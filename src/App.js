@@ -4,12 +4,12 @@ import './App.css';
 //import library
 import { ThemeProvider } from '@material-ui/core/styles';
 import { BrowserRouter, Route, Switch,Redirect} from "react-router-dom";
+
 //import theme
 import themes from './theme'
 
 //import project
 import HomePage from './pages/HomePage/HomePage'
-import LoginPage from './pages/LoginPage/LoginPage'
 import PageNotFound from './pages/PageNotFound/PageNotFound'
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
           <BrowserRouter>
             <Switch>
               <Route path="/" component={HomePage} exact/>
-              <Route path="/home" component={HomePage} exact/>
+              <Route path="/home" component={HomePage} />
               <Route path="*" component={PageNotFound} />
             </Switch>
           </BrowserRouter>

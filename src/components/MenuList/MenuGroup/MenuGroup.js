@@ -1,20 +1,34 @@
 
 import React from 'react'
-
-// material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Collapse, Divider, List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+
+// import library
+import { Collapse, Divider, List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import {ExpandLess,ExpandMore} from "@material-ui/icons";
+
+// import project
 import MenuItem from '../MenuItem/MenuItem';
+
+
 const useStyles = makeStyles((theme) => ({
     menuCaption: {
-        ...theme.typography.menuCaption
+        ...theme.typography.menuCaption,
+        marginLeft:-20,
     },
+    collapse:{
+        marginBottom:-10,
+    },
+    menuDivider:{
+       marginRight:20
+    },
+    openIcon:{
+        marginRight:15
+    }
 }));
+
+
 const MenuGroup = (props) => {
     const { item } = props;
-
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(true);
@@ -24,24 +38,28 @@ const MenuGroup = (props) => {
             <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
-                className={classes.root}
             >
-                <ListItem
-                    
+                <ListItem    
                     onClick={() => setOpen(!open)}
-
+                    className={classes.collapse}
                 >
-
                     <ListItemText
                         primary={
                             <Typography variant="caption" className={classes.menuCaption} >
                                 {item.title}
-
                             </Typography>
                         } />
-                    {open ? <ExpandLess /> : <ExpandMore />}
+                    {open ? <ExpandLess className={classes.openIcon}  /> : <ExpandMore className={classes.openIcon} />}
                 </ListItem>
-                <MenuItem open={open} list={item.children} />
+                
+                <Collapse in={open} timeout="auto">
+                    <List component="div">
+                        {item.children.map((_item) => (
+                            <MenuItem  item={_item} />
+                        ))}
+                    </List>
+                </Collapse>
+                
 
             </List>
             {/* group divider */}
