@@ -1,41 +1,63 @@
 import React from 'react'
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Divider from '@material-ui/core/Divider';
-import Avatar from '@material-ui/core/Avatar';
-
+import MenuGroup from './MenuGroup/MenuGroup';
 // import logo from '../../assets/img/icon/crownIcon.png'; 
-const icon = require('../../assets/img/icon/img.jpg');
 
+import { IconBrandFramer, IconTypography, IconPalette, IconShadow, IconWindmill, IconLayoutGridAdd } from '@tabler/icons';
+
+const icons = {
+    IconTypography,
+    IconPalette,
+    IconShadow,
+    IconWindmill,
+    IconBrandFramer,
+    IconLayoutGridAdd
+};
+
+  const salesModule = {
+    title:"Nhân Sự",
+    children:  [
+        { title: "Giỏ Hàng", url: "/home/inventory",icon: icons.IconTypography},
+        { title: "Hóa Đơn", url: "/home/inventory",icon: icons.IconTypography },
+        { title: "Đơn Trả", url: "/home/inventory",icon: icons.IconTypography },
+      ]
+    };
+ 
+  const inventoryModule = {
+    title:"Kho Hàng",
+    children: [
+        { title: "Nhập Hàng", url: "/home/inventory/import",icon: icons.IconTypography },
+        { title: "Kho Hàng", url: "/home/inventory/inventory" ,icon: icons.IconTypography},
+        { title: "Đơn Nhập Hàng", url: "/home/inventory/receipt" ,icon: icons.IconTypography},
+        { title: "Đơn Trả Hàng Nhập", url: "/home/inventory/returns",icon: icons.IconTypography },
+        { title: "Nhà Cung Cấp", url: "/home/inventory/supplier",icon: icons.IconTypography },
+        { title: "Danh Mục Sản Phẩm", url: "/home/inventory/category" ,icon: icons.IconTypography},
+      ]
+    };
+  const hrModule = {
+    title:"Nhân Sự",
+    children: [
+        { title: "Nhân Viên", url: "/home/inventory",icon: icons.IconTypography },
+        { title: "Ca Làm Việc", url: "/home/inventory",icon: icons.IconTypography },
+      ]
+    };
+  const reportModule = {
+      title:"Quản Lý",
+      children:[
+        { title: "Lịch Sử Hoạt Động", url: "/home/inventory" ,icon: icons.IconTypography},
+        { title: "Cửa Hàng", url: "/home/inventory",icon: icons.IconTypography },
+        { title: "Khách Hàng", url: "/home/inventory" ,icon: icons.IconTypography},
+        { title: "Thống Kê", url: "/home/inventory" },
+      ]
+  };
+  const menuItems = {
+    items: [salesModule, inventoryModule, hrModule, reportModule]
+};
 
 const MenuList = () => {
-    return (
-      <>
-            <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem button key={text}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={text} />
-                </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem button key={text}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={text} />
-                </ListItem>
-                ))}
-            </List>
-            
-      </>
-    )
+    const navItems = menuItems.items.map((item) => {
+        return <MenuGroup  item={item} />;
+    });
+    return navItems;
 }
 
 export default MenuList

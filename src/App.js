@@ -18,12 +18,14 @@ function App() {
       <ThemeProvider theme={themes} >
           <BrowserRouter>
             <Switch>
+              <Route path="/" component={HomePage} exact/>
               <Route path="/home" component={HomePage} exact/>
               <Route path="*" component={PageNotFound} />
             </Switch>
           </BrowserRouter>
       </ThemeProvider>
     </div>
+    
     
   );
 }
