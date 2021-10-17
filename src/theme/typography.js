@@ -4,8 +4,6 @@
  */
 export default function themeTypography(theme) {
     return {
-        // fontFamily: 'Roboto', //custom
-        // fontFamily: theme.customization.fontFamily,
         h6: {
             fontWeight: 500,
             color: theme.heading,
@@ -85,14 +83,6 @@ export default function themeTypography(theme) {
         },
         mainContent: {
             backgroundColor: theme.background,
-            width: '100%',
-            minHeight: 'calc(100vh - 88px)',
-            flexGrow: 1,
-            padding: '20px',
-            marginTop: '88px',
-            marginRight: '20px',
-            // borderRadius: `${theme.customization.borderRadius}px`
-            borderRadius: '12px'//custom
         },
         menuCaption: {
             fontSize: '0.875rem',
@@ -101,12 +91,6 @@ export default function themeTypography(theme) {
             padding: '6px',
             textTransform: 'capitalize',
             marginTop: '10px'
-        },
-        subMenuCaption: {
-            fontSize: '0.6875rem',
-            fontWeight: 500,
-            color: theme.darkTextSecondary,
-            textTransform: 'capitalize'
         },
         commonAvatar: {
             cursor: 'pointer',

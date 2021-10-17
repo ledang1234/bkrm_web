@@ -25,6 +25,7 @@ createStyles({
     background: theme.palette.background,
     boxShadow: "none",
   },
+
   hide: {
     display: "none",
   },

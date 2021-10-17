@@ -16,13 +16,15 @@ const useStyles = makeStyles((theme) => ({
         marginLeft:-20,
     },
     collapse:{
-        marginBottom:-10,
+        marginBottom:-15,
+        marginTop:-10,
     },
     menuDivider:{
-       marginRight:20
+       marginRight:20,
+       marginTop:-5,
     },
     openIcon:{
-        marginRight:15
+        marginRight:10
     }
 }));
 
