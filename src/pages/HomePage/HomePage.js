@@ -117,7 +117,7 @@ const HomePage = (props)  =>{
     if(!smallScreen) return (
     <div  style={{width:drawerWidth, justifyContent: "flex-end",display: "flex",}}  >
       <IconButton onClick={() => handleToggleSidebar(!isSidebarOpen)}>
-          <MenuIcon />
+          <MenuIcon style={{color:theme.customization.themeText}}/>
       </IconButton>
     </div>
     )

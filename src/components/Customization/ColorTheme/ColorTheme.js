@@ -3,7 +3,7 @@ import { makeStyles,createStyles} from "@material-ui/core/styles";
 import { Button,Grid} from "@material-ui/core";
 import { SET_BORDER_RADIUS, SET_FONT_FAMILY, SET_PRIMARY_COLOR,SET_SECONDARY_COLOR , SET_COLOR_LEVEL} from '../../../store/action';
 import { useDispatch, useSelector } from 'react-redux';
-import {red, pink, purple, blue, cyan,  green, yellow, amber, orange, grey} from '@material-ui/core/colors'
+import {red, pink, purple, blue, cyan,  green, yellow, amber, orange, grey,teal} from '@material-ui/core/colors'
 import clsx from "clsx";
 
 import CardWrapper from '../../CardWrapper/CardWrapper';
@@ -27,12 +27,11 @@ import {
     Box,
     List
 } from '@material-ui/core';
- // borderWidth:2,
-            // borderColor:'#212121'
+
 const useStyles = makeStyles((theme) =>
 createStyles({
     btn:{
-        maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px', borderRadius:'30px', margin:10,
+        maxWidth: '30px', maxHeight: '33px', minWidth: '30px', minHeight: '33px', borderRadius:'30px', margin:10,
     },
     btnPink:{
         background:pink[500],
@@ -58,9 +57,9 @@ createStyles({
         background:green[500],
         '&:hover': {background:green[300]}
     },
-    btnYellow:{
-        background:yellow[500],
-        '&:hover': {background:yellow[300]}
+    btnTeal:{
+        background:teal[500],
+        '&:hover': {background:teal[300]}
     },
     btnAmber:{
         background:amber[500],
@@ -79,6 +78,11 @@ createStyles({
         paddingBottom:20,
         paddingLeft:15
      },
+    choosen:{
+        borderWidth:2,
+        margin:9,
+        borderColor:'#212121'
+    }
 }));
 function valueText(value) {
     return `${value}px`;
@@ -142,24 +146,24 @@ const SliderColor = (props) =>{
 
 const ButtonGroup = (props)=>{
     const classes = useStyles();
-    const {set, title} = props;
+    const {set, title, colorChoosen} = props;
     return(
  
         <CardWrapper title={title}>
             <Grid spacing={3}>
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnPink)} onClick={()=>{set(pink)}}  />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnBlue)} onClick={()=>{set(blue)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnAmber)} onClick={()=>{set(amber)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnRed)} onClick={()=>{set(red)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnPurple)} onClick={()=>{set(purple)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnPink,(colorChoosen == pink)&& classes.choosen)} onClick={()=>{set(pink)}}  />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnBlue,(colorChoosen == blue)&& classes.choosen)} onClick={()=>{set(blue)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnAmber,(colorChoosen == amber)&& classes.choosen)} onClick={()=>{set(amber)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnRed,(colorChoosen == red)&& classes.choosen)} onClick={()=>{set(red)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnPurple,(colorChoosen == purple)&& classes.choosen)} onClick={()=>{set(purple)}} />
                 
             </Grid>
             <Grid spacing={3}>
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnCyan)} onClick={()=>{set(cyan)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnGreen)} onClick={()=>{set(green)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnYellow)} onClick={()=>{set(yellow)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnOrange)} onClick={()=>{set(orange)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnGrey)} onClick={()=>{set(grey)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnCyan,(colorChoosen == cyan)&& classes.choosen)} onClick={()=>{set(cyan)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnGreen,(colorChoosen == green)&& classes.choosen)} onClick={()=>{set(green)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnTeal,(colorChoosen == teal)&& classes.choosen)} onClick={()=>{set(teal)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnOrange,(colorChoosen == orange)&& classes.choosen)} onClick={()=>{set(orange)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnGrey,(colorChoosen == grey)&& classes.choosen)} onClick={()=>{set(grey)}} />
             </Grid>
             <SliderColor title={title}/>
        
@@ -188,8 +192,8 @@ const ColorTheme = () => {
 
     return (
         <div>
-            <ButtonGroup set={setPrimaryColor} title="Màu nền" />
-            <ButtonGroup  set={setSecondaryColor} title="Màu nhấn"/>
+            <ButtonGroup set={setPrimaryColor} title="Màu nền"  colorChoosen={primaryColor}/>
+            <ButtonGroup  set={setSecondaryColor} title="Màu nhấn" colorChoosen={secondaryColor}/>
         </div>
     );
 }   
