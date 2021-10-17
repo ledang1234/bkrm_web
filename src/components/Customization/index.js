@@ -263,11 +263,12 @@ import {
     Typography,
     Card,
     Button,
-    Box
+    Box,
+    List
 } from '@material-ui/core';
 
 // third-party
-// import PerfectScrollbar from 'react-perfect-scrollbar';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // project imports
 import CardWrapper from '../CardWrapper/CardWrapper';
@@ -309,6 +310,9 @@ createStyles({
      paddingBottom:20,
      paddingLeft:15
   },
+  drawerPaper:{
+    width: drawerWidth,
+  }
   
 
 
@@ -341,10 +345,7 @@ const Customization = () => {
 
       //MODE
       const [mode, setMode] = React.useState('Light');
-    //   const handleMode = (event, newValue) => {
-          
-    //   };
-  
+   
       useEffect(() => {
           dispatch({ type: SET_MODE, mode });
       }, [dispatch, mode]);
@@ -411,10 +412,14 @@ const Customization = () => {
                 anchor="right"
                 onClose={handleToggle}
                 open={open}
-       
+
+                classes={{
+                    paper: classes.drawerPaper
+                  }}
                 className={classes.drawer}
             >
-                {/* <PerfectScrollbar component="div"> */}
+        
+                <PerfectScrollbar component="div">
             <CardWrapper title="Font Family">
                 <FormControl className={classes.fontForm}>
                     <RadioGroup
@@ -524,10 +529,11 @@ const Customization = () => {
                 </Grid>
                 </Box>
             </CardWrapper>
-                {/* </PerfectScrollbar> */}
+       
 
             <ColorTheme />
-            </Drawer>
+            </PerfectScrollbar>
+        </Drawer>
         </>
     );
 };

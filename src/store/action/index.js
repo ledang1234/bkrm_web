@@ -3,3 +3,4 @@ export const SET_BORDER_RADIUS = '@customization/SET_BORDER_RADIUS';
 export const SET_MODE = '@customization/SET_MODE';
 export const SET_PRIMARY_COLOR = '@customization/SET_PRIMARY_COLOR';
 export const SET_SECONDARY_COLOR = '@customization/SET_SECONDARY_COLOR';
+export const SET_COLOR_LEVEL = '@customization/SET_COLOR_LEVEL';

@@ -15,7 +15,8 @@ export const initialState = {
     themeGreyText: colors.grey700,
 
     primaryColor:blue,
-    secondaryColor:pink
+    secondaryColor:pink,
+    colorLevel:50
 
     
 
@@ -48,6 +49,7 @@ const customizationReducer = (state = initialState, action) => {
                 }
             }else{
                 return {
+                    ...state,
                     mode:action.mode,
                     themeBackground: colors.grey800,
                     themeText: colors.grey50,
@@ -63,7 +65,14 @@ const customizationReducer = (state = initialState, action) => {
             return{
                 ...state,
                 secondaryColor: action.secondaryColor
-            }
+            };
+        case actionTypes.SET_COLOR_LEVEL:
+            let value = action.colorLevel ;
+            if( action.colorLevel == 0){value = 50;}
+            return {
+                ...state,
+                colorLevel: value
+            };
             
     
        
