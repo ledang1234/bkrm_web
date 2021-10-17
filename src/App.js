@@ -16,15 +16,17 @@ import PageNotFound from './pages/PageNotFound/PageNotFound'
 function App() {
   const customization = useSelector((state) => state.customization);
   return (
-    <div>
+    <div >
       <ThemeProvider theme={themes(customization)} >
-          <BrowserRouter>
+       
+        <BrowserRouter>
             <Switch>
               <Route path="/" component={HomePage} exact/>
               <Route path="/home" component={HomePage} />
               <Route path="*" component={PageNotFound} />
             </Switch>
           </BrowserRouter>
+
       </ThemeProvider>
     </div>
     

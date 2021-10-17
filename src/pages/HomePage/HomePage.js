@@ -23,10 +23,12 @@ const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
     display: "flex",
-    backgroundColor: theme.palette.background
+    height:735,
+    background: theme.palette.background.default,
+    
   },
   appBar: {
-    background: theme.palette.background,
+    background: theme.palette.background.paper,
     boxShadow: "none",
   },
 
@@ -36,14 +38,21 @@ createStyles({
   drawerPaper: {
     width: drawerWidth,
     marginTop:48+16+16,
-    borderColor:"#fff",
+    
+    // marginTop:48,
+    // paddingTop:48+16+16,
+    borderColor:theme.palette.background.paper,
     paddingLeft:20,
+
+    
    
   },
   _drawerPaper: {
     width: drawerWidth,
-    borderColor:"#fff",
+    borderColor:theme.palette.background.paper,
     paddingLeft:20,
+
+
    
   },
   drawerHeader: { 
@@ -71,10 +80,11 @@ createStyles({
     borderRadius: theme.customization.borderRadius,
     marginLeft:20,
     marginRight:20,
-    padding:20
+    padding:20,
+    
   },
   toolBar:{
-    background:'#fff',
+    background:theme.palette.background.paper,
   },
   searchEngine:{
     paddingLeft:20
@@ -137,8 +147,8 @@ const HomePage = (props)  =>{
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap className={classes.searchEngine}>
-            Persistent drawer
+          <Typography variant="h3" noWrap className={classes.searchEngine}>
+            BKRM
           </Typography>
         </Toolbar>
       </AppBar>
@@ -153,12 +163,13 @@ const HomePage = (props)  =>{
     
         classes={{
           paper: matchUpMd ? classes.drawerPaper :classes._drawerPaper
-      }}
+        }}
           ModalProps={{ keepMounted: true }}
           color="inherit"
       >
         <Box >
           {_divLogo()}
+          {/* {divLogo()} */}
         </Box>
         <MenuList/> 
       </Drawer>

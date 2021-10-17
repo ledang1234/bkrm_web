@@ -13,23 +13,30 @@ export function theme(customization) {
 
   const themeOption = {
       colors: color,
-      heading: color.grey900,
       
-      paper: color.paper,
-      backgroundDefault: color.paper,
-      background: color.primaryLight,
+      heading: customization.themeText,
+      paper: customization.themeBackground, 
+      darkTextPrimary: customization.themeGreyText,
       
-      darkTextPrimary: color.grey700,
-      darkTextSecondary: color.grey500,
-      textDark: color.grey900,
-      menuSelected: color.secondaryDark,
-      menuSelectedBack: color.secondaryLight,
-      divider: color.grey200,
+    //   heading: color.grey50,
+    //   paper: color.grey800,
+    //   darkTextPrimary: color.grey50,
+
+
+    
+    //divider: color.grey200,
+    //   backgroundDefault: color.grey900,
+    //   background: color.grey900,
+    //   darkTextSecondary: color.grey500,
+    //   textDark: color.grey900,
+    //   menuSelected: color.secondaryDark,
+    //   menuSelectedBack: color.secondaryLight,
+      
       customization
   };
 
   return createTheme({
-      customization:customization,
+      customization: customization,
       palette: themePalette(themeOption),
       typography: themeTypography(themeOption),
       components: componentStyleOverrides(themeOption),

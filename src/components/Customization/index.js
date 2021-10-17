@@ -272,7 +272,7 @@ import {
 // project imports
 import CardWrapper from '../CardWrapper/CardWrapper';
 import AnimateButton from '../Button/AnimateButton';
-import { SET_BORDER_RADIUS, SET_FONT_FAMILY } from '../../store/action'; // THEME_RTL
+import { SET_BORDER_RADIUS, SET_FONT_FAMILY, SET_MODE } from '../../store/action'; // THEME_RTL
 import { IconSettings } from '@tabler/icons';
 
 const gridSpacing = 3;
@@ -338,6 +338,16 @@ const Customization = () => {
         dispatch({ type: SET_BORDER_RADIUS, borderRadius });
     }, [dispatch, borderRadius]);
 
+      //MODE
+      const [mode, setMode] = React.useState('Light');
+    //   const handleMode = (event, newValue) => {
+          
+    //   };
+  
+      useEffect(() => {
+          dispatch({ type: SET_MODE, mode });
+      }, [dispatch, mode]);
+  
 
     /////// FONT FAMILY
     let initialFont;
@@ -372,6 +382,8 @@ const Customization = () => {
         }
         dispatch({ type: SET_FONT_FAMILY, fontFamily: newFont });
     }, [dispatch, fontFamily]);
+
+  
 
     return (
         <>
@@ -438,6 +450,38 @@ const Customization = () => {
                             }}
                         />
                     </RadioGroup>
+                </FormControl>
+            </CardWrapper>
+            <CardWrapper title="Mode">
+                <FormControl className={classes.fontForm}>
+                    <Grid>
+                    <RadioGroup
+                        aria-label="mode"
+                        value={mode}
+                        onChange={(e) => setMode(e.target.value)}
+                        name="row-radio-buttons-group"
+                    >
+                        <FormControlLabel
+                            value="Light"
+                            control={<Radio />}
+                            label="Light"
+                            sx={{
+                                '& .MuiSvgIcon-root': { fontSize: 28 },
+                                '& .MuiFormControlLabel-label': { color: 'grey.900' }
+                            }}
+                        />
+                        <FormControlLabel
+                            value="Dark"
+                            control={<Radio />}
+                            label="Dark"
+                            sx={{
+                                '& .MuiSvgIcon-root': { fontSize: 28 },
+                                '& .MuiFormControlLabel-label': { color: 'grey.900' }
+                            }}
+                        />
+                    
+                    </RadioGroup>
+                    </Grid>
                 </FormControl>
             </CardWrapper>
                                             
