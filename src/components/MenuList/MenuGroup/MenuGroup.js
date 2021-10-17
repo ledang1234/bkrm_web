@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { makeStyles } from '@material-ui/styles';
+import {useTheme, makeStyles } from '@material-ui/styles';
 
 // import library
 import { Collapse, Divider, List, ListItem, ListItemText, Typography } from '@material-ui/core';
@@ -25,12 +25,14 @@ const useStyles = makeStyles((theme) => ({
     },
     openIcon:{
         marginRight:10
-    }
+    },
+  
 }));
 
 
 const MenuGroup = (props) => {
     const { item } = props;
+    const theme = useTheme();
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(true);
@@ -55,9 +57,9 @@ const MenuGroup = (props) => {
                 </ListItem>
                 
                 <Collapse in={open} timeout="auto">
-                    <List component="div">
+                    <List component="div" style={{marginRight:25, borderRadius:12}} >
                         {item.children.map((_item) => (
-                            <MenuItem  item={_item} />
+                            <MenuItem  item={_item}  />
                         ))}
                     </List>
                 </Collapse>

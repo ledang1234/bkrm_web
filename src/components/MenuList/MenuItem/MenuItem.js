@@ -15,8 +15,10 @@ const useStyles = makeStyles((theme) => ({
   item:{
     // background:theme.color.primaryLight
     // background: "#f1f1f1",
+    borderRadius: theme.customization.borderRadius,
     '&:hover': {
-       background: theme.palette.primary.light,
+       background: theme.palette.secondary.dark,
+       
     },
   }
 }));
@@ -33,6 +35,7 @@ const MenuItem = (props) => {
           component={Link}
           to={item.url}
           className={classes.item}
+          
         >
           {/* <ListItemIcon >
             {itemIcon}

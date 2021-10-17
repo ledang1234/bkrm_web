@@ -421,6 +421,7 @@ const Customization = () => {
                         value={fontFamily}
                         onChange={(e) => setFontFamily(e.target.value)}
                         name="row-radio-buttons-group"
+                        
                     >
                         <FormControlLabel
                             value="Roboto"
@@ -430,6 +431,7 @@ const Customization = () => {
                                 '& .MuiSvgIcon-root': { fontSize: 28 },
                                 '& .MuiFormControlLabel-label': { color: 'grey.900' }
                             }}
+                            
                         />
                         <FormControlLabel
                             value="Poppins"
