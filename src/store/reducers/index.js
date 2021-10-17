@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
-import userReducer from "./userReducer";
+import customizationReducer from "./customizationReducer";
 
 const rootReducer = combineReducers({
   //IMPOORT STATE MA STORE DANG LUU TRU
   
     //key: value
-  userReducer //userReducer: userReducer
+    customization: customizationReducer
 });
 
 export default rootReducer;

@@ -1,27 +1,2 @@
-import * as ActionType  from "./../constant/ActionType"
-
-
-export const actDelete = user => {
-    return {
-      type: ActionType.DELETE,
-      user
-    };
-  };
-export const actSubmit = user => {
-    return{
-        type: ActionType.SUBMIT,
-        user
-    }
-}
-export const actEdit =user=> {
-    return {
-        type: ActionType.EDIT,
-        user
-    }
-}
-export const actSearch = user => {
-    return{
-        type: ActionType.SEARCH,
-        user
-    }
-}
+export const SET_FONT_FAMILY = '@customization/SET_FONT_FAMILY';
+export const SET_BORDER_RADIUS = '@customization/SET_BORDER_RADIUS';

@@ -22,8 +22,7 @@ export default function componentStyleOverrides(theme) {
                     backgroundImage: 'none'
                 },
                 rounded: {
-                    // borderRadius: `${theme.customization.borderRadius}px`//custom
-                    borderRadius: 12 
+                    borderRadius: `${theme.customization.borderRadius}px`
                 }
             }
         },
@@ -34,7 +33,7 @@ export default function componentStyleOverrides(theme) {
                     padding: '24px'
                 },
                 title: {
-                    fontSize: '.125rem'
+                    fontSize: '1.125rem'
                 }
             }
         },
@@ -108,8 +107,7 @@ export default function componentStyleOverrides(theme) {
             styleOverrides: {
                 root: {
                     background: theme.colors.grey50,
-                    // borderRadius: `${theme.customization.borderRadius}px`,
-                    borderRadius: 12 ,
+                    borderRadius: `${theme.customization.borderRadius}px`,
                     '& .MuiOutlinedInput-notchedOutline': {
                         borderColor: theme.colors.grey400
                     },
@@ -124,8 +122,7 @@ export default function componentStyleOverrides(theme) {
                     fontWeight: 500,
                     background: theme.colors.grey50,
                     padding: '15.5px 14px',
-                    // borderRadius: `${theme.customization.borderRadius}px`,
-                    borderRadius: 12,
+                    borderRadius: `${theme.customization.borderRadius}px`,
                     '&.MuiInputBase-inputSizeSmall': {
                         padding: '10px 14px',
                         '&.MuiInputBase-inputAdornedStart': {
@@ -137,8 +134,7 @@ export default function componentStyleOverrides(theme) {
                     paddingLeft: 4
                 },
                 notchedOutline: {
-                    // borderRadius: `${theme.customization.borderRadius}px`,
-                    borderRadius: 12 
+                    borderRadius: `${theme.customization.borderRadius}px`
                 }
             }
         },

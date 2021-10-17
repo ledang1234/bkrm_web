@@ -3,6 +3,7 @@ import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import clsx from "clsx";
+import { useSelector } from 'react-redux';
 
 //import library
 import {AppBar, Toolbar,IconButton,Drawer,Typography,Box} from "@material-ui/core";
@@ -13,8 +14,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 //import project
 import MenuList from "../../components/MenuList/MenuList"
 import TableWrapper from "../../components/TableWrapper/TableWrapper";
+import Customization from '../../components/Customization'
 
 const drawerWidth = 240;
+
+
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
@@ -46,7 +50,7 @@ createStyles({
     display: "flex",
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
-    background:'#fff',
+    // background:'#fff',
   },
   content: {
     flexGrow: 1,
@@ -64,7 +68,7 @@ createStyles({
   },
   background:{
     backgroundColor: theme.palette.primary.light,
-    borderRadius:'12px',
+    borderRadius: theme.customization.borderRadius,
     marginLeft:20,
     marginRight:20,
     padding:20
@@ -82,6 +86,7 @@ createStyles({
 const HomePage = (props)  =>{
   const theme = useTheme();
   const classes = useStyles();
+  const customization = useSelector((state) => state.customization);
   const { window } = props;
   
   const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -89,7 +94,7 @@ const HomePage = (props)  =>{
   const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
 
   const [isSidebarOpen, setSidebarOpen] = useState(!smallScreen);
-
+  
   useEffect(() => {
     setSidebarOpen(!smallScreen);
   }, [smallScreen]);
@@ -165,12 +170,13 @@ const HomePage = (props)  =>{
         })}
       >
         <div className={classes.drawerHeader} />
-        
-        <Typography className={classes.background}  > 
-          <TableWrapper/>
-        </Typography>
 
+        <Typography  className={clsx(classes.background)}  > 
+          <TableWrapper/>      
+        </Typography>
+        <Customization/>
       </main>
+      
     </div>
   );
 }

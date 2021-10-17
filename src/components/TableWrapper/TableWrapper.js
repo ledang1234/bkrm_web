@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
     backgroundColor: theme.palette.background,
-    borderRadius:12,
+    borderRadius:theme.customization.borderRadius,
     color: '#000000',
     boxShadow: "none"
   },
