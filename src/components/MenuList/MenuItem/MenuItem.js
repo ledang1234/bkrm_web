@@ -17,8 +17,7 @@ const useStyles = makeStyles((theme) => ({
     // background: "#f1f1f1",
     borderRadius: theme.customization.borderRadius,
     '&:hover': {
-       background: theme.palette.secondary.dark,
-       
+       background: theme.palette.secondary.light,
     },
   }
 }));

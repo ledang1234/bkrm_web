@@ -3,7 +3,7 @@ import config from '../../config';
 import colors from '../../assets/scss/_themes-vars.module.scss';
 // action - state management
 import * as actionTypes from '../action/index';
-
+import {red, pink, purple, blue, cyan,  green, yellow, amber, orange, grey} from '@material-ui/core/colors'
 export const initialState = {
     
     fontFamily: config.fontFamily,
@@ -13,6 +13,11 @@ export const initialState = {
     themeBackground: colors.paper,
     themeText: colors.grey900,
     themeGreyText: colors.grey700,
+
+    primaryColor:blue,
+    secondaryColor:pink
+
+    
 
 };
 
@@ -48,6 +53,16 @@ const customizationReducer = (state = initialState, action) => {
                     themeText: colors.grey50,
                     themeGreyText: colors.grey50,
                 }
+            };
+        case actionTypes.SET_PRIMARY_COLOR:
+            return{
+                ...state,
+                primaryColor: action.primaryColor
+            };
+        case actionTypes.SET_SECONDARY_COLOR:
+            return{
+                ...state,
+                secondaryColor: action.secondaryColor
             }
             
     

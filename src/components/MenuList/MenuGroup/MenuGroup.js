@@ -57,7 +57,7 @@ const MenuGroup = (props) => {
                 </ListItem>
                 
                 <Collapse in={open} timeout="auto">
-                    <List component="div" style={{marginRight:25, borderRadius:12}} >
+                    <List component="div" style={{marginRight:25}} >
                         {item.children.map((_item) => (
                             <MenuItem  item={_item}  />
                         ))}

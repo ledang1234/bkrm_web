@@ -274,7 +274,7 @@ import CardWrapper from '../CardWrapper/CardWrapper';
 import AnimateButton from '../Button/AnimateButton';
 import { SET_BORDER_RADIUS, SET_FONT_FAMILY, SET_MODE } from '../../store/action'; // THEME_RTL
 import { IconSettings } from '@tabler/icons';
-
+import ColorTheme from './ColorTheme/ColorTheme'
 const gridSpacing = 3;
 const drawerWidth = 300;
 // assets
@@ -308,7 +308,8 @@ createStyles({
      paddingTop:30,
      paddingBottom:20,
      paddingLeft:15
-  }
+  },
+  
 
 
 }));
@@ -425,7 +426,7 @@ const Customization = () => {
                     >
                         <FormControlLabel
                             value="Roboto"
-                            control={<Radio />}
+                            control={<Radio  classes={{root: classes.radio, checked: classes.checked}}/>}
                             label="Roboto"
                             sx={{
                                 '& .MuiSvgIcon-root': { fontSize: 28 },
@@ -524,6 +525,8 @@ const Customization = () => {
                 </Box>
             </CardWrapper>
                 {/* </PerfectScrollbar> */}
+
+            <ColorTheme />
             </Drawer>
         </>
     );
