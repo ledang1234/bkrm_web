@@ -22,6 +22,10 @@ createStyles({
   headerTitle:{
     padding: '24px',
     fontSize: '1.125rem'
+  },
+  table:{
+    paddingLeft:20,
+    paddingRight:20
   }
 })
 );
@@ -38,9 +42,9 @@ const TableWrapper = (props) => {
                 {title}
             </Typography>
         <Divider/>
-        <Grid item xs={12}>
-        <Test />
-      </Grid>
+        {/* <Grid item xs={12}> */}
+        <Test/>
+      {/* </Grid> */}
 
     </Card>
     )

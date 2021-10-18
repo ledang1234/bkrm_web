@@ -20,13 +20,12 @@ function TableHeader(props) {
       
 
     return (
-      <TableHead>
+      <TableHead >
         <TableRow>
             {headCells.map((headCell) => (
             <TableCell
                 key={headCell.id}
                 align={headCell.numeric ? 'right' : 'left'}
-                padding={headCell.disablePadding ? 'none' : 'normal'}
                 sortDirection={orderBy === headCell.id ? order : false}
             >
                 <TableSortLabel
@@ -43,7 +42,7 @@ function TableHeader(props) {
                 </TableSortLabel>
             </TableCell>
             ))}
-            <TableCell/>
+            {/* <TableCell/> */}
             
         </TableRow>
         </TableHead>

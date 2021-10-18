@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { withStyles,lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
+
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,11 +20,11 @@ import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import TableHeader from '../TableHeader/TableHeader'
-import Collapse from '@material-ui/core/Collapse';
-import Box from '@material-ui/core/Box';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+
+
+
 import TableRowInfo  from '../TableRow/TableRow'
+import { Divider } from '@material-ui/core';
 
 function createData(name, calories, fat, carbs, protein, history) {
   return { name, calories, fat, carbs, protein,history };
@@ -72,7 +72,13 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-
+const StyledPaper = withStyles((theme) => ({
+  root: {
+    boxShadow:"none"
+    // color: theme.palette.common.white,
+  },
+  
+}))(Paper);
 
 
 const useStyles = makeStyles((theme) => ({
@@ -82,13 +88,20 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
+    // delete
+    // marginLeft: theme.spacing(5),
+  },
+  _paper: {
+   
+    marginLeft: theme.spacing(5),
   },
   container: {
-    maxHeight: 440
+    maxHeight: 440,
   },
 
   table: {
     minWidth: 750,
+ 
   },
   visuallyHidden: {
     border: 0,
@@ -102,13 +115,6 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
 }));
-const useRowStyles = makeStyles({
-    root: {
-      '& > *': {
-        borderBottom: 'unset',
-      },
-    },
-  });
 
 function Test() {
   const classes = useStyles();
@@ -120,7 +126,14 @@ function Test() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   //collapse
-  const [open, setOpen] = React.useState(false);
+
+  const [openRow, setRowOpen] = React.useState(null);
+  const handleOpenRow = (row) => {
+    if (row !=  openRow){setRowOpen(row);}
+    else{setRowOpen(null)}
+    
+  };
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -145,8 +158,9 @@ function Test() {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <TableContainer className={classes.container}>
+      
+      <StyledPaper className={classes.paper}>
+        <TableContainer >
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
@@ -166,7 +180,7 @@ function Test() {
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
                   return (
-                    <TableRowInfo key={row.name} row={row} labelId={labelId} />
+              <TableRowInfo key={row.name} row={row} labelId={labelId} openRow={openRow}  handleOpenRow={handleOpenRow}/>
                   );
                 })}
               {emptyRows > 0 && (
@@ -175,6 +189,7 @@ function Test() {
                 </TableRow>
               )}
             </TableBody>
+     
           </Table>
         </TableContainer>
         <TablePagination
@@ -186,11 +201,14 @@ function Test() {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Paper>
+      </StyledPaper>
+      <Divider/>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
+        style={{display: "flex",justifyContent: "flex-end",}}
       />
+     
     </div>
   );
 }
