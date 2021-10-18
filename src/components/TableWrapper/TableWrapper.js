@@ -5,8 +5,10 @@ import { Typography,Card,CardContent, CardHeader, Divider ,Grid} from '@material
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import project
-import TableView from './Table/TableView'
-import TableTest from './Table/TableTest'
+import TableView from './Test/TableView'
+import TableTest from './Test/TableTest'
+
+import Test from './Table/Table'
 //= =============================|| SAMPLE PAGE ||==============================//
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -37,7 +39,7 @@ const TableWrapper = (props) => {
             </Typography>
         <Divider/>
         <Grid item xs={12}>
-        <TableTest />
+        <Test />
       </Grid>
 
     </Card>
