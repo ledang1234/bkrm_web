@@ -25,15 +25,16 @@ createStyles({
 );
 
 
-const TableWrapper = () => {
+const TableWrapper = (props) => {
+    const {title} =props;
     const theme = useTheme();
     const classes = useStyles(theme);
 
    return ( 
-   <Card className={classes.root}>
-       <Typography className={classes.headerTitle} variant="h5">
-            Sample Card
-          </Typography>
+      <Card className={classes.root}>
+            <Typography className={classes.headerTitle} variant="h5">
+                {title}
+            </Typography>
         <Divider/>
         <Grid item xs={12}>
         <TableTest />

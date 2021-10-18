@@ -1,0 +1,147 @@
+
+[
+    {
+        "product_id": "1",
+        "name": "Quan dai",
+        "price":200,
+        "import_price": 100,
+        "barcode": 300,
+        "category_id":"1",
+        "status":"active",
+        "image_url":"/src/assets/img/product/1.jpg",
+        "quantity":32
+    },
+    {
+        "product_id": "2",
+        "name": "Quan dui",
+        "price":340,
+        "import_price": 200,
+        "barcode": 320,
+        "category_id":"1",
+        "status":"active",
+        "image_url":"/src/assets/img/product/199.jpg",
+        "quantity":35
+    },
+    {
+        "product_id": "3",
+        "name": "Ao dai",
+        "price":250,
+        "import_price": 120,
+        "barcode": 322,
+        "category_id":"1",
+        "status":"active",
+        "image_url":"/src/assets/img/product/11127.jpg",
+        "quantity":34
+    },
+    {
+        "product_id": "4",
+        "name": "Banh",
+        "price":200,
+        "import_price": 100,
+        "barcode": 300,
+        "category_id":"2",
+        "status":"active",
+        "image_url":"/src/assets/img/product/9830.jpg",
+        "quantity":32
+    },
+    {
+        "product_id": "5",
+        "name": "Keo",
+        "price":220,
+        "import_price": 100,
+        "barcode": 3002,
+        "category_id":"2",
+        "status":"active",
+        "image_url":"/src/assets/img/product/199.jpg",
+        "quantity":30
+    },
+    {
+        "product_id": "6",
+        "name": "Quan dai",
+        "price":200,
+        "import_price": 100,
+        "barcode": 300,
+        "category_id":"3",
+        "status":"active",
+        "image_url":"/src/assets/img/product/9830.jpg",
+        "quantity":13
+    },
+    {
+        "product_id": "7",
+        "name": "khan giay",
+        "price":200,
+        "import_price": 100,
+        "barcode": 350,
+        "category_id":"3",
+        "status":"active",
+        "image_url":"/src/assets/img/product/9830.jpg",
+        "quantity":4
+    },
+    {
+        "product_id": "8",
+        "name": "tap",
+        "price":203,
+        "import_price": 150,
+        "barcode": 350,
+        "category_id":"4",
+        "status":"active",
+        "image_url":"/src/assets/img/product/9830.jpg",
+        "quantity":45
+    },
+    {
+        "product_id": "9",
+        "name": "tap",
+        "price":203,
+        "import_price": 152,
+        "barcode": 350,
+        "category_id":"4",
+        "status":"active",
+        "image_url":"/src/assets/img/product/1.jpg",
+        "quantity":45
+    },
+    {
+        "product_id": "10",
+        "name": "may tinh",
+        "price":203,
+        "import_price": 152,
+        "barcode": 350,
+        "category_id":"4",
+        "status":"active",
+        "image_url":"/src/assets/img/product/1.jpg",
+        "quantity":45
+    },
+    {
+        "product_id": "11",
+        "name": "may tinh cam tay",
+        "price":223,
+        "import_price": 152,
+        "barcode": 350,
+        "category_id":"4",
+        "status":"active",
+        "image_url":"/src/assets/img/product/1.jpg",
+        "quantity":3
+    },
+    {
+        "product_id": "12",
+        "name": "tap",
+        "price":203,
+        "import_price": 152,
+        "barcode": 350,
+        "category_id":"4",
+        "status":"active",
+        "image_url":"/src/assets/img/product/1.jpg",
+        "quantity":45
+    },
+    {
+        "product_id": "13",
+        "name": "may tinh",
+        "price":203,
+        "import_price": 152,
+        "barcode": 350,
+        "category_id":"4",
+        "status":"active",
+        "image_url":"/src/assets/img/product/1.jpg",
+        "quantity":45
+    }
+
+]

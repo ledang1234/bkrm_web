@@ -1,0 +1,27 @@
+[
+    {
+        "id":"1",
+        "name":"Bach Khoa",
+        "phone":"0903829833",
+        "email":"hello@gmail.com",
+        "address":"Ly thuong Kiet",
+        "total_cost":20000
+    },
+    {
+        "id":"2",
+        "name":"Bach ",
+        "phone":"0903829833",
+        "email":"hello@gmail.com",
+        "address":"Ly thuong Kiet",
+        "total_cost":20000
+    },
+    {
+        "id":"3",
+        "name":"Khoa",
+        "phone":"0903829833",
+        "email":"hello@gmail.com",
+        "address":"Ly thuong Kiet",
+        "total_cost":20000
+    },
+
+]

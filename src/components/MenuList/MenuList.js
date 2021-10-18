@@ -50,10 +50,10 @@ const salesModule = {
   const reportModule = {
       title:"Quản Lý",
       children:[
-        { title: "Lịch Sử Hoạt Động", url: "/home/report/history" ,icon:  historyIcon},
-        { title: "Cửa Hàng", url: "/home/report/branchIcon",icon:  branchIcon},
-        { title: "Khách Hàng", url: "/home/report/customerIcon" ,icon:  customerIcon},
-        { title: "Thống Kê", url: "/home/report/statistic" ,icon: statisticIcon},
+        { title: "Lịch Sử Hoạt Động", url: "/home/manager/history" ,icon:  historyIcon},
+        { title: "Cửa Hàng", url: "/home/manager/branch",icon:  branchIcon},
+        { title: "Khách Hàng", url: "/home/manager/customer" ,icon:  customerIcon},
+        { title: "Thống Kê", url: "/home/manager/report" ,icon: statisticIcon},
       ]
   };
   const menuItems = {

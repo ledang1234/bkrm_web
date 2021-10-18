@@ -3,7 +3,7 @@ import config from '../../config';
 import colors from '../../assets/scss/_themes-vars.module.scss';
 // action - state management
 import * as actionTypes from '../action/index';
-import {red, pink, purple, blue, cyan,  green, yellow, amber, orange, grey} from '@material-ui/core/colors'
+import {red, pink, purple, blue, cyan,  green, teal, amber, orange, grey} from '@material-ui/core/colors'
 export const initialState = {
     
     fontFamily: config.fontFamily,

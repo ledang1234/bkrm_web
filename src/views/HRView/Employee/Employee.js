@@ -1,9 +1,11 @@
 import React from 'react'
 
+import TableWrapper from '../../../components/TableWrapper/TableWrapper'
+
 const Employee = () => {
     return (
         <div>
-            Employees
+            <TableWrapper title="Nhân viên" />
         </div>
     )
 }

@@ -1,9 +1,11 @@
 import React from 'react'
 
+import TableWrapper from '../../../components/TableWrapper/TableWrapper'
+
 const InventoryReturnOrder = () => {
     return (
         <div>
-            InventoryReturnOrder
+            <TableWrapper title="Đơn trả hàng nhập" />
         </div>
     )
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import { createTheme ,responsiveFontSizes} from '@material-ui/core/styles';
 // assets
 import colors from '../assets/scss/_themes-vars.module.scss';
-import {red, pink, purple, blue, cyan,  green, yellow, amber, orange, grey} from '@material-ui/core/colors'
+import {red, pink, purple, blue, cyan,  green, yellow, amber, orange, grey,teal} from '@material-ui/core/colors'
 
 //project import
 import themeTypography from './typography';
