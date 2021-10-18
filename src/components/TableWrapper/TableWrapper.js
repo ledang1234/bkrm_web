@@ -8,7 +8,10 @@ import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 import TableView from './Test/TableView'
 import TableTest from './Test/TableTest'
 
+
+
 import Test from './Table/Table'
+
 //= =============================|| SAMPLE PAGE ||==============================//
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -32,7 +35,8 @@ createStyles({
 
 
 const TableWrapper = (props) => {
-    const {title} =props;
+    const {title, dataTable, headerData ,tableType} =props;
+
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -42,9 +46,9 @@ const TableWrapper = (props) => {
                 {title}
             </Typography>
         <Divider/>
-        {/* <Grid item xs={12}> */}
-        <Test/>
-      {/* </Grid> */}
+        <Grid item xs={12}>
+        <Test rows={dataTable} headerData={headerData} tableType={tableType}/>
+      </Grid>
 
     </Card>
     )
@@ -54,25 +58,29 @@ const TableWrapper = (props) => {
 
 export default TableWrapper;
 
-// import React from 'react';
 
-// // material-ui
-// import { Typography } from '@material-ui/core';
 
-// // project imports
-// import MainCard from './MainCard/MainCard';
 
-// //= =============================|| SAMPLE PAGE ||==============================//
 
-// const SamplePage = () => (
-//     <MainCard title="Sample Card">
-//         <Typography variant="body2">
-//             Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif
-//             ad minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in
-//             reprehended in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa
-//             qui officiate descent molls anim id est labours.
-//         </Typography>
-//     </MainCard>
-// );
 
-// export default SamplePage;
+
+// function createData(name, calories, fat, carbs, protein, history) {
+//   return { name, calories, fat, carbs, protein,history };
+// }
+
+// const rows = [
+//   createData('Cupcake', 305, 3.7, 67, 4.3, [{ date: '2020-01-05', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Donut', 452, 25.0, 51, 4.9,[{ date: '2020-01-06', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Eclair', 262, 16.0, 24, 6.0,[{ date: '2020-01-07', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0, [{ date: '2020-01-08', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Gingerbread', 356, 16.0, 49, 3.9,[{ date: '2020-01-09', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Honeycomb', 408, 3.2, 87, 6.5 ,[{ date: '2020-01-10', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3, [{ date: '2020-01-11', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Jelly Bean', 375, 0.0, 94, 0.0,[{ date: '2020-01-12', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('KitKat', 518, 26.0, 65, 7.0, [{ date: '2020-01-13', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Lollipop', 392, 0.2, 98, 0.0, [{ date: '2020-01-14', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Marshmallow', 318, 0, 81, 2.0,[{ date: '2020-01-15', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Nougat', 360, 19.0, 9, 37.0, [{ date: '2020-01-16', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+//   createData('Oreo', 437, 18.0, 63, 4.0,[{ date: '2020-01-17', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]),
+// ];
+

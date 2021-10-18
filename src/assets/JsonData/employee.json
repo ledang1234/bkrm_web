@@ -1,0 +1,44 @@
+[
+    {
+        "id":"1",
+        "name":"Ly Quoc Hai",
+        "phone":"0903829833",
+        "email":"hello@gmail.com",
+        "address":"Ly thuong Kiet",
+        "debt":2000,
+        "total_cost":20000,
+        "idCard":"0793000012430"
+
+    },
+    {
+        "id":"2",
+        "name":"Mai Huynh Tuan Kiet",
+        "phone":"0903829833",
+        "email":"hello@gmail.com",
+        "address":"Ly thuong Kiet",
+        "debt":0,
+        "total_cost":20000,
+        "idCard":"0793000012430"
+    },
+    {
+        "id":"3",
+        "name":"Mai Truong Khang",
+        "phone":"0903829833",
+        "email":"hello@gmail.com",
+        "address":"Ly thuong Kiet",
+        "debt":200,
+        "total_cost":20000,
+        "idCard":"0793000012430"
+    },
+    {
+        "id":"4",
+        "name":"Dang Gia Le",
+        "phone":"0903829833",
+        "email":"hello@gmail.com",
+        "address":"Ly thuong Kiet",
+        "debt":200,
+        "total_cost":20000,
+        "idCard":"0793000012430"
+    }
+
+]

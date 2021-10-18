@@ -151,19 +151,19 @@ const ButtonGroup = (props)=>{
  
         <CardWrapper title={title}>
             <Grid spacing={3}>
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnPink,(colorChoosen == pink)&& classes.choosen)} onClick={()=>{set(pink)}}  />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnBlue,(colorChoosen == blue)&& classes.choosen)} onClick={()=>{set(blue)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnAmber,(colorChoosen == amber)&& classes.choosen)} onClick={()=>{set(amber)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnRed,(colorChoosen == red)&& classes.choosen)} onClick={()=>{set(red)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnPurple,(colorChoosen == purple)&& classes.choosen)} onClick={()=>{set(purple)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnPink,(colorChoosen === pink)&& classes.choosen)} onClick={()=>{set(pink)}}  />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnBlue,(colorChoosen === blue)&& classes.choosen)} onClick={()=>{set(blue)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnAmber,(colorChoosen === amber)&& classes.choosen)} onClick={()=>{set(amber)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnRed,(colorChoosen === red)&& classes.choosen)} onClick={()=>{set(red)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnPurple,(colorChoosen === purple)&& classes.choosen)} onClick={()=>{set(purple)}} />
                 
             </Grid>
             <Grid spacing={3}>
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnCyan,(colorChoosen == cyan)&& classes.choosen)} onClick={()=>{set(cyan)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnGreen,(colorChoosen == green)&& classes.choosen)} onClick={()=>{set(green)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnTeal,(colorChoosen == teal)&& classes.choosen)} onClick={()=>{set(teal)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnOrange,(colorChoosen == orange)&& classes.choosen)} onClick={()=>{set(orange)}} />
-                <Button variant="outlined"  className={clsx(classes.btn,classes.btnGrey,(colorChoosen == grey)&& classes.choosen)} onClick={()=>{set(grey)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnCyan,(colorChoosen === cyan)&& classes.choosen)} onClick={()=>{set(cyan)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnGreen,(colorChoosen === green)&& classes.choosen)} onClick={()=>{set(green)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnTeal,(colorChoosen === teal)&& classes.choosen)} onClick={()=>{set(teal)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnOrange,(colorChoosen === orange)&& classes.choosen)} onClick={()=>{set(orange)}} />
+                <Button variant="outlined"  className={clsx(classes.btn,classes.btnGrey,(colorChoosen === grey)&& classes.choosen)} onClick={()=>{set(grey)}} />
             </Grid>
             <SliderColor title={title}/>
        

@@ -1,6 +1,7 @@
 [
     {
         "id":"1",
+        "invoid_id":"4",
         "date":"22/12/2008",
         "supplier":"Gia Le",
         "employee":"Minh Tri",
@@ -35,6 +36,7 @@
     },
     {
         "id":"2",
+        "invoid_id":"2",
         "date":"25/12/2008",
         "supplier":"Hai Ly",
         "employee":"Khang Mai",
