@@ -10,9 +10,9 @@ import *  as TableType from '../../../assets/constant/tableType'
 const Inventory = () => {
     return (
         // type={TableType.TEST} 
-        <div>
+
             <TableWrapper title="Kho hàng" dataTable={JSONdata} headerData={HeadCells.InventoryHeadCells} tableType={TableType.INVENTORY}/>
-        </div>
+   
     )
 }
 export default Inventory

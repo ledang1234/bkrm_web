@@ -23,8 +23,6 @@ import HRView from "../../views/HRView/HRView"
 import ManagerView from "../../views/ManagerView/ManagerView"
 import PageNotFound from "../PageNotFound/PageNotFound"
 
-import PerfectScrollbar from 'react-perfect-scrollbar';
-
 
 const drawerWidth = 240;
 
@@ -72,15 +70,11 @@ createStyles({
     // background:'#fff',
   },
   content: {
-    // flexGrow: 1,
-  
+    flexGrow: 1,
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-
-    //// KO CÓ DÒNG NÀY TABLE KO SCOLL NGANG ĐC
-    width:"100%",
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
@@ -103,9 +97,6 @@ createStyles({
   searchEngine:{
     paddingLeft:20
   },
-  scroll:{
-    maxHeight:100
-  }
 
 }));
 
@@ -184,15 +175,11 @@ const HomePage = (props)  =>{
           ModalProps={{ keepMounted: true }}
           color="inherit"
       >
-        <PerfectScrollbar component="div" className={classes.scroll}>
         <Box >
           {_divLogo()}
           {/* {divLogo()} */}
         </Box>
         <MenuList/> 
-
-        </PerfectScrollbar>
-        
       </Drawer>
       
      

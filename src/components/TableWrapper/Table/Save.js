@@ -74,12 +74,11 @@ const useStyles = makeStyles((theme) => ({
   },
 
   container: {
-    // maxHeight: 440,
-    maxHeight: 700,
+    maxHeight: 440,
   },
-  //RESPONSIVE
+
   table: {
-    // minWidth: 750,
+    minWidth: 750,
  
   },
   visuallyHidden: {

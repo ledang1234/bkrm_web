@@ -46,9 +46,9 @@ const TableWrapper = (props) => {
                 {title}
             </Typography>
         <Divider/>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}> */}
         <Test rows={dataTable} headerData={headerData} tableType={tableType}/>
-      </Grid>
+      {/* </Grid> */}
 
     </Card>
     )

@@ -12,7 +12,7 @@ import themes from './theme'
 //import project
 import HomePage from './pages/HomePage/HomePage'
 import PageNotFound from './pages/PageNotFound/PageNotFound'
-
+import TableTest from './components/TableWrapper/Test/TableTest'
 function App() {
   const customization = useSelector((state) => state.customization);
   return (
@@ -21,8 +21,9 @@ function App() {
        
         <BrowserRouter>
             <Switch>
-              <Route path="/" component={HomePage} exact/>
+              <Route path="/" component={TableTest} exact/>
               <Route path="/home" component={HomePage} />
+              {/* <Route path="/home/inventory/inventory" component={TableTest} /> */}
               <Route path="*" component={PageNotFound} />
             </Switch>
           </BrowserRouter>

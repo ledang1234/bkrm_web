@@ -8,9 +8,9 @@ import *  as TableType from '../../../assets/constant/tableType'
 
 const Employee = () => {
     return (
-        <div>
-            <TableWrapper title="Nhân viên"   dataTable={JSONdata} headerData={HeadCells.EmployeeHeadCells} tableType={TableType.EMPLOYEE}/>
-        </div>
+     
+        <TableWrapper title="Nhân viên"   dataTable={JSONdata} headerData={HeadCells.EmployeeHeadCells} tableType={TableType.EMPLOYEE}/>
+       
     )
 }
 
