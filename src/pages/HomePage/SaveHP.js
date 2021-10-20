@@ -23,6 +23,8 @@ import HRView from "../../views/HRView/HRView"
 import ManagerView from "../../views/ManagerView/ManagerView"
 import PageNotFound from "../PageNotFound/PageNotFound"
 
+import PerfectScrollbar from 'react-perfect-scrollbar';
+
 
 const drawerWidth = 240;
 
@@ -31,9 +33,9 @@ const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
     display: "flex",
-    height:735,
+    // height:735,
     background: theme.palette.background.default,
-    
+
   },
   appBar: {
     background: theme.palette.background.paper,
@@ -67,23 +69,31 @@ createStyles({
     display: "flex",
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
+
     // background:'#fff',
   },
   content: {
     flexGrow: 1,
+  
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+
+    //// KO CÓ DÒNG NÀY TABLE KO SCOLL NGANG ĐC
+    width:"100%",
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  
     marginLeft: drawerWidth,
+
   },
   background:{
+
     backgroundColor: theme.palette.primary.light,
     borderRadius: theme.customization.borderRadius,
     marginLeft:20,
@@ -97,6 +107,10 @@ createStyles({
   searchEngine:{
     paddingLeft:20
   },
+  scroll:{
+    maxHeight:100
+  }
+  
 
 }));
 
@@ -175,11 +189,15 @@ const HomePage = (props)  =>{
           ModalProps={{ keepMounted: true }}
           color="inherit"
       >
+        <PerfectScrollbar component="div" className={classes.scroll}>
         <Box >
           {_divLogo()}
           {/* {divLogo()} */}
         </Box>
         <MenuList/> 
+
+        </PerfectScrollbar>
+        
       </Drawer>
       
      
@@ -190,7 +208,7 @@ const HomePage = (props)  =>{
       >
         <div className={classes.drawerHeader} />
 
-        <Typography  className={clsx(classes.background)}  > 
+        <Typography  className={clsx(classes.background)} st > 
          
           <Switch>
             <Route path={`${path}/sales`} component={SalesView} />

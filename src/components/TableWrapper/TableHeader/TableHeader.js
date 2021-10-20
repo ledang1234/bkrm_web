@@ -4,17 +4,33 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import PropTypes from 'prop-types';
+import {useTheme,withStyles, makeStyles,createStyles} from "@material-ui/core/styles";
 
+import { grey} from '@material-ui/core/colors'
+
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.customization.mode == "Light"? null: grey[800],
+      color: theme.customization.mode == "Light"? null: grey[500],
+    },
+    
+  }))(TableCell);
+
+  
 function TableHeader(props) {
+
+
+    const theme = useTheme();
+
     const { classes, order, orderBy, onRequestSort,headerData } = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
     return (
-      <TableHead >
+      <TableHead className={classes.headColor}>
         <TableRow>
             {headerData.map((headCell) => (
-            <TableCell
+            <StyledTableCell
                 key={headCell.id}
                 align={headCell.numeric ? 'right' : 'left'}
                 sortDirection={orderBy === headCell.id ? order : false}
@@ -23,6 +39,7 @@ function TableHeader(props) {
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
+                style={{color:theme.themeText}}
                 >
                 {headCell.label}
                 {orderBy === headCell.id ? (
@@ -31,7 +48,7 @@ function TableHeader(props) {
                     </span>
                 ) : null}
                 </TableSortLabel>
-            </TableCell>
+            </StyledTableCell>
             ))}
             {/* <TableCell/> */}
             

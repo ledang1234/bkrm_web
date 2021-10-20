@@ -1,186 +1,234 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Box from '@material-ui/core/Box';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import clsx from "clsx";
+import { useSelector } from 'react-redux';
 
-import TableWrapper from '../../components/TableWrapper/TableWrapper'
-import JSONdata from '../../assets/JsonData/employee.json'
-import * as HeadCells from '../../assets/constant/tableHead'
-import *  as TableType from '../../assets/constant/tableType'
+//import library
+import {AppBar, Toolbar,IconButton,Drawer,Typography,Box} from "@material-ui/core";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import MenuList from "../../components/MenuList/MenuList";
+//import icons
+import MenuIcon from "@material-ui/icons/Menu";
+
+//import project
+import MenuList from "../../components/MenuList/MenuList"
+import TableWrapper from "../../components/TableWrapper/TableWrapper";
+import Customization from '../../components/Customization'
+
+import SalesView from "../../views/SalesView/SalesView"
+import InventoryView from "../../views/InventoryView/InventoryView"
+import HRView from "../../views/HRView/HRView"
+import ManagerView from "../../views/ManagerView/ManagerView"
+import PageNotFound from "../PageNotFound/PageNotFound"
+
+import PerfectScrollbar from 'react-perfect-scrollbar';
+
+
 const drawerWidth = 240;
-const useStyles = makeStyles((theme) => ({
+
+
+const useStyles = makeStyles((theme) =>
+createStyles({
   root: {
-    display: 'flex',
-  },
-  drawer: {
-    [theme.breakpoints.up("md")]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  notfound:{
-    display:"flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width:"100%",
+    display: "flex",
+    // height:735,
+    background: theme.palette.background.default,
+
   },
   appBar: {
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
+    background: theme.palette.background.paper,
+    boxShadow: "none",
   },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
+
+  hide: {
+    display: "none",
+  },
+  drawerPaper: {
+    width: drawerWidth,
+    marginTop:48+16+16,
+    
+    // marginTop:48,
+    // paddingTop:48+16+16,
+    borderColor:theme.palette.background.paper,
+    paddingLeft:20,
+
+    
+   
+  },
+  _drawerPaper: {
+    width: drawerWidth,
+    borderColor:theme.palette.background.paper,
+    paddingLeft:20,
+
+
+   
+  },
+  drawerHeader: { 
+    // display: "flex",
+    ...theme.mixins.toolbar,
+    // justifyContent: "flex-end",
+
+    // background:'#fff',
+  },
+  // content: {
+  //   flexGrow: 1,
+  
+    // transition: theme.transitions.create("margin", {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.leavingScreen,
+    // }),
+
+  //   //// KO CÓ DÒNG NÀY TABLE KO SCOLL NGANG ĐC
+  //   width:"100%",
+  // },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  
+    marginLeft: drawerWidth,
+
   },
+  background:{
 
-  // menuButton: {
-  //   marginRight: theme.spacing(2),
-  //   [theme.breakpoints.up('sm')]: {
-  //     display: 'none',
-  //   },
-  // },
-  // necessary for content to be below app bar
-
- 
-  // content: {
-  //   flexGrow: 1,
-  //   padding: theme.spacing(3),
-  // },
+    backgroundColor: theme.palette.primary.light,
+    borderRadius: theme.customization.borderRadius,
+    marginLeft:20,
+    marginRight:20,
+    padding:20,
+    
+  },
+  toolBar:{
+    background:theme.palette.background.paper,
+  },
+  searchEngine:{
+    paddingLeft:20
+  },
+  scroll:{
+    maxHeight:100
+  },
   content: {
     [theme.breakpoints.up("md")]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
     padding:"1vw",
-    // width:"100%",
+    width:"100%",
   },
+  
 
 }));
 
-function HomePage(props) {
-  const { window } = props;
-  const classes = useStyles();
+
+const HomePage = (props)  =>{
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const classes = useStyles();
+  const customization = useSelector((state) => state.customization);
+  const { window } = props;
+  
+  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const container = window !== undefined ? () => window().document.body : undefined;
+  const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
+  let { path } = useRouteMatch();
+  const [isSidebarOpen, setSidebarOpen] = useState(!smallScreen);
+  
+  useEffect(() => {
+    setSidebarOpen(!smallScreen);
+  }, [smallScreen]);
 
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+  function handleToggleSidebar(open) {
+    setSidebarOpen(open);
+  }
+
+  const divLogo =()=>{
+    if(!smallScreen) return (
+    <div  style={{width:drawerWidth, justifyContent: "flex-end",display: "flex",}}  >
+      <IconButton onClick={() => handleToggleSidebar(!isSidebarOpen)}>
+          <MenuIcon style={{color:theme.customization.themeText}}/>
+      </IconButton>
     </div>
-  );
-
+    )
+  }
+  const _divLogo =()=>{
+    if(smallScreen) return (
+    <div  style={{width:drawerWidth, height:48,}}  >
+        Hello
+    </div>
+    )
+  }
 
   return (
     <div className={classes.root}>
-
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar className={classes.toolBar}>
+      {/* NavBar */}
+      <AppBar
+        position="fixed"
+        className={classes.appBar} 
+      >
+        <Toolbar className={classes.toolBar} >
+          {divLogo()}
           <IconButton
-            color="inherit"
             aria-label="open drawer"
+            onClick={() => handleToggleSidebar(!isSidebarOpen)}
             edge="start"
-            onClick={handleDrawerToggle}
-            // className={classes.menuButton}
+            className={ !smallScreen && classes.hide}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Responsive drawer
+          <Typography variant="h3" noWrap className={classes.searchEngine}>
+            BKRM
           </Typography>
         </Toolbar>
       </AppBar>
-      {/* <nav className={classes.drawer} aria-label="mailbox folders"> */}
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden mdUp implementation="css">
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-        >
-          <MenuList />
-        </Drawer>
-      </Hidden>
-      <Hidden smDown implementation="css">
-        <Drawer
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          variant="permanent"
-          open
-        >
-        <MenuList />
-        </Drawer>
-      </Hidden>
-      {/* </nav> */}
-      {/* <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <TableWrapper title="Kho hàng" dataTable={JSONdata} headerData={HeadCells.EmployeeHeadCells} tableType={TableType.EMPLOYEE}/>
-      </main> */}
-      <Box component="main" className={classes.content}>
-        <div className={classes.toolbar} />
-        
+      
+      {/* Drawer */}
+      <Drawer
+        container={container}
+        variant={matchUpMd ? 'persistent' : 'temporary'}
+        anchor="left"
+        open={isSidebarOpen}
+        onClose={()=>handleToggleSidebar(!isSidebarOpen)}
+    
+        classes={{
+          paper: matchUpMd ? classes.drawerPaper :classes._drawerPaper
+        }}
+          ModalProps={{ keepMounted: true }}
+          color="inherit"
+      >
+        <PerfectScrollbar component="div" className={classes.scroll}>
+        <Box >
+          {_divLogo()}
+          {/* {divLogo()} */}
+        </Box>
+        <MenuList/> 
 
-        <TableWrapper title="Kho hàng" dataTable={JSONdata} headerData={HeadCells.EmployeeHeadCells} tableType={TableType.EMPLOYEE}/>
-        <div style={{width:500, height:300}}> </div>
-      </Box>
+        </PerfectScrollbar>
+        
+      </Drawer>
+      
+     
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: isSidebarOpen ,
+        })}
+      >
+        <div className={classes.drawerHeader} />
+
+        <Typography  className={clsx(classes.background)} st > 
+         
+          <Switch>
+            <Route path={`${path}/sales`} component={SalesView} />
+            <Route path={`${path}/inventory`} component={InventoryView} />
+            <Route path={`${path}/hr`} component={HRView} />
+            <Route path={`${path}/manager`} component={ManagerView} />
+            <Route path={`${path}/*`} component={PageNotFound} />
+        </Switch>
+        </Typography>
+        <Customization/>
+      </main>
+      
     </div>
   );
 }
@@ -193,4 +241,6 @@ HomePage.propTypes = {
   window: PropTypes.func,
 };
 
+
 export default HomePage;
+

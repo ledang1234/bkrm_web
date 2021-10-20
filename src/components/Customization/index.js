@@ -145,7 +145,7 @@ const Customization = () => {
         <>
             {/* toggle button */}
 
-            <Tooltip title="Live Customize">
+            <Tooltip title="Chỉnh sửa">
                 <Fab
                     component="div"
                     onClick={handleToggle}

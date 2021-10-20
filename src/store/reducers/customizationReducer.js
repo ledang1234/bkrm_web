@@ -18,8 +18,6 @@ export const initialState = {
     secondaryColor:pink,
     colorLevel:50
 
-    
-
 };
 
 // ===========================|| CUSTOMIZATION REDUCER ||=========================== //
@@ -46,6 +44,10 @@ const customizationReducer = (state = initialState, action) => {
                     themeBackground: colors.paper,
                     themeText: colors.grey900,
                     themeGreyText: colors.grey700,
+
+                    //add them => canaf ko ??
+                    primaryColor:blue,
+                    colorLevel:50
                 }
             }else{
                 return {
@@ -54,6 +56,10 @@ const customizationReducer = (state = initialState, action) => {
                     themeBackground: colors.grey800,
                     themeText: colors.grey50,
                     themeGreyText: colors.grey50,
+                    //add them => canaf ko ??
+                    primaryColor:grey,
+                    colorLevel:700
+
                 }
             };
         case actionTypes.SET_PRIMARY_COLOR:
@@ -77,7 +83,7 @@ const customizationReducer = (state = initialState, action) => {
     
        
         default:
-            return state;
+            return {...state};
     }
 };
 

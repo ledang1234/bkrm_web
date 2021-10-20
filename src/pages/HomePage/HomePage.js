@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 //import library
 import {AppBar, Toolbar,IconButton,Drawer,Typography,Box} from "@material-ui/core";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
 
 //import icons
 import MenuIcon from "@material-ui/icons/Menu";
@@ -24,7 +26,7 @@ import ManagerView from "../../views/ManagerView/ManagerView"
 import PageNotFound from "../PageNotFound/PageNotFound"
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
-
+import { grey} from '@material-ui/core/colors'
 
 const drawerWidth = 240;
 
@@ -33,9 +35,12 @@ const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
     display: "flex",
-    height:735,
-    background: theme.palette.background.default,
+    //SET CHO DARK MODE -> chinhr lai
+    // height:735,
+    height:1035,
     
+    background: theme.palette.background.default,
+
   },
   appBar: {
     background: theme.palette.background.paper,
@@ -69,15 +74,17 @@ createStyles({
     display: "flex",
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
+
     // background:'#fff',
   },
   content: {
-    // flexGrow: 1,
+    flexGrow: 1,
   
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    
 
     //// KO CÓ DÒNG NÀY TABLE KO SCOLL NGANG ĐC
     width:"100%",
@@ -87,10 +94,18 @@ createStyles({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    [theme.breakpoints.up("md")]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+    },
+  
     marginLeft: drawerWidth,
+
   },
   background:{
-    backgroundColor: theme.palette.primary.light,
+
+    // backgroundColor: theme.palette.primary.light,
+    background: theme.customization.mode == "Light"? theme.palette.primary.light: theme.customization.primaryColor[theme.customization.colorLevel],
     borderRadius: theme.customization.borderRadius,
     marginLeft:20,
     marginRight:20,
@@ -105,7 +120,11 @@ createStyles({
   },
   scroll:{
     maxHeight:100
+  },
+  logo:{
+    marginTop:25
   }
+  
 
 }));
 
@@ -142,7 +161,9 @@ const HomePage = (props)  =>{
   const _divLogo =()=>{
     if(smallScreen) return (
     <div  style={{width:drawerWidth, height:48,}}  >
-        Hello
+        <Typography variant="h3" noWrap className={classes.logo}>
+            BKRM
+          </Typography>
     </div>
     )
   }
@@ -197,7 +218,7 @@ const HomePage = (props)  =>{
       
      
       <main
-        className={clsx(classes.content, {
+        className={clsx([classes.content], {
           [classes.contentShift]: isSidebarOpen ,
         })}
       >
@@ -214,7 +235,9 @@ const HomePage = (props)  =>{
         </Switch>
         </Typography>
         <Customization/>
+       
       </main>
+      
       
     </div>
   );

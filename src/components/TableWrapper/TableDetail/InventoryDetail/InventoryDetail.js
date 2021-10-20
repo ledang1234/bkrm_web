@@ -11,7 +11,9 @@ import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 const history =[{ date: '2020-01-05', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]
-const TableDetail = (props) => {
+
+
+const InventoryDetail = (props) => {
     const {row,labelId ,handleOpenRow,openRow }= props.parentProps;
     return (
         <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
@@ -46,8 +48,7 @@ const TableDetail = (props) => {
                </Table>
              </Box>
            </Collapse>
-        // <div></div>
     )
 }
 
-export default TableDetail
+export default InventoryDetail

@@ -1,6 +1,6 @@
 [
     {
-        "id":"1",
+        "id":1,
         "name":"Ly Quoc Hai",
         "phone":"0903829833",
         "email":"hello@gmail.com",
@@ -11,7 +11,7 @@
 
     },
     {
-        "id":"2",
+        "id":2,
         "name":"Mai Huynh Tuan Kiet",
         "phone":"0903829833",
         "email":"hello@gmail.com",
@@ -21,17 +21,17 @@
         "idCard":"0793000012430"
     },
     {
-        "id":"3",
+        "id":3,
         "name":"Mai Truong Khang",
-        "phone":"0903829833",
-        "email":"hello@gmail.com",
+        "phone":"0903829831",
+        "email":"hello@gmail.co",
         "address":"Ly thuong Kiet",
         "debt":200,
         "total_cost":20000,
         "idCard":"0793000012430"
     },
     {
-        "id":"4",
+        "id":4,
         "name":"Dang Gia Le",
         "phone":"0903829833",
         "email":"hello@gmail.com",

@@ -1,25 +1,28 @@
-import React from 'react';
+import React, {useRef} from 'react';
+import { useReactToPrint } from 'react-to-print';
 
 // material-ui
 import { Typography,Card,CardContent, CardHeader, Divider ,Grid} from '@material-ui/core';
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
-
+import Chip from '@material-ui/core/Chip';
 //import project
 import TableView from './Test/TableView'
 import TableTest from './Test/TableTest'
-
-
-
+import ToolBar from './ToolBar/ToolBar'
 import Test from './Table/Table'
+import { grey} from '@material-ui/core/colors'
 
+
+import ReactToPrint from "react-to-print";
 //= =============================|| SAMPLE PAGE ||==============================//
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
-    backgroundColor: theme.palette.background,
+    // backgroundColor: theme.palette.background,
+    background: theme.customization.mode == "Light"? null: grey[800],
     borderRadius:theme.customization.borderRadius,
     color: '#000000',
-    boxShadow: "none"
+    boxShadow: "none",
   },
  
   headerTitle:{
@@ -27,9 +30,11 @@ createStyles({
     fontSize: '1.125rem'
   },
   table:{
-    paddingLeft:20,
-    paddingRight:20
-  }
+    // paddingLeft:20,
+    // paddingRight:20,
+    width:"100%",
+  },
+
 })
 );
 
@@ -40,15 +45,30 @@ const TableWrapper = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
+    
    return ( 
-      <Card className={classes.root}>
+
+      <Card className={classes.root} >
             <Typography className={classes.headerTitle} variant="h5">
                 {title}
             </Typography>
-        <Divider/>
-        {/* <Grid item xs={12}> */}
-        <Test rows={dataTable} headerData={headerData} tableType={tableType}/>
-      {/* </Grid> */}
+            <Divider />
+            
+            {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
+            <ToolBar rows={dataTable} data={dataTable} tableType={tableType} handlePrint={handlePrint}/>
+           
+        {/* <Divider/> */}
+
+        {/* <Test rows={dataTable} headerData={headerData} tableType={tableType} ref={componentRef} /> */}
+
+
+        {/* CHinhr lai in table day du cac trang vs ko có in phần phía dưới */}
+        <ComponentToPrint dataTable={dataTable} headerData={headerData} tableType={tableType} ref={componentRef} />
+      
 
     </Card>
     )
@@ -58,6 +78,29 @@ const TableWrapper = (props) => {
 
 export default TableWrapper;
 
+
+class ComponentToPrint extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state ={
+      dataTable :[],
+      headerData:[],
+      tableType :[]
+    }
+
+  }
+ 
+  componentDidMount() {
+    const { dataTable,headerData,tableType} = this.props;
+    this.setState({ dataTable,headerData,tableType});
+  }
+  render() {
+    return (
+
+       <Test rows={this.state.dataTable} headerData={this.state.headerData} tableType={this.state.tableType} />
+    );
+  }
+}
 
 
 

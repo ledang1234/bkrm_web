@@ -1,6 +1,6 @@
 [
     {
-        "id":"1",
+        "id":1,
         "date":"22/12/2008",
         "customer":"Le Dang",
         "employee":"Phuong Gia Le",
@@ -8,6 +8,8 @@
         "discount":200,
         "remain":100,
         "debt":0,
+        "branch":"Trung tâm",
+        "payment":"Tiền mặt",
         "list":[
             {
                 "product_id": "1",
@@ -34,7 +36,7 @@
         ]
     },
     {
-        "id":"2",
+        "id":2,
         "date":"25/12/2008",
         "supplier":"Hai Ly",
         "employee":"Kiet Mai",
@@ -42,6 +44,8 @@
         "discount":300,
         "remain":300,
         "debt":100,
+        "branch":"Quận 1",
+        "payment":"Thẻ",
         "list":[
             {
                 "product_id": "3",

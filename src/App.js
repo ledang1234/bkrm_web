@@ -21,7 +21,7 @@ function App() {
        
         <BrowserRouter>
             <Switch>
-              <Route path="/" component={TableTest} exact/>
+              <Route path="/" component={HomePage} exact/>
               <Route path="/home" component={HomePage} />
               {/* <Route path="/home/inventory/inventory" component={TableTest} /> */}
               <Route path="*" component={PageNotFound} />

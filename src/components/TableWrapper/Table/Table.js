@@ -21,6 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import TableHeader from '../TableHeader/TableHeader'
 
+import { grey} from '@material-ui/core/colors'
 
 
 import TableRowInfo  from '../TableRow/TableRow'
@@ -55,11 +56,13 @@ function stableSort(array, comparator) {
 const StyledPaper = withStyles((theme) => ({
   root: {
     boxShadow:"none",
-    overflowX: "auto"
-    // color: theme.palette.common.white,
+    background: theme.customization.mode == "Light"? null: grey[800],
+    color: theme.customization.mode == "Light"? null: grey[700]
   },
+ 
   
 }))(Paper);
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -93,15 +96,18 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
+
 }));
 
 function Test(props) {
   const {rows,headerData, tableType} = props;
+
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
+  
 
   //XEM LAI
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('id');
 //   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -163,12 +169,12 @@ function Test(props) {
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
                   return (
-              <TableRowInfo key={row.name} row={row} labelId={labelId} openRow={openRow}  handleOpenRow={handleOpenRow} tableType={tableType}/>
+                        <TableRowInfo key={row.id} row={row} labelId={labelId} openRow={openRow}  handleOpenRow={handleOpenRow} tableType={tableType}/>
                   );
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={8} />
                 </TableRow>
               )}
             </TableBody>
@@ -176,7 +182,7 @@ function Test(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10, 25,100,1000]}
+          rowsPerPageOptions={[5,10, 25,100,1000]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
@@ -188,7 +194,7 @@ function Test(props) {
       <Divider/>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
+        label="Thu nhỏ"
         style={{display: "flex",justifyContent: "flex-end",}}
       />
      

@@ -1,147 +1,161 @@
 
 [
     {
-        "product_id": "1",
-        "name": "Quan dai",
+        "id": 1,
+        "name": "Quần dài",
         "price":200,
         "import_price": 100,
         "barcode": 300,
         "category_id":"1",
         "status":"active",
         "image_url":"/src/assets/img/product/1.jpg",
-        "quantity":32
+        "quantity":0,
+        "category":"Thuc pham"
     },
     {
-        "product_id": "2",
-        "name": "Quan dui",
+        "id": 2,
+        "name": "Quần đùi",
         "price":340,
         "import_price": 200,
         "barcode": 320,
         "category_id":"1",
         "status":"active",
         "image_url":"/src/assets/img/product/199.jpg",
-        "quantity":35
+        "quantity":35,
+        "category":"Banh keo"
     },
     {
-        "product_id": "3",
-        "name": "Ao dai",
+        "id": 3,
+        "name": "Áo dài",
         "price":250,
         "import_price": 120,
         "barcode": 322,
         "category_id":"1",
         "status":"active",
         "image_url":"/src/assets/img/product/11127.jpg",
-        "quantity":34
+        "quantity":34,
+        "category":"Do dung"
     },
     {
-        "product_id": "4",
-        "name": "Banh",
+        "id": 4,
+        "name": "Bánh",
         "price":200,
         "import_price": 100,
         "barcode": 300,
         "category_id":"2",
         "status":"active",
         "image_url":"/src/assets/img/product/9830.jpg",
-        "quantity":32
+        "quantity":10,
+        "category":"Quan ao"
     },
     {
-        "product_id": "5",
-        "name": "Keo",
+        "id": 5,
+        "name": "Kẹo",
         "price":220,
         "import_price": 100,
         "barcode": 3002,
         "category_id":"2",
         "status":"active",
         "image_url":"/src/assets/img/product/199.jpg",
-        "quantity":30
+        "quantity":30,
+        "category":"Quan ao"
+
     },
     {
-        "product_id": "6",
-        "name": "Quan dai",
+        "id": 6,
+        "name": "Quần dài",
         "price":200,
         "import_price": 100,
         "barcode": 300,
         "category_id":"3",
         "status":"active",
         "image_url":"/src/assets/img/product/9830.jpg",
-        "quantity":13
+        "quantity":10,
+        "category":"Quan ao"
     },
     {
-        "product_id": "7",
-        "name": "khan giay",
+        "id": 7,
+        "name": "Khăn giấy",
         "price":200,
         "import_price": 100,
         "barcode": 350,
         "category_id":"3",
         "status":"active",
         "image_url":"/src/assets/img/product/9830.jpg",
-        "quantity":4
+        "quantity":4,
+        "category":"Quan ao"
     },
     {
-        "product_id": "8",
-        "name": "tap",
+        "id": 8,
+        "name": "Túi xách",
         "price":203,
         "import_price": 150,
         "barcode": 350,
         "category_id":"4",
         "status":"active",
         "image_url":"/src/assets/img/product/9830.jpg",
-        "quantity":45
+        "quantity":3,
+        "category":"Quan ao"
     },
     {
-        "product_id": "9",
-        "name": "tap",
+        "id": 9,
+        "name": "Laptop",
         "price":203,
         "import_price": 152,
         "barcode": 350,
         "category_id":"4",
         "status":"active",
         "image_url":"/src/assets/img/product/1.jpg",
-        "quantity":45
+        "quantity":45,
+        "category":"Quan ao"
     },
     {
-        "product_id": "10",
-        "name": "may tinh",
+        "id": 10,
+        "name": "Máy tính",
         "price":203,
         "import_price": 152,
         "barcode": 350,
         "category_id":"4",
         "status":"active",
         "image_url":"/src/assets/img/product/1.jpg",
-        "quantity":45
+        "quantity":3,
+        "category":"Quan ao"
     },
     {
-        "product_id": "11",
-        "name": "may tinh cam tay",
+        "id": 11,
+        "name": "Máy tính cầm tay",
         "price":223,
         "import_price": 152,
         "barcode": 350,
         "category_id":"4",
         "status":"active",
         "image_url":"/src/assets/img/product/1.jpg",
-        "quantity":3
+        "quantity":3,
+        "category":"Quan ao"
     },
     {
-        "product_id": "12",
-        "name": "tap",
+        "id": 12,
+        "name": "Tập vở",
         "price":203,
         "import_price": 152,
         "barcode": 350,
         "category_id":"4",
         "status":"active",
         "image_url":"/src/assets/img/product/1.jpg",
-        "quantity":45
+        "quantity":45,
+        "category":"Quan ao"
     },
     {
-        "product_id": "13",
-        "name": "may tinh",
+        "id": 13,
+        "name": "Máy tính",
         "price":203,
         "import_price": 152,
         "barcode": 350,
         "category_id":"4",
         "status":"active",
         "image_url":"/src/assets/img/product/1.jpg",
-        "quantity":45
+        "quantity":0,
+        "category":"Quan ao"
     }
 
 ]
