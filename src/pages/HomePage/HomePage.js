@@ -8,8 +8,8 @@ import { useSelector } from 'react-redux';
 //import library
 import {AppBar, Toolbar,IconButton,Drawer,Typography,Box} from "@material-ui/core";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import Chip from '@material-ui/core/Chip';
-import Grid from '@material-ui/core/Grid';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 //import icons
 import MenuIcon from "@material-ui/icons/Menu";
@@ -26,7 +26,7 @@ import ManagerView from "../../views/ManagerView/ManagerView"
 import PageNotFound from "../PageNotFound/PageNotFound"
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { grey} from '@material-ui/core/colors'
+import { grey, pink,blue} from '@material-ui/core/colors'
 
 const drawerWidth = 240;
 
@@ -121,10 +121,22 @@ createStyles({
   scroll:{
     maxHeight:100
   },
-  logo:{
-    marginTop:25
-  }
-  
+  logo1:{
+    fontSize: '1.25rem',
+    color:  theme.palette.primary.main,
+    fontWeight: 700
+  },
+  logo2:{
+    fontSize: '1.25rem',
+    color: theme.heading,
+    fontWeight: 700
+  },
+    logoPos:{
+      marginLeft:-10,
+      marginTop:20,
+      marginBottom:10
+    }
+
 
 }));
 
@@ -151,19 +163,28 @@ const HomePage = (props)  =>{
 
   const divLogo =()=>{
     if(!smallScreen) return (
-    <div  style={{width:drawerWidth, justifyContent: "flex-end",display: "flex",}}  >
-      <IconButton onClick={() => handleToggleSidebar(!isSidebarOpen)}>
-          <MenuIcon style={{color:theme.customization.themeText}}/>
-      </IconButton>
+    <div  style={{width:drawerWidth, justifyContent: "flex-end",display: "flex",}}>
+          {/* <ListItem >
+            <div className={classes.logo1} > MY LOGO </div>
+            <div  className={classes.logo2} >  </div>
+          </ListItem> */}
+
+          <div  style={{width:drawerWidth, justifyContent: "flex-end",display: "flex",}}  >
+          <IconButton onClick={() => handleToggleSidebar(!isSidebarOpen)}>
+              <MenuIcon style={{color:theme.customization.themeText}}/>
+          </IconButton>
+        </div>
+        
     </div>
     )
   }
   const _divLogo =()=>{
     if(smallScreen) return (
-    <div  style={{width:drawerWidth, height:48,}}  >
-        <Typography variant="h3" noWrap className={classes.logo}>
-            BKRM
-          </Typography>
+    <div  style={{width:drawerWidth, height:48}}  >
+        {/* <ListItem className={classes.logoPos}>
+           <div className={classes.logo1} > BK </div>
+           <div  className={classes.logo2} > RM </div>
+        </ListItem> */}
     </div>
     )
   }
