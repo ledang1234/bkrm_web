@@ -1,6 +1,5 @@
 // ------------TABLE TYPE
 
-export const TEST = "TEST";
 // Sales
 export const INVOICE = "Hoá_đơn";
 export const INVOICE_RETURN = "Đơn_trả";

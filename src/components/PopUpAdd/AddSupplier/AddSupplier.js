@@ -1,14 +1,10 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import * as TableType from '../../../assets/constant/tableType'
-import {useTheme, makeStyles,createStyles,withStyles} from "@material-ui/core/styles";
-import { Typography,Card,CardContent,Paper, CardHeader, Divider ,ListItem,Grid,IconButton,ButtonBase,Avatar} from '@material-ui/core';
+import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+
+//import project
+import {Button,TextField,DialogActions,DialogContent,DialogTitle,
+  Typography,Grid} from '@material-ui/core';
+
 
 
 const useStyles = makeStyles((theme) =>
@@ -16,12 +12,9 @@ createStyles({
   root: {
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      // width: '30ch',
-      // marginTop: theme.spacing(2),
     },
   },
   headerTitle:{
-    // padding: '24px',
     fontSize: '1.125rem'
   },
 

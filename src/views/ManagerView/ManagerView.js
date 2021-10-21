@@ -7,7 +7,7 @@ import Report from './Report/Report'
 import React from "react";
 
 const ManagerView = (props) => {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
   return (
 
       <Switch>

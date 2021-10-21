@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {useTheme, makeStyles } from '@material-ui/styles';
+import {makeStyles } from '@material-ui/styles';
 
 // import library
 import { Collapse, Divider, List, ListItem, ListItemText, Typography } from '@material-ui/core';
@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
 
 const MenuGroup = (props) => {
     const { item } = props;
-    const theme = useTheme();
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(true);

@@ -15,7 +15,7 @@ import {
   ViewSwitcher,
   DragDropProvider,
 } from '@devexpress/dx-react-scheduler-material-ui';
-import { amber, pink ,red,green} from '@material-ui/core/colors';
+import { amber, pink } from '@material-ui/core/colors';
 
 import { data as appointments } from './data';
 

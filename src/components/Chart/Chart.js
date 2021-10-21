@@ -1,9 +1,8 @@
 import React from 'react';
 
-import ApexCharts from 'apexcharts';
+// import ApexCharts from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
 
-import { amber, pink} from '@material-ui/core/colors'
 
 export default class ApexChart extends React.Component {
     constructor(props) {
@@ -58,5 +57,3 @@ export default class ApexChart extends React.Component {
       );
     }
   }
-
-  const domContainer = document.querySelector('#app');

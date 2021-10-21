@@ -1,31 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { withStyles,lighten, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Toolbar from '@material-ui/core/Toolbar';
-
-import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import TableHeader from '../TableHeader/TableHeader'
+//import library
+import {Table,TableBody,TableCell,TableContainer,TablePagination,TableRow,Paper,FormControlLabel,Switch,Divider} from '@material-ui/core';
 
 import { grey} from '@material-ui/core/colors'
-
-
+//import project
+import TableHeader from '../TableHeader/TableHeader'
 import TableRowInfo  from '../TableRow/TableRow'
-import { Divider } from '@material-ui/core';
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -56,11 +39,10 @@ function stableSort(array, comparator) {
 const StyledPaper = withStyles((theme) => ({
   root: {
     boxShadow:"none",
-    background: theme.customization.mode == "Light"? null: grey[800],
-    color: theme.customization.mode == "Light"? null: grey[700]
+    background: theme.customization.mode === "Light"? null: grey[800],
+    color: theme.customization.mode === "Light"? null: grey[700]
   },
- 
-  
+
 }))(Paper);
 
 
@@ -72,18 +54,10 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
-    // delete
-    // marginLeft: theme.spacing(5),
   },
 
   container: {
-    // maxHeight: 440,
     maxHeight: 700,
-  },
-  //RESPONSIVE
-  table: {
-    // minWidth: 750,
- 
   },
   visuallyHidden: {
     border: 0,
@@ -104,24 +78,18 @@ function Test(props) {
 
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
-  
-
-  //XEM LAI
   const [orderBy, setOrderBy] = React.useState('id');
-//   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   //collapse
-
   const [openRow, setRowOpen] = React.useState(null);
   const handleOpenRow = (row) => {
-    if (row !=  openRow){setRowOpen(row);}
+    if (row !==  openRow){setRowOpen(row);}
     else{setRowOpen(null)}
     
   };
-
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -181,6 +149,7 @@ function Test(props) {
      
           </Table>
         </TableContainer>
+        
         <TablePagination
           rowsPerPageOptions={[5,10, 25,100,1000]}
           component="div"

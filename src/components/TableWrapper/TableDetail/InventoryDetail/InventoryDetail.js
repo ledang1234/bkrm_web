@@ -1,32 +1,21 @@
 import React from 'react'
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import Collapse from '@material-ui/core/Collapse';
-import {Box,Grid,TextField} from '@material-ui/core';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+
+//import library
+import {Box,Grid,Collapse,Typography} from '@material-ui/core';
+
+//import image
 import avaUpload from '../../../../assets/img/product/img.jpeg';
-import {useTheme, makeStyles,createStyles,withStyles} from "@material-ui/core/styles";
-
-
-const history =[{ date: '2020-01-05', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]
 
 
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
     '& .MuiTextField-root': {
-      // margin: theme.spacing(1),
       marginTop: theme.spacing(2),
     },
   },
   headerTitle:{
-    // padding: '24px',
     fontSize: '1.125rem'
   },
   typo:{
@@ -52,7 +41,7 @@ const UploadImage  = () => {
   )
 }
 const InventoryDetail = (props) => {
-    const {row,labelId ,handleOpenRow,openRow }= props.parentProps;
+    const {row,openRow }= props.parentProps;
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -120,36 +109,6 @@ const InventoryDetail = (props) => {
                
               </Grid>
 
-
-
-               {/* <Typography variant="h4" gutterBottom component="div">
-                 History
-               </Typography>
-               <Table size="small" aria-label="purchases">
-                 <TableHead>
-                   <TableRow>
-                     <TableCell>Date</TableCell>
-                     <TableCell>Customer</TableCell>
-                     <TableCell align="right">Amount</TableCell>
-                     <TableCell align="right">Total price ($)</TableCell>
-                   </TableRow>
-                 </TableHead>
-                 <TableBody>
-    
-                    {history.map((historyRow) => (
-                     <TableRow key={historyRow.date}>
-                       <TableCell component="th" scope="row">
-                         {historyRow.date}
-                       </TableCell>
-                       <TableCell>{historyRow.customerId}</TableCell>
-                       <TableCell align="right">{historyRow.amount}</TableCell>
-                       <TableCell align="right">
-                         {Math.round(historyRow.amount * row.price * 100) / 100}
-                       </TableCell>
-                     </TableRow>
-                   ))}
-                 </TableBody>
-               </Table> */}
              </Box>
            </Collapse>
     )

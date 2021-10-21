@@ -1,24 +1,23 @@
 import React from 'react'
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import PropTypes from 'prop-types';
-import {useTheme,withStyles, makeStyles,createStyles} from "@material-ui/core/styles";
+import {useTheme,withStyles} from "@material-ui/core/styles";
 
+// import library
+import {TableHead,TableRow,TableCell,TableSortLabel} from '@material-ui/core';
 import { grey} from '@material-ui/core/colors'
+
+
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
-      backgroundColor: theme.customization.mode == "Light"? null: grey[800],
-      color: theme.customization.mode == "Light"? null: grey[500],
+      backgroundColor: theme.customization.mode === "Light"? null: grey[800],
+      color: theme.customization.mode === "Light"? null: grey[500],
     },
     
-  }))(TableCell);
+}))(TableCell);
 
   
 function TableHeader(props) {
-
 
     const theme = useTheme();
 
@@ -50,10 +49,9 @@ function TableHeader(props) {
                 </TableSortLabel>
             </StyledTableCell>
             ))}
-            {/* <TableCell/> */}
             
         </TableRow>
-        </TableHead>
+      </TableHead>
         );
     }
 

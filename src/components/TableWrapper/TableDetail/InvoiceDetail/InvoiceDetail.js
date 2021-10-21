@@ -1,32 +1,20 @@
 import React from 'react'
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import Collapse from '@material-ui/core/Collapse';
-import {Box,Grid,TextField} from '@material-ui/core';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import avaUpload from '../../../../assets/img/product/img.jpeg';
-import {useTheme, makeStyles,createStyles,withStyles} from "@material-ui/core/styles";
+import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+
+//import library
+import {Box,Grid,TableHead,TableBody,Typography,Table,TableCell,TableRow,Collapse} from '@material-ui/core';
 
 
-const history =[{ date: '2020-01-05', customerId: '11091700', amount: 3 },{ date: '2020-01-02', customerId: 'Anonymous', amount: 1 }]
 
 
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
     '& .MuiTextField-root': {
-      // margin: theme.spacing(1),
       marginTop: theme.spacing(2),
     },
   },
   headerTitle:{
-    // padding: '24px',
     fontSize: '1.125rem'
   },
   typo:{
@@ -35,24 +23,9 @@ createStyles({
 
 }));
 
-const UploadImage  = () => {
-  return (
-    <Box
-      component="img"
-      sx={{
-        height: 190,
-        width: 190, 
-        borderRadius:2,
-        marginLeft:15,
 
-      }}
-      src={avaUpload}
-    />
-    
-  )
-}
 const InvoiceDetail = (props) => {
-    const {row,labelId ,handleOpenRow,openRow }= props.parentProps;
+    const {row,openRow }= props.parentProps;
 
     const theme = useTheme();
     const classes = useStyles(theme);

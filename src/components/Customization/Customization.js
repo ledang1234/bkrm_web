@@ -1,41 +1,29 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles,createStyles} from "@material-ui/core/styles";
-// material-ui
 import { useTheme } from '@material-ui/styles';
-import {
-    Drawer,
-    Fab,
-    FormControl,
-    FormControlLabel,
-    Grid,
-    IconButton,
-    Radio,
-    RadioGroup,
-    Slider,
-    Tooltip,
-    Typography,
-    Card,
-    Button,
-    Box,
-    List
-} from '@material-ui/core';
+
+// import library
+import { Drawer, Fab,FormControl, FormControlLabel, Grid, IconButton, Radio,
+    RadioGroup, Slider, Tooltip, Typography,Box} from '@material-ui/core';
 
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // project imports
+import ColorTheme from './ColorTheme/ColorTheme'
 import CardWrapper from '../CardWrapper/CardWrapper';
 import AnimateButton from '../Button/AnimateButton';
-import { SET_BORDER_RADIUS, SET_FONT_FAMILY, SET_MODE } from '../../store/action'; // THEME_RTL
+
+//import icon
 import { IconSettings } from '@tabler/icons';
-import ColorTheme from './ColorTheme/ColorTheme'
-const gridSpacing = 3;
+
+// import redux
+import { SET_BORDER_RADIUS, SET_FONT_FAMILY, SET_MODE } from '../../store/constant'; 
+
+
 const drawerWidth = 300;
-// assets
 
-
-// concat 'px'
 function valueText(value) {
     return `${value}px`;
 }
@@ -46,7 +34,6 @@ createStyles({
     m: 4,
     position: 'fixed',
     right: 25,
-    // zIndex: (theme) => theme.zIndex.speedDial,
     boxShadow: theme.shadows[8],
     marginLeft:200
   },
@@ -67,15 +54,12 @@ createStyles({
   drawerPaper:{
     width: drawerWidth,
   }
-  
-
-
 }));
 // ===========================|| LIVE CUSTOMIZATION ||=========================== //
 
 const Customization = () => {
     const theme = useTheme();
-    const classes = useStyles();
+    const classes = useStyles(theme);
     const dispatch = useDispatch();
     const customization = useSelector((state) => state.customization);
 
@@ -85,9 +69,8 @@ const Customization = () => {
         setOpen(!open);
     };
 
-    /////// BORDER
+    //------BORDER
     // state - border radius
-    // const [borderRadius, setBorderRadius] = React.useState(customization.borderRadius);
     const [borderRadius, setBorderRadius] = React.useState(customization.borderRadius);
     const handleBorderRadius = (event, newValue) => {
         setBorderRadius(newValue);
@@ -97,15 +80,15 @@ const Customization = () => {
         dispatch({ type: SET_BORDER_RADIUS, borderRadius });
     }, [dispatch, borderRadius]);
 
-      //MODE
-      const [mode, setMode] = React.useState('Light');
-   
-      useEffect(() => {
-          dispatch({ type: SET_MODE, mode });
-      }, [dispatch, mode]);
-  
+    //------ MODE
+    const [mode, setMode] = React.useState('Light');
 
-    /////// FONT FAMILY
+    useEffect(() => {
+        dispatch({ type: SET_MODE, mode });
+    }, [dispatch, mode]);
+
+
+    //------ FONT FAMILY
     let initialFont;
     switch (customization.fontFamily) {
         case `'Inter', sans-serif`:
@@ -143,8 +126,7 @@ const Customization = () => {
 
     return (
         <>
-            {/* toggle button */}
-
+        {/* Button  */}
             <Tooltip title="Chỉnh sửa">
                 <Fab
                     component="div"
@@ -162,18 +144,20 @@ const Customization = () => {
                 </Fab>
             </Tooltip>
 
-            <Drawer
-                anchor="right"
-                onClose={handleToggle}
-                open={open}
-
-                classes={{
-                    paper: classes.drawerPaper
-                  }}
-                className={classes.drawer}
-            >
+         {/* Drawer  */}
+        <Drawer
+            anchor="right"
+            onClose={handleToggle}
+            open={open}
+            classes={{
+                paper: classes.drawerPaper
+                }}
+            className={classes.drawer}
+        >
         
-                <PerfectScrollbar component="div">
+            <PerfectScrollbar component="div">
+           
+           {/* Font family */}
             <CardWrapper title="Font Family">
                 <FormControl className={classes.fontForm}>
                     <RadioGroup
@@ -214,6 +198,8 @@ const Customization = () => {
                     </RadioGroup>
                 </FormControl>
             </CardWrapper>
+
+            {/* Mode */}
             <CardWrapper title="Mode">
                 <FormControl className={classes.fontForm}>
                     <Grid>
@@ -246,7 +232,8 @@ const Customization = () => {
                     </Grid>
                 </FormControl>
             </CardWrapper>
-                                            
+
+         {/* Border Radius */}                                 
         <CardWrapper title="Border Radius">
             <Box className={classes.borderForm}>
                 <Grid item xs={12} container spacing={2} alignItems="center" sx={{ mt: 2.5 }}>
@@ -284,11 +271,12 @@ const Customization = () => {
                 </Box>
             </CardWrapper>
        
-
+            {/* Color */}
             <ColorTheme />
-            </PerfectScrollbar>
-        </Drawer>
-        </>
+
+        </PerfectScrollbar>
+     </Drawer>
+    </>
     );
 };
 

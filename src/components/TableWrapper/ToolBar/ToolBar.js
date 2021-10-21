@@ -1,89 +1,68 @@
-import React, {useRef} from 'react';
-import { useReactToPrint } from 'react-to-print';
+import React from 'react';
+import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+
+//import project
+import { CardHeader,Tooltip ,TextField, IconButton,InputAdornment,Box} from '@material-ui/core';
+
+// import - icon
 import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
 import PrintTwoToneIcon from '@material-ui/icons/PrintTwoTone';
 import ViewColumnTwoToneIcon from '@material-ui/icons/ViewColumnTwoTone';
 import FilterListTwoToneIcon from '@material-ui/icons/FilterListTwoTone';
-import {Grid,Box, Hidden} from '@material-ui/core';
-import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
+
 import grey from '@material-ui/core/colors/grey';
 
 
-
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
-import Tooltip from '@material-ui/core/Tooltip';
-import { CardHeader } from '@material-ui/core';
-
-// import
+// import third party
 import XLSX from 'xlsx';
-//thu vien nay bij loi font
-import jsPDF from 'jspdf'
-import 'jspdf-autotable'
 
-import ReactToPrint from "react-to-print";
 
+//--thu vien nay bij loi font
+// import jsPDF from 'jspdf'
+// import 'jspdf-autotable'
 
 const useStyles = makeStyles((theme) =>
 createStyles({
     icon: {
-        // marginRight:20,
-        // color:grey[700],
         color:theme.customization.mode === 'Light' ?grey[700] :grey[50]
-  },
-  toolbar:{
-    justifyContent:"left",
-    // paddingLeft:100
-  },
+    },
+    toolbar:{
+        justifyContent:"left",
+    },
     search:{
       borderRadius:theme.customization.borderRadius,
       height:40,
       marginLeft:10,
       marginTop:10,
       backgroundColor:theme.customization.mode === 'Light' ?grey[50] :grey[700]
-
     },
     actions:{
         marginTop:10
     }
-})
-);
+}));
 
 
 const exportExcel = (dataTable,tableType)=>{
-
-        /// TAI SAO BO FILE JSON VÔ BỊ LỖI NHƯNG BỎ FILE OBJECT JS THÌ KO ???
-        // =>>>> TIM CÁCH CHUYỂN JSON VE DẠNG OBJECT
+    /// TAI SAO BO FILE JSON VÔ BỊ LỖI NHƯNG BỎ FILE OBJECT JS THÌ KO ???
+    // =>>>> TIM CÁCH CHUYỂN JSON VE DẠNG OBJECT
     const newData= studentData;
     const workSheet=XLSX.utils.json_to_sheet(newData)
     const workBook=XLSX.utils.book_new()
 
     XLSX.utils.book_append_sheet(workBook,workSheet,tableType)
     //Buffer
-    let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
+    //let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
     //Binary string
     XLSX.write(workBook,{bookType:"xlsx",type:"binary"})
     //Download
     XLSX.writeFile(workBook,`${tableType}.xlsx`)
 }
-// THU VIEN NAY BỊ LOI FONT TIENG VIET
-const downloadPdf = (dataTable,tableType) => {
-    const doc = new jsPDF()
-    doc.text(tableType, 20, 10)
-    doc.autoTable({
-      theme: "grid",
-      columns: columns.map(col => ({ ...col, dataKey: col.field })),
-      body: studentData
-    })
-    doc.save(`${tableType}.pdf`)
-  }
 
  
 
 const ToolBar = (props) => {
-    const {rows,dataTable,tableType,handlePrint} = props;
+    const {dataTable,tableType,handlePrint} = props;
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -114,7 +93,6 @@ const ToolBar = (props) => {
              
              <Tooltip title="In">
                 <IconButton aria-label="filter list">
-                    {/* <PrintTwoToneIcon className={classes.icon} onClick={() => { downloadPdf(dataTable,tableType) }}/> */}
                     <PrintTwoToneIcon className={classes.icon} onClick={handlePrint}/>
                 </IconButton>
              </Tooltip>
@@ -129,15 +107,10 @@ const ToolBar = (props) => {
                 <IconButton aria-label="filter list">
                     <FilterListTwoToneIcon className={classes.icon}/>
                 </IconButton>
-             </Tooltip>
-             {/* <Hidden>
-             <ComponentToPrint ref={componentRef} />
-             </Hidden> */}
-             
+             </Tooltip>  
         </Box>
        
           }
-         
         />
      
     )
@@ -145,12 +118,12 @@ const ToolBar = (props) => {
 
 export default ToolBar
 
-const columns = [
-    { title: "Tên sản phẩm", field: "name", },
-    { title: "Danh mục", field: "category", },
-    { title: "Giá bán", field: "price", type: "numeric" },
-    { title: "Giá vốn", field: 'import_price', type: "numeric" }
-]
+// const columns = [
+//     { title: "Tên sản phẩm", field: "name", },
+//     { title: "Danh mục", field: "category", },
+//     { title: "Giá bán", field: "price", type: "numeric" },
+//     { title: "Giá vốn", field: 'import_price', type: "numeric" }
+// ]
 
 const studentData = [
     {

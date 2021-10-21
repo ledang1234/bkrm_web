@@ -8,8 +8,7 @@ import *  as TableType from '../../../assets/constant/tableType'
 
 const Customer = () => {
     return (
-        
-            <TableWrapper title="Khách hàng"  dataTable={JSONdata} headerData={HeadCells.CustomerHeadCells} tableType={TableType.CUSTOMER} />
+        <TableWrapper title="Khách hàng"  dataTable={JSONdata} headerData={HeadCells.CustomerHeadCells} tableType={TableType.CUSTOMER} />
     
     )
 }

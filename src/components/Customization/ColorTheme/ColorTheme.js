@@ -1,32 +1,18 @@
 import React , { useEffect }from 'react'
 import { makeStyles,createStyles} from "@material-ui/core/styles";
-import { Button,Grid} from "@material-ui/core";
-import { SET_BORDER_RADIUS, SET_FONT_FAMILY, SET_PRIMARY_COLOR,SET_SECONDARY_COLOR , SET_COLOR_LEVEL} from '../../../store/action';
 import { useDispatch, useSelector } from 'react-redux';
-import {red, pink, purple, blue, cyan,  green, yellow, amber, orange, grey,teal} from '@material-ui/core/colors'
 import clsx from "clsx";
 
+// import library
+import { Button,Grid,Typography,Slider, Box} from "@material-ui/core";
+import { SET_PRIMARY_COLOR,SET_SECONDARY_COLOR , SET_COLOR_LEVEL,} from '../../../store/constant';
+
+// import icon
+import {red, pink, purple, blue, cyan,  green, amber, orange, grey,teal} from '@material-ui/core/colors'
+
+//import project
 import CardWrapper from '../../CardWrapper/CardWrapper';
-// material-ui
 
-import { useTheme } from '@material-ui/styles';
-import {
-    Drawer,
-    Fab,
-    FormControl,
-    FormControlLabel,
-
-    IconButton,
-    Radio,
-    RadioGroup,
-    Slider,
-    Tooltip,
-    Typography,
-    Card,
-
-    Box,
-    List
-} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -84,9 +70,11 @@ createStyles({
         borderColor:'#212121'
     }
 }));
+
 function valueText(value) {
-    return `${value}px`;
+    return `${value}`;
 }
+
 const SliderColor = (props) =>{
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -94,6 +82,8 @@ const SliderColor = (props) =>{
 
     // state - border radius
     const [colorLevel, setColorLevel] = React.useState(customization.colorLevel);
+
+
     const handleColorLevel = (event, newValue) => {
         setColorLevel(newValue);
     };
@@ -101,13 +91,14 @@ const SliderColor = (props) =>{
         dispatch({ type: SET_COLOR_LEVEL, colorLevel});
     }, [dispatch, colorLevel]);
 
+
     if (props.title === "Màu nền"){
         return (
             <Box className={classes.levelForm}>
                 <Grid item xs={12} container spacing={2} alignItems="center" sx={{ mt: 2.5 }}>
                     <Grid item>
                         <Typography variant="h6" color="secondary">
-                            4px
+                            0
                         </Typography>
                     </Grid>
                     <Grid item xs>
@@ -132,7 +123,7 @@ const SliderColor = (props) =>{
                     </Grid>
                     <Grid item>
                         <Typography variant="h6" color="secondary">
-                            24px
+                            900
                         </Typography>
                     </Grid>
                 </Grid>
@@ -172,12 +163,9 @@ const ButtonGroup = (props)=>{
     );
 }
 const ColorTheme = () => {
-    const classes = useStyles();
     const dispatch = useDispatch();
     const customization = useSelector((state) => state.customization);
 
-
-    // state - font family
     const [primaryColor, setPrimaryColor] = React.useState(customization.primaryColor);
     useEffect(() => {
         dispatch({ type: SET_PRIMARY_COLOR, primaryColor });

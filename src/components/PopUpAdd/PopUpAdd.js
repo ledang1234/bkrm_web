@@ -1,19 +1,17 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+
+//import library
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import * as TableType from '../../assets/constant/tableType'
 
 
+
+//import project
 import AddCustomer from './AddCustomer/AddCustomer'
 import AddEmployee from './AddEmployee/AddEmployee'
 import AddInventory from './AddInventory/AddInventory'
 import AddSupplier from './AddSupplier/AddSupplier'
 import AddCategory from './AddCategory/AddCategory'
+import * as TableType from '../../assets/constant/tableType'
 
 
 const  AddView = (props) =>{

@@ -1,14 +1,15 @@
 // project imports
-import config from '../../config';
 import colors from '../../assets/scss/_themes-vars.module.scss';
+import {pink, blue, grey} from '@material-ui/core/colors'
+
 // action - state management
-import * as actionTypes from '../action/index';
-import {red, pink, purple, blue, cyan,  green, teal, amber, orange, grey} from '@material-ui/core/colors'
+import * as actionTypes from '../constant/index';
+
 export const initialState = {
-    
-    fontFamily: config.fontFamily,
-    borderRadius: config.borderRadius,
-    mode: config.mode,
+
+    fontFamily: `'Roboto', sans-serif`,
+    borderRadius: 12,
+    mode: 'Light',
 
     themeBackground: colors.paper,
     themeText: colors.grey900,
@@ -24,7 +25,6 @@ export const initialState = {
 
 const customizationReducer = (state = initialState, action) => {
     // const color = colors;
-    let id;
     switch (action.type) {
         case actionTypes.SET_FONT_FAMILY:
             return {
@@ -44,8 +44,7 @@ const customizationReducer = (state = initialState, action) => {
                     themeBackground: colors.paper,
                     themeText: colors.grey900,
                     themeGreyText: colors.grey700,
-
-                    //add them => canaf ko ??
+                    //add them 
                     primaryColor:blue,
                     colorLevel:50
                 }
@@ -56,7 +55,7 @@ const customizationReducer = (state = initialState, action) => {
                     themeBackground: colors.grey800,
                     themeText: colors.grey50,
                     themeGreyText: colors.grey50,
-                    //add them => canaf ko ??
+                    //add them 
                     primaryColor:grey,
                     colorLevel:700
 
@@ -74,7 +73,7 @@ const customizationReducer = (state = initialState, action) => {
             };
         case actionTypes.SET_COLOR_LEVEL:
             let value = action.colorLevel ;
-            if( action.colorLevel == 0){value = 50;}
+            if( action.colorLevel === 0){value = 50;}
             return {
                 ...state,
                 colorLevel: value

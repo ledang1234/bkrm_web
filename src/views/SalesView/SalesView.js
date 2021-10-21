@@ -6,9 +6,8 @@ import InvoiceReturn from './InvoiceReturn/InvoiceReturn'
 import React from "react";
 
 const SalesView = (props) => {
-  const { path, url } = useRouteMatch();
+  const { path} = useRouteMatch();
   return (
-
       <Switch>
         <Route exact path={path} component={Cart}/>
         <Route exact path={`${path}/cart`} component={Cart} />

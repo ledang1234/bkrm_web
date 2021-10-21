@@ -5,7 +5,7 @@ import Schedule from './Schedule/Schedule'
 import React from "react";
 
 const HRView = (props) => {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
   return (
 
       <Switch>
