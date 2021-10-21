@@ -30,7 +30,8 @@ const useStyles = makeStyles((theme) =>
 createStyles({
     icon: {
         // marginRight:20,
-        color:grey[700],
+        // color:grey[700],
+        color:theme.customization.mode === 'Light' ?grey[700] :grey[50]
   },
   toolbar:{
     justifyContent:"left",
@@ -41,7 +42,7 @@ createStyles({
       height:40,
       marginLeft:10,
       marginTop:10,
-      backgroundColor:grey[50]
+      backgroundColor:theme.customization.mode === 'Light' ?grey[50] :grey[700]
 
     },
     actions:{
@@ -79,38 +80,7 @@ const downloadPdf = (dataTable,tableType) => {
     doc.save(`${tableType}.pdf`)
   }
 
-  class ComponentToPrint extends React.PureComponent {
-    render() {
-      return (
-        <table>
-          <thead>
-            <th>#</th>
-            <th>Tên sản phẩm</th>
-            <th>Danh mục</th>
-            <th>Giá bán</th>
-            <th>Giá vốn</th>
-          </thead>
-          <tbody>
-            
-          {studentData.map((item)=>{
-                return(
-                <tr>
-                    <td>{item.id}</td>
-                    <td>{item.name}</td>
-                    <td>{item.category}</td>
-                    <td>{item.price}</td>
-                    <td>{item.import_price}</td>
-                </tr>
-                )
-            }) }
-          </tbody>
-        </table>
-        // <Test rows={dataTable} headerData={headerData} tableType={tableType} />
-      );
-    }
-  }
-
-
+ 
 
 const ToolBar = (props) => {
     const {rows,dataTable,tableType,handlePrint} = props;

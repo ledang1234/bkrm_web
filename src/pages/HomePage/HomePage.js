@@ -79,7 +79,6 @@ createStyles({
   },
   content: {
     flexGrow: 1,
-  
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -135,7 +134,18 @@ createStyles({
       marginLeft:-10,
       marginTop:20,
       marginBottom:10
-    }
+    },
+    headerAvatar: {
+      ...theme.typography.commonAvatar,
+      ...theme.typography.mediumAvatar,
+      transition: 'all .2s ease-in-out',
+      background: theme.palette.secondary.light,
+      color: theme.palette.secondary.dark,
+      '&:hover': {
+          background: theme.palette.secondary.dark,
+          color: theme.palette.secondary.light
+      }
+  },
 
 
 }));
@@ -171,8 +181,17 @@ const HomePage = (props)  =>{
 
           <div  style={{width:drawerWidth, justifyContent: "flex-end",display: "flex",}}  >
           <IconButton onClick={() => handleToggleSidebar(!isSidebarOpen)}>
+            
               <MenuIcon style={{color:theme.customization.themeText}}/>
           </IconButton>
+
+          {/* icon menu color */}
+          {/* <IconButton onClick={() => handleToggleSidebar(!isSidebarOpen)} style={{ borderRadius: '12px', overflow: 'hidden' }}>
+              <Avatar variant="rounded" className={classes.headerAvatar} color="inherit">
+                  <MenuIcon stroke={1.5} size="1.1rem" />
+              </Avatar>
+      
+          </IconButton> */}
         </div>
         
     </div>

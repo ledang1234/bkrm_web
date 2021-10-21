@@ -2,18 +2,30 @@ import React, {useRef} from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 // material-ui
-import { Typography,Card,CardContent, CardHeader, Divider ,Grid} from '@material-ui/core';
-import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+import { Typography,Card,CardContent, CardHeader, Divider ,Button,ListItem,Grid,IconButton,ButtonBase,Avatar} from '@material-ui/core';
+import {useTheme, makeStyles,createStyles,withStyles} from "@material-ui/core/styles";
 import Chip from '@material-ui/core/Chip';
 //import project
-import TableView from './Test/TableView'
+// import TableView from './Test/TableView'
 import TableTest from './Test/TableTest'
 import ToolBar from './ToolBar/ToolBar'
 import Test from './Table/Table'
-import { grey} from '@material-ui/core/colors'
-
-
+import ListIcon from '@material-ui/icons/List';
+import AddIcon from '@material-ui/icons/Add';
+import Box from '@material-ui/core/Box';
+import { grey, pink, blue} from '@material-ui/core/colors'
 import ReactToPrint from "react-to-print";
+import Tooltip from '@material-ui/core/Tooltip';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import * as TableType from '../../assets/constant/tableType'
+
+import PopUpAdd from '../PopUpAdd/PopUpAdd'
+// import AddCustomer from '../PopUpAdd/AddCustomer/AddCustomer'
+// import AddEmployee from '../PopUpAdd/AddEmployee/AddEmployee'
+// import AddInventory from '../PopUpAdd/AddInventory/AddInventory'
+// import AddSupplier from '../PopUpAdd/AddSupplier/AddSupplier'
+// import AddCategory from '../PopUpAdd/AddCategory/AddCategory'
+
 //= =============================|| SAMPLE PAGE ||==============================//
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -34,6 +46,45 @@ createStyles({
     // paddingRight:20,
     width:"100%",
   },
+  button: {
+    margin: theme.spacing(1),
+    paddingRight:-10
+  },
+  addbtn:{
+    // backgroundColor:'#f50057'
+  },
+  headerAvatar: {
+    ...theme.typography.commonAvatar,
+    ...theme.typography.mediumAvatar,
+    transition: 'all .05s ease-in-out',
+    //Chỉnh lai hop voi dark mode sau
+   // background:theme.customization.primaryColor === grey? blue[500] : theme.palette.primary.main ,
+    background:theme.palette.primary.main ,
+
+    '&:hover': {
+        // background:theme.customization.primaryColor === grey? blue[300] :  theme.customization.primaryColor[400],
+        background: theme.customization.primaryColor[400],
+    },
+
+},
+menuBtn:{
+    // background:theme.palette.secondary.main,
+    // '&:hover': {
+    //   background: theme.customization.secondaryColor[100],
+    // }
+    // background:theme.palette.secondary.main,
+    // '&:hover': {
+    //   background: theme.customization.secondaryColor[100],
+    // }
+},
+btngroup:{
+  marginRight:20,
+  marginTop:10
+},
+btngroup1:{
+  marginRight:20,
+  marginTop:20
+}
 
 })
 );
@@ -49,26 +100,95 @@ const TableWrapper = (props) => {
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
-    
+
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+   
+
    return ( 
 
       <Card className={classes.root} >
-            <Typography className={classes.headerTitle} variant="h5">
+          <Grid 
+            container
+            direction="row"
+            justifyContent="space-between"
+           
+          > 
+              <Typography className={classes.headerTitle} variant="h5">
                 {title}
-            </Typography>
+              </Typography>
+            
+              {tableType === TableType.INVENTORY ? 
+                  <Grid className={classes.btngroup} >
+                      <Tooltip title="Xem danh mục">
+                          {/* <ColorButton variant="contained" className={classes.menuBtn}  
+                          //  startIcon={<ListIcon />} 
+                          className={classes.button}
+                          onClick={handleClickOpen}
+                          >
+                         
+                              Danh mục
+                          </ColorButton>      */}
+                           <ColorButton variant="outlined" color="primary" className={classes.menuBtn}  
+                          //  startIcon={<ListIcon />} 
+                          className={classes.button}
+                          onClick={handleClickOpen}
+                          >
+                         
+                              Danh mục
+                          </ColorButton> 
+                    </Tooltip> 
+
+                      <ButtonBase sx={{ borderRadius: '16px' }} onClick={handleClickOpen}>
+                          <Avatar variant="rounded" className={classes.headerAvatar}  >
+                            <Tooltip title="Thêm sản phẩm">
+                              <AddIcon stroke={1.5} size="1.3rem" />
+                              </Tooltip>
+                          </Avatar>
+                      </ButtonBase>
+                  </Grid>
+              : null}
+            {tableType !== TableType.INVENTORY && tableType !== TableType.INVENTORY_RETURN && tableType !== TableType.INVOICE_RETURN? 
+                  <Grid className={classes.btngroup1} >
+                      <ButtonBase sx={{ borderRadius: '16px' }} 
+                      onClick={tableType !== TableType.INVENTORY_ORDER  && tableType !== TableType.INVOICE ? 
+                        handleClickOpen : null}
+                      
+                      >
+                          <Avatar variant="rounded" className={classes.headerAvatar}  >
+                            <Tooltip title={returnNameToolTip(tableType)}>
+                              <AddIcon stroke={1.5} size="1.3rem" />
+                              </Tooltip>
+                          </Avatar>
+                      </ButtonBase>
+                  </Grid>
+              : null}
+              
+            
+        </Grid>
+        
+        <PopUpAdd open={open} handleClose={handleClose} tableType={tableType}/>
             <Divider />
+
             
             {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
             <ToolBar rows={dataTable} data={dataTable} tableType={tableType} handlePrint={handlePrint}/>
            
-        {/* <Divider/> */}
 
         {/* <Test rows={dataTable} headerData={headerData} tableType={tableType} ref={componentRef} /> */}
 
 
         {/* CHinhr lai in table day du cac trang vs ko có in phần phía dưới */}
         <ComponentToPrint dataTable={dataTable} headerData={headerData} tableType={tableType} ref={componentRef} />
-      
+            
 
     </Card>
     )
@@ -77,6 +197,40 @@ const TableWrapper = (props) => {
 };
 
 export default TableWrapper;
+
+
+function returnNameToolTip(type){
+  switch(type){
+    case TableType.INVENTORY_ORDER:
+      return "Nhập hàng"
+    case TableType.INVENTORY_RETURN:
+        return ""
+    case TableType.SUPPLIER:
+      return  "Thêm nhà cung cấp"
+    case TableType.INVOICE:
+        return  "Thêm hoá đơn"
+    case TableType.INVOICE_RETURN:
+        return  ""
+    case TableType.EMPLOYEE:
+        return  "Thêm nhân viên"
+    case TableType.CUSTOMER:
+        return "Thêm khách hàng"
+    default:
+      return ""
+
+  }
+}
+
+const ColorButton = withStyles((theme) => ({
+  root: {
+    // color: theme.palette.getContrastText(theme.palette.secondary.main),
+    // // backgroundColor:theme.palette.secondary.main,
+    // backgroundColor:theme.palette.secondary.main,
+    // '&:hover': {
+    //   background: theme.customization.secondaryColor[300],
+    // }
+  },
+}))(Button);
 
 
 class ComponentToPrint extends React.Component{
