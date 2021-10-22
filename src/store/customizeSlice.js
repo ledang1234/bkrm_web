@@ -18,21 +18,22 @@ const customizeSlice = createSlice({
   initialState: initialState,
   reducers: {
     setFontFamily(state, action) {
-      state.fontFamily = action.fontFamily;
+      console.log(action);
+      state.fontFamily = action.payload;
     },
     setBorderRadius(state, action) {
-      state.borderRadius = action.borderRadius;
+      state.borderRadius = action.payload;
     },
     setMode(state, action) {
-      if (action.mode === "Light") {
-        state.mode = action.mode;
+      if (action.payload === "Light") {
+        state.mode = action.payload;
         state.themeBackground = colors.paper;
         state.themeText = colors.grey900;
         state.themeGreyText = colors.grey700;
         state.primaryColor = blue;
         state.colorLevel = 50;
       } else {
-        state.mode = action.mode;
+        state.mode = action.payload;
         state.themeBackground = colors.grey800;
         state.themeText = colors.grey50;
         state.themeGreyText = colors.grey50;
@@ -41,16 +42,16 @@ const customizeSlice = createSlice({
       }
     },
     setPrimaryColor(state, action) {
-      state.primaryColor = action.primaryColor;
+      state.primaryColor = action.payload;
     },
     setSecondaryColor(state, action) {
-      state.secondaryColor = action.secondaryColor;
+      state.secondaryColor = action.payload;
     },
     setColorLevel(state, action) {
-      state.colorLevel = action.colorLevel;
+      state.colorLevel = action.payload;
     },
     setState(state, action) {
-      state = action.state;
+      state = action.payload;
     },
   },
 });
