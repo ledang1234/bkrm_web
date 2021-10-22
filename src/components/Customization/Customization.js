@@ -6,7 +6,6 @@ import { useTheme } from '@material-ui/styles';
 // import library
 import { Drawer, Fab,FormControl, FormControlLabel, Grid, IconButton, Radio,
     RadioGroup, Slider, Tooltip, Typography,Box} from '@material-ui/core';
-
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
@@ -61,7 +60,7 @@ const Customization = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const dispatch = useDispatch();
-    const customization = useSelector((state) => state.customization);
+    const customization = useSelector((state) => state.customize);
 
     // drawer on/off
     const [open, setOpen] = React.useState(false);

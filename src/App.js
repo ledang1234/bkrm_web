@@ -4,9 +4,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
-
 function App() {
-  const customization = useSelector((state) => state.customization);
+  const customization = useSelector((state) => state.customize);
   return (
     <div>
       <ThemeProvider theme={themes(customization)}>
