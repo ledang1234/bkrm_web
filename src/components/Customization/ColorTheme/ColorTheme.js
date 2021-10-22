@@ -1,17 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { customizeAction } from "../../../store/customizeSlice";
 import clsx from "clsx";
 
 // import library
-import { Button, Grid, Typography, Slider, Box } from "@material-ui/core";
-import {
-  SET_PRIMARY_COLOR,
-  SET_SECONDARY_COLOR,
-  SET_COLOR_LEVEL,
-} from "../../../store/constant";
-
 // import icon
 import {
   red,
