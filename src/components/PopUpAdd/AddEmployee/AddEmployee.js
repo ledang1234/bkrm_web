@@ -1,17 +1,20 @@
 import React from 'react';
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
-//import project
+//import library
 import {Button,TextField,DialogActions,DialogContent,DialogTitle,
-  Typography,Grid,Avatar} from '@material-ui/core';
+  Typography,Grid,Avatar,Select,MenuItem,FormControl,InputLabel} from '@material-ui/core';
 
 
+//import project 
+import NumberFormatCustom from '../../TextField/NumberFormatCustom'
+import MultipleSelect  from '../../MultipleSelect/MultipleSelect'
 
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
     '& .MuiTextField-root': {
-      marginTop: theme.spacing(0.5),
+      marginTop: theme.spacing(1),
     },
   },
   headerTitle:{
@@ -22,6 +25,9 @@ createStyles({
     height: theme.spacing(7),
     marginBottom:15
   },
+  input: {
+    display: 'none',
+  },
 
 }));
 
@@ -30,8 +36,31 @@ createStyles({
 
 const AddEmployee = (props) =>{
     const {handleClose} = props;
+
+    // tam thoi
+    const statusState = "Success"
+
     const theme = useTheme();
     const classes = useStyles(theme);
+
+     // đổi thành state sau (price format)
+     const [values, setValues] = React.useState({
+      numberformat: '',
+    });
+    const handleChange = (event) => {
+      setValues({
+        ...values,
+        [event.target.name]: event.target.value,
+      });
+    };
+
+    // loại lương
+    const [typeSalary, setTypeSalary] = React.useState('');
+
+    const handleTypeSalary = (event) => {
+      setTypeSalary(event.target.value);
+    };
+
 
   return (
     <div>
@@ -46,12 +75,33 @@ const AddEmployee = (props) =>{
       <div className={classes.root}>
            <Grid container direction="row" >
             <Avatar alt="Remy Sharp" className={classes.ava} />
-            <Button variant="contained" style={{height:22,textTransform: 'none', marginLeft:20}}  >Chọn ảnh</Button>
+            <input
+                accept="image/*"
+                className={classes.input}
+                id="contained-button-file"
+                multiple
+                type="file"
+              />
+            <label htmlFor="contained-button-file">
+                <Button variant="contained" component="span" style={{height:22,textTransform: 'none', marginLeft:20}}  >Chọn ảnh</Button>
+            </label>
           </Grid>
         <Grid container direction="row" justifyContent="space-around"spacing={2}>
           <Grid item xs={6} >
               <TextField id="outlined-basic" label="Tên nhân viên" variant="outlined" fullWidth size="small"/>
-              <TextField id="outlined-basic" label="Ngày sinh" variant="outlined"  fullWidth size="small"/>
+              <TextField
+                  id="date"
+                  label="Ngày sinh"
+                  type="date"
+                  defaultValue="" //null
+                  variant="outlined" 
+                  size="small"
+                  fullWidth 
+                  className={classes.textField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
               <TextField id="outlined-basic" label="CMND" variant="outlined" fullWidth size="small"/>
 
               <TextField id="outlined-basic" label="Số điện thoại" variant="outlined" fullWidth size="small"/>
@@ -59,12 +109,42 @@ const AddEmployee = (props) =>{
               <TextField id="outlined-basic" label="Địa chỉ" variant="outlined" fullWidth size="small"/>
           </Grid>
           <Grid item xs={6} >
-              <TextField id="outlined-basic" label="Loại lương" variant="outlined" fullWidth size="small"/>
-              <TextField id="outlined-basic" label="Mức lương" variant="outlined" fullWidth size="small"/>
-              <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/>
+            {/* Select lưong */}
+                <FormControl  className={classes.formControl} fullWidth size="small" variant="outlined" style={{marginTop:8}}>
+                    <InputLabel id="demo-simple-select-outlined-label">Lương </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={typeSalary}
+                      onChange={handleTypeSalary}
+                      label="Age"
+                      
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={10}>Lương cố định</MenuItem>
+                      <MenuItem value={20}>Lương theo ca</MenuItem>
+                    </Select>
+              </FormControl>
+            
+              <TextField
+                  label="Mức lương"
+                  variant="outlined" fullWidth size="small"
+                  value={values.numberformat}
+                  onChange={handleChange}
+                  name="numberformat"
+                  id="formatted-numberformat-input"
+                  InputProps={{
+                    inputComponent: NumberFormatCustom,
+                  }}
+                />
+
               <TextField id="outlined-basic" label="Tên tài khoản" variant="outlined" fullWidth size="small"/>
-              {/* <TextField id="outlined-basic" label="Mật khẩu" variant="outlined" type="password"fullWidth size="small"/>
-              <TextField id="outlined-basic" label="Nhập lại mật khẩu" variant="outlined" type="password" fullWidth size="small"/> */}
+
+              {/* <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/> */}
+              <MultipleSelect />
+              
           </Grid>
         </Grid>
       </div>
@@ -76,10 +156,10 @@ const AddEmployee = (props) =>{
 
        
         <DialogActions>
-          <Button onClick={handleClose} variant="contained" size="small" color="secondary">
+          <Button onClick={() => handleClose(null)} variant="contained" size="small" color="secondary">
             Huỷ
           </Button>
-          <Button onClick={handleClose} variant="contained" size="small" color="primary">
+          <Button onClick={() => handleClose(statusState)} variant="contained" size="small" color="primary">
             Thêm 
           </Button>
         </DialogActions>

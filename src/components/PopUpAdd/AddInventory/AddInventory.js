@@ -1,13 +1,17 @@
 import React from 'react';
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
-//import project
+//import library
 import {Button,TextField,DialogActions,DialogContent,DialogTitle,
-  Typography,Grid, Box} from '@material-ui/core';
+  Typography,Grid, Box,InputAdornment} from '@material-ui/core';
 
 
+//import project 
+import NumberFormatCustom from '../../TextField/NumberFormatCustom'
 // import img
 import avaUpload from '../../../assets/img/product/default-product.png';
+import barcodeIcon from '../../../assets/img/icon/barcode1.png'
+
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -36,14 +40,46 @@ const UploadImage  = () => {
       }}
       src={avaUpload}
     />
+   
     
   )
 }
 
 const AddInventory = (props) =>{
     const {handleClose} = props;
+
+    // tam thoi
+    const statusState = "Success"
+
+
+    // đổi thành state sau (price format)
+    const [values, setValues] = React.useState({
+      numberformat: '',
+    });
+    const handleChange = (event) => {
+      setValues({
+        ...values,
+        [event.target.name]: event.target.value,
+      });
+    };
+
+    const [import_values, setImportValues] = React.useState({
+      numberformat: '',
+    });
+    const handleImportChange = (event) => {
+      setImportValues({
+        ...import_values,
+        [event.target.name]: event.target.value,
+      });
+    };
+    
+    
     const theme = useTheme();
     const classes = useStyles(theme);
+
+
+
+    
 
   return (
     <div>
@@ -61,12 +97,46 @@ const AddInventory = (props) =>{
         <Grid container direction="row" justifyContent="space-around"spacing={3}>
           <Grid item xs={7} >
               <TextField id="outlined-basic" label="Tên sản phẩm" variant="outlined" fullWidth size="small"/>
-              <TextField id="outlined-basic" label="Mã vạch (mặc định)" variant="outlined"  fullWidth size="small"/>
+              <TextField
+                className={classes.margin}
+                id="input-with-icon-textfield"
+                label="Mã vạch (mặc định)" variant="outlined"  fullWidth size="small"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Box component="img" sx={{height: 25,width: 25 }} src={barcodeIcon}/>
+                    </InputAdornment>
+                  ),
+                }}
+              />
               <TextField id="outlined-basic" label="Danh mục" variant="outlined" fullWidth size="small"/>
           </Grid>
           <Grid item xs={5} >
-              <TextField id="outlined-basic" label="Giá bán" variant="outlined" fullWidth size="small"/>
-              <TextField id="outlined-basic" label="Giá vốn" variant="outlined" fullWidth size="small"/>
+              {/* <TextField id="outlined-basic" label="Giá bán" variant="outlined" fullWidth size="small"/> */}
+              {/* <TextField id="outlined-basic" label="Giá vốn" variant="outlined" fullWidth size="small"/> */}
+              <TextField
+                  label="Giá bán"
+                  variant="outlined" fullWidth size="small"
+                  value={values.numberformat}
+                  onChange={handleChange}
+                  name="numberformat"
+                  id="formatted-numberformat-input"
+                  InputProps={{
+                    inputComponent: NumberFormatCustom,
+                  }}
+                />
+                <TextField
+                  label="Giá vốn"
+                  variant="outlined" fullWidth size="small"
+                  value={import_values.numberformat}
+                  onChange={handleImportChange}
+                  name="numberformat"
+                  id="formatted-numberformat-input"
+                  InputProps={{
+                    inputComponent: NumberFormatCustom,
+                  }}
+                />
+             
               <TextField id="outlined-basic" label="Đơn vị" variant="outlined" fullWidth size="small"/>
           </Grid>
           <Grid container direction="row" >
@@ -83,10 +153,10 @@ const AddInventory = (props) =>{
         </DialogContent>
        
         <DialogActions>
-          <Button onClick={handleClose} variant="contained" size="small" color="secondary">
+          <Button onClick={() => handleClose(null)}  variant="contained" size="small" color="secondary">
             Huỷ
           </Button>
-          <Button onClick={handleClose} variant="contained" size="small" color="primary">
+          <Button onClick={() => handleClose(statusState)}  variant="contained" size="small" color="primary">
             Thêm 
           </Button>
         </DialogActions>

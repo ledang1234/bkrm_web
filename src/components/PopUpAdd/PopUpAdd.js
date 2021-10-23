@@ -2,7 +2,6 @@ import React from 'react';
 
 //import library
 import Dialog from '@material-ui/core/Dialog';
-import Button from '@material-ui/core/Button';
 
 
 
