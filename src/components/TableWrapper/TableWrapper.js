@@ -67,6 +67,9 @@ createStyles({
 const TableWrapper = (props) => {
     const {title, dataTable, headerData ,tableType} =props;
 
+
+    const [isCategory, setIsCategory] = React.useState(false);
+
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -84,18 +87,25 @@ const TableWrapper = (props) => {
   
     const handleCloseBar = () => {
       setOpenBar(false)
+     
     };
 
     
     const handleClickOpen = () => {
       setOpen(true);
     };
+    const handleClickOpenCategory = () => {
+      setIsCategory(true);
+      setOpen(true);
+    };
+    
     const handleClose = (status) => {
       setOpen(false);
       setAddStatus(status);
       if(status === "Success"){
         setOpenBar(true);
-      }      
+      }   
+      setIsCategory(false);   
     };
 
    return ( 
@@ -117,7 +127,7 @@ const TableWrapper = (props) => {
                     
                         <Button variant="outlined" color="primary"  
                           className={classes.button}
-                          onClick={handleClickOpen}
+                          onClick={handleClickOpenCategory}
                           >               
                               Danh mục
                           </Button> 
@@ -152,7 +162,10 @@ const TableWrapper = (props) => {
             
         </Grid>
         
-        <PopUpAdd open={open} handleClose={handleClose} tableType={tableType}/>
+        {isCategory ? 
+        <PopUpAdd open={open} handleClose={handleClose} tableType={''}  />
+        :<PopUpAdd open={open} handleClose={handleClose} tableType={tableType}/>
+        }
         
         <Snackbar
             anchorOrigin={{ vertical: 'top',horizontal:  'right' }}
