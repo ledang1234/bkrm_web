@@ -21,6 +21,7 @@ import {
 
 //import project
 import CardWrapper from "../../CardWrapper/CardWrapper";
+import { Box, Button, Grid, Slider, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
