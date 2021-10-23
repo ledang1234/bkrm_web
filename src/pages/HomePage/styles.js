@@ -6,6 +6,7 @@ export default makeStyles((theme) => ({
   root: {
     display: "flex",
     background: theme.palette.background.default,
+    minHeight:"100vh"
   },
   appBar: {
     background: theme.palette.background.paper,

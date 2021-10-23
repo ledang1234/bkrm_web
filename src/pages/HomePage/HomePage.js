@@ -13,6 +13,7 @@ import {
   Drawer,
   Typography,
   Box,
+  Button,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
@@ -29,6 +30,8 @@ import HRView from "../../views/HRView/HRView";
 import ManagerView from "../../views/ManagerView/ManagerView";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import useStyles from "./styles";
+import { authActions } from "../../store/authSlice";
+import { useDispatch } from "react-redux";
 const drawerWidth = 240;
 
 const HomePage = (props) => {
@@ -81,7 +84,11 @@ const HomePage = (props) => {
     if (smallScreen)
       return <div style={{ width: drawerWidth, height: 48 }}></div>;
   };
-
+  const dispatch = useDispatch();
+  const logOutHandler = () => {
+    localStorage.removeItem("token");
+    dispatch(authActions.logOut());
+  };
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -95,10 +102,21 @@ const HomePage = (props) => {
           >
             <MenuIcon />
           </IconButton>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            style={{ width: "100%" }}
+          >
+            <Typography variant="h3" noWrap className={classes.searchEngine}>
+              BKRM
+            </Typography>
 
-          <Typography variant="h3" noWrap className={classes.searchEngine}>
-            BKRM
-          </Typography>
+            <Button color="primary" onClick={() => logOutHandler()}>
+              Logout
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -136,7 +154,6 @@ const HomePage = (props) => {
             <Route path={`${path}/*`} component={PageNotFound} />
           </Switch>
         </Typography>
-        <Customization />
       </main>
     </div>
   );
