@@ -30,8 +30,13 @@ createStyles({
 
 const AddCustomer = (props) =>{
     const {handleClose} = props;
+    // tam thoi
+    const statusState = "Success"
+    
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    
 
   return (
     <div>
@@ -70,12 +75,13 @@ const AddCustomer = (props) =>{
 
        
         <DialogActions>
-          <Button onClick={handleClose} variant="contained" size="small" color="secondary">
+          <Button onClick={() => handleClose(null)} variant="contained" size="small" color="secondary">
             Huỷ
           </Button>
-          <Button onClick={handleClose} variant="contained" size="small" color="primary">
+          <Button onClick={() => handleClose(statusState)} variant="contained" size="small" color="primary">
             Thêm 
           </Button>
+
         </DialogActions>
     </div>
   );

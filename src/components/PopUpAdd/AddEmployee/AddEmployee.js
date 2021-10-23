@@ -63,8 +63,8 @@ const AddEmployee = (props) =>{
               <TextField id="outlined-basic" label="Mức lương" variant="outlined" fullWidth size="small"/>
               <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/>
               <TextField id="outlined-basic" label="Tên tài khoản" variant="outlined" fullWidth size="small"/>
-              <TextField id="outlined-basic" label="Mật khẩu" variant="outlined" type="password"fullWidth size="small"/>
-              <TextField id="outlined-basic" label="Nhập lại mật khẩu" variant="outlined" type="password" fullWidth size="small"/>
+              {/* <TextField id="outlined-basic" label="Mật khẩu" variant="outlined" type="password"fullWidth size="small"/>
+              <TextField id="outlined-basic" label="Nhập lại mật khẩu" variant="outlined" type="password" fullWidth size="small"/> */}
           </Grid>
         </Grid>
       </div>

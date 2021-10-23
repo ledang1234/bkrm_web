@@ -194,7 +194,8 @@ const TableSupplierCell = ({row}) =>{
       <TableCell align="left" className={classes.fontName} style={{minWidth:150}}>{row.name}</TableCell>
       <TableCell align="left">{row.phone}</TableCell>
       <TableCell align="left">{row.email}</TableCell>
-      <TableCell align="left" style={{minWidth:150}}>{row.address}</TableCell>
+      <TableCell align="left" style={{minWidth:100}}>{row.address}</TableCell>
+      <TableCell align="right" >{row.total_cost}</TableCell>
       <TableCell align="left">
       <FormatedStatus debt={row.debt}/>
       </TableCell>
@@ -248,6 +249,7 @@ const TableEmployeeCell = ({row}) =>{
 
       <TableCell align="left">{row.phone}</TableCell>
       <TableCell align="left">{row.email}</TableCell>
+      <TableCell align="left">{row.function}</TableCell>
     </>
   )
 }

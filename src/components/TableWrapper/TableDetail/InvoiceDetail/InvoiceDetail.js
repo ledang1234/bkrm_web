@@ -2,8 +2,15 @@ import React from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import library
-import {Box,Grid,TableHead,TableBody,Typography,Table,TableCell,TableRow,Collapse} from '@material-ui/core';
+import {Box,Grid,TableHead,TableBody,Typography,Table,TableCell,TableRow,Collapse,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
 
+//import icon
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import PrintTwoToneIcon from '@material-ui/icons/PrintTwoTone';
+import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
+
+//import project 
+import {StyledMenu,StyledMenuItem} from '../../../Button/MenuButton'
 
 
 
@@ -26,9 +33,23 @@ createStyles({
 
 const InvoiceDetail = (props) => {
     const {row,openRow }= props.parentProps;
+    //  tam thoi
+    const currentUser = "Phuong Gia Le";
 
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
+
 
     return (
         <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
@@ -57,7 +78,7 @@ const InvoiceDetail = (props) => {
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
                       <Grid item xs={5} >
-                        <Typography variant="h5" gutterBottom component="div">Tên khách hàng</Typography>    
+                        <Typography variant="h5" gutterBottom component="div">Khách hàng</Typography>    
                       </Grid>
                       <Grid item xs={4} >
                         <Typography variant="body1" gutterBottom component="div">{row.customer} </Typography>
@@ -65,7 +86,7 @@ const InvoiceDetail = (props) => {
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
                       <Grid item xs={5} >
-                        <Typography variant="h5"gutterBottom component="div">Tên người bán</Typography>    
+                        <Typography variant="h5"gutterBottom component="div">Người bán</Typography>    
                       </Grid>
                       <Grid item xs={4} >
                         <Typography variant="body1" gutterBottom component="div">{row.employee} </Typography>
@@ -74,17 +95,24 @@ const InvoiceDetail = (props) => {
                      
                   </Grid>
                     <Grid item xs={5}>
-                    
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Tổng tiền</Typography>    
+                        <Grid item xs={6} >
+                            <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
+                        </Grid>
+                        <Grid item xs={4} >
+                            <Typography variant="body1" gutterBottom component="div">Cần thu 500.000</Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" justifyContent="flex-start">
+                        <Grid item xs={6} >
+                            <Typography variant="h5" gutterBottom component="div">Tổng hoá đơn</Typography>    
                         </Grid>
                         <Grid item xs={4} >
                             <Typography variant="body1" gutterBottom component="div">{row.total}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={5} >
+                        <Grid item xs={6} >
                             <Typography variant="h5" gutterBottom component="div">Chi nhánh thực hiện</Typography>    
                         </Grid>
                         <Grid item xs={4} >
@@ -92,13 +120,14 @@ const InvoiceDetail = (props) => {
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={5} >
+                        <Grid item xs={6} >
                             <Typography variant="h5" gutterBottom component="div">Phương thức thanh toán</Typography>    
                         </Grid>
                         <Grid item xs={4} >
                             <Typography variant="body1" gutterBottom component="div">{row.payment} </Typography>
                         </Grid>
                     </Grid>
+                    
                   </Grid>
 
           
@@ -115,12 +144,11 @@ const InvoiceDetail = (props) => {
                  <TableHead>
                    <TableRow>
                      <TableCell>#</TableCell>
-                     <TableCell>Sảm phẩm</TableCell>
-                     <TableCell align="right">Danh mục</TableCell>
-                     <TableCell align="right">Giá bán </TableCell>
-                     <TableCell align="right">Giá vốn</TableCell>
-                     <TableCell align="right">Tồn kho </TableCell>
-                     <TableCell align="right">Số lượng </TableCell>
+                     <TableCell>Sản phẩm</TableCell>
+                     <TableCell align="right">Số lượng</TableCell>
+                     <TableCell align="right">Giá bán</TableCell>
+                     <TableCell align="right">Thành tiền</TableCell>
+ 
                    </TableRow>
                  </TableHead>
                  <TableBody>
@@ -131,41 +159,117 @@ const InvoiceDetail = (props) => {
                          {historyRow.product_id}
                        </TableCell>
                        <TableCell>{historyRow.name}</TableCell>
-                       <TableCell align="right">{historyRow.category_id}</TableCell>
+                       <TableCell align="right">{historyRow.quantity}</TableCell>
                        <TableCell align="right">
                          {historyRow.price}
                        </TableCell>
-                       <TableCell align="right">
-                         {historyRow.import_price}
+                       <TableCell align="right" style={{fontWeight:700}}>
+                         {historyRow.quantity * historyRow.price}
                        </TableCell>
-                       <TableCell align="right">
-                         {historyRow.quantity}
-                       </TableCell>
-                       <TableCell align="right">
-                         2
-                       </TableCell>
+                       
                      </TableRow>
                    ))}
                  </TableBody>
                </Table> 
-               <Box style={{background:theme.customization.primaryColor[50]}}>
-               <Grid container direction="row" justifyContent="flex-end">
-                    <Grid item xs={5} >
-                        <Typography variant="h5" gutterBottom component="div">Tổng tiền</Typography>    
+               <Box style={{background:theme.customization.primaryColor[50],padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
+               <Grid container direction="column" >
+                    <Grid container direction="row" justifyContent="flex-end">
+                        <Grid item xs={2} >
+                            <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>    
+                        </Grid>
+                        <Grid item xs={2} >
+                            <Typography variant="body1" gutterBottom component="div">4 </Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">450</Typography>
+
+                    <Grid container direction="row" justifyContent="flex-end">
+                        <Grid item xs={2} >
+                            <Typography variant="h5" gutterBottom component="div">Tiền hàng</Typography>    
+                        </Grid>
+                        <Grid item xs={2} >
+                            <Typography variant="body1" gutterBottom component="div">{row.total} </Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={5} >
-                        <Typography variant="h5" gutterBottom component="div">Tổng số luong</Typography>    
+
+                    <Grid container direction="row" justifyContent="flex-end">
+                        <Grid item xs={2} >
+                            <Typography variant="h5" gutterBottom component="div">Giảm giá</Typography>    
+                        </Grid>
+                        <Grid item xs={2} >
+                            <Typography variant="body1" gutterBottom component="div">200</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">2</Typography>
+
+                    <Grid container direction="row" justifyContent="flex-end">
+                        <Grid item xs={2} >
+                            <Typography variant="h5" gutterBottom component="div">Tổng hoá đơn</Typography>    
+                        </Grid>
+                        <Grid item xs={2} >
+                            <Typography variant="body1" gutterBottom component="div">100</Typography>
+                        </Grid>
                     </Grid>
+
+                    <Grid container direction="row" justifyContent="flex-end">
+                        <Grid item xs={2} >
+                            <Typography variant="h5" gutterBottom component="div">Khách đã trả</Typography>    
+                        </Grid>
+                        <Grid item xs={2} >
+                            <Typography variant="body1" gutterBottom component="div">100</Typography>
+                        </Grid>
                     </Grid>
-                    </Box>
-             </Box>
-           </Collapse>
+                    
+              </Grid>
+            </Box>
+
+            <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
+                    {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
+                    {currentUser === row.employee ? 
+                    <> <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>
+                      <Button variant="contained" size="small" style={{marginLeft:15}}>Xoá</Button> </>
+                    : null
+                    }
+                  
+                  <Button variant="contained" size="small" style={{marginLeft:15}}>Trả hàng</Button>
+                  
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    size="small"
+                    style={{marginLeft:10}}
+
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+
+                  <StyledMenu
+                    id="customized-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    
+                    
+                  >
+                    <StyledMenuItem>
+                      <ListItemIcon style={{marginRight:-15}}>
+                        <PrintTwoToneIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText primary="In hoá đơn" />
+                    </StyledMenuItem>
+
+                    <StyledMenuItem>
+                      <ListItemIcon style={{marginRight:-15}}>
+                        <GetAppTwoToneIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText primary="Xuất excel" />
+                    </StyledMenuItem>
+                  </StyledMenu>
+                  
+              </Grid>
+      </Box>
+  </Collapse>
     )
 }
 

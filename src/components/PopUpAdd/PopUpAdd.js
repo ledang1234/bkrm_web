@@ -2,6 +2,7 @@ import React from 'react';
 
 //import library
 import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
 
 
 
@@ -33,10 +34,12 @@ const  AddView = (props) =>{
 
 const PopUpAdd = (props) =>{
     const {open, handleClose,tableType} = props
+    
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <AddView handleClose={handleClose} tableType={tableType}/> 
+          <AddView handleClose={handleClose} tableType={tableType} /> 
+       
       </Dialog>
     </div>
   );
