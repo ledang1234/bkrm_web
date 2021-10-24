@@ -33,10 +33,12 @@ const  AddView = (props) =>{
 
 const PopUpAdd = (props) =>{
     const {open, handleClose,tableType} = props
+    
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <AddView handleClose={handleClose} tableType={tableType}/> 
+          <AddView handleClose={handleClose} tableType={tableType} /> 
+       
       </Dialog>
     </div>
   );

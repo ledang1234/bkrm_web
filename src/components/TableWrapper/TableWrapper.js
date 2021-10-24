@@ -3,8 +3,9 @@ import React, {useRef} from 'react';
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 // import library
-import { Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip} from '@material-ui/core';
+import { Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,Snackbar} from '@material-ui/core';
 import { grey} from '@material-ui/core/colors'
+import MuiAlert from '@material-ui/lab/Alert';
 
 //import thitd-party
 import { useReactToPrint } from 'react-to-print';
@@ -16,6 +17,9 @@ import MyTable from './Table/Table'
 import AddIcon from '@material-ui/icons/Add';
 import * as TableType from '../../assets/constant/tableType'
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -63,6 +67,9 @@ createStyles({
 const TableWrapper = (props) => {
     const {title, dataTable, headerData ,tableType} =props;
 
+
+    const [isCategory, setIsCategory] = React.useState(false);
+
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -73,13 +80,33 @@ const TableWrapper = (props) => {
     });
 
     const [open, setOpen] = React.useState(false);
+    const [addStatus, setAddStatus] = React.useState(null);
+
+    const [openBar, setOpenBar] = React.useState(false);
+
+  
+    const handleCloseBar = () => {
+      setOpenBar(false)
+     
+    };
+
+    
     const handleClickOpen = () => {
       setOpen(true);
     };
-    const handleClose = () => {
-      setOpen(false);
+    const handleClickOpenCategory = () => {
+      setIsCategory(true);
+      setOpen(true);
     };
-   
+    
+    const handleClose = (status) => {
+      setOpen(false);
+      setAddStatus(status);
+      if(status === "Success"){
+        setOpenBar(true);
+      }   
+      setIsCategory(false);   
+    };
 
    return ( 
 
@@ -98,11 +125,10 @@ const TableWrapper = (props) => {
                   <Grid className={classes.btngroup} >
                       <Tooltip title="Xem danh mục">
                     
-                           <Button variant="outlined" color="primary"  
+                        <Button variant="outlined" color="primary"  
                           className={classes.button}
-                          onClick={handleClickOpen}
-                          >
-                         
+                          onClick={handleClickOpenCategory}
+                          >               
                               Danh mục
                           </Button> 
                     </Tooltip> 
@@ -136,8 +162,26 @@ const TableWrapper = (props) => {
             
         </Grid>
         
-        <PopUpAdd open={open} handleClose={handleClose} tableType={tableType}/>
-            
+        {isCategory ? 
+        <PopUpAdd open={open} handleClose={handleClose} tableType={''}  />
+        :<PopUpAdd open={open} handleClose={handleClose} tableType={tableType}/>
+        }
+        
+        <Snackbar
+            anchorOrigin={{ vertical: 'top',horizontal:  'right' }}
+            open={openBar}
+            onClose={handleCloseBar}
+            autoHideDuration={2000} 
+          >
+            {addStatus === "Success" ? 
+            <Alert onClose={handleClose} severity="success">
+                Thêm thành công
+            </Alert> 
+            :  <Alert onClose={handleClose} severity="error">
+                Thêm thất bại
+            </Alert> }
+
+          </Snackbar>
         
         <Divider />
 

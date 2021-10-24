@@ -1,10 +1,11 @@
 import React from 'react';
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
-//import project
+//import library
 import {Button,TextField,DialogActions,DialogContent,DialogTitle,
   Typography,Grid,Avatar} from '@material-ui/core';
 
+//import project 
 
 
 
@@ -22,6 +23,12 @@ createStyles({
     width: theme.spacing(7),
     height: theme.spacing(7),
   },
+  textField: {
+    width:'100%',
+  },
+  input: {
+    display: 'none',
+  },
 
 }));
 
@@ -30,8 +37,13 @@ createStyles({
 
 const AddCustomer = (props) =>{
     const {handleClose} = props;
+    // tam thoi
+    const statusState = "Success"
+    
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    
 
   return (
     <div>
@@ -46,8 +58,19 @@ const AddCustomer = (props) =>{
         
       <div className={classes.root}>
           <Grid container direction="row" >
+
             <Avatar alt="Remy Sharp" className={classes.ava} />
-            <Button variant="contained" style={{height:22,textTransform: 'none', marginLeft:20}}  >Chọn ảnh</Button>
+            <input
+                accept="image/*"
+                className={classes.input}
+                id="contained-button-file"
+                multiple
+                type="file"
+              />
+            <label htmlFor="contained-button-file">
+                <Button variant="contained" component="span" style={{height:22,textTransform: 'none', marginLeft:20}}  >Chọn ảnh</Button>
+            </label>
+            
           </Grid>
         <Grid container direction="row" justifyContent="space-around"spacing={3}>
           <Grid item xs={7} >
@@ -57,7 +80,18 @@ const AddCustomer = (props) =>{
               
           </Grid>
           <Grid item xs={5} >
-              <TextField id="outlined-basic" label="Ngày sinh" variant="outlined" fullWidth size="small"/>    
+              <TextField
+                  id="date"
+                  label="Ngày sinh"
+                  type="date"
+                  defaultValue="" //null
+                  variant="outlined" 
+                  size="small"
+                  className={classes.textField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
               <TextField id="outlined-basic" label="Email" variant="outlined" fullWidth size="small"/>
           </Grid>
         </Grid>
@@ -70,12 +104,13 @@ const AddCustomer = (props) =>{
 
        
         <DialogActions>
-          <Button onClick={handleClose} variant="contained" size="small" color="secondary">
+          <Button onClick={() => handleClose(null)} variant="contained" size="small" color="secondary">
             Huỷ
           </Button>
-          <Button onClick={handleClose} variant="contained" size="small" color="primary">
+          <Button onClick={() => handleClose(statusState)} variant="contained" size="small" color="primary">
             Thêm 
           </Button>
+
         </DialogActions>
     </div>
   );
