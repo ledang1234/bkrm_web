@@ -43,7 +43,6 @@ export default function SignIn() {
   return (
     <Box className={classes.background}>
       <Paper className={classes.container}>
-        <CssBaseline />
         <Box className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />

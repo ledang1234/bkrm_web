@@ -1,4 +1,2 @@
 một số lỗi - chưa hoàn thiện:
-
 1. tai sao redux chua luu vao local ???
-

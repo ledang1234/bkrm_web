@@ -19,7 +19,6 @@ export default function SignUp() {
   return (
     <Box className={classes.background}>
       <Paper className={classes.container}>
-        <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />

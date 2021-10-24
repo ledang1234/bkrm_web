@@ -11,6 +11,7 @@ import { verifyToken } from "./store/actionCreator";
 import { useEffect } from "react";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
+import { CssBaseline } from "@material-ui/core";
 function App() {
   const customization = useSelector((state) => state.customize);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -22,6 +23,7 @@ function App() {
     <div>
       <ThemeProvider theme={themes(customization)}>
         <LoadingModal />
+        <CssBaseline />
         <BrowserRouter>
           <Switch>
             {/* Fix lại route */}
