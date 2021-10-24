@@ -145,7 +145,7 @@ const HomePage = (props) => {
         })}
       >
         <div className={classes.drawerHeader} />
-        <Typography className={clsx(classes.background)}>
+        <Box className={clsx(classes.background)}>
           <Switch>
             <Route path={`${path}/sales`} component={SalesView} />
             <Route path={`${path}/inventory`} component={InventoryView} />
@@ -153,7 +153,7 @@ const HomePage = (props) => {
             <Route path={`${path}/manager`} component={ManagerView} />
             <Route path={`${path}/*`} component={PageNotFound} />
           </Switch>
-        </Typography>
+        </Box>
       </main>
     </div>
   );

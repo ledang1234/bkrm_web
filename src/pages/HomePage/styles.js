@@ -6,7 +6,6 @@ export default makeStyles((theme) => ({
   root: {
     display: "flex",
     background: theme.palette.background.default,
-    minHeight:"100vh"
   },
   appBar: {
     background: theme.palette.background.paper,
@@ -61,6 +60,7 @@ export default makeStyles((theme) => ({
     marginLeft: 20,
     marginRight: 20,
     padding: 20,
+    marginTop:35,
   },
   toolBar: {
     background: theme.palette.background.paper,
