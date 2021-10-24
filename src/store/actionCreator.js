@@ -1,9 +1,9 @@
 import { authActions } from "./authSlice";
-import { loadingAction } from "./loadingSlice";
+import { loadingActions } from "./loadingSlice";
 import userApi from "../api/userApi";
 export const verifyToken = () => {
   return async (dispatch) => {
-    dispatch(loadingAction.startLoad());
+    dispatch(loadingActions.startLoad());
     const verifyToken = async () => {
       try {
         const response = await userApi.verify();
@@ -16,14 +16,14 @@ export const verifyToken = () => {
       const rs = await verifyToken();
       if (rs.data) {
         dispatch(authActions.logIn());
-        dispatch(loadingAction.finishLoad());
+        dispatch(loadingActions.finishLoad());
       } else {
         dispatch(authActions.logOut());
-        dispatch(loadingAction.finishLoad());
+        dispatch(loadingActions.finishLoad());
       }
     } catch (error) {
       dispatch(authActions.logOut());
-      dispatch(loadingAction.finishLoad());
+      dispatch(loadingActions.finishLoad());
     }
   };
 };

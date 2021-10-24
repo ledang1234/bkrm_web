@@ -15,4 +15,4 @@ const loadingSlice = createSlice({
 });
 
 export default loadingSlice;
-export const loadingAction = loadingSlice.actions;
+export const loadingActions = loadingSlice.actions;
