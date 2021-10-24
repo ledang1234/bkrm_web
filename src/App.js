@@ -8,22 +8,23 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import Customization from "./components/Customization/Customization";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import { verifyToken } from "./store/actionCreator";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
-const useStyles = makeStyles((theme) => ({
-  root: {
-    minHeight: "100vh",
-  },
-}));
 function App() {
+  const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   useEffect(() => {
+    setLoading(false);
     dispatch(verifyToken());
   }, [dispatch]);
+  if (loading) {
+    // if your component doesn't have to wait for an async action, remove this block
+    return null; // render null when app is not ready
+  }
   return (
     <div>
       <ThemeProvider theme={themes(customization)}>
@@ -42,7 +43,9 @@ function App() {
               <Route path="/login" exact>
                 {isLoggedIn ? <Redirect to="/home" /> : <LoginPage />}
               </Route>
-              <Route path="/signup" component={SignupPage} />
+              <Route path="/signup" exact>
+                {isLoggedIn ? <Redirect to="/home" /> : <SignupPage />}
+              </Route>
               <Route path="*" component={PageNotFound} />
             </Switch>
           </BrowserRouter>

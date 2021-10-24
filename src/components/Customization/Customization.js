@@ -28,7 +28,7 @@ import AnimateButton from "../Button/AnimateButton";
 import { IconSettings } from "@tabler/icons";
 
 // import redux
-import { customizeAction } from "../../store/customizeSlice";
+import { customizeAction } from "../../store/slice/customizeSlice";
 const drawerWidth = 300;
 
 function valueText(value) {

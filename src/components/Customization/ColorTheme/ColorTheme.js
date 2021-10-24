@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { customizeAction } from "../../../store/customizeSlice";
+import { customizeAction } from "../../../store/slice/customizeSlice";
 import clsx from "clsx";
 
 // import library

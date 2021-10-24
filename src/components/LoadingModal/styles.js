@@ -7,11 +7,14 @@ export default makeStyles((theme) => ({
     justifyContent: "center",
     padding: 10,
     minWidth: "100%",
+    minHeight: "100vh",
   },
   modal: {
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
+    width: "100vw",
+    minHeight: "100vh",
   },
   box: {
     width: "100%",

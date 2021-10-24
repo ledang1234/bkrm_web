@@ -1,5 +1,5 @@
-import { authActions } from "./authSlice";
-import { loadingActions } from "./loadingSlice";
+import { authActions } from "./slice/authSlice";
+import { loadingActions } from "./slice/loadingSlice";
 import userApi from "../api/userApi";
 export const verifyToken = () => {
   return async (dispatch) => {
@@ -15,6 +15,36 @@ export const verifyToken = () => {
     try {
       const rs = await verifyToken();
       if (rs.data) {
+        dispatch(authActions.logIn());
+        dispatch(loadingActions.finishLoad());
+      } else {
+        dispatch(authActions.logOut());
+        dispatch(loadingActions.finishLoad());
+      }
+    } catch (error) {
+      dispatch(authActions.logOut());
+      dispatch(loadingActions.finishLoad());
+    }
+  };
+};
+export const logInHandler = (userName, password) => {
+  return async (dispatch) => {
+    dispatch(loadingActions.startLoad());
+    const logIn = async () => {
+      try {
+        const response = await userApi.signIn({
+          phone: userName,
+          password: password,
+        });
+        if (response.access_token) {
+          localStorage.setItem("token", response.access_token);
+        }
+        return response;
+      } catch (error) {}
+    };
+    try {
+      const rs = await logIn();
+      if (rs.access_token) {
         dispatch(authActions.logIn());
         dispatch(loadingActions.finishLoad());
       } else {

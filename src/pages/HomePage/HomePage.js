@@ -30,7 +30,7 @@ import HRView from "../../views/HRView/HRView";
 import ManagerView from "../../views/ManagerView/ManagerView";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import useStyles from "./styles";
-import { authActions } from "../../store/authSlice";
+import { authActions } from "../../store/slice/authSlice";
 import { useDispatch } from "react-redux";
 const drawerWidth = 240;
 

@@ -13,31 +13,14 @@ import useStyles from "./styles";
 import { Paper } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import userApi from "../../api/userApi";
-import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../../store/authSlice";
-import { loadingActions } from "../../store/loadingSlice";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/slice/authSlice";
+import { loadingActions } from "../../store/slice/loadingSlice";
+import { logInHandler } from "../../store/actionCreator";
 export default function SignIn() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const logInHandler = async () => {
-    dispatch(loadingActions.startLoad());
-    try {
-      const response = await userApi.signIn({
-        phone: userName,
-        password: password,
-      });
-      if (response.access_token) {
-        localStorage.setItem("token", response.access_token);
-        dispatch(authActions.logIn());
-        dispatch(loadingActions.finishLoad());
-      }
-    } catch (error) {
-      console.log(error);
-      dispatch(loadingActions.finishLoad());
-    }
-  };
   const classes = useStyles();
 
   return (
@@ -87,7 +70,7 @@ export default function SignIn() {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={() => logInHandler()}
+                onClick={() => dispatch(logInHandler(userName, password))}
               >
                 Sign In
               </Button>

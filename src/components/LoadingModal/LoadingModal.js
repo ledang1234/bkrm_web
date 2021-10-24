@@ -12,7 +12,6 @@ export default function SimpleModal(props) {
         open={isLoading}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-        className={classes.modal}
       >
         <React.Fragment>
           <Paper>
