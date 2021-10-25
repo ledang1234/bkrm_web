@@ -89,5 +89,3 @@ AnimateButton.defaultProps = {
         tap: 0.9
     }
 };
-
-export default AnimateButton;

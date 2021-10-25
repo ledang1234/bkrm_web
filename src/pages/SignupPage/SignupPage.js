@@ -1,158 +1,129 @@
-import React, { useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import userApi from "../../api/userApi";
 import Typography from "@material-ui/core/Typography";
-import { Paper } from "@material-ui/core";
+import { Button, Paper, Step, StepLabel, Stepper } from "@material-ui/core";
 import useStyles from "./styles";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logInHandler } from "../../store/actionCreator";
+import { Link } from "react-router-dom";
+import UserInfo from "../../components/SignUp/UserInfo";
+import StoreInfo from "../../components/SignUp/StoreInfo";
+import { loadingActions } from "../../store/slice/loadingSlice";
 export default function SignUp() {
   const classes = useStyles();
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = getSteps();
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    phone: "",
+    dateOfBirth: "1991-01-01",
+  });
+  const [storeInfo, setStoreInfo] = useState({
+    name: "",
+    phone: "",
+    city: { id: "", name: "" },
+    district: { id: "", name: "" },
+    ward: { id: "", name: "" },
+    address: "",
+  });
   const dispatch = useDispatch();
   const handleSignUp = async () => {
     try {
+      dispatch(loadingActions.startLoad());
       const response = await userApi.ownerRegister({
-        name: name,
-        email: email,
-        password: password,
-        password_confirmation: confirmPassword,
-        phone: phone,
-        date_of_birth: dateOfBirth,
+        name: userInfo.name,
+        email: userInfo.email,
+        password: userInfo.password,
+        password_confirmation: userInfo.passwordConfirm,
+        phone: userInfo.phone,
+        date_of_birth: userInfo.dateOfBirth,
         status: "active",
+        store_name: storeInfo.name,
+        address: storeInfo.address,
+        ward: storeInfo.ward.name,
+        district: storeInfo.district.name,
+        province: storeInfo.city.name,
+        store_phone: storeInfo.phone,
+        default_branch: true,
       });
-      console.log(response)
+      dispatch(loadingActions.finishLoad());
       if (response.message === "User successfully registered") {
-        console.log("succ")
-        dispatch(logInHandler(phone, password));
+        dispatch(logInHandler(userInfo.phone, userInfo.password));
       }
-    } catch (error) {}
+    } catch (error) {
+      dispatch(loadingActions.finishLoad());
+    }
   };
   return (
     <Box className={classes.background}>
       <Paper className={classes.container}>
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography variant="h3" gutterBottom color="textSecondary">
-            STORE OWNER
-          </Typography>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h3" gutterBottom>
             Sign up
           </Typography>
-          <form
-            className={classes.form}
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
+          <Stepper
+            activeStep={activeStep}
+            alternativeLabel
+            style={{ width: 300 }}
           >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="name"
-                  name="name"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Full Name"
-                  autoFocus
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Phone"
-                  name="phone"
-                  autoComplete="phone"
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="date"
-                  type="date"
-                  defaultValue="1991-01-01"
-                  label="Date"
-                  onChange={(e) => setDateOfBirth(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password Confirmation"
-                  type="password"
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  error={confirmPassword === password ? false : true}
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={() => handleSignUp()}
-            >
-              Sign Up
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          {activeStep !== 1 ? (
+            <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
+          ) : (
+            <StoreInfo storeInfo={storeInfo} setStoreInfo={setStoreInfo} />
+          )}
+          <Box className={classes.button}>
+            <Button disabled={activeStep === 0} onClick={handleBack}>
+              Back
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Typography
-                  style={{ textDecoration: "none" }}
-                  component={Link}
-                  to="/login"
-                >
-                  Already have an account? Sign in
-                </Typography>
-              </Grid>
+            {activeStep !== 1 ? (
+              <Button onClick={handleNext} variant="contained" color="primary">
+                Next
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={() => handleSignUp()}
+              >
+                Sign Up
+              </Button>
+            )}
+          </Box>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Typography
+                style={{ textDecoration: "none" }}
+                component={Link}
+                to="/login"
+              >
+                Already have an account? Sign in
+              </Typography>
             </Grid>
-          </form>
+          </Grid>
         </div>
       </Paper>
     </Box>
   );
+}
+
+function getSteps() {
+  return ["Fill in owner information", "Fill in store information"];
 }

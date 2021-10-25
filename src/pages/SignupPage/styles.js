@@ -21,7 +21,6 @@ export default makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
   },
   paper: {
     display: "flex",
@@ -36,7 +35,12 @@ export default makeStyles((theme) => ({
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
-  submit: {
+  button: {
+    display: "flex",
+    flexDirection: "row",
+    align: "center",
+    justifyContent: "space-between",
+    width: "100%",
     margin: theme.spacing(3, 0, 2),
   },
 }));

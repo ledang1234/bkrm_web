@@ -22,7 +22,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 // project imports
 import ColorTheme from "./ColorTheme/ColorTheme";
 import CardWrapper from "../CardWrapper/CardWrapper";
-import AnimateButton from "../Button/AnimateButton";
+// import AnimateButton from "../Button/AnimateButton";
 
 //import icon
 import { IconSettings } from "@tabler/icons";
@@ -103,11 +103,11 @@ const Customization = () => {
           color="secondary"
           className={classes.btn}
         >
-          <AnimateButton type="rotate">
-            <IconButton color="inherit" size="large" disableRipple>
-              <IconSettings />
-            </IconButton>
-          </AnimateButton>
+          {/* <AnimateButton type="rotate"> */}
+          <IconButton color="inherit" size="large" disableRipple>
+            <IconSettings />
+          </IconButton>
+          {/* </AnimateButton> */}
         </Fab>
       </Tooltip>
 

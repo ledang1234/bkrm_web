@@ -5,7 +5,7 @@ const userAPi = {
     return axiosClient.post(url, JSON.stringify({ ...params }));
   },
   signIn: (params) => {
-    const url = "/ownerLogin";
+    const url = "/login";
     return axiosClient.post(url, JSON.stringify({ ...params }));
   },
   logOut: () => {
@@ -15,6 +15,18 @@ const userAPi = {
   verify: () => {
     const url = "/verify-token";
     return axiosClient.get(url);
+  },
+  getCity: () => {
+    const url = "/address/provinces";
+    return axiosClient.get(url);
+  },
+  getDistrict: (id) => {
+    const url = "/address/provinces";
+    return axiosClient.get(`${url}/${id}/districts`);
+  },
+  getWard: (cityId,districtId) => {
+    const url = "/address/provinces";
+    return axiosClient.get(`${url}/${cityId}/districts/${districtId}/wards`);
   },
 };
 export default userAPi;
