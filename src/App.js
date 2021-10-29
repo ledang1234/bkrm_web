@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
+import AddInventory from "./components/PopUpAdd/AddInventory/AddInventory";
 function App() {
   const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
@@ -45,6 +46,9 @@ function App() {
               </Route>
               <Route path="/signup" exact>
                 {isLoggedIn ? <Redirect to="/home" /> : <SignupPage />}
+              </Route>
+              <Route path="/test" exact>
+                <AddInventory />
               </Route>
               <Route path="*" component={PageNotFound} />
             </Switch>

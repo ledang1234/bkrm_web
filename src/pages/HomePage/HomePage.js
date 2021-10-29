@@ -32,6 +32,7 @@ import PageNotFound from "../PageNotFound/PageNotFound";
 import useStyles from "./styles";
 import { authActions } from "../../store/slice/authSlice";
 import { useDispatch } from "react-redux";
+import PersonIcon from "@material-ui/icons/Person";
 const drawerWidth = 240;
 
 const HomePage = (props) => {
@@ -112,10 +113,23 @@ const HomePage = (props) => {
             <Typography variant="h3" noWrap className={classes.searchEngine}>
               BKRM
             </Typography>
-
-            <Button color="primary" onClick={() => logOutHandler()}>
-              Logout
-            </Button>
+            <Box display="flex" flexDirection="row" alignItems="center">
+              <IconButton color="primary" size ="small">
+                <PersonIcon fontSize="large"/>
+              </IconButton>
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                style={{maxWidth:90,marginLeft:10,marginRight:5}}
+              >
+                <Typography variant = "h6">Store Owner</Typography>
+                <Typography variant = "h6" noWrap>Mai Trường Khang</Typography>
+              </Box>
+              <Button  color="primary" onClick={() => logOutHandler()}>
+                Logout
+              </Button>
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>
