@@ -38,6 +38,7 @@ export const logInHandler = (userName, password) => {
         });
         if (response.access_token) {
           localStorage.setItem("token", response.access_token);
+          localStorage.setItem("info", response.store.uuid);
         }
         return response;
       } catch (error) {}

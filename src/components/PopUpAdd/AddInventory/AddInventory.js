@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import library
 import {
@@ -22,6 +22,7 @@ import avaUpload from "../../../assets/img/product/default-product.png";
 import barcodeIcon from "../../../assets/img/icon/barcode1.png";
 import AddCategory from "./AddCategory";
 import useStyles from "./styles";
+import productApi from "../../../api/productApi";
 const UploadImage = (img) => {
   return (
     <Box
@@ -41,8 +42,16 @@ const AddInventory = (props) => {
   const { handleClose } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
   const handleCloseCategory = () => setOpenAddCategory(false);
+  const [categoryList, setCategoryList] = useState([
+    {
+      uuid: "",
+      parent_category_id: null,
+      name: "",
+      created_at: "",
+      updated_at: "",
+    },
+  ]);
   const statusState = "Success";
-
   const [image, setImage] = useState(null);
   const [display, setDisplay] = useState([]);
   const onChange = (e) => {
@@ -60,6 +69,18 @@ const AddInventory = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  useEffect(() => {
+    const fetchCategoryList = async () => {
+      try {
+        const response = await productApi.getAllCategory();
+        setCategoryList(response.data);
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    };
+    fetchCategoryList();
+  }, []);
   return (
     <div>
       <Box className={classes.root}>
@@ -107,16 +128,24 @@ const AddInventory = (props) => {
                   <Select
                     native
                     value={productInfo.category}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      const catUuid = categoryList.filter(
+                        (item) => item.name === e.target.value
+                      ).uuid;
                       setProductInfo({
                         ...productInfo,
-                        category: e.target.value,
-                      })
-                    }
+                        category: catUuid,
+                      });
+                    }}
                     label="Danh mục"
                     id="category"
                   >
                     <option aria-label="None" value="" />
+                    {categoryList.map((category) => (
+                      <option key={category.uuid} value={category}>
+                        {category.name}
+                      </option>
+                    ))}
                   </Select>
                 </FormControl>
                 <Tooltip title="Thêm danh mục">
@@ -151,9 +180,9 @@ const AddInventory = (props) => {
               fullWidth
               size="small"
               value={productInfo.salesPrice}
-              onChange={(e) =>
-                setProductInfo({ ...productInfo, salesPrice: e.target.value })
-              }
+              onChange={(e) => {
+                setProductInfo({ ...productInfo, salesPrice: e.target.value });
+              }}
               className={classes.margin}
             />
 
@@ -228,7 +257,7 @@ const AddInventory = (props) => {
               Huỷ
             </Button>
             <Button
-              onClick={() => handleClose(statusState)}
+              onClick={() => console.log(productInfo)}
               variant="contained"
               size="small"
               color="primary"

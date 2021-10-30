@@ -112,6 +112,7 @@ const HomePage = (props) => {
   const dispatch = useDispatch();
   const logOutHandler = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("info");
     dispatch(authActions.logOut());
   };
   return (

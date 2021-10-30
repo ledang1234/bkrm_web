@@ -7,21 +7,10 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ModalWrapper from "../../Modal/ModalWrapper";
 import productApi from "../../../api/productApi";
 const AddCategory = (props) => {
-  const fetchCategoryList = async () => {
-    try {
-      const response = await productApi.getAllCategory();
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
-  const categoryList = fetchCategoryList();
-  console.log(categoryList);
   return (
     <ModalWrapper {...props}>
       <Typography variant="h4" gutterBottom>

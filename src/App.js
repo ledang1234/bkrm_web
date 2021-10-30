@@ -47,7 +47,6 @@ function App() {
               </Route>
               <Route path="/main" component={MainPage} />
               <Route path="/customer-test" component={CustomerPage} />
-
               <Route path="*" component={PageNotFound} />
             </Switch>
           </BrowserRouter>

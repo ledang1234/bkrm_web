@@ -1,18 +1,22 @@
 import axiosClient from "./axiosClient";
 const productApi = {
-  createProduct: (storeId, params) => {
+  createProduct: (params) => {
+    const storeId = localStorage.getItem('info')
     const url = `stores/${storeId}/products`;
     return axiosClient.post(url, JSON.stringify(params));
   },
-  getProduct: (storeId, params) => {
+  getProduct: () => {
+    const storeId = localStorage.getItem('info')
     const url = `stores/${storeId}/products`;
     return axiosClient.get(url);
   },
-  createCategory: (storeId, params) => {
+  createCategory: ( params) => {
+    const storeId = localStorage.getItem('info')
     const url = `stores/${storeId}/categories`;
     return axiosClient.post(url, JSON.stringify(params));
   },
-  getAllCategory: (storeId) => {
+  getAllCategory: () => {
+    const storeId = localStorage.getItem('info')
     const url = `/stores/${storeId}/categories`
     return axiosClient.get(url);
   }
