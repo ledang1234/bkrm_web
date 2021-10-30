@@ -14,6 +14,7 @@ import LoadingModal from "./components/LoadingModal/LoadingModal";
 import MainPage from './pages/MainPage/MainPage'
 import CustomerPage from './pages/CustomerPage/CustomerPage'
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
+import AddInventory from "./components/PopUpAdd/AddInventory/AddInventory";
 function App() {
   const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
@@ -23,10 +24,6 @@ function App() {
     setLoading(false);
     dispatch(verifyToken());
   }, [dispatch]);
-  if (loading) {
-    // if your component doesn't have to wait for an async action, remove this block
-    return null; // render null when app is not ready
-  }
   return (
     <div>
       <ThemeProvider theme={themes(customization)}>
@@ -50,6 +47,7 @@ function App() {
               </Route>
               <Route path="/main" component={MainPage} />
               <Route path="/customer-test" component={CustomerPage} />
+
               <Route path="*" component={PageNotFound} />
             </Switch>
           </BrowserRouter>

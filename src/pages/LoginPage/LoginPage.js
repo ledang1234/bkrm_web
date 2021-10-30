@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -12,10 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import useStyles from "./styles";
 import { Paper } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import userApi from "../../api/userApi";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../store/slice/authSlice";
-import { loadingActions } from "../../store/slice/loadingSlice";
 import { logInHandler } from "../../store/actionCreator";
 export default function SignIn() {
   const [userName, setUserName] = useState("");

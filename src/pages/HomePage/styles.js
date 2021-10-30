@@ -61,10 +61,11 @@ export default makeStyles((theme) => ({
     // marginLeft: 20,
     marginRight: 20,
     padding: 20,
-    marginTop:35,
+    marginTop:30,
   },
   toolBar: {
     background: theme.palette.background.paper,
+    padding:12,
   },
   searchEngine: {
     paddingLeft: 20,
