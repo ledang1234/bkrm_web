@@ -22,10 +22,6 @@ function App() {
     setLoading(false);
     dispatch(verifyToken());
   }, [dispatch]);
-  if (loading) {
-    // if your component doesn't have to wait for an async action, remove this block
-    return null; // render null when app is not ready
-  }
   return (
     <div>
       <ThemeProvider theme={themes(customization)}>

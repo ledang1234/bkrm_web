@@ -14,7 +14,7 @@ export const verifyToken = () => {
     };
     try {
       const rs = await verifyToken();
-      if (rs.data) {
+      if (rs) {
         dispatch(authActions.logIn());
         dispatch(loadingActions.finishLoad());
       } else {
