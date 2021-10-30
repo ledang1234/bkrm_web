@@ -11,6 +11,9 @@ const initialState = {
   primaryColor: blue,
   secondaryColor: pink,
   colorLevel: 50,
+
+  isSidebarOpen:null,
+  itemMenuOpen:3
 };
 
 const customizeSlice = createSlice({
@@ -48,11 +51,19 @@ const customizeSlice = createSlice({
       state.secondaryColor = action.payload;
     },
     setColorLevel(state, action) {
-      state.colorLevel = action.payload;
+      if(action.payload === 0){state.colorLevel = 50;}
+      else{state.colorLevel = action.payload;}
     },
     setState(state, action) {
       state = action.payload;
     },
+    setSidebarOpen(state, action) {
+      state.isSidebarOpen = action.payload;
+    },
+    setItemMenuOpen(state, action) {
+      state.itemMenuOpen = action.payload;
+    },
+
   },
 });
 export default customizeSlice;

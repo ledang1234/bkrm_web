@@ -12,3 +12,6 @@ code {
     monospace;
 }
 
+video{
+  outline: 0px;
+}

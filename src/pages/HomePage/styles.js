@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-const drawerWidth = 240;
+const drawerWidth = 245;
 
 export default makeStyles((theme) => ({
   root: {
@@ -24,6 +24,7 @@ export default makeStyles((theme) => ({
     width: drawerWidth,
     borderColor: theme.palette.background.paper,
     paddingLeft: 20,
+
   },
   drawerHeader: {
     display: "flex",
@@ -57,7 +58,7 @@ export default makeStyles((theme) => ({
         ? theme.palette.primary.light
         : theme.customization.primaryColor[theme.customization.colorLevel],
     borderRadius: theme.customization.borderRadius,
-    marginLeft: 20,
+    // marginLeft: 20,
     marginRight: 20,
     padding: 20,
     marginTop:35,
@@ -71,4 +72,7 @@ export default makeStyles((theme) => ({
   scroll: {
     maxHeight: 100,
   },
+  marginBackground:{
+    marginLeft: 20
+  }
 }));
