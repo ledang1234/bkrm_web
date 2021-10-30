@@ -11,6 +11,8 @@ import { verifyToken } from "./store/actionCreator";
 import { useEffect, useState } from "react";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
+import MainPage from './pages/MainPage/MainPage'
+import CustomerPage from './pages/CustomerPage/CustomerPage'
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
 import AddInventory from "./components/PopUpAdd/AddInventory/AddInventory";
 function App() {
@@ -43,9 +45,9 @@ function App() {
               <Route path="/signup" exact>
                 {isLoggedIn ? <Redirect to="/home" /> : <SignupPage />}
               </Route>
-              <Route path="/test" exact>
-                <AddInventory />
-              </Route>
+              <Route path="/main" component={MainPage} />
+              <Route path="/customer-test" component={CustomerPage} />
+
               <Route path="*" component={PageNotFound} />
             </Switch>
           </BrowserRouter>

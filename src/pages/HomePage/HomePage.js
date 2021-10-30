@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTheme, createStyles } from "@material-ui/core/styles";
+import { useDispatch,useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import clsx from "clsx";
@@ -31,8 +32,12 @@ import ManagerView from "../../views/ManagerView/ManagerView";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import useStyles from "./styles";
 import { authActions } from "../../store/slice/authSlice";
+
+import { customizeAction } from "../../store/slice/customizeSlice";
+
 import { useDispatch } from "react-redux";
 import PersonIcon from "@material-ui/icons/Person";
+
 const drawerWidth = 240;
 
 const HomePage = (props) => {
@@ -46,16 +51,17 @@ const HomePage = (props) => {
   const container =
     window !== undefined ? () => window().document.body : undefined;
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
+  const customization = useSelector((state) => state.customize);
 
-  const [isSidebarOpen, setSidebarOpen] = useState(!smallScreen);
-
+  const isSidebarOpen = customization.isSidebarOpen === null ? !smallScreen : customization.isSidebarOpen;
+  
   useEffect(() => {
-    setSidebarOpen(!smallScreen);
+    dispatch(customizeAction.setSidebarOpen(!smallScreen));
   }, [smallScreen]);
-
-  function handleToggleSidebar(open) {
-    setSidebarOpen(open);
-  }
+  
+  const handleToggleSidebar = (open) => {
+    dispatch(customizeAction.setSidebarOpen(open));
+  };
 
   const divLogo = () => {
     if (!smallScreen)
@@ -67,6 +73,9 @@ const HomePage = (props) => {
             display: "flex",
           }}
         >
+           <Typography variant="h3"  style={{marginTop:15, marginLeft:20}}>
+              BKRM
+          </Typography>
           <div
             style={{
               width: drawerWidth,
@@ -74,6 +83,7 @@ const HomePage = (props) => {
               display: "flex",
             }}
           >
+           
             <IconButton onClick={() => handleToggleSidebar(!isSidebarOpen)}>
               <MenuIcon style={{ color: theme.customization.themeText }} />
             </IconButton>
@@ -83,7 +93,12 @@ const HomePage = (props) => {
   };
   const _divLogo = () => {
     if (smallScreen)
-      return <div style={{ width: drawerWidth, height: 48 }}></div>;
+      return (
+      <div style={{ width: drawerWidth, height: 48, marginTop:30, marginLeft:-15 }}>
+          <Typography variant="h3" noWrap className={classes.searchEngine}>
+              BKRM
+          </Typography>
+      </div>);
   };
   const dispatch = useDispatch();
   const logOutHandler = () => {
@@ -159,7 +174,7 @@ const HomePage = (props) => {
         })}
       >
         <div className={classes.drawerHeader} />
-        <Box className={clsx(classes.background)}>
+        <Box className={clsx([classes.background],{[classes.marginBackground]:!isSidebarOpen})}>
           <Switch>
             <Route path={`${path}/sales`} component={SalesView} />
             <Route path={`${path}/inventory`} component={InventoryView} />

@@ -1,7 +1,10 @@
 import React, {useRef} from 'react';
 
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
-
+// import redux
+import { customizeAction } from "../../store/slice/customizeSlice";
+import { useDispatch,useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 // import library
 import { Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,Snackbar} from '@material-ui/core';
 import { grey} from '@material-ui/core/colors'
@@ -66,7 +69,7 @@ createStyles({
 
 const TableWrapper = (props) => {
     const {title, dataTable, headerData ,tableType} =props;
-
+    const dispatch = useDispatch();
 
     const [isCategory, setIsCategory] = React.useState(false);
 
@@ -145,19 +148,33 @@ const TableWrapper = (props) => {
 
             {tableType !== TableType.INVENTORY && tableType !== TableType.INVENTORY_RETURN && tableType !== TableType.INVOICE_RETURN? 
                   <Grid className={classes.btngroup1} >
-                      <ButtonBase sx={{ borderRadius: '16px' }} 
-                      onClick={tableType !== TableType.INVENTORY_ORDER  && tableType !== TableType.INVOICE ? 
-                        handleClickOpen : null}
-                      
-                      >
-                          <Avatar variant="rounded" className={classes.headerAvatar}  >
-                            <Tooltip title={returnNameToolTip(tableType)}>
-                              <AddIcon stroke={1.5} size="1.3rem" />
-                              </Tooltip>
-                          </Avatar>
-                      </ButtonBase>
+                      {tableType !== TableType.INVENTORY_ORDER  && tableType !== TableType.INVOICE ?
+                        <ButtonBase sx={{ borderRadius: '16px' }} 
+                        onClick={handleClickOpen}
+                         >
+                            <Avatar variant="rounded" className={classes.headerAvatar}  >
+                              <Tooltip title={returnNameToolTip(tableType)}>
+                                <AddIcon stroke={1.5} size="1.3rem" />
+                                </Tooltip>
+                            </Avatar>
+                        </ButtonBase>
+                        : 
+                        <ButtonBase 
+                            sx={{ borderRadius: '16px' }} 
+                            onClick={()=>dispatch(customizeAction.setSidebarOpen(false))}
+                            component={Link}
+                            to={tableType === TableType.INVOICE ? '/home/sales/cart' :'/home/inventory/import'}
+                         >
+                            <Avatar variant="rounded" className={classes.headerAvatar}  >
+                              <Tooltip title={returnNameToolTip(tableType)}>
+                                <AddIcon stroke={1.5} size="1.3rem" />
+                                </Tooltip>
+                            </Avatar>
+                        </ButtonBase>
+                        }
                   </Grid>
               : null}
+              
               
             
         </Grid>
