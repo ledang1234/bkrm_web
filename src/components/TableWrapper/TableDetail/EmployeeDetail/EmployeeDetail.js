@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import library
@@ -14,6 +14,7 @@ import avaUpload from '../../../../assets/img/product/lyimg.jpeg';
 
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../Button/MenuButton'
+import employeeApi from '../../../../api/employeeApi';
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -54,6 +55,7 @@ const EmployeeDetail = (props) => {
     const classes = useStyles(theme);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [employeeDetail, setEmployeeDetail] = React.useState({});
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -63,8 +65,21 @@ const EmployeeDetail = (props) => {
       setAnchorEl(null);
     };
 
+    useEffect(() => {
+      const fetchEmp = async () => {
+        try {
+          const response = await employeeApi.getEmployee(row.uuid)
+          setEmployeeDetail(response.data)
+        } catch(err) {
+          console.log(err)
+        }
+      }
+      fetchEmp()
+
+    }, [])
+
     return (
-        <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
+        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -80,7 +95,7 @@ const EmployeeDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Mã nhân viên </Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
+                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.uuid} </Typography>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
@@ -88,7 +103,7 @@ const EmployeeDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Tên nhân viên </Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{row.name} </Typography>
+                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.name} </Typography>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
@@ -96,7 +111,7 @@ const EmployeeDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Ngày sinh</Typography>    
                           </Grid>
                           <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">22/12/2008</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.date_of_birth}</Typography>
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
@@ -104,7 +119,7 @@ const EmployeeDetail = (props) => {
                             <Typography variant="h5"gutterBottom component="div">CMND</Typography>    
                           </Grid>
                           <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.idCard}</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.id_card_num}</Typography>
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
@@ -112,7 +127,7 @@ const EmployeeDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Số điện thoại</Typography>    
                           </Grid>
                           <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.phone}</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.phone}</Typography>
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
@@ -120,7 +135,7 @@ const EmployeeDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Email</Typography>    
                           </Grid>
                           <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.email} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.email} </Typography>
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
@@ -128,7 +143,7 @@ const EmployeeDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Địa chỉ</Typography>    
                           </Grid>
                           <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.address} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.address} </Typography>
                           </Grid>
                       </Grid>
                   </Grid>
@@ -148,7 +163,7 @@ const EmployeeDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Chức năng</Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">Nhân viên bán hàng</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.permissions ? employeeDetail.permissions.map(permission => <div>{permission.name}</div>) : ""}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -156,7 +171,7 @@ const EmployeeDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Loại lương</Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">Theo ca</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.salary_type}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -164,7 +179,7 @@ const EmployeeDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Mức lương</Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">20.000/ca</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.salary}</Typography>
                         </Grid>
                     </Grid>
                   

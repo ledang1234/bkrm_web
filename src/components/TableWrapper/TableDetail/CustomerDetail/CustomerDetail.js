@@ -63,7 +63,7 @@ const CustomerDetail = (props) => {
     };
 
     return (
-        <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
+        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -79,7 +79,7 @@ const CustomerDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Mã khách hàng </Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
+                          <Typography variant="body1" gutterBottom component="div">{row.uuid} </Typography>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
@@ -100,10 +100,10 @@ const CustomerDetail = (props) => {
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
                           <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Ngày sinh</Typography>    
+                            <Typography variant="h5" gutterBottom component="div">Thông tin thanh toán</Typography>    
                           </Grid>
                           <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.phone}</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.payment_info}</Typography>
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">

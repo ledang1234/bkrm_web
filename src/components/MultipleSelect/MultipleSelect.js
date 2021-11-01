@@ -36,7 +36,7 @@ const MenuProps = {
   }
 };
 
-const names = ["Bán hàng", "Kho hàng", "Nhân viên", "Quản lý"];
+//const names = ["Bán hàng", "Kho hàng", "Nhân viên", "Quản lý"];
 
 function getStyles(name, personName, theme) {
   return {
@@ -47,13 +47,14 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function MultipleSelect() {
+export default function MultipleSelect(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
 
   const handleChange = (event) => {
-    setPersonName(event.target.value);
+    setPersonName(event.target.value)
+    props.handleSelect(event.target.value)
   };
 
   return (
@@ -69,20 +70,20 @@ export default function MultipleSelect() {
           input={<Input id="select-multiple-chip" />}
           renderValue={(selected) => (
             <div className={classes.chips}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} className={classes.chip} />
+              {selected.map((choice) => (
+                <Chip key={choice.value} label={choice.value} className={classes.chip} />
               ))}
             </div>
           )}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
+          {props.choices.map((choice) => (
             <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
+              key={choice.key}
+              value={choice}
+              style={getStyles(choice.value, personName, theme)}
             >
-              {name}
+              {choice.value}
             </MenuItem>
           ))}
         </Select>

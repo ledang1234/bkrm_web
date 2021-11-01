@@ -137,7 +137,7 @@ function Test(props) {
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
                   return (
-                        <TableRowInfo key={row.id} row={row} labelId={labelId} openRow={openRow}  handleOpenRow={handleOpenRow} tableType={tableType}/>
+                        <TableRowInfo key={row.uuid} row={row} labelId={labelId} openRow={openRow}  handleOpenRow={handleOpenRow} tableType={tableType}/>
                   );
                 })}
               {emptyRows > 0 && (

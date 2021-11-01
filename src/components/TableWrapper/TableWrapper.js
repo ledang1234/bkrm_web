@@ -68,13 +68,18 @@ createStyles({
 
 
 const TableWrapper = (props) => {
-    const {title, dataTable, headerData ,tableType} =props;
+    const {title, headerData ,tableType} =props;
     const dispatch = useDispatch();
 
     const [isCategory, setIsCategory] = React.useState(false);
-
+    const [dataTable, setDataTable] = React.useState([]);
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    React.useEffect(() => {
+      setDataTable(props.dataTable)
+      console.log(props.dataTable)
+    }, [props.dataTable])
 
 
     const componentRef = useRef();
@@ -104,8 +109,10 @@ const TableWrapper = (props) => {
     
     const handleClose = (status) => {
       setOpen(false);
+      
       setAddStatus(status);
       if(status === "Success"){
+        props.reload()
         setOpenBar(true);
       }   
       setIsCategory(false);   
@@ -243,26 +250,40 @@ function returnNameToolTip(type){
 }
 
 
+/* Hải: tui sửa lại tại cái table ko tự refresh khi props.dataTable thay đổi*/
+// class ComponentToPrint extends React.Component{
+//   constructor(props) {
+//     super(props);
+//     this.state ={
+//       dataTable :[],
+//       headerData:[],
+//       tableType :[]
+//     }
 
-class ComponentToPrint extends React.Component{
-  constructor(props) {
-    super(props);
-    this.state ={
-      dataTable :[],
-      headerData:[],
-      tableType :[]
-    }
-
-  }
+//   }
  
-  componentDidMount() {
-    const { dataTable,headerData,tableType} = this.props;
-    this.setState({ dataTable,headerData,tableType});
-  }
-  render() {
-    return (
+//   componentDidMount() {
+//     const { dataTable,headerData,tableType} = this.props;
+//     this.setState({ dataTable,headerData,tableType});
+//   }
+//   render() {
+//     return (
 
-       <MyTable rows={this.state.dataTable} headerData={this.state.headerData} tableType={this.state.tableType} />
-    );
-  }
+//        <MyTable rows={this.state.dataTable} headerData={this.state.headerData} tableType={this.state.tableType} />
+//     );
+//   }
+// }
+
+function ComponentToPrint(props) {
+  const [dataTable, setDataTable] = React.useState([]) 
+  const [headerData, setHeaderData] = React.useState(props.headerData) 
+  const [tableType, setTableType] = React.useState(props.tableType) 
+
+  React.useEffect(() => {
+    setDataTable(props.dataTable)
+  }, [props.dataTable])
+
+  return (
+    <MyTable rows={dataTable} headerData={headerData} tableType={tableType} />
+  )
 }

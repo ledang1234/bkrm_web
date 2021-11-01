@@ -75,7 +75,7 @@ export const EmployeeHeadCells = [
     { id: 'name', numeric: false, disablePadding: true, label: 'Nhân viên' },
     { id: 'phone', numeric: false, disablePadding: true, label: 'Số điện thoại' },
     { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
-    { id: 'function', numeric: false, disablePadding: false, label: 'Chức năng' },  
+    { id: 'function', numeric: false, disablePadding: false, label: 'Quyền' },  
 ];
 
 export const CustomerHeadCells = [
