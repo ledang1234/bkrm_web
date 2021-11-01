@@ -46,90 +46,91 @@ const useRowStyles = makeStyles((theme)=>
   }
 }));
 
-  function ReturnDataTable (props){
-    const {type,row} = props;
-    switch(type){
-      case TableType.INVENTORY:
-        return <TableInventoryCell row={row} />
-      case TableType.INVENTORY_ORDER:
-        return <TableInventoryOrderCell row={row}/>
-      case TableType.INVENTORY_RETURN:
-          return <TableInventoryReturnOrderCell row={row}/>
-      case TableType.SUPPLIER:
-        return  <TableSupplierCell row={row}/>
-      case TableType.INVOICE:
-          return  <TableInvoiceCell row={row}/>
-      case TableType.INVOICE_RETURN:
-          return  <TableInvoiceReturnCell row={row}/>
-      case TableType.EMPLOYEE:
-          return  <TableEmployeeCell row={row}/>
-      case TableType.CUSTOMER:
-          return  <TableCustomerCell row={row}/>
-      default:
-        return <TableInventoryCell row={row} />
-  
-    }
-  }
-  function ReturnDetailRow (props){
-    const {type,parentProps} = props;
-    switch(type){
-      case TableType.INVENTORY:
-        return <InventoryDetail parentProps={parentProps} />
-      case TableType.INVENTORY_ORDER:
-        return <InventoryOrderDetail parentProps={parentProps}/>
-      case TableType.INVENTORY_RETURN:
-          return <InventoryReturnDetail parentProps={parentProps}/>
-      case TableType.SUPPLIER:
-        return  <SupplierDetail parentProps={parentProps}/>
-      case TableType.INVOICE:
-          return  <InvoiceDetail parentProps={parentProps}/>
-      case TableType.INVOICE_RETURN:
-          return  <InvoiceReturnDetail parentProps={parentProps}/>
-      case TableType.EMPLOYEE:
-          return  <EmployeeDetail parentProps={parentProps}/>
-      case TableType.CUSTOMER:
-          return  <CustomerDetail parentProps={parentProps}/>
-      default:
-        return  null
-  
-    }
+function ReturnDataTable (props){
+  const {type,row} = props;
+  switch(type){
+    case TableType.INVENTORY:
+      return <TableInventoryCell row={row} />
+    case TableType.INVENTORY_ORDER:
+      return <TableInventoryOrderCell row={row}/>
+    case TableType.INVENTORY_RETURN:
+        return <TableInventoryReturnOrderCell row={row}/>
+    case TableType.SUPPLIER:
+      return  <TableSupplierCell row={row}/>
+    case TableType.INVOICE:
+        return  <TableInvoiceCell row={row}/>
+    case TableType.INVOICE_RETURN:
+        return  <TableInvoiceReturnCell row={row}/>
+    case TableType.EMPLOYEE:
+        return  <TableEmployeeCell row={row}/>
+    case TableType.CUSTOMER:
+        return  <TableCustomerCell row={row}/>
+    default:
+      return <TableInventoryCell row={row} />
 
   }
-  const FormatedImage  = () => {
-    return (
-      <Box
-        component="img"
-        sx={{
-          height: 53,
-          width: 53, 
-          borderRadius:10,
-          marginRight:15
-        }}
-        src={icon}
-      />
-      
-    )
+}
+function ReturnDetailRow (props){
+  const {type,parentProps} = props;
+  switch(type){
+    case TableType.INVENTORY:
+      return <InventoryDetail parentProps={parentProps} />
+    case TableType.INVENTORY_ORDER:
+      return <InventoryOrderDetail parentProps={parentProps}/>
+    case TableType.INVENTORY_RETURN:
+        return <InventoryReturnDetail parentProps={parentProps}/>
+    case TableType.SUPPLIER:
+      return  <SupplierDetail parentProps={parentProps}/>
+    case TableType.INVOICE:
+        return  <InvoiceDetail parentProps={parentProps}/>
+    case TableType.INVOICE_RETURN:
+        return  <InvoiceReturnDetail parentProps={parentProps}/>
+    case TableType.EMPLOYEE:
+        return  <EmployeeDetail parentProps={parentProps}/>
+    case TableType.CUSTOMER:
+        return  <CustomerDetail parentProps={parentProps}/>
+    default:
+      return  null
+
   }
-  const FormatedStatus  = (props) => {
-    if (props.debt === 0){
-      return ( <Chip label="Trả đủ" color="#76ff03" variant="outlined"  style={{backgroundColor:'#76ff03',  fontWeight:500, marginLeft:10, height:28}}>{"Trả đủ"} </Chip>)
-    }
-    else{
-      return( <Chip label="Còn nợ" color="#ff3d00" variant="outlined"style={{backgroundColor:"#ff3d00" ,  fontWeight:500, marginLeft:10, height:28} }>{"Trả đủ"} </Chip> )
-    }
+
+}
+const FormatedImage  = () => {
+  return (
+    <Box
+      component="img"
+      sx={{
+        height: 53,
+        width: 53, 
+        borderRadius:10,
+        marginRight:15
+      }}
+      src={icon}
+    />
+    
+  )
+}
+const FormatedStatus  = (props) => {
+  if (props.debt === 0){
+    return ( <Chip label="Trả đủ" color="#76ff03" variant="outlined"  style={{backgroundColor:'#76ff03',  fontWeight:500, marginLeft:10, height:28}}>{"Trả đủ"} </Chip>)
+  }
+  else{
+    return( <Chip label="Còn nợ" color="#ff3d00" variant="outlined"style={{backgroundColor:"#ff3d00" ,  fontWeight:500, marginLeft:10, height:28} }>{"Trả đủ"} </Chip> )
+  }
+}
+  
+const FormatedProductStatus  = (props) => {
+  if (props.quantity === 0){
+    return (<Chip label="Hết hàng" color="#ff007d" variant="outlined"  style={{backgroundColor:'#ff007d',  fontWeight:500, marginLeft:10, height:28}}>{"Trả đủ"} </Chip>)
+    //Gia tri low stock ??
+  }else if (props.quantity <=10){
+    return( <Chip label="Sắp hết" color="#ffc02b" variant="outlined"style={{backgroundColor:"#ffc02b" ,  fontWeight:500, marginLeft:10, height:28} }>{"Trả đủ"} </Chip>  )
+  }else{
+    return(  <Chip label="Còn hàng" color="#00ded7" variant="outlined"style={{backgroundColor:"#00ded7" ,  fontWeight:500, marginLeft:10, height:28} }>{"Trả đủ"} </Chip> )
   }
   
-  const FormatedProductStatus  = (props) => {
-    if (props.quantity === 0){
-      return (<Chip label="Hết hàng" color="#ff007d" variant="outlined"  style={{backgroundColor:'#ff007d',  fontWeight:500, marginLeft:10, height:28}}>{"Trả đủ"} </Chip>)
-      //Gia tri low stock ??
-    }else if (props.quantity <=10){
-      return( <Chip label="Sắp hết" color="#ffc02b" variant="outlined"style={{backgroundColor:"#ffc02b" ,  fontWeight:500, marginLeft:10, height:28} }>{"Trả đủ"} </Chip>  )
-    }else{
-      return(  <Chip label="Còn hàng" color="#00ded7" variant="outlined"style={{backgroundColor:"#00ded7" ,  fontWeight:500, marginLeft:10, height:28} }>{"Trả đủ"} </Chip> )
-    }
-    
-  }
+}
+
 /// ROW.ID cua HEADCELL phai trung vois ten ATTRIBUTE
 const TableInventoryCell = ({row}) =>{
   const classes = useRowStyles();
@@ -154,6 +155,7 @@ const TableInventoryCell = ({row}) =>{
     </>
   )
 }
+
 const TableInventoryOrderCell = ({row}) =>{
   const classes = useRowStyles();
   return (
@@ -171,6 +173,7 @@ const TableInventoryOrderCell = ({row}) =>{
     </>
   )
 }
+
 const TableInventoryReturnOrderCell = ({row}) =>{
   const classes = useRowStyles();
   return (
@@ -186,6 +189,7 @@ const TableInventoryReturnOrderCell = ({row}) =>{
     </>
   )
 }
+
 const TableSupplierCell = ({row}) =>{
   const classes = useRowStyles();
   return (
@@ -202,6 +206,7 @@ const TableSupplierCell = ({row}) =>{
     </>
   )
 }
+
 const TableInvoiceCell = ({row}) =>{
   const classes = useRowStyles();
   return (
@@ -219,6 +224,7 @@ const TableInvoiceCell = ({row}) =>{
     </>
   )
 }
+
 const TableInvoiceReturnCell = ({row}) =>{
   const classes = useRowStyles();
   return (
@@ -234,11 +240,13 @@ const TableInvoiceReturnCell = ({row}) =>{
     </>
   )
 }
+
+
 const TableEmployeeCell = ({row}) =>{
   const classes = useRowStyles();
   return (
     <>
-      <TableCell align="left">{row.id}</TableCell>
+      <TableCell align="left">{row.uuid}</TableCell>
       
       <TableCell align="left" style={{minWidth:200}} >
         <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}>
@@ -249,10 +257,12 @@ const TableEmployeeCell = ({row}) =>{
 
       <TableCell align="left">{row.phone}</TableCell>
       <TableCell align="left">{row.email}</TableCell>
-      <TableCell align="left">{row.function}</TableCell>
+      <TableCell align="left">{row.permissions}</TableCell>
     </>
   )
 }
+
+
 const TableCustomerCell = ({row}) =>{
  const classes = useRowStyles();
   return (
@@ -279,14 +289,15 @@ const TableCustomerCell = ({row}) =>{
 function TableRowInfo(props) {
     const { row, handleOpenRow,openRow, tableType} = props;
     const classes = useRowStyles();
+
   
     return (
         < >
         {/* Row */}
         <TableRow
-          onClick={() => handleOpenRow(row.id)}   
-          key={row.id}
-          className={ clsx(classes.row,(openRow === row.id) ? classes.rowClicked : null)}
+          onClick={() => handleOpenRow(row.uuid)}   
+          key={row.uuid}
+          className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
           
         >
            
@@ -304,6 +315,6 @@ function TableRowInfo(props) {
        </TableRow>
       </>
     );
-  }
+}
 
 export default TableRowInfo

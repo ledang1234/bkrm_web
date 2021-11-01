@@ -49,7 +49,7 @@ const SupplierDetail = (props) => {
     };
 
     return (
-        <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
+        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -62,7 +62,7 @@ const SupplierDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Mã nhà cung cấp </Typography>    
                       </Grid>
                       <Grid item xs={3} >
-                        <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.uuid} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
@@ -103,18 +103,18 @@ const SupplierDetail = (props) => {
                   <Grid item xs={6}>  
                     <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Tổng tiền nhập</Typography>    
+                            <Typography variant="h5" gutterBottom component="div">Thông tin thanh toán</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">2.000.000</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.payment_info}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Còn nợ NCC</Typography>    
+                            <Typography variant="h5" gutterBottom component="div">Công ty</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">1.000.000</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.company}</Typography>
                         </Grid>
                     </Grid>
                     
