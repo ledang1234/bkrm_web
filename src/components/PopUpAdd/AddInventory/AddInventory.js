@@ -23,7 +23,7 @@ import barcodeIcon from "../../../assets/img/icon/barcode1.png";
 import AddCategory from "./AddCategory";
 import useStyles from "./styles";
 import productApi from "../../../api/productApi";
-const UploadImage = (img) => {
+const UploadImages = (img) => {
   return (
     <Box
       component="img"
@@ -52,10 +52,10 @@ const AddInventory = (props) => {
     },
   ]);
   const statusState = "Success";
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
   const onChange = (e) => {
-    setImage(e.target.files[0]);
+    setImages([...images, e.target.files[0]]);
     setDisplay([...display, URL.createObjectURL(e.target.files[0])]);
   };
   const [productInfo, setProductInfo] = useState({
@@ -63,12 +63,39 @@ const AddInventory = (props) => {
     importedPrice: 0,
     salesPrice: 0,
     barcode: "",
-    category: "",
+    category: { uuid: "" },
     unit: "",
+    re_order_point: 0,
   });
   const theme = useTheme();
   const classes = useStyles(theme);
-
+  const addProductHandler = async () => {
+    console.log(images);
+    try {
+      var bodyFormData = new FormData();
+      bodyFormData.append("name", productInfo.name.toString());
+      bodyFormData.append("list_price", productInfo.salesPrice.toString());
+      bodyFormData.append(
+        "standard_price",
+        productInfo.importedPrice.toString()
+      );
+      bodyFormData.append("bar_code", productInfo.barcode.toString());
+      bodyFormData.append("quantity_per_unit", productInfo.unit.toString());
+      bodyFormData.append(
+        "min_reorder_quantity",
+        productInfo.re_order_point.toString()
+      );
+      bodyFormData.append(
+        "category_uuid",
+        productInfo.category.uuid.toString()
+      );
+      // bodyFormData.append("images[]", images);
+      images.forEach((image) => bodyFormData.append("images[]", image));
+      const response = await productApi.createProduct(bodyFormData);
+      alert("Add product successfully")
+    } catch (error) {
+    }
+  };
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
@@ -85,7 +112,12 @@ const AddInventory = (props) => {
     <div>
       <Box className={classes.root}>
         <AddCategory open={openAddCategory} handleClose={handleCloseCategory} />
-        <Typography className={classes.headerTitle} variant="h5" gutterBottom>
+        <Typography
+          className={classes.headerTitle}
+          variant="h5"
+          gutterBottom
+          style={{ marginBottom: 20 }}
+        >
           Thêm sản phẩm
         </Typography>
         <Grid
@@ -96,18 +128,23 @@ const AddInventory = (props) => {
         >
           <Grid item sm={7} xs={12}>
             <TextField
-              id="outlined-basic"
+              required
               label="Tên sản phẩm"
               variant="outlined"
               fullWidth
               size="small"
+              onChange={(e) =>
+                setProductInfo({ ...productInfo, name: e.target.value })
+              }
+              value={productInfo.name}
             />
+
             <TextField
-              id="input-with-icon-textfield"
               label="Mã vạch (mặc định)"
               variant="outlined"
               fullWidth
               size="small"
+              value={productInfo.barcode}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -119,49 +156,62 @@ const AddInventory = (props) => {
                   </InputAdornment>
                 ),
               }}
+              onChange={(e) =>
+                setProductInfo({ ...productInfo, barcode: e.target.value })
+              }
               className={classes.margin}
             />
-            <Grid item xs>
-              <Box className={`${classes.box} ${classes.margin}`}>
-                <FormControl required size="small" variant="outlined" fullWidth>
-                  <InputLabel htmlFor="category">Danh mục</InputLabel>
-                  <Select
-                    native
-                    value={productInfo.category}
-                    onChange={(e) => {
-                      const catUuid = categoryList.filter(
-                        (item) => item.name === e.target.value
-                      ).uuid;
-                      setProductInfo({
-                        ...productInfo,
-                        category: catUuid,
-                      });
-                    }}
-                    label="Danh mục"
-                    id="category"
-                  >
-                    <option aria-label="None" value="" />
-                    {categoryList.map((category) => (
-                      <option key={category.uuid} value={category}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-                <Tooltip title="Thêm danh mục">
-                  <IconButton
-                    size="small"
-                    style={{ marginLeft: 5 }}
-                    onClick={() => setOpenAddCategory(true)}
-                  >
-                    <AddIcon color="primary" />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Grid>
+            <TextField
+              label="Đơn vị"
+              variant="outlined"
+              fullWidth
+              size="small"
+              className={classes.margin}
+              value={productInfo.unit}
+              onChange={(e) => {
+                setProductInfo({ ...productInfo, unit: e.target.value });
+              }}
+            />
+            <Box className={`${classes.box} ${classes.margin}`}>
+              <FormControl required size="small" variant="outlined" fullWidth>
+                <InputLabel htmlFor="category">Danh mục</InputLabel>
+                <Select
+                  native
+                  value={productInfo.category.name || null}
+                  onChange={(e) => {
+                    const cat = categoryList.find(
+                      (item) => item.name === e.target.value
+                    );
+                    setProductInfo({
+                      ...productInfo,
+                      category: cat,
+                    });
+                  }}
+                  label="Danh mục"
+                  id="category"
+                >
+                  <option aria-label="None" value="" />
+                  {categoryList.map((category) => (
+                    <option key={category.uuid} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+              <Tooltip title="Thêm danh mục">
+                <IconButton
+                  size="small"
+                  style={{ marginLeft: 5 }}
+                  onClick={() => setOpenAddCategory(true)}
+                >
+                  <AddIcon color="primary" />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Grid>
           <Grid item sm={5} xs={12}>
             <VNDInput
+              required
               label="Giá bán"
               variant="outlined"
               fullWidth
@@ -175,6 +225,7 @@ const AddInventory = (props) => {
               }
             />
             <VNDInput
+              required
               label="Giá vốn"
               variant="outlined"
               fullWidth
@@ -187,12 +238,18 @@ const AddInventory = (props) => {
             />
 
             <TextField
-              id="outlined-basic"
-              label="Đơn vị"
+              label="Số lượng đặt hàng lại"
               variant="outlined"
               fullWidth
               size="small"
               className={classes.margin}
+              onChange={(e) =>
+                setProductInfo({
+                  ...productInfo,
+                  re_order_point: e.target.value,
+                })
+              }
+              value={productInfo.re_order_point}
             />
           </Grid>
         </Grid>
@@ -226,7 +283,7 @@ const AddInventory = (props) => {
                   </Button>
                 </Tooltip>
               ))}
-              {display.length === 0 ? <UploadImage /> : null}
+              {display.length === 0 ? <UploadImages /> : null}
               <IconButton
                 disabled={display.length > 3 ? true : false}
                 color="primary"
@@ -257,7 +314,10 @@ const AddInventory = (props) => {
               Huỷ
             </Button>
             <Button
-              onClick={() => console.log(productInfo)}
+              onClick={() => {
+                addProductHandler();
+                handleClose(null);
+              }}
               variant="contained"
               size="small"
               color="primary"
