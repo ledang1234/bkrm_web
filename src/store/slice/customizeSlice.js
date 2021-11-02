@@ -21,7 +21,6 @@ const customizeSlice = createSlice({
   initialState: initialState,
   reducers: {
     setFontFamily(state, action) {
-      console.log(action);
       state.fontFamily = action.payload;
     },
     setBorderRadius(state, action) {
