@@ -12,7 +12,7 @@
         "payment":"Thẻ",
         "list":[
             {
-                "product_id": "1",
+                "id": "1",
                 "name": "Quan dai",
                 "price":200,
                 "import_price": 100,
@@ -23,7 +23,7 @@
                 "quantity":1
             },
             {
-                "product_id": "3",
+                "id": "3",
                 "name": "Ao dai",
                 "price":250,
                 "import_price": 120,
@@ -48,7 +48,7 @@
         "payment":"Tiền mặt",
         "list":[
             {
-                "product_id": "3",
+                "id": "3",
                 "name": "Ao dai",
                 "price":250,
                 "import_price": 120,
@@ -59,7 +59,7 @@
                 "quantity":3
             },
             {
-                "product_id": "9",
+                "id": "9",
                 "name": "tap",
                 "price":203,
                 "import_price": 152,

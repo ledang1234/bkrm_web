@@ -16,3 +16,11 @@ export const EMPLOYEE = "Nhân_viên";
 //Manager
 export const CUSTOMER = "Khách_hàng";
 
+
+
+//CART
+export const CART = "Giỏ_hàng";
+export const IMPORT = "Nhập hàng";
+export const CART_RETURN = "Trả_hàng";
+export const IMPORT_RETURN = "Trả_hàng_nhập";
+

@@ -12,6 +12,7 @@ import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../Button/MenuButton'
 
+import { grey} from '@material-ui/core/colors'
 
 // dơn trả giá trả có khác ko ???
 
@@ -27,6 +28,9 @@ createStyles({
   },
   typo:{
     marginBottom:20
+  },
+  background:{
+    background: theme.customization.mode === "Light"? theme.customization.primaryColor[50]: grey[700]
   }
 
 }));
@@ -184,7 +188,7 @@ const InventoryReturnDetail = (props) => {
                    ))}
                  </TableBody>
                </Table> 
-               <Box style={{background:theme.customization.primaryColor[50],padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
+               <Box className={classes.background} style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
                <Grid container direction="column" >
                     
                     <Grid container direction="row" justifyContent="flex-end">

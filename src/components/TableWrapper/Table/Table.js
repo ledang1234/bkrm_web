@@ -42,7 +42,6 @@ const StyledPaper = withStyles((theme) => ({
     background: theme.customization.mode === "Light"? null: grey[800],
     color: theme.customization.mode === "Light"? null: grey[700]
   },
-
 }))(Paper);
 
 
@@ -166,7 +165,6 @@ function Test(props) {
         label="Thu nhỏ"
         style={{display: "flex",justifyContent: "flex-end",}}
       />
-     
     </div>
   );
 }

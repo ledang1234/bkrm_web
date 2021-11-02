@@ -57,9 +57,12 @@ export default function VNDInput(props) {
   );
 }
 export function ThousandSeperatedInput(props) {
+  const {defaultPrice, value} = props 
   return (
     <TextField
       name="numberformat"
+      defaultValue={defaultPrice}
+      value={value ? value:null}
       InputProps={{
         inputComponent: NumberFormatCustom,
       }}
