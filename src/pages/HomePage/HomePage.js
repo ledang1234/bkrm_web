@@ -23,7 +23,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 //import project
 import MenuList from "../../components/MenuList/MenuList";
-import SearchProduct  from '../../components/SearchProduct/SearchProduct'
+import SearchProduct from "../../components/SearchProduct/SearchProduct";
 import Customization from "../../components/Customization/Customization";
 
 import SalesView from "../../views/SalesView/SalesView";
@@ -42,17 +42,15 @@ const drawerWidth = 240;
 
 const HomePage = (props) => {
   const { window } = props;
-
   const theme = useTheme();
   const classes = useStyles(theme);
   let { path } = useRouteMatch();
-
   const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const container =
     window !== undefined ? () => window().document.body : undefined;
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
   const customization = useSelector((state) => state.customize);
-
+  const infoDetail = useSelector((state) => state.info);
   const isSidebarOpen =
     customization.isSidebarOpen === null
       ? !smallScreen
@@ -113,7 +111,6 @@ const HomePage = (props) => {
   const dispatch = useDispatch();
   const logOutHandler = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("info");
     dispatch(authActions.logOut());
   };
   return (
@@ -139,7 +136,7 @@ const HomePage = (props) => {
             {/* <Typography variant="h3" noWrap className={classes.searchEngine}>
               BKRM
             </Typography> */}
-            <SearchProduct/>
+            <SearchProduct />
             <Box display="flex" flexDirection="row" alignItems="center">
               <IconButton color="primary" size="small">
                 <PersonIcon fontSize="large" />
@@ -152,7 +149,7 @@ const HomePage = (props) => {
               >
                 <Typography variant="h6">Store Owner</Typography>
                 <Typography variant="h6" noWrap>
-                  Mai Trường Khang
+                  {infoDetail.user.name}
                 </Typography>
               </Box>
               <Button color="primary" onClick={() => logOutHandler()}>

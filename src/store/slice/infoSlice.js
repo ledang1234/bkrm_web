@@ -27,3 +27,20 @@ const initialUserInfoSlice = {
   },
   role: "",
 };
+const infoSlice = createSlice({
+  name: "info",
+  initialState: initialUserInfoSlice,
+  reducers: {
+    setUser(state, action) {
+      state.user = action.payload;
+    },
+    setStore(state, action) {
+      state.store = action.payload;
+    },
+    setRole(state, action) {
+      state.role = action.payload;
+    },
+  },
+});
+export default infoSlice;
+export const infoActions = infoSlice.actions;
