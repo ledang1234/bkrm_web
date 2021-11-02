@@ -55,7 +55,18 @@ const EmployeeDetail = (props) => {
     const classes = useStyles(theme);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [employeeDetail, setEmployeeDetail] = React.useState({});
+    const [employeeDetail, setEmployeeDetail] = React.useState({
+      uuid: "",
+      name: "",
+      id_card_num: "",
+      date_of_birth: "",
+      phone: "",
+      email: "",
+      address: "",
+      permissions: [],
+      salary: "",
+      salary_type: "",
+    });
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
