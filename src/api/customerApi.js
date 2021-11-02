@@ -11,10 +11,15 @@ const customerApi = {
     return axiosClient.get(url);
   },
   
-  getCustomer: (employeeUuid) => {
+  getCustomer: (customerUuid) => {
     const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/customers/${employeeUuid}`;
+    const url = `/stores/${storeId}/customers/${customerUuid}`;
     return axiosClient.get(url);
+  },
+  deleteCustomer: (customerUuid) => {
+    const storeId = localStorage.getItem('info')
+    const url = `/stores/${storeId}/customers/${customerUuid}`;
+    return axiosClient.delete(url);
   },
 };
 export default customerApi;

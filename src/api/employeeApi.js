@@ -16,5 +16,10 @@ const employeeApi = {
     const url = `/stores/${storeId}/employees/${employeeUuid}`;
     return axiosClient.get(url);
   },
+  deleteEmployee: (employeeUuid) => {
+    const storeId = localStorage.getItem('info')
+    const url = `/stores/${storeId}/employees/${employeeUuid}`;
+    return axiosClient.delete(url);
+  },
 };
 export default employeeApi;

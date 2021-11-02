@@ -16,5 +16,10 @@ const supplierApi = {
     const url = `/stores/${storeId}/suppliers/${supplierUuid}`;
     return axiosClient.get(url);
   },
+  deleteSupplier: (supplierUuid) => {
+    const storeId = localStorage.getItem('info')
+    const url = `/stores/${storeId}/suppliers/${supplierUuid}`;
+    return axiosClient.delete(url);
+  },
 };
 export default supplierApi;
