@@ -9,11 +9,18 @@ const productApi = {
       },
     });
   },
-  getProduct: () => {
+  getProducts: () => {
     const storeId = localStorage.getItem("info");
     const url = `stores/${storeId}/products`;
     return axiosClient.get(url);
   },
+
+  getProduct: (productUuid) => {
+    const storeId = localStorage.getItem("info");
+    const url = `stores/${storeId}/products/${productUuid}`;
+    return axiosClient.get(url);
+  },
+  
   createCategory: (params) => {
     const storeId = localStorage.getItem("info");
     const url = `stores/${storeId}/categories`;

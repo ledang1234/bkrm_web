@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import library
@@ -16,7 +16,7 @@ import avaUpload from '../../../../assets/img/product/img.jpeg';
 
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../Button/MenuButton'
-
+import productApi from '../../../../api/productApi';
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
@@ -58,6 +58,14 @@ const InventoryDetail = (props) => {
     const classes = useStyles(theme);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [productDetail, setProductDetail] = React.useState({
+      name: "",
+      barcode: "",
+      category: {name: ""},
+      images: [],
+      suppliers: [],
+
+    }); 
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -66,9 +74,22 @@ const InventoryDetail = (props) => {
     const handleClose = () => {
       setAnchorEl(null);
     };
+  
+    useEffect(() => {
+      const fetchProduct = async () => {
+        try {
+          const response = await productApi.getProduct(row.uuid)
+          setProductDetail(response.data)
+        } catch(err) {
+          console.log(err)
+        }
+      }
+      fetchProduct()
+
+    }, [])
 
     return (
-        <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
+        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -87,7 +108,7 @@ const InventoryDetail = (props) => {
                               <Typography variant="h5" gutterBottom component="div">Mã hàng </Typography>    
                             </Grid>
                             <Grid item xs={6} >
-                              <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
+                              <Typography variant="body1" gutterBottom component="div">{productDetail.uuid} </Typography>
                             </Grid>
                         </Grid>
                         <Grid container direction="row" justifyContent="flex-start">
@@ -95,7 +116,7 @@ const InventoryDetail = (props) => {
                               <Typography variant="h5" gutterBottom component="div">Tên sản phẩm</Typography>    
                             </Grid>
                             <Grid item xs={6} >
-                              <Typography variant="body1" gutterBottom component="div">{row.barcode} </Typography>
+                              <Typography variant="body1" gutterBottom component="div">{productDetail.name} </Typography>
                             </Grid>
                         </Grid>
                         <Grid container direction="row" justifyContent="flex-start">
@@ -103,7 +124,7 @@ const InventoryDetail = (props) => {
                               <Typography variant="h5" gutterBottom component="div">Mã vạch</Typography>    
                             </Grid>
                             <Grid item xs={6} >
-                              <Typography variant="body1" gutterBottom component="div">{row.barcode} </Typography>
+                              <Typography variant="body1" gutterBottom component="div">{productDetail.barcode} </Typography>
                             </Grid>
                         </Grid>
                         <Grid container direction="row" justifyContent="flex-start">
@@ -111,7 +132,7 @@ const InventoryDetail = (props) => {
                               <Typography variant="h5" gutterBottom component="div">Danh mục</Typography>    
                             </Grid>
                             <Grid item xs={6} >
-                              <Typography variant="body1" gutterBottom component="div">{row.category} </Typography>
+                              <Typography variant="body1" gutterBottom component="div">{productDetail.category.name } </Typography>
                             </Grid>
                         </Grid>
                         <Grid container direction="row" justifyContent="flex-start">
@@ -119,7 +140,7 @@ const InventoryDetail = (props) => {
                               <Typography variant="h5" gutterBottom component="div">Đơn vị</Typography>    
                             </Grid>
                             <Grid item xs={6} >
-                              <Typography variant="body1" gutterBottom component="div">2kg/bịch</Typography>
+                              <Typography variant="body1" gutterBottom component="div">{productDetail.quantity_per_unit}</Typography>
                             </Grid>
                         </Grid>
                       </Grid>
@@ -129,7 +150,7 @@ const InventoryDetail = (props) => {
                               <Typography variant="h5"gutterBottom component="div">Giá bán</Typography>    
                             </Grid>
                             <Grid item xs={6} >
-                              <Typography variant="body1" gutterBottom component="div">{row.price} </Typography>
+                              <Typography variant="body1" gutterBottom component="div">{productDetail.list_price} </Typography>
                             </Grid>
                         </Grid>
                         <Grid container direction="row" justifyContent="flex-start">
@@ -137,15 +158,16 @@ const InventoryDetail = (props) => {
                               <Typography variant="h5" gutterBottom component="div">Giá vốn</Typography>    
                             </Grid>
                             <Grid item xs={6} >
-                              <Typography variant="body1" gutterBottom component="div">{row.import_price} </Typography>
+                              <Typography variant="body1" gutterBottom component="div">{productDetail.standard_price} </Typography>
                             </Grid>
                         </Grid>
+                       
                         <Grid container direction="row" justifyContent="flex-start">
                             <Grid item xs={4} >
                               <Typography variant="h5" gutterBottom component="div">Tồn kho</Typography>    
                             </Grid>
                             <Grid item xs={6} >
-                              <Typography variant="body1" gutterBottom component="div">{row.quantity} </Typography>
+                              <Typography variant="body1" gutterBottom component="div">{productDetail.quantity_available} </Typography>
                             </Grid>
                         </Grid>
                       </Grid>
