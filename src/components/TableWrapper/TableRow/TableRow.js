@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 //import library
 import {TableCell,TableRow,Box,Avatar,ListItem,Typography, Chip} from '@material-ui/core';
-
+import { grey} from '@material-ui/core/colors'
 // import img
 import icon from '../../../assets/img/product/img.jpeg';
 import ava from '../../../assets/img/product/lyimg.jpeg';
@@ -29,13 +29,15 @@ const useRowStyles = makeStyles((theme)=>
    
   },
   rowClicked:{
-    backgroundColor: theme.customization.mode === "Light" ? theme.palette.secondary.light : theme.palette.secondary.main ,
+    //backgroundColor: theme.customization.mode === "Light" ? theme.palette.secondary.light : theme.palette.secondary.main ,
+    backgroundColor: theme.customization.mode === "Light" ?grey[200] : grey[700] ,
     
   },
   row:{
     '&:hover': {
-      backgroundColor: theme.customization.mode === "Light" ? theme.palette.secondary.light : theme.palette.secondary.main ,
-   },
+      // backgroundColor: theme.customization.mode === "Light" ? theme.palette.secondary.light : theme.palette.secondary.main ,
+      backgroundColor: theme.customization.mode === "Light" ?grey[200] : grey[700] ,
+    },
   },
   large: {
     width: theme.spacing(7),
@@ -190,6 +192,7 @@ const TableSupplierCell = ({row}) =>{
   const classes = useRowStyles();
   return (
     <>
+    
       <TableCell align="left">{row.id}</TableCell>
       <TableCell align="left" className={classes.fontName} style={{minWidth:150}}>{row.name}</TableCell>
       <TableCell align="left">{row.phone}</TableCell>
@@ -241,8 +244,8 @@ const TableEmployeeCell = ({row}) =>{
       <TableCell align="left">{row.id}</TableCell>
       
       <TableCell align="left" style={{minWidth:200}} >
-        <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}>
-            <Avatar alt="Remy Sharp" src={ava} style={{marginRight:20}} className={classes.ava} />
+        <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }} >
+            <Avatar alt="Remy Sharp" src={ava} style={{marginRight:20}} className={classes.ava}  />
             <Typography className={classes.fontName}>{row.name}</Typography>
         </ListItem>  
       </TableCell>

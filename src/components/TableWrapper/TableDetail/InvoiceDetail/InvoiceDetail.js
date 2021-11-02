@@ -2,17 +2,21 @@ import React from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import library
-import {Box,Grid,TableHead,TableBody,Typography,Table,TableCell,TableRow,Collapse,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
-
+import {Dialog,Card,DialogContent,Box,Grid,TableHead,TableBody,Typography,Table,TableCell,TableRow,Collapse,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
 //import icon
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PrintTwoToneIcon from '@material-ui/icons/PrintTwoTone';
 import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
+import CloseIcon from '@material-ui/icons/Close';
 
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../Button/MenuButton'
+import InvoiceReturnSummary from '../../../CheckoutComponent/CheckoutSummary/InvoiceReturnSummary/InvoiceReturnSummary'
+import ListItem from '../../../CheckoutComponent/ListItem/ListItem'
+import * as HeadCells from '../../../../assets/constant/tableHead'
+import *  as TableType from '../../../../assets/constant/tableType'
 
-
+import { grey} from '@material-ui/core/colors'
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -26,10 +30,24 @@ createStyles({
   },
   typo:{
     marginBottom:20
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+  card: {
+    background: theme.customization.mode === "Light"? null: grey[800],
+    borderRadius:theme.customization.borderRadius,
+    color: '#000000',
+    borderWidth:2,
+  },
+  background:{
+    background: theme.customization.mode === "Light"? theme.customization.primaryColor[50]: grey[700]
   }
 
 }));
-
 
 const InvoiceDetail = (props) => {
     const {row,openRow }= props.parentProps;
@@ -49,7 +67,17 @@ const InvoiceDetail = (props) => {
       setAnchorEl(null);
     };
 
+    const [open, setOpen] = React.useState(false);
 
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleCloseReturn = () => {
+      setOpen(false);
+    };
+
+    
 
     return (
         <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
@@ -171,7 +199,7 @@ const InvoiceDetail = (props) => {
                    ))}
                  </TableBody>
                </Table> 
-               <Box style={{background:theme.customization.primaryColor[50],padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
+               <Box  className={classes.background}  style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
                <Grid container direction="column" >
                     <Grid container direction="row" justifyContent="flex-end">
                         <Grid item xs={2} >
@@ -229,7 +257,7 @@ const InvoiceDetail = (props) => {
                     : null
                     }
                   
-                  <Button variant="contained" size="small" style={{marginLeft:15}}>Trả hàng</Button>
+                  <Button variant="contained" size="small" style={{marginLeft:15}} onClick={handleClickOpen}>Trả hàng</Button>
                   
                   <IconButton
                     aria-label="more"
@@ -269,6 +297,35 @@ const InvoiceDetail = (props) => {
                   
               </Grid>
       </Box>
+      <Dialog fullWidth={true} maxWidth='lg' open={open} onClose={handleCloseReturn} aria-labelledby="form-dialog-title">
+        <Grid  container direction="row" justifyContent="space-between"  alignItems="center" >
+            <Typography variant="h3" style={{paddingTop:20,marginBottom:-20, marginLeft:25}}>Trả hàng</Typography>
+          
+            <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseReturn}>
+              <CloseIcon />
+            </IconButton>
+    
+        </Grid>
+        
+        <DialogContent style={{marginTop:25}}>
+          <Grid container direction="row" justifyContent="space-between"  alignItems="center" spacing={2} >
+              <Grid item xs={12} sm={8}  >
+                  <Card className={classes.card}>
+                      <Box style={{padding:30, minHeight:'80vh'}} >
+                        {/* JSON data attribute phải giongso table head id */}
+                          <ListItem headCells={HeadCells.CartReturnHeadCells}  cartData={row.list} tableType={TableType.CART_RETURN} />
+                      </Box>
+                  </Card>
+              </Grid>
+
+              <Grid item xs={12} sm={4} className={classes.card} >
+                  <Card className={classes.card}>
+                      <InvoiceReturnSummary  data={row}/>
+                  </Card>
+              </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
   </Collapse>
     )
 }

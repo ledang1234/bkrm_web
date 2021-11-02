@@ -86,3 +86,39 @@ export const CustomerHeadCells = [
     { id: 'total', numeric: true, disablePadding: true, label: 'Tổng tiền mua' },  
     { id: 'quantity', numeric: false, disablePadding: true, label: 'Trạng thái' },
 ];
+
+export const CartHeadCells = [
+    { id: 'stt', numeric: false, disablePadding: true, label: 'Stt' },
+    { id: 'id', numeric: false, disablePadding: true, label: '#' },
+    { id: 'name', numeric: false, disablePadding: true, label: 'Tên' },
+    { id: 'price', numeric: true, disablePadding: true, label: 'Đơn giá' },
+    { id: 'quantity', numeric: true, disablePadding: true, label: 'Số lượng' },
+    { id: 'protein1', numeric: true, disablePadding: true, label: 'Thành tiền' },]
+;
+export  const ImportHeadCells = [
+    { id: 'stt', numeric: false, disablePadding: true, label: 'Stt' },
+    { id: 'id', numeric: false, disablePadding: true, label: '#' },
+    { id: 'name', numeric: false, disablePadding: true, label: 'Tên' },
+    { id: 'price', numeric: true, disablePadding: true, label: 'Giá nhập' },
+    { id: 'quantity', numeric: true, disablePadding: true, label: 'Số lượng' },
+    { id: 'protein1', numeric: true, disablePadding: true, label: 'Thành tiền' },
+]; 
+
+export const CartReturnHeadCells = [
+    { id: 'stt', numeric: false, disablePadding: true, label: 'Stt' },
+    { id: 'id', numeric: false, disablePadding: true, label: '#' },
+    { id: 'name', numeric: false, disablePadding: true, label: 'Tên' },
+    { id: 'price', numeric: true, disablePadding: true, label: 'Giá bán' },
+    { id: 'return_price', numeric: true, disablePadding: true, label: 'Giá trả' },
+    { id: 'quantity', numeric: true, disablePadding: true, label: 'Số lượng' },
+    { id: 'protein1', numeric: true, disablePadding: true, label: 'Thành tiền' },]
+;
+export const ImportReturnHeadCells = [
+    { id: 'stt', numeric: false, disablePadding: true, label: 'Stt' },
+    { id: 'id', numeric: false, disablePadding: true, label: '#' },
+    { id: 'name', numeric: false, disablePadding: true, label: 'Tên' },
+    { id: 'price', numeric: true, disablePadding: true, label: 'Giá nhập' },
+    { id: 'return_price', numeric: true, disablePadding: true, label: 'Giá trả' },
+    { id: 'quantity', numeric: true, disablePadding: true, label: 'Số lượng' },
+    { id: 'protein1', numeric: true, disablePadding: true, label: 'Thành tiền' },]
+;

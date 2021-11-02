@@ -23,6 +23,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 //import project
 import MenuList from "../../components/MenuList/MenuList";
+import SearchProduct  from '../../components/SearchProduct/SearchProduct'
 import Customization from "../../components/Customization/Customization";
 
 import SalesView from "../../views/SalesView/SalesView";
@@ -134,9 +135,10 @@ const HomePage = (props) => {
             alignItems="center"
             style={{ width: "100%" }}
           >
-            <Typography variant="h3" noWrap className={classes.searchEngine}>
+            {/* <Typography variant="h3" noWrap className={classes.searchEngine}>
               BKRM
-            </Typography>
+            </Typography> */}
+            <SearchProduct/>
             <Box display="flex" flexDirection="row" alignItems="center">
               <IconButton color="primary" size="small">
                 <PersonIcon fontSize="large" />
