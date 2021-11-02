@@ -12,7 +12,8 @@ import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../Button/MenuButton'
 
-
+import { useSelector } from 'react-redux'
+import supplierApi from '../../../../api/supplierApi';
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -44,9 +45,23 @@ const SupplierDetail = (props) => {
       setAnchorEl(event.currentTarget);
     };
 
+
     const handleClose = () => {
       setAnchorEl(null);
     };
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
+
+    const deleteBtnClick = (supplierUuid) => {
+      const deleteSupplier = async () => {
+        const response = await supplierApi.deleteSupplier(store_uuid, supplierUuid);
+        handleClose("Success")
+  
+        // phai check status code nua
+      }
+  
+      deleteSupplier()
+    }
 
     return (
         <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>

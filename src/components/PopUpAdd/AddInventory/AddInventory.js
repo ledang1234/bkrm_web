@@ -23,6 +23,8 @@ import barcodeIcon from "../../../assets/img/icon/barcode1.png";
 import AddCategory from "./AddCategory";
 import useStyles from "./styles";
 import productApi from "../../../api/productApi";
+import { useSelector } from 'react-redux'
+
 const UploadImages = (img) => {
   return (
     <Box
@@ -69,6 +71,11 @@ const AddInventory = (props) => {
   });
   const theme = useTheme();
   const classes = useStyles(theme);
+
+  // redux
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+
   const addProductHandler = async () => {
     console.log(images);
     try {
@@ -91,15 +98,15 @@ const AddInventory = (props) => {
       );
       // bodyFormData.append("images[]", images);
       images.forEach((image) => bodyFormData.append("images[]", image));
-      const response = await productApi.createProduct(bodyFormData);
-      alert("Add product successfully")
+      const response = await productApi.createProduct(store_uuid, bodyFormData);
+      handleClose("Success");
     } catch (error) {
     }
   };
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
-        const response = await productApi.getAllCategory();
+        const response = await productApi.getAllCategory(store_uuid);
         setCategoryList(response.data);
       } catch (error) {
         console.log(error);
@@ -107,7 +114,7 @@ const AddInventory = (props) => {
       }
     };
     fetchCategoryList();
-  }, []);
+  }, [store_uuid]);
   return (
     <div>
       <Box className={classes.root}>
@@ -316,7 +323,7 @@ const AddInventory = (props) => {
             <Button
               onClick={() => {
                 addProductHandler();
-                handleClose(null);
+               
               }}
               variant="contained"
               size="small"

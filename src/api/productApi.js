@@ -1,35 +1,36 @@
 import axiosClient from "./axiosClient";
 const productApi = {
-  createProduct: (params) => {
-    const storeId = localStorage.getItem("info");
-    const url = `stores/${storeId}/products`;
+  createProduct: (storeUuid,params) => {
+    const url = `stores/${storeUuid}/products`;
     return axiosClient.post(url, params, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
   },
-  getProducts: () => {
-    const storeId = localStorage.getItem("info");
-    const url = `stores/${storeId}/products`;
+  getProducts: (storeUuid,) => {
+    const url = `stores/${storeUuid}/products`;
     return axiosClient.get(url);
   },
 
-  getProduct: (productUuid) => {
-    const storeId = localStorage.getItem("info");
-    const url = `stores/${storeId}/products/${productUuid}`;
+  getProduct: (storeUuid,productUuid) => {
+    const url = `stores/${storeUuid}/products/${productUuid}`;
     return axiosClient.get(url);
   },
   
-  createCategory: (params) => {
-    const storeId = localStorage.getItem("info");
-    const url = `stores/${storeId}/categories`;
+  createCategory: (storeUuid,params) => {
+    const url = `stores/${storeUuid}/categories`;
     return axiosClient.post(url, JSON.stringify(params));
   },
-  getAllCategory: () => {
-    const storeId = localStorage.getItem("info");
-    const url = `/stores/${storeId}/categories`;
+  getAllCategory: (storeUuid) => {
+
+    const url = `/stores/${storeUuid}/categories`;
     return axiosClient.get(url);
+  },
+
+  deleteProduct: (storeUuid,productUuid) => {
+    const url = `stores/${storeUuid}/products/${productUuid}`;
+    return axiosClient.delete(url);
   },
 };
 export default productApi;

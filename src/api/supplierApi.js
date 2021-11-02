@@ -1,24 +1,20 @@
 import axiosClient from "./axiosClient";
 const supplierApi = {
-  createSupplier: (body) => {
-    const storeId = localStorage.getItem('info')
-    const url = `stores/${storeId}/suppliers`;
+  createSupplier: (storeUuid, body) => {
+    const url = `stores/${storeUuid}/suppliers`;
     return axiosClient.post(url, body);
   },
-  getSuppliers: () => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/suppliers`;
+  getSuppliers: (storeUuid, ) => {
+    const url = `/stores/${storeUuid}/suppliers`;
     return axiosClient.get(url);
   },
   
-  getSupplier: (supplierUuid) => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/suppliers/${supplierUuid}`;
+  getSupplier: (storeUuid, supplierUuid) => {
+    const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
     return axiosClient.get(url);
   },
-  deleteSupplier: (supplierUuid) => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/suppliers/${supplierUuid}`;
+  deleteSupplier: (storeUuid, supplierUuid) => {
+    const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
     return axiosClient.delete(url);
   },
 };

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import supplierApi from "../../../api/supplierApi";
 
+import { useSelector } from 'react-redux'
+
 //import project
 import {
   Button,
@@ -40,6 +42,9 @@ const AddSupplier = (props) => {
   const [address, setAddress] = React.useState("");
   const [company, setCompany] = React.useState("");
   const [paymentInfo, setPaymentInfo] = React.useState("");
+
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
 
   return (
     <div>
@@ -149,7 +154,7 @@ const AddSupplier = (props) => {
             };
 
             try {
-              const response = await supplierApi.createSupplier(body)
+              const response = await supplierApi.createSupplier(store_uuid, body)
               handleClose("Success")
 
             } catch (err) {

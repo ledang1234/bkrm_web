@@ -1,24 +1,21 @@
 import axiosClient from "./axiosClient";
 const employeeApi = {
-  createEmployee: (body) => {
-    const storeId = localStorage.getItem('info')
-    const url = `stores/${storeId}/employees`;
+  createEmployee: (storeUuid, body) => {
+    const url = `stores/${storeUuid}/employees`;
     return axiosClient.post(url, body);
   },
-  getEmployees: () => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/employees`;
+  getEmployees: (storeUuid) => {
+    const url = `/stores/${storeUuid}/employees`;
     return axiosClient.get(url);
   },
   
-  getEmployee: (employeeUuid) => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/employees/${employeeUuid}`;
+  getEmployee: (storeUuid, employeeUuid) => {
+    const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
     return axiosClient.get(url);
   },
-  deleteEmployee: (employeeUuid) => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/employees/${employeeUuid}`;
+  deleteEmployee: (storeUuid, employeeUuid) => {
+   
+    const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
     return axiosClient.delete(url);
   },
 };

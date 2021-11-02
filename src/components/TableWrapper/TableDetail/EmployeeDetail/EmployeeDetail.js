@@ -16,6 +16,9 @@ import avaUpload from '../../../../assets/img/product/lyimg.jpeg';
 import {StyledMenu,StyledMenuItem} from '../../../Button/MenuButton'
 import employeeApi from '../../../../api/employeeApi';
 
+
+import { useSelector } from 'react-redux'
+
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
@@ -55,7 +58,21 @@ const EmployeeDetail = (props) => {
     const classes = useStyles(theme);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [employeeDetail, setEmployeeDetail] = React.useState({});
+    const [employeeDetail, setEmployeeDetail] = React.useState({
+      uuid: "",
+      name: "",
+      id_card_num: "",
+      date_of_birth: "",
+      phone: "",
+      email: "",
+      address: "",
+      permissions: [],
+      salary: "",
+      salary_type: "",
+    });
+
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -68,7 +85,7 @@ const EmployeeDetail = (props) => {
     useEffect(() => {
       const fetchEmp = async () => {
         try {
-          const response = await employeeApi.getEmployee(row.uuid)
+          const response = await employeeApi.getEmployee(store_uuid,row.uuid)
           setEmployeeDetail(response.data)
         } catch(err) {
           console.log(err)
@@ -77,7 +94,19 @@ const EmployeeDetail = (props) => {
       fetchEmp()
 
     }, [])
+    
+    const deleteBtnClick = (employeeUuid) => {
+      const deleteEmployee = async () => {
+        const response = await employeeApi.deleteEmployee(store_uuid, employeeUuid);
+        handleClose("Success")
+  
+        // phai check status code nua
+      }
+  
+      deleteEmployee()
+    }
 
+    
     return (
         <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
              <Box margin={1}>

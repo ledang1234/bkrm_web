@@ -22,6 +22,7 @@ import NumberFormatCustom from "../../TextField/NumberFormatCustom";
 import MultipleSelect from "../../MultipleSelect/MultipleSelect";
 import { EmailRounded } from "@material-ui/icons";
 import employeeApi from "../../../api/employeeApi";
+import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -85,6 +86,8 @@ const AddEmployee = (props) => {
   const [address, setAddress] = React.useState("");
   const [permissions, setPermissions] = React.useState([]);
 
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
 
   const handleSelectPermission = (selected) => {
     let permissions = selected.map((permission) => permission.key);
@@ -307,7 +310,7 @@ const AddEmployee = (props) => {
             };
 
             try {
-              const response = await employeeApi.createEmployee(body)
+              const response = await employeeApi.createEmployee(store_uuid, body)
               handleClose("Success")
               console.log(response.status)
 
