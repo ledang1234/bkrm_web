@@ -13,6 +13,8 @@ import avaUpload from '../../../../assets/img/product/lyimg.jpeg';
 
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../Button/MenuButton'
+import customerApi from '../../../../api/customerApi';
+import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -51,6 +53,8 @@ const CustomerDetail = (props) => {
 
     const theme = useTheme();
     const classes = useStyles(theme);
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -61,6 +65,17 @@ const CustomerDetail = (props) => {
     const handleClose = () => {
       setAnchorEl(null);
     };
+
+    const deleteBtnClick = (customerUuid) => {
+      const deleteCustomer = async () => {
+        const response = await customerApi.deleteCustomer(store_uuid, customerUuid);
+        handleClose("Success")
+
+        // phai check status code nua
+      }
+
+      deleteCustomer()
+    }
 
     return (
         <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>

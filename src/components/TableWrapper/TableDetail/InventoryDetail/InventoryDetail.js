@@ -21,6 +21,8 @@ import { Carousel } from 'react-responsive-carousel';
 //import project 
 import { StyledMenu, StyledMenuItem } from '../../../Button/MenuButton'
 import productApi from '../../../../api/productApi';
+
+import { useSelector } from 'react-redux'
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -79,10 +81,13 @@ const InventoryDetail = (props) => {
     setAnchorEl(null);
   };
 
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await productApi.getProduct(row.uuid)
+        const response = await productApi.getProduct(store_uuid, row.uuid)
         setProductDetail(response.data)
       } catch (err) {
         console.log(err)
@@ -90,7 +95,20 @@ const InventoryDetail = (props) => {
     }
     fetchProduct()
 
-  }, [])
+  }, [store_uuid])
+
+
+  const deleteBtnClick = (productUuid) => {
+    const deleteProduct = async () => {
+      const response = await productApi.deleteProduct(store_uuid, productUuid);
+      handleClose("Success")
+
+      // phai check status code nua
+    }
+
+    deleteProduct()
+  }
+
 
   return (
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>

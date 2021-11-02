@@ -11,6 +11,8 @@ import AddIcon from '@material-ui/icons/Add';
 import CategoryTree from '../../CategoryTree/CategoryTree'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
+import { useSelector } from 'react-redux'
+
 const useStyles = makeStyles((theme) =>
 createStyles({
   headerTitle:{
@@ -18,6 +20,7 @@ createStyles({
   },
 
 }));
+
 
 
 const AddCategory = (props) =>{
@@ -35,6 +38,10 @@ const AddCategory = (props) =>{
      setIsAdd(!isAdd);
    };
 
+   const info = useSelector((state) => state.info);
+   const store_uuid = info.store.uuid;
+
+   
   return (
     <div>
       <DialogTitle id="form-dialog-title">

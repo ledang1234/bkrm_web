@@ -1,24 +1,20 @@
 import axiosClient from "./axiosClient";
 const customerApi = {
-  createCustomer: (body) => {
-    const storeId = localStorage.getItem('info')
-    const url = `stores/${storeId}/customers`;
+  createCustomer: (storeUuid, body) => {
+    const url = `stores/${storeUuid}/customers`;
     return axiosClient.post(url, body);
   },
-  getCustomers: () => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/customers`;
+  getCustomers: (storeUuid, ) => {
+    const url = `/stores/${storeUuid}/customers`;
     return axiosClient.get(url);
   },
   
-  getCustomer: (customerUuid) => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/customers/${customerUuid}`;
+  getCustomer: (storeUuid, customerUuid) => {
+    const url = `/stores/${storeUuid}/customers/${customerUuid}`;
     return axiosClient.get(url);
   },
-  deleteCustomer: (customerUuid) => {
-    const storeId = localStorage.getItem('info')
-    const url = `/stores/${storeId}/customers/${customerUuid}`;
+  deleteCustomer: (storeUuid, customerUuid) => {
+    const url = `/stores/${storeUuid}/customers/${customerUuid}`;
     return axiosClient.delete(url);
   },
 };
