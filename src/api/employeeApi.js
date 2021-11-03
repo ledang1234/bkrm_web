@@ -14,7 +14,6 @@ const employeeApi = {
     return axiosClient.get(url);
   },
   deleteEmployee: (storeUuid, employeeUuid) => {
-   
     const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
     return axiosClient.delete(url);
   },

@@ -4,7 +4,7 @@ import {Grid,Card,Box, Typography,TextField,InputAdornment,IconButton,Button,Dia
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
-import AddCustomer from '../../../PopUpAdd/AddCustomer/AddCustomer'
+import AddCustomer from '../../../../views/ManagerView/Customer/AddCustomer/AddCustomer'
 //import project 
 import * as Input from '../../../TextField/NumberFormatCustom'
 import { grey} from '@material-ui/core/colors'
