@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 //import library
@@ -16,6 +16,7 @@ import {
 
 //import project
 import customerApi from "../../../../api/customerApi";
+import {useSelector} from 'react-redux'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -53,6 +54,9 @@ const AddCustomer = (props) => {
   const [phone, setPhone] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [paymentInfo, setPaymentInfo] = React.useState("");
+
+  const info = useSelector(state => state.info)
+  const store_uuid = info.store.uuid
 
   return (
  
@@ -164,7 +168,7 @@ const AddCustomer = (props) => {
             };
 
             try {
-              const response = await customerApi.createCustomer(body)
+              const response = await customerApi.createCustomer(store_uuid, body)
               handleClose("Success")
               console.log(response.status)
 

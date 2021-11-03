@@ -30,16 +30,20 @@ const Employee = () => {
     const [reload, setReload] = useState(false);
 
     const onReload = () => setReload(!reload)
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
     
     useEffect(() => {
-        employeeApi.getEmployees()
-        .then(response => response.data, err => console.log(err))
-        .then(data => {
-            setEmployeeList(data)
-           
-        })
-
-    }, [reload]);
+        const fetchEmployees = async () => {
+          try {
+            const response = await employeeApi.getEmployees(store_uuid)
+            setEmployeeList(response.data)
+          } catch (error) {
+            console.log(error)
+          }
+        }
+        fetchEmployees()
+    }, [reload, store_uuid]);
 
     const theme = useTheme();
     const classes = useStyles(theme);

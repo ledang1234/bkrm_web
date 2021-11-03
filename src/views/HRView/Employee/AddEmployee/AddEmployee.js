@@ -22,6 +22,9 @@ import {
 import NumberFormatCustom from "../../../../components/TextField/NumberFormatCustom";
 import MultipleSelect from "../../../../components/MultipleSelect/MultipleSelect";
 import { EmailRounded } from "@material-ui/icons";
+
+// api 
+import { useSelector } from "react-redux";
 import employeeApi from "../../../../api/employeeApi";
 
 const useStyles = makeStyles((theme) =>
@@ -46,7 +49,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 let choices = [
-  { key: "manage-employees", value: "Nhân viên" },
+  { key: "manage-employees", value: "Nhân sự" },
   { key: "manage-orders", value: "Bán hàng" },
   { key: "manage-purchase-orders", value: "Nhập hàng" },
   { key: "manage-purchase-returns", value: "Trả hàng" },
@@ -85,7 +88,10 @@ const AddEmployee = (props) => {
   const [salaryType, setSalaryType] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [permissions, setPermissions] = React.useState([]);
-
+  
+  // redux
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
 
   const handleSelectPermission = (selected) => {
     let permissions = selected.map((permission) => permission.key);
@@ -311,7 +317,7 @@ const AddEmployee = (props) => {
             };
 
             try {
-              const response = await employeeApi.createEmployee(body)
+              const response = await employeeApi.createEmployee(store_uuid,body)
               handleClose("Success")
               console.log(response.status)
 

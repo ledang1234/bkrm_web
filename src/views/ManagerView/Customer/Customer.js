@@ -25,21 +25,23 @@ import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
 
 
-
 const Customer = () => {
     const [customerList, setCustomerList] = useState([]);
     const [reload, setReload] = useState(false);
 
     const onReload = () => setReload(!reload)
     
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
+
     useEffect(() => {
-        customerApi.getCustomers()
+        customerApi.getCustomers(store_uuid)
         .then(response => response.data, err => console.log(err))
         .then(data => {
             setCustomerList(data)
         })
 
-    }, [reload]);
+    }, [reload, store_uuid]);
 
     const theme = useTheme();
     const classes = useStyles(theme);

@@ -24,6 +24,8 @@ import barcodeIcon from "../../../../assets/img/icon/barcode1.png";
 import AddCategory from "./AddCategory";
 import useStyles from "./styles";
 import productApi from "../../../../api/productApi";
+import {useSelector} from 'react-redux'
+
 const UploadImages = (img) => {
   return (
     <Box
@@ -70,6 +72,12 @@ const AddInventory = (props) => {
     unit: "",
     re_order_point: 0,
   });
+
+
+  // redux
+  const info = useSelector(state => state.info)
+  const store_uuid = info.store.uuid
+
   const theme = useTheme();
   const classes = useStyles(theme);
   const addProductHandler = async () => {
@@ -95,14 +103,14 @@ const AddInventory = (props) => {
       // bodyFormData.append("images[]", images);
       images.forEach((image) => bodyFormData.append("images[]", image));
       const response = await productApi.createProduct(bodyFormData);
-      alert("Add product successfully")
+      handleClose("Success")
     } catch (error) {
     }
   };
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
-        const response = await productApi.getAllCategory();
+        const response = await productApi.getAllCategory(store_uuid);
         setCategoryList(response.data);
       } catch (error) {
         console.log(error);
@@ -110,7 +118,8 @@ const AddInventory = (props) => {
       }
     };
     fetchCategoryList();
-  }, []);
+  }, [store_uuid]);
+
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
       <Box className={classes.root}>

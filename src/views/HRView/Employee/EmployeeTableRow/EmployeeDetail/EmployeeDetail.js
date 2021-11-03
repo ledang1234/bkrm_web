@@ -15,6 +15,7 @@ import avaUpload from '../../../../../assets/img/product/lyimg.jpeg';
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../../../components/Button/MenuButton'
 import employeeApi from '../../../../../api/employeeApi';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -63,19 +64,21 @@ const EmployeeDetail = (props) => {
 
     const handleClose = () => {
       setAnchorEl(null);
-    };
+    }; 
+
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
 
     useEffect(() => {
       const fetchEmp = async () => {
         try {
-          const response = await employeeApi.getEmployee(row.uuid)
+          const response = await employeeApi.getEmployee(store_uuid, row.uuid)
           setEmployeeDetail(response.data)
         } catch(err) {
           console.log(err)
         }
       }
       fetchEmp()
-
     }, [])
 
     return (

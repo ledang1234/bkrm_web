@@ -18,6 +18,7 @@ import *  as TableType from '../../../assets/constant/tableType'
 //riêng
 import AddSupplier from './AddSupplier/AddSupplier'
 // import InventoryTableRow from './InventoryTableRow/InventoryTableRow'
+import SupplierTableRow  from './SupplierTableRow/SupplierTableRow'
 //chung
 import SnackBar from '../../../components/SnackBar/SnackBar'
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
@@ -32,8 +33,11 @@ const Supplier = () => {
 
     const onReload = () => setReload(!reload)
     
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
+    
     useEffect(() => {
-        supplierApi.getSuppliers()
+        supplierApi.getSuppliers(store_uuid)
         .then(response => response.data, err => console.log(err))
         .then(data => {
             setSupplierList(data)
@@ -139,9 +143,9 @@ const Supplier = () => {
               />
               <TableBody>
                 {supplerList.map((row, index) => {
-                    // return (
-                    // //   <InventoryTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
-                    // );
+                    return (
+                       <SupplierTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
+                    );
                 })}
               </TableBody>
           </TableWrapper>

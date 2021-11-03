@@ -14,6 +14,9 @@ import avaUpload from '../../../../../assets/img/product/lyimg.jpeg';
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../../../components/Button/MenuButton'
 
+import customerApi from '../../../../../api/customerApi';
+import { useSelector } from 'react-redux';
+
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
@@ -57,6 +60,9 @@ const CustomerDetail = (props) => {
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
+
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
 
     const handleClose = () => {
       setAnchorEl(null);

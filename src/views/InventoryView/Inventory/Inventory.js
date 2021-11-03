@@ -23,7 +23,7 @@ import SnackBar from '../../../components/SnackBar/SnackBar'
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
 import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
-
+import { useSelector } from 'react-redux';
 
 
 const Inventory = () => {
@@ -31,11 +31,15 @@ const Inventory = () => {
     const [reload, setReload] = useState(false);
 
     const onReload = () => setReload(!reload)
-    
+
+    // redux
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
+  
     useEffect(() => {
       const fetchProducts = async () => {
           try {
-              const response = await productApi.getProducts()
+              const response = await productApi.getProducts(store_uuid)
               setProductList(response.data)
               console.log(response.data)
           } catch(err) {
@@ -43,7 +47,9 @@ const Inventory = () => {
           }
       }
       fetchProducts()  
-    }, [reload]);
+    }, [reload, store_uuid]);
+
+   
 
     const theme = useTheme();
     const classes = useStyles(theme);
