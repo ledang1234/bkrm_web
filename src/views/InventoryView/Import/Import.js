@@ -33,7 +33,7 @@ const Import = () => {
        { stt: 1, id: 123, name:"áo", quantity:2, price:200 },
        { stt: 2, id: 12,  name:"quan", quantity:1, price:220 },
        { stt: 3, id: 134,  name:"banh", quantity:3, price:240 },   
-   ];
+    ];
    
     // FILE này xử lý state -> connect search bar, listitem, với summary lại
     return (

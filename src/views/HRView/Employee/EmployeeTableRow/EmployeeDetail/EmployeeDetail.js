@@ -3,6 +3,7 @@ import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import library
 import {Box,Grid,Collapse,Typography,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
+import Chip from '@mui/material/Chip';
 
 
 //import icon
@@ -49,6 +50,19 @@ const UploadImage  = () => {
     
   )
 }
+
+const permissionsMapping = {
+  'manage-employees': "Nhân sự",
+  'manage-orders': "Bán hàng",
+  'manage-purchase-orders': "Đặt hàng",
+  'manage-purchase-returns': "Nhập hàng",
+}
+
+const salaryTypeMapping = {
+  'fix': "Lương cứng",
+  'per-shift': "Lương theo ca"
+}
+
 const EmployeeDetail = (props) => {
     const {row,openRow }= props.parentProps;
 
@@ -56,7 +70,18 @@ const EmployeeDetail = (props) => {
     const classes = useStyles(theme);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [employeeDetail, setEmployeeDetail] = React.useState({});
+    const [employeeDetail, setEmployeeDetail] = React.useState({
+      uuid: "",
+      name: "",
+      date_of_birth: "",
+      id_card_num: "",
+      phone: "",
+      email: "",
+      address: "",
+      permissions: [],
+      salary_type: "",
+      salary: "",
+    });
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -75,7 +100,18 @@ const EmployeeDetail = (props) => {
           const response = await employeeApi.getEmployee(store_uuid, row.uuid)
           setEmployeeDetail(response.data)
         } catch(err) {
-          console.log(err)
+          setEmployeeDetail({
+            uuid: "",
+            name: "",
+            date_of_birth: "",
+            id_card_num: "",
+            phone: "",
+            email: "",
+            address: "",
+            permissions: [],
+            salary_type: "",
+            salary: "",
+          })
         }
       }
       fetchEmp()
@@ -155,18 +191,11 @@ const EmployeeDetail = (props) => {
                 <Grid item xs={4}>
                     <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={6} >
-                          <Typography variant="h5" gutterBottom component="div">Tên tài khoản</Typography>    
-                        </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">giale1234</Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
                           <Typography variant="h5" gutterBottom component="div">Chức năng</Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.permissions ? employeeDetail.permissions.map(permission => <div>{permission.name}</div>) : ""}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">
+                            {employeeDetail.permissions.map(permission => <Chip label={permissionsMapping[permission.name]} />)}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -174,7 +203,7 @@ const EmployeeDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Loại lương</Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.salary_type}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{salaryTypeMapping[employeeDetail.salary_type]}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">

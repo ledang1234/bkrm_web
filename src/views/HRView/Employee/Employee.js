@@ -39,6 +39,7 @@ const Employee = () => {
             const response = await employeeApi.getEmployees(store_uuid)
             setEmployeeList(response.data)
           } catch (error) {
+            setEmployeeList([])
             console.log(error)
           }
         }

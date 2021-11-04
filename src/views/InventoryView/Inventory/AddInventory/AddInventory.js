@@ -102,7 +102,7 @@ const AddInventory = (props) => {
       );
       // bodyFormData.append("images[]", images);
       images.forEach((image) => bodyFormData.append("images[]", image));
-      const response = await productApi.createProduct(bodyFormData);
+      const response = await productApi.createProduct(store_uuid, bodyFormData);
       handleClose("Success")
     } catch (error) {
     }
@@ -328,7 +328,6 @@ const AddInventory = (props) => {
             <Button
               onClick={() => {
                 addProductHandler();
-                handleClose(statusState);
               }}
               variant="contained"
               size="small"

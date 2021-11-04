@@ -101,6 +101,7 @@ const AddInventory = (props) => {
       const response = await productApi.createProduct(store_uuid, bodyFormData);
       handleClose("Success");
     } catch (error) {
+      handleClose("Fail")
     }
   };
   useEffect(() => {
