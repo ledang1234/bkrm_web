@@ -111,7 +111,10 @@ const AddEmployee = (props) => {
 
       <DialogContent>
         <div className={classes.root}>
-          <Grid container direction="row">
+
+          {/* <Grid container direction="row">
+
+
             <Avatar alt="Remy Sharp" className={classes.ava} />
             <input
               accept="image/*"
@@ -129,7 +132,9 @@ const AddEmployee = (props) => {
                 Chọn ảnh
               </Button>
             </label>
-          </Grid>
+
+          </Grid> */}
+
           <Grid
             container
             direction="row"

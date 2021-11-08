@@ -147,7 +147,7 @@ const MainPage = () => {
                         </Grid>
                         <Grid container item xs={11}>
                             <Typography style={{fontSize:14,color:theme.customization.themeGreyText, paddingRight:50}}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam non felis efficitur, aliquet lectus in, luctus nisi. Proin mattis mollis nibh, sed feugiat orci tristique vitae. 
+                               Hỗ trợ bạn tự động hóa quy trình bán hàng từ việc quản lý kho, nhân sự, nhà cung cấp, khách hàng
                             </Typography>
                         </Grid>
                     </Grid>
