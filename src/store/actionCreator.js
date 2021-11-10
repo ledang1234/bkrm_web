@@ -54,6 +54,9 @@ export const logInHandler = (userName, password) => {
         dispatch(authActions.logOut());
         dispatch(loadingActions.finishLoad());
       }
-    } catch (error) {}
+    } catch (error) {
+      dispatch(authActions.logOut());
+      dispatch(loadingActions.finishLoad());
+    }
   };
 };
