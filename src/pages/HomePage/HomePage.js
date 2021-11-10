@@ -133,10 +133,11 @@ const HomePage = (props) => {
             alignItems="center"
             style={{ width: "100%" }}
           >
-            {/* <Typography variant="h3" noWrap className={classes.searchEngine}>
-              BKRM
-            </Typography> */}
-            <SearchProduct />
+            <Typography variant="h3" noWrap className={classes.searchEngine}>
+              {/* BKRM */}
+            </Typography>
+            {/* <SearchProduct /> */}
+ 
             <Box display="flex" flexDirection="row" alignItems="center">
               <IconButton color="primary" size="small">
                 <PersonIcon fontSize="large" />

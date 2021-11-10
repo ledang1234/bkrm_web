@@ -33,7 +33,7 @@ const CustomerTableRow = (props) => {
 
                 <TableCell align="left">{row.phone}</TableCell>
                 <TableCell align="right" >{row.total_cost}</TableCell> 
-                <TableCell align="left" >
+                <TableCell align="center" >
                     <FormatedStatus debt={row.debt} />
                     
                 </TableCell>

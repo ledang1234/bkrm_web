@@ -19,7 +19,7 @@ const StyledTableCell = withStyles((theme) => ({
   
 function TableHeader(props) {
     const theme = useTheme();
-    const { classes, order, orderBy, onRequestSort,headerData } = props;
+    const { classes, order, orderBy, onRequestSort,headerData,isCart } = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
@@ -30,7 +30,7 @@ function TableHeader(props) {
             {headerData.map((headCell) => (
             <StyledTableCell
                 key={headCell.id}
-                align={headCell.numeric ? 'right' : 'left'}
+                align={headCell.align}
                 sortDirection={orderBy === headCell.id ? order : false}
             >
                 <TableSortLabel
@@ -47,21 +47,14 @@ function TableHeader(props) {
                 ) : null}
                 </TableSortLabel>
             </StyledTableCell>
+           
             ))}
+             {isCart?  <StyledTableCell/>: null}
             
         </TableRow>
       </TableHead>
         );
     }
 
-TableHeader.propTypes = {
-classes: PropTypes.object.isRequired,
-numSelected: PropTypes.number.isRequired,
-onRequestSort: PropTypes.func.isRequired,
-onSelectAllClick: PropTypes.func.isRequired,
-order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-orderBy: PropTypes.string.isRequired,
-rowCount: PropTypes.number.isRequired,
-};
 
 export default TableHeader

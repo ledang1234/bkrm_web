@@ -4,7 +4,6 @@ import {Grid,Avatar,Card,Box, Typography,TextField,InputAdornment,IconButton,But
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
-import AddCustomer from '../../../PopUpAdd/AddCustomer/AddCustomer'
 //import project 
 import * as Input from '../../../TextField/NumberFormatCustom'
 import { grey} from '@material-ui/core/colors'
@@ -33,11 +32,10 @@ const InvoiceReturnSummary = (props) => {
     const classes = useStyles(theme);
 
 
-      let  _value = null;
 
     return (
         
-        <Box style={{padding:30,minHeight:'80vh'}}>       
+        <Box style={{padding:30,minHeight:'75vh'}}>       
             <Grid container direction="column"  alignItems="flex-start" spacing={3}>
                 <Grid container direction="row" justifyContent="space-between" >
 
@@ -47,7 +45,7 @@ const InvoiceReturnSummary = (props) => {
                         </Typography>
                         <Typography variant="body2">
                             {/* current branch */}
-                            Chi nhánh trung tâm
+                            Chi nhánh trung tâm 
                         </Typography>
                         
                     </Grid>

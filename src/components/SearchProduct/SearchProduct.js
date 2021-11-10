@@ -7,6 +7,8 @@ import { grey} from '@material-ui/core/colors'
 
 // import img
 import icon from '../../assets/img/product/img.jpeg';
+import barcodeIcon from "../../assets/img/icon/barcode_grey.png";
+
 
 import InventoryData from '../../assets/JsonData/inventory.json'
 
@@ -43,24 +45,25 @@ const FormatedImage  = () => {
     )
   }
 
-
-
 const SearchProduct = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
+    let cartValue = null;
 
     return (
         <div style={{ width: 320, paddingLeft: 20,}}>
             <Autocomplete
+            onChange={(event, value) => {console.log(value); cartValue = value;}}
             id="free-solo-demo"
             freeSolo
             options={InventoryData}
             getOptionLabel={(option) => option.name.concat(" - ").concat(option.id.toString()).concat(" - ").concat(option.barcode) }  
-            onKeyDown={(event) => {
+            onKeyDown={(event,value) => {
                 if (event.key === 'Enter') {
                     // Prevent's default 'Enter' behavior.
                     // event.defaultMuiPrevented = true;
                     console.log('enter to increase quatity');
+                    console.log(cartValue);
                 }
             }}
             renderInput={(params) => (
@@ -74,7 +77,16 @@ const SearchProduct = () => {
                     ...params.InputProps,
                     startAdornment: (
                         <InputAdornment position="start">
-                          <SearchIcon style={{color:grey[500]}}/>
+                           <SearchIcon style={{color:grey[500]}}/>
+                        </InputAdornment>
+                      ),
+                    endAdornment: (
+                        <InputAdornment position="end">
+                          <Box
+                            component="img"
+                            sx={{ height: 23, width: 23 }}
+                            src={barcodeIcon}
+                          />
                         </InputAdornment>
                       ),
                     style: {
@@ -94,8 +106,7 @@ const SearchProduct = () => {
                         <Grid container item  direction="row" justifyContent="space-between" >
                         <Typography variant="body2">{`Tồn kho: ${option.quantity}`} </Typography>
                         <Typography variant="body2">{`Giá bán: ${option.price}`} </Typography>     
-                        </Grid>
-                        
+                        </Grid> 
                     </Grid>                
                 </Grid>
                 )
