@@ -5,9 +5,13 @@ import {Table,TableContainer,FormControlLabel,Switch,Paper} from '@material-ui/c
 
 
 const TableWrapper = (props) => {
+    const {isCart} = props;
+
     const theme = useTheme();
+    // const classes = useStyles(theme);
     // table
     const [dense, setDense] = React.useState(false);
+    
 
     const handleChangeDense = (event) => {
       setDense(event.target.checked);
@@ -16,7 +20,7 @@ const TableWrapper = (props) => {
     return (
     <>
         <StyledPaper style={{width: '100%', marginBottom: theme.spacing(2)}}>
-            <TableContainer >
+            <TableContainer style={{maxHeight: '58vh',}}>
                 <Table
                     aria-labelledby="tableTitle"
                     size={dense ? 'small' : 'medium'}
@@ -30,11 +34,11 @@ const TableWrapper = (props) => {
         </StyledPaper>
 
          {/* Add page navigation here...  */}
-        <FormControlLabel
+        {isCart ? null :<FormControlLabel
             control={<Switch checked={dense} onChange={handleChangeDense} />}
             label="Thu nhỏ"
             style={{display: "flex",justifyContent: "flex-end",}}
-        />
+        />}
     </>
     )
 }

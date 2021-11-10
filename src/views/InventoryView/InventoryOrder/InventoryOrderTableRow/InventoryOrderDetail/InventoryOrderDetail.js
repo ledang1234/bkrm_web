@@ -8,14 +8,11 @@ import {Dialog,Card,DialogContent,Box,Grid,TableHead,TableBody,Typography,Table,
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PrintTwoToneIcon from '@material-ui/icons/PrintTwoTone';
 import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
-import CloseIcon from '@material-ui/icons/Close';
+
 
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../../../components/Button/MenuButton'
-import ImportReturnSummary from '../../../../../components/CheckoutComponent/CheckoutSummary/ImportReturnSummary/ImportReturnSummary'
-import ListItem from '../../../../../components/CheckoutComponent/ListItem/ListItem'
-import * as HeadCells from '../../../../../assets/constant/tableHead'
-import *  as TableType from '../../../../../assets/constant/tableType'
+import InventoryReturnPopUp from '../../../../../components/PopUpReturn/InventoryReturnPopUp/InventoryReturnPopUp';
 
 import { grey} from '@material-ui/core/colors'
 
@@ -40,7 +37,24 @@ createStyles({
   },
   background:{
     background: theme.customization.mode === "Light"? theme.customization.primaryColor[50]: grey[700]
-  }
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1,
+  },
 
 }));
 
@@ -75,7 +89,8 @@ const InventoryOrderDetail = (props) => {
 
 
     return (
-        <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
+        // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
+        <Collapse in={ true } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -300,37 +315,7 @@ const InventoryOrderDetail = (props) => {
               </Grid>
 
               <Dialog fullWidth={true} maxWidth='lg' open={open} onClose={handleCloseReturn} aria-labelledby="form-dialog-title">
-                <Grid  container direction="row" justifyContent="space-between"  alignItems="center" >
-                    <Typography variant="h3" style={{paddingTop:20,marginBottom:-20, marginLeft:25}}>Trả hàng nhập</Typography>
-                  
-                    <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseReturn}>
-                      <CloseIcon />
-                    </IconButton>
-            
-                </Grid>
-
-
-
-                {/* RETURN POP ƯP */}
-                
-                <DialogContent style={{marginTop:25}}>
-                  <Grid container direction="row" justifyContent="space-between"  alignItems="center" spacing={2} >
-                      <Grid item xs={12} sm={8}  >
-                          <Card className={classes.card}>
-                              <Box style={{padding:30, minHeight:'80vh'}} >
-                                {/* JSON data attribute phải giongso table head id */}
-                                  <ListItem headCells={HeadCells.ImportReturnHeadCells}  cartData={row.list} tableType={TableType.IMPORT_RETURN}/>
-                              </Box>
-                          </Card>
-                      </Grid>
-
-                      <Grid item xs={12} sm={4} className={classes.card} >
-                          <Card className={classes.card}>
-                              <ImportReturnSummary  data={row}/>
-                          </Card>
-                      </Grid>
-                  </Grid>
-                </DialogContent>
+                    <InventoryReturnPopUp handleCloseReturn={handleCloseReturn} row={row} classes={classes}/>
               </Dialog>
                 
              </Box>
