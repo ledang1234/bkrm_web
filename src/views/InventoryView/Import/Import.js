@@ -129,7 +129,7 @@ const Import = () => {
                             </Grid>
                             <Grid>
                                 {/* 1.1.3. Search */}
-                                <SearchProduct />    
+                                <SearchProduct/>    
                             </Grid>
                         </Grid>
 
