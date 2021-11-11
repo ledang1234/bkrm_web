@@ -19,11 +19,13 @@ import {ImportRow,ImportRowMini} from './ImportTableRow/ImportTableRow'
 //chung
 import MenuProduct from "../../../components/MenuProduct/MenuProduct"
 import ChangeCartBtn from  "../../../components/CheckoutComponent/ChangeCartBtn/ChangeCartBtn"
-import SearchProduct from "../../../components/SearchProduct/SearchProduct";
+import SearchProduct from "../../../components/SearchBar/SearchProduct";
 import TableHeader from '../../../components/TableCommon/TableHeader/TableHeader'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
 import {getComparator,stableSort} from '../../../components/TableCommon/util/sortUtil'
 
+// update state
+import update from 'immutability-helper';
 
  // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
@@ -32,22 +34,23 @@ const Import = () => {
     const classes = useStyles(theme);
     ////------------ I. DATA (useState) ----------------
     // Cart data get from search_product component 
-    const cartData = [
-        // QUANTITY có thể edit ->  truyền quatity edit ngược về cartData ??
-        //dựa vào id của text field quatity ??
+    // const cartData = [
+    //     // QUANTITY có thể edit ->  truyền quatity edit ngược về cartData ??
+    //     //dựa vào id của text field quatity ??
 
-        //còn bị lỗi sort // tự generate stt
-        { stt: 1, id: 123, name:"Áo dài Việt Nam Việt Nam", quantity:2, price:200 },
-        { stt: 2, id: 12,  name:"Quan", quantity:1, price:220 },
-        { stt: 3, id: 134,  name:"Bánh", quantity:3, price:240 },  
-        { stt: 1, id: 123, name:"Áo dài Việt Nam Việt Nam", quantity:2, price:200 },
-        { stt: 2, id: 12,  name:"Quan", quantity:1, price:220 },
-        { stt: 3, id: 134,  name:"Bánh", quantity:3, price:240 },   
+    //     //còn bị lỗi sort // tự generate stt
+    //     { stt: 1, id: 123, name:"Áo dài Việt Nam Việt Nam", quantity:2, price:200 },
+    //     { stt: 2, id: 12,  name:"Quan", quantity:1, price:220 },
+    //     { stt: 3, id: 134,  name:"Bánh", quantity:3, price:240 },  
+    //     { stt: 1, id: 123, name:"Áo dài Việt Nam Việt Nam", quantity:2, price:200 },
+    //     { stt: 2, id: 12,  name:"Quan", quantity:1, price:220 },
+    //     { stt: 3, id: 134,  name:"Bánh", quantity:3, price:240 },   
         
-    ]; 
+    // ]; 
     // chú ý cartList id from 1 to ... dùng để edit + delete
-    const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
+    // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
 
+    const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: []}]);
     //// ----------II. FUNCTION
     // 1.Cart
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -99,9 +102,11 @@ const Import = () => {
     };
 
 
-  
-
-   
+    // handle search select 
+    const handleSearchBarSelect = (selectedOption) => {
+        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {$push: [selectedOption]}}})
+        setCartList(newCartList)
+    }
     return (
         <Grid container direction="row" justifyContent="space-between"  alignItems="center" spacing={2} >
             
@@ -122,14 +127,14 @@ const Import = () => {
                                 <ListItem  >
                                     {/* 1.1.1 Title */}
                                     <Typography  variant="h3" > Nhập hàng </Typography> 
-                                    <Typography  variant="h3" style={{marginLeft:10, color:theme.customization.primaryColor[500]}}> #{cartList[selectedIndex].customer ?cartList[selectedIndex].customer.name:selectedIndex + 1} </Typography> 
+                                    <Typography  variant="h3" style={{marginLeft:10, color:theme.customization.primaryColor[500]}}> # {cartList[selectedIndex].id} </Typography> 
                                     {/* 1.1.2. Btn Channge Cart */}
                                     <ChangeCartBtn selectedIndex={selectedIndex}anchorEl={anchorEl}cartList={cartList} handleClick={handleClick} handleClose={handleClose}handleChoose={handleChoose}handleDelete={handleDelete}handleAdd={handleAdd} isCart={false}/>                
                                 </ListItem>
                             </Grid>
                             <Grid>
                                 {/* 1.1.3. Search */}
-                                <SearchProduct/>    
+                                <SearchProduct handleSearchBarSelect={handleSearchBarSelect}/>    
                             </Grid>
                         </Grid>
 
