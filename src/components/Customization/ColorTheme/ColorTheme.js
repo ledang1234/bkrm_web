@@ -3,7 +3,7 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { customizeAction } from "../../../store/slice/customizeSlice";
 import clsx from "clsx";
-
+import {updateLocalStorage} from "../Customization"
 // import library
 // import icon
 import {
@@ -100,6 +100,7 @@ const SliderColor = (props) => {
 
   const handleColorLevel = (event, newValue) => {
     dispatch(customizeAction.setColorLevel(newValue));
+    updateLocalStorage({ type: "COLOR_LEVEL", payload: newValue })
   };
 
   if (props.title === "Màu nền") {
@@ -281,11 +282,13 @@ const ColorTheme = () => {
   const primaryColor = customization.primaryColor;
   const handlePrimaryColor = (e) => {
     dispatch(customizeAction.setPrimaryColor(e));
+    updateLocalStorage({ type: "PRIMARY_COLOR", payload: e })
   };
 
   const secondaryColor = customization.secondaryColor;
   const handleSecondaryColor = (e) => {
     dispatch(customizeAction.setSecondaryColor(e));
+    updateLocalStorage({ type: "SECONDARY_COLOR", payload: e })
   };
 
   return (

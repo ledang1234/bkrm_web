@@ -15,9 +15,7 @@ export default function SimpleModal(props) {
       >
         <React.Fragment>
           <Paper>
-            <Box className={classes.container}>
-              <img src={loading} className={classes.loading} />
-            </Box>
+            <Box className={classes.container}></Box>
           </Paper>
         </React.Fragment>
       </Modal>
