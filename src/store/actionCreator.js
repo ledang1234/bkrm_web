@@ -66,9 +66,9 @@ export const setCustomization = (ini) => {
       dispatch(customizeAction.setBorderRadius(customization.borderRadius));
       dispatch(customizeAction.setColorLevel(customization.colorLevel));
       dispatch(customizeAction.setFontFamily(customization.fontFamily));
+      dispatch(customizeAction.setMode(customization.mode));
       dispatch(customizeAction.setPrimaryColor(customization.primaryColor));
       dispatch(customizeAction.setSecondaryColor(customization.secondaryColor));
-      dispatch(customizeAction.setMode(customization.mode));
     };
     try {
       fetchCustomization();
