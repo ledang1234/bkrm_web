@@ -19,7 +19,7 @@ import {CartRow,CartRowMini} from './CartTableRow/CartTableRow'
 //chung
 import MenuProduct from "../../../components/MenuProduct/MenuProduct"
 import ChangeCartBtn from  "../../../components/CheckoutComponent/ChangeCartBtn/ChangeCartBtn"
-import SearchProduct from "../../../components/SearchProduct/SearchProduct";
+import SearchProduct from "../../../components/SearchBar/SearchProduct";
 import TableHeader from '../../../components/TableCommon/TableHeader/TableHeader'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
 import {getComparator,stableSort} from '../../../components/TableCommon/util/sortUtil'

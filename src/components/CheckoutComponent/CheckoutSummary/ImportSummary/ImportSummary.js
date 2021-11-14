@@ -6,11 +6,14 @@ import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import AddSupplier from '../../../../views/InventoryView/Supplier/AddSupplier/AddSupplier'
 
+import SearchSupplier from '../../../SearchBar/SearchSupplier';
+
 //import project 
 import * as Input from '../../../TextField/NumberFormatCustom'
 import { grey} from '@material-ui/core/colors'
 
 import SupplierData from '../../../../assets/JsonData/supplier.json'
+import supplierApi from '../../../../api/supplierApi';
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -85,7 +88,7 @@ const ImportSummary = (props) => {
                 
                 <div style={{ width: '100%'}}>
                     
-                        <Autocomplete
+                        {/* <Autocomplete
                             id="free-solo-demo"
                             freeSolo
                             value={currentCustomer}
@@ -129,7 +132,9 @@ const ImportSummary = (props) => {
                                 </Grid>
                                 )
                               }}          
-                        />
+                        /> */}
+
+                        <SearchSupplier handleClickOpen={handleClickOpen} selectedSupplier={{name: "", phone:""}}/>
 
                 </div>
                 

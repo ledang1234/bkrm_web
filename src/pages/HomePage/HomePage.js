@@ -23,7 +23,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 //import project
 import MenuList from "../../components/MenuList/MenuList";
-import SearchProduct from "../../components/SearchProduct/SearchProduct";
+import SearchProduct from "../../components/SearchBar/SearchProduct";
 import Customization from "../../components/Customization/Customization";
 
 import SalesView from "../../views/SalesView/SalesView";

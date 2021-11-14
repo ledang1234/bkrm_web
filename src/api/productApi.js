@@ -32,5 +32,12 @@ const productApi = {
     const url = `stores/${storeUuid}/products/${productUuid}`;
     return axiosClient.delete(url);
   },
+
+  searchProduct: (storeUuid, searchKey, searchBy) => {
+    const url = `stores/${storeUuid}/products/`;
+    return axiosClient.get(url, {params: {searchKey: searchKey, searchBy: searchBy}});
+  },
+
+
 };
 export default productApi;
