@@ -102,11 +102,32 @@ const Import = () => {
     };
 
 
-    // handle search select 
+    // handle search select item add to cart
     const handleSearchBarSelect = (selectedOption) => {
+        selectedOption.quantity = 0
+        selectedOption.price 
         let newCartList = update(cartList, {[selectedIndex]: {cartItem: {$push: [selectedOption]}}})
         setCartList(newCartList)
     }
+
+    const handleDeleteItemCart = (itemUuid) => {
+        let itemIndex = cartList[selectedIndex].find(item => item.uuid === itemUuid);
+        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {$splice: [itemIndex, 1]}}})
+        setCartList(newCartList)
+    }
+
+    const handleChangeItemQuantity = (itemUuid, quantity) => {
+        let itemIndex = cartList[selectedIndex].find(item => item.uuid === itemUuid);
+        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {[itemIndex]: {quantity: {$set: quantity}}}}})
+        setCartList(newCartList)
+    }
+
+    const handleChangeItemPrice = (itemUuid, newPrice) => {
+        let itemIndex = cartList[selectedIndex].find(item => item.uuid === itemUuid);
+        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {[itemIndex]: {: quantity}}}})
+        setCartList(newCartList)
+    }
+
     return (
         <Grid container direction="row" justifyContent="space-between"  alignItems="center" spacing={2} >
             
@@ -122,7 +143,7 @@ const Import = () => {
                             justifyContent="space-between"  
                             alignItems="center"
                             style={{marginTop:-10,marginBottom:30}}
-                        > 
+                        >
                             <Grid>
                                 <ListItem  >
                                     {/* 1.1.1 Title */}
@@ -154,7 +175,7 @@ const Import = () => {
                                 {stableSort(cartList[selectedIndex].cartItem, getComparator(order, orderBy))
                                     .map((row, index) => {
                                     return (
-                                        <ImportRow row={row}/> 
+                                        <ImportRow row={row} handleDeleteItemCart={handleDeleteItemCart}/> 
                                     );})
                                 }
                                 </TableBody>
