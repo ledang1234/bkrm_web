@@ -11,12 +11,13 @@ import ButtonQuantity from "../../../../components/Button/ButtonQuantity";
 import icon from '../../../../assets/img/product/tch.jpeg';
 
 
-export const ImportRow = ({row}) =>{
+export const ImportRow = (props) =>{
     const classes = useStyles(); 
+    const {row, handleDeleteItemCart} = props
     const [quantity, setQuantity] = React.useState(row.quantity);
 
     return (
-      <TableRow hover key={row.id}>
+      <TableRow hover key={props.row.id}>
          <TableCell align="left" style={{width:5}}>{row.stt}</TableCell>
           {/* <TableCell align="left">{row.id}</TableCell> */}
           <TableCell align="left" style={{minWidth:200}}>
@@ -36,7 +37,7 @@ export const ImportRow = ({row}) =>{
           <TableCell align="right"className={classes.boldText}>{row.price * row.quantity}</TableCell>
           <TableCell align="right" >
             <IconButton aria-label="expand row" size="small" >
-                <DeleteForeverOutlinedIcon/>
+                <DeleteForeverOutlinedIcon onClick={handleDeleteItemCart(row.uuid)}/>
             </IconButton>
           </TableCell>
         </TableRow>
@@ -67,7 +68,7 @@ export const ImportRowMini = ({row}) =>{
           <TableCell align="right"className={classes.boldText}>700.000</TableCell>
           <TableCell align="left" >
             <IconButton aria-label="expand row" size="small"style={{marginLeft:-25}} >
-                <DeleteForeverOutlinedIcon/>
+                <DeleteForeverOutlinedIcon />
             </IconButton>
           </TableCell>
         </TableRow>

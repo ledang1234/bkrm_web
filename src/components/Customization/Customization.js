@@ -31,6 +31,35 @@ import { IconSettings } from "@tabler/icons";
 import { customizeAction } from "../../store/slice/customizeSlice";
 const drawerWidth = 300;
 
+export const updateLocalStorage = (action) => {
+  let customization = JSON.parse(sessionStorage.getItem("customization"));
+  console.log(customization);
+  switch (action.type) {
+    case "MODE":
+      customization.mode = action.payload;
+      break;
+    case "FONT_FAMILY":
+      customization.fontFamily = action.payload;
+      break;
+    case "BORDER_RADIUS":
+      customization.borderRadius = action.payload;
+      break;
+    case "COLOR_LEVEL":
+      customization.colorLevel = action.payload;
+      break;
+    case "PRIMARY_COLOR":
+      customization.primaryColor = action.payload;
+      break;
+    case "SECONDARY_COLOR":
+      customization.secondaryColor = action.payload;
+      break;
+    default:
+      console.log("invalid customization");
+      break;
+  }
+  sessionStorage.setItem("customization", JSON.stringify(customization));
+};
+
 function valueText(value) {
   return `${value}px`;
 }
@@ -70,26 +99,26 @@ const Customization = () => {
   const dispatch = useDispatch();
   const customization = useSelector((state) => state.customize);
 
-  // drawer on/off
   const [open, setOpen] = React.useState(false);
   const handleToggle = () => {
     setOpen(!open);
   };
 
-  //------BORDER
-  // state - border radius
   const borderRadius = customization.borderRadius;
   const handleBorderRadius = (borderRadius) => {
     dispatch(customizeAction.setBorderRadius(borderRadius));
+    updateLocalStorage({ type: "BORDER_RADIUS", payload: borderRadius });
   };
 
   const mode = customization.mode;
   const handleMode = (mode) => {
     dispatch(customizeAction.setMode(mode));
+    updateLocalStorage({ type: "MODE", payload: mode });
   };
   const fontFamily = customization.fontFamily;
   const handleFontChange = (fontFamily) => {
     dispatch(customizeAction.setFontFamily(fontFamily));
+    updateLocalStorage({ type: "FONT_FAMILY", payload: fontFamily });
   };
   return (
     <>
@@ -250,7 +279,7 @@ const Customization = () => {
           </CardWrapper>
 
           {/* Color */}
-          <ColorTheme />
+          <ColorTheme updateLocalStorage={updateLocalStorage} />
         </PerfectScrollbar>
       </Drawer>
     </>

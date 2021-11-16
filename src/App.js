@@ -7,14 +7,14 @@ import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import Customization from "./components/Customization/Customization";
 import SignupPage from "./pages/SignupPage/SignupPage";
-import { verifyToken } from "./store/actionCreator";
+import { verifyToken, setCustomization } from "./store/actionCreator";
 import { useEffect, useState } from "react";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
 import MainPage from "./pages/MainPage/MainPage";
 import CustomerPage from "./pages/CustomerPage/CustomerPage";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
-// import AddInventory from "./components/PopUpAdd/AddInventory/AddInventory";
+
 function App() {
   const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
@@ -23,6 +23,7 @@ function App() {
   useEffect(() => {
     setLoading(false);
     dispatch(verifyToken());
+    dispatch(setCustomization(customization));
   }, [dispatch]);
   return (
     <div>
