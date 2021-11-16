@@ -192,8 +192,16 @@ const Import = () => {
     }
 
     const handleConfirm = () => {
-        
-        console.log(cartList[selectedIndex])
+        let cart = cartList[selectedIndex]
+        let body = {
+            supplier_uuid: cart.supplier.uuid,
+            total_amount: cart.total_amount,
+            payment_method: cart.payment_method,
+            paid_amount: cart.paid_amount,
+            status: cart.payment_amount - cart.discount > cart.paid_amount ? 'closed' : 'debt',
+            details: cart.cartItem,
+        }
+        console.log(body)
     }
     return (
         <Grid container direction="row" justifyContent="space-between"  alignItems="center" spacing={2} >
