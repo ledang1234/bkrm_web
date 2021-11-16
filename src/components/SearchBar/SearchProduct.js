@@ -110,12 +110,12 @@ const SearchProduct = (props) => {
 
     return (
         <div style={{ width: 320, paddingLeft: 20,}}>
-            <SearchBar 
+            <SearchBar
               handleSearchBarSelect={props.handleSearchBarSelect}
               loadingData={loadingData}
               renderInput={renderInput}
               selected={{}}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => option.name ? option.name : ""}
               renderOption={renderOption}/>
         </div>
         

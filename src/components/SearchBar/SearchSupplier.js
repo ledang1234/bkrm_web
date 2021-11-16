@@ -37,7 +37,7 @@ const SearchSupplier = (props) => {
   const classes = useStyles(theme);
 
   useEffect(() => {
-  }, [props.selectedSupplier])
+  }, [props.handleSelectSupplier])
 
   // redux
   const info = useSelector((state) => state.info);

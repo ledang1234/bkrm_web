@@ -99,7 +99,7 @@ const SearchBar = (props) => {
         onKeyDown={(event) => {
           if (event.key === "Enter" && selectedOption) {
             // Prevent's default 'Enter' behavior.
-            // event.defaultMuiPrevented = true;
+            event.defaultMuiPrevented = true;
             handleSearchBarSelect(selectedOption);
           }
         }}

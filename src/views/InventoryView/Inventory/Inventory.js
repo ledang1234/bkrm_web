@@ -41,7 +41,7 @@ const Inventory = () => {
           try {
               const response = await productApi.getProducts(store_uuid)
               setProductList(response.data)
-              console.log(response.data)
+              
           } catch(err) {
               console.log(err) 
           }

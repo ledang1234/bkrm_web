@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 //import style
 import useStyles from "../../../../components/TableCommon/style/mainViewStyle";
 //impỏrt library
@@ -13,31 +13,38 @@ import icon from '../../../../assets/img/product/tch.jpeg';
 
 export const ImportRow = (props) =>{
     const classes = useStyles(); 
-    const {row, handleDeleteItemCart} = props
-    const [quantity, setQuantity] = React.useState(row.quantity);
+    const {row, handleDeleteItemCart, handleChangeItemQuantity, handleChangeItemPrice} = props
 
+    const updateQuantity = (newQuantity) => {
+      handleChangeItemQuantity(row.uuid, newQuantity)
+    }
+    
     return (
-      <TableRow hover key={props.row.id}>
-         <TableCell align="left" style={{width:5}}>{row.stt}</TableCell>
-          {/* <TableCell align="left">{row.id}</TableCell> */}
+      <TableRow hover key={props.row.uuid}>
+          <TableCell align="left">{row.id}</TableCell>
+          <TableCell align="left" style={{width:5}}>{row.barcode}</TableCell>
           <TableCell align="left" style={{minWidth:200}}>
             <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}> 
-                <Box component="img" sx={{ height: 40, width: 40,  borderRadius:10,  marginRight:15 }}src={icon} />
+                <Box component="img" sx={{ height: 40, width: 40,  borderRadius:10,  marginRight:15 }}src={row.img_url} />
                 {row.name}
             </ListItem>  
             </TableCell>
           <TableCell align="right">
-            <Input.ThousandSeperatedInput id="standard-basic" style={{width:70 }} size="small" inputProps={{style: { textAlign: "right" }}} defaultPrice={row.price}  />
+            <Input.ThousandSeperatedInput 
+              id="standard-basic" style={{width:70 }} size="small" 
+              inputProps={{style: { textAlign: "right" }}} 
+              defaultPrice={row.unit_price} 
+              onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}/>
           </TableCell>
   
           <TableCell align="left" padding='none' >
-            <ButtonQuantity quantity={quantity} setQuantity={setQuantity}/> 
+            <ButtonQuantity quantity={row.quantity} setQuantity={updateQuantity}/> 
           </TableCell> 
           
-          <TableCell align="right"className={classes.boldText}>{row.price * row.quantity}</TableCell>
+          <TableCell align="right"className={classes.boldText}>{row.unit_price * row.quantity}</TableCell>
           <TableCell align="right" >
             <IconButton aria-label="expand row" size="small" >
-                <DeleteForeverOutlinedIcon onClick={handleDeleteItemCart(row.uuid)}/>
+                <DeleteForeverOutlinedIcon onClick={() => handleDeleteItemCart(row.uuid)}/>
             </IconButton>
           </TableCell>
         </TableRow>

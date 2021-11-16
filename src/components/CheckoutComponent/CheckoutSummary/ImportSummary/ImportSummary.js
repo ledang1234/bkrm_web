@@ -14,6 +14,7 @@ import { grey} from '@material-ui/core/colors'
 
 import SupplierData from '../../../../assets/JsonData/supplier.json'
 import supplierApi from '../../../../api/supplierApi';
+import { CardTravelTwoTone } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -31,7 +32,17 @@ createStyles({
   }
 }));
 const ImportSummary = (props) => {
-    const {cartData, updateCustomer,currentCustomer, mode} = props;
+    const {
+        cartData,
+        handleSelectSupplier,
+        currentSupplier,
+        handleUpdateDiscount,
+        handleUpdatePaidAmount,
+        handleUpdatePaymentMethod,
+        handleConfirm,
+        mode
+    } = props;
+
     const theme = useTheme();
     const classes = useStyles(theme);
     const [open, setOpen] = React.useState(false);
@@ -42,12 +53,11 @@ const ImportSummary = (props) => {
         setOpen(false);
     };
 
-    //phuong thuc thanh toan
-    const [payment, setPayment] = React.useState('cash');
 
     const handleChangePayment = (event) => {
-        setPayment(event.target.value);
+        handleUpdatePaymentMethod(event.target.value);
     };
+
     //mode 2: popup
     const [openPopUp, setOpenPopUp] = React.useState(false);
     const handleClickOpenPopUp = () => {
@@ -87,55 +97,10 @@ const ImportSummary = (props) => {
                 </Grid>
                 
                 <div style={{ width: '100%'}}>
-                    
-                        {/* <Autocomplete
-                            id="free-solo-demo"
-                            freeSolo
-                            value={currentCustomer}
-                            options={SupplierData}
-                            getOptionLabel={(option) => option.name.concat(" - ").concat(option.phone) } 
-                            onChange={(event, value) => {updateCustomer(value);}} 
-                            renderInput={(params) => (
-                                <TextField 
-                                {...params}
-                                fullWidth 
-                                placeholder="Tìm nhà cung cấp"
-                                margin="normal"  
-                                InputProps={currentCustomer === null? {
-                                    ...params.InputProps,
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                        <SearchIcon style={{color:grey[500]}}/>
-                                        </InputAdornment>
-                                    ),
-                                    endAdornment: (
-                                        <IconButton aria-label="delete"  size="small" onClick={handleClickOpen} style={{marginRight:-30}}>
-                                            <AddIcon/>
-                                        </IconButton>
-                                        ),
-                                    }: {
-                                    ...params.InputProps,
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                        <SearchIcon style={{color:grey[500]}}/>
-                                        </InputAdornment>
-                                    ),
-                                    }}
-                                
-                                />
-                            )}  
-                            renderOption={(option) => {
-                                return (
-                                <Grid fullWidth container direction="row" justifyContent="space-between"  >
-                                    <Typography variant="h5">{option.name}</Typography>
-                                    <Typography variant="body1">{option.phone}</Typography>               
-                                </Grid>
-                                )
-                              }}          
-                        /> */}
-
-                        <SearchSupplier handleClickOpen={handleClickOpen} selectedSupplier={{name: "", phone:""}}/>
-
+                    <SearchSupplier 
+                        handleClickOpen={handleClickOpen} 
+                        selectedSupplier={currentSupplier ? currentSupplier : {name: "", phone:""}}
+                        handleSearchBarSelect={handleSelectSupplier}/>
                 </div>
                 
                 <AddSupplier  open={open} handleClose={handleClose}/>
@@ -153,7 +118,7 @@ const ImportSummary = (props) => {
                         Tổng số mặt hàng
                     </Typography>
                     <Typography variant="body2">
-                            5
+                        {cartData.cartItem.length}
                     </Typography>
                 </Grid>
 
@@ -162,7 +127,7 @@ const ImportSummary = (props) => {
                         Tổng tiền hàng
                     </Typography>
                     <Typography variant="body2">
-                            500.000
+                        {cartData.total_amount}
                     </Typography>
                 </Grid>
 
@@ -170,7 +135,10 @@ const ImportSummary = (props) => {
                     <Typography variant="h5">
                         Giảm giá
                     </Typography>
-                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }} size="small" inputProps={{style: { textAlign: "right" }}}  />
+                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }} 
+                        size="small" inputProps={{style: { textAlign: "right" }}}  
+                        onChange={(e) => handleUpdateDiscount(e.target.value)}
+                    />
                 </Grid>
 
                 <Grid container direction="row" justifyContent="space-between"className={classes.marginRow}>
@@ -178,7 +146,7 @@ const ImportSummary = (props) => {
                         Cần trả NCC
                     </Typography>
                     <Typography variant="body2">
-                        400.000
+                        {cartData.total_amount - cartData.discount}
                     </Typography>
                 </Grid>
 
@@ -186,28 +154,34 @@ const ImportSummary = (props) => {
                     <Typography variant="h5">
                         Đã trả NCC
                     </Typography>
-                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }} size="small" inputProps={{style: { textAlign: "right" }}}  />
+                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }} 
+                        size="small" inputProps={{style: { textAlign: "right" }}}  
+                        onChange={(e) => handleUpdatePaidAmount(e.target.value)}/>
                 </Grid>
                 <Grid container direction="row" justifyContent="space-between"  alignItems="center" className={classes.marginRow}>
                     <Typography variant="h5">
-                        Công nợ
+                        Công nợ phải trả
                     </Typography>
-                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }} size="small" inputProps={{style: { textAlign: "right" }}}  />
+                    <Input.ThousandSeperatedInput 
+                        id="standard-basic" style={{width:90 }} 
+                        size="small" inputProps={{style: { textAlign: "right" }}} 
+                        value={cartData.total_amount - cartData.discount - cartData.paid_amount}
+                    />
                 </Grid>
                 
                 <Grid container direction="row" justifyContent="flex-end" alignItems="center" className={classes.marginRow}>
                     <FormControl component="fieldset">
-                        <RadioGroup aria-label="gender" name="gender1" value={payment} onChange={handleChangePayment}>
+                        <RadioGroup aria-label="gender" name="gender1" 
+                            value={cartData.payment_method} onChange={handleChangePayment}>
                             <Grid container direction="row">
                                 <FormControlLabel labelPlacement="start" value="card" control={<Radio />} label="Thẻ" />
                                 <FormControlLabel labelPlacement="start" value="cash" control={<Radio />} label="Tiền mặt" />
-                                
                             </Grid>
                         </RadioGroup>
                     </FormControl>
                 </Grid>
 
-                <Button variant="contained" fullWidth color="primary" style={{marginTop:40}}>
+                <Button variant="contained" fullWidth color="primary" style={{marginTop:40}} onClick={handleConfirm}>
                     Nhập hàng
                 </Button>
            
