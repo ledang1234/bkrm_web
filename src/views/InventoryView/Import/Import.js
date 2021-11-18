@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
@@ -6,7 +6,6 @@ import { grey} from '@material-ui/core/colors'
 
 //import library 
 import {Grid,Card,Box,Tabs,Tab,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Switch,Menu,MenuItem,ListItem,IconButton,TableBody,Typography} from '@material-ui/core'
-
 
 //import constant
 import * as HeadCells from '../../../assets/constant/tableHead'
@@ -24,14 +23,21 @@ import TableHeader from '../../../components/TableCommon/TableHeader/TableHeader
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
 import {getComparator,stableSort} from '../../../components/TableCommon/util/sortUtil'
 
+import purchaseOrderApi from '../../../api/purchaseOrderApi';
 // update state
 import update from 'immutability-helper';
+import { useSelector } from 'react-redux';
 
  // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
+    const [selectedBranch, setSelectedBranch] = useState({})
+
+     // redux
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
     ////------------ I. DATA (useState) ----------------
     // Cart data get from search_product component 
     // const cartData = [
@@ -50,11 +56,23 @@ const Import = () => {
     // chú ý cartList id from 1 to ... dùng để edit + delete
     // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
 
-    const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: []}]);
+    const [cartList, setCartList] = React.useState([{
+        supplier: null, 
+        cartItem: [],
+        total_amount: 0, 
+        paid_amount: 0,
+        discount: 0,
+        payment_method: "cash"}]);
     //// ----------II. FUNCTION
     // 1.Cart
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+    const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false)
+
+    useEffect(() => {
+        updateTotalAmount();
+    }, [isUpdateTotalAmount])
     
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -68,14 +86,30 @@ const Import = () => {
     }
     const handleAdd = () =>{
         // ADD CART
-        setCartList([...cartList, { id: cartList.length + 1, customer:null, cartItem: []}]);
+        setCartList([...cartList, {
+            supplier:null, 
+            cartItem: [], 
+            total_amount: 0, 
+            paid_amount: 0, 
+            payment_method: "cash", 
+            discount: 0}]);
         setSelectedIndex(cartList.length);
         handleClose();
     } 
     const handleDelete = (index) =>{
         // DELETE CART
         cartList.splice(index, 1);
-        setCartList(cartList);
+        if(cartList.length === 0) {
+            setCartList([{ 
+                supplier: null, 
+                cartItem: [],
+                total_amount: 0, 
+                paid_amount: 0,
+                discount: 0,
+                payment_method: "cash"}])
+        } else {
+            setCartList(cartList);
+        }
         if (selectedIndex === index){setSelectedIndex(0);}
         else if(selectedIndex > index){setSelectedIndex(selectedIndex-1);}
         handleClose();
@@ -102,10 +136,104 @@ const Import = () => {
     };
 
 
-    // handle search select 
+    // handle search select item add to cart
     const handleSearchBarSelect = (selectedOption) => {
-        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {$push: [selectedOption]}}})
+        let itemIndex = cartList[selectedIndex].cartItem.findIndex(item => item.uuid === selectedOption.uuid);
+
+        if (itemIndex !== -1) {
+            handleChangeItemQuantity(selectedOption.uuid, cartList[selectedIndex].cartItem[itemIndex].quantity + 1);
+            return
+        }
+        let newCartItem = {
+            id: cartList[selectedIndex].cartItem.length,
+            uuid: selectedOption.uuid,
+            quantity: 1,
+            barcode: selectedOption.bar_code,
+            unit_price: selectedOption.list_price,
+            img_url: selectedOption.img_url,
+            name: selectedOption.name
+        }
+
+        
+        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {$push: [newCartItem]}}})
+        console.log(newCartList)
         setCartList(newCartList)
+        setIsUpdateTotalAmount(!isUpdateTotalAmount)
+    }
+
+    const handleDeleteItemCart = (itemUuid) => {
+        let itemIndex = cartList[selectedIndex].cartItem.findIndex(item => item.uuid === itemUuid);
+        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {$splice: [[itemIndex, 1]]}}})
+        setCartList(newCartList)
+        setIsUpdateTotalAmount(!isUpdateTotalAmount)
+    }
+
+    const handleChangeItemQuantity = (itemUuid, newQuantity) => {
+        if (newQuantity === 0) {
+            handleDeleteItemCart(itemUuid);
+            return;
+        }
+        let itemIndex = cartList[selectedIndex].cartItem.findIndex(item => item.uuid === itemUuid);
+        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {[itemIndex]: {quantity: {$set: newQuantity}}}}})
+        setCartList(newCartList)
+        setIsUpdateTotalAmount(!isUpdateTotalAmount)
+    }
+
+    const handleChangeItemPrice = (itemUuid, newPrice) => {
+        let itemIndex = cartList[selectedIndex].cartItem.findIndex(item => item.uuid === itemUuid);
+        let newCartList = update(cartList, {[selectedIndex]: {cartItem: {[itemIndex]: {unit_price: {$set: newPrice}}}}})
+        setCartList(newCartList)
+        setIsUpdateTotalAmount(!isUpdateTotalAmount)
+    }
+
+    const handleSelectSupplier = (selectedSupplier) => {
+        let newCartList = update(cartList, {[selectedIndex]: {supplier: {$set: selectedSupplier}}})
+        setCartList(newCartList)
+    }
+
+    const handleUpdatePaidAmount = (amount) => {
+        let newCartList = update(cartList, {[selectedIndex]: {paid_amount: {$set: amount}}})
+        setCartList(newCartList)
+    }
+
+    const handleUpdatePaymentMethod = (method) => {
+        let newCartList = update(cartList, {[selectedIndex]: {payment_method: {$set: method}}})
+        setCartList(newCartList)
+    }
+
+    const handleUpdateDiscount = (amount) => {
+        let newCartList = update(cartList, {[selectedIndex]: {discount: {$set: amount}}})
+        setCartList(newCartList)
+    }
+
+    const updateTotalAmount = () => {
+        let total = 0
+        cartList[selectedIndex].cartItem.forEach(item => {
+            total += item.unit_price * item.quantity
+        });
+
+        let newCartList = update(cartList, {[selectedIndex]: {total_amount: {$set: total}}})
+        setCartList(newCartList)
+    }
+
+    const handleConfirm = async () => {
+        let cart = cartList[selectedIndex]
+        let body = {
+            supplier_uuid: cart.supplier.uuid,
+            total_amount: cart.total_amount.toString(),
+            payment_method: cart.payment_method,
+            paid_amount: cart.paid_amount,
+            discount: cart.discount,
+            status: cart.payment_amount - cart.discount > cart.paid_amount ? 'closed' : 'debt',
+            details: cart.cartItem,
+        }
+
+        try {
+            let res = purchaseOrderApi.addInventory(store_uuid, selectedBranch.uuid, body);
+            console.log(res)
+        } catch(err) {
+            console.log(err)
+        }
     }
     return (
         <Grid container direction="row" justifyContent="space-between"  alignItems="center" spacing={2} >
@@ -122,12 +250,12 @@ const Import = () => {
                             justifyContent="space-between"  
                             alignItems="center"
                             style={{marginTop:-10,marginBottom:30}}
-                        > 
+                        >
                             <Grid>
                                 <ListItem  >
                                     {/* 1.1.1 Title */}
                                     <Typography  variant="h3" > Nhập hàng </Typography> 
-                                    <Typography  variant="h3" style={{marginLeft:10, color:theme.customization.primaryColor[500]}}> # {cartList[selectedIndex].id} </Typography> 
+                                    <Typography  variant="h3" style={{marginLeft:10, color:theme.customization.primaryColor[500]}}> # {(selectedIndex + 1)}</Typography> 
                                     {/* 1.1.2. Btn Channge Cart */}
                                     <ChangeCartBtn selectedIndex={selectedIndex}anchorEl={anchorEl}cartList={cartList} handleClick={handleClick} handleClose={handleClose}handleChoose={handleChoose}handleDelete={handleDelete}handleAdd={handleAdd} isCart={false}/>                
                                 </ListItem>
@@ -154,7 +282,11 @@ const Import = () => {
                                 {stableSort(cartList[selectedIndex].cartItem, getComparator(order, orderBy))
                                     .map((row, index) => {
                                     return (
-                                        <ImportRow row={row}/> 
+                                        <ImportRow 
+                                            row={row} 
+                                            handleDeleteItemCart={handleDeleteItemCart} 
+                                            handleChangeItemPrice={handleChangeItemPrice}
+                                            handleChangeItemQuantity={handleChangeItemQuantity}/> 
                                     );})
                                 }
                                 </TableBody>
@@ -183,9 +315,21 @@ const Import = () => {
                     <Box style={{padding:0,minHeight:'80vh', }}>
                     {!mode  ?
                         /* Viết hàm tính toán sau dựa trên cartData ... hiện tại đang set cứng giá trị */
-                        <ImportSummary cartData={cartList[selectedIndex].cartItem} updateCustomer={updateCustomer}  currentCustomer={cartList[selectedIndex].customer} mode={mode}/>                    
+                        <ImportSummary 
+                            setSelectedBranch={setSelectedBranch}
+                            selectedBranch={selectedBranch}
+                            cartData={cartList[selectedIndex]}  
+                            handleSelectSupplier={handleSelectSupplier}
+                            handleUpdateDiscount={handleUpdateDiscount}
+                            handleUpdatePaidAmount={handleUpdatePaidAmount}
+                            handleUpdatePaymentMethod={handleUpdatePaymentMethod}
+                            handleConfirm={handleConfirm}
+                            currentSupplier={cartList[selectedIndex].supplier} mode={mode}/>                    
                         : 
-                        <ImportSummary cartData={cartList[selectedIndex].cartItem} updateCustomer={updateCustomer}  currentCustomer={cartList[selectedIndex].customer} mode={mode}>
+                        <ImportSummary 
+                            cartData={cartList[selectedIndex]} 
+                            updateCustomer={updateCustomer}  
+                            currentCustomer={cartList[selectedIndex].customer} mode={mode}>
                             <TableContainer style={{maxHeight: '40vh',marginBottom:20, height:'40vh'}}>                         
                                 <TableBody>
                                 {cartList[selectedIndex].cartItem.map((row, index) => {
@@ -196,7 +340,6 @@ const Import = () => {
                                 </TableBody>
                             </TableContainer> 
                         </ImportSummary>
-  
                     }
                     </Box>
                 </Card>

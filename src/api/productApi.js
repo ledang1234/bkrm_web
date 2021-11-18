@@ -32,7 +32,7 @@ const productApi = {
     return axiosClient.delete(url);
   },
 
-  searchProduct: (storeUuid, searchKey, searchBy) => {
+  searchProduct: (storeUuid, searchKey) => {
     const url = `stores/${storeUuid}/products/`;
     return axiosClient.get(url, {
       params: { searchKey: searchKey, searchBy: searchBy },
