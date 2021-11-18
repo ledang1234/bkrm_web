@@ -14,6 +14,7 @@ import LoadingModal from "./components/LoadingModal/LoadingModal";
 import MainPage from "./pages/MainPage/MainPage";
 import CustomerPage from "./pages/CustomerPage/CustomerPage";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
+
 function App() {
   const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
