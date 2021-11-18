@@ -62,15 +62,19 @@ const UpdateInventory = (props) => {
     setDisplay([...display, URL.createObjectURL(e.target.files[0])]);
   };
   const [productInfo, setProductInfo] = useState({
-    name: props.productInfo.name,
-    importedPrice: props.productInfo.list_price,
-    salesPrice: props.productInfo.standard_price,
-    barcode: props.productInfo.bar_code,
-    category: props.productInfo.category,
-    unit: props.productInfo.quantity_per_unit,
-    re_order_point: props.productInfo.min_reorder_quantity,
+    name: "",
+    importedPrice: "",
+    salesPrice: "",
+    barcode: "",
+    category: {
+      uuid: "37526a21-06e1-43ee-bb77-dca5e901ff32",
+      parent_category_id: null,
+      name: "Mặc Định",
+    },
+    unit: "",
+    re_order_point: "",
   });
-  // redux
+
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
@@ -120,7 +124,16 @@ const UpdateInventory = (props) => {
       }
     };
     fetchCategoryList();
-  }, [store_uuid]);
+    setProductInfo({
+      name: props.productInfo.name,
+      importedPrice: props.productInfo.list_price,
+      salesPrice: props.productInfo.standard_price,
+      barcode: props.productInfo.bar_code,
+      category: props.productInfo.category,
+      unit: props.productInfo.quantity_per_unit,
+      re_order_point: props.productInfo.min_reorder_quantity,
+    });
+  }, [store_uuid, props.productInfo]);
 
   return (
     <Dialog
@@ -196,6 +209,7 @@ const UpdateInventory = (props) => {
                 <Select
                   native
                   value={productInfo.category.uuid}
+                  InputLabelProps={{ shrink: !!productInfo.category.uuid }}
                   onChange={(e) => {
                     const cat = categoryList.find(
                       (item) => item.uuid === e.target.value

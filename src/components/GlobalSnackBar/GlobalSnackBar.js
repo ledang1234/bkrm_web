@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
 const SnackBar = () => {
   const isOpen = useSelector((state) => state.status.open);
   const isSuccess = useSelector((state) => state.status.status);

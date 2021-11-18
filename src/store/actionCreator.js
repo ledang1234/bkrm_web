@@ -4,7 +4,7 @@ import { infoActions } from "./slice/infoSlice";
 import { customizeAction } from "./slice/customizeSlice";
 import userApi from "../api/userApi";
 import { pink, blue, grey } from "@material-ui/core/colors";
-
+import { statusAction } from "./slice/statusSlice";
 export const verifyToken = () => {
   return async (dispatch) => {
     dispatch(loadingActions.startLoad());
@@ -49,13 +49,12 @@ export const logInHandler = (userName, password) => {
         dispatch(infoActions.setUser(rs.user));
         dispatch(infoActions.setStore(rs.store));
         dispatch(infoActions.setRole(rs.role));
-      } else {
-        dispatch(authActions.logOut());
-        dispatch(loadingActions.finishLoad());
+        dispatch(statusAction.successfulStatus("Login successfully"));
       }
     } catch (error) {
       dispatch(authActions.logOut());
       dispatch(loadingActions.finishLoad());
+      dispatch(statusAction.failedStatus("Login failed"));
     }
   };
 };

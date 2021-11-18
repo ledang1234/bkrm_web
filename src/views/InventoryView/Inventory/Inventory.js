@@ -45,9 +45,8 @@ const Inventory = () => {
       try {
         const response = await productApi.getProducts(store_uuid);
         setProductList(response.data);
-        console.log("reloaded");
       } catch (err) {
-        console.log("here", store_uuid, err);
+        console.log(err);
       }
     };
     if (reload) {
@@ -102,6 +101,14 @@ const Inventory = () => {
   //// 2. Table
 
   //collapse
+  const [openRow, setRowOpen] = React.useState(null);
+  const handleOpenRow = (row) => {
+    if (row !== openRow) {
+      setRowOpen(row);
+    } else {
+      setRowOpen(null);
+    }
+  };
 
   // header sort
   const [order, setOrder] = React.useState("asc");
@@ -178,6 +185,8 @@ const Inventory = () => {
                 key={row.uuid}
                 row={row}
                 setReload={setReload}
+                openRow={openRow}
+                handleOpenRow={handleOpenRow}
               />
             );
           })}

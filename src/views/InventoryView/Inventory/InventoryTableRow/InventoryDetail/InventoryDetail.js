@@ -28,8 +28,10 @@ import productApi from "../../../../../api/productApi";
 // carousel for images
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UpdateInventory from "./UpdateInventory/UpdateInventory";
+import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
+import { statusAction } from "../../../../../store/slice/statusSlice";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -61,12 +63,12 @@ const UploadImage = () => {
   );
 };
 const InventoryDetail = (props) => {
-  const { row } = props.parentProps;
+  const { row, openRow } = props.parentProps;
 
   const theme = useTheme();
   const classes = useStyles(theme);
-
   const [anchorEl, setAnchorEl] = useState(null);
+  const dispatch = useDispatch();
   const [productDetail, setProductDetail] = useState({
     name: "",
     bar_code: "",
@@ -78,18 +80,31 @@ const InventoryDetail = (props) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
   const handleCloseUpdate = (status) => {
     if (status) {
-      console.log("here");
       props.parentProps.setReload(true);
     }
     setIsOpenUpdate(false);
   };
-
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const handleCloseDelete = () => {
+    setDeleteConfirm(false);
+  };
+  const handleConfirmDelete = async () => {
+    handleCloseDelete();
+    try {
+      const response = await productApi.deleteProduct(store_uuid, row.uuid);
+      dispatch(statusAction.successfulStatus("Xóa thành công"));
+      props.parentProps.setReload(true);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      dispatch(statusAction.failedStatus("Xóa thất bại"));
+    }
+  };
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
@@ -105,22 +120,22 @@ const InventoryDetail = (props) => {
     fetchProduct();
   }, [store_uuid, row, props.openRow]);
 
-  const deleteBtnClick = (productUuid) => {
-    const deleteProduct = async () => {
-      const response = await productApi.deleteProduct(store_uuid, productUuid);
-      handleClose("Success");
-
-      // phai check status code nua
-    };
-
-    deleteProduct();
-  };
   return (
-    <Collapse in={props.openRow} timeout="auto" unmountOnExit>
+    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
       <UpdateInventory
         open={isOpenUpdate}
         handleClose={handleCloseUpdate}
         productInfo={productDetail}
+      />
+      <ConfirmPopUp
+        open={deleteConfirm}
+        handleClose={handleCloseDelete}
+        handleConfirm={handleConfirmDelete}
+        message={
+          <Typography>
+            Xóa vĩnh viễn sản phẩm <b>{productDetail.name} ?</b>
+          </Typography>
+        }
       />
       <Box margin={1}>
         <Typography
@@ -280,6 +295,9 @@ const InventoryDetail = (props) => {
                 variant="contained"
                 size="small"
                 style={{ marginLeft: 15 }}
+                onClick={() => {
+                  setDeleteConfirm(true);
+                }}
               >
                 Xoá
               </Button>
