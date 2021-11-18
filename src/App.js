@@ -14,6 +14,7 @@ import LoadingModal from "./components/LoadingModal/LoadingModal";
 import MainPage from "./pages/MainPage/MainPage";
 import CustomerPage from "./pages/CustomerPage/CustomerPage";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
+import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
 function App() {
   const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
@@ -25,35 +26,34 @@ function App() {
     dispatch(setCustomization(customization));
   }, [dispatch]);
   return (
-    <div>
-      <ThemeProvider theme={themes(customization)}>
-        <Box>
-          <LoadingModal />
-          <CssBaseline />
-          <BrowserRouter>
-            <Switch>
-              {/* Fix lại route */}
-              <Route path="/" exact>
-                <Redirect to="/home" />
-              </Route>
-              <PrivateRoute path="/home">
-                <HomePage />
-              </PrivateRoute>
-              <Route path="/login" exact>
-                {isLoggedIn ? <Redirect to="/home" /> : <LoginPage />}
-              </Route>
-              <Route path="/signup" exact>
-                {isLoggedIn ? <Redirect to="/home" /> : <SignupPage />}
-              </Route>
-              <Route path="/main" component={MainPage} />
-              <Route path="/customer-test" component={CustomerPage} />
-              <Route path="*" component={PageNotFound} />
-            </Switch>
-          </BrowserRouter>
-          <Customization />
-        </Box>
-      </ThemeProvider>
-    </div>
+    <ThemeProvider theme={themes(customization)}>
+      <Box>
+        <LoadingModal />
+        <GlobalSnackbar />
+        <CssBaseline />
+        <BrowserRouter>
+          <Switch>
+            {/* Fix lại route */}
+            <Route path="/" exact>
+              <Redirect to="/home" />
+            </Route>{" "}
+            <PrivateRoute path="/home">
+              <HomePage />
+            </PrivateRoute>
+            <Route path="/login" exact>
+              {isLoggedIn ? <Redirect to="/home" /> : <LoginPage />}
+            </Route>
+            <Route path="/signup" exact>
+              {isLoggedIn ? <Redirect to="/home" /> : <SignupPage />}
+            </Route>
+            <Route path="/main" component={MainPage} />
+            <Route path="/customer-test" component={CustomerPage} />
+            <Route path="*" component={PageNotFound} />
+          </Switch>
+        </BrowserRouter>
+        <Customization />
+      </Box>
+    </ThemeProvider>
   );
 }
 

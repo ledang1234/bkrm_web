@@ -1,6 +1,6 @@
 import axiosClient from "./axiosClient";
 const productApi = {
-  createProduct: (storeUuid,params) => {
+  createProduct: (storeUuid, params) => {
     const url = `stores/${storeUuid}/products`;
     return axiosClient.post(url, params, {
       headers: {
@@ -8,36 +8,43 @@ const productApi = {
       },
     });
   },
-  getProducts: (storeUuid,) => {
+  getProducts: (storeUuid) => {
     const url = `stores/${storeUuid}/products`;
     return axiosClient.get(url);
   },
 
-  getProduct: (storeUuid,productUuid) => {
+  getProduct: (storeUuid, productUuid) => {
     const url = `stores/${storeUuid}/products/${productUuid}`;
     return axiosClient.get(url);
   },
-  
-  createCategory: (storeUuid,params) => {
+
+  createCategory: (storeUuid, params) => {
     const url = `stores/${storeUuid}/categories`;
     return axiosClient.post(url, JSON.stringify(params));
   },
   getAllCategory: (storeUuid) => {
-
     const url = `/stores/${storeUuid}/categories`;
     return axiosClient.get(url);
   },
 
-  deleteProduct: (storeUuid,productUuid) => {
+  deleteProduct: (storeUuid, productUuid) => {
     const url = `stores/${storeUuid}/products/${productUuid}`;
     return axiosClient.delete(url);
   },
 
   searchProduct: (storeUuid, searchKey, searchBy) => {
     const url = `stores/${storeUuid}/products/`;
-    return axiosClient.get(url, {params: {searchKey: searchKey, searchBy: searchBy}});
+    return axiosClient.get(url, {
+      params: { searchKey: searchKey, searchBy: searchBy },
+    });
   },
-
-
+  updateProduct: (storeUuid, productUuid, params) => {
+    const url = `/stores/${storeUuid}/products/${productUuid}?_method=PUT`;
+    return axiosClient.post(url, params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
 };
 export default productApi;
