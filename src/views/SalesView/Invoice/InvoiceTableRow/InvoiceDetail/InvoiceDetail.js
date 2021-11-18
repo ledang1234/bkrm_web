@@ -172,9 +172,6 @@ const InvoiceDetail = (props) => {
                
                </Grid>
  
-
-
-
                <Typography variant="h4" gutterBottom component="div" style={{marginTop:30}}>
                  Danh sách sản phẩm
                </Typography>

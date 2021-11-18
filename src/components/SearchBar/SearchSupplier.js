@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import {Grid,Card,Box, Typography,TextField,InputAdornment,IconButton,Button,Dialog,FormControlLabel,Checkbox,FormControl,FormLabel,RadioGroup, Radio} from '@material-ui/core'
+import React, { useEffect , useState} from "react";
+import {Grid, Typography,TextField,InputAdornment,IconButton} from '@material-ui/core'
 import {
   useTheme,
   withStyles,
@@ -12,7 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 
 import supplierApi from "../../api/supplierApi";
 import { useSelector } from "react-redux";
-import SearchBar from "./SearchBar";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { render } from "sass";
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -35,17 +35,20 @@ const CustomTextField = withStyles({
 const SearchSupplier = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
-
-  useEffect(() => {
-  }, [props.handleSelectSupplier])
+  const [selectedOption, setSelectedOption] = useState(props.selected)
+  const [options, setOptions] = React.useState([]);
 
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
+  useEffect(() => {
+    loadingData();
+  }, [])
+
   const loadingData = async () => {
     const response = await supplierApi.getSuppliers(store_uuid);
-    return response;
+    setOptions(response.data)
   };
 
   const renderOption = (option) => {
@@ -97,15 +100,22 @@ const SearchSupplier = (props) => {
   );
 
   const getOptionLabel = (option) =>  option.name ? option.name : ""
+  
   return (
     <div style={{ width: "100%" }}>
-      <SearchBar
-        handleSearchBarSelect={props.handleSearchBarSelect}
-        loadingData={loadingData}
-        renderInput={renderInput}
-        renderOption={renderOption}
-        selected={props.selectedSupplier}
-        getOptionLabel={getOptionLabel}
+        <Autocomplete
+          freeSolo
+          value={props.selected}
+          options={options}
+          getOptionLabel={getOptionLabel}
+
+          onChange={(event, value) => {
+            setSelectedOption(value);
+            props.handleSearchBarSelect(value)
+          }}
+
+          renderInput={renderInput}
+          renderOption={renderOption}
       />
     </div>
   );

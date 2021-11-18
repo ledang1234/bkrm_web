@@ -3,7 +3,6 @@ import {Grid,Card,Box, Typography,TextField,InputAdornment,IconButton,Button,Dia
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useTheme, withStyles,makeStyles,createStyles} from "@material-ui/core/styles";
 import SearchIcon from '@material-ui/icons/Search';
-import SearchBar from './SearchBar'
 import { grey } from '@material-ui/core/colors'
 
 // import img
@@ -15,6 +14,7 @@ import InventoryData from '../../assets/JsonData/inventory.json'
 import productApi from '../../api/productApi'
 import { useSelector } from 'react-redux';
 import { render } from 'sass';
+
 const useStyles = makeStyles((theme) =>
 createStyles({
     input:{
@@ -51,14 +51,16 @@ const FormatedImage  = (props) => {
 const SearchProduct = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
+    const [selectedOption, setSelectedOption] = useState(props.selected)
+    const [options, setOptions] = React.useState([]);
 
     // redux
     const info = useSelector(state => state.info)
     const store_uuid = info.store.uuid
     
-    const loadingData = async () => {
-      const response = await productApi.getProducts(store_uuid)
-      return response
+    const loadingData = async (e, searchKey, reason) => {
+      const response = await productApi.searchProduct(store_uuid, searchKey)
+      setOptions(response.data)
     }
 
     const renderOption = (option) => {
@@ -108,15 +110,39 @@ const SearchProduct = (props) => {
       />
     )
 
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter" && selectedOption) {
+        // Prevent's default 'Enter' behavior.
+        // event.defaultMuiPrevented = true;
+        props.handleSearchBarSelect(selectedOption);
+      }
+    }
+
+    
+
+    const getOptionLabel = (option) => option.name ? option.name : ""
+
+    // just filter
+    const filterOptions = (options, state) => options
     return (
         <div style={{ width: 320, paddingLeft: 20,}}>
-            <SearchBar
-              handleSearchBarSelect={props.handleSearchBarSelect}
-              loadingData={loadingData}
+            <Autocomplete
+              options={options}
+              freeSolo={true}
+              getOptionLabel={getOptionLabel}
+
+              onKeyDown={handleKeyDown}
+
+              onChange={(event, value) => {
+                setSelectedOption(value);
+              }}
+
+              onInputChange={loadingData}
               renderInput={renderInput}
-              selected={{}}
-              getOptionLabel={(option) => option.name ? option.name : ""}
-              renderOption={renderOption}/>
+              renderOption={renderOption}
+
+              filterOptions={filterOptions}
+            />
         </div>
         
     )
