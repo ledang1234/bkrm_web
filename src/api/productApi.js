@@ -34,9 +34,7 @@ const productApi = {
 
   searchProduct: (storeUuid, searchKey) => {
     const url = `stores/${storeUuid}/products/`;
-    return axiosClient.get(url, {
-      params: { searchKey: searchKey, searchBy: searchBy },
-    });
+    return axiosClient.get(url, { params: { searchKey: searchKey } });
   },
   updateProduct: (storeUuid, productUuid, params) => {
     const url = `/stores/${storeUuid}/products/${productUuid}?_method=PUT`;

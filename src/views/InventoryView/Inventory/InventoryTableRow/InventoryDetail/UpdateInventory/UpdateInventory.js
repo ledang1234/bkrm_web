@@ -84,11 +84,8 @@ const UpdateInventory = (props) => {
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", productInfo.name.toString());
-      bodyFormData.append("list_price", productInfo.salesPrice.toString());
-      bodyFormData.append(
-        "standard_price",
-        productInfo.importedPrice.toString()
-      );
+      bodyFormData.append("list_price", productInfo.importedPrice.toString());
+      bodyFormData.append("standard_price", productInfo.salesPrice.toString());
       bodyFormData.append("bar_code", productInfo.barcode.toString());
       bodyFormData.append("quantity_per_unit", productInfo.unit.toString());
       bodyFormData.append(
