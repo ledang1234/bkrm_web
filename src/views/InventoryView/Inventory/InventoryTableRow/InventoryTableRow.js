@@ -66,5 +66,28 @@ const InventoryTableRow = (props) => {
     </>
   );
 };
+    return (
+        <>
+        {/* ROW */}
+            <TableRow
+            onClick={() => handleOpenRow(row.uuid)}   
+            key={row.uuid}
+            className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
+            >
+                <TableCell align="left">{row.id}</TableCell>
+                <TableCell align="left" style={{minWidth:200}} >
+                    <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}>
+                        <Box component="img" sx={{ height: 50, width: 50,  borderRadius:10,  marginRight:15 }}src={row.img_url} />
+                        <Typography className={classes.fontName}>{row.name}</Typography>
+                    </ListItem>  
+                </TableCell>
+                <TableCell align="left">{row.category.name}</TableCell>
+                <TableCell align="right">{row.list_price}</TableCell>
+                <TableCell align="right">{row.standard_price}</TableCell>
+                <TableCell align="center">
+                    <FormatedProductStatus quantity={row.quantity_available}/>
+                </TableCell>
+                <TableCell align="right" className={classes.fontName}>{row.quantity_available}</TableCell>
+
 
 export default InventoryTableRow;

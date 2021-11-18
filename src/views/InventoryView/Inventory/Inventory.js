@@ -47,6 +47,61 @@ const Inventory = () => {
         setProductList(response.data);
       } catch (err) {
         console.log(err);
+    const [productList, setProductList] = useState([]);
+    const [reload, setReload] = useState(false);
+
+    const onReload = () => setReload(!reload)
+
+    // redux
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
+  
+    useEffect(() => {
+      const fetchProducts = async () => {
+          try {
+              const response = await productApi.getProducts(store_uuid)
+              setProductList(response.data)
+              
+          } catch(err) {
+              console.log(err) 
+          }
+      }
+      fetchProducts()  
+    }, [reload, store_uuid]);
+
+   
+
+    const theme = useTheme();
+    const classes = useStyles(theme);
+    //// 1. Add pop up + noti
+    //add
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+    const handleClose = (status) => {
+      setOpen(false);
+      setAddStatus(status);
+      if(status === "Success"){
+        onReload();
+        setOpenBar(true);
+      }else if (status === "Fail"){
+        setOpenBar(true);
+      }
+    };
+    //category
+    const [openCategory, setOpenCategory] = React.useState(false);
+    const handleClickOpenCategory = () => {
+      setOpenCategory(true);
+    };
+    const handleCloseCategory = (status) => { 
+      setOpenCategory(false);
+      setAddStatus(status);
+      if(status === "Success"){
+        onReload();
+        setOpenBar(true);
+      }else if (status === "Fail"){
+        setOpenBar(true);
       }
     };
     if (reload) {
