@@ -120,13 +120,10 @@ const SupplierDetail = (props) => {
                     
                   </Grid> 
                </Grid>
-
-
                {/* Button */}
               <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
                   <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>
                   <Button variant="contained" size="small" style={{marginLeft:15}}>Xoá</Button>
-                  
                   <IconButton
                     aria-label="more"
                     aria-controls="long-menu"
@@ -138,15 +135,12 @@ const SupplierDetail = (props) => {
                   >
                     <MoreVertIcon />
                   </IconButton>
-                  
                   <StyledMenu
                     id="customized-menu"
                     anchorEl={anchorEl}
                     keepMounted
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
-                    
-                    
                   >
                     <StyledMenuItem>
                       <ListItemIcon style={{marginRight:-15}}>
@@ -154,12 +148,8 @@ const SupplierDetail = (props) => {
                       </ListItemIcon>
                       <ListItemText primary="Ngừng hoạt động" />
                     </StyledMenuItem>
-
                   </StyledMenu>
-
-
               </Grid>
-
              </Box>
            </Collapse>
     )

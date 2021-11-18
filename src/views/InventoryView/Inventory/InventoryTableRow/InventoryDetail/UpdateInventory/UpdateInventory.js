@@ -17,15 +17,15 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
-import VNDInput from "../../../../components/TextField/NumberFormatCustom";
+import VNDInput from "../../../../../../components/TextField/NumberFormatCustom";
 // import img
-import avaUpload from "../../../../assets/img/product/default-product.png";
-import barcodeIcon from "../../../../assets/img/icon/barcode1.png";
-import AddCategory from "./AddCategory";
+import avaUpload from "../../../../../../assets/img/product/default-product.png";
+import barcodeIcon from "../../../../../../assets/img/icon/barcode1.png";
+import AddCategory from "../../../AddCategory/AddCategory";
 import useStyles from "./styles";
-import productApi from "../../../../api/productApi";
-import { useSelector } from "react-redux";
-
+import productApi from "../../../../../../api/productApi";
+import { useDispatch, useSelector } from "react-redux";
+import { statusAction } from "../../../../../../store/slice/statusSlice";
 const UploadImages = (img) => {
   return (
     <Box
@@ -41,9 +41,8 @@ const UploadImages = (img) => {
     />
   );
 };
-const AddInventory = (props) => {
-  const statusState = "Success";
-
+const UpdateInventory = (props) => {
+  const dispatch = useDispatch();
   const { handleClose, open } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
   const handleCloseCategory = () => setOpenAddCategory(false);
@@ -56,7 +55,6 @@ const AddInventory = (props) => {
       updated_at: "",
     },
   ]);
-
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
   const onChange = (e) => {
@@ -65,25 +63,24 @@ const AddInventory = (props) => {
   };
   const [productInfo, setProductInfo] = useState({
     name: "",
-    importedPrice: 0,
-    salesPrice: 0,
+    importedPrice: "",
+    salesPrice: "",
     barcode: "",
     category: {
       uuid: "37526a21-06e1-43ee-bb77-dca5e901ff32",
+      parent_category_id: null,
       name: "Mặc Định",
     },
     unit: "",
-    re_order_point: 0,
+    re_order_point: "",
   });
 
-  // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  const addProductHandler = async () => {
-    console.log(images);
+  const updateProductHandler = async () => {
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", productInfo.name.toString());
@@ -102,11 +99,19 @@ const AddInventory = (props) => {
         "category_uuid",
         productInfo.category.uuid.toString()
       );
-      // bodyFormData.append("images[]", images);
-      images.forEach((image) => bodyFormData.append("images[]", image));
-      const response = await productApi.createProduct(store_uuid, bodyFormData);
-      handleClose("Success");
-    } catch (error) {}
+      // images.forEach((image) => bodyFormData.append("images[]", image));
+      const response = await productApi.updateProduct(
+        store_uuid,
+        props.productInfo.uuid,
+        bodyFormData
+      );
+      handleClose(1);
+      dispatch(statusAction.successfulStatus("Sửa thành công"));
+    } catch (error) {
+      console.log("here", error);
+      handleClose(0);
+      dispatch(statusAction.failedStatus("Sửa thất bại"));
+    }
   };
   useEffect(() => {
     const fetchCategoryList = async () => {
@@ -119,7 +124,16 @@ const AddInventory = (props) => {
       }
     };
     fetchCategoryList();
-  }, [store_uuid]);
+    setProductInfo({
+      name: props.productInfo.name,
+      importedPrice: props.productInfo.list_price,
+      salesPrice: props.productInfo.standard_price,
+      barcode: props.productInfo.bar_code,
+      category: props.productInfo.category,
+      unit: props.productInfo.quantity_per_unit,
+      re_order_point: props.productInfo.min_reorder_quantity,
+    });
+  }, [store_uuid, props.productInfo]);
 
   return (
     <Dialog
@@ -127,15 +141,15 @@ const AddInventory = (props) => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
+      <AddCategory open={openAddCategory} handleClose={handleCloseCategory} />
       <Box className={classes.root}>
-        <AddCategory open={openAddCategory} handleClose={handleCloseCategory} />
         <Typography
           className={classes.headerTitle}
           variant="h5"
           gutterBottom
           style={{ marginBottom: 20 }}
         >
-          Thêm sản phẩm
+          Chỉnh sửa sản phẩm
         </Typography>
         <Grid
           container
@@ -195,6 +209,7 @@ const AddInventory = (props) => {
                 <Select
                   native
                   value={productInfo.category.uuid}
+                  InputLabelProps={{ shrink: !!productInfo.category.uuid }}
                   onChange={(e) => {
                     const cat = categoryList.find(
                       (item) => item.uuid === e.target.value
@@ -331,13 +346,13 @@ const AddInventory = (props) => {
             </Button>
             <Button
               onClick={() => {
-                addProductHandler();
+                updateProductHandler();
               }}
               variant="contained"
               size="small"
               color="primary"
             >
-              Thêm
+              Sửa
             </Button>
           </Grid>
         </Grid>
@@ -346,4 +361,4 @@ const AddInventory = (props) => {
   );
 };
 
-export default AddInventory;
+export default UpdateInventory;
