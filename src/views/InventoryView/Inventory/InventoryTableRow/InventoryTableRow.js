@@ -19,13 +19,12 @@ import { FormatedProductStatus } from "../../../../components/TableCommon/util/f
 import icon from "../../../../assets/img/product/img.jpeg";
 
 const InventoryTableRow = (props) => {
-  const { row,  handleOpenRow,openRow} = props;
+  const { row, handleOpenRow, openRow } = props;
   const classes = useRowStyles();
   return (
     <>
       <TableRow
-        onClick={() =>handleOpenRow(row.uuid)}
-        key={row.uuid}
+        onClick={() => handleOpenRow(row.uuid)}
         className={clsx(
           classes.row,
           openRow === row.uuid ? classes.rowClicked : null

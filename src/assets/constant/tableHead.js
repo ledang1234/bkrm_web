@@ -11,7 +11,7 @@ export const InventoryHeadCells = [
     { id: 'price', align: 'right', disablePadding: false, label: 'Giá bán' },
     { id: 'import_price', align: 'right', disablePadding: false, label: 'Giá vốn' },
     { id: 'quantity', align: 'center', disablePadding: false, label: 'Tình trạng' },
-    { id: 'quantity', align: 'right', disablePadding: false, label: 'Tồn kho' },
+    { id: 'inventory', align: 'right', disablePadding: false, label: 'Tồn kho' },
 ];
 export const InventoryOrderHeadCells = [
     // thêm cột Tiền hàng, Giảm giá, (tiền còn thiếu)

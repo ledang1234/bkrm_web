@@ -38,6 +38,7 @@ import { useSelector } from "react-redux";
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   useEffect(() => {
@@ -54,7 +55,18 @@ const Inventory = () => {
       setReload(false);
     }
   }, [reload, store_uuid]);
-
+  useEffect(() => {
+    const identifier = setTimeout(async () => {
+      try {
+        const response = await productApi.searchProduct(
+          store_uuid,
+          searchValue
+        );
+        setProductList(response.data);
+      } catch (error) {}
+    }, 500);
+    return () => clearTimeout(identifier);
+  }, [searchValue]);
   const theme = useTheme();
   const classes = useStyles(theme);
   //// 1. Add pop up + noti
@@ -167,6 +179,7 @@ const Inventory = () => {
       <ToolBar
         dataTable={productList}
         tableType={TableType.INVENTORY} /*handlePrint={handlePrint}*/
+        handleSearchValueChange={setSearchValue}
       />
 
       {/* 3. TABLE */}
