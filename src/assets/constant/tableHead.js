@@ -22,8 +22,6 @@ export const InventoryOrderHeadCells = [
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
     { id: 'total', align: 'right', disablePadding: false, label: 'Tổng đơn nhập' },
     { id: 'debt', align: 'center', disablePadding: false, label: 'Trạng thái' },
-    { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },
-    
 ];
 export const InventoryReturnOrderHeadCells = [
     // them cột tình trạng
@@ -57,8 +55,7 @@ export const InvoiceHeadCells = [
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
     { id: 'total', align: 'right', disablePadding: false, label: 'Tổng hoá đơn' },
-    { id: 'debt', align: 'left', disablePadding: false, label: 'Trạng thái' },  
-    { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },  
+    { id: 'debt', align: 'left', disablePadding: false, label: 'Trạng thái' }, 
 ];
 export const InvoiceReturnHeadCells = [
     { id: 'id', align: 'left', disablePadding: true, label: '#' },

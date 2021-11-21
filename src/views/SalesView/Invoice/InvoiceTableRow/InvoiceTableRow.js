@@ -19,12 +19,12 @@ const InvoiceTableRow = (props) => {
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
-                <TableCell align="left" >{row.id}</TableCell>
-                <TableCell align="left" className={classes.fontName}>{row.date}</TableCell>
-                <TableCell align="left"style={{minWidth:150}}className={classes.fontName}>{row.customer}</TableCell>
-                <TableCell align="left">{row.branch}</TableCell>
-                <TableCell align="left">{row.payment}</TableCell>
-                <TableCell align="right" className={classes.fontName}>{row.total}</TableCell>
+                <TableCell align="left" >{row.order_code}</TableCell>
+                <TableCell align="left" className={classes.fontName}>{row.paid_date}</TableCell>
+                <TableCell align="left"style={{minWidth:150}}className={classes.fontName}>{row.customer_name}</TableCell>
+                <TableCell align="left">{row.branch_name}</TableCell>
+                <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
+                <TableCell align="right" className={classes.fontName}>{row.total_amount}</TableCell>
                 <TableCell align="center">
                     <FormatedStatus debt={row.debt}/>
                 </TableCell>

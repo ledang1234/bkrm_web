@@ -10,10 +10,10 @@ import SearchIcon from "@material-ui/icons/Search";
 import { grey } from "@material-ui/core/colors";
 import AddIcon from "@material-ui/icons/Add";
 
-import supplierApi from "../../api/supplierApi";
+import customerApi from "../../api/customerApi";
 import { useSelector } from "react-redux";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { render } from "sass";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     input: {
@@ -32,7 +32,7 @@ const CustomTextField = withStyles({
   },
 })(TextField);
 
-const SearchSupplier = (props) => {
+const SearchCustomer = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [selectedOption, setSelectedOption] = useState(props.selected)
@@ -47,7 +47,7 @@ const SearchSupplier = (props) => {
   }, [])
 
   const loadingData = async () => {
-    const response = await supplierApi.getSuppliers(store_uuid);
+    const response = await customerApi.getCustomers(store_uuid);
     setOptions(response.data)
     setSelectedOption(response.data[0]);
     props.handleSearchBarSelect(response.data[0])
@@ -67,7 +67,7 @@ const SearchSupplier = (props) => {
     <TextField
       {...params}
       fullWidth
-      placeholder="Tìm nhà cung cấp"
+      placeholder="Tìm khách hàng"
       margin="normal"
       InputProps={
         props.selectedSupplier === {}
@@ -123,4 +123,4 @@ const SearchSupplier = (props) => {
   );
 };
 
-export default SearchSupplier;
+export default SearchCustomer;

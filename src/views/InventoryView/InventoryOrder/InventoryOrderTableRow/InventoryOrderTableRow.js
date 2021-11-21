@@ -19,16 +19,16 @@ const InventoryOrderTableRow = (props) => {
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
-                <TableCell align="left" >{row.id}</TableCell>
-                <TableCell align="left"className={classes.fontName}>{row.date}</TableCell>
-                <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.supplier}</TableCell>
-                <TableCell align="left">{row.branch}</TableCell>
-                <TableCell align="left">{row.payment}</TableCell>
-                <TableCell align="right" className={classes.fontName}>{row.total}</TableCell>
-                <TableCell align="center">
-                    <FormatedStatus debt={row.debt}/>
+                <TableCell align="left" >{row.purchase_order_code}</TableCell>
+                <TableCell align="left" >{row.creation_date}</TableCell>
+                <TableCell align="left"className={classes.fontName}>{row.supplier_name}</TableCell>
+                <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.branch_name}</TableCell>
+                <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
+                <TableCell align="right">{row.total_amount}</TableCell>
+                <TableCell align="center" className={classes.fontName}>
+                    <FormatedStatus debt={row.status === 'debt' ? 1 : 0}/>
                 </TableCell>
-                <TableCell align="left">{row.employee}</TableCell>
+               
             </TableRow>
 
         {/* DETAIL */}

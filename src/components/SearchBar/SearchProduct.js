@@ -110,16 +110,6 @@ const SearchProduct = (props) => {
       />
     )
 
-    const handleKeyDown = (event) => {
-      if (event.key === "Enter" && selectedOption) {
-        // Prevent's default 'Enter' behavior.
-        // event.defaultMuiPrevented = true;
-        props.handleSearchBarSelect(selectedOption);
-      }
-    }
-
-    
-
     const getOptionLabel = (option) => option.name ? option.name : ""
 
     // just filter
@@ -131,10 +121,11 @@ const SearchProduct = (props) => {
               freeSolo={true}
               getOptionLabel={getOptionLabel}
 
-              onKeyDown={handleKeyDown}
+              
 
               onChange={(event, value) => {
                 setSelectedOption(value);
+                props.handleSearchBarSelect(value);
               }}
 
               onInputChange={loadingData}

@@ -21,7 +21,7 @@ export const ImportRow = (props) =>{
     
     return (
       <TableRow hover key={props.row.uuid}>
-          <TableCell align="left">{row.id}</TableCell>
+          <TableCell align="left">{row.id + 1}</TableCell>
           <TableCell align="left" style={{width:5}}>{row.barcode}</TableCell>
           <TableCell align="left" style={{minWidth:200}}>
             <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}> 
