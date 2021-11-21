@@ -2,8 +2,7 @@ import React from "react";
 import { Modal, Box, Paper } from "@material-ui/core";
 import useStyles from "./styles";
 import { useSelector } from "react-redux";
-import loading from "../../assets/img/icon/loading.gif";
-export default function SimpleModal(props) {
+export default function SimpleModal() {
   const isLoading = useSelector((state) => state.loading.isLoading);
   const classes = useStyles();
   return (
