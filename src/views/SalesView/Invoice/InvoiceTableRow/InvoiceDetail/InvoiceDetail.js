@@ -170,7 +170,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">Cần thu 500.000</Typography>
+                            <Typography variant="body1" gutterBottom component="div">Cần thu {order.total_amount - order.paid_amount}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -178,7 +178,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng hoá đơn</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{row.total}</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{order.total_amount}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -186,7 +186,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Chi nhánh thực hiện</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{row.branch} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{order.branch ? order.branch.name : ""} </Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -194,7 +194,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Phương thức thanh toán</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{row.payment} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'} </Typography>
                         </Grid>
                     </Grid>
                     
@@ -219,23 +219,23 @@ const InvoiceDetail = (props) => {
                    </TableRow>
                  </TableHead>
                  <TableBody>
-{/*     
-                    {row.list.map((historyRow) => (
-                     <TableRow key={historyRow.product_id}>
+    
+                    {order.details.map((detail) => (
+                     <TableRow key={detail.product_id}>
                        <TableCell component="th" scope="row">
-                         {historyRow.product_id}
+                         {detail.bar_code}
                        </TableCell>
-                       <TableCell>{historyRow.name}</TableCell>
-                       <TableCell align="right">{historyRow.quantity}</TableCell>
+                       <TableCell>{detail.product_name}</TableCell>
+                       <TableCell align="right">{detail.quantity}</TableCell>
                        <TableCell align="right">
-                         {historyRow.price}
+                         {detail.unit_price}
                        </TableCell>
                        <TableCell align="right" style={{fontWeight:700}}>
-                         {historyRow.quantity * historyRow.price}
+                         {detail.quantity * detail.unit_price}
                        </TableCell>
                        
                      </TableRow>
-                   ))} */}
+                   ))}
                  </TableBody>
                </Table> 
                <Box  className={classes.background}  style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
@@ -245,7 +245,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">4 </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{order.details.length}</Typography>
                         </Grid>
                     </Grid>
 
@@ -254,7 +254,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tiền hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">{row.total} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.total_amount} </Typography>
                         </Grid>
                     </Grid>
 
@@ -263,7 +263,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Giảm giá</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">200</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.discount}</Typography>
                         </Grid>
                     </Grid>
 
@@ -272,7 +272,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng hoá đơn</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">100</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.total_amount - row.discount}</Typography>
                         </Grid>
                     </Grid>
 
@@ -281,7 +281,7 @@ const InvoiceDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Khách đã trả</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">100</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.paid_amount}</Typography>
                         </Grid>
                     </Grid>
                     

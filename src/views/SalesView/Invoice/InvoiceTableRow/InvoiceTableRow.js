@@ -26,9 +26,9 @@ const InvoiceTableRow = (props) => {
                 <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
                 <TableCell align="right" className={classes.fontName}>{row.total_amount}</TableCell>
                 <TableCell align="center">
-                    <FormatedStatus debt={row.debt}/>
+                    <FormatedStatus debt={row.status === 'debt' ? 1 : 0}/>
                 </TableCell>
-                <TableCell align="left">{row.employee}</TableCell>
+                
             </TableRow>
 
         {/* DETAIL */}
