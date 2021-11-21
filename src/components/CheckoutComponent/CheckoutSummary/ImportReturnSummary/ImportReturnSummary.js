@@ -47,7 +47,7 @@ const ImportReturnSummary = (props) => {
                         </Typography>
                         <Typography variant="body2">
                             {/* current branch */}
-                            Chi nhánh trung tâm
+                            {data.branch.name}
                         </Typography>
                         
                     </Grid>
@@ -55,11 +55,11 @@ const ImportReturnSummary = (props) => {
                     <Grid item xs={4} container direction="column"  alignItems="flex-end">
                         <Typography variant="body2">
                             {/* current date */}
-                            29/10/2000
+                            {new Date().toLocaleDateString("es-US")}
                         </Typography>
                         <Typography variant="body2">
                             {/* current date */}
-                            22:30
+                            {new Date().toLocaleTimeString()}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -70,14 +70,12 @@ const ImportReturnSummary = (props) => {
                             Trả đơn nhập
                         </Typography>
                         <Typography variant="h3" style={{color:theme.customization.primaryColor[500]}}>
-                            #{data.id}
+                            #{data.purchase_order_code}
                         </Typography>
                     </Grid>
                     <Grid item xs={4}container direction="row"  justifyContent="flex-end" className={classes.marginBox} alignItems="center">
-                        
-                        <Avatar alt="Remy Sharp" src={ava} className={classes.ava} style={{marginRight:10}} />
-                        <Typography variant="h5" >
-                            {data.supplier}
+                        <Typography variant="h5">
+                            {data.supplier.name}
                         </Typography>
                     </Grid>          
                 </Grid>
@@ -87,7 +85,7 @@ const ImportReturnSummary = (props) => {
                         Tổng mặt hàng trả
                     </Typography>
                     <Typography variant="body2">
-                        5 
+                        {data.details.length}
                     </Typography>
                 </Grid>
 
@@ -96,7 +94,7 @@ const ImportReturnSummary = (props) => {
                         Tổng tiền gốc hàng trả
                     </Typography>
                     <Typography variant="body2">
-                        500.000
+                        {data.total_amount}
                     </Typography>
                 </Grid>
 
@@ -105,7 +103,7 @@ const ImportReturnSummary = (props) => {
                         Tổng tiền hàng trả
                     </Typography>
                     <Typography variant="body2">
-                        500.000
+                        {}
                     </Typography>
                 </Grid>
 

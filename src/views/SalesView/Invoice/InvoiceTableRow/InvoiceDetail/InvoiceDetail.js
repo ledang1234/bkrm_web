@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import library
@@ -15,6 +15,8 @@ import InvoiceReturnPopUp from '../../../../../components/PopUpReturn/InvoiceRet
 
 
 import { grey} from '@material-ui/core/colors'
+import orderApi from '../../../../../api/orderApi';
+import {useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -86,11 +88,41 @@ const InvoiceDetail = (props) => {
       setOpen(false);
     };
 
-    
+    const [order, setOrder] = useState({
+      customer: {name: ""},
+      created_by_user: {name: ""},
+      branch: null,
+      details: []
+    })
+
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
+
+    useEffect(() => {
+      const loadData = async () => {
+        try {
+          const res = await orderApi.getOrder(store_uuid, row.uuid);
+          // console.log(res.data)
+          setOrder(res.data);
+        } catch (error) {
+          setOrder({
+            customer: {name: ""},
+            created_by_user: {name: ""},
+            branch: null,
+            details: []
+          });
+        }
+      }
+      if (openRow === row.uuid) {
+        loadData();
+      }
+    }
+    , [props.parentProps.openRow]);
+
 
     return (
-        // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
-        <Collapse in={true } timeout="auto" unmountOnExit>
+        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
+        {/* <Collapse in={true } timeout="auto" unmountOnExit> */}
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -103,7 +135,7 @@ const InvoiceDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Mã hoá đơn </Typography>    
                       </Grid>
                       <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.order_code} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
@@ -111,7 +143,7 @@ const InvoiceDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Ngày bán </Typography>    
                       </Grid>
                       <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.date} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.creation_date} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
@@ -119,7 +151,7 @@ const InvoiceDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Khách hàng</Typography>    
                       </Grid>
                       <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.customer} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{order.customer ? order.customer.name: ""} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
@@ -127,7 +159,7 @@ const InvoiceDetail = (props) => {
                         <Typography variant="h5"gutterBottom component="div">Người bán</Typography>    
                       </Grid>
                       <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.employee} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{order.created_by_user ? order.created_by_user.name : ""} </Typography>
                       </Grid>
                   </Grid>
                      
@@ -187,7 +219,7 @@ const InvoiceDetail = (props) => {
                    </TableRow>
                  </TableHead>
                  <TableBody>
-    
+{/*     
                     {row.list.map((historyRow) => (
                      <TableRow key={historyRow.product_id}>
                        <TableCell component="th" scope="row">
@@ -203,7 +235,7 @@ const InvoiceDetail = (props) => {
                        </TableCell>
                        
                      </TableRow>
-                   ))}
+                   ))} */}
                  </TableBody>
                </Table> 
                <Box  className={classes.background}  style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>

@@ -25,25 +25,22 @@ import InventoryOrderTableRow from './InventoryOrderTableRow/InventoryOrderTable
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
 import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
-
-import JSONdata from '../../../assets/JsonData/invoice.json'
-
+import purchaseOrderApi from '../../../api/purchaseOrderApi';
 
 const InventoryOrder = () => {
     // fetch data here
-    const inventoryOrderList = JSONdata;
-
+    const [purchaseOrders, setPurchaseOrders] = useState([])
 
     const theme = useTheme();
     const classes = useStyles(theme);
     const dispatch = useDispatch();
 
-
     //// 2. Table
     //collapse
     const [openRow, setRowOpen] = React.useState(null);
     const handleOpenRow = (row) => {
-        if (row !==  openRow){setRowOpen(row);}
+        if (row !==  openRow){
+          setRowOpen(row);}
         else{setRowOpen(null)}  
     };
 
@@ -57,6 +54,23 @@ const InventoryOrder = () => {
       // setOrder(isAsc ? 'desc' : 'asc');
       // setOrderBy(property);
     };
+
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
+
+    const loadData = async () => {
+      try {
+        const res = await purchaseOrderApi.getAllOfStore(store_uuid);
+        console.log(res.data)
+        setPurchaseOrders(res.data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    useEffect(() => {
+      loadData();
+    }, [])
 
     return (
       
@@ -92,7 +106,7 @@ const InventoryOrder = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ />
+          <ToolBar  dataTable={purchaseOrders} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ />
 
           
           {/* 3. TABLE */}
@@ -105,9 +119,12 @@ const InventoryOrder = () => {
                 headerData={HeadCells.InventoryOrderHeadCells}
               />
               <TableBody>
-                {inventoryOrderList.map((row, index) => {
+                {purchaseOrders.map((row, index) => {
                     return (
-                      <InventoryOrderTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
+                      <InventoryOrderTableRow 
+                        key={row.uuid} row={row}  
+                        openRow={openRow} 
+                        handleOpenRow={handleOpenRow} />
                     );
                 })}
               </TableBody>
@@ -116,4 +133,4 @@ const InventoryOrder = () => {
     )
 }
 
-export default InventoryOrder
+export default InventoryOrder;

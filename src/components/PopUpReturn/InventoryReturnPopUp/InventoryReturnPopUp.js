@@ -23,7 +23,7 @@ import ButtonQuantity from "../../../components/Button/ButtonQuantity";
 const InventoryReturnPopUp = (props) => {
     const {row,classes, handleCloseReturn } =props;
 
-    //2. Table sort
+    // 2. Table sort
     const [order, setOrder] = React.useState('desc');
     const [orderBy, setOrderBy] = React.useState('stt');
     const handleRequestSort = (event, property) => {
@@ -65,11 +65,7 @@ const InventoryReturnPopUp = (props) => {
                                 />
                                 <TableBody>
                                 {
-                                    stableSort(row.list, getComparator(order, orderBy))
-                                        .map((row, index) => {
-                                        return (
-                                            <ImportReturnTableRow row={row}/> 
-                                        );})
+                                    row.details.map((row, index) =>  (<ImportReturnTableRow row={row}/>))
                                 }
                                 </TableBody>
                         </TableWrapper> 
@@ -95,13 +91,13 @@ const ImportReturnTableRow = ({row}) =>{
     const [quantity, setQuantity] = React.useState(row.quantity);
     const [show, setShow] = React.useState('none');
     return (
-      <TableRow hover key={row.id}>
-         <TableCell align="left" style={{width:5}}>{row.stt}</TableCell>
+      <TableRow hover key={row.uuid}>
+         <TableCell align="left" style={{width:5}}>{row.bar_code}</TableCell>
           {/* <TableCell align="left">{row.id}</TableCell> */}
           <TableCell align="left" >{row.name}</TableCell>
-          <TableCell align="right">{row.price}</TableCell>
+          <TableCell align="right">{row.unit_price}</TableCell>
           <TableCell align="right">
-            <Input.ThousandSeperatedInput id="standard-basic" style={{width:70 }} size="small" inputProps={{style: { textAlign: "right" }}} defaultPrice={row.price}  />
+            <Input.ThousandSeperatedInput id="standard-basic" style={{width:70 }} size="small" inputProps={{style: { textAlign: "right" }}} defaultPrice={row.unit_price}  />
           </TableCell>
       
           <TableCell align="left" padding='none' >
@@ -109,7 +105,7 @@ const ImportReturnTableRow = ({row}) =>{
           </TableCell> 
         
   
-          <TableCell align="right" className={classes.boldText}>{row.price * row.quantity}</TableCell>
+          <TableCell align="right" className={classes.boldText}>{row.unit_price * row.quantity}</TableCell>
        
       </TableRow>
     )

@@ -75,6 +75,9 @@ const CartSummary = (props) => {
         setDeliver(event.target.checked );
     };
 
+    // so tien khach đưa
+    const [customerMoney, setCustomerMoney] = React.useState('0');
+
     return (
 
         <Box style={{padding:30,minHeight:'80vh'}}>
@@ -164,10 +167,21 @@ const CartSummary = (props) => {
                         Khách thanh toán
                     </Typography>
                     <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }}
-                        value={cartData.total_amount - cartData.discount}
+                        defaultPrice={(cartData.total_amount - cartData.discount).toString()}
                         size="small" inputProps={{style: { textAlign: "right" }}}
                         onChange={(e) => handleUpdatePaidAmount(e.target.value)}/>
                 </Grid>
+
+                <Grid container direction="row" justifyContent="space-between"  alignItems="center" className={classes.marginRow}>
+                    <Typography variant="h5">
+                        Khách đưa
+                    </Typography>
+                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }}
+                        defaultPrice={(cartData.total_amount - cartData.discount).toString()}
+                        size="small" inputProps={{style: { textAlign: "right" }}}
+                        onChange={(e) => setCustomerMoney(e.target.value)}/>
+                </Grid>
+
                 <Grid container direction="row" justifyContent="space-between"  alignItems="center" className={classes.marginRow}>
                     <Typography variant="h5">
                         Tiền thối
@@ -175,7 +189,7 @@ const CartSummary = (props) => {
                     <Input.ThousandSeperatedInput
                         id="standard-basic" style={{width:90 }}
                         size="small" inputProps={{style: { textAlign: "right" }}}
-                        value={cartData.total_amount - cartData.discount - cartData.paid_amount}
+                        value={Number(customerMoney) - cartData.paid_amount}
                     />
                 </Grid>
 

@@ -311,7 +311,7 @@ const Cart = () => {
       paid_amount: cart.paid_amount,
       discount: cart.discount,
       status:
-        cart.payment_amount - cart.discount > cart.paid_amount
+        cart.paid_amount >= cart.payment_amount - cart.discount 
           ? "closed"
           : "debt",
       details: details,
