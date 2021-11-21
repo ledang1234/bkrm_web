@@ -74,7 +74,7 @@ const InventoryOrder = () => {
                 <Grid className={classes.btngroup1} >
                     <ButtonBase 
                         sx={{ borderRadius: '16px' }} 
-                        onClick={()=>dispatch(customizeAction.setSidebarOpen(false))}
+                        onClick={()=>{dispatch(customizeAction.setSidebarOpen(false));dispatch(customizeAction.setItemMenuOpen(4));}}
                         component={Link}
                         to='/home/inventory/import' 
                         >

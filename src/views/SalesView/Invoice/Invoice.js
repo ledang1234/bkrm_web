@@ -74,7 +74,7 @@ const Invoice = () => {
                 <Grid className={classes.btngroup1} >
                     <ButtonBase 
                         sx={{ borderRadius: '16px' }} 
-                        onClick={()=>dispatch(customizeAction.setSidebarOpen(false))}
+                        onClick={()=>{dispatch(customizeAction.setSidebarOpen(false));dispatch(customizeAction.setItemMenuOpen(1));}}
                         component={Link}
                         to='/home/sales/cart' 
                         >

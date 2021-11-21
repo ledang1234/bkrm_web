@@ -123,7 +123,7 @@ const Customization = () => {
   return (
     <>
       {/* Button  */}
-      <Tooltip title="Chỉnh sửa">
+      <Tooltip title="Cài đặt">
         <Fab
           component="div"
           onClick={handleToggle}

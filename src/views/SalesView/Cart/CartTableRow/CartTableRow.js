@@ -30,7 +30,7 @@ export const CartRow = ({row}) =>{
           </TableCell>
   
           <TableCell align="left" padding='none' >
-            <ButtonQuantity quantity={quantity} setQuantity={setQuantity}/> 
+            <ButtonQuantity quantity={quantity} setQuantity={setQuantity} /> 
           </TableCell> 
           
           <TableCell align="right"className={classes.boldText}>{row.price * row.quantity}</TableCell>
@@ -52,10 +52,9 @@ export const CartRowMini = ({row}) =>{
             <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}> 
                 <Box component="img" sx={{ height: 40, width: 40,  borderRadius:10,  marginRight:15 }}src={icon} />
                 <Box direction="column">
-
                     <Typography className={classes.boldText} style={{marginBottom:3, fontSize:14.5,width:135, textOverflow: 'ellipsis' ,overflow: 'hidden',whiteSpace: 'nowrap' }}>{row.name}</Typography>
-                    <Typography>{row.price}</Typography>
-                    
+                    {/* <Typography>{row.price}</Typography> */}
+                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:70 }} size="small" defaultPrice={row.price} />                    
                 </Box>
             </ListItem>  
         </TableCell>

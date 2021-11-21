@@ -3,6 +3,10 @@ import Import from './Import/Import'
 import Inventory from './Inventory/Inventory'
 import InventoryOrder from './InventoryOrder/InventoryOrder'
 import InventoryReturnOrder from './InventoryReturnOrder/InventoryReturnOrder'
+import OrderProduct from './OrderProduct/OrderProduct'
+import OrderProductList from './OrderProductList/OrderProductList'
+import Check from './Check/Check'
+import CheckHistory from './CheckHistory/CheckHistory'
 import Supplier from './Supplier/Supplier'
 import PageNotFound from '../../pages/PageNotFound/PageNotFound'
 
@@ -17,7 +21,11 @@ const InventoryView = (props) => {
           <Route exact path={`${path}/import`} component={Import} />
           <Route path={`${path}/inventory`} component={Inventory} />
           <Route path={`${path}/receipt`}  component={InventoryOrder}/>
-          <Route path={`${path}/returns`}  component={InventoryReturnOrder}/>         
+          <Route path={`${path}/returns`}  component={InventoryReturnOrder}/>
+          <Route path={`${path}/order-list/order`}  component={OrderProduct}/>   
+          <Route path={`${path}/order-list`}  component={OrderProductList}/>    
+          <Route path={`${path}/check-history/check`}  component={Check}/>   
+          <Route path={`${path}/check-history`}  component={CheckHistory}/>      
           <Route path={`${path}/supplier`}  component={Supplier}/>
           <Route exact path={`${path}/*`} component={PageNotFound}/>
       </Switch>

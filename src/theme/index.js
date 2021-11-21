@@ -35,7 +35,8 @@ export function theme(customization) {
         sm: 600,
         md: 960,
         lg: 1280,
-        xl: 1920,
+        // xl: 1920,
+        xl: 1500,
       },
     },
   });

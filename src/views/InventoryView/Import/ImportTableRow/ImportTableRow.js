@@ -54,7 +54,8 @@ export const ImportRowMini = ({row}) =>{
                 <Box direction="column">
 
                     <Typography className={classes.boldText} style={{marginBottom:3, fontSize:14.5,width:135, textOverflow: 'ellipsis' ,overflow: 'hidden',whiteSpace: 'nowrap' }}>{row.name}</Typography>
-                    <Typography>{row.price}</Typography>
+                    {/* <Typography>{row.price}</Typography> */}
+                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:70 }} size="small" defaultPrice={row.price} />
                     
                 </Box>
             </ListItem>  

@@ -5,11 +5,15 @@ import { Link } from "react-router-dom";
 import clsx from "clsx";
 
 //import library
-import { Box,ListItem,ListItemIcon, ListItemText ,Typography} from '@material-ui/core';
+import {Collapse,List, Box,ListItem,ListItemIcon, ListItemText ,Typography} from '@material-ui/core';
 import { useDispatch,useSelector } from "react-redux";
+import {ExpandLess,ExpandMore} from "@material-ui/icons";
+
 // import redux
 import { customizeAction } from "../../../store/slice/customizeSlice";
 
+//import project 
+import SubItem from './SubItem';
 
 const useStyles = makeStyles((theme) => ({
   menuText:{
@@ -22,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
        background: theme.customization.mode === "Light" ? theme.palette.secondary.light : theme.palette.secondary.main ,
     },
+    marginTop:2,
+
 
   },
   itemClick:{
@@ -30,31 +36,41 @@ const useStyles = makeStyles((theme) => ({
   },
   menuTextClick:{
     fontWeight:800
+  },
+  openIcon:{
+    marginLeft:40
   }
 }));
 
 const MenuItem = (props) => {
-    const {item} = props;
+    const {item, collapse} = props;
     const classes = useStyles();
     const dispatch = useDispatch();
     const customization = useSelector((state) => state.customize);
     
+    const [open, setOpen] = React.useState(true);
     const itemMenuOpen = customization.itemMenuOpen;
   
     function handleOnClick(id){
-        if(id === 1 || id ===4){
+        if(id === 1 || id ===4 
+          // ||id === 8 || id ===10 
+          ){
           dispatch(customizeAction.setSidebarOpen(false));  
         }
         dispatch(customizeAction.setItemMenuOpen(id));
+        if(collapse){setOpen(!open)}
+
     }
+
     return (
+      <>
       <ListItem   
           button
           component={Link}
           to={item.url}
           // className={classes.item}
           className={clsx([classes.item], {
-            [classes.itemClick]: itemMenuOpen === item.id,
+            [classes.itemClick]: Math.floor(itemMenuOpen) === Math.floor(item.id),
           })}
           onClick={()=>handleOnClick(item.id)}
           
@@ -63,8 +79,8 @@ const MenuItem = (props) => {
           <Box
             component="img"
             sx={{
-              height: 25,
-              width: 25, 
+              height: 24,
+              width: 24, 
             }}
             src={item.icon}
           />
@@ -72,12 +88,28 @@ const MenuItem = (props) => {
           
            <Typography
               className={clsx([classes.menuText], {
-                [classes.menuTextClick]: itemMenuOpen === item.id,
+                [classes.menuTextClick]:  Math.floor(itemMenuOpen) === Math.floor(item.id),
               })}
             > 
               {item.title} 
           </Typography>
-        </ListItem>
+              
+          {collapse ?
+           open? <ExpandLess className={classes.openIcon}  fontSize="small"/> : <ExpandMore className={classes.openIcon}fontSize="small" />  
+          :null}
+          </ListItem>
+        
+        
+          {collapse ?
+            <Collapse in={open} timeout="auto">
+            <List component="div" style={{/*marginRight:25*/marginTop:-7}} >
+                {item.children.map((_item) => (
+                    <SubItem  item={_item}  />
+                ))}
+            </List>
+          </Collapse>
+          :null}
+    </>
     )
 }
 
