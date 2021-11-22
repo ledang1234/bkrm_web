@@ -14,8 +14,16 @@ const ChangeCartBtn = (props) => {
 
     const theme = useTheme();
     const classes = useStyles(theme);
-    let hardText =isCart ? "Khách lẻ" :"Nhà cung cấp lẻ";
-    
+    let hardText = isCart ? "Khách lẻ" :"Nhà cung cấp lẻ";
+
+    const getTitle = (cart) => {
+        if (isCart) {
+            return cart.customer === null ? hardText : cart.customer.name
+        } else {
+            return cart.supplier === null ? hardText: cart.supplier.name
+        }
+    }
+
     return (
         <>
 
@@ -37,13 +45,13 @@ const ChangeCartBtn = (props) => {
         >
             {cartList.map((cart, index) => (
                 <MenuItem
-                    key={cart.id}
+                    key={index}
                     selected={index === selectedIndex}
                 >
                     <Grid container direction="row" justifyContent="space-between"spacing={1}>
                         <Grid container item onMouseDown={()=>handleChoose(index)} item xs={10}  >
                             <Box style={{marginRight:10}}>#{index + 1}</Box>
-                            {cart.customer=== null? hardText :cart.customer.name}         
+                            {getTitle(cart)}         
                         </Grid>
                 
                         <Grid container xs={2} item>

@@ -11,7 +11,7 @@ export const InventoryHeadCells = [
     { id: 'price', align: 'right', disablePadding: false, label: 'Giá bán' },
     { id: 'import_price', align: 'right', disablePadding: false, label: 'Giá vốn' },
     { id: 'quantity', align: 'center', disablePadding: false, label: 'Tình trạng' },
-    { id: 'quantity', align: 'right', disablePadding: false, label: 'Tồn kho' },
+    { id: 'inventory', align: 'right', disablePadding: false, label: 'Tồn kho' },
 ];
 export const InventoryOrderHeadCells = [
     // thêm cột Tiền hàng, Giảm giá, (tiền còn thiếu)
@@ -22,8 +22,6 @@ export const InventoryOrderHeadCells = [
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
     { id: 'total', align: 'right', disablePadding: false, label: 'Tổng đơn nhập' },
     { id: 'debt', align: 'center', disablePadding: false, label: 'Trạng thái' },
-    { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },
-    
 ];
 export const InventoryReturnOrderHeadCells = [
     // them cột tình trạng
@@ -57,8 +55,7 @@ export const InvoiceHeadCells = [
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
     { id: 'total', align: 'right', disablePadding: false, label: 'Tổng hoá đơn' },
-    { id: 'debt', align: 'left', disablePadding: false, label: 'Trạng thái' },  
-    { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },  
+    { id: 'debt', align: 'left', disablePadding: false, label: 'Trạng thái' }, 
 ];
 export const InvoiceReturnHeadCells = [
     { id: 'id', align: 'left', disablePadding: true, label: '#' },
@@ -99,7 +96,7 @@ export const CartHeadCells = [
 
 export  const ImportHeadCells = [
     { id: 'stt', align: 'left', disablePadding: true, label: 'Stt' },
-    // { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'barcode', align: 'left', disablePadding: true, label: 'Mã SP' },
     { id: 'name', align: 'left', disablePadding: true, label: 'Tên' },
     { id: 'price', align: 'right', disablePadding: true, label: 'Giá nhập' },
     { id: 'quantity', align: 'center', disablePadding: true, label: 'Số lượng' },

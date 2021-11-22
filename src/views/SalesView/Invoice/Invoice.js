@@ -27,16 +27,32 @@ import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
 
 import JSONdata from '../../../assets/JsonData/invoice.json'
+import orderApi from '../../../api/orderApi'
+
 
 
 const Invoice = () => {
     // fetch data here
-    const invoiceList = JSONdata;
+   
 
 
     const theme = useTheme();
     const classes = useStyles(theme);
     const dispatch = useDispatch();
+
+    const [orders, setOrders] = useState([])
+    // api
+    const info = useSelector(state => state.info)
+    const store_uuid = info.store.uuid
+    const loadData = async () => {
+      try {
+        const res = await orderApi.getAllOfStore(store_uuid);
+        console.log(res.data)
+        setOrders(res.data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
 
     //// 2. Table
@@ -58,17 +74,9 @@ const Invoice = () => {
       // setOrderBy(property);
     };
 
-    //3. ToolBar
-    //3.1. search
-
-    //3.2. filter
-    const [openFilter, setOpenFilter] = React.useState(false);
-    const handleToggleFilter = () => {
-      setOpenFilter(!openFilter);
-    };
-
-    //3.3. loc cot
-
+    useEffect(() => {
+      loadData();
+    }, [])
 
     return (
       
@@ -104,7 +112,7 @@ const Invoice = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={invoiceList} tableType={TableType.INVOICE} textSearch={'#, Khách, Người bán,...  '}  /*handlePrint={handlePrint}*/ 
+          <ToolBar  dataTable={orders} tableType={TableType.INVOICE} textSearch={'#, Khách, Người bán,...  '}  /*handlePrint={handlePrint}*/ 
           handleToggleFilter={handleToggleFilter}
           />
           <InvoiceFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
@@ -119,7 +127,7 @@ const Invoice = () => {
                 headerData={HeadCells.InvoiceHeadCells}
               />
               <TableBody>
-                {invoiceList.map((row, index) => {
+                {orders.map((row, index) => {
                     return (
                       <InvoiceTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
                     );

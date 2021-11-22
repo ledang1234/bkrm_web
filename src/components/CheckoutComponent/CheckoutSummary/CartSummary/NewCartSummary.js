@@ -6,15 +6,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import AddSupplier from '../../../../views/InventoryView/Supplier/AddSupplier/AddSupplier'
 
-import SearchSupplier from '../../../SearchBar/SearchSupplier';
+import SearchCustomer from '../../../SearchBar/SearchCustomer';
 
 //import project
 import * as Input from '../../../TextField/NumberFormatCustom'
 import { grey} from '@material-ui/core/colors'
 
-import SupplierData from '../../../../assets/JsonData/supplier.json'
-import supplierApi from '../../../../api/supplierApi';
-import { CardTravelTwoTone } from '@material-ui/icons';
 import BranchSelect from '../../BranchSelect/BranchSelect';
 
 const useStyles = makeStyles((theme) =>
@@ -32,11 +29,11 @@ createStyles({
     fontSize: "1.125rem",
   }
 }));
-const ImportSummary = (props) => {
+const CartSummary = (props) => {
     const {
         cartData,
-        handleSelectSupplier,
-        currentSupplier,
+        handleSelectCustomer,
+        currentCustomer,
         handleUpdateDiscount,
         handleUpdatePaidAmount,
         handleUpdatePaymentMethod,
@@ -71,6 +68,15 @@ const ImportSummary = (props) => {
         setOpenPopUp(false);
     };
 
+    // giao hang
+    const [deliver, setDeliver] = React.useState(false)
+    
+        const handleChangeDeliver = (event) => {
+        setDeliver(event.target.checked );
+    };
+
+    // so tien khach đưa
+    const [customerMoney, setCustomerMoney] = React.useState('0');
 
     return (
 
@@ -103,10 +109,10 @@ const ImportSummary = (props) => {
                 </Grid>
 
                 <div style={{ width: '100%'}}>
-                    <SearchSupplier
+                    <SearchCustomer
                         handleClickOpen={handleClickOpen}
-                        selectedSupplier={currentSupplier ? currentSupplier : {name: "", phone:""}}
-                        handleSearchBarSelect={handleSelectSupplier}/>
+                        selectedCustomer={currentCustomer ? currentCustomer : {name: "", phone:""}}
+                        handleSearchBarSelect={handleSelectCustomer}/>
                 </div>
 
                 <AddSupplier  open={open} handleClose={handleClose}/>
@@ -149,7 +155,7 @@ const ImportSummary = (props) => {
 
                 <Grid container direction="row" justifyContent="space-between"className={classes.marginRow}>
                     <Typography variant="h5">
-                        Cần trả NCC
+                        Khách cần trả
                     </Typography>
                     <Typography variant="body2">
                         {cartData.total_amount - cartData.discount}
@@ -158,21 +164,32 @@ const ImportSummary = (props) => {
 
                 <Grid container direction="row" justifyContent="space-between"  alignItems="center" className={classes.marginRow}>
                     <Typography variant="h5">
-                        Đã trả NCC
+                        Khách thanh toán
                     </Typography>
                     <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }}
-                        value={cartData.total_amount - cartData.discount}
+                        defaultPrice={(cartData.total_amount - cartData.discount).toString()}
                         size="small" inputProps={{style: { textAlign: "right" }}}
                         onChange={(e) => handleUpdatePaidAmount(e.target.value)}/>
                 </Grid>
+
                 <Grid container direction="row" justifyContent="space-between"  alignItems="center" className={classes.marginRow}>
                     <Typography variant="h5">
-                        Công nợ phải trả
+                        Khách đưa
+                    </Typography>
+                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }}
+                        defaultPrice={(cartData.total_amount - cartData.discount).toString()}
+                        size="small" inputProps={{style: { textAlign: "right" }}}
+                        onChange={(e) => setCustomerMoney(e.target.value)}/>
+                </Grid>
+
+                <Grid container direction="row" justifyContent="space-between"  alignItems="center" className={classes.marginRow}>
+                    <Typography variant="h5">
+                        Tiền thối
                     </Typography>
                     <Input.ThousandSeperatedInput
                         id="standard-basic" style={{width:90 }}
                         size="small" inputProps={{style: { textAlign: "right" }}}
-                        value={cartData.total_amount - cartData.discount - cartData.paid_amount}
+                        value={Number(customerMoney) - cartData.paid_amount}
                     />
                 </Grid>
 
@@ -188,9 +205,18 @@ const ImportSummary = (props) => {
                     </FormControl>
                 </Grid>
 
+                <Grid container direction="row" justifyContent="flex-end" alignItems="center" >
+                    <FormControlLabel
+                        labelPlacement="start"
+                        control={ <Checkbox  checked={deliver} onChange={handleChangeDeliver} />  }
+                        label="Giao hàng"
+                    />
+                </Grid>
                 <Button variant="contained" fullWidth color="primary" style={{marginTop:40}} onClick={handleConfirm}>
-                    Nhập hàng
+                    Thanh toán
                 </Button>
+
+                
 
             </>:
             /* 2.2 Mode 2 */
@@ -225,7 +251,7 @@ const ImportSummary = (props) => {
     )
 }
 
-export default ImportSummary
+export default CartSummary
 
 const CheckoutPopUp = (props)=>{
     const {onClose,handleChangePayment,payment}= props;

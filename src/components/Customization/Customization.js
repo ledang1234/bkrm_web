@@ -33,7 +33,6 @@ const drawerWidth = 300;
 
 export const updateLocalStorage = (action) => {
   let customization = JSON.parse(sessionStorage.getItem("customization"));
-  console.log(customization);
   switch (action.type) {
     case "MODE":
       customization.mode = action.payload;
@@ -72,6 +71,7 @@ const useStyles = makeStyles((theme) =>
       right: 25,
       boxShadow: theme.shadows[8],
       marginLeft: 200,
+      zIndex:5
     },
     drawer: {
       width: drawerWidth,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import library
@@ -15,6 +15,10 @@ import {StyledMenu,StyledMenuItem} from '../../../../../components/Button/MenuBu
 import InventoryReturnPopUp from '../../../../../components/PopUpReturn/InventoryReturnPopUp/InventoryReturnPopUp';
 
 import { grey} from '@material-ui/core/colors'
+
+// api
+import purchaseOrderApi from '../../../../../api/purchaseOrderApi';
+import {useSelector} from 'react-redux'
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -63,6 +67,8 @@ const InventoryOrderDetail = (props) => {
     const {row,openRow }= props.parentProps;
   //  tam thoi
     const currentUser = "Minh Tri";
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -87,10 +93,42 @@ const InventoryOrderDetail = (props) => {
       setOpen(false);
     };
 
+    
+
+    const [purchaseOrder, setPurchaseOrder] = useState({
+      branch: null,
+      details: []
+    })
+
+
+    useEffect(() => {
+      const loadData = async () => {
+        try {
+          const res = await purchaseOrderApi.getPurchaseOrder(store_uuid, row.uuid);
+          // console.log(res.data)
+          setPurchaseOrder(res.data);
+        } catch (error) {
+          setPurchaseOrder({
+            branch: null,
+            details: []
+          });
+        }
+      }
+      if (openRow === row.uuid) {
+        loadData();
+
+      }
+    }
+    , [props.parentProps.openRow]);
+
+    useEffect(() => {
+
+    }, [purchaseOrder])
+    
 
     return (
-        // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
-        <Collapse in={ true } timeout="auto" unmountOnExit>
+        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
+        {/* <Collapse in={ true } timeout="auto" unmountOnExit> */}
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -103,7 +141,7 @@ const InventoryOrderDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Mã đơn nhập</Typography>    
                       </Grid>
                       <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.purchase_order_code} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
@@ -111,7 +149,7 @@ const InventoryOrderDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Ngày bán </Typography>    
                       </Grid>
                       <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.date} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.creation_date} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
@@ -119,7 +157,7 @@ const InventoryOrderDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Nhà cung cấp</Typography>    
                       </Grid>
                       <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.customer} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.supplier_name} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
@@ -127,7 +165,7 @@ const InventoryOrderDetail = (props) => {
                         <Typography variant="h5"gutterBottom component="div">Người trả</Typography>    
                       </Grid>
                       <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.employee} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{purchaseOrder.created_by_user ? purchaseOrder.created_by_user.name : ""} </Typography>
                       </Grid>
                   </Grid>
                      
@@ -138,7 +176,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">Cần trả 500.000</Typography>
+                            <Typography variant="body1" gutterBottom component="div">Cần trả {Number(row.total_amount ) - Number(row.discount) - Number(row.paid_amount)}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -146,7 +184,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng đơn nhập</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{row.total}</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.total_amount}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -154,7 +192,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Chi nhánh thực hiện</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{row.branch} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{purchaseOrder.branch ? purchaseOrder.branch.name : ""} </Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -162,7 +200,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Phương thức thanh toán</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{row.payment} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'} </Typography>
                         </Grid>
                     </Grid>
                     
@@ -190,18 +228,18 @@ const InventoryOrderDetail = (props) => {
                  </TableHead>
                  <TableBody>
     
-                    {row.list.map((historyRow) => (
-                     <TableRow key={historyRow.product_id}>
+                    { purchaseOrder.details.map((detail) => (
+                     <TableRow key={detail.product_id}>
                        <TableCell component="th" scope="row">
-                         {historyRow.product_id}
+                         {detail.bar_code}
                        </TableCell>
-                       <TableCell>{historyRow.name}</TableCell>
-                       <TableCell align="right">{historyRow.quantity}</TableCell>
+                       <TableCell>{detail.name}</TableCell>
+                       <TableCell align="right">{detail.quantity}</TableCell>
                        <TableCell align="right">
-                         {historyRow.price}
+                         {detail.unit_price}
                        </TableCell>
                        <TableCell align="right" style={{fontWeight:700}}>
-                         {historyRow.quantity * historyRow.price}
+                         {Number(detail.quantity) * Number(detail.unit_price)}
                        </TableCell>
                        
                      </TableRow>
@@ -223,7 +261,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng số mặt hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">4 </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{purchaseOrder.details.length}</Typography>
                         </Grid>
                     </Grid>
 
@@ -232,7 +270,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tiền hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">{row.total} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{purchaseOrder.total_amount} </Typography>
                         </Grid>
                     </Grid>
 
@@ -241,7 +279,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Giảm giá</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">200</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{purchaseOrder.discount}</Typography>
                         </Grid>
                     </Grid>
 
@@ -250,7 +288,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng đơn nhập</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">100</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.total_amount - row.discount - row.paid_amount}</Typography>
                         </Grid>
                     </Grid>
 
@@ -259,7 +297,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Đã trả NCC</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">100</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.paid_amount}</Typography>
                         </Grid>
                     </Grid>
                     
@@ -315,7 +353,7 @@ const InventoryOrderDetail = (props) => {
               </Grid>
 
               <Dialog fullWidth={true} maxWidth='lg' open={open} onClose={handleCloseReturn} aria-labelledby="form-dialog-title">
-                    <InventoryReturnPopUp handleCloseReturn={handleCloseReturn} row={row} classes={classes}/>
+                    <InventoryReturnPopUp handleCloseReturn={handleCloseReturn} row={purchaseOrder} classes={classes}/>
               </Dialog>
                 
              </Box>
