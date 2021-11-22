@@ -66,23 +66,23 @@ const Marker = (props) => {
   return (
     <>
 
-      <Box component="img" sx={{marginLeft:-7, marginTop:-50 ,height: 33,  width: 33, zIndex:-1}} src={icon}
-        onClick={()=>{console.log("Click")}} 
-        style={{cursor: 'pointer'}}
-        // onClick={()=>handleClickOpen(id)}
-        onMouseOver={handleMouseOver} onMouseOut={handleMouseExit}
-        />
+    <Box component="img" sx={{marginLeft:-7, marginTop:-50 ,height: 33,  width: 33, zIndex:-1}} src={icon}
+      onClick={()=>{console.log("Click")}} 
+      style={{cursor: 'pointer'}}
+      // onClick={()=>handleClickOpen(id)}
+      onMouseOver={handleMouseOver} onMouseOut={handleMouseExit}
+      />
      <Card className={clsx(open&&classes.root, !open&&classes.hidden)} onMouseOver={handleMouseOver} onMouseOut={handleMouseExit}>
        <CardMedia
         component="img"
         height="60"
         image={icon1}
       />
-      <CardContent style={{marginLeft:-5, marginTop:-9,paddingBottom:-10}}>
+      <CardContent style={{marginLeft:-5, marginTop:-9,paddingBottom:-10,}}>
         <Typography gutterBottom variant="h5" component="div">
           {branch.name}
         </Typography>
-        <p  style={{fontSize:12, marginTop:-3,color:grey[700], minHeight:15}}> {branch.address}  </p>
+        <p  style={{fontSize:12, marginTop:-3,color:grey[700], maxHeight:13}}> {branch.address}  </p>
         <Typography onClick={()=>{getLocation(branch.lat,branch.lng)}}variant="h6"  style={{cursor: 'pointer',flexGrow: 1,textAlign: "right",color:'#1b74e4',fontSize:12, }}>
             Chỉ đường
         </Typography>

@@ -17,6 +17,8 @@ import *  as TableType from '../../../assets/constant/tableType'
 ////import project
 //riêng
 import AddCustomer from './AddCustomer/AddCustomer'
+import CustomerFilter from './CustomerTool/CustomerFilter'
+
 import CustomerTableRow from './CustomerTableRow/CustomerTableRow'
 //chung
 import SnackBar from '../../../components/SnackBar/SnackBar'
@@ -92,6 +94,18 @@ const Customer = () => {
       // setOrderBy(property);
     };
 
+    //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
+
+
     return (
 
     <Card className={classes.root} >
@@ -124,12 +138,13 @@ const Customer = () => {
         <SnackBar openBar={openBar} handleCloseBar={handleCloseBar} addStatus={addStatus}/>
 
         
-        <Divider />
+        <Divider  openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         
         {/* 2. SEARCH - FILTER - EXPORT*/}
         {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-        <ToolBar  dataTable={customerList} tableType={TableType.CUSTOMER} /*handlePrint={handlePrint}*/ />
-
+        <ToolBar  dataTable={customerList} tableType={TableType.CUSTOMER} textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
+        handleToggleFilter={handleToggleFilter}/>
+        <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
         <TableWrapper>
             <TableHeader

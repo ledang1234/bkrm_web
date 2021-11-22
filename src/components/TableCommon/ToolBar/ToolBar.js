@@ -10,7 +10,7 @@ import PrintTwoToneIcon from '@material-ui/icons/PrintTwoTone';
 import ViewColumnTwoToneIcon from '@material-ui/icons/ViewColumnTwoTone';
 import FilterListTwoToneIcon from '@material-ui/icons/FilterListTwoTone';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
-
+import barcodeIcon from "../../../assets/img/icon/barcode_grey.png";
 import grey from '@material-ui/core/colors/grey';
 
 
@@ -35,6 +35,8 @@ createStyles({
       height:40,
       marginLeft:10,
       marginTop:10,
+      //
+      width:260,
       backgroundColor:theme.customization.mode === 'Light' ?grey[50] :grey[700]
     },
     actions:{
@@ -44,9 +46,8 @@ createStyles({
 
 
 const exportExcel = (dataTable,tableType)=>{
-    /// TAI SAO BO FILE JSON VÔ BỊ LỖI NHƯNG BỎ FILE OBJECT JS THÌ KO ???
-    // =>>>> TIM CÁCH CHUYỂN JSON VE DẠNG OBJECT
-    const newData= studentData;
+ 
+    const newData= dataTable;
     const workSheet=XLSX.utils.json_to_sheet(newData)
     const workBook=XLSX.utils.book_new()
 
@@ -62,7 +63,7 @@ const exportExcel = (dataTable,tableType)=>{
  
 
 const ToolBar = (props) => {
-    const {dataTable,tableType,handlePrint} = props;
+    const {dataTable,tableType,handlePrint,textSearch,handleToggleFilter} = props;
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -70,15 +71,22 @@ const ToolBar = (props) => {
     return (
         <CardHeader
           avatar={
-            <TextField  
-            variant="outlined" 
-            placeholder='Tìm kiếm ...'
-              InputProps={{
+            <TextField  variant="outlined"  placeholder={textSearch}/*placeholder='Tìm kiếm ...'*/
+            InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
                     <SearchTwoToneIcon className={classes.icon}/>
                   </InputAdornment>
                 ),
+                endAdornment: (
+                    <InputAdornment position="end">
+                      <Box
+                        component="img"
+                        sx={{ height: 23, width: 23 }}
+                        src={barcodeIcon}
+                      />
+                    </InputAdornment>
+                  ),
                 className:classes.search
               }}
             />    
@@ -92,10 +100,12 @@ const ToolBar = (props) => {
              </Tooltip>
              
              <Tooltip title="In">
-                <IconButton aria-label="filter list">
-                    <PrintTwoToneIcon className={classes.icon} onClick={handlePrint}/>
+                <IconButton aria-label="filter list" onClick={handlePrint}>
+                    <PrintTwoToneIcon className={classes.icon} />
                 </IconButton>
              </Tooltip>
+                
+            {/* {props.children} */}
 
              <Tooltip title="Chọn cột">
                 <IconButton aria-label="filter list">
@@ -104,8 +114,8 @@ const ToolBar = (props) => {
              </Tooltip>
 
              <Tooltip title="Lọc">
-                <IconButton aria-label="filter list">
-                    <FilterListTwoToneIcon className={classes.icon}/>
+                <IconButton aria-label="filter list" onClick={handleToggleFilter}>
+                    <FilterListTwoToneIcon className={classes.icon} />
                 </IconButton>
              </Tooltip>  
         </Box>
@@ -118,12 +128,6 @@ const ToolBar = (props) => {
 
 export default ToolBar
 
-// const columns = [
-//     { title: "Tên sản phẩm", field: "name", },
-//     { title: "Danh mục", field: "category", },
-//     { title: "Giá bán", field: "price", type: "numeric" },
-//     { title: "Giá vốn", field: 'import_price', type: "numeric" }
-// ]
 
 const studentData = [
     {

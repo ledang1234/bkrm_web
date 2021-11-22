@@ -17,6 +17,7 @@ import *  as TableType from '../../../assets/constant/tableType'
 //riêng
 import AddCategory from './AddCategory/AddCategory'
 import AddInventory from './AddInventory/AddInventory'
+import InventoryFilter from './InventoryTool/InventoryFilter'
 import InventoryTableRow from './InventoryTableRow/InventoryTableRow'
 //chung
 import SnackBar from '../../../components/SnackBar/SnackBar'
@@ -113,6 +114,17 @@ const Inventory = () => {
       // setOrder(isAsc ? 'desc' : 'asc');
       // setOrderBy(property);
     };
+
+    //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
     
   
     return (
@@ -157,7 +169,11 @@ const Inventory = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={productList} tableType={TableType.INVENTORY} /*handlePrint={handlePrint}*/ />
+          <ToolBar  dataTable={productList} tableType={TableType.INVENTORY} textSearch={'#,mã vạch,tên sp,...  '}/*handlePrint={handlePrint}*/ 
+          handleToggleFilter={handleToggleFilter}/>
+          <InventoryFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+
+
 
 
           {/* 3. TABLE */}

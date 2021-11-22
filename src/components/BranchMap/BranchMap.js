@@ -26,11 +26,11 @@ const Branch = () => {
     const handleSetLocation = (location) =>{
         setCurrentLocation(`${location.coords.latitude},${location.coords.longitude}`)
     }
-    function getLocation() {
+    function getLocation(lat, lng) {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition((location)=>{
             handleSetLocation(location)
-            window.open(`https://www.google.com/maps/dir/${currentLocation}/10.7727173,106.7262802`, '_blank');  
+            window.open(`https://www.google.com/maps/dir/${currentLocation}/${lat},${lng}`, '_blank');  
         });
         } else {
             

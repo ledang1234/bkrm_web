@@ -3,8 +3,9 @@ import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
+import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+
 
 //import api 
 
@@ -19,7 +20,7 @@ import * as HeadCells from '../../../assets/constant/tableHead'
 import *  as TableType from '../../../assets/constant/tableType'
 
 ////import project
-
+import InventoryOrderFilter from './InventoryOrderTool/InventoryOrderFilter'
 import InventoryOrderTableRow from './InventoryOrderTableRow/InventoryOrderTableRow'
 //chung
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
@@ -58,6 +59,18 @@ const InventoryOrder = () => {
       // setOrderBy(property);
     };
 
+    //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
+
+
     return (
       
         <Card className={classes.root} >
@@ -92,7 +105,12 @@ const InventoryOrder = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ />
+          {/* <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ }
+          <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER}  textSearch={'#, NCC, Nguoi nhap,...'}
+          handleToggleFilter={handleToggleFilter}
+          /> 
+   
+          <InventoryOrderFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
 
           
           {/* 3. TABLE */}

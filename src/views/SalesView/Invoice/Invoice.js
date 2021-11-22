@@ -19,7 +19,7 @@ import * as HeadCells from '../../../assets/constant/tableHead'
 import *  as TableType from '../../../assets/constant/tableType'
 
 ////import project
-
+import InvoiceFilter from './InvoiceTool/InvoiceFilter'
 import InvoiceTableRow from './InvoiceTableRow/InvoiceTableRow'
 //chung
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
@@ -58,6 +58,18 @@ const Invoice = () => {
       // setOrderBy(property);
     };
 
+    //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
+
+
     return (
       
         <Card className={classes.root} >
@@ -92,8 +104,10 @@ const Invoice = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={invoiceList} tableType={TableType.INVOICE} /*handlePrint={handlePrint}*/ />
-
+          <ToolBar  dataTable={invoiceList} tableType={TableType.INVOICE} textSearch={'#, Khách, Người bán,...  '}  /*handlePrint={handlePrint}*/ 
+          handleToggleFilter={handleToggleFilter}
+          />
+          <InvoiceFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
           
           {/* 3. TABLE */}
           <TableWrapper>

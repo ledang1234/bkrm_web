@@ -19,7 +19,7 @@ import * as HeadCells from '../../../assets/constant/tableHead'
 import *  as TableType from '../../../assets/constant/tableType'
 
 ////import project
-
+import CheckHistoryFilter from './CheckHistoryTool/CheckHistoryFilter'
 import CheckHistoryTableRow from './CheckHistoryTableRow/CheckHistoryTableRow'
 //chung
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
@@ -31,7 +31,7 @@ import JSONdata from '../../../assets/JsonData/check.json'
 
 const CheckHistory = () => {
     // fetch data here
-    const inventoryOrderList = JSONdata;
+    const checkHistoryList = JSONdata;
 
 
     const theme = useTheme();
@@ -57,6 +57,17 @@ const CheckHistory = () => {
       // setOrder(isAsc ? 'desc' : 'asc');
       // setOrderBy(property);
     };
+
+    //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
 
     return (
       
@@ -91,7 +102,12 @@ const CheckHistory = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ />
+          <ToolBar  dataTable={checkHistoryList} tableType={TableType.CHECK_LIST} textSearch={'#, Người kiểm,...'} /*handlePrint={handlePrint}*/ 
+           handleToggleFilter={handleToggleFilter}
+          />
+
+          <CheckHistoryFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+
 
           
           {/* 3. TABLE */}
@@ -104,7 +120,7 @@ const CheckHistory = () => {
                 headerData={HeadCells.CheckHistoryHeadCells}
               />
               <TableBody>
-                {inventoryOrderList.map((row, index) => {
+                {checkHistoryList.map((row, index) => {
                     return (
                       <CheckHistoryTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
                     );

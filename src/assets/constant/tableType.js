@@ -9,6 +9,8 @@ export const INVENTORY = "Kho_hàng";
 export const INVENTORY_ORDER = "Đơn_nhập_hàng";
 export const INVENTORY_RETURN = "Đơn_trả_hàng_nhập";
 export const SUPPLIER = "Nhà_cung_cấp";
+export const CHECK_LIST = "Đơn_kiểm_kho";
+export const ORDER_LIST = "Đơn_đặt_hàng";
 
 // HR
 export const EMPLOYEE = "Nhân_viên";
