@@ -66,6 +66,12 @@ const Invoice = () => {
     // header sort 
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
     
     const handleRequestSort = (event, property) => {
       //// (gửi order vs orderBy lên api) -> fetch lại data để sort

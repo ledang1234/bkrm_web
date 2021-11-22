@@ -5,7 +5,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import LoginPage from "./pages/LoginPage/LoginPage";
-// import Customization from "./components/Customization/Customization";
+import Customization from "./components/Customization/Customization";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import { verifyToken, setCustomization } from "./store/actionCreator";
 import { useEffect, useState } from "react";

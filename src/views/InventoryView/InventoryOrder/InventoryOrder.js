@@ -48,6 +48,12 @@ const InventoryOrder = () => {
     // header sort 
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
     
     const handleRequestSort = (event, property) => {
       //// (gửi order vs orderBy lên api) -> fetch lại data để sort
@@ -108,8 +114,11 @@ const InventoryOrder = () => {
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
           {/* <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ }
-          <ToolBar  dataTable={purchaseOrders} tableType={TableType.INVENTORY_ORDER}  textSearch={'#, NCC, Nguoi nhap,...'}
-          handleToggleFilter={handleToggleFilter}
+          <ToolBar  
+            dataTable={purchaseOrders} 
+            tableType={TableType.INVENTORY_ORDER}  
+            textSearch={'#, NCC, Nguoi nhap,...'}
+            handleToggleFilter={handleToggleFilter}
           /> 
    
           <InventoryOrderFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
