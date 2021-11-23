@@ -193,7 +193,7 @@ const AddEmployee = (props) => {
                   label="Gender"
                   value={gender}
                 >
-                  <MenuItem value="male">Name</MenuItem>
+                  <MenuItem value="male">Nam</MenuItem>
                   <MenuItem value="female">Nữ</MenuItem>
                 </Select>
               </FormControl>

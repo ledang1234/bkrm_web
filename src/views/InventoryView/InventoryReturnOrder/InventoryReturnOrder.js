@@ -3,7 +3,7 @@ import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
+import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
 //import api 
@@ -15,6 +15,8 @@ import *  as TableType from '../../../assets/constant/tableType'
 ////import project
 //riêng
 import InventoryReturnTableRow from './InventoryReturnTableRow/InventoryReturnTableRow'
+import InventoryReturnFilter from './InventoryReturnTool/InventoryReturnFilter'
+
 //chung
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
 import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
@@ -50,6 +52,18 @@ const InventoryReturnOrder = () => {
       // setOrderBy(property);
     };
 
+
+     //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
+
     return (
       
         <Card className={classes.root} >
@@ -68,7 +82,12 @@ const InventoryReturnOrder = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={inventoryReturnList} tableType={TableType.INVENTORY_RETURN} /*handlePrint={handlePrint}*/ />
+          {/* <ToolBar  dataTable={inventoryReturnList} tableType={TableType.INVENTORY_RETURN} /*handlePrint={handlePrint}*/ }
+          <ToolBar  dataTable={inventoryReturnList} tableType={TableType.INVENTORY_RETURN} textSearch={'#, #đn, NCC, Nguoi trả,...'}
+           handleToggleFilter={handleToggleFilter}/> 
+
+          <InventoryReturnFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+
 
           {/* 3. TABLE */}
           <TableWrapper>

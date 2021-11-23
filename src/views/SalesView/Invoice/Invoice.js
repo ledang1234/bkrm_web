@@ -19,7 +19,7 @@ import * as HeadCells from '../../../assets/constant/tableHead'
 import *  as TableType from '../../../assets/constant/tableType'
 
 ////import project
-
+import InvoiceFilter from './InvoiceTool/InvoiceFilter'
 import InvoiceTableRow from './InvoiceTableRow/InvoiceTableRow'
 //chung
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
@@ -66,6 +66,12 @@ const Invoice = () => {
     // header sort 
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
     
     const handleRequestSort = (event, property) => {
       //// (gửi order vs orderBy lên api) -> fetch lại data để sort
@@ -94,7 +100,7 @@ const Invoice = () => {
                 <Grid className={classes.btngroup1} >
                     <ButtonBase 
                         sx={{ borderRadius: '16px' }} 
-                        onClick={()=>dispatch(customizeAction.setSidebarOpen(false))}
+                        onClick={()=>{dispatch(customizeAction.setSidebarOpen(false));dispatch(customizeAction.setItemMenuOpen(1));}}
                         component={Link}
                         to='/home/sales/cart' 
                         >
@@ -112,8 +118,10 @@ const Invoice = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={orders} tableType={TableType.INVOICE} /*handlePrint={handlePrint}*/ />
-
+          <ToolBar  dataTable={orders} tableType={TableType.INVOICE} textSearch={'#, Khách, Người bán,...  '}  /*handlePrint={handlePrint}*/ 
+          handleToggleFilter={handleToggleFilter}
+          />
+          <InvoiceFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
           
           {/* 3. TABLE */}
           <TableWrapper>

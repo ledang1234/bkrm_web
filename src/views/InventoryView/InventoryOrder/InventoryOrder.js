@@ -3,8 +3,9 @@ import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
+import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+
 
 //import api 
 
@@ -19,7 +20,7 @@ import * as HeadCells from '../../../assets/constant/tableHead'
 import *  as TableType from '../../../assets/constant/tableType'
 
 ////import project
-
+import InventoryOrderFilter from './InventoryOrderTool/InventoryOrderFilter'
 import InventoryOrderTableRow from './InventoryOrderTableRow/InventoryOrderTableRow'
 //chung
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
@@ -47,6 +48,12 @@ const InventoryOrder = () => {
     // header sort 
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
     
     const handleRequestSort = (event, property) => {
       //// (gửi order vs orderBy lên api) -> fetch lại data để sort
@@ -88,7 +95,7 @@ const InventoryOrder = () => {
                 <Grid className={classes.btngroup1} >
                     <ButtonBase 
                         sx={{ borderRadius: '16px' }} 
-                        onClick={()=>dispatch(customizeAction.setSidebarOpen(false))}
+                        onClick={()=>{dispatch(customizeAction.setSidebarOpen(false));dispatch(customizeAction.setItemMenuOpen(4));}}
                         component={Link}
                         to='/home/inventory/import' 
                         >
@@ -106,7 +113,15 @@ const InventoryOrder = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={purchaseOrders} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ />
+          {/* <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ }
+          <ToolBar  
+            dataTable={purchaseOrders} 
+            tableType={TableType.INVENTORY_ORDER}  
+            textSearch={'#, NCC, Nguoi nhap,...'}
+            handleToggleFilter={handleToggleFilter}
+          /> 
+   
+          <InventoryOrderFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
 
           
           {/* 3. TABLE */}

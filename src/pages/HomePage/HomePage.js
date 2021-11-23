@@ -25,7 +25,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import MenuList from "../../components/MenuList/MenuList";
 import SearchProduct from "../../components/SearchBar/SearchProduct";
 import Customization from "../../components/Customization/Customization";
-
+import AvatarInfo from "../../components/Button/AvatarInfo";
 import SalesView from "../../views/SalesView/SalesView";
 import InventoryView from "../../views/InventoryView/InventoryView";
 import HRView from "../../views/HRView/HRView";
@@ -37,6 +37,7 @@ import { authActions } from "../../store/slice/authSlice";
 import { customizeAction } from "../../store/slice/customizeSlice";
 
 import PersonIcon from "@material-ui/icons/Person";
+import DeliveryView from "../../views/DeliveryView/DeliveryView";
 
 const drawerWidth = 240;
 
@@ -133,9 +134,10 @@ const HomePage = (props) => {
             alignItems="center"
             style={{ width: "100%" }}
           >
-            <Typography variant="h3" noWrap className={classes.searchEngine}>
-              {/* BKRM */}
-            </Typography>
+            {/* <Typography variant="h3" noWrap >
+     
+            </Typography> */}
+            <Box></Box>
             {/* <SearchProduct /> */}
  
             <Box display="flex" flexDirection="row" alignItems="center">
@@ -156,11 +158,18 @@ const HomePage = (props) => {
               <Button color="primary" onClick={() => logOutHandler()}>
                 Logout
               </Button>
+              
             </Box>
+            {/* <Box style={{marginRight:10}}>
+              <AvatarInfo  name={infoDetail.user.name}/>
+            </Box> */}
+            
+
+
           </Box>
         </Toolbar>
       </AppBar>
-
+      <Customization />
       {/* Drawer */}
       <Drawer
         container={container}
@@ -194,6 +203,7 @@ const HomePage = (props) => {
           <Switch>
             <Route path={`${path}/sales`} component={SalesView} />
             <Route path={`${path}/inventory`} component={InventoryView} />
+            <Route path={`${path}/delivery`} component={DeliveryView} />
             <Route path={`${path}/hr`} component={HRView} />
             <Route path={`${path}/manager`} component={ManagerView} />
             <Route path={`${path}/*`} component={PageNotFound} />

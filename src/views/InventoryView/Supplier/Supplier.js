@@ -3,7 +3,7 @@ import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
+import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody,IconButton} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
 //import api 
@@ -17,6 +17,7 @@ import *  as TableType from '../../../assets/constant/tableType'
 ////import project
 //riêng
 import AddSupplier from './AddSupplier/AddSupplier'
+import SupplierFilter from './SupplierTool/SupplierFilter'
 // import InventoryTableRow from './InventoryTableRow/InventoryTableRow'
 import SupplierTableRow  from './SupplierTableRow/SupplierTableRow'
 //chung
@@ -24,6 +25,7 @@ import SnackBar from '../../../components/SnackBar/SnackBar'
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
 import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
+
 
 
 
@@ -94,6 +96,19 @@ const Supplier = () => {
       // setOrderBy(property);
     };
 
+    //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
+
+
+
     return (
       
         <Card className={classes.root} >
@@ -113,7 +128,7 @@ const Supplier = () => {
                     >
                     <Avatar variant="rounded" className={classes.headerAvatar}  >
                         <Tooltip title='Thêm nhà cung cấp'>
-                        <AddIcon stroke={1.5} size="1.3rem" />
+                          <AddIcon stroke={1.5} size="1.3rem" />
                         </Tooltip>
                     </Avatar>
                 </ButtonBase>
@@ -130,7 +145,11 @@ const Supplier = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={supplerList} tableType={TableType.SUPPLIER} /*handlePrint={handlePrint}*/ />
+          <ToolBar  dataTable={supplerList} tableType={TableType.SUPPLIER}  textSearch={'#, Tên, sđt, email, địa chỉ, ...  '} 
+              handleToggleFilter={handleToggleFilter}
+          /> 
+          <SupplierFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+
 
           {/* 3. TABLE */}
           <TableWrapper>

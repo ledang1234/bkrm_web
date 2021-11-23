@@ -103,6 +103,9 @@ export  const ImportHeadCells = [
     { id: 'protein1', align: 'right', disablePadding: true, label: 'Thành tiền' },
 ]; 
 
+
+
+
 export const CartReturnHeadCells = [
     { id: 'stt', align: 'left', disablePadding: true, label: 'Stt' },
     // { id: 'id', align: 'left', disablePadding: true, label: '#' },
@@ -121,3 +124,53 @@ export const ImportReturnHeadCells = [
     { id: 'quantity', align: 'center', disablePadding: true, label: 'Số lượng' },
     { id: 'protein1', align: 'right', disablePadding: true, label: 'Thành tiền' },]
 ;
+
+
+export  const OrderHeadCells = [
+    { id: 'stt', align: 'left', disablePadding: true, label: 'Stt' },
+    // { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'name', align: 'left', disablePadding: true, label: 'Sản phẩm' },
+    { id: 'price', align: 'right', disablePadding: true, label: 'Khoảng giá' },
+    { id: 'quantity', align: 'center', disablePadding: true, label: 'Số lượng' },
+    { id: 'protein1', align: 'right', disablePadding: true, label: 'Thành tiền' },
+]; 
+export  const CheckHeadCells = [
+    { id: 'stt', align: 'left', disablePadding: true, label: 'Stt' },
+    // { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'name', align: 'left', disablePadding: true, label: 'Sản phẩm' },
+    { id: 'quantity', align: 'right', disablePadding: true, label: 'Tồn kho' },
+    { id: 'real-quantity', align: 'center', disablePadding: true, label: 'SL thực tế' },
+    { id: 'balance', align: 'right', disablePadding: true, label: 'Lệch' },
+]; 
+
+export  const OrderListHeadCells = [
+    { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'date', align: 'left', disablePadding: false, label: 'Ngày đặt' },
+    { id: 'supplier', align: 'left', disablePadding: false, label: 'Nhà cung cấp' },
+    { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Khoảng tiền' },
+    { id: 'status', align: 'center', disablePadding: false, label: 'Trạng thái' },
+    { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },
+]; 
+export  const CheckHistoryHeadCells = [
+    { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'date', align: 'left', disablePadding: false, label: 'Ngày kiểm' },
+    { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
+    { id: 'inventory', align: 'right', disablePadding: false, label: 'Tồn kho' },
+    { id: 'real', align: 'center', disablePadding: false, label: 'SL thực tế' },
+    { id: 'substract', align: 'right', disablePadding: false, label: 'Lệch'},
+    { id: 'status', align: 'center', disablePadding: false, label: 'Trạng thái' },
+    { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },
+]; 
+
+export  const DeliveryHeadCells = [
+    { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'date', align: 'left', disablePadding: false, label: 'Ngày đặt' },
+    { id: 'customer', align: 'left', disablePadding: false, label: 'Khách hàng' },
+    { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
+    { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng hoá đơn' },
+    { id: 'debt', align: 'left', disablePadding: false, label: 'Trạng thái' },  
+    { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' }, 
+]; 
+

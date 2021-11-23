@@ -12,13 +12,13 @@ import {
 } from "@material-ui/core";
 
 // import - icon
-import GetAppTwoToneIcon from "@material-ui/icons/GetAppTwoTone";
-import PrintTwoToneIcon from "@material-ui/icons/PrintTwoTone";
-import ViewColumnTwoToneIcon from "@material-ui/icons/ViewColumnTwoTone";
-import FilterListTwoToneIcon from "@material-ui/icons/FilterListTwoTone";
-import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
-
-import grey from "@material-ui/core/colors/grey";
+import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
+import PrintTwoToneIcon from '@material-ui/icons/PrintTwoTone';
+import ViewColumnTwoToneIcon from '@material-ui/icons/ViewColumnTwoTone';
+import FilterListTwoToneIcon from '@material-ui/icons/FilterListTwoTone';
+import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
+import barcodeIcon from "../../../assets/img/icon/barcode_grey.png";
+import grey from '@material-ui/core/colors/grey';
 
 // import third party
 import XLSX from "xlsx";
@@ -43,83 +43,94 @@ const useStyles = makeStyles((theme) =>
       backgroundColor:
         theme.customization.mode === "Light" ? grey[50] : grey[700],
     },
-    actions: {
-      marginTop: 10,
+    search:{
+      borderRadius:theme.customization.borderRadius,
+      height:40,
+      marginLeft:10,
+      marginTop:10,
+      //
+      width:260,
+      backgroundColor:theme.customization.mode === 'Light' ?grey[50] :grey[700]
     },
-  })
-);
+    actions:{
+        marginTop:10
+    }
+}));
 
-const exportExcel = (dataTable, tableType) => {
-  /// TAI SAO BO FILE JSON VÔ BỊ LỖI NHƯNG BỎ FILE OBJECT JS THÌ KO ???
-  // =>>>> TIM CÁCH CHUYỂN JSON VE DẠNG OBJECT
-  const newData = studentData;
-  const workSheet = XLSX.utils.json_to_sheet(newData);
-  const workBook = XLSX.utils.book_new();
 
-  XLSX.utils.book_append_sheet(workBook, workSheet, tableType);
-  //Buffer
-  //let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
-  //Binary string
-  XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
-  //Download
-  XLSX.writeFile(workBook, `${tableType}.xlsx`);
-};
+const exportExcel = (dataTable,tableType)=>{
+ 
+    const newData= dataTable;
+    const workSheet=XLSX.utils.json_to_sheet(newData)
+    const workBook=XLSX.utils.book_new()
+
+    XLSX.utils.book_append_sheet(workBook,workSheet,tableType)
+    //Buffer
+    //let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
+    //Binary string
+    XLSX.write(workBook,{bookType:"xlsx",type:"binary"})
+    //Download
+    XLSX.writeFile(workBook,`${tableType}.xlsx`)
+}
+
+ 
 
 const ToolBar = (props) => {
-  const { dataTable, tableType, handlePrint, handleSearchValueChange } = props;
-  const theme = useTheme();
-  const classes = useStyles(theme);
+    const {dataTable,tableType,handlePrint,textSearch,handleToggleFilter} = props;
+    const theme = useTheme();
+    const classes = useStyles(theme);
 
-  return (
-    <CardHeader
-      avatar={
-        <TextField
-          variant="outlined"
-          placeholder="Tìm kiếm ..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchTwoToneIcon className={classes.icon} />
-              </InputAdornment>
-            ),
-            className: classes.search,
-          }}
-          onChange={(e) => handleSearchValueChange(e.target.value)}
-        />
-      }
-      action={
-        <Box className={classes.actions}>
-          <Tooltip title="Xuất excel">
-            <IconButton
-              aria-label="filter list"
-              onClick={() => {
-                exportExcel(dataTable, tableType);
+
+    return (
+        <CardHeader
+          avatar={
+            <TextField  variant="outlined"  placeholder={textSearch}/*placeholder='Tìm kiếm ...'*/
+            InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchTwoToneIcon className={classes.icon}/>
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                    <InputAdornment position="end">
+                      <Box
+                        component="img"
+                        sx={{ height: 23, width: 23 }}
+                        src={barcodeIcon}
+                      />
+                    </InputAdornment>
+                  ),
+                className:classes.search
               }}
-            >
-              <GetAppTwoToneIcon className={classes.icon} />
-            </IconButton>
-          </Tooltip>
+            />    
+          }
+          action={
+        <Box  className={classes.actions}>
+             <Tooltip title="Xuất excel">
+                <IconButton aria-label="filter list" onClick={() => { exportExcel(dataTable,tableType) }}>
+                    <GetAppTwoToneIcon className={classes.icon}/>
+                </IconButton>
+             </Tooltip>
+             
+             <Tooltip title="In">
+                <IconButton aria-label="filter list" onClick={handlePrint}>
+                    <PrintTwoToneIcon className={classes.icon} />
+                </IconButton>
+             </Tooltip>
+                
+            {/* {props.children} */}
 
-          <Tooltip title="In">
-            <IconButton aria-label="filter list">
-              <PrintTwoToneIcon
-                className={classes.icon}
-                onClick={handlePrint}
-              />
-            </IconButton>
-          </Tooltip>
+             <Tooltip title="Chọn cột">
+                <IconButton aria-label="filter list">
+                    <ViewColumnTwoToneIcon className={classes.icon}/>
+                </IconButton>
+             </Tooltip>
 
-          <Tooltip title="Chọn cột">
-            <IconButton aria-label="filter list">
-              <ViewColumnTwoToneIcon className={classes.icon} />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title="Lọc">
-            <IconButton aria-label="filter list">
-              <FilterListTwoToneIcon className={classes.icon} />
-            </IconButton>
-          </Tooltip>
+             <Tooltip title="Lọc">
+                <IconButton aria-label="filter list" onClick={handleToggleFilter}>
+                    <FilterListTwoToneIcon className={classes.icon} />
+                </IconButton>
+             </Tooltip>  
         </Box>
       }
     />
@@ -128,12 +139,6 @@ const ToolBar = (props) => {
 
 export default ToolBar;
 
-// const columns = [
-//     { title: "Tên sản phẩm", field: "name", },
-//     { title: "Danh mục", field: "category", },
-//     { title: "Giá bán", field: "price", type: "numeric" },
-//     { title: "Giá vốn", field: 'import_price', type: "numeric" }
-// ]
 
 const studentData = [
   {

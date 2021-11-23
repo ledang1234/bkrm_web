@@ -18,3 +18,19 @@ video{
 .card1:hover{
   box-shadow: -1px 10px 29px 0px rgba(0,0,0,0.8);
 }
+
+
+
+.carousel .thumb.selected, .carousel .thumb:hover {
+  border: 3px solid rgb(255, 253, 253);
+}
+.carousel .thumb, .carousel .thumb .img {
+  opacity: 0.4;
+}
+.carousel .thumb.selected, .carousel .thumb:hover .img {
+  opacity: 1;
+}
+
+#map {
+  height: 100%;
+}

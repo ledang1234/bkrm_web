@@ -4,7 +4,7 @@ import {makeStyles } from '@material-ui/styles';
 
 // import library
 import { Collapse, Divider, List, ListItem, ListItemText, Typography } from '@material-ui/core';
-import {ExpandLess,ExpandMore} from "@material-ui/icons";
+import {ExpandLess,ExpandMore, TrendingUpOutlined} from "@material-ui/icons";
 
 // import project
 import MenuItem from '../MenuItem/MenuItem';
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
        marginTop:-5,
     },
     openIcon:{
-        marginRight:10
+        marginRight:10,
     },
   
 }));
@@ -59,7 +59,7 @@ const MenuGroup = (props) => {
                 <Collapse in={open} timeout="auto">
                     <List component="div" style={{marginRight:25}} >
                         {item.children.map((_item) => (
-                            <MenuItem  item={_item}  />
+                            _item.children ? <MenuItem  item={_item} collapse={true}  />: <MenuItem  item={_item} collapse={false} />
                         ))}
                     </List>
                 </Collapse>

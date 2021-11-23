@@ -52,6 +52,9 @@ export default  makeStyles((theme) =>({
       top: 20,
       width: 1,
     },
+    icon: {
+      color:theme.customization.mode === 'Light' ?grey[700] :grey[50]
+  },
     padding:{
       marginLeft:24,
       marginRight:24

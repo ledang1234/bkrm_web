@@ -17,6 +17,7 @@ import *  as TableType from '../../../assets/constant/tableType'
 ////import project
 //riêng
 import AddEmployee from './AddEmployee/AddEmployee'
+import EmployeeFilter from './EmployeeTool/EmployeeFilter'
 import EmployeeTableRow from './EmployeeTableRow/EmployeeTableRow'
 //chung
 import SnackBar from '../../../components/SnackBar/SnackBar'
@@ -95,6 +96,18 @@ const Employee = () => {
       // setOrderBy(property);
     };
 
+    //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
+
+
 
     return (
 
@@ -133,8 +146,11 @@ const Employee = () => {
             
             {/* 2. SEARCH - FILTER - EXPORT*/}
             {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-            <ToolBar  dataTable={employeeList} tableType={TableType.EMPLOYEE} /*handlePrint={handlePrint}*/ />
-    
+            <ToolBar  dataTable={employeeList} tableType={TableType.EMPLOYEE} textSearch={'#, Tên, sđt, email, địa chỉ, ...  '}  /*handlePrint={handlePrint}*/ 
+            handleToggleFilter={handleToggleFilter}
+            /> 
+
+            <EmployeeFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
             {/* 3. TABLE */}
             <TableWrapper>
                 <TableHeader

@@ -14,6 +14,7 @@ import *  as TableType from '../../../assets/constant/tableType'
 
 ////import project
 //riêng
+import InvoiceReturnFilter from './InvoiceReturnTool/InvoiceReturnFilter'
 import InvoiceReturnTableRow from './InvoiceReturnTableRow/InvoiceReturnTableRow'
 //chung
 import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
@@ -50,6 +51,18 @@ const InvoiceReturn = () => {
       // setOrderBy(property);
     };
 
+    //3. ToolBar
+    //3.1. search
+
+    //3.2. filter
+    const [openFilter, setOpenFilter] = React.useState(false);
+    const handleToggleFilter = () => {
+      setOpenFilter(!openFilter);
+    };
+
+    //3.3. loc cot
+
+
     return (
       
         <Card className={classes.root} >
@@ -68,8 +81,10 @@ const InvoiceReturn = () => {
           
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={invoiceReturnList} tableType={TableType.INVOICE_RETURN} /*handlePrint={handlePrint}*/ />
+          <ToolBar  dataTable={invoiceReturnList} tableType={TableType.INVOICE_RETURN} textSearch={'#,#hđ, Khách, Người trả,...  '} /*handlePrint={handlePrint}*/ 
 
+           handleToggleFilter={handleToggleFilter}/>
+          <InvoiceReturnFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
           {/* 3. TABLE */}
           <TableWrapper>
               <TableHeader
