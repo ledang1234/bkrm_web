@@ -69,7 +69,7 @@ const InventoryOrder = () => {
       try {
         const res = await purchaseOrderApi.getAllOfStore(store_uuid);
         console.log(res.data)
-        setPurchaseOrders(res.data);
+        setPurchaseOrders(res.data.reverse());
       } catch (error) {
         console.log(error)
       }

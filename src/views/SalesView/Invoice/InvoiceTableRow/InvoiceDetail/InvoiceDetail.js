@@ -81,6 +81,7 @@ const InvoiceDetail = (props) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
+      return;
       setOpen(true);
     };
 

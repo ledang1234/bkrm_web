@@ -117,8 +117,10 @@ const InventoryDetail = (props) => {
         console.log(err);
       }
     };
-    fetchProduct();
-  }, [store_uuid, row, props.openRow]);
+    if (openRow === row.uuid) {
+      fetchProduct();
+    }
+  }, [store_uuid, openRow]);
 
   return (
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>

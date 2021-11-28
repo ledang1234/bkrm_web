@@ -185,7 +185,9 @@ const Cart = () => {
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
-      (item) => item.uuid === selectedOption.uuid
+      (item) => {
+        return item.uuid === selectedOption.uuid
+      }
     );
 
     if (itemIndex !== -1) {
@@ -330,7 +332,7 @@ const Cart = () => {
       );
       setSnackStatus({
         style: "success",
-        message: "Tạo hóa đơn thành công: " + res.data.invoice.invoice_code,
+        message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
       });
       setOpenSnack(true);
       handleDelete(selectedIndex);

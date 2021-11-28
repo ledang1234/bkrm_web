@@ -112,8 +112,10 @@ const SearchCustomer = (props) => {
           getOptionLabel={getOptionLabel}
 
           onChange={(event, value) => {
-            setSelectedOption(value);
-            props.handleSearchBarSelect(value)
+            if (value) {
+              setSelectedOption(value);
+              props.handleSearchBarSelect(value)
+            }
           }}
 
           renderInput={renderInput}

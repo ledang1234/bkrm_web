@@ -122,11 +122,11 @@ const SearchProduct = (props) => {
               freeSolo={true}
               getOptionLabel={getOptionLabel}
 
-              
-
               onChange={(event, value) => {
-                setSelectedOption(value);
-                props.handleSearchBarSelect(value);
+                if (value) {
+                  setSelectedOption(value);
+                  props.handleSearchBarSelect(value);
+                } 
               }}
 
               onInputChange={loadingData}

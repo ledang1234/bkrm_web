@@ -48,7 +48,7 @@ const Invoice = () => {
       try {
         const res = await orderApi.getAllOfStore(store_uuid);
         console.log(res.data)
-        setOrders(res.data);
+        setOrders(res.data.reverse());
       } catch (error) {
         console.log(error)
       }

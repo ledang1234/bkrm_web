@@ -55,6 +55,7 @@ const Inventory = () => {
       setReload(false);
     }
   }, [reload, store_uuid]);
+
   useEffect(() => {
     const identifier = setTimeout(async () => {
       try {
