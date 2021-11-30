@@ -174,3 +174,11 @@ export  const DeliveryHeadCells = [
     { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' }, 
 ]; 
 
+export const EmployeeScheduleHeadCells = [
+    { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'name', align: 'left', disablePadding: true, label: 'Nhân viên' },
+    { id: 'phone', align: 'left', disablePadding: true, label: 'Số điện thoại' },
+    { id: 'status', align: 'left', disablePadding: true, label: 'Chấm công' },
+    { id: 'function', align: 'left', disablePadding: false, label: 'Quyền' },  
+];
+
