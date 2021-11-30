@@ -64,7 +64,7 @@ const Schedule = () => {
 
 
     // 2.3 onClickSchedule (shift- day)
-    const [clickSchedule, setClickSchedule] = React.useState(null);
+    const [clickSchedule, setClickSchedule] = React.useState(shiftInfoWeek[0]);
     //popUpDetail
     const [open, setOpen] = React.useState(false);
     const handlePopUp = () => {
