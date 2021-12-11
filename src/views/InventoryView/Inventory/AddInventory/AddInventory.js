@@ -42,7 +42,6 @@ const UploadImages = (img) => {
   );
 };
 const AddInventory = (props) => {
-  const statusState = "Success";
 
   const { handleClose, open } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
@@ -69,7 +68,7 @@ const AddInventory = (props) => {
     salesPrice: 0,
     barcode: "",
     category: {
-      uuid: "37526a21-06e1-43ee-bb77-dca5e901ff32",
+      uuid: "",
       name: "Mặc Định",
     },
     unit: "",
@@ -83,7 +82,7 @@ const AddInventory = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const addProductHandler = async () => {
-    console.log(images);
+    console.log("herere");
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", productInfo.name.toString());
@@ -104,15 +103,23 @@ const AddInventory = (props) => {
       );
       // bodyFormData.append("images[]", images);
       images.forEach((image) => bodyFormData.append("images[]", image));
-      const response = await productApi.createProduct(store_uuid, bodyFormData);
+      await productApi.createProduct(store_uuid, bodyFormData);
       handleClose("Success");
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+      console.log(productInfo)
+      handleClose("Failed");
+    }
   };
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
         const response = await productApi.getAllCategory(store_uuid);
+        const defautCategory = response.data[0];
         setCategoryList(response.data);
+        setProductInfo(productInfo => {
+          return { ...productInfo, category: { ...defautCategory } }
+        })
       } catch (error) {
         console.log(error);
         return [];
