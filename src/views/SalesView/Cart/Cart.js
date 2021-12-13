@@ -301,7 +301,7 @@ const Cart = () => {
 
     let d = moment.now()/1000;
     
-    let orderTime = moment.unix(d).format('YYYY-MM-DD HH:mm:ss')
+    let orderTime = moment.unix(d).format('YYYY-MM-DD HH:mm:ss',  { trim: false })
     console.log(orderTime)
     
     let details = cart.cartItem.map(item => ({...item, discount: '0'}));

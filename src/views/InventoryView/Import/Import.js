@@ -48,7 +48,7 @@ import purchaseOrderApi from "../../../api/purchaseOrderApi";
 import update from "immutability-helper";
 import { useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
-
+import moment from "moment";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
@@ -296,9 +296,14 @@ const Import = () => {
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
 
-    let d = new Date();
-    let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
-                    + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+    // let d = new Date();
+    // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
+    //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+
+    let d = moment.now()/1000;
+    
+    let importTime = moment.unix(d).format('YYYY-MM-DD HH:mm:ss',  { trim: false })
+
 
     let body = {
       supplier_uuid: cart.supplier.uuid,
