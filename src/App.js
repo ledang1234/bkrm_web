@@ -1,6 +1,6 @@
 import themes from "./theme";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect, HashRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
@@ -31,7 +31,7 @@ function App() {
         <LoadingModal />
         <GlobalSnackbar />
         <CssBaseline />
-        <BrowserRouter>
+        <HashRouter>
           <Switch>
             {/* Fix lại route */}
             <Route path="/" exact>
@@ -50,7 +50,7 @@ function App() {
             <Route path="/customer-test" component={CustomerPage} />
             <Route path="*" component={PageNotFound} />
           </Switch>
-        </BrowserRouter>
+        </HashRouter>
         <Customization />
       </Box>
     </ThemeProvider>
