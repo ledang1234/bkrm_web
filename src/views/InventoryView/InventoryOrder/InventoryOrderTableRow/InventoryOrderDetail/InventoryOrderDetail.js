@@ -353,7 +353,7 @@ const InventoryOrderDetail = (props) => {
               </Grid>
 
               <Dialog fullWidth={true} maxWidth='lg' open={open} onClose={handleCloseReturn} aria-labelledby="form-dialog-title">
-                    <InventoryReturnPopUp handleCloseReturn={handleCloseReturn} row={purchaseOrder} classes={classes}/>
+                    <InventoryReturnPopUp handleCloseReturn={handleCloseReturn} purchaseOrder={purchaseOrder} classes={classes}/>
               </Dialog>
                 
              </Box>

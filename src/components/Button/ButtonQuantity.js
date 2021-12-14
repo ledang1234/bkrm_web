@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Grid,Card,Box,TextField,ListItem,Divider,IconButton,TableRow,TableCell,TableBody,Typography} from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add';
 import useStyles from "../../components/TableCommon/style/mainViewStyle";
@@ -6,15 +6,25 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import clsx from "clsx";
 const ButtonQuantity = (props) =>{
     const classes = useStyles();
-    const {quantity,setQuantity} = props;
+    const {quantity,setQuantity, limit} = props;
     const [show, setShow] = React.useState('none');
+  
     const handleIncrement = () => {
+      if(limit) {
+        if(quantity >= Number(limit)) {
+          console.log('true')
+          setQuantity(quantity)
+          return
+        }
+      } 
       setQuantity(quantity+ 1);
     };
   
     const handleDecrement = () => {
       if(quantity >=1){setQuantity(quantity- 1);}
     };
+
+    
     const handleShow = () => {
       setShow('block');
     };

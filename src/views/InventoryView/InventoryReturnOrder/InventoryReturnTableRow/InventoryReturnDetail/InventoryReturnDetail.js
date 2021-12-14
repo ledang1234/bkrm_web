@@ -167,7 +167,7 @@ const InventoryReturnDetail = (props) => {
                  </TableHead>
                  <TableBody>
     
-                    {row.list.map((historyRow) => (
+                    {/* {row.list.map((historyRow) => (
                      <TableRow key={historyRow.product_id}>
                        <TableCell component="th" scope="row">
                          {historyRow.product_id}
@@ -185,7 +185,7 @@ const InventoryReturnDetail = (props) => {
                        </TableCell>
                        
                      </TableRow>
-                   ))}
+                   ))} */}
                  </TableBody>
                </Table> 
                <Box className={classes.background} style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>

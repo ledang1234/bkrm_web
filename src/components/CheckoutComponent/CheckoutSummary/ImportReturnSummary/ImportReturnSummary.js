@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 import {Grid,Avatar,Card,Box, Typography,TextField,InputAdornment,IconButton,Button,Dialog,FormControlLabel,Checkbox,FormControl,FormLabel,RadioGroup, Radio} from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -27,13 +27,16 @@ createStyles({
       height:30
   }
 }));
-const ImportReturnSummary = (props) => {
-    const {data} = props;
+const ImportReturnSummary = ({data, handlePaidAmountChange, handlePaymentMethodChange, handleConfirm}) => {
+   
     const theme = useTheme();
     const classes = useStyles(theme);
 
 
     let  _value = null;
+    useEffect(() => {
+
+    }, [data])
 
     return (
         
@@ -91,46 +94,39 @@ const ImportReturnSummary = (props) => {
 
                 <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>
                     <Typography variant="h5">
-                        Tổng tiền gốc hàng trả
+                        Tổng tiền hàng trả
                     </Typography>
                     <Typography variant="body2">
                         {data.total_amount}
                     </Typography>
                 </Grid>
 
-                <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>
-                    <Typography variant="h5">
-                        Tổng tiền hàng trả
-                    </Typography>
-                    <Typography variant="body2">
-                        {}
-                    </Typography>
-                </Grid>
-
-                <Grid container direction="row" justifyContent="space-between"className={classes.marginRow}>
-                    <Typography variant="h5">
-                        Phí trả hàng
-                    </Typography>
-                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }} size="small" inputProps={{style: { textAlign: "right" }}}  />
-                </Grid>
-
-                <Grid container direction="row" justifyContent="space-between"className={classes.marginRow}>
-                    <Typography variant="h5">
-                        NCC cần trả
-                    </Typography>
-                    <Typography variant="body2">
-                        400.000
-                    </Typography>
-                </Grid>
-
+                
                 <Grid container direction="row" justifyContent="space-between"  alignItems="center" className={classes.marginRow}>
                     <Typography variant="h5">
                         NCC đã trả
                     </Typography>
-                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }} size="small" inputProps={{style: { textAlign: "right" }}}  />
+                    <Input.ThousandSeperatedInput id="standard-basic" style={{width:90 }} 
+                      size="small" inputProps={{style: { textAlign: "right" }}}  defaultValue={data.paid_amount}
+                      onChange={(e) => handlePaidAmountChange(e.target.value)}
+                    />
+                </Grid>
+                <Grid container direction="row" justifyContent="flex-end" alignItems="center" className={classes.marginRow}>
+                    <FormControl component="fieldset">
+                        <RadioGroup aria-label="gender" name="gender1"
+                            value={data.payment_method} onChange={(e) => handlePaymentMethodChange(e.target.value)}>
+                            <Grid container direction="row">
+                                <FormControlLabel labelPlacement="start" value="card" control={<Radio />} label="Thẻ" />
+                                <FormControlLabel labelPlacement="start" value="cash" control={<Radio />} label="Tiền mặt" />
+                            </Grid>
+                        </RadioGroup>
+                    </FormControl>
                 </Grid>
 
-                <Button variant="contained" fullWidth color="primary" style={{marginTop:40}}>
+                <Button variant="contained" fullWidth 
+                    color="primary" style={{marginTop:40}}
+                    onClick={handleConfirm}
+                >
                     Trả hàng nhập
                 </Button>
             </Grid>

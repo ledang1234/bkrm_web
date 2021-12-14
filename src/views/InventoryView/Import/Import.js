@@ -9,8 +9,6 @@ import {
   Grid,
   Card,
   Box,
-  Tabs,
-  Tab,
   TableContainer,
   CardContent,
   CardMedia,
@@ -109,7 +107,6 @@ const Import = () => {
   };
 
   const handleCloseSnackBar = (event, reason) => {
-  
     setOpenSnack(false);
   };
 

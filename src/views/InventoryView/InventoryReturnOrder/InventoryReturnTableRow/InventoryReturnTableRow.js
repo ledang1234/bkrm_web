@@ -5,7 +5,7 @@ import clsx from "clsx";
 import {TableCell,TableRow} from '@material-ui/core';
 
 import InventoryReturnDetail from './InventoryReturnDetail/InventoryReturnDetail'
-
+import {FormatedStatus} from '../../../../components/TableCommon/util/format'
 const InventoryReturnTableRow = (props) => {
     const { row, handleOpenRow,openRow} = props;
     const classes = useRowStyles();
@@ -18,14 +18,15 @@ const InventoryReturnTableRow = (props) => {
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
-                <TableCell align="left" >{row.id}</TableCell>
-                <TableCell align="left"className={classes.fontName}>{row.date}</TableCell>
-                <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.supplier}</TableCell>
-                <TableCell align="left">{row.branch}</TableCell>
-                <TableCell align="left">{row.payment}</TableCell>
-                <TableCell align="right" className={classes.fontName}>{row.total}</TableCell>
-                <TableCell align="left">{row.import_id}</TableCell>
-                <TableCell align="left">{row.employee}</TableCell>
+                <TableCell align="left" >{row.purchase_return_code}</TableCell>
+                <TableCell align="left"className={classes.fontName}>{row.creation_date}</TableCell>
+                <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.supplier_name}</TableCell>
+                <TableCell align="left">{row.branch_name}</TableCell>
+                <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
+                <TableCell align="right" className={classes.fontName}>{row.total_amount}</TableCell>
+                <TableCell align="center" className={classes.fontName}>
+                    <FormatedStatus debt={row.status === 'debt' ? 1 : 0}/>
+                </TableCell>
             </TableRow>
 
         {/* DETAIL */}
