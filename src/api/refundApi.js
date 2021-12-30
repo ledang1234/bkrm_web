@@ -1,4 +1,4 @@
-import axiosClient from "./axiosClient";
+import axiosClient from './axiosClient';
 
 const refundApi = {
   removeInventory: (storeUuid, branchUuid, body) => {
@@ -16,6 +16,6 @@ const refundApi = {
   getRefund: (storeUuid, refundUuid) => {
     const url = `stores/${storeUuid}/refunds/${refundUuid}`;
     return axiosClient.get(url, {});
-  }
+  },
 };
 export default refundApi;

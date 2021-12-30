@@ -1,9 +1,4 @@
-import ImportReturnSummary from "../../../components/CheckoutComponent/CheckoutSummary/ImportReturnSummary/ImportReturnSummary";
-
-import React, { useEffect } from "react";
-import useStyles from "../../../components/TableCommon/style/mainViewStyle";
-
-//import library
+import React, { useEffect } from 'react';
 import {
   Card,
   ListItem,
@@ -20,42 +15,47 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
-} from "@material-ui/core";
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import update from 'immutability-helper';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
+import ImportReturnSummary from '../../CheckoutComponent/CheckoutSummary/ImportReturnSummary/ImportReturnSummary';
 
-import InvoiceReturnSummary from "../../../components/CheckoutComponent/CheckoutSummary/InvoiceReturnSummary/InvoiceReturnSummary";
+import useStyles from '../../TableCommon/style/mainViewStyle';
 
-import CloseIcon from "@material-ui/icons/Close";
-import * as HeadCells from "../../../assets/constant/tableHead";
-import * as TableType from "../../../assets/constant/tableType";
-import SearchProduct from "../../../components/SearchBar/SearchProduct";
-import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader";
-import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
+// import library
+
+import InvoiceReturnSummary from '../../CheckoutComponent/CheckoutSummary/InvoiceReturnSummary/InvoiceReturnSummary';
+
+import * as HeadCells from '../../../assets/constant/tableHead';
+import * as TableType from '../../../assets/constant/tableType';
+import SearchProduct from '../../SearchBar/SearchProduct';
+import TableHeader from '../../TableCommon/TableHeader/TableHeader';
+import TableWrapper from '../../TableCommon/TableWrapper/TableWrapper';
 import {
   getComparator,
   stableSort,
-} from "../../../components/TableCommon/util/sortUtil";
-import * as Input from "../../../components/TextField/NumberFormatCustom";
-import ButtonQuantity from "../../../components/Button/ButtonQuantity";
-import update from "immutability-helper";
-import purchaseReturnApi from "../../../api/purchaseReturnApi";
-import { useSelector } from "react-redux";
-import moment from "moment";
-import SnackBarGeneral from "../../SnackBar/SnackBarGeneral";
+} from '../../TableCommon/util/sortUtil';
+import * as Input from '../../TextField/NumberFormatCustom';
+import ButtonQuantity from '../../Button/ButtonQuantity';
+import purchaseReturnApi from '../../../api/purchaseReturnApi';
+import SnackBarGeneral from '../../SnackBar/SnackBarGeneral';
 
-const InventoryReturnPopUp = (props) => {
+function InventoryReturnPopUp(props) {
   const { purchaseOrder, classes, handleCloseReturn } = props;
 
   // 2. Table sort
-  const [order, setOrder] = React.useState("desc");
-  const [orderBy, setOrderBy] = React.useState("stt");
+  const [order, setOrder] = React.useState('desc');
+  const [orderBy, setOrderBy] = React.useState('stt');
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-   // redux
-   const info = useSelector((state) => state.info);
-   const store_uuid = info.store.uuid;
+  // redux
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
   const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
   const [purchaseReturn, setPurchaseReturn] = React.useState({
     purchase_order_code: purchaseOrder.purchase_order_code,
@@ -70,16 +70,15 @@ const InventoryReturnPopUp = (props) => {
       returnQuantity: detail.quantity,
       returnPrice: detail.unit_price,
     })),
-    payment_method: "cash",
-    paid_amount: "0",
+    payment_method: 'cash',
+    paid_amount: '0',
   });
 
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
-    style: "error",
-    message: "Trả hàng thất bại",
+    style: 'error',
+    message: 'Trả hàng thất bại',
   });
-
 
   useEffect(() => {
     updateTotalAmount();
@@ -91,17 +90,17 @@ const InventoryReturnPopUp = (props) => {
       total += item.returnPrice * item.returnQuantity;
     });
 
-    let newPurchaseReturn = update(purchaseReturn, {
+    const newPurchaseReturn = update(purchaseReturn, {
       total_amount: { $set: total },
     });
     setPurchaseReturn(newPurchaseReturn);
   };
 
   const handleDeleteItem = (itemId) => {
-    let itemIndex = purchaseReturn.details.findIndex(
-      (item) => item.id === itemId
+    const itemIndex = purchaseReturn.details.findIndex(
+      (item) => item.id === itemId,
     );
-    let newPurchaseReturn = update(purchaseReturn, {
+    const newPurchaseReturn = update(purchaseReturn, {
       details: { $splice: [[itemIndex, 1]] },
     });
     setPurchaseReturn(newPurchaseReturn);
@@ -113,10 +112,10 @@ const InventoryReturnPopUp = (props) => {
       handleDeleteItem(itemId);
       return;
     }
-    let itemIndex = purchaseReturn.details.findIndex(
-      (item) => item.id === itemId
+    const itemIndex = purchaseReturn.details.findIndex(
+      (item) => item.id === itemId,
     );
-    let newPurchaseReturn = update(purchaseReturn, {
+    const newPurchaseReturn = update(purchaseReturn, {
       details: {
         [itemIndex]: {
           returnQuantity: { $set: newQuantity },
@@ -128,38 +127,36 @@ const InventoryReturnPopUp = (props) => {
   };
 
   const handleProductPriceChange = (itemId, newPrice) => {
-    let itemIndex = purchaseReturn.details.findIndex(
-        (item) => item.id === itemId
-      );
-      let newPurchaseReturn = update(purchaseReturn, {
-        details: {
-          [itemIndex]: {
-            returnPrice: { $set: newPrice },
-          },
+    const itemIndex = purchaseReturn.details.findIndex(
+      (item) => item.id === itemId,
+    );
+    const newPurchaseReturn = update(purchaseReturn, {
+      details: {
+        [itemIndex]: {
+          returnPrice: { $set: newPrice },
         },
-      });
-      setPurchaseReturn(newPurchaseReturn);
-      setIsUpdateTotalAmount(!isUpdateTotalAmount);
+      },
+    });
+    setPurchaseReturn(newPurchaseReturn);
+    setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
 
   const handlePaidAmountChange = (paidAmount) => {
-      let newPurchaseReturn = update(purchaseReturn, {paid_amount: {$set: paidAmount}})
-      setPurchaseReturn(newPurchaseReturn);
+    const newPurchaseReturn = update(purchaseReturn, { paid_amount: { $set: paidAmount } });
+    setPurchaseReturn(newPurchaseReturn);
   };
 
   const handlePaymentMethodChange = (paymentMethod) => {
-    let newPurchaseReturn = update(purchaseReturn, {payment_method: {$set: paymentMethod}})
+    const newPurchaseReturn = update(purchaseReturn, { payment_method: { $set: paymentMethod } });
     setPurchaseReturn(newPurchaseReturn);
   };
 
   const handleConfirm = async () => {
-   
-    let d = moment.now()/1000;
-    
-    let export_date = moment.unix(d).format('YYYY-MM-DD HH:mm:ss',  { trim: false })
+    const d = moment.now() / 1000;
 
+    const export_date = moment.unix(d).format('YYYY-MM-DD HH:mm:ss', { trim: false });
 
-    let body = {
+    const body = {
       purchase_order_uuid: purchaseOrder.uuid,
       supplier_id: purchaseReturn.supplier_id,
       total_amount: purchaseReturn.total_amount.toString(),
@@ -167,35 +164,32 @@ const InventoryReturnPopUp = (props) => {
       paid_amount: purchaseReturn.paid_amount,
       status:
         purchaseReturn.payment_amount > purchaseReturn.paid_amount
-          ? "closed"
-          : "debt",
-      details: purchaseReturn.details.map(detail => {
-          return {
-              product_id: detail.product_id,
-              quantity: detail.returnQuantity,
-              unit_price: detail.returnPrice,
+          ? 'closed'
+          : 'debt',
+      details: purchaseReturn.details.map((detail) => ({
+        product_id: detail.product_id,
+        quantity: detail.returnQuantity,
+        unit_price: detail.returnPrice,
 
-          }
-      }),
-      export_date: export_date
+      })),
+      export_date,
     };
- 
+
     try {
-      let res = await purchaseReturnApi.removeInventory(
+      const res = await purchaseReturnApi.removeInventory(
         store_uuid,
         purchaseOrder.branch.uuid,
-        body
+        body,
       );
       setSnackStatus({
-        style: "success",
-        message: "Trả hàng thành công: " + res.data.purchase_order_code,
+        style: 'success',
+        message: `Trả hàng thành công: ${res.data.purchase_order_code}`,
       });
       setOpenSnack(true);
-    
     } catch (err) {
       setSnackStatus({
-        style: "error",
-        message: "Trả hàng thất bại! ",
+        style: 'error',
+        message: 'Trả hàng thất bại! ',
       });
       setOpenSnack(true);
       console.log(err);
@@ -213,11 +207,11 @@ const InventoryReturnPopUp = (props) => {
         justifyContent="space-between"
         alignItems="center"
       >
-           <SnackBarGeneral
-        handleClose={handleCloseSnackBar}
-        open={openSnack}
-        status={snackStatus}
-      />
+        <SnackBarGeneral
+          handleClose={handleCloseSnackBar}
+          open={openSnack}
+          status={snackStatus}
+        />
 
         <ListItem style={{ paddingTop: 20, marginBottom: -20, marginLeft: 25 }}>
           <Typography variant="h3" style={{ marginRight: 20 }}>
@@ -247,11 +241,11 @@ const InventoryReturnPopUp = (props) => {
         >
           <Grid item xs={12} sm={8}>
             <Card className={classes.card}>
-              <Box style={{ padding: 30, minHeight: "75vh" }}>
+              <Box style={{ padding: 30, minHeight: '75vh' }}>
                 {/* JSON data attribute phải giongso table head id */}
 
                 {/* <ListItem headCells={HeadCells.CartReturnHeadCells}  cartData={row.list} tableType={TableType.CART_RETURN} /> */}
-                <TableWrapper isCart={true}>
+                <TableWrapper isCart>
                   <TableHeader
                     classes={classes}
                     order={order}
@@ -261,10 +255,11 @@ const InventoryReturnPopUp = (props) => {
                   />
                   <TableBody>
                     {purchaseReturn.details.map((detail, index) => (
-                      <ImportReturnTableRow 
+                      <ImportReturnTableRow
                         handleProductPriceChange={handleProductPriceChange}
                         handleItemQuantityChange={handleItemQuantityChange}
-                        detail={detail} />
+                        detail={detail}
+                      />
                     ))}
                   </TableBody>
                 </TableWrapper>
@@ -274,7 +269,7 @@ const InventoryReturnPopUp = (props) => {
 
           <Grid item xs={12} sm={4} className={classes.card}>
             <Card className={classes.card}>
-              <ImportReturnSummary 
+              <ImportReturnSummary
                 data={purchaseReturn}
                 handlePaidAmountChange={handlePaidAmountChange}
                 handlePaymentMethodChange={handlePaymentMethodChange}
@@ -286,21 +281,21 @@ const InventoryReturnPopUp = (props) => {
       </DialogContent>
     </>
   );
-};
+}
 
 export default InventoryReturnPopUp;
-const ImportReturnTableRow = ({ detail, handleProductPriceChange, handleItemQuantityChange }) => {
+function ImportReturnTableRow({ detail, handleProductPriceChange, handleItemQuantityChange }) {
   const classes = useStyles();
-  const [show, setShow] = React.useState("none");
-  useEffect(() => {}, [detail])
+  const [show, setShow] = React.useState('none');
+  useEffect(() => {}, [detail]);
 
   const handleChangeQuantity = (newQuantity) => {
-      handleItemQuantityChange(detail.id, newQuantity)
-  }
+    handleItemQuantityChange(detail.id, newQuantity);
+  };
 
   const handleChangePrice = (newPrice) => {
-      handleProductPriceChange(detail.id, newPrice)
-  }
+    handleProductPriceChange(detail.id, newPrice);
+  };
   return (
     <TableRow hover key={detail.id}>
       <TableCell align="left" style={{ width: 5 }}>
@@ -314,7 +309,7 @@ const ImportReturnTableRow = ({ detail, handleProductPriceChange, handleItemQuan
           id="standard-basic"
           style={{ width: 70 }}
           size="small"
-          inputProps={{ style: { textAlign: "right" } }}
+          inputProps={{ style: { textAlign: 'right' } }}
           defaultPrice={detail.returnPrice}
           onChange={(e) => handleChangePrice(e.target.value)}
         />
@@ -335,4 +330,4 @@ const ImportReturnTableRow = ({ detail, handleProductPriceChange, handleItemQuan
       </TableCell>
     </TableRow>
   );
-};
+}
