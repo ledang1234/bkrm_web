@@ -77,7 +77,7 @@ const InventoryReturnPopUp = (props) => {
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
     style: "error",
-    message: "Nhập hàng thất bại",
+    message: "Trả hàng thất bại",
   });
 
 

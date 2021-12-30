@@ -45,7 +45,7 @@ const InvoiceReturnSummary = (props) => {
                         </Typography>
                         <Typography variant="body2">
                             {/* current branch */}
-                            Chi nhánh trung tâm 
+                            {data.branch_name}
                         </Typography>
                         
                     </Grid>
@@ -68,14 +68,14 @@ const InvoiceReturnSummary = (props) => {
                             Trả hoá đơn
                         </Typography>
                         <Typography variant="h3" style={{color:theme.customization.primaryColor[500]}}>
-                            #{data.id}
+                            #{data.order_code}
                         </Typography>
                     </Grid>
                     <Grid item xs={4}container direction="row"  justifyContent="flex-end" className={classes.marginBox} alignItems="center">
                         
                         <Avatar alt="Remy Sharp" src={ava} className={classes.ava} style={{marginRight:10}} />
                         <Typography variant="h5" >
-                        {data.customer}
+                        {data.customer_name}
                         </Typography>
                     
                     </Grid>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 
 //import library
@@ -16,18 +16,172 @@ import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrap
 import {getComparator,stableSort} from '../../../components/TableCommon/util/sortUtil'
 import * as Input from '../../../components/TextField/NumberFormatCustom'
 import ButtonQuantity from "../../../components/Button/ButtonQuantity";
+import { useSelector } from 'react-redux';
+import update from "immutability-helper";
+import moment from "moment";
+import refundApi from '../../../api/refundApi';
+
 
 const InvoiceReturnPopUp = (props) => {
-    const {row,classes, handleCloseReturn } =props;
-
+    const {order, classes, handleCloseReturn } =props;
+    // redux
+   const info = useSelector((state) => state.info);
+   const store_uuid = info.store.uuid;
     //2. Table sort
-    const [order, setOrder] = React.useState('desc');
-    const [orderBy, setOrderBy] = React.useState('stt');
-    const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
+    // const [order, setOrder] = React.useState('desc');
+    // const [orderBy, setOrderBy] = React.useState('stt');
+    // const handleRequestSort = (event, property) => {
+    //     const isAsc = orderBy === property && order === 'asc';
+    //     setOrder(isAsc ? 'desc' : 'asc');
+    //     setOrderBy(property);
+    // };
+
+    const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
+  const [refund, setRefund] = React.useState({
+    order_code: order.order_code,
+    order_id: order.id,
+    branch: order.branch,
+    supplier: order.supplier,
+    supplier_id: order.supplier_id,
+    branch_id: order.branch_id,
+    total_amount: 0,
+    details: order.details.map((detail) => ({
+      ...detail,
+      returnQuantity: detail.quantity,
+      returnPrice: detail.unit_price,
+    })),
+    payment_method: "cash",
+    paid_amount: "0",
+  });
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [snackStatus, setSnackStatus] = React.useState({
+    style: "error",
+    message: "Trả hàng thất bại",
+  });
+
+  useEffect(() => {
+    updateTotalAmount();
+    console.log(order)
+  }, [isUpdateTotalAmount]);
+
+
+  const updateTotalAmount = () => {
+    let total = 0;
+    refund.details.forEach((item) => {
+      total += item.returnPrice * item.returnQuantity;
+    });
+
+    let newRefund = update(refund, {
+      total_amount: { $set: total },
+    });
+    setRefund(newRefund);
+  };
+
+  const handleDeleteItem = (itemId) => {
+    let itemIndex = refund.details.findIndex(
+      (item) => item.id === itemId
+    );
+    let newRefund = update(refund, {
+      details: { $splice: [[itemIndex, 1]] },
+    });
+    setRefund(newRefund);
+    setIsUpdateTotalAmount(!isUpdateTotalAmount);
+  };
+
+  const handleItemQuantityChange = (itemId, newQuantity) => {
+    
+    let itemIndex = refund.details.findIndex(
+      (item) => item.id === itemId
+    );
+    let newRefund = update(refund, {
+      details: {
+        [itemIndex]: {
+          returnQuantity: { $set: newQuantity },
+        },
+      },
+    });
+    setRefund(newRefund);
+    setIsUpdateTotalAmount(!isUpdateTotalAmount);
+  };
+
+  const handleProductPriceChange = (itemId, newPrice) => {
+    let itemIndex = refund.details.findIndex(
+        (item) => item.id === itemId
+      );
+      let newRefund = update(refund, {
+        details: {
+          [itemIndex]: {
+            returnPrice: { $set: newPrice },
+          },
+        },
+      });
+      setRefund(newRefund);
+      setIsUpdateTotalAmount(!isUpdateTotalAmount);
+  };
+
+  const handlePaidAmountChange = (paidAmount) => {
+      let newRefund = update(refund, {paid_amount: {$set: paidAmount}})
+      setRefund(newRefund);
+  };
+
+  const handlePaymentMethodChange = (paymentMethod) => {
+    let newRefund = update(refund, {payment_method: {$set: paymentMethod}})
+    setRefund(newRefund);
+  };
+
+  const handleConfirm = async () => {
+   
+    let d = moment.now()/1000;
+    
+    let export_date = moment.unix(d).format('YYYY-MM-DD HH:mm:ss',  { trim: false })
+
+
+    let body = {
+      order_uuid: order.uuid,
+      supplier_id: refund.supplier_id,
+      total_amount: refund.total_amount.toString(),
+      payment_method: refund.payment_method,
+      paid_amount: refund.paid_amount,
+      status:
+      refund.payment_amount > refund.paid_amount
+          ? "closed"
+          : "debt",
+      details: refund.details.map(detail => {
+          return {
+              product_id: detail.product_id,
+              quantity: detail.returnQuantity,
+              unit_price: detail.returnPrice,
+
+          }
+      }),
+      export_date: export_date
     };
+ 
+    try {
+      let res = await refundApi.removeInventory(
+        store_uuid,
+        refund.branch.uuid,
+        body
+      );
+      setSnackStatus({
+        style: "success",
+        message: "Trả hàng thành công: " + res.data.purchase_order_code,
+      });
+      setOpenSnack(true);
+    
+    } catch (err) {
+      setSnackStatus({
+        style: "error",
+        message: "Trả hàng thất bại! ",
+      });
+      setOpenSnack(true);
+      console.log(err);
+    }
+  };
+  const handleCloseSnackBar = (event, reason) => {
+    setOpenSnack(false);
+  };
+
 
     return (
         <>
@@ -36,7 +190,7 @@ const InvoiceReturnPopUp = (props) => {
                 <Typography variant="h3" style={{marginRight:30}} >Trả hàng</Typography>
                 
                 {/* Search nayf chir search những sản phẩm trong hoá đơn thôi -> đổi lại thanh search khác sau */}
-                <SearchProduct />
+                {/* <SearchProduct /> */}
             </ListItem>   
 
             <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseReturn}>
@@ -55,20 +209,27 @@ const InvoiceReturnPopUp = (props) => {
                             <TableWrapper isCart={true} >
                                 <TableHeader
                                     classes={classes}
-                                    order={order}
-                                    orderBy={orderBy}
-                                    onRequestSort={handleRequestSort}
+                                    // order={order}
+                                    // orderBy={orderBy}
+                                    // onRequestSort={handleRequestSort}
                                     headerData={HeadCells.CartReturnHeadCells}
 
                                 />
                                 <TableBody>
-                                {
+                                {/* {
                                     stableSort(row.list, getComparator(order, orderBy))
                                         .map((row, index) => {
                                         return (
                                             <CartReturnTableRow row={row}/> 
                                         );})
-                                }
+                                } */}
+
+                                {refund.details.map((detail, index) => (
+                                  <CartReturnTableRow 
+                                    handleProductPriceChange={handleProductPriceChange}
+                                    handleItemQuantityChange={handleItemQuantityChange}
+                                    detail={detail} />
+                                ))}
                                 </TableBody>
                         </TableWrapper> 
                       </Box>
@@ -77,7 +238,7 @@ const InvoiceReturnPopUp = (props) => {
 
               <Grid item xs={12} sm={4} className={classes.card} >
                   <Card className={classes.card}>
-                      <InvoiceReturnSummary  data={row}/>
+                      <InvoiceReturnSummary  data={refund}/>
                   </Card>
               </Grid>
           </Grid>
@@ -88,27 +249,43 @@ const InvoiceReturnPopUp = (props) => {
 }
 
 export default InvoiceReturnPopUp
-const CartReturnTableRow = ({row}) =>{
+
+const CartReturnTableRow = ({detail, handleProductPriceChange, handleItemQuantityChange}) =>{
     const classes = useStyles();
     
-    const [quantity, setQuantity] = React.useState(row.quantity);
     const [show, setShow] = React.useState('none');
+
+    const handleChangeQuantity = (newQuantity) => {
+      handleItemQuantityChange(detail.id, newQuantity)
+    }
+
+    const handleChangePrice = (newPrice) => {
+        handleProductPriceChange(detail.id, newPrice)
+    }
+
+
     return (
-      <TableRow hover key={row.id}>
-         <TableCell align="left" style={{width:5}}>{row.stt}</TableCell>
+      <TableRow hover key={detail.id}>
+         <TableCell align="left" style={{width:5}}>{detail.bar_code}</TableCell>
           {/* <TableCell align="left">{row.id}</TableCell> */}
-          <TableCell align="left" >{row.name}</TableCell>
-          <TableCell align="right">{row.price}</TableCell>
+          <TableCell align="left" >{detail.name}</TableCell>
+          <TableCell align="right">{detail.unit_price}</TableCell>
           <TableCell align="right">
-            <Input.ThousandSeperatedInput id="standard-basic" style={{width:70 }} size="small" inputProps={{style: { textAlign: "right" }}} defaultPrice={row.price}  />
+            <Input.ThousandSeperatedInput id="standard-basic" style={{width:70 }} size="small" inputProps={{style: { textAlign: "right" }}} defaultPrice={detail.returnPrice} onChange={(e) => handleChangePrice(e.target.value)} />
           </TableCell>
       
           <TableCell align="left" padding='none' >
-            <ButtonQuantity quantity={quantity} setQuantity={setQuantity} show={show} setShow={setShow}/> 
+            <ButtonQuantity 
+              quantity={detail.returnQuantity} 
+              limit={detail.quantity}
+              setQuantity={handleChangeQuantity}
+              show={show} setShow={setShow}/> 
           </TableCell> 
         
   
-          <TableCell align="right" className={classes.boldText}>{row.price * row.quantity}</TableCell>
+          <TableCell align="right" className={classes.boldText}>
+            {Number(detail.returnQuantity) * Number(detail.returnPrice)}
+          </TableCell>
        
       </TableRow>
     )

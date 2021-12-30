@@ -77,12 +77,16 @@ const InvoiceDetail = (props) => {
     const handleClose = () => {
       setAnchorEl(null);
     };
+    
+    useEffect(() => {
+      console.log(row)
+    })
 
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
-      return;
       setOpen(true);
+      return;
     };
 
     const handleCloseReturn = () => {
@@ -290,55 +294,52 @@ const InvoiceDetail = (props) => {
             </Box>
 
             <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
-                    {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
-                    {currentUser === row.employee ? 
-                    <> <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>
-                      <Button variant="contained" size="small" style={{marginLeft:15}}>Xoá</Button> </>
-                    : null
-                    }
-                  
-                  <Button variant="contained" size="small" style={{marginLeft:15}} onClick={handleClickOpen}>Trả hàng</Button>
-                  
-                  <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                    size="small"
-                    style={{marginLeft:10}}
+                {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
+                {currentUser === row.employee ? 
+                <> <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>
+                  <Button variant="contained" size="small" style={{marginLeft:15}}>Xoá</Button> </>
+                : null
+                }
+              
+              <Button variant="contained" size="small" style={{marginLeft:15}} onClick={handleClickOpen}>Trả hàng</Button>
+              
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={handleClick}
+                size="small"
+                style={{marginLeft:10}}
+              >
+                <MoreVertIcon />
+              </IconButton>
 
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
+              <StyledMenu
+                id="customized-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <StyledMenuItem>
+                  <ListItemIcon style={{marginRight:-15}}>
+                    <PrintTwoToneIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="In hoá đơn" />
+                </StyledMenuItem>
 
-                  <StyledMenu
-                    id="customized-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    
-                    
-                  >
-                    <StyledMenuItem>
-                      <ListItemIcon style={{marginRight:-15}}>
-                        <PrintTwoToneIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText primary="In hoá đơn" />
-                    </StyledMenuItem>
-
-                    <StyledMenuItem>
-                      <ListItemIcon style={{marginRight:-15}}>
-                        <GetAppTwoToneIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText primary="Xuất excel" />
-                    </StyledMenuItem>
-                  </StyledMenu>
-                  
-              </Grid>
+                <StyledMenuItem>
+                  <ListItemIcon style={{marginRight:-15}}>
+                    <GetAppTwoToneIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Xuất excel" />
+                </StyledMenuItem>
+              </StyledMenu>
+              
+          </Grid>
       </Box>
       <Dialog fullWidth={true} maxWidth='lg' open={open} onClose={handleCloseReturn} aria-labelledby="form-dialog-title">
-      <InvoiceReturnPopUp handleCloseReturn={handleCloseReturn} row={row} classes={classes}/>
+        <InvoiceReturnPopUp handleCloseReturn={handleCloseReturn} order={order} classes={classes}/>
       </Dialog>
   </Collapse>
     )
