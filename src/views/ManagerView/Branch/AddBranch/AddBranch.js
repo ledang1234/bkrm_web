@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import StoreInfo from "../../../../components/SignUp/StoreInfo";
 //import library
@@ -11,12 +11,18 @@ import {
   Typography,
   Grid,
   Avatar,
-  Dialog
+  Dialog,
+  Select,
+  MenuItem
 } from "@material-ui/core";
+
+import userApi from "../../../../api/userApi";
 
 //import project
 import customerApi from "../../../../api/customerApi";
+import branchApi from '../../../../api/branchApi';
 import {useSelector} from 'react-redux'
+import { useFormik } from 'formik';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -61,10 +67,32 @@ const AddBranch = (props) => {
   const [storeInfo, setStoreInfo] = useState({
     name: "",
     phone: "",
-    city: { id: "", name: "" },
+    province: { id: "", name: "" },
     district: { id: "", name: "" },
     ward: { id: "", name: "" },
     address: "",
+  });
+
+  const [provinces, setProvinces] = useState([]);
+
+  const loadProvince = async () => {
+    const res = await userApi.getCity();
+    setProvinces(res.provinces);
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      address: '', 
+      ward: '',
+      distric: '',
+      province: '',
+      phone: '',
+      status: '',
+    },
+    onSubmit: values => {
+      alert(JSON.stringify(values, null, 2));
+    },
   });
 
   return (
@@ -77,7 +105,38 @@ const AddBranch = (props) => {
       </DialogTitle>
 
       <DialogContent>
-            <StoreInfo storeInfo={storeInfo} setStoreInfo={setStoreInfo} />
+        <TextField
+          required
+          label="Tên chi nhánh"
+          variant="outlined"
+          fullWidth
+          size="small"
+          onChange={formik.handleChange}
+          value={formik.values.name}
+        />
+
+        <TextField
+          required
+          label="Số điện thoại"
+          variant="outlined"
+          fullWidth
+          size="small"
+          onChange={formik.handleChange}
+          value={formik.values.phone}
+        />
+
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={formik.values.province}
+          label="Age"
+          onChange={formik.handleChange}
+          onFocus={loadProvince}
+        >
+          {provinces.map(p => (<MenuItem value={p.name}>{p.name}</MenuItem>))}
+          ""
+        </Select>
+
       </DialogContent>
 
       <DialogActions>
@@ -100,9 +159,9 @@ const AddBranch = (props) => {
             };
 
             try {
-            //   const response = await customerApi.createCustomer(store_uuid, body)
-              handleClose("Success")
-            //   console.log(response.status)
+            const response = await customerApi.createCustomer(store_uuid, body)
+            handleClose("Success")
+            console.log(response.status)
 
             } catch (err) {
               handleClose("Failed");

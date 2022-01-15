@@ -14,7 +14,8 @@ import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
 // import project
 import { grey } from '@material-ui/core/colors';
 import { StyledMenu, StyledMenuItem } from '../../../../../components/Button/MenuButton';
-
+import { useSelector } from 'react-redux';
+import refundApi from '../../../../../api/refundApi';
 // dơn trả giá trả có khác ko ???
 
 const useStyles = makeStyles((theme) => createStyles({
@@ -53,8 +54,36 @@ function InvoiceReturnDetail(props) {
     setAnchorEl(null);
   };
 
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+  
+  const [refund, setRefund] = React.useState({
+    branch: null,
+    details: []
+  })
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const res = await refundApi.getRefund(store_uuid, row.uuid);
+        // console.log(res.data)
+        setRefund(res.data);
+      } catch (error) {
+        setRefund({
+          branch: null,
+          details: []
+        });
+      }
+    }
+    if (openRow === row.uuid) {
+      loadData();
+
+    }
+  }
+  , [props.parentProps.openRow]);
+
   return (
-    <Collapse in={openRow === row.id} timeout="auto" unmountOnExit>
+    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
       <Box margin={1}>
         <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
           {row.name}
@@ -68,7 +97,7 @@ function InvoiceReturnDetail(props) {
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.id}
+                  {row.refund_code}
                   {' '}
                 </Typography>
               </Grid>
@@ -78,7 +107,7 @@ function InvoiceReturnDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Mã hoá đơn</Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant="body1" gutterBottom component="div">{row.invoid_id}</Typography>
+                <Typography variant="body1" gutterBottom component="div">{refund.order?.order_code}</Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
@@ -87,7 +116,7 @@ function InvoiceReturnDetail(props) {
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.date}
+                  {row.created_at}
                   {' '}
                 </Typography>
               </Grid>
@@ -98,18 +127,18 @@ function InvoiceReturnDetail(props) {
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.customer}
+                  {refund.customer?.name}
                   {' '}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={5}>
-                <Typography variant="h5" gutterBottom component="div">Người bán</Typography>
+                <Typography variant="h5" gutterBottom component="div">Người thực hiện</Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.employee}
+                  {refund.created_by_user?.name}
                   {' '}
                 </Typography>
               </Grid>
@@ -122,7 +151,7 @@ function InvoiceReturnDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Tình trạng</Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant="body1" gutterBottom component="div">Cần trả 100.000</Typography>
+                <Typography variant="body1" gutterBottom component="div">{`Cần trả ${(row.total_amount - row.paid_amount).toString()}`}</Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
@@ -130,7 +159,7 @@ function InvoiceReturnDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Tổng đơn trả</Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant="body1" gutterBottom component="div">{row.total}</Typography>
+                <Typography variant="body1" gutterBottom component="div">{row.total_amount}</Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
@@ -139,7 +168,7 @@ function InvoiceReturnDetail(props) {
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.branch}
+                  {refund.branch?.name}
                   {' '}
                 </Typography>
               </Grid>
@@ -150,7 +179,7 @@ function InvoiceReturnDetail(props) {
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.payment}
+                  {row.payment_method}
                   {' '}
                 </Typography>
               </Grid>
@@ -169,7 +198,6 @@ function InvoiceReturnDetail(props) {
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
               <TableCell align="right">Số lượng</TableCell>
-              <TableCell align="right">Giá bán</TableCell>
               <TableCell align="right">Giá trả</TableCell>
               <TableCell align="right">Thành tiền</TableCell>
 
@@ -177,21 +205,19 @@ function InvoiceReturnDetail(props) {
           </TableHead>
           <TableBody>
 
-            {row.list.map((historyRow) => (
-              <TableRow key={historyRow.product_id}>
+            {refund.details.map((detail) => (
+              <TableRow key={detail.bar_code}>
                 <TableCell component="th" scope="row">
-                  {historyRow.product_id}
+                  {detail.bar_code}
                 </TableCell>
-                <TableCell>{historyRow.name}</TableCell>
-                <TableCell align="right">{historyRow.quantity}</TableCell>
+                <TableCell>{detail.name}</TableCell>
+                <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">
-                  {historyRow.price}
+                  {detail.unit_price}
                 </TableCell>
-                <TableCell align="right">
-                  100
-                </TableCell>
+               
                 <TableCell align="right" style={{ fontWeight: 700 }}>
-                  {historyRow.quantity * 100}
+                  {detail.quantity * detail.unit_price}
                 </TableCell>
 
               </TableRow>
@@ -206,7 +232,7 @@ function InvoiceReturnDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography variant="body1" gutterBottom component="div">4 </Typography>
+                <Typography variant="body1" gutterBottom component="div">{refund.details?.length}</Typography>
               </Grid>
             </Grid>
 
@@ -216,35 +242,35 @@ function InvoiceReturnDetail(props) {
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.total}
+                  {row.total_amount}
                   {' '}
                 </Typography>
               </Grid>
             </Grid>
-            <Grid container direction="row" justifyContent="flex-end">
+            {/* <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
                 <Typography variant="h5" gutterBottom component="div">Phí trả hàng</Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">200</Typography>
               </Grid>
-            </Grid>
+            </Grid> */}
 
-            <Grid container direction="row" justifyContent="flex-end">
+            {/* <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
                 <Typography variant="h5" gutterBottom component="div">Tổng đơn trả</Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">100</Typography>
               </Grid>
-            </Grid>
+            </Grid> */}
 
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
-                <Typography variant="h5" gutterBottom component="div">Khách đã trả</Typography>
+                <Typography variant="h5" gutterBottom component="div">Đã trả khách</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography variant="body1" gutterBottom component="div">100</Typography>
+                <Typography variant="body1" gutterBottom component="div">{row.paid_amount}</Typography>
               </Grid>
             </Grid>
 

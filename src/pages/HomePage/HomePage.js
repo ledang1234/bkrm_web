@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import clsx from "clsx";
-
+import BranchSelectAppBar from "../../components/CheckoutComponent/BranchSelect/BranchSelectAppBar";
 //import library
 import {
   AppBar,
@@ -139,8 +139,9 @@ const HomePage = (props) => {
             </Typography> */}
             <Box></Box>
             {/* <SearchProduct /> */}
- 
+            
             <Box display="flex" flexDirection="row" alignItems="center">
+              <BranchSelectAppBar store_uuid={infoDetail.store.uuid} />
               <IconButton color="primary" size="small">
                 <PersonIcon fontSize="large" />
               </IconButton>
@@ -150,6 +151,7 @@ const HomePage = (props) => {
                 justifyContent="center"
                 style={{ maxWidth: 90, marginLeft: 10, marginRight: 5 }}
               >
+                
                 <Typography variant="h6">Store Owner</Typography>
                 <Typography variant="h6" noWrap>
                   {infoDetail.user.name}

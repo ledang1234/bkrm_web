@@ -140,7 +140,7 @@ function InvoiceReturnPopUp(props) {
       payment_method: refund.payment_method,
       paid_amount: refund.paid_amount,
       status:
-      refund.payment_amount > refund.paid_amount
+      refund.paid_amount >= refund.total_amount
         ? 'closed'
         : 'debt',
       details: refund.details.map((detail) => ({

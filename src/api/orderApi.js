@@ -9,6 +9,10 @@ const orderApi = {
     const url = `stores/${storeUuid}/orders`;
     return axiosClient.get(url, {});
   },
+  getAllOfBranch: (storeUuid, branchUuid) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/orders`;
+    return axiosClient.get(url, {});
+  },
   getOrder: (storeUuid, orderUuid) => {
     const url = `stores/${storeUuid}/orders/${orderUuid}`;
     return axiosClient.get(url, {});

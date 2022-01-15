@@ -192,7 +192,9 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Chi nhánh thực hiện</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{purchaseOrder.branch ? purchaseOrder.branch.name : ""} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">
+                              {purchaseOrder.branch ? purchaseOrder.branch.name : ""}
+                            </Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -248,14 +250,14 @@ const InventoryOrderDetail = (props) => {
                </Table> 
                <Box  className={classes.background}style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
                <Grid container direction="column" >
-                    <Grid container direction="row" justifyContent="flex-end">
+                    {/* <Grid container direction="row" justifyContent="flex-end">
                         <Grid item xs={2} >
                             <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
                             <Typography variant="body1" gutterBottom component="div">4 </Typography>
                         </Grid>
-                    </Grid>
+                    </Grid> */}
                     <Grid container direction="row" justifyContent="flex-end">
                         <Grid item xs={2} >
                             <Typography variant="h5" gutterBottom component="div">Tổng số mặt hàng</Typography>    

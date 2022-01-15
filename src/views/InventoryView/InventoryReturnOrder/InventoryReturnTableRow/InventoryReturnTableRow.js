@@ -6,8 +6,9 @@ import {TableCell,TableRow} from '@material-ui/core';
 
 import InventoryReturnDetail from './InventoryReturnDetail/InventoryReturnDetail'
 import {FormatedStatus} from '../../../../components/TableCommon/util/format'
+
 const InventoryReturnTableRow = (props) => {
-    const { row, handleOpenRow,openRow} = props;
+    const { row, handleOpenRow, openRow } = props;
     const classes = useRowStyles();
 
     return (
