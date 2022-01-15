@@ -20,7 +20,7 @@ export const InventoryOrderHeadCells = [
     { id: 'supplier', align: 'left', disablePadding: false, label: 'Nhà cung cấp' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
-    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng đơn nhập' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng tiền nhập' },
     { id: 'debt', align: 'center', disablePadding: false, label: 'Trạng thái' },
 ];
 export const InventoryReturnOrderHeadCells = [
