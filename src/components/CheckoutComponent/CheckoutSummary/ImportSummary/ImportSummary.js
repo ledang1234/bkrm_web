@@ -44,8 +44,8 @@ const ImportSummary = (props) => {
         handleUpdatePaidAmount,
         handleUpdatePaymentMethod,
         handleConfirm,
-        selectedBranch,
-        setSelectedBranch,
+        currentBranch,
+        
         mode
     } = props;
 
@@ -83,16 +83,16 @@ const ImportSummary = (props) => {
                 <Grid container direction="row" justifyContent="space-between" >
                         {/* 1. BASIC INFO */}
                     <Grid item  xs={8} container direction="column"  alignItems="flex-start">
-                        {/* <Typography variant="h5">
+                        <Typography variant="h5">
                             Chi nhánh
-                        </Typography> */}
-                        {/* <Typography variant="body2">
-                            Chi nhánh trung tâm
-                        </Typography> */}
-                        <BranchSelect 
+                        </Typography>
+                        <Typography variant="body2">
+                            {currentBranch.name}
+                        </Typography>
+                        {/* <BranchSelect 
                             setSelectedBranch={setSelectedBranch}
                             selectedBranch={selectedBranch}
-                        />
+                        /> */}
                     </Grid>
 
                     <Grid item xs={4} container direction="column"  alignItems="flex-end">

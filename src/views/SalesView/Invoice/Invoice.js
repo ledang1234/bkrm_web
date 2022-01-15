@@ -44,9 +44,10 @@ const Invoice = () => {
     // api
     const info = useSelector(state => state.info)
     const store_uuid = info.store.uuid
+    const branch_uuid = info.branch.uuid
     const loadData = async () => {
       try {
-        const res = await orderApi.getAllOfStore(store_uuid);
+        const res = await orderApi.getAllOfBranch(store_uuid,branch_uuid);
         console.log(res.data)
         setOrders(res.data.reverse());
       } catch (error) {

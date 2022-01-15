@@ -25,6 +25,10 @@ const initialUserInfoSlice = {
     updated_at: "",
     district: "",
   },
+  branch: {
+    uuid: "",
+    name: "",
+  },
   role: "",
 };
 const infoSlice = createSlice({
@@ -40,6 +44,9 @@ const infoSlice = createSlice({
     setRole(state, action) {
       state.role = action.payload;
     },
+    setBranch(state, action) {
+      state.branch = action.payload;
+    }
   },
 });
 export default infoSlice;

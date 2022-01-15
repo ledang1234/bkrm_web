@@ -40,6 +40,8 @@ const InventoryOrder = () => {
     //collapse
     const [openRow, setRowOpen] = React.useState(null);
     const handleOpenRow = (row) => {
+      console.log(row)
+      console.log(openRow)
         if (row !==  openRow){
           setRowOpen(row);}
         else{setRowOpen(null)}  

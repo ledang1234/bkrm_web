@@ -30,7 +30,7 @@ function InvoiceReturnTableRow(props) {
       <TableRow>
         {/* colspan  => số cột trong collapse */}
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          {/* <InvoiceReturnDetail parentProps={props}/>        */}
+          <InvoiceReturnDetail parentProps={props}/>
         </TableCell>
 
       </TableRow>

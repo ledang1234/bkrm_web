@@ -1,36 +1,31 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import branchApi from '../../../api/branchApi';
-import { useSelector } from 'react-redux';
-import { Typography } from '@mui/material';
-
-export default function BranchSelect(props) {
-  const {selectedBranch, setSelectedBranch} = props;
+import { infoActions } from '../../../store/slice/infoSlice';
+import { useDispatch } from 'react-redux';
+export default function BranchSelectAppBar({store_uuid}) {
+  const [selectedBranch, setSelectedBranch] = React.useState({});
   const [branches, setBranches] = React.useState([])
-
-  // redux
-  const info = useSelector(state => state.info)
-  const store_uuid = info.store.uuid
-  const current_branch_uuid = info.branch.uuid
-
+  const dispatch = useDispatch();
+  
   const handleChange = (event) => {
     setSelectedBranch(event.target.value);
+    dispatch(infoActions.setBranch(event.target.value.uuid, event.target.value.name));
   };
 
   const loadingData = async () => {
     let response = await branchApi.getBranches(store_uuid);
-    console.log(response.data)
     setBranches(response.data);
-    setSelectedBranch(response.data.filter(branch => branch.uuid === current_branch_uuid)[0]);
+    setSelectedBranch(response.data[0]);
+    dispatch(infoActions.setBranch({uuid: response.data[0].uuid, name: response.data[0].name}));
   }
 
   React.useEffect(() => {
     loadingData()
-  }, [])
+  }, [store_uuid])
 
   const renderMenuItem = () => {
     return branches.map(branch => {

@@ -35,28 +35,29 @@ import JSONdata from "../../../assets/JsonData/inventoryReturn.json";
 import { useSelector } from "react-redux";
 import purchaseReturnApi from "../../../api/purchaseReturnApi";
 const InventoryReturnOrder = () => {
-  // fetch data here
   const [purchaseReturns, setPurchaseReturns] = useState([]);
-
+  const [openRow, setRowOpen] = React.useState(null);
+  
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+
+  const theme = useTheme();
+  const classes = useStyles(theme);
+  
   const loadData = async () => {
     try {
       const res = await purchaseReturnApi.getAllOfStore(store_uuid);
-      console.log(res.data);
       setPurchaseReturns(res.data.reverse());
     } catch (error) {
       console.log(error);
     }
   };
+  
   useEffect(() => {
     loadData();
   }, []);
 
-  const theme = useTheme();
-  const classes = useStyles(theme);
-
-  const [openRow, setRowOpen] = React.useState(null);
+  
   const handleOpenRow = (row) => {
     if (row !== openRow) {
       setRowOpen(row);

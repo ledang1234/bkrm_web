@@ -85,3 +85,12 @@ export const setCustomization = (ini) => {
     }
   };
 };
+
+export const selectBranch = (uuid, name) => {
+  return  (dispatch) => {
+    infoActions.setBranch({
+      uuid: uuid,
+      name: name
+    })
+  }
+}

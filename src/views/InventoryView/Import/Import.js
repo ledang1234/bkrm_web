@@ -57,6 +57,7 @@ const Import = () => {
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const branch = info.branch;
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -309,7 +310,7 @@ const Import = () => {
       paid_amount: cart.paid_amount,
       discount: cart.discount,
       status:
-        cart.payment_amount - cart.discount > cart.paid_amount
+        (Number(cart.total_amount) - Number(cart.discount)) >= Number(cart.paid_amount)
           ? "closed"
           : "debt",
       details: cart.cartItem,
@@ -320,7 +321,7 @@ const Import = () => {
     try {
       let res = await purchaseOrderApi.addInventory(
         store_uuid,
-        selectedBranch.uuid,
+        branch.uuid,
         body
       );
       setSnackStatus({
@@ -463,6 +464,7 @@ const Import = () => {
                 handleConfirm={handleConfirm}
                 currentSupplier={cartList[selectedIndex].supplier}
                 mode={mode}
+                currentBranch={branch}
               />
             ) : (
               <ImportSummary

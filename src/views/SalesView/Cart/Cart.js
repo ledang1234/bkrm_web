@@ -60,6 +60,7 @@ const Cart = () => {
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const branch = info.branch;
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -327,7 +328,7 @@ const Cart = () => {
     try {
       let res = await orderApi.addOrder(
         store_uuid,
-        selectedBranch.uuid,
+        branch.uuid,
         body
       );
       setSnackStatus({
@@ -469,6 +470,7 @@ const Cart = () => {
                 handleUpdatePaymentMethod={handleUpdatePaymentMethod}
                 handleConfirm={handleConfirm}
                 currentCustomer={cartList[selectedIndex].customer}
+                currentBranch={branch}
                 mode={mode}
               />
             ) : (

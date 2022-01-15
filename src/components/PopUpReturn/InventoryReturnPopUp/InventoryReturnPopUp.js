@@ -163,7 +163,7 @@ function InventoryReturnPopUp(props) {
       payment_method: purchaseReturn.payment_method,
       paid_amount: purchaseReturn.paid_amount,
       status:
-        purchaseReturn.payment_amount > purchaseReturn.paid_amount
+        purchaseReturn.paid_amount >= purchaseReturn.total_amount
           ? 'closed'
           : 'debt',
       details: purchaseReturn.details.map((detail) => ({
