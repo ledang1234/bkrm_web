@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "./axiosClient";
 const productApi = {
   createProduct: (storeUuid, params) => {
@@ -26,12 +27,18 @@ const productApi = {
     const url = `/stores/${storeUuid}/categories`;
     return axiosClient.get(url);
   },
-
+  getParentCategory: (storeUuid) => {
+    const url = `/stores/${storeUuid}/categories/parent`;
+    return axiosClient.get(url);
+  },
+  getSubCategory: (storeUuid, parentCategory) => {
+    const url = `/stores/${storeUuid}/categories/${parentCategory}`
+    return axiosClient.get(url);
+  },
   deleteProduct: (storeUuid, productUuid) => {
     const url = `stores/${storeUuid}/products/${productUuid}`;
     return axiosClient.delete(url);
   },
-
   searchProduct: (storeUuid, searchKey) => {
     const url = `stores/${storeUuid}/products/`;
     return axiosClient.get(url, { params: { searchKey: searchKey } });

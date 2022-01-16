@@ -2,6 +2,19 @@ import React from "react";
 import NumberFormat from "react-number-format";
 import TextField from "@material-ui/core/TextField";
 
+export const VNDFormat = (props) => {
+  return (
+    <NumberFormat
+      {...props}
+      thousandSeparator
+      isNumericString
+      displayType="text"
+      type="text"
+      suffix=" đ"
+    />
+  )
+}
+
 function VNDFormatCustom(props) {
   const { inputRef, onChange, ...other } = props;
 
@@ -19,7 +32,7 @@ function VNDFormatCustom(props) {
       }}
       thousandSeparator
       isNumericString
-      suffix="đ"
+      suffix=" đ"
     />
   );
 }
@@ -57,12 +70,12 @@ export default function VNDInput(props) {
   );
 }
 export function ThousandSeperatedInput(props) {
-  const {defaultPrice, value} = props 
+  const { defaultPrice, value } = props
   return (
     <TextField
       name="numberformat"
       defaultValue={defaultPrice}
-      value={value ? value:null}
+      value={value ? value : null}
       InputProps={{
         inputComponent: NumberFormatCustom,
       }}

@@ -17,6 +17,7 @@ import {
 import InventoryDetail from "./InventoryDetail/InventoryDetail";
 import { FormatedProductStatus } from "../../../../components/TableCommon/util/format";
 import icon from "../../../../assets/img/product/img.jpeg";
+import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 
 const InventoryTableRow = (props) => {
   const { row, handleOpenRow, openRow } = props;
@@ -44,8 +45,8 @@ const InventoryTableRow = (props) => {
           </ListItem>
         </TableCell>
         <TableCell align="left">{row.category.name}</TableCell>
-        <TableCell align="right">{row.list_price}</TableCell>
-        <TableCell align="right">{row.standard_price}</TableCell>
+        <TableCell align="right"><VNDFormat value={row.list_price} /></TableCell>
+        <TableCell align="right"><VNDFormat value={row.standard_price} /></TableCell>
         <TableCell align="center">
           <FormatedProductStatus quantity={row.quantity_available} />
         </TableCell>
