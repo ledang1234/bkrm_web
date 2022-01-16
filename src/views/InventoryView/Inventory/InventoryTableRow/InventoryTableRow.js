@@ -31,7 +31,7 @@ const InventoryTableRow = (props) => {
           openRow === row.uuid ? classes.rowClicked : null
         )}
       >
-        <TableCell align="left">{row.id}</TableCell>
+        <TableCell align="left">{row.bar_code}</TableCell>
         <TableCell align="left" style={{ minWidth: 200 }}>
           <ListItem
             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
@@ -48,10 +48,10 @@ const InventoryTableRow = (props) => {
         <TableCell align="right"><VNDFormat value={row.list_price} /></TableCell>
         <TableCell align="right"><VNDFormat value={row.standard_price} /></TableCell>
         <TableCell align="center">
-          <FormatedProductStatus quantity={row.quantity_available} />
+          <FormatedProductStatus quantity={row.branch_quantity} lowStock={row.min_reorder_quantity}/>
         </TableCell>
         <TableCell align="right" className={classes.fontName}>
-          {row.quantity_available}
+          {row.branch_quantity}
         </TableCell>
       </TableRow>
 

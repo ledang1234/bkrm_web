@@ -270,7 +270,7 @@ const InventoryDetail = (props) => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {productDetail.quantity_available}{" "}
+                      {row.branch_quantity}{" "}
                     </Typography>
                   </Grid>
                 </Grid>

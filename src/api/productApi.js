@@ -14,6 +14,11 @@ const productApi = {
     return axiosClient.get(url);
   },
 
+  getProductsOfBranch: (storeUuid, branchUuid) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/products`;
+    return axiosClient.get(url);
+  },
+
   getProduct: (storeUuid, productUuid) => {
     const url = `stores/${storeUuid}/products/${productUuid}`;
     return axiosClient.get(url);

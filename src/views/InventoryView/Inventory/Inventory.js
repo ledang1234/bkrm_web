@@ -41,10 +41,12 @@ const Inventory = () => {
   const [searchValue, setSearchValue] = useState("");
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await productApi.getProducts(store_uuid);
+        const response = await productApi.getProductsOfBranch(store_uuid, branch_uuid);
         setProductList(response.data);
       } catch (err) {
         console.log(err);
@@ -54,7 +56,7 @@ const Inventory = () => {
       fetchProducts();
       setReload(false);
     }
-  }, [reload, store_uuid]);
+  }, [reload, store_uuid, branch_uuid]);
 
   useEffect(() => {
     const identifier = setTimeout(async () => {
