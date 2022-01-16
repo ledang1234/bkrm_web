@@ -16,6 +16,10 @@ const orderApi = {
   getOrder: (storeUuid, orderUuid) => {
     const url = `stores/${storeUuid}/orders/${orderUuid}`;
     return axiosClient.get(url, {});
+  },
+  searchOrder: (storeUuid, branchUuid, query) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/orders`;
+    return axiosClient.get(url, {params: query});
   }
 };
 export default orderApi;

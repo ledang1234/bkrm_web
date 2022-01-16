@@ -37,7 +37,6 @@ const InventoryOrderTableRow = (props) => {
               <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>           
                     <InventoryOrderDetail parentProps={props}/>       
               </TableCell>
-       
             </TableRow>
         </>
     )

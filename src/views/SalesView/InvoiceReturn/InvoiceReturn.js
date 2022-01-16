@@ -104,7 +104,11 @@ function InvoiceReturn() {
 
         handleToggleFilter={handleToggleFilter}
       />
-      <InvoiceReturnFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter} />
+      <InvoiceReturnFilter 
+        openFilter={openFilter} 
+        handleToggleFilter={handleToggleFilter} 
+        setRefunds={setRefunds}
+      />
       {/* 3. TABLE */}
       <TableWrapper>
         <TableHeader

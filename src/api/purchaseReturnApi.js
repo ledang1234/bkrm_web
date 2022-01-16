@@ -16,6 +16,10 @@ const purchaseReturnApi = {
   getPurchaseReturn: (storeUuid, purchaseReturnUuid) => {
     const url = `stores/${storeUuid}/purchase-returns/${purchaseReturnUuid}`;
     return axiosClient.get(url, {});
+  },
+  searchPurchaseReturn: (storeUuid, branchUuid, query) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-returns/`;
+    return axiosClient.get(url, {params: query});
   }
 };
 export default purchaseReturnApi;
