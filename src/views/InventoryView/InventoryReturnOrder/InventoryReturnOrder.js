@@ -111,6 +111,7 @@ const InventoryReturnOrder = () => {
       <InventoryReturnFilter
         openFilter={openFilter}
         handleToggleFilter={handleToggleFilter}
+        setPurchaseReturns={setPurchaseReturns}
       />
 
       {/* 3. TABLE */}

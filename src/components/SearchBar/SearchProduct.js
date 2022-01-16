@@ -20,7 +20,6 @@ createStyles({
     input:{
         borderRadius:'20px'
     },
-    
 }));
 
 const CustomTextField = withStyles({
@@ -58,9 +57,10 @@ const SearchProduct = (props) => {
     // redux
     const info = useSelector(state => state.info)
     const store_uuid = info.store.uuid
+    const branch_uuid = info.branch.uuid
     
     const loadingData = async (e, searchKey, reason) => {
-      const response = await productApi.searchProduct(store_uuid, searchKey)
+      const response = await productApi.searchBranchProduct(store_uuid, branch_uuid, searchKey)
       setOptions(response.data)
     }
 
@@ -73,7 +73,7 @@ const SearchProduct = (props) => {
           <Typography variant="h5">{`#${option.uuid}`}</Typography>
               <Typography variant="h5">{option.name}</Typography>
               <Grid container item  direction="row" justifyContent="space-between" >
-              <Typography variant="body2">{`Tồn kho: ${option.quantity_available}`} </Typography>
+              <Typography variant="body2">{`Tồn kho: ${option.branch_quantity}`} </Typography>
               <Typography variant="body2">{`Giá bán: ${option.list_price}`} </Typography>     
               </Grid> 
           </Grid>                

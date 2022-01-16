@@ -43,6 +43,12 @@ const productApi = {
     const url = `stores/${storeUuid}/products/`;
     return axiosClient.get(url, { params: { searchKey: searchKey } });
   },
+
+  searchBranchProduct: (storeUuid, branchUuid, searchKey) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/search-products/`;
+    return axiosClient.get(url, { params: { searchKey: searchKey } });
+  },
+
   updateProduct: (storeUuid, productUuid, params) => {
     const url = `/stores/${storeUuid}/products/${productUuid}?_method=PUT`;
     return axiosClient.post(url, params, {

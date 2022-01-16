@@ -4,7 +4,11 @@ import {
 } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/styles";
-import VNDInput from '../../../../components/TextField/NumberFormatCustom'
+import VNDInput from '../../../../components/TextField/NumberFormatCustom';
+import { useFormik } from 'formik';
+import moment from 'moment';
+import purchaseReturnApi from '../../../../api/purchaseReturnApi';
+import { useSelector } from 'react-redux';
 
 const drawerWidth = 300;
 const useStyles = makeStyles((theme) =>
@@ -23,13 +27,34 @@ const useStyles = makeStyles((theme) =>
   })
 );
 const InventoryReturnFilter = (props) => {
-    const {handleToggleFilter,openFilter} =props;
+    const {handleToggleFilter,openFilter, setPurchaseReturns} =props;
 
     const theme = useTheme();
     const classes = useStyles(theme);
 
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
+    const branch_uuid = info.branch.uuid;
+    
+    const formik = useFormik({
+      initialValues: {
+        startDate: '',
+        endDate: '',
+        purchaseOrderCode: '',
+        minTotalAmount: 0,
+        maxTotalAmount: 0,
+        status: 'debt',
+        paymentMethod: '',
+      },
+      onSubmit: async values => {
+        console.log(values)
+        const res = await purchaseReturnApi.searchPurchaseReturn(store_uuid, branch_uuid, values)
+        setPurchaseReturns(res.data)
+      },
+    });
+
     return (
-    <Drawer
+      <Drawer
         anchor="right"
         onClose={handleToggleFilter}
         open={openFilter}
@@ -38,87 +63,108 @@ const InventoryReturnFilter = (props) => {
         }}
         className={classes.drawer}
       >
-      {/* Nhan vien, NCC?? search ở đây hay chỗ kia -> search sđt ,mã , tên,...*/}   
-      {/* Mã đơn nhập ???*/}
+        <Typography variant="h5" className={classes.text} >Mã đơn nhập:</Typography>
+        <TextField 
+          id="purchaseOrderCode" label="Đơn nhập" type="text"
+          name="purchaseOrderCode"
+          defaultValue={formik.values.purchaseOrderCode} 
+          variant="outlined" size="small" fullWidth 
+          className={classes.textField} 
+          InputLabelProps={{ shrink: true }} 
+          value={formik.values.purchaseOrderCode} 
+          onChange={formik.handleChange}
+        />
 
-      {/* 1. Ngay from-to */}
-      <Typography variant="h5"className={classes.text} >Ngày bán:</Typography>
-      <TextField id="date" label="Từ" type="date"  defaultValue=""  variant="outlined" size="small" fullWidth className={classes.textField} InputLabelProps={{ shrink: true }} // value={dateOfBirth} // onChange={(event) => setDateOfBirth(event.target.value)}
-      />
-       <TextField id="date" label="Đến" type="date"  defaultValue=""  variant="outlined" size="small" fullWidth className={classes.textField} InputLabelProps={{ shrink: true }} // value={dateOfBirth} // onChange={(event) => setDateOfBirth(event.target.value)}
-      />
+        {/* 1.Ngay from-to */}
+        <Typography variant="h5" className={classes.text} >Ngày trả:</Typography>
+        <TextField id="startDate" label="Từ" 
+          type="date" 
+          name="startDate"
+          defaultValue={formik.values.startDate} 
+          variant="outlined" size="small" fullWidth 
+          className={classes.textField} 
+          InputLabelProps={{ shrink: true }} 
+          value={formik.values.startDate} 
+          onChange={formik.handleChange}
+        />
+        <TextField 
+          id="endDate" label="Đến" type="date" name="endDate"
+          defaultValue={formik.values.endDate} 
+          variant="outlined" size="small" 
+          fullWidth className={classes.textField} 
+          InputLabelProps={{ shrink: true }} 
+          value={formik.values.endDate}  
+          onChange={formik.handleChange}
+        />
+       
+  
+        {/* 2.Tien from-to*/}
+        <Typography variant="h5" className={classes.text} >Tiền đơn đặt hàng:</Typography>
+        <VNDInput required label="Từ" variant="outlined" fullWidth size="small" className={classes.textField}
+          name="minTotalAmount"
+          value={formik.values.minTotalAmount}
+          onChange={formik.handleChange}
+        />
+        <VNDInput 
+          id="maxTotalAmount" name="maxTotalAmount"
+          required label="Đến" variant="outlined" 
+          fullWidth size="small" className={classes.textField}
+          value={formik.values.maxTotalAmount}
+          onChange={formik.handleChange}
+        />
 
-      {/* 2.Tien from-to*/}
-      <Typography variant="h5"className={classes.text} >Tiền đơn trả:</Typography>
-      <VNDInput required label="Từ" variant="outlined" fullWidth size="small" className={classes.textField}
-        //  value={productInfo.importedPrice}
-        // onChange={(e) =>
-        //   setProductInfo({
-        //     ...productInfo,
-        //     importedPrice: e.target.value,
-        //   })
-        // }
-      />
-      <VNDInput required label="Đến" variant="outlined" fullWidth size="small" className={classes.textField}
-      //  value={productInfo.importedPrice}
-        // onChange={(e) =>
-        //   setProductInfo({
-        //     ...productInfo,
-        //     importedPrice: e.target.value,
-        //   })
-        // }
-      />
-
-      {/* 3. Chi nhanh */}
-      <Typography variant="h5"className={classes.text} >Chi nhánh:</Typography>
-      <FormControl
+        {/* 5.Trang thai */}
+        <Typography variant="h5" className={classes.text} >Trạng thái:</Typography>
+        <FormControl
           className={classes.formControl}
           fullWidth
           size="small"
           variant="outlined"
         >
-      <Select
-        labelId="demo-simple-select-outlined-label"
-        id="demo-simple-select-outlined"
-        size="small"
-        // onChange={(event) => { setGender(event.target.value) }}
-        // label=" Chi nhánh"
-        // value={gender}
-      >
-        <MenuItem value="trungtam">Chi nhánh trung tâm</MenuItem>
-        <MenuItem value="q1">Chi nhánh quận 1</MenuItem>
-      </Select>
-      </FormControl>
-
-      {/* Trang thai ???*/}
-
-      {/* Pttt ?*/}
-      <Typography variant="h5"className={classes.text} >Hình thức trả:</Typography>
-      <FormControl
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="status"
+            name="status"
+            size="small"
+            onChange={formik.handleChange}
+            // label=" Chi nhánh"
+            value={formik.values.status}
+          >
+            <MenuItem value="debt">Còn nợ</MenuItem>
+            <MenuItem value="closed">Trả đủ</MenuItem>
+          </Select>
+        </FormControl>
+  
+        {/* 5.Pttt */}
+        <Typography variant="h5" className={classes.text}>Hình thức trả:</Typography>
+        <FormControl
           className={classes.formControl}
           fullWidth
           size="small"
           variant="outlined"
         >
-      <Select
-        labelId="demo-simple-select-outlined-label"
-        id="demo-simple-select-outlined"
-        size="small"
-        // onChange={(event) => { setGender(event.target.value) }}
-        // label=" Chi nhánh"
-        // value={gender}
-      >
-        <MenuItem value="trungtam">Thẻ</MenuItem>
-        <MenuItem value="q1">Tiền mặt</MenuItem>
-      </Select>
-      </FormControl>
-
-
-      <Button variant="contained"  color="primary" style={{marginTop:30}}>
-           Lọc
-      </Button>
-          
-    </Drawer>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="paymentMethod" name="paymentMethod"
+            size="small"
+            onChange={formik.handleChange}
+            // label=" Chi nhánh"
+            value={formik.values.paymentMethod}
+          >
+            <MenuItem value="card">Thẻ</MenuItem>
+            <MenuItem value="cash">Tiền mặt</MenuItem>
+          </Select>
+        </FormControl>
+  
+        {/* BUTTON */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={formik.handleSubmit}
+          style={{ marginTop: 30 }}>
+          Lọc
+        </Button>
+      </Drawer>
     )
 }
 

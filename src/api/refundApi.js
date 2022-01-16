@@ -17,5 +17,9 @@ const refundApi = {
     const url = `stores/${storeUuid}/refunds/${refundUuid}`;
     return axiosClient.get(url, {});
   },
+  searchRefund: (storeUuid, branchUuid, query) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/refunds/`;
+    return axiosClient.get(url, {params: query});
+  }
 };
 export default refundApi;

@@ -123,7 +123,10 @@ const InventoryOrder = () => {
             handleToggleFilter={handleToggleFilter}
           /> 
    
-          <InventoryOrderFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+          <InventoryOrderFilter 
+            openFilter={openFilter} 
+            setPurchaseOrders={setPurchaseOrders}
+            handleToggleFilter={handleToggleFilter}/>
 
           
           {/* 3. TABLE */}

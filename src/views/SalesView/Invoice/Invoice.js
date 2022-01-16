@@ -122,7 +122,11 @@ const Invoice = () => {
           <ToolBar  dataTable={orders} tableType={TableType.INVOICE} textSearch={'#, Khách, Người bán,...  '}  /*handlePrint={handlePrint}*/ 
           handleToggleFilter={handleToggleFilter}
           />
-          <InvoiceFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+          <InvoiceFilter 
+            openFilter={openFilter} 
+            handleToggleFilter={handleToggleFilter}
+            setOrders={setOrders}
+          />
           
           {/* 3. TABLE */}
           <TableWrapper>
