@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles,useTheme } from '@material-ui/styles';
 
 import { Link } from "react-router-dom";
 import clsx from "clsx";
@@ -14,6 +14,12 @@ import { customizeAction } from "../../../store/slice/customizeSlice";
 
 //import project 
 import SubItem from './SubItem';
+
+//ICON
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
+
+
 
 const useStyles = makeStyles((theme) => ({
   menuText:{
@@ -45,12 +51,38 @@ const useStyles = makeStyles((theme) => ({
 const MenuItem = (props) => {
     const {item, collapse} = props;
     const classes = useStyles();
+    const theme = useTheme();
     const dispatch = useDispatch();
     const customization = useSelector((state) => state.customize);
     
     const [open, setOpen] = React.useState(true);
     const itemMenuOpen = customization.itemMenuOpen;
   
+    const Icon = item.icon1;
+    const Icon1 = item.icon2;
+
+    function getMenuIcon (type){
+      switch (type) {
+        case "1":
+          return  <Box
+              component="img"
+              sx={{
+                height: 24,
+                width: 24, 
+              }}
+              src={item.icon}
+           />
+          
+        case "2":
+          return <Icon1 fontSize="small" />
+          
+        case "3":
+            return <Icon fontSize="small" />
+        default:
+            return <Icon fontSize="small" />
+      } 
+    }
+
     function handleOnClick(id){
         if(id === 1 || id ===4 
           // ||id === 8 || id ===10 
@@ -75,16 +107,22 @@ const MenuItem = (props) => {
           onClick={()=>handleOnClick(item.id)}
           
         >
-          <ListItemIcon >
-          <Box
-            component="img"
-            sx={{
-              height: 24,
-              width: 24, 
-            }}
-            src={item.icon}
-          />
+          <ListItemIcon style={{marginRight:-5, padding:2}}>
+
+             { getMenuIcon(theme.customization.menu)}
+            
+             {/* { getMenuIcon(1)} */}
           </ListItemIcon>
+          {/* <ListItemIcon >
+              <Box
+                component="img"
+                sx={{
+                  height: 24,
+                  width: 24, 
+                }}
+                src={item.icon}
+              />
+          </ListItemIcon> */}
           
            <Typography
               className={clsx([classes.menuText], {
