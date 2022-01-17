@@ -37,6 +37,9 @@ export const updateLocalStorage = (action) => {
     case "MODE":
       customization.mode = action.payload;
       break;
+    case "MENU":
+        customization.menu = action.payload;
+        break;
     case "FONT_FAMILY":
       customization.fontFamily = action.payload;
       break;
@@ -111,10 +114,19 @@ const Customization = () => {
   };
 
   const mode = customization.mode;
+  {console.log(customization.mode)}
   const handleMode = (mode) => {
     dispatch(customizeAction.setMode(mode));
     updateLocalStorage({ type: "MODE", payload: mode });
   };
+  
+  const menu = customization.menu;
+  // {console.log(customization.menu)}
+  const handleMenu = (menu) => {
+    dispatch(customizeAction.setMenu(menu));
+    updateLocalStorage({ type: "MENU", payload: menu });
+  };
+
   const fontFamily = customization.fontFamily;
   const handleFontChange = (fontFamily) => {
     dispatch(customizeAction.setFontFamily(fontFamily));
@@ -151,6 +163,56 @@ const Customization = () => {
         className={classes.drawer}
       >
         <PerfectScrollbar component="div">
+          {/* Menu */}
+          <CardWrapper title="Menu">
+            <FormControl className={classes.fontForm}>
+                <RadioGroup
+                  aria-label="menu"
+                  value={menu}
+                  // value={1}
+                  onChange={(e) => handleMenu(e.target.value)}
+                  name="row-radio-buttons-group"
+                  style={{width:200}}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                
+                  >
+                      <FormControlLabel
+                        value="1"
+                        control={<Radio />}
+                        label={1}
+                        sx={{
+                          "& .MuiSvgIcon-root": { fontSize: 28 },
+                          "& .MuiFormControlLabel-label": { color: "grey.900" },
+                        }}
+                      />
+                      <FormControlLabel
+                        value="2"
+                        control={<Radio />}
+                        label={2}
+                        sx={{
+                          "& .MuiSvgIcon-root": { fontSize: 28 },
+                          "& .MuiFormControlLabel-label": { color: "grey.900" },
+                        }}
+                      />
+                      <FormControlLabel
+                        value="3"
+                        control={<Radio />}
+                        label={3}
+                        sx={{
+                          "& .MuiSvgIcon-root": { fontSize: 28 },
+                          "& .MuiFormControlLabel-label": { color: "grey.900" },
+                        }}
+                      />
+                  
+                  </Grid>
+                </RadioGroup>
+              
+            </FormControl>
+          </CardWrapper>
+
           {/* Font family */}
           <CardWrapper title="Font Family">
             <FormControl className={classes.fontForm}>

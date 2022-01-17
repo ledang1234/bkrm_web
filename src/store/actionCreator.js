@@ -66,6 +66,7 @@ export const setCustomization = (ini) => {
       dispatch(customizeAction.setColorLevel(customization.colorLevel));
       dispatch(customizeAction.setFontFamily(customization.fontFamily));
       dispatch(customizeAction.setMode(customization.mode));
+      dispatch(customizeAction.setMenu(customization.menu));
       dispatch(customizeAction.setPrimaryColor(customization.primaryColor));
       dispatch(customizeAction.setSecondaryColor(customization.secondaryColor));
     };
@@ -76,6 +77,7 @@ export const setCustomization = (ini) => {
         fontFamily: `'Roboto', sans-serif`,
         borderRadius: 12,
         mode: "Light",
+        menu:"1",
         primaryColor: blue,
         secondaryColor: pink,
         colorLevel: 50,

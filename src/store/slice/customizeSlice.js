@@ -5,6 +5,7 @@ const initialState = {
   fontFamily: `'Roboto', sans-serif`,
   borderRadius: 12,
   mode: "Light",
+  menu:"1",
   themeBackground: colors.paper,
   themeText: colors.grey900,
   themeGreyText: colors.grey700,
@@ -21,6 +22,9 @@ const customizeSlice = createSlice({
   reducers: {
     setFontFamily(state, action) {
       state.fontFamily = action.payload;
+    },
+    setMenu(state, action) {
+      state.menu = action.payload;
     },
     setBorderRadius(state, action) {
       state.borderRadius = action.payload;
