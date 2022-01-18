@@ -78,38 +78,42 @@ const EditEmployee = ({ handleClose, open, employee }) => {
 
   useEffect(() => {
     formik.initialValues = {
-        uuid: employee.uuid,
-        name: employee.name,
-        phone: employee.phone,
-        permissions: employee.permissions,
-        email: employee.email,
-        salary: employee.salary,
-        salary_type: employee.salary_type,
-        id_card_num: employee.id_card_num,
-        gender: employee.gender,
-        date_of_birth: employee.date_of_birth,
-        address: employee.address
+      uuid: employee.uuid,
+      name: employee.name,
+      phone: employee.phone,
+      permissions: employee.permissions,
+      email: employee.email,
+      salary: employee.salary,
+      salary_type: employee.salary_type,
+      id_card_num: employee.id_card_num,
+      gender: employee.gender,
+      date_of_birth: employee.date_of_birth,
+      address: employee.address,
     };
-  }, [employee])
-  
+  }, [employee]);
+
   const formik = useFormik({
     initialValues: {
-        uuid: employee.uuid,
-        name: employee.name,
-        phone: employee.phone,
-        permissions: employee.permissions,
-        email: employee.email,
-        salary: employee.salary,
-        salary_type: employee.salary_type,
-        id_card_num: employee.id_card_num,
-        gender: employee.gender,
-        date_of_birth: employee.date_of_birth,
-        address: employee.address
+      uuid: employee.uuid,
+      name: employee.name,
+      phone: employee.phone,
+      permissions: employee.permissions,
+      email: employee.email,
+      salary: employee.salary,
+      salary_type: employee.salary_type,
+      id_card_num: employee.id_card_num,
+      gender: employee.gender,
+      date_of_birth: employee.date_of_birth,
+      address: employee.address,
     },
-    onSubmit: async values => {
-      console.log(values)
+    onSubmit: async (values) => {
+      console.log(values);
       try {
-        const response = await employeeApi.updateEmployee(store_uuid, employee.uuid, values)
+        const response = await employeeApi.updateEmployee(
+          store_uuid,
+          employee.uuid,
+          values
+        );
         handleClose("Success");
         console.log(response.status);
       } catch (error) {
@@ -118,14 +122,12 @@ const EditEmployee = ({ handleClose, open, employee }) => {
     },
   });
 
-
   // redux
-  
 
-//   const handleSelectPermission = (selected) => {
-//     let permissions = selected.map((permission) => permission.key);
-//     setPermissions(permissions);
-//   };
+  //   const handleSelectPermission = (selected) => {
+  //     let permissions = selected.map((permission) => permission.key);
+  //     setPermissions(permissions);
+  //   };
 
   return (
     <Dialog
@@ -288,10 +290,10 @@ const EditEmployee = ({ handleClose, open, employee }) => {
               />
               {/* <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/> */}
 
-              {/* <MultipleSelect
+              <MultipleSelect
                 choices={choices}
-                selected={formik.}
-              /> */}
+                selected={formik.values.permissions}
+              />
             </Grid>
           </Grid>
         </div>
