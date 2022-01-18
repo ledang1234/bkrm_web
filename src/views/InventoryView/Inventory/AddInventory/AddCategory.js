@@ -10,7 +10,21 @@ import {
 import React, { useEffect, useState } from "react";
 import ModalWrapper from "../../../../components/Modal/ModalWrapper";
 import productApi from "../../../../api/productApi";
+import { useSelector } from "react-redux";
 const AddCategory = (props) => {
+  const [categoryList, setCategoryList] = useState([]);
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+  useEffect(() => {
+    const fetchAllCategory = async () => {
+      try {
+        const response = await productApi.getAllCategory(store_uuid);
+        setCategoryList(response.data);
+        console.log(response.data);
+      } catch (error) {}
+    };
+    fetchAllCategory();
+  }, []);
   return (
     <ModalWrapper {...props}>
       <Typography variant="h4" gutterBottom>
@@ -32,6 +46,11 @@ const AddCategory = (props) => {
             <InputLabel htmlFor="category">Danh mục cha</InputLabel>
             <Select native label="Danh mục cha" id="category">
               <option aria-label="None" value="" />
+              {categoryList.map((category) => (
+                <option key={category.uuid} value={category.uuid}>
+                  {category.name}
+                </option>
+              ))}
             </Select>
           </FormControl>
         </Grid>

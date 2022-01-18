@@ -62,5 +62,9 @@ const productApi = {
       },
     });
   },
+
+  addCategory: (storeUuid, parentCategoryUuid) =>{
+
+  }
 };
 export default productApi;
