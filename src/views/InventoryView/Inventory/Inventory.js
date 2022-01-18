@@ -25,7 +25,7 @@ import * as TableType from "../../../assets/constant/tableType";
 
 ////import project
 //riêng
-import AddCategory from "./AddCategory/AddCategory";
+import Category from "./Category/Category";
 import AddInventory from "./AddInventory/AddInventory";
 import InventoryTableRow from "./InventoryTableRow/InventoryTableRow";
 //chung
@@ -46,7 +46,10 @@ const Inventory = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await productApi.getProductsOfBranch(store_uuid, branch_uuid);
+        const response = await productApi.getProductsOfBranch(
+          store_uuid,
+          branch_uuid
+        );
         setProductList(response.data);
       } catch (err) {
         console.log(err);
@@ -93,15 +96,9 @@ const Inventory = () => {
   const handleClickOpenCategory = () => {
     setOpenCategory(true);
   };
-  const handleCloseCategory = (status) => {
+  const handleCloseCategory = () => {
     setOpenCategory(false);
-    setAddStatus(status);
-    if (status === "Success") {
-      setReload(true);
-      setOpenBar(true);
-    } else if (status === "Fail") {
-      setOpenBar(true);
-    }
+    console.log("here");
   };
 
   //status add
@@ -166,7 +163,7 @@ const Inventory = () => {
       </Grid>
 
       {/* Popup add */}
-      <AddCategory open={openCategory} handleClose={handleCloseCategory} />
+      <Category open={openCategory} handleClose={handleCloseCategory} />
       <AddInventory open={open} handleClose={handleClose} />
       {/* Noti */}
       <SnackBar

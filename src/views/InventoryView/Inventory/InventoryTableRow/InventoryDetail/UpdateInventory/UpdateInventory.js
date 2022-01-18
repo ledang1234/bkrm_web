@@ -21,7 +21,7 @@ import VNDInput from "../../../../../../components/TextField/NumberFormatCustom"
 // import img
 import avaUpload from "../../../../../../assets/img/product/default-product.png";
 import barcodeIcon from "../../../../../../assets/img/icon/barcode1.png";
-import AddCategory from "../../../AddCategory/AddCategory";
+import AddCategory from "../../../Category/Category";
 import useStyles from "./styles";
 import productApi from "../../../../../../api/productApi";
 import { useDispatch, useSelector } from "react-redux";
