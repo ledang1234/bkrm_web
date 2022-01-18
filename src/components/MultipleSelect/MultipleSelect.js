@@ -66,6 +66,7 @@ export default function MultipleSelect(props) {
           id="demo-mutiple-chip"
           multiple
           value={personName}
+          defaultValues={props.selected ? props.selected : []}
           onChange={handleChange}
           input={<Input id="select-multiple-chip" />}
           renderValue={(selected) => (

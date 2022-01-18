@@ -37,6 +37,7 @@ export const logInHandler = (userName, password) => {
       const response = await userApi.signIn({
         phone: userName,
         password: password,
+        role: 'owner'
       });
       return response;
     };

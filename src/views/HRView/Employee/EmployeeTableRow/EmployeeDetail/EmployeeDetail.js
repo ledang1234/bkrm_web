@@ -17,6 +17,7 @@ import avaUpload from '../../../../../assets/img/product/lyimg.jpeg';
 import {StyledMenu,StyledMenuItem} from '../../../../../components/Button/MenuButton'
 import employeeApi from '../../../../../api/employeeApi';
 import { useSelector } from 'react-redux';
+import EditEmployee from '../../AddEmployee/EditEmployee';
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -69,6 +70,8 @@ const EmployeeDetail = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
+    const [openEdit, setOpenEdit] = React.useState(false);
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [employeeDetail, setEmployeeDetail] = React.useState({
       uuid: "",
@@ -119,6 +122,7 @@ const EmployeeDetail = (props) => {
 
     return (
         <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
+          <EditEmployee handleClose={() => {setOpenEdit(false)}} open={openEdit} employee={employeeDetail}/>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -221,8 +225,8 @@ const EmployeeDetail = (props) => {
 
               {/* Button */}
               <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
-                          <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>
-                          <Button variant="contained" size="small" style={{marginLeft:15}}>Xoá</Button>
+                          <Button variant="contained" size="small" style={{marginLeft:15}} onClick={() => {setOpenEdit(true)}}>Sửa</Button>
+                          <Button variant="contained" size="small" style={{marginLeft:15}}>Ngưng hoạt động</Button>
                           
                           <IconButton
                             aria-label="more"

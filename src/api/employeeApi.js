@@ -17,5 +17,9 @@ const employeeApi = {
     const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
     return axiosClient.delete(url);
   },
+  updateEmployee: (storeUuid, employeeUuid, body) => {
+    const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
+    return axiosClient.put(url, body);
+  },
 };
 export default employeeApi;
