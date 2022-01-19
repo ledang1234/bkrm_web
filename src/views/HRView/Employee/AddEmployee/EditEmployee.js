@@ -76,21 +76,7 @@ const EditEmployee = ({ handleClose, open, employee }) => {
   // employee info
   // const [typeSalary, setTypeSalary] = React.useState("");
 
-  useEffect(() => {
-    formik.initialValues = {
-      uuid: employee.uuid,
-      name: employee.name,
-      phone: employee.phone,
-      permissions: employee.permissions,
-      email: employee.email,
-      salary: employee.salary,
-      salary_type: employee.salary_type,
-      id_card_num: employee.id_card_num,
-      gender: employee.gender,
-      date_of_birth: employee.date_of_birth,
-      address: employee.address,
-    };
-  }, [employee]);
+  useEffect(() => {}, [employee]);
 
   const formik = useFormik({
     initialValues: {
