@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 
 import userApi from "../../../../api/userApi";
+import getGeoCode from "../../../../components/BranchMap/Geocode";
 
 //import project
 import customerApi from "../../../../api/customerApi";
@@ -81,20 +82,30 @@ const AddBranch = (props) => {
   const dispatch = useDispatch();
   const handleAddBranch = async () => {
     handleClose();
+    const ward = wardList.find((ward) => ward.id === formik.values.ward).name;
+    const province = cityList.find(
+      (city) => city.id === formik.values.city
+    ).name;
+    const district = districtList.find(
+      (district) => district.id === formik.values.district
+    ).name;
+    const { lat, lng } = await getGeoCode(
+      formik.values.address + ward + district + province
+    );
     const body = {
       name: formik.values.name,
       address: formik.values.address,
-      ward: wardList.find((ward) => ward.id === formik.values.ward).name,
-      provinces: cityList.find((city) => city.id === formik.values.city).name,
-      district: districtList.find(
-        (district) => district.id === formik.values.district
-      ).name,
+      ward: ward,
+      province: province,
+      district: district,
       phone: formik.values.phone,
       status: "active",
+      lng: `${lng}`,
+      lat: `${lat}`,
     };
+    console.log(body);
     try {
       const response = await branchApi.createBranch(store_uuid, body);
-      console.log(response);
       onReload();
       dispatch(statusAction.successfulStatus("Create branch successfully"));
     } catch (error) {

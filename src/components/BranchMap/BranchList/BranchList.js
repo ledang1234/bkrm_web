@@ -45,14 +45,7 @@ const BranchList = (props) => {
       {branchList.map((branch) => {
         return (
           <Grid item xs={12} sm={6}>
-            <Card
-              className={classes.card}
-              style={{ minHeight: 140 }}
-              onClick={() => {
-                setBranchToEdit(branch);
-                setIsEditBranch(true);
-              }}
-            >
+            <Card className={classes.card} style={{ minHeight: 140 }}>
               {/* <CardContent style={{}}> */}
               <Grid container spacing={2}>
                 <Grid item xs={4}>
@@ -76,7 +69,7 @@ const BranchList = (props) => {
                     component="div"
                     style={{ fontSize: "1rem", fontWeight: 400, height: "60%" }}
                   >
-                    {branch.address}
+                    {`${branch.address} ${branch.ward} ${branch.district} ${branch.province}`}
                   </Typography>
                   <Grid container direction="row" justifyContent="flex-end">
                     <Typography
@@ -101,6 +94,20 @@ const BranchList = (props) => {
                       }}
                     >
                       Chỉ đường
+                    </Typography>
+                    <Typography
+                      onClick={() => {
+                        setBranchToEdit(branch);
+                        setIsEditBranch(true);
+                      }}
+                      variant="h5"
+                      style={{
+                        cursor: "pointer",
+                        color: "#1b74e4",
+                        marginLeft: 10,
+                      }}
+                    >
+                      Chỉnh sửa
                     </Typography>
                   </Grid>
                 </Grid>
