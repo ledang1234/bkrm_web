@@ -1,4 +1,4 @@
-import {Chip} from '@material-ui/core';
+import {Chip,Box, Avatar} from '@material-ui/core';
 
 export const FormatedStatus  = (props) => {
     if (props.debt === 0){
@@ -16,6 +16,18 @@ export const FormatedProductStatus  = (props) => {
     return( <Chip label="Sắp hết" color="#ffc02b" variant="outlined"style={{backgroundColor:"#ffc02b" ,  fontWeight:500, marginLeft:-10, height:28} }>{"Trả đủ"} </Chip>  )
   } else{
     return(  <Chip label="Còn hàng" color="#00ded7" variant="outlined"style={{backgroundColor:"#00ded7" ,  fontWeight:500, marginLeft:-10, height:28} }>{"Trả đủ"} </Chip> )
+  }
+  
+}
+
+export const FormatedProductStatusReport  = (props) => {
+  if (props.quantity === 0){
+    return (<Box style={{ width:20, height:20,borderRadius:20,backgroundColor:'#ff007d'}}></Box>)
+    //Gia tri low stock ??
+  } else if (Number(props.quantity) <= props.lowStock){
+    return( <Box style={{ width:20, height:20,borderRadius:20,backgroundColor:'#ffc02b'}}></Box>  )
+  } else{
+    return(  <Box style={{ width:20, height:20,borderRadius:20,backgroundColor:'#00ded7'}}></Box>)
   }
   
 }
