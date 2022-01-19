@@ -17,7 +17,7 @@ import EmployeeDetail from "./EmployeeDetail/EmployeeDetail";
 import ava from "../../../../assets/img/product/lyimg.jpeg";
 
 const EmployeeTableRow = (props) => {
-  const { row, handleOpenRow, openRow } = props;
+  const { row, handleOpenRow, openRow, handleReload } = props;
   const classes = useRowStyles();
 
   return (
