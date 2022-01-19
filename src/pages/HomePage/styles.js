@@ -19,12 +19,12 @@ export default makeStyles((theme) => ({
     marginTop: 48 + 16 + 16,
     borderColor: theme.palette.background.paper,
     paddingLeft: 20,
+    paddingBottom:48 + 16 + 16,
   },
   _drawerPaper: {
     width: drawerWidth,
     borderColor: theme.palette.background.paper,
     paddingLeft: 20,
-
   },
   drawerHeader: {
     display: "flex",
@@ -71,7 +71,7 @@ export default makeStyles((theme) => ({
     paddingLeft: 20,
   },
   scroll: {
-    maxHeight: 100,
+    // maxHeight: 10,
   },
   marginBackground:{
     marginLeft: 20

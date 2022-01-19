@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,useRef} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
 import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-
+import { useReactToPrint } from "react-to-print";
 //import api 
 import customerApi from '../../../api/customerApi'
 import { useSelector } from 'react-redux'
@@ -95,6 +95,12 @@ const Customer = () => {
     };
 
     //3. ToolBar
+
+    // toolbar
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
     //3.1. search
 
     //3.2. filter
@@ -143,7 +149,7 @@ const Customer = () => {
         {/* 2. SEARCH - FILTER - EXPORT*/}
         {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
         <ToolBar  dataTable={customerList} tableType={TableType.CUSTOMER} textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
-        handleToggleFilter={handleToggleFilter}/>
+        handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
         <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
         <TableWrapper>
@@ -162,8 +168,39 @@ const Customer = () => {
               })}
             </TableBody>
         </TableWrapper>
+        <div  style={{display:'none'}} >
+        <div ref={componentRef}  >
+        <ComponentToPrint  customerList={customerList} classes={classes}/>
+        </div>
+        
+      </div>
       </Card>
     )
 }
 
 export default Customer
+
+const ComponentToPrint = ({customerList,classes}) =>{
+  return (
+      <div >
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Khách hàng</Typography>
+        <div >
+          <TableHeader
+                classes={classes}
+                headerData={HeadCells.CustomerHeadCells}
+              />
+              <TableBody >
+                {customerList.map((row, index) => {
+                  return (
+                    <CustomerTableRow
+                      key={row.uuid}
+                      row={row}
+                    
+                    />
+                  );
+                })}
+              </TableBody>
+        </div>
+  </div>
+  )
+}

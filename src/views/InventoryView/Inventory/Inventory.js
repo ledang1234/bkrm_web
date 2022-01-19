@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
@@ -15,6 +15,7 @@ import {
   TableBody,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import { useReactToPrint } from "react-to-print";
 
 //import api
 import productApi from "../../../api/productApi";
@@ -134,6 +135,13 @@ const Inventory = () => {
     // setOrderBy(property);
   };
 
+
+  // toolbar
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
+
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -179,37 +187,71 @@ const Inventory = () => {
       {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
       <ToolBar
         dataTable={productList}
-        tableType={TableType.INVENTORY} /*handlePrint={handlePrint}*/
+        tableType={TableType.INVENTORY} 
+        handlePrint={handlePrint}
         handleSearchValueChange={setSearchValue}
       />
 
       {/* 3. TABLE */}
-      <TableWrapper>
-        <TableHeader
-          classes={classes}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          headerData={HeadCells.InventoryHeadCells}
-        />
-        <TableBody>
-          {productList.map((row, index) => {
-            return (
-              <InventoryTableRow
-                key={row.uuid}
-                row={row}
-                setReload={setReload}
-                openRow={openRow}
-                handleOpenRow={handleOpenRow}
-              />
-            );
-          })}
-        </TableBody>
+      <TableWrapper >
+        <div >
+          <TableHeader
+            classes={classes}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            headerData={HeadCells.InventoryHeadCells}
+          />
+          <TableBody >
+            {productList.map((row, index) => {
+              return (
+                <InventoryTableRow
+                  key={row.uuid}
+                  row={row}
+                  setReload={setReload}
+                  openRow={openRow}
+                  handleOpenRow={handleOpenRow}
+                />
+              );
+            })}
+          </TableBody>
+        </div>
       </TableWrapper>
+      <div  style={{display:'none'}} >
+        <div ref={componentRef}  >
+        <ComponentToPrint  productList={productList} classes={classes}/>
+        </div>
+        
+      </div>
     </Card>
   );
 };
 export default Inventory;
+
+const ComponentToPrint = ({productList,classes}) =>{
+  return (
+      <div >
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Kho hàng</Typography>
+        <div >
+          <TableHeader
+                classes={classes}
+                headerData={HeadCells.InventoryHeadCells}
+              />
+              <TableBody >
+                {productList.map((row, index) => {
+                  return (
+                    <InventoryTableRow
+                      key={row.uuid}
+                      row={row}
+                    
+                    />
+                  );
+                })}
+              </TableBody>
+        </div>
+  </div>
+  )
+}
 
 // PRINT làm lại sau
 

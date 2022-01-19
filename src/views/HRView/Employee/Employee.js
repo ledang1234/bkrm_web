@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
@@ -15,7 +15,7 @@ import {
   TableBody,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-
+import { useReactToPrint } from "react-to-print";
 //import api
 import employeeApi from "../../../api/employeeApi";
 import { useSelector } from "react-redux";
@@ -109,6 +109,12 @@ const Employee = () => {
   };
 
   //3. ToolBar
+
+  // toolbar
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
   //3.1. search
 
   //3.2. filter
@@ -159,6 +165,7 @@ const Employee = () => {
           "#, Tên, sđt, email, địa chỉ, ...  "
         } /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
+        handlePrint={handlePrint}
       />
 
       <EmployeeFilter
@@ -188,8 +195,38 @@ const Employee = () => {
           })}
         </TableBody>
       </TableWrapper>
+      <div  style={{display:'none'}} >
+        <div ref={componentRef}  >
+        <ComponentToPrint  employeeList={employeeList} classes={classes}/>
+        </div>
+        
+      </div>
     </Card>
   );
 };
 
 export default Employee;
+const ComponentToPrint = ({employeeList,classes}) =>{
+  return (
+      <div >
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Nhân viên</Typography>
+        <div >
+          <TableHeader
+                classes={classes}
+                headerData={HeadCells.EmployeeHeadCells}
+              />
+              <TableBody >
+                {employeeList.map((row, index) => {
+                  return (
+                    <EmployeeTableRow
+                      key={row.uuid}
+                      row={row}
+                    
+                    />
+                  );
+                })}
+              </TableBody>
+        </div>
+  </div>
+  )
+}

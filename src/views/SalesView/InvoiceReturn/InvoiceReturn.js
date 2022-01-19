@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 // import style
 import {
@@ -8,7 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { useSelector } from 'react-redux';
 import useStyles from '../../../components/TableCommon/style/mainViewStyle';
 // import lib
-
+import { useReactToPrint } from "react-to-print";
 // import api
 
 // import constant
@@ -69,6 +69,11 @@ function InvoiceReturn() {
   };
 
   // 3. ToolBar
+    // toolbar
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
   // 3.1. search
 
   // 3.2. filter
@@ -101,6 +106,7 @@ function InvoiceReturn() {
         dataTable={refunds}
         tableType={TableType.INVOICE_RETURN}
         textSearch="#,#hđ, Khách, Người trả,...  " /* handlePrint={handlePrint} */
+        handlePrint={handlePrint}
 
         handleToggleFilter={handleToggleFilter}
       />
@@ -124,8 +130,39 @@ function InvoiceReturn() {
           ))}
         </TableBody>
       </TableWrapper>
+      <div  style={{display:'none'}} >
+            <div ref={componentRef}  >
+            <ComponentToPrint  refunds={refunds} classes={classes}/>
+            </div>
+            
+          </div>
     </Card>
   );
 }
 
 export default InvoiceReturn;
+
+const ComponentToPrint = ({refunds,classes}) =>{
+  return (
+      <div >
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Đơn trả</Typography>
+        <div >
+          <TableHeader
+                classes={classes}
+                headerData={HeadCells.InvoiceReturnHeadCells}
+              />
+              <TableBody >
+                {refunds.map((row, index) => {
+                  return (
+                    <InvoiceReturnTableRow
+                      key={row.uuid}
+                      row={row}
+                    
+                    />
+                  );
+                })}
+              </TableBody>
+        </div>
+  </div>
+  )
+}

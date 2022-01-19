@@ -182,11 +182,14 @@ const HomePage = (props) => {
         }}
         ModalProps={{ keepMounted: true }}
         color="inherit"
+        // style={{height:30}}
       >
-        <PerfectScrollbar component="div" className={classes.scroll}>
-          <Box>{_divLogo()} </Box>
+         {_divLogo()} 
+        {/* <PerfectScrollbar component="div" className={classes.scroll}> */}
+         
           <MenuList permissions={permissions} />
-        </PerfectScrollbar>
+          {/* <div>hello</div> */}
+        {/* </PerfectScrollbar> */}
       </Drawer>
 
       <main

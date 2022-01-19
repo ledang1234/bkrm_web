@@ -113,7 +113,7 @@ const ToolBar = (props) => {
              </Tooltip>
              
              <Tooltip title="In">
-                <IconButton aria-label="filter list" onClick={handlePrint}>
+                <IconButton aria-label="filter list" onClick={()=>{handlePrint()}}>
                     <PrintTwoToneIcon className={classes.icon} />
                 </IconButton>
              </Tooltip>
