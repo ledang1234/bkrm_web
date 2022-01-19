@@ -189,6 +189,7 @@ const Employee = () => {
                 row={row}
                 openRow={openRow}
                 handleOpenRow={handleOpenRow}
+                handleReload={onReload}
               />
             );
           })}

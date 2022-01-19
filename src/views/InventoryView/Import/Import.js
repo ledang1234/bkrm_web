@@ -128,7 +128,7 @@ const Import = () => {
         total_amount: "0",
         paid_amount: "0",
         payment_method: "cash",
-        discount: '0',
+        discount: "0",
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -298,25 +298,27 @@ const Import = () => {
     // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
     //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
-    let d = moment.now()/1000;
-    
-    let importTime = moment.unix(d).format('YYYY-MM-DD HH:mm:ss',  { trim: false })
+    let d = moment.now() / 1000;
 
+    let importTime = moment
+      .unix(d)
+      .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
     let body = {
       supplier_uuid: cart.supplier.uuid,
       total_amount: cart.total_amount.toString(),
       payment_method: cart.payment_method,
       paid_amount: cart.paid_amount,
-      discount: cart.discount,
+      discount: cart.discount.toString(),
       status:
-        (Number(cart.total_amount) - Number(cart.discount)) >= Number(cart.paid_amount)
+        Number(cart.total_amount) - Number(cart.discount) >=
+        Number(cart.paid_amount)
           ? "closed"
           : "debt",
       details: cart.cartItem,
-      import_date: importTime
+      import_date: importTime,
     };
-    console.log(importTime)
+    console.log(importTime);
 
     try {
       let res = await purchaseOrderApi.addInventory(

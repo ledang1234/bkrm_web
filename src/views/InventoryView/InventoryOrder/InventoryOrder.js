@@ -1,3 +1,4 @@
+
 import React, {useState, useEffect,useRef} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
@@ -7,27 +8,23 @@ import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from 
 import AddIcon from '@material-ui/icons/Add';
 import { useReactToPrint } from "react-to-print";
 
-
-//import api 
-
 // import redux
 import { customizeAction } from "../../../store/slice/customizeSlice";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-
 //import constant
-import * as HeadCells from '../../../assets/constant/tableHead'
-import *  as TableType from '../../../assets/constant/tableType'
+import * as HeadCells from "../../../assets/constant/tableHead";
+import * as TableType from "../../../assets/constant/tableType";
 
 ////import project
-import InventoryOrderFilter from './InventoryOrderTool/InventoryOrderFilter'
-import InventoryOrderTableRow from './InventoryOrderTableRow/InventoryOrderTableRow'
+import InventoryOrderFilter from "./InventoryOrderTool/InventoryOrderFilter";
+import InventoryOrderTableRow from "./InventoryOrderTableRow/InventoryOrderTableRow";
 //chung
-import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
-import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
-import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
-import purchaseOrderApi from '../../../api/purchaseOrderApi';
+import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader";
+import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
+import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
+import purchaseOrderApi from "../../../api/purchaseOrderApi";
 
 const InventoryOrder = () => {
     // fetch data here
@@ -167,6 +164,7 @@ const InventoryOrder = () => {
         </Card>
     )
 }
+
 
 export default InventoryOrder;
 

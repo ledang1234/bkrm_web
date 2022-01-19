@@ -74,7 +74,7 @@ const salaryTypeMapping = {
 };
 
 const EmployeeDetail = (props) => {
-  const { row, openRow } = props.parentProps;
+  const { row, openRow, handleReload } = props.parentProps;
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -134,6 +134,7 @@ const EmployeeDetail = (props) => {
       <EditEmployee
         handleClose={() => {
           setOpenEdit(false);
+          handleReload();
         }}
         open={openEdit}
         employee={employeeDetail}
@@ -324,7 +325,7 @@ const EmployeeDetail = (props) => {
               <ListItemIcon style={{ marginRight: -15 }}>
                 <HighlightOffTwoToneIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Ngừng hoạt động" />
+              <ListItemText primary="Xoá" />
             </StyledMenuItem>
           </StyledMenu>
         </Grid>

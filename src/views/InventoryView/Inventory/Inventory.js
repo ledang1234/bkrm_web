@@ -62,20 +62,19 @@ const Inventory = () => {
     }
   }, [reload, store_uuid, branch_uuid]);
 
-  useEffect(() => {
-    const identifier = setTimeout(async () => {
-      try {
-        const response = await productApi.searchProduct(
-          store_uuid,
-          searchValue
-        );
-        setProductList(response.data);
-      } catch (error) {}
-    }, 500);
-    return () => clearTimeout(identifier);
-  }, [searchValue]);
+  // useEffect(() => {
+  //   const identifier = setTimeout(async () => {
+  //     try {
+  //       const response = await productApi.searchProduct(
+  //         store_uuid,
+  //         searchValue
+  //       );
+  //       setProductList(response.data);
+  //     } catch (error) {}
+  //   }, 500);
+  //   return () => clearTimeout(identifier);
+  // }, [searchValue]);
 
-  
   const theme = useTheme();
   const classes = useStyles(theme);
   //// 1. Add pop up + noti
