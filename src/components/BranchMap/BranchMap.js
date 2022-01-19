@@ -6,7 +6,6 @@ import Map from "./Map/Map";
 import BranchList from "./BranchList/BranchList";
 import { useSelector } from "react-redux";
 import branchApi from "../../api/branchApi";
-import getGeoCode from "./Geocode";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -37,7 +36,6 @@ const Branch = (props) => {
       }
     };
     fetchBranchList();
-    getGeoCode();
   }, [store_uuid, props.reload]);
 
   //MAP

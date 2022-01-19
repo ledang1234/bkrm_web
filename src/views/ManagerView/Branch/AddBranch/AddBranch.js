@@ -55,7 +55,6 @@ const AddBranch = (props) => {
       }
     };
     loadCity();
-    console.log(store_uuid);
   }, []);
   useEffect(() => {
     const loadDistrict = async (city_id) => {
@@ -90,7 +89,7 @@ const AddBranch = (props) => {
       (district) => district.id === formik.values.district
     ).name;
     const { lat, lng } = await getGeoCode(
-      formik.values.address + ward + district + province
+      formik.values.address + " " + ward + " " + district + " " + province
     );
     const body = {
       name: formik.values.name,
@@ -103,7 +102,6 @@ const AddBranch = (props) => {
       lng: `${lng}`,
       lat: `${lat}`,
     };
-    console.log(body);
     try {
       const response = await branchApi.createBranch(store_uuid, body);
       onReload();

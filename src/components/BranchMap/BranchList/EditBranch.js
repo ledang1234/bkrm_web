@@ -46,7 +46,7 @@ const EditBranch = (props) => {
       address: branch.address,
       ward: branch.ward,
       district: branch.district,
-      city: branch.city,
+      city: branch.province,
       phone: branch.phone,
     },
   });
@@ -94,7 +94,7 @@ const EditBranch = (props) => {
       (district) => district.id === formik.values.district
     ).name;
     const { lat, lng } = await getGeoCode(
-      formik.values.address + ward + district + province
+      formik.values.address + " " + ward + " " + district + " " + province
     );
     handleClose();
     try {
@@ -114,11 +114,10 @@ const EditBranch = (props) => {
         branch.uuid,
         body
       );
-      console.log(response);
       dispatch(statusAction.successfulStatus("Edit branch successfully"));
       props.onReload();
     } catch (error) {
-      console.log(error, store_uuid, branch.uuid);
+      console.log(error);
       dispatch(statusAction.failedStatus("Failed to edit branch"));
     }
   };
@@ -131,7 +130,7 @@ const EditBranch = (props) => {
       dispatch(statusAction.successfulStatus("Delete branch successfully"));
     } catch (error) {
       console.log(error);
-      dispatch(statusAction.successfulStatus("Delete branch failed"));
+      dispatch(statusAction.failedStatus("Delete branch failed"));
     }
   };
   return (
