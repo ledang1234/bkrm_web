@@ -11,6 +11,7 @@ const initialUserInfoSlice = {
     uuid: "",
     created_at: "",
     updated_at: "",
+    permissions: [],
   },
   store: {
     uuid: "",
@@ -46,7 +47,7 @@ const infoSlice = createSlice({
     },
     setBranch(state, action) {
       state.branch = action.payload;
-    }
+    },
   },
 });
 export default infoSlice;

@@ -17,7 +17,24 @@ export const verifyToken = () => {
       if (rs) {
         dispatch(authActions.logIn());
         dispatch(loadingActions.finishLoad());
-        dispatch(infoActions.setUser(rs.user));
+        if (rs.role == "owner") {
+          dispatch(
+            infoActions.setUser({
+              ...rs.user,
+              permissions: [
+                { id: 1, name: "inventory", description: "Kho hàng" },
+                { id: 2, name: "employee", description: "Nhân sự" },
+                { id: 3, name: "sales", description: "Bán hàng" },
+                { id: 4, name: "product", description: "Sản phẩm" },
+                { id: 5, name: "report", description: "Báo cáo" },
+              ],
+            })
+          );
+        } else {
+          dispatch(
+            infoActions.setUser({ ...rs.user, permissions: rs.permissions })
+          );
+        }
         dispatch(infoActions.setStore(rs.store));
         dispatch(infoActions.setRole(rs.role));
       } else {
@@ -37,7 +54,7 @@ export const logInHandler = (userName, password) => {
       const response = await userApi.signIn({
         phone: userName,
         password: password,
-        role: 'owner'
+        role: "owner",
       });
       return response;
     };
@@ -47,7 +64,18 @@ export const logInHandler = (userName, password) => {
         localStorage.setItem("token", rs.access_token);
         dispatch(authActions.logIn());
         dispatch(loadingActions.finishLoad());
-        dispatch(infoActions.setUser(rs.user));
+        dispatch(
+          infoActions.setUser({
+            ...rs.user,
+            permissions: [
+              { id: 1, name: "inventory", description: "Kho hàng" },
+              { id: 2, name: "employee", description: "Nhân sự" },
+              { id: 3, name: "sales", description: "Bán hàng" },
+              { id: 4, name: "product", description: "Sản phẩm" },
+              { id: 5, name: "report", description: "Báo cáo" },
+            ],
+          })
+        );
         dispatch(infoActions.setStore(rs.store));
         dispatch(infoActions.setRole(rs.role));
         dispatch(statusAction.successfulStatus("Login successfully"));
@@ -59,6 +87,39 @@ export const logInHandler = (userName, password) => {
     }
   };
 };
+
+export const empLogInHandler = (userName, password) => {
+  return async (dispatch) => {
+    dispatch(loadingActions.startLoad());
+    const logIn = async () => {
+      const response = await userApi.signIn({
+        phone: userName,
+        password: password,
+        role: "employee",
+      });
+      return response;
+    };
+    try {
+      const rs = await logIn();
+      if (rs.access_token) {
+        localStorage.setItem("token", rs.access_token);
+        dispatch(authActions.logIn());
+        dispatch(loadingActions.finishLoad());
+        dispatch(
+          infoActions.setUser({ ...rs.user, permissions: rs.permissions })
+        );
+        dispatch(infoActions.setStore(rs.store));
+        dispatch(infoActions.setRole(rs.role));
+        dispatch(statusAction.successfulStatus("Login successfully"));
+      }
+    } catch (error) {
+      dispatch(authActions.logOut());
+      dispatch(loadingActions.finishLoad());
+      dispatch(statusAction.failedStatus("Login failed"));
+    }
+  };
+};
+
 export const setCustomization = (ini) => {
   return (dispatch) => {
     const fetchCustomization = () => {
@@ -78,7 +139,7 @@ export const setCustomization = (ini) => {
         fontFamily: `'Roboto', sans-serif`,
         borderRadius: 12,
         mode: "Light",
-        menu:"1",
+        menu: "1",
         primaryColor: blue,
         secondaryColor: pink,
         colorLevel: 50,
@@ -90,10 +151,10 @@ export const setCustomization = (ini) => {
 };
 
 export const selectBranch = (uuid, name) => {
-  return  (dispatch) => {
+  return (dispatch) => {
     infoActions.setBranch({
       uuid: uuid,
-      name: name
-    })
-  }
-}
+      name: name,
+    });
+  };
+};

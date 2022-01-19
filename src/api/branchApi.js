@@ -13,12 +13,14 @@ const branchApi = {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
     return axiosClient.get(url);
   },
+
   deleteBranch: (storeUuid, branchUuid) => {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
     return axiosClient.delete(url);
   },
-  editBranch: (storeUuid, branchUuid, body) => {
-    const url = `stores/${storeUuid}/branches/${branchUuid}`;
+
+  updateBranch: (storeUuid, branchUuid, body) => {
+    const url = `/stores/${storeUuid}/branches/${branchUuid}`;
     return axiosClient.put(url, body);
   },
 };

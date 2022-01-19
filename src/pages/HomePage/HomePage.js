@@ -57,9 +57,12 @@ const HomePage = (props) => {
       ? !smallScreen
       : customization.isSidebarOpen;
 
+  const permissions = useSelector((state) => state.info.user.permissions);
+
   useEffect(() => {
     dispatch(customizeAction.setSidebarOpen(!smallScreen));
-  }, [smallScreen]);
+    console.log(permissions);
+  }, [smallScreen, permissions]);
 
   const handleToggleSidebar = (open) => {
     dispatch(customizeAction.setSidebarOpen(open));
@@ -139,7 +142,7 @@ const HomePage = (props) => {
             </Typography> */}
             <Box></Box>
             {/* <SearchProduct /> */}
-            
+
             <Box display="flex" flexDirection="row" alignItems="center">
               <BranchSelectAppBar store_uuid={infoDetail.store.uuid} />
               <IconButton color="primary" size="small">
@@ -151,7 +154,6 @@ const HomePage = (props) => {
                 justifyContent="center"
                 style={{ maxWidth: 90, marginLeft: 10, marginRight: 5 }}
               >
-                
                 <Typography variant="h6">Store Owner</Typography>
                 <Typography variant="h6" noWrap>
                   {infoDetail.user.name}
@@ -160,14 +162,10 @@ const HomePage = (props) => {
               <Button color="primary" onClick={() => logOutHandler()}>
                 Logout
               </Button>
-              
             </Box>
             {/* <Box style={{marginRight:10}}>
               <AvatarInfo  name={infoDetail.user.name}/>
             </Box> */}
-            
-
-
           </Box>
         </Toolbar>
       </AppBar>
@@ -187,7 +185,7 @@ const HomePage = (props) => {
       >
         <PerfectScrollbar component="div" className={classes.scroll}>
           <Box>{_divLogo()} </Box>
-          <MenuList />
+          <MenuList permissions={permissions} />
         </PerfectScrollbar>
       </Drawer>
 
@@ -203,11 +201,19 @@ const HomePage = (props) => {
           })}
         >
           <Switch>
-            <Route path={`${path}/sales`} component={SalesView} />
-            <Route path={`${path}/inventory`} component={InventoryView} />
-            <Route path={`${path}/delivery`} component={DeliveryView} />
-            <Route path={`${path}/hr`} component={HRView} />
-            <Route path={`${path}/manager`} component={ManagerView} />
+            {permissions?.find((p) => p.name === "sales") && (
+              <Route path={`${path}/sales`} component={SalesView} />
+            )}
+            {permissions?.find((p) => p.name === "inventory") && (
+              <Route path={`${path}/inventory`} component={InventoryView} />
+            )}
+            {permissions?.find((p) => p.name === "employee") && (
+              <Route path={`${path}/hr`} component={HRView} />
+            )}
+            {/* <Route path={`${path}/delivery`} component={DeliveryView} /> */}
+            {permissions?.find((p) => p.name === "report") && (
+              <Route path={`${path}/manager`} component={ManagerView} />
+            )}
             <Route path={`${path}/*`} component={PageNotFound} />
           </Switch>
         </Box>

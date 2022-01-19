@@ -12,10 +12,11 @@ import useStyles from "./styles";
 import { Paper } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logInHandler } from "../../store/actionCreator";
+import { logInHandler, empLogInHandler } from "../../store/actionCreator";
 export default function SignIn() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -27,9 +28,9 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography variant="h3" gutterBottom color="textSecondary">
-            STORE OWNER
+            CỬA HÀNG CỦA BẠN
           </Typography>
-          <Typography variant="h5">Sign in</Typography>
+          <Typography variant="h5">Đăng nhập</Typography>
           <Box className={classes.form}>
             <form
               onSubmit={(e) => {
@@ -41,7 +42,7 @@ export default function SignIn() {
                 margin="normal"
                 required
                 fullWidth
-                label="Phone Number"
+                label="Số điện thoại"
                 name="phone"
                 autoFocus
                 onChange={(e) => setUserName(e.target.value)}
@@ -52,13 +53,19 @@ export default function SignIn() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Mật khẩu"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                control={
+                  <Checkbox
+                    value="remember"
+                    color="primary"
+                    onChange={() => setIsOwner(true)}
+                  />
+                }
+                label="Chủ cửa hàng"
               />
               <Button
                 type="submit"
@@ -66,9 +73,15 @@ export default function SignIn() {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={() => dispatch(logInHandler(userName, password))}
+                onClick={() => {
+                  if (isOwner) {
+                    dispatch(logInHandler(userName, password));
+                  } else {
+                    dispatch(empLogInHandler(userName, password));
+                  }
+                }}
               >
-                Sign In
+                Đăng nhập
               </Button>
             </form>
             <Grid container>
@@ -79,7 +92,7 @@ export default function SignIn() {
                   component={Link}
                   to="/signup"
                 >
-                  Do not have an account? Sign up
+                  Chưa có tài khoản? Đăng kí cửa hàng mới
                 </Typography>
               </Grid>
             </Grid>

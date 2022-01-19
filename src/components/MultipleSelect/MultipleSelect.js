@@ -11,18 +11,18 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
-    maxWidth: 300
+    maxWidth: 300,
   },
   chips: {
     display: "flex",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
   },
   chip: {
-    margin: 2
+    margin: 2,
   },
   noLabel: {
-    marginTop: theme.spacing(3)
-  }
+    marginTop: theme.spacing(3),
+  },
 }));
 
 const ITEM_HEIGHT = 48;
@@ -31,9 +31,9 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
+      width: 250,
+    },
+  },
 };
 
 //const names = ["Bán hàng", "Kho hàng", "Nhân viên", "Quản lý"];
@@ -43,7 +43,7 @@ function getStyles(name, personName, theme) {
     fontWeight:
       personName.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium
+        : theme.typography.fontWeightMedium,
   };
 }
 
@@ -53,13 +53,19 @@ export default function MultipleSelect(props) {
   const [personName, setPersonName] = React.useState([]);
 
   const handleChange = (event) => {
-    setPersonName(event.target.value)
-    props.handleSelect(event.target.value)
+    setPersonName(event.target.value);
+    props.handleSelect(event.target.value);
   };
 
   return (
     <div>
-      <FormControl className={classes.formControl} fullWidth size="small" variant="outlined" style={{marginLeft:-2}}>
+      <FormControl
+        className={classes.formControl}
+        fullWidth
+        size="small"
+        variant="outlined"
+        style={{ marginLeft: -2 }}
+      >
         <InputLabel id="demo-mutiple-chip-label">Chức năng</InputLabel>
         <Select
           labelId="demo-mutiple-chip-label"
@@ -72,7 +78,11 @@ export default function MultipleSelect(props) {
           renderValue={(selected) => (
             <div className={classes.chips}>
               {selected.map((choice) => (
-                <Chip key={choice.value} label={choice.value} className={classes.chip} />
+                <Chip
+                  key={choice.id}
+                  label={choice.description}
+                  className={classes.chip}
+                />
               ))}
             </div>
           )}
@@ -80,11 +90,11 @@ export default function MultipleSelect(props) {
         >
           {props.choices.map((choice) => (
             <MenuItem
-              key={choice.key}
+              key={choice.id}
               value={choice}
-              style={getStyles(choice.value, personName, theme)}
+              // style={getStyles(choice.value, personName, theme)}
             >
-              {choice.value}
+              {choice.description}
             </MenuItem>
           ))}
         </Select>

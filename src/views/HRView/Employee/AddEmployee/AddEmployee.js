@@ -15,7 +15,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Dialog
+  Dialog,
 } from "@material-ui/core";
 
 //import project
@@ -23,7 +23,7 @@ import NumberFormatCustom from "../../../../components/TextField/NumberFormatCus
 import MultipleSelect from "../../../../components/MultipleSelect/MultipleSelect";
 import { EmailRounded } from "@material-ui/icons";
 
-// api 
+// api
 import { useSelector } from "react-redux";
 import employeeApi from "../../../../api/employeeApi";
 
@@ -49,14 +49,15 @@ const useStyles = makeStyles((theme) =>
 );
 
 let choices = [
-  { key: "manage-employees", value: "Nhân sự" },
-  { key: "manage-orders", value: "Bán hàng" },
-  { key: "manage-purchase-orders", value: "Nhập hàng" },
-  { key: "manage-purchase-returns", value: "Trả hàng" },
+  { id: 1, name: "inventory", description: "Kho hàng" },
+  { id: 2, name: "employee", description: "Nhân sự" },
+  { id: 3, name: "sales", description: "Bán hàng" },
+  { id: 4, name: "product", description: "Sản phẩm" },
+  { id: 5, name: "report", description: "Báo cáo" },
 ];
 
 const AddEmployee = (props) => {
-  const { handleClose,open } = props;
+  const { handleClose, open } = props;
 
   // tam thoi
   const statusState = "Success";
@@ -88,21 +89,22 @@ const AddEmployee = (props) => {
   const [salaryType, setSalaryType] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [permissions, setPermissions] = React.useState([]);
-  
+
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
   const handleSelectPermission = (selected) => {
-    let permissions = selected.map((permission) => permission.key);
+    let permissions = selected.map((permission) => permission.id);
     setPermissions(permissions);
   };
 
   return (
-
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-
-       
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="form-dialog-title"
+    >
       <DialogTitle id="form-dialog-title">
         <Typography className={classes.headerTitle} variant="h5">
           Thêm nhân viên
@@ -111,7 +113,6 @@ const AddEmployee = (props) => {
 
       <DialogContent>
         <div className={classes.root}>
-
           {/* <Grid container direction="row">
 
 
@@ -132,7 +133,6 @@ const AddEmployee = (props) => {
                 Chọn ảnh
               </Button>
             </label>
-
           </Grid> */}
 
           <Grid
@@ -189,7 +189,9 @@ const AddEmployee = (props) => {
                 <Select
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
-                  onChange={(event) => { setGender(event.target.value) }}
+                  onChange={(event) => {
+                    setGender(event.target.value);
+                  }}
                   label="Gender"
                   value={gender}
                 >
@@ -244,7 +246,9 @@ const AddEmployee = (props) => {
                 <Select
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
-                  onChange={(event) => { setSalaryType(event.target.value) }}
+                  onChange={(event) => {
+                    setSalaryType(event.target.value);
+                  }}
                   label="Age"
                   value={salaryType}
                 >
@@ -322,14 +326,15 @@ const AddEmployee = (props) => {
             };
 
             try {
-              const response = await employeeApi.createEmployee(store_uuid,body)
-              handleClose("Success")
-              console.log(response.status)
-
+              const response = await employeeApi.createEmployee(
+                store_uuid,
+                body
+              );
+              handleClose("Success");
+              console.log(response.status);
             } catch (err) {
               handleClose("Failed");
             }
-
           }}
           variant="contained"
           size="small"
