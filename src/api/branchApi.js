@@ -8,7 +8,7 @@ const branchApi = {
     const url = `/stores/${storeUuid}/branches`;
     return axiosClient.get(url);
   },
-  
+
   getBranch: (storeUuid, branchUuid) => {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
     return axiosClient.get(url);
@@ -16,6 +16,10 @@ const branchApi = {
   deleteBranch: (storeUuid, branchUuid) => {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
     return axiosClient.delete(url);
+  },
+  editBranch: (storeUuid, branchUuid, body) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}`;
+    return axiosClient.put(url, body);
   },
 };
 export default branchApi;

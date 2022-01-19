@@ -37,7 +37,7 @@ const productApi = {
     return axiosClient.get(url);
   },
   getSubCategory: (storeUuid, parentCategory) => {
-    const url = `/stores/${storeUuid}/categories/${parentCategory}`
+    const url = `/stores/${storeUuid}/categories/${parentCategory}`;
     return axiosClient.get(url);
   },
   deleteProduct: (storeUuid, productUuid) => {
@@ -55,7 +55,7 @@ const productApi = {
   },
 
   updateProduct: (storeUuid, productUuid, params) => {
-    const url = `/stores/${storeUuid}/products/${productUuid}?_method=PUT`;
+    const url = `stores/${storeUuid}/products/${productUuid}?_method=PUT`;
     return axiosClient.post(url, params, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -63,8 +63,9 @@ const productApi = {
     });
   },
 
-  addCategory: (storeUuid, parentCategoryUuid) =>{
-
-  }
+  addCategory: (storeUuid, body) => {
+    const url = `stores/${storeUuid}/categories`;
+    return axiosClient.post(url, body);
+  },
 };
 export default productApi;

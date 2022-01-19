@@ -11,8 +11,14 @@ import React, { useEffect, useState } from "react";
 import ModalWrapper from "../../../../components/Modal/ModalWrapper";
 import productApi from "../../../../api/productApi";
 import { useSelector } from "react-redux";
+
+
 const AddCategory = (props) => {
   const [categoryList, setCategoryList] = useState([]);
+  const [categoryInfo, setCategoryInfo] = useState({
+    name: "",
+    parent_category_uuid: "",
+  });
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   useEffect(() => {
@@ -25,6 +31,14 @@ const AddCategory = (props) => {
     };
     fetchAllCategory();
   }, []);
+  const handleAddCategory = async () => {
+    try {
+      const response = await productApi.addCategory(store_uuid,categoryInfo)
+      console.log(response.data);
+    } catch (error) {
+      console.log(error)
+    }
+  };
   return (
     <ModalWrapper {...props}>
       <Typography variant="h4" gutterBottom>
@@ -39,12 +53,25 @@ const AddCategory = (props) => {
             size="small"
             required
             fullWidth
+            onChange={(e) =>
+              setCategoryInfo({ ...categoryInfo, name: e.target.value })
+            }
           />
         </Grid>
         <Grid item xs={12}>
           <FormControl size="small" variant="outlined" fullWidth>
             <InputLabel htmlFor="category">Danh mục cha</InputLabel>
-            <Select native label="Danh mục cha" id="category">
+            <Select
+              native
+              label="Danh mục cha"
+              id="category"
+              onChange={(e) =>
+                setCategoryInfo({
+                  ...categoryInfo,
+                  parent_category_uuid: e.target.value,
+                })
+              }
+            >
               <option aria-label="None" value="" />
               {categoryList.map((category) => (
                 <option key={category.uuid} value={category.uuid}>
@@ -73,7 +100,12 @@ const AddCategory = (props) => {
           >
             Hủy
           </Button>
-          <Button color="primary" variant="contained" size="small">
+          <Button
+            color="primary"
+            variant="contained"
+            size="small"
+            onClick={() => handleAddCategory()}
+          >
             Thêm
           </Button>
         </Grid>
