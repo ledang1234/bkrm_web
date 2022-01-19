@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { Typography, Box, Card, Grid } from "@material-ui/core";
-import icon1 from "../../../assets/img/product/lyimg.jpeg";
+import store from "../../../assets/img/store.JPG";
 import { grey } from "@material-ui/core/colors";
 import EditBranch from "./EditBranch";
 
@@ -21,14 +21,24 @@ const useStyles = makeStyles((theme) =>
 );
 
 const BranchList = (props) => {
-  const { branchList, setChosenBranch, getLocation } = props;
+  const { branchList, setChosenBranch, getLocation, onReload } = props;
   const [isEditBranch, setIsEditBranch] = useState(false);
+  const [branchToEdit, setBranchToEdit] = useState({
+    name: "",
+    address: "",
+    ward: "",
+    district: "",
+    city: "",
+    phone: "",
+  });
   const theme = useTheme();
   const classes = useStyles(theme);
 
   return (
     <Grid container spacing={2}>
       <EditBranch
+        branch={branchToEdit}
+        onReload={onReload}
         open={isEditBranch}
         handleClose={() => setIsEditBranch(false)}
       />
@@ -38,7 +48,10 @@ const BranchList = (props) => {
             <Card
               className={classes.card}
               style={{ minHeight: 140 }}
-              onClick={() => setIsEditBranch(true)}
+              onClick={() => {
+                setBranchToEdit(branch);
+                setIsEditBranch(true);
+              }}
             >
               {/* <CardContent style={{}}> */}
               <Grid container spacing={2}>
@@ -46,7 +59,7 @@ const BranchList = (props) => {
                   <Box
                     component="img"
                     sx={{ height: "100%", width: "100%", borderRadius: 10 }}
-                    src={icon1}
+                    src={store}
                   />
                 </Grid>
                 <Grid item xs={8} style={{ minHeight: 140 }}>

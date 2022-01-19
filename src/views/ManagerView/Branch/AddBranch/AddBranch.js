@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
-import StoreInfo from "../../../../components/SignUp/StoreInfo";
 //import library
 import {
   Button,
   TextField,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Typography,
   Grid,
-  Avatar,
-  Dialog,
   Select,
-  MenuItem,
-  Modal,
   FormControl,
   InputLabel,
 } from "@material-ui/core";
@@ -24,20 +16,21 @@ import userApi from "../../../../api/userApi";
 //import project
 import customerApi from "../../../../api/customerApi";
 import branchApi from "../../../../api/branchApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import SimpleModal from "../../../../components/Modal/ModalWrapper";
+import { statusAction } from "../../../../store/slice/statusSlice";
 
 const useStyles = makeStyles((theme) => createStyles({}));
 
 const AddBranch = (props) => {
-  const { handleClose, open } = props;
+  const { handleClose, open, onReload } = props;
 
   const theme = useTheme();
   const classes = useStyles(theme);
 
   const info = useSelector((state) => state.info);
-  const store_uuid = info.store.store_uuid;
+  const store_uuid = info.store.uuid;
   const [cityList, setCityList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
@@ -61,6 +54,7 @@ const AddBranch = (props) => {
       }
     };
     loadCity();
+    console.log(store_uuid);
   }, []);
   useEffect(() => {
     const loadDistrict = async (city_id) => {
@@ -84,13 +78,30 @@ const AddBranch = (props) => {
     };
     loadWard(formik.values.city, formik.values.district);
   }, [formik.values.city, formik.values.district]);
-  const handleAddBranch = async () =>{
+  const dispatch = useDispatch();
+  const handleAddBranch = async () => {
+    handleClose();
+    const body = {
+      name: formik.values.name,
+      address: formik.values.address,
+      ward: wardList.find((ward) => ward.id === formik.values.ward).name,
+      provinces: cityList.find((city) => city.id === formik.values.city).name,
+      district: districtList.find(
+        (district) => district.id === formik.values.district
+      ).name,
+      phone: formik.values.phone,
+      status: "active",
+    };
     try {
-      
+      const response = await branchApi.createBranch(store_uuid, body);
+      console.log(response);
+      onReload();
+      dispatch(statusAction.successfulStatus("Create branch successfully"));
     } catch (error) {
-      
+      console.log(error);
+      dispatch(statusAction.failedStatus("Failed to createBranch"));
     }
-  }
+  };
   return (
     <SimpleModal open={open} handleClose={handleClose}>
       <Typography variant="h4" gutterBottom>
@@ -197,10 +208,16 @@ const AddBranch = (props) => {
           size="small"
           style={{ marginRight: 20 }}
           color="secondary"
+          onClick={handleClose}
         >
           Hủy
         </Button>
-        <Button variant="contained" size="small" color="primary">
+        <Button
+          variant="contained"
+          size="small"
+          color="primary"
+          onClick={handleAddBranch}
+        >
           Thêm
         </Button>
       </Grid>
