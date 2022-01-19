@@ -1,269 +1,336 @@
-import React, { useEffect } from 'react'
-import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+import React, { useEffect } from "react";
+import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 //import library
-import {Box,Grid,Collapse,Typography,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
-import Chip from '@mui/material/Chip';
-
+import {
+  Box,
+  Grid,
+  Collapse,
+  Typography,
+  Button,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
+} from "@material-ui/core";
+import Chip from "@mui/material/Chip";
 
 //import icon
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import HighlightOffTwoToneIcon from "@material-ui/icons/HighlightOffTwoTone";
 
 //import image
-import avaUpload from '../../../../../assets/img/product/lyimg.jpeg';
+import avaUpload from "../../../../../assets/img/product/lyimg.jpeg";
 
-//import project 
-import {StyledMenu,StyledMenuItem} from '../../../../../components/Button/MenuButton'
-import employeeApi from '../../../../../api/employeeApi';
-import { useSelector } from 'react-redux';
-import EditEmployee from '../../AddEmployee/EditEmployee';
+//import project
+import {
+  StyledMenu,
+  StyledMenuItem,
+} from "../../../../../components/Button/MenuButton";
+import employeeApi from "../../../../../api/employeeApi";
+import { useSelector } from "react-redux";
+import EditEmployee from "../../AddEmployee/EditEmployee";
 
 const useStyles = makeStyles((theme) =>
-createStyles({
-  root: {
-    '& .MuiTextField-root': {
-      marginTop: theme.spacing(2),
+  createStyles({
+    root: {
+      "& .MuiTextField-root": {
+        marginTop: theme.spacing(2),
+      },
     },
-  },
-  headerTitle:{
-    fontSize: '1.125rem'
-  },
-  typo:{
-    marginBottom:20
-  }
+    headerTitle: {
+      fontSize: "1.125rem",
+    },
+    typo: {
+      marginBottom: 20,
+    },
+  })
+);
 
-}));
-
-const UploadImage  = () => {
+const UploadImage = () => {
   return (
     <Box
       component="img"
       sx={{
         height: 120,
-        width: 120, 
-        borderRadius:120,
-        marginLeft:15,
-
+        width: 120,
+        borderRadius: 120,
+        marginLeft: 15,
       }}
       src={avaUpload}
     />
-    
-  )
-}
+  );
+};
 
 const permissionsMapping = {
-  'manage-employees': "Nhân sự",
-  'manage-orders': "Bán hàng",
-  'manage-purchase-orders': "Đặt hàng",
-  'manage-purchase-returns': "Nhập hàng",
-}
+  "manage-employees": "Nhân sự",
+  "manage-orders": "Bán hàng",
+  "manage-purchase-orders": "Đặt hàng",
+  "manage-purchase-returns": "Nhập hàng",
+};
 
 const salaryTypeMapping = {
-  'fix': "Lương cứng",
-  'per-shift': "Lương theo ca"
-}
+  fix: "Lương cứng",
+  "per-shift": "Lương theo ca",
+};
 
 const EmployeeDetail = (props) => {
-    const {row,openRow }= props.parentProps;
+  const { row, openRow } = props.parentProps;
 
-    const theme = useTheme();
-    const classes = useStyles(theme);
+  const theme = useTheme();
+  const classes = useStyles(theme);
 
-    const [openEdit, setOpenEdit] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [employeeDetail, setEmployeeDetail] = React.useState({
-      uuid: "",
-      name: "",
-      date_of_birth: "",
-      id_card_num: "",
-      phone: "",
-      email: "",
-      address: "",
-      permissions: [],
-      salary_type: "",
-      salary: "",
-    });
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [employeeDetail, setEmployeeDetail] = React.useState({
+    uuid: "",
+    name: "",
+    date_of_birth: "",
+    id_card_num: "",
+    phone: "",
+    email: "",
+    address: "",
+    permissions: [],
+    salary_type: "",
+    salary: "",
+  });
 
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleClose = () => {
-      setAnchorEl(null);
-    }; 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    const info = useSelector(state => state.info)
-    const store_uuid = info.store.uuid
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
 
-    useEffect(() => {
-      const fetchEmp = async () => {
-        try {
-          const response = await employeeApi.getEmployee(store_uuid, row.uuid)
-          setEmployeeDetail(response.data)
-        } catch(err) {
-          setEmployeeDetail({
-            uuid: "",
-            name: "",
-            date_of_birth: "",
-            id_card_num: "",
-            phone: "",
-            email: "",
-            address: "",
-            permissions: [],
-            salary_type: "",
-            salary: "",
-          })
-        }
+  useEffect(() => {
+    const fetchEmp = async () => {
+      try {
+        const response = await employeeApi.getEmployee(store_uuid, row.uuid);
+        setEmployeeDetail(response.data);
+      } catch (err) {
+        setEmployeeDetail({
+          uuid: "",
+          name: "",
+          date_of_birth: "",
+          id_card_num: "",
+          phone: "",
+          email: "",
+          address: "",
+          permissions: [],
+          salary_type: "",
+          salary: "",
+        });
       }
-      fetchEmp()
-    }, [])
+    };
+    fetchEmp();
+  }, []);
 
-    return (
-        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
-          <EditEmployee handleClose={() => {setOpenEdit(false)}} open={openEdit} employee={employeeDetail}/>
-             <Box margin={1}>
-                <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
-                 {row.name}
-               </Typography>
+  return (
+    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+      <EditEmployee
+        handleClose={() => {
+          setOpenEdit(false);
+        }}
+        open={openEdit}
+        employee={employeeDetail}
+      />
+      <Box margin={1}>
+        <Typography
+          variant="h3"
+          gutterBottom
+          component="div"
+          className={classes.typo}
+        >
+          {row.name}
+        </Typography>
 
-              <Grid  container direction="row" justifyContent="flex-start">
-                  <Grid item xs={3}>
-                      <UploadImage />
-                  </Grid>
-                <Grid item xs={5}>
-                      <Grid container direction="row" justifyContent="flex-start" > 
-                        <Grid item xs={5} >
-                          <Typography variant="h5" gutterBottom component="div">Mã nhân viên </Typography>    
-                        </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.uuid} </Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={5} >
-                          <Typography variant="h5" gutterBottom component="div">Tên nhân viên </Typography>    
-                        </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.name} </Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Ngày sinh</Typography>    
-                          </Grid>
-                          <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.date_of_birth}</Typography>
-                          </Grid>
-                      </Grid>
-                      <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
-                            <Typography variant="h5"gutterBottom component="div">CMND</Typography>    
-                          </Grid>
-                          <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.id_card_num}</Typography>
-                          </Grid>
-                      </Grid>
-                      <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Số điện thoại</Typography>    
-                          </Grid>
-                          <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.phone}</Typography>
-                          </Grid>
-                      </Grid>
-                      <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Email</Typography>    
-                          </Grid>
-                          <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.email} </Typography>
-                          </Grid>
-                      </Grid>
-                      <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Địa chỉ</Typography>    
-                          </Grid>
-                          <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{employeeDetail.address} </Typography>
-                          </Grid>
-                      </Grid>
-                  </Grid>
-
-
-                <Grid item xs={4}>
-                    <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
-                          <Typography variant="h5" gutterBottom component="div">Chức năng</Typography>    
-                        </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">
-                            {employeeDetail.permissions.map(permission => <Chip label={permissionsMapping[permission.name]} />)}</Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
-                          <Typography variant="h5" gutterBottom component="div">Loại lương</Typography>    
-                        </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{salaryTypeMapping[employeeDetail.salary_type]}</Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
-                          <Typography variant="h5" gutterBottom component="div">Mức lương</Typography>    
-                        </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{employeeDetail.salary}</Typography>
-                        </Grid>
-                    </Grid>
-                  
-                </Grid>
-               
+        <Grid container direction="row" justifyContent="flex-start">
+          <Grid item xs={3}>
+            <UploadImage />
+          </Grid>
+          <Grid item xs={5}>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Mã nhân viên{" "}
+                </Typography>
               </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.uuid}{" "}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Tên nhân viên{" "}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.name}{" "}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Ngày sinh
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.date_of_birth}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  CMND
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.id_card_num}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Số điện thoại
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.phone}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Email
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.email}{" "}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Địa chỉ
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.address}{" "}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
 
-              {/* Button */}
-              <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
-                          <Button variant="contained" size="small" style={{marginLeft:15}} onClick={() => {setOpenEdit(true)}}>Sửa</Button>
-                          <Button variant="contained" size="small" style={{marginLeft:15}}>Ngưng hoạt động</Button>
-                          
-                          <IconButton
-                            aria-label="more"
-                            aria-controls="long-menu"
-                            aria-haspopup="true"
-                            onClick={handleClick}
-                            size="small"
-                            style={{marginLeft:10}}
+          <Grid item xs={4}>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={6}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Chức năng
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.permissions.map((permission) => (
+                    <Chip label={permission.description} />
+                  ))}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={6}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Loại lương
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {salaryTypeMapping[employeeDetail.salary_type]}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={6}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Mức lương
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.salary}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
 
-                          >
-                            <MoreVertIcon />
-                          </IconButton>
-                          
-                          <StyledMenu
-                            id="customized-menu"
-                            anchorEl={anchorEl}
-                            keepMounted
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                            
-                           
-                          >
-                            <StyledMenuItem>
-                              <ListItemIcon style={{marginRight:-15}}>
-                                <HighlightOffTwoToneIcon fontSize="small" />
-                              </ListItemIcon>
-                              <ListItemText primary="Ngừng hoạt động" />
-                            </StyledMenuItem>
+        {/* Button */}
+        <Grid
+          container
+          direction="row"
+          justifyContent="flex-end"
+          style={{ marginTop: 20 }}
+        >
+          <Button
+            variant="contained"
+            size="small"
+            style={{ marginLeft: 15 }}
+            onClick={() => {
+              setOpenEdit(true);
+            }}
+          >
+            Sửa
+          </Button>
+          <Button variant="contained" size="small" style={{ marginLeft: 15 }}>
+            Ngưng hoạt động
+          </Button>
 
-                          </StyledMenu>
+          <IconButton
+            aria-label="more"
+            aria-controls="long-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+            size="small"
+            style={{ marginLeft: 10 }}
+          >
+            <MoreVertIcon />
+          </IconButton>
 
+          <StyledMenu
+            id="customized-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <StyledMenuItem>
+              <ListItemIcon style={{ marginRight: -15 }}>
+                <HighlightOffTwoToneIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Ngừng hoạt động" />
+            </StyledMenuItem>
+          </StyledMenu>
+        </Grid>
+      </Box>
+    </Collapse>
+  );
+};
 
-                      </Grid>
-
-             </Box>
-           </Collapse>
-    )
-}
-
-export default EmployeeDetail
+export default EmployeeDetail;
