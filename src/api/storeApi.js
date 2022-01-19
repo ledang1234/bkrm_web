@@ -5,5 +5,9 @@ const storeApi = {
     const url = `stores/${storeUuid}/report`;
     return axiosClient.get(url, { params: { period: period } });
   },
+  getActivities: (storeUuid, period) => {
+    const url = `stores/${storeUuid}/activities`;
+    return axiosClient.get(url, { params: { period: period } });
+  }
 };
 export default storeApi;

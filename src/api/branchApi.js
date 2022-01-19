@@ -23,5 +23,13 @@ const branchApi = {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
     return axiosClient.put(url, body);
   },
+  inactiveBranch: (storeUuid, branchUuid) => {
+    const url = `/stores/${storeUuid}/branches/${branchUuid}`;
+    return axiosClient.put(url, { status: "inactive" });
+  },
+  activeBranch: (storeUuid, branchUuid) => {
+    const url = `/stores/${storeUuid}/branches/${branchUuid}`;
+    return axiosClient.put(url, { status: "active" });
+  },
 };
 export default branchApi;
