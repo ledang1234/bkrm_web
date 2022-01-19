@@ -29,7 +29,7 @@ const SupplierReport = (props) => {
             <Grid container direction="row"justifyContent="space-between" alignItems="center" className={classes.header} >
                   <Grid item >
                       <Typography className={classes.headerTitle} variant="h5">
-                            Top 10 khách hàng
+                            Top 10 nhà cung cấp
                       </Typography> 
                   </Grid>
                   <Grid item  >

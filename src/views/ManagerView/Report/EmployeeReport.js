@@ -19,7 +19,7 @@ createStyles({
 }));
 
 const EmployeeReport = (props) => {
-    const {employeeList} = props;
+    const {employeeSales} = props;
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -29,7 +29,7 @@ const EmployeeReport = (props) => {
             <Grid container direction="row"justifyContent="space-between" alignItems="center" className={classes.header} >
                   <Grid item >
                       <Typography className={classes.headerTitle} variant="h5">
-                            Top 10 khách hàng
+                            Top 10 nhân viên
                       </Typography> 
                   </Grid>
                   <Grid item  >
@@ -44,7 +44,7 @@ const EmployeeReport = (props) => {
                     headerData={EmployeeHeadCells}
                 />
                 <TableBody>
-                {employeeList.map((row, index) => {
+                {employeeSales.map((row, index) => {
                     return (
                         <TableRow >
                             {/* <TableCell align="left">{index + 1}</TableCell> */}
@@ -56,8 +56,8 @@ const EmployeeReport = (props) => {
                                 </ListItem>  
                             </TableCell>
  
-                            <TableCell align="left" >{row.total_cost}</TableCell> 
-                            <TableCell align="left">{row.phone}</TableCell>
+                            <TableCell align="left" >{row.total_sale}</TableCell> 
+                            <TableCell align="left">{row.number_of_orders}</TableCell>
                             
                         </TableRow>
                     );
@@ -78,5 +78,5 @@ const EmployeeHeadCells = [
     // { id: 'id', align: 'left', disablePadding: true, label: 'Stt' },
     { id: 'name', align: 'center', disablePadding: true, label: 'Khách hàng' },
     { id: 'total', align: 'left', disablePadding: true, label: 'Tổng tiền' },  
-    { id: 'phone', align: 'left', disablePadding: true, label: 'Sđt' },
+    { id: 'phone', align: 'left', disablePadding: true, label: 'Số đơn' },
 ];

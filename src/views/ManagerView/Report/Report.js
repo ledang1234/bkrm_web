@@ -20,6 +20,8 @@ import BranchReport from './BranchReport'
 import SupplierReport from './SupplierReport'
 import EmployeeReport from './EmployeeReport'
 import Chart from 'react-apexcharts';
+import storeApi from "../../../api/storeApi";
+
 //import api 
 import customerApi from '../../../api/customerApi'
 import { useSelector } from 'react-redux'
@@ -67,7 +69,9 @@ const Report = () => {
     // 1.data for Overall Report
 
     // 2.data for customer
-   
+
+
+  
     
     
   const [categoryList, setCategoryList] = useState([{name: 'áo', total: 100},{name: 'quần', total: 200}]);
@@ -117,7 +121,38 @@ const Report = () => {
   }, [reload, store_uuid, branch_uuid]);
 
 
-    //
+
+
+    ///////////
+    // const info = useSelector((state) => state.info);
+    // const store_uuid = info.store.uuid;
+    const [data, setData] = useState({
+      customerSales:[],
+      employeeSales:[],
+      inAccount:0,
+      numOfBranches:0,
+      numOfCustomers:0,
+      numOfEmployees:0,
+      numOfProducts:0,
+      outAccount:0,
+      product_report:[],
+
+    });
+    
+    
+    const fetchReport = async (period) => {
+      const res = await storeApi.getReport(store_uuid, period);
+      console.log(res.data);
+      setData(res.data)
+    };
+  
+    useEffect(() => {
+      fetchReport(7)
+    }, [])
+
+    // console.log("data")
+    // console.log(data)
+
     return (
       <Card className={classes.root}>
              {/* 1. */}
@@ -175,9 +210,9 @@ const Report = () => {
 
            {/* <Divider className={classes.divider}/> */}
         
-           {/* 2. OverallReport bỏ data vô  */}
-            <OverallReport />
-
+           {/* 2. OverallReport  */}
+            <OverallReport  data={data}/>
+           
             {/* 3.  */}
             <Grid container spacing={3} >
                 <Grid  item xs={12} md={7} >
@@ -205,10 +240,11 @@ const Report = () => {
 
             <Grid container spacing={3} >
                 <Grid  item xs={12} md={4} >
-                    <EmployeeReport  employeeList={employeeList}/>       
+                    <EmployeeReport  employeeSales={data.employeeSales}/>       
                 </Grid>
+              
                 <Grid  item xs={12} md={4}  style={{textAlign:'center'}}> 
-                      <CustomerReport  customerList={customerList}/>       
+                      <CustomerReport  customerSales={data.customerSales}/>       
                 </Grid>
                 <Grid  item xs={12} md={4}  style={{textAlign:'center'}}> 
                     <SupplierReport  supplierList={supplierList}/>       

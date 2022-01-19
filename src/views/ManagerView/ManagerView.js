@@ -9,13 +9,13 @@ import { useSelector } from "react-redux";
 import React from "react";
 
 const ManagerView = (props) => {
-  const info = useSelector((state) => state.info);
-  const store_uuid = info.store.uuid;
+  // const info = useSelector((state) => state.info);
+  // const store_uuid = info.store.uuid;
 
-  const fetchReport = async (period) => {
-    const res = await storeApi.getReport(store_uuid, period);
-    console.log(res.data);
-  };
+  // const fetchReport = async (period) => {
+  //   const res = await storeApi.getReport(store_uuid, period);
+  //   console.log(res.data);
+  // };
 
   const { path } = useRouteMatch();
   return (

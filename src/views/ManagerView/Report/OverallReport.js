@@ -68,7 +68,7 @@ createStyles({
  
 }));
 
-export const OverallReport = () => {
+export const OverallReport = ({data}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const chartIncome = {
@@ -185,6 +185,7 @@ export const OverallReport = () => {
             colors: ['#ff007d'],
         },
     }
+  
 
     return (
         <div className={classes.row}>
@@ -202,7 +203,7 @@ export const OverallReport = () => {
                             
                             <Grid  item  xs={8}  style={{textAlign:'center'}}>
                                 <Typography>Mặt hàng</Typography>
-                                <Typography className={classes.count}>300</Typography>
+                                <Typography className={classes.count}>{data.numOfProducts}</Typography>
                             </Grid>
                           
                         </Grid>  
@@ -215,7 +216,7 @@ export const OverallReport = () => {
                                 
                                 <Grid  item  xs={8}  style={{textAlign:'center'}}>
                                     <Typography>Nhân viên</Typography>
-                                    <Typography className={classes.count}>300</Typography>
+                                    <Typography className={classes.count}>{data.numOfEmployees}</Typography>
                                 </Grid>
                             </Grid>
                         <Grid container item xs={6} >
@@ -227,7 +228,7 @@ export const OverallReport = () => {
                             
                             <Grid  item  xs={8}  style={{textAlign:'center'}}>
                                 <Typography>Khách hàng</Typography>
-                                <Typography className={classes.count}>300</Typography>
+                                <Typography className={classes.count}>{data.numOfCustomers}</Typography>
                             </Grid>
                         </Grid>
                         <Grid container item xs={6} >
@@ -239,7 +240,7 @@ export const OverallReport = () => {
                             
                             <Grid  item  xs={8}  style={{textAlign:'center'}}>
                                 <Typography>Chi nhánh</Typography>
-                                <Typography className={classes.count}>300</Typography>
+                                <Typography className={classes.count}>{data.numOfBranches}</Typography>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -251,21 +252,21 @@ export const OverallReport = () => {
                 <Grid item md={4}xs={12}>
                     <Card className={classes.hoverCard}>
                         <Typography>Tổng thu</Typography>
-                        <Typography className={classes.number}>200.000</Typography>
+                        <Typography className={classes.number}>{data.inAccount}</Typography>
                         <Chart {...chartIncome} />   
                     </Card>
                 </Grid>
                 <Grid item md={4}xs={12}>
                     <Card className={classes.hoverCard}>
                         <Typography>Tổng chi</Typography>
-                         <Typography className={classes.number}>200.000</Typography>
+                         <Typography className={classes.number}>{data.outAccount}</Typography>
                         <Chart {...chartExpense}/>    
                     </Card>
                 </Grid>
                 <Grid item md={4} xs={12}>
                     <Card className={classes.hoverCard}>
                         <Typography>Tổng lợi nhuận</Typography>
-                        <Typography className={classes.number}>200.000.000</Typography>
+                        <Typography className={classes.number}>200.000</Typography>
                         <Chart {...chartInvoice}/>
                     </Card>
                 </Grid>
