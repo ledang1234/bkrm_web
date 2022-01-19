@@ -6,25 +6,27 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-export default function HistoryCard(data) {
+export default function HistoryCard({data}) {
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card sx={{ minWidth: 275, marginBottom: 5, borderRadius: 5 }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {data?.code}
+          {"Tài liệu: " + data?.code}
         </Typography>
-        <Typography variant="h5" component="div">
-          {data?.partner_name}
+        <Typography component="div">
+          {"Đối tác: " + data?.partner_name}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          {data?.user_name}
+          {(data?.user_type === "owner" ? "Chủ cửa hàng - " : "Nhân viên - ") +
+            data?.user_name}
         </Typography>
         <Typography variant="body2">
-          {data?.total_amount}
+          {"Tổng giá trị: " + data?.total_amount}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button size="small">{"Thời gian: " + data?.created_at}</Button>
+        <Button size="small">{"Địa điểm: " + data?.branch_name}</Button>
       </CardActions>
     </Card>
   );
