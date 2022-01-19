@@ -194,7 +194,7 @@ const Inventory = () => {
 
       {/* 3. TABLE */}
       <TableWrapper >
-        <div >
+
           <TableHeader
             classes={classes}
             order={order}
@@ -215,7 +215,7 @@ const Inventory = () => {
               );
             })}
           </TableBody>
-        </div>
+
       </TableWrapper>
       <div  style={{display:'none'}} >
         <div ref={componentRef}  >
