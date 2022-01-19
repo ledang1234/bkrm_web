@@ -6,8 +6,7 @@ import Map from "./Map/Map";
 import BranchList from "./BranchList/BranchList";
 import { useSelector } from "react-redux";
 import branchApi from "../../api/branchApi";
-import getGeoCode from "./Geocode"
-
+import getGeoCode from "./Geocode";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -72,7 +71,6 @@ const Branch = (props) => {
       <Typography className={classes.textTitle} variant="body2">
         ( {branchList.length} chi nhánh )
       </Typography>
-      <Button onClick = {getGeoCode}>get loc</Button>
       <Map
         branchList={branchList}
         chosenBranch={chosenBranch}
