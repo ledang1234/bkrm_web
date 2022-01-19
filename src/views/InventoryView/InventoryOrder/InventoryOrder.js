@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,useRef} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
 import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { useReactToPrint } from "react-to-print";
 
 
 //import api 
@@ -64,6 +65,12 @@ const InventoryOrder = () => {
       // setOrderBy(property);
     };
 
+     // toolbar
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
+
     const info = useSelector(state => state.info)
     const store_uuid = info.store.uuid
 
@@ -121,6 +128,7 @@ const InventoryOrder = () => {
             tableType={TableType.INVENTORY_ORDER}  
             textSearch={'#, NCC, Nguoi nhap,...'}
             handleToggleFilter={handleToggleFilter}
+            handlePrint={handlePrint}
           /> 
    
           <InventoryOrderFilter 
@@ -131,6 +139,7 @@ const InventoryOrder = () => {
           
           {/* 3. TABLE */}
           <TableWrapper>
+            <div ref={componentRef}>
               <TableHeader
                 classes={classes}
                 order={order}
@@ -148,9 +157,41 @@ const InventoryOrder = () => {
                     );
                 })}
               </TableBody>
+              </div>
           </TableWrapper>
+        <div  style={{display:'none'}} >
+          <div ref={componentRef}  >
+            <ComponentToPrint  purchaseOrders={purchaseOrders} classes={classes}/>
+            </div> 
+        </div>
         </Card>
     )
 }
 
 export default InventoryOrder;
+
+
+const ComponentToPrint = ({purchaseOrders,classes}) =>{
+  return (
+      <div >
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Đơn nhập hàng</Typography>
+        <div >
+          <TableHeader
+                classes={classes}
+                headerData={HeadCells.InventoryOrderHeadCells}
+              />
+              <TableBody >
+                {purchaseOrders.map((row, index) => {
+                  return (
+                    <InventoryOrderTableRow
+                      key={row.uuid}
+                      row={row}
+                    
+                    />
+                  );
+                })}
+              </TableBody>
+        </div>
+  </div>
+  )
+}

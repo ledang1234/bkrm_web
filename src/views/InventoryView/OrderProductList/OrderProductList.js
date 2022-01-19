@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,useRef} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
 import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { useReactToPrint } from "react-to-print";
 
 //import api 
 
@@ -62,6 +63,11 @@ const OrderProductList = () => {
 
 
     //3. ToolBar
+     // toolbar
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
     //3.1. search
 
     //3.2. filter
@@ -106,7 +112,7 @@ const OrderProductList = () => {
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
           {/* <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ }
           <ToolBar  dataTable={orderProductList} tableType={TableType.ORDER_LIST}  textSearch={'#, NCC, Nguoi đặt,...'}
-           handleToggleFilter={handleToggleFilter}/> 
+           handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/> 
 
           <OrderProductListFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
 
@@ -130,9 +136,40 @@ const OrderProductList = () => {
                 })}
               </TableBody>
           </TableWrapper>
+          <div  style={{display:'none'}} >
+            <div ref={componentRef}  >
+            <ComponentToPrint  orderProductList={orderProductList} classes={classes}/>
+            </div>
+        
+          </div>
      
       </Card>
   )
 }
 
 export default OrderProductList
+
+const ComponentToPrint = ({orderProductList,classes}) =>{
+  return (
+      <div >
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Đơn đặt hàng NCC</Typography>
+        <div >
+          <TableHeader
+                classes={classes}
+                headerData={HeadCells.OrderListHeadCells}
+              />
+              <TableBody >
+                {orderProductList.map((row, index) => {
+                  return (
+                    <OrderProductListTableRow
+                      key={row.uuid}
+                      row={row}
+                    
+                    />
+                  );
+                })}
+              </TableBody>
+        </div>
+  </div>
+  )
+}

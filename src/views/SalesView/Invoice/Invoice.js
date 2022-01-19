@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,useRef} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
 import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-
+import { useReactToPrint } from "react-to-print";
 //import api 
 
 // import redux
@@ -68,7 +68,14 @@ const Invoice = () => {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
 
-    //3.2. filter
+
+      //3. ToolBar
+      //3.2. filter
+      // toolbar
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
     const [openFilter, setOpenFilter] = React.useState(false);
     const handleToggleFilter = () => {
       setOpenFilter(!openFilter);
@@ -120,7 +127,7 @@ const Invoice = () => {
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
           <ToolBar  dataTable={orders} tableType={TableType.INVOICE} textSearch={'#, Khách, Người bán,...  '}  /*handlePrint={handlePrint}*/ 
-          handleToggleFilter={handleToggleFilter}
+          handleToggleFilter={handleToggleFilter} handlePrint={handlePrint}
           />
           <InvoiceFilter 
             openFilter={openFilter} 
@@ -145,8 +152,39 @@ const Invoice = () => {
                 })}
               </TableBody>
           </TableWrapper>
+          <div  style={{display:'none'}} >
+            <div ref={componentRef}  >
+            <ComponentToPrint  orders={orders} classes={classes}/>
+            </div>
+            
+          </div>
         </Card>
     )
 }
 
 export default Invoice
+
+const ComponentToPrint = ({orders,classes}) =>{
+  return (
+      <div >
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Hoá đơn</Typography>
+        <div >
+          <TableHeader
+                classes={classes}
+                headerData={HeadCells.InvoiceHeadCells}
+              />
+              <TableBody >
+                {orders.map((row, index) => {
+                  return (
+                    <InvoiceTableRow
+                      key={row.uuid}
+                      row={row}
+                    
+                    />
+                  );
+                })}
+              </TableBody>
+        </div>
+  </div>
+  )
+}

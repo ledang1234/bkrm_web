@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,useRef} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
 import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { useReactToPrint } from "react-to-print";
 
 //import api 
 
@@ -59,6 +60,11 @@ const CheckHistory = () => {
     };
 
     //3. ToolBar
+     // toolbar
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
     //3.1. search
 
     //3.2. filter
@@ -103,7 +109,7 @@ const CheckHistory = () => {
           {/* 2. SEARCH - FILTER - EXPORT*/}
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
           <ToolBar  dataTable={checkHistoryList} tableType={TableType.CHECK_LIST} textSearch={'#, Người kiểm,...'} /*handlePrint={handlePrint}*/ 
-           handleToggleFilter={handleToggleFilter}
+           handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}
           />
 
           <CheckHistoryFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
@@ -127,8 +133,39 @@ const CheckHistory = () => {
                 })}
               </TableBody>
           </TableWrapper>
+          <div  style={{display:'none'}} >
+            <div ref={componentRef}  >
+            <ComponentToPrint  checkHistoryList={checkHistoryList} classes={classes}/>
+            </div>
+          </div>
         </Card>
     )
 }
 
 export default CheckHistory
+
+
+const ComponentToPrint = ({checkHistoryList,classes}) =>{
+  return (
+      <div >
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Đơn kiểm kho</Typography>
+        <div >
+          <TableHeader
+                classes={classes}
+                headerData={HeadCells.CheckHistoryHeadCells}
+              />
+              <TableBody >
+                {checkHistoryList.map((row, index) => {
+                  return (
+                    <CheckHistoryTableRow
+                      key={row.uuid}
+                      row={row}
+                    
+                    />
+                  );
+                })}
+              </TableBody>
+        </div>
+  </div>
+  )
+}
