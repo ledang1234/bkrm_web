@@ -73,6 +73,8 @@ const Inventory = () => {
     }, 500);
     return () => clearTimeout(identifier);
   }, [searchValue]);
+
+  
   const theme = useTheme();
   const classes = useStyles(theme);
   //// 1. Add pop up + noti

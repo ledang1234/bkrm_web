@@ -1,11 +1,33 @@
-import React from 'react'
+import React ,{useState, useEffect} from 'react'
 import ApexChart from '../../../components/Chart/Chart'
 import {useTheme, makeStyles,withStyles,createStyles,lighten} from "@material-ui/core/styles";
-import {Typography,Divider,Grid,Paper,Box,Button,ListItem,ListItemIcon,ListItemText} from '@material-ui/core';
+import {Typography,Divider,Grid,Paper,Box,Button,InputLabel,MenuItem,FormControl,Select,ListItem,ListItemIcon,ListItemText} from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import { grey, blue,purple} from '@material-ui/core/colors'
 import clsx from "clsx";
 import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
+import ReactApexChart from 'react-apexcharts';
+import CustomerReport from './CustomerReport'
+// import data_card from './chart-data/data_card'
+// import data1 from './chart-data/bajaj-area-chart'
+// import data2 from './chart-data/mydata'
+import {ColorButtonPink,ColorButtonYellow} from '../../../components/Button/ColorButton'
+import OverallReport from './OverallReport'
+import ProductReport from './ProductReport'
+import MoneyReport from './MoneyReport'
+import CategoryReport from './CategoryReport'
+import BranchReport from './BranchReport'
+import SupplierReport from './SupplierReport'
+import EmployeeReport from './EmployeeReport'
+import Chart from 'react-apexcharts';
+//import api 
+import customerApi from '../../../api/customerApi'
+import { useSelector } from 'react-redux'
+
+
+//import api
+import productApi from "../../../api/productApi";
+
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -18,7 +40,6 @@ createStyles({
     paddingLeft:20
   },
   header:{
-    // padding: '20px',
     paddingTop:20,
     paddingBottom:15
   },
@@ -28,47 +49,78 @@ createStyles({
   divider:{
       marginBottom:15
   },
-  row:{
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  overall:{
-    background:'#13d0f2',
-  }
+  
 }));
-const ColorButton = withStyles((theme) => ({
-  root: {
-  //  color: theme.palette.getContrastText("#ff007d"),
-  color:'#000',
-    backgroundColor: "#ff007d",
-    textTransform: 'none',
-    '&:hover': {
-      backgroundColor: lighten("#ff007d", 0.3),
-    },
-    borderRadius:20
-  },
-}))(Button);
-const ColorButton1 = withStyles((theme) => ({
-  root: {
-   color: theme.palette.getContrastText("#ffc02b"),
-    backgroundColor: "#ffc02b",
-    textTransform: 'none',
-    '&:hover': {
-      backgroundColor: lighten("#ffc02b", 0.3),
-    },
-    borderRadius:20
-  },
-}))(Button);
+
 
 const Report = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    //0. set time
+    const [time, setTime] = React.useState('');
+
+    const handleChangeTime = (event) => {
+      setTime(event.target.value);
+    };
+
+    // 1.data for Overall Report
+
+    // 2.data for customer
+   
+    
+    
+  const [categoryList, setCategoryList] = useState([{name: 'áo', total: 100},{name: 'quần', total: 200}]);
+  const [productList, setProductList] = useState([]);
+  
+
+  const [moneyData, setMoneyData] = useState([]);
+  const [branchList, setBranchList] = useState([]);
+
+  const [customerList, setCustomerList] = useState([]);
+  const [supplierList, setSupplierList] = useState([]);
+  const [employeeList, setEmployeeList] = useState([]);
+
+
+  const [reload, setReload] = useState(true);
+  const onReload = () => setReload(!reload)
+    
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
+
+    useEffect(() => {
+      customerApi.getCustomers(store_uuid)
+      .then(response => response.data, err => console.log(err))
+      .then(data => {
+          setCustomerList(data)
+      })
+
+  }, [reload, store_uuid]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await productApi.getProductsOfBranch(
+          store_uuid,
+          branch_uuid
+        );
+        setProductList(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (reload) {
+      fetchProducts();
+      setReload(false);
+    }
+  }, [reload, store_uuid, branch_uuid]);
+
+
+    //
     return (
       <Card className={classes.root}>
+             {/* 1. */}
             <div className={classes.row}>
               <Grid 
               container 
@@ -79,48 +131,90 @@ const Report = () => {
               >
                   <Grid item >
                     <Typography className={classes.headerTitle} variant="h5">
-                        {/* Thống kê  */}
-                        Tong quan
+                        Tổng quan
                       </Typography> 
                   </Grid>
                   <Grid item  >
-                        <ColorButton variant="contained" size="small" className={classes.row} >
+                    <FormControl
+                          className={classes.formControl}
+                          style={{marginTop:-5}}
+                          // fullWidth
+                          size="small"
+                          variant="outlined"
+                        >
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="time"
+                            name="time"
+                            size="small"
+                            onChange={handleChangeTime}
+                            // label=" Chi nhánh"
+                            defaultValue="today"
+                            value={time}
+                          >
+                            <MenuItem value="today">Hôm nay</MenuItem>
+                            <MenuItem value="7day">7 ngày gần nhất</MenuItem>
+                            <MenuItem value="30day">30 ngày gần nhất</MenuItem>
+                            <MenuItem value="365day">365 ngày gần nhất</MenuItem>
+                            <MenuItem value="advance">Tìm kiếm nâng cao</MenuItem>
+                          </Select>
+                        </FormControl>
+                    
+                        <ColorButtonPink variant="contained" size="small" className={classes.row} style={{marginLeft:20}}>
                               Báo cáo
-                        </ColorButton>
-                         <ColorButton1 variant="contained" size="small" className={classes.row} style={{marginLeft:10}}>
+                        </ColorButtonPink>
+                         <ColorButtonYellow variant="contained" size="small" className={classes.row} style={{marginLeft:10}}>
                             <GetAppTwoToneIcon fontSize="small"/>
                               Báo cáo
-                        </ColorButton1>
-
+                        </ColorButtonYellow>
                   </Grid>
 
-              </Grid>
-                   
-                  
+              </Grid>   
             </div>
-            {/* <Divider className={classes.divider}/> */}
+
+
+           {/* <Divider className={classes.divider}/> */}
         
-            <div className={classes.row}>
-              <Grid container spacing={3}>
-                <Grid item xs={4} >
-                  <Paper className={clsx(classes.paper, classes.overall)}>xs=6</Paper>
-                </Grid>
+           {/* 2. OverallReport bỏ data vô  */}
+            <OverallReport />
 
-                <Grid container item xs={8} spacing={3}>
-                  <Grid item xs={4}>
-                    <Paper className={classes.paper}>xs=6</Paper>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Paper className={classes.paper}>xs=6</Paper>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Paper className={classes.paper}>xs=6</Paper>
-                  </Grid>
+            {/* 3.  */}
+            <Grid container spacing={3} >
+                <Grid  item xs={12} md={7} >
+                    <ProductReport productList={productList}/>   
+                
                 </Grid>
+                
+                <Grid  item xs={12} md={5}  style={{textAlign:'center'}}> 
+                    <CategoryReport categoryList={categoryList}/>
+                </Grid>
+            </Grid>
 
-              </Grid>
-            </div>
-          {/* <ApexChart /> */}
+          {/* 4.  */}
+            <Grid container spacing={3} >
+                <Grid  item xs={12} md={5} >
+                    <BranchReport branchList={branchList}/>   
+                </Grid>
+                
+                <Grid  item xs={12} md={7}  style={{textAlign:'center'}}> 
+                    <MoneyReport moneyData={moneyData}/>        
+                </Grid>
+            </Grid>
+            
+            
+
+            <Grid container spacing={3} >
+                <Grid  item xs={12} md={4} >
+                    <EmployeeReport  employeeList={employeeList}/>       
+                </Grid>
+                <Grid  item xs={12} md={4}  style={{textAlign:'center'}}> 
+                      <CustomerReport  customerList={customerList}/>       
+                </Grid>
+                <Grid  item xs={12} md={4}  style={{textAlign:'center'}}> 
+                    <SupplierReport  supplierList={supplierList}/>       
+                </Grid>
+            </Grid>
+
       </Card>
         
     )

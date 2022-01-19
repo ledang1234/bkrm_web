@@ -5,12 +5,12 @@ import {Table,TableContainer,FormControlLabel,Switch,Paper} from '@material-ui/c
 
 
 const TableWrapper = (props) => {
-    const {isCart} = props;
+    const {isCart, isReport} = props;
 
     const theme = useTheme();
     // const classes = useStyles(theme);
     // table
-    const [dense, setDense] = React.useState(false);
+    const [dense, setDense] = React.useState(isReport?true:false);
     
 
     const handleChangeDense = (event) => {
