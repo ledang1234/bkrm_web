@@ -1,33 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
-//import library
 import {
+  Box,
   Button,
+  createStyles,
+  FormControl,
+  Grid,
+  InputLabel,
+  makeStyles,
+  Select,
   TextField,
   Typography,
-  Grid,
-  Select,
-  FormControl,
-  InputLabel,
 } from "@material-ui/core";
-
-import userApi from "../../../../api/userApi";
-
-//import project
-import customerApi from "../../../../api/customerApi";
-import branchApi from "../../../../api/branchApi";
-import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import SimpleModal from "../../../../components/Modal/ModalWrapper";
-import { statusAction } from "../../../../store/slice/statusSlice";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import branchApi from "../../../api/branchApi";
+import userApi from "../../../api/userApi";
+import { statusAction } from "../../../store/slice/statusSlice";
+import SimpleModal from "../../Modal/ModalWrapper";
 
-const useStyles = makeStyles((theme) => createStyles({}));
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    headerTitle: {
+      fontSize: "1.125rem",
+    },
+  })
+);
 
-const AddBranch = (props) => {
-  const { handleClose, open, onReload } = props;
-
-  const theme = useTheme();
-  const classes = useStyles(theme);
+const EditBranch = (props) => {
+  const { handleClose, open, branch } = props;
+  const classes = useStyles();
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
@@ -35,13 +37,14 @@ const AddBranch = (props) => {
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: "",
-      address: "",
-      ward: "",
-      district: "",
-      city: "",
-      phone: "",
+      name: branch.name,
+      address: branch.address,
+      ward: branch.ward,
+      district: branch.district,
+      city: branch.city,
+      phone: branch.phone,
     },
   });
   useEffect(() => {
@@ -54,7 +57,6 @@ const AddBranch = (props) => {
       }
     };
     loadCity();
-    console.log(store_uuid);
   }, []);
   useEffect(() => {
     const loadDistrict = async (city_id) => {
@@ -78,34 +80,39 @@ const AddBranch = (props) => {
     };
     loadWard(formik.values.city, formik.values.district);
   }, [formik.values.city, formik.values.district]);
+
   const dispatch = useDispatch();
-  const handleAddBranch = async () => {
+  const handleEditBranch = async () => {
     handleClose();
-    const body = {
-      name: formik.values.name,
-      address: formik.values.address,
-      ward: wardList.find((ward) => ward.id === formik.values.ward).name,
-      provinces: cityList.find((city) => city.id === formik.values.city).name,
-      district: districtList.find(
-        (district) => district.id === formik.values.district
-      ).name,
-      phone: formik.values.phone,
-      status: "active",
-    };
     try {
-      const response = await branchApi.createBranch(store_uuid, body);
+      const body = {
+        name: formik.values.name,
+        address: formik.values.address,
+        ward: wardList.find((ward) => ward.id === formik.values.ward).name,
+        provinces: cityList.find((city) => city.id === formik.values.city).name,
+        district: districtList.find(
+          (district) => district.id === formik.values.district
+        ).name,
+        phone: formik.values.phone,
+        status: "active",
+      };
+      const response = await branchApi.updateBranch(
+        store_uuid,
+        branch.uuid,
+        body
+      );
       console.log(response);
-      onReload();
-      dispatch(statusAction.successfulStatus("Create branch successfully"));
+      dispatch(statusAction.successfulStatus("Edit branch successfully"));
+      props.onReload();
     } catch (error) {
-      console.log(error);
-      dispatch(statusAction.failedStatus("Failed to createBranch"));
+      console.log(error, store_uuid, branch.uuid);
+      dispatch(statusAction.failedStatus("Failed to edit branch"));
     }
   };
   return (
     <SimpleModal open={open} handleClose={handleClose}>
       <Typography variant="h4" gutterBottom>
-        Thêm chi nhánh mới
+        Chỉnh sửa chi nhánh mới
       </Typography>
       <Grid container spacing={2} style={{ maxWidth: 600, marginTop: 10 }}>
         <Grid item xs={12}>
@@ -216,13 +223,13 @@ const AddBranch = (props) => {
           variant="contained"
           size="small"
           color="primary"
-          onClick={handleAddBranch}
+          onClick={handleEditBranch}
         >
-          Thêm
+          Sửa
         </Button>
       </Grid>
     </SimpleModal>
   );
 };
 
-export default AddBranch;
+export default EditBranch;
