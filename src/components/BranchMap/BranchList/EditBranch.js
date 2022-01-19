@@ -18,6 +18,8 @@ import branchApi from "../../../api/branchApi";
 import userApi from "../../../api/userApi";
 import { statusAction } from "../../../store/slice/statusSlice";
 import SimpleModal from "../../Modal/ModalWrapper";
+import getGeoCode from "../Geocode";
+import ConfirmPopUp from "../../ConfirmPopUp/ConfirmPopUp";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,6 +38,7 @@ const EditBranch = (props) => {
   const [cityList, setCityList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
+  const [isDelete, setIsDelete] = useState(false);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -83,18 +86,28 @@ const EditBranch = (props) => {
 
   const dispatch = useDispatch();
   const handleEditBranch = async () => {
+    const ward = wardList.find((ward) => ward.id === formik.values.ward).name;
+    const province = cityList.find(
+      (city) => city.id === formik.values.city
+    ).name;
+    const district = districtList.find(
+      (district) => district.id === formik.values.district
+    ).name;
+    const { lat, lng } = await getGeoCode(
+      formik.values.address + ward + district + province
+    );
     handleClose();
     try {
       const body = {
         name: formik.values.name,
         address: formik.values.address,
-        ward: wardList.find((ward) => ward.id === formik.values.ward).name,
-        provinces: cityList.find((city) => city.id === formik.values.city).name,
-        district: districtList.find(
-          (district) => district.id === formik.values.district
-        ).name,
+        ward: ward,
+        province: province,
+        district: district,
         phone: formik.values.phone,
         status: "active",
+        lng: `${lng}`,
+        lat: `${lat}`,
       };
       const response = await branchApi.updateBranch(
         store_uuid,
@@ -109,11 +122,49 @@ const EditBranch = (props) => {
       dispatch(statusAction.failedStatus("Failed to edit branch"));
     }
   };
+  const handleDeleteBranch = async () => {
+    setIsDelete(false);
+    handleClose();
+    try {
+      await branchApi.deleteBranch(store_uuid, branch.uuid);
+      props.onReload();
+      dispatch(statusAction.successfulStatus("Delete branch successfully"));
+    } catch (error) {
+      console.log(error);
+      dispatch(statusAction.successfulStatus("Delete branch failed"));
+    }
+  };
   return (
     <SimpleModal open={open} handleClose={handleClose}>
-      <Typography variant="h4" gutterBottom>
-        Chỉnh sửa chi nhánh mới
-      </Typography>
+      <ConfirmPopUp
+        open={isDelete}
+        handleConfirm={handleDeleteBranch}
+        handleClose={() => setIsDelete(false)}
+        message={
+          <Typography>
+            Xóa vĩnh viễn chi nhánh <b>{branch.name} ?</b>
+          </Typography>
+        }
+      />
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h4" gutterBottom>
+          Chỉnh sửa chi nhánh mới
+        </Typography>
+        <Button
+          variant="contained"
+          size="small"
+          style={{ marginRight: 20 }}
+          color="secondary"
+          onClick={() => setIsDelete(true)}
+        >
+          Xóa
+        </Button>
+      </Box>
       <Grid container spacing={2} style={{ maxWidth: 600, marginTop: 10 }}>
         <Grid item xs={12}>
           <TextField
@@ -214,7 +265,6 @@ const EditBranch = (props) => {
           variant="contained"
           size="small"
           style={{ marginRight: 20 }}
-          color="secondary"
           onClick={handleClose}
         >
           Hủy
@@ -224,6 +274,7 @@ const EditBranch = (props) => {
           size="small"
           color="primary"
           onClick={handleEditBranch}
+          style={{ marginRight: 20 }}
         >
           Sửa
         </Button>
