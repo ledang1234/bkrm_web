@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 
 import Map from "./Map/Map";
 import BranchList from "./BranchList/BranchList";
 import { useSelector } from "react-redux";
 import branchApi from "../../api/branchApi";
+import getGeoCode from "./Geocode";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,6 +37,7 @@ const Branch = (props) => {
       }
     };
     fetchBranchList();
+    getGeoCode();
   }, [store_uuid, props.reload]);
 
   //MAP
@@ -69,7 +71,6 @@ const Branch = (props) => {
       <Typography className={classes.textTitle} variant="body2">
         ( {branchList.length} chi nhánh )
       </Typography>
-
       <Map
         branchList={branchList}
         chosenBranch={chosenBranch}
