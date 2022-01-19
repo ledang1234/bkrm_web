@@ -41,13 +41,14 @@ const InventoryReturnOrder = () => {
   
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
 
   const theme = useTheme();
   const classes = useStyles(theme);
   
   const loadData = async () => {
     try {
-      const res = await purchaseReturnApi.getAllOfStore(store_uuid);
+      const res = await purchaseReturnApi.getAllOfBranch(store_uuid, branch_uuid);
       setPurchaseReturns(res.data.reverse());
     } catch (error) {
       console.log(error);
@@ -56,7 +57,7 @@ const InventoryReturnOrder = () => {
   
   useEffect(() => {
     loadData();
-  }, []);
+  }, [branch_uuid]);
 
   
   const handleOpenRow = (row) => {

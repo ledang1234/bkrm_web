@@ -33,9 +33,6 @@ import orderApi from '../../../api/orderApi'
 
 const Invoice = () => {
     // fetch data here
-   
-
-
     const theme = useTheme();
     const classes = useStyles(theme);
     const dispatch = useDispatch();
@@ -90,7 +87,7 @@ const Invoice = () => {
 
     useEffect(() => {
       loadData();
-    }, [])
+    }, [branch_uuid]);
 
     return (
       
