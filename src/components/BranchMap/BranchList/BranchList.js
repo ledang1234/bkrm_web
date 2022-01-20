@@ -74,7 +74,8 @@ const BranchList = (props) => {
                   <Grid container direction="row" justifyContent="flex-end">
                     <Typography
                       onClick={() => {
-                        setChosenBranch({ lat: branch.lat, lng: branch.lng });
+//                         setChosenBranch({ lat: branch.lat, lng: branch.lng });
+                           setChosenBranch({ lat: parseFloat(branch.lat), lng: parseFloat(branch.lng) });
                         window.scrollTo(0, 0);
                       }}
                       variant="h5"
