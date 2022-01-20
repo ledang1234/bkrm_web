@@ -62,6 +62,21 @@ const Inventory = () => {
     }
   }, [reload, store_uuid, branch_uuid]);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await productApi.getProductsOfBranch(
+          store_uuid,
+          branch_uuid
+        );
+        setProductList(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchProducts()
+  }, [branch_uuid]);
+
   // useEffect(() => {
   //   const identifier = setTimeout(async () => {
   //     try {
