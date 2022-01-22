@@ -35,6 +35,7 @@ const CartSummary = (props) => {
         handleConfirm,
         selectedBranch,
         setSelectedBranch,
+        customers,
         currentBranch,
         mode
     } = props;
@@ -68,7 +69,7 @@ const CartSummary = (props) => {
 
     // so tien khach đưa
     const [customerMoney, setCustomerMoney] = React.useState('0');
-    React.useEffect(() => {console.log(currentBranch)})
+    // React.useEffect(() => {console.log(currentBranch)})
     return (
 
         <Box style={{ padding: 30, minHeight: '80vh' }}>
@@ -102,6 +103,7 @@ const CartSummary = (props) => {
                 <div style={{ width: '100%' }}>
                     <SearchCustomer
                         handleClickOpen={handleClickOpen}
+                        customers={customers}
                         selectedCustomer={currentCustomer ? currentCustomer : { name: "", phone: "" }}
                         handleSearchBarSelect={handleSelectCustomer} />
                 </div>
