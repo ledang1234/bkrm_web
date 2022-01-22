@@ -44,7 +44,7 @@ const InventoryTableRow = (props) => {
             <Typography className={classes.fontName}>{row.name}</Typography>
           </ListItem>
         </TableCell>
-        <TableCell align="left">{row.category.name}</TableCell>
+        <TableCell align="left">{row.category?.name}</TableCell>
         <TableCell align="right"><VNDFormat value={row.list_price} /></TableCell>
         <TableCell align="right"><VNDFormat value={row.standard_price} /></TableCell>
         <TableCell align="center">
