@@ -35,7 +35,7 @@ import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 import { useSelector } from "react-redux";
-
+import * as xlsx from 'xlsx'
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);
@@ -52,6 +52,7 @@ const Inventory = () => {
           branch_uuid
         );
         setProductList(response.data);
+        console.log(response.data)
       } catch (err) {
         console.log(err);
       }
@@ -70,6 +71,7 @@ const Inventory = () => {
           branch_uuid
         );
         setProductList(response.data);
+        console.log(response.data)
       } catch (err) {
         console.log(err);
       }
@@ -149,6 +151,30 @@ const Inventory = () => {
     content: () => componentRef.current,
   });
 
+  const readUploadFile = (e) => {
+    e.preventDefault();
+    if (e.target.files) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = e.target.result;
+            const workbook = xlsx.read(data, { type: "array" });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+
+            const header = ['uuid','category','name','bar_code','standard_price','list_price','branch_quantity'];
+            const cell = ['A1','B1','C1','D1','E1','F1','G1'];
+
+            for (var i = 0; i < cell.length; i++) {
+              xlsx.utils.sheet_add_aoa(worksheet, [[header[i]]], {origin: cell[i]});
+            }
+           
+            const json = xlsx.utils.sheet_to_json(worksheet);
+            console.log(json);
+        };
+        reader.readAsArrayBuffer(e.target.files[0]);
+    }
+}
+
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -202,6 +228,15 @@ const Inventory = () => {
         handlePrint={handlePrint}
         handleSearchValueChange={setSearchValue}
       />
+      <form>
+        <label htmlFor="upload">Upload File</label>
+        <input
+            type="file"
+            name="upload"
+            id="upload"
+            onChange={readUploadFile}
+        />
+    </form>
 
       {/* 3. TABLE */}
       <TableWrapper>
