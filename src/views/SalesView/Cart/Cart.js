@@ -49,7 +49,7 @@ import orderApi from "../../../api/orderApi";
 import update from "immutability-helper";
 import { useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
-
+import customerApi from "../../../api/customerApi";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Cart = () => {
@@ -61,6 +61,8 @@ const Cart = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch = info.branch;
+
+  const [customers, setCustomers] = useState([])
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -106,6 +108,20 @@ const Cart = () => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
 
+  useEffect(() => {
+    const loadingCustomer = async () => {
+      try {
+        const response = await customerApi.getCustomers(store_uuid);
+        setCustomers(response.data);
+      } catch(err) {
+        console.log(err)
+      }
+      
+    };
+
+    loadingCustomer();
+  }, [])
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -144,7 +160,7 @@ const Cart = () => {
     if (cartList.length === 0) {
       setCartList([
         {
-          customer: null,
+          customer: customers[0],
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -472,6 +488,7 @@ const Cart = () => {
                 currentCustomer={cartList[selectedIndex].customer}
                 currentBranch={branch}
                 mode={mode}
+                customers={customers}
               />
             ) : (
               <CartSummary

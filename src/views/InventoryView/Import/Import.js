@@ -52,6 +52,9 @@ import { useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import moment from "moment";
 import AddInventory from "../Inventory/AddInventory/AddInventory";
+import supplierApi from "../../../api/supplierApi";
+
+
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
@@ -63,6 +66,9 @@ const Import = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch = info.branch;
+
+
+ 
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -97,6 +103,7 @@ const Import = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [addProduct, setAddProduct] = useState(false);
   const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
+  const [suppliers, setSuppliers] = React.useState([])
 
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
@@ -107,6 +114,17 @@ const Import = () => {
   useEffect(() => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
+
+  useEffect(() => {
+
+    const fetchSupplier = async () => {
+      const response = await supplierApi.getSuppliers(store_uuid);
+      setSuppliers(response.data)
+    }
+
+    fetchSupplier();
+    
+  })
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -128,7 +146,7 @@ const Import = () => {
     setCartList([
       ...cartList,
       {
-        supplier: null,
+        supplier: suppliers[0],
         cartItem: [],
         total_amount: "0",
         paid_amount: "0",
@@ -145,7 +163,7 @@ const Import = () => {
     if (cartList.length === 0) {
       setCartList([
         {
-          supplier: null,
+          supplier: suppliers[0],
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -153,6 +171,7 @@ const Import = () => {
           payment_method: "cash",
         },
       ]);
+      setSelectedIndex(0);
     } else {
       setCartList(cartList);
     }
@@ -310,7 +329,7 @@ const Import = () => {
       .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
     let body = {
-      supplier_uuid: cart.supplier.uuid,
+      supplier_uuid: cart.supplier?.uuid,
       total_amount: cart.total_amount.toString(),
       payment_method: cart.payment_method,
       paid_amount: cart.paid_amount,
@@ -323,7 +342,7 @@ const Import = () => {
       details: cart.cartItem,
       import_date: importTime,
     };
-    console.log(importTime);
+    // console.log(importTime);
 
     try {
       let res = await purchaseOrderApi.addInventory(
@@ -492,6 +511,7 @@ const Import = () => {
                 currentSupplier={cartList[selectedIndex].supplier}
                 mode={mode}
                 currentBranch={branch}
+                suppliers={suppliers}
               />
             ) : (
               <ImportSummary
@@ -520,6 +540,6 @@ const Import = () => {
       </Grid>
     </Grid>
   );
-};
+};;
 
 export default Import;

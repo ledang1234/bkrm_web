@@ -46,9 +46,10 @@ const ImportSummary = (props) => {
         handleUpdatePaymentMethod,
         handleConfirm,
         currentBranch,
-
+        suppliers,
         mode
     } = props;
+
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -108,6 +109,7 @@ const ImportSummary = (props) => {
 
                 <div style={{ width: '100%' }}>
                     <SearchSupplier
+                        suppliers={suppliers}
                         handleClickOpen={handleClickOpen}
                         selectedSupplier={currentSupplier ? currentSupplier : { name: "", phone: "" }}
                         handleSearchBarSelect={handleSelectSupplier} />
