@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "@material-ui/core/styles";
+import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 //import library
 import {
   Button,
@@ -24,8 +25,10 @@ import barcodeIcon from "../../../../assets/img/icon/barcode1.png";
 import AddCategory from "./AddCategory";
 import useStyles from "./styles";
 import productApi from "../../../../api/productApi";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import SearchWithAutoComplete from "../../../../components/SearchBar/SearchWithAutoComplete";
+import { urltoFile } from "../../../../api/helper";
+import { statusAction } from "../../../../store/slice/statusSlice";
 const UploadImages = (img) => {
   return (
     <Box
@@ -42,7 +45,6 @@ const UploadImages = (img) => {
   );
 };
 const AddInventory = (props) => {
-
   const { handleClose, open } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
   const handleCloseCategory = () => setOpenAddCategory(false);
@@ -58,31 +60,41 @@ const AddInventory = (props) => {
 
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
-  const onChange = (e) => {
+  const [imageURL, setImageURL] = useState();
+  const addImageHandler = (e) => {
+    console.log(e.target.files[0]);
+    console.log(URL.createObjectURL(e.target.files[0]));
     setImages([...images, e.target.files[0]]);
-    setDisplay([...display, URL.createObjectURL(e.target.files[0])]);
+    setDisplay([
+      ...display,
+      {
+        index: images.length,
+        link: URL.createObjectURL(e.target.files[0]),
+        isUrl: false,
+      },
+    ]);
   };
   const [productInfo, setProductInfo] = useState({
     name: "",
+    barcode: "",
     importedPrice: 0,
     salesPrice: 0,
-    barcode: "",
     category: {
       uuid: "",
       name: "Mặc Định",
     },
     unit: "",
-    re_order_point: 0,
+    re_order_point: "",
   });
 
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-
+  const dispatch = useDispatch();
   const theme = useTheme();
   const classes = useStyles(theme);
   const addProductHandler = async () => {
-    console.log("herere");
+    handleCloseAndReset();
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", productInfo.name.toString());
@@ -101,14 +113,16 @@ const AddInventory = (props) => {
         "category_uuid",
         productInfo.category.uuid.toString()
       );
+      bodyFormData.append("img_url", imageURL.toString());
       // bodyFormData.append("images[]", images);
       images.forEach((image) => bodyFormData.append("images[]", image));
+      console.log(productInfo);
       await productApi.createProduct(store_uuid, bodyFormData);
-      handleClose("Success");
+      dispatch(statusAction.successfulStatus("Create product successfully"));
+      props.setReload(true);
     } catch (error) {
-      console.log(error)
-      console.log(productInfo)
-      handleClose("Failed");
+      console.log(error);
+      dispatch(statusAction.failedStatus("Create product failed"));
     }
   };
   useEffect(() => {
@@ -117,9 +131,9 @@ const AddInventory = (props) => {
         const response = await productApi.getAllCategory(store_uuid);
         const defautCategory = response.data[0];
         setCategoryList(response.data);
-        setProductInfo(productInfo => {
-          return { ...productInfo, category: { ...defautCategory } }
-        })
+        setProductInfo((productInfo) => {
+          return { ...productInfo, category: { ...defautCategory } };
+        });
       } catch (error) {
         console.log(error);
         return [];
@@ -128,22 +142,90 @@ const AddInventory = (props) => {
     fetchCategoryList();
   }, [store_uuid]);
 
+  const selectSampleProductHandler = (product) => {
+    try {
+      setProductInfo({
+        ...productInfo,
+        name: product.name,
+        barcode: product.bar_code,
+      });
+      setDisplay([...display, { link: product.img_url, isUrl: true }]);
+      setImages([]);
+      setImageURL(product.img_url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const searchSampleProductHandler = async (searchKey) => {
+    return productApi.searchDefaultProducts(searchKey, 1);
+  };
+  const handleCloseAndReset = () => {
+    handleClose();
+    setProductInfo({
+      name: "",
+      barcode: "",
+      importedPrice: 0,
+      salesPrice: 0,
+      category: {
+        uuid: "",
+        name: "Mặc Định",
+      },
+      unit: "",
+      re_order_point: 0,
+    });
+    clearAllImages();
+  };
+  const clearAllImages = () => {
+    setDisplay([]);
+    setImages([]);
+    setImageURL(null);
+  };
+  const clearImage = (displayImage) => {
+    setDisplay(display.filter((img) => img != displayImage));
+    if (displayImage.isUrl) {
+      setImageURL(null);
+    } else {
+      setImages(images.filter((image, index) => index !== displayImage.index));
+    }
+  };
+  const renderNameInput = (params) => (
+    <TextField
+      {...params}
+      required
+      label="Tìm kiếm sản phẩm mẫu bằng tên hoặc mã vạch"
+      variant="outlined"
+      fullWidth
+      size="small"
+    />
+  );
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={handleCloseAndReset}
       aria-labelledby="form-dialog-title"
     >
       <Box className={classes.root}>
         <AddCategory open={openAddCategory} handleClose={handleCloseCategory} />
-        <Typography
-          className={classes.headerTitle}
-          variant="h5"
-          gutterBottom
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
           style={{ marginBottom: 20 }}
         >
-          Thêm sản phẩm
-        </Typography>
+          <Typography className={classes.headerTitle} variant="h5">
+            Thêm sản phẩm
+          </Typography>
+          <Box style={{ width: "70%" }}>
+            <SearchWithAutoComplete
+              onSelect={selectSampleProductHandler}
+              searchApiCall={searchSampleProductHandler}
+              renderInput={renderNameInput}
+              getOptionLabel={(option) => option.name}
+            />
+          </Box>
+        </Box>
         <Grid
           container
           direction="row"
@@ -152,17 +234,15 @@ const AddInventory = (props) => {
         >
           <Grid item sm={7} xs={12}>
             <TextField
-              required
               label="Tên sản phẩm"
               variant="outlined"
               fullWidth
               size="small"
+              value={productInfo.name}
               onChange={(e) =>
                 setProductInfo({ ...productInfo, name: e.target.value })
               }
-              value={productInfo.name}
             />
-
             <TextField
               label="Mã vạch (mặc định)"
               variant="outlined"
@@ -285,13 +365,8 @@ const AddInventory = (props) => {
               style={{ marginTop: 10 }}
             >
               {display.map((img) => (
-                <Tooltip title="Xóa">
-                  <Button
-                    size="small"
-                    onClick={() =>
-                      setDisplay(display.filter((item) => item !== img))
-                    }
-                  >
+                <Tooltip title="Xóa tất cả hình ảnh">
+                  <Button size="small" onClick={() => clearImage(img)}>
                     <Box
                       component="img"
                       sx={{
@@ -301,7 +376,7 @@ const AddInventory = (props) => {
                         marginRight: 7,
                         borderRadius: 2,
                       }}
-                      src={img}
+                      src={img.link}
                     />
                   </Button>
                 </Tooltip>
@@ -313,7 +388,7 @@ const AddInventory = (props) => {
                 size="medium"
                 component="label"
               >
-                <input type="file" hidden onChange={onChange} />
+                <input type="file" hidden onChange={addImageHandler} />
                 <AddIcon />
               </IconButton>
             </Box>
@@ -328,7 +403,7 @@ const AddInventory = (props) => {
             }}
           >
             <Button
-              onClick={() => handleClose(null)}
+              onClick={handleCloseAndReset}
               variant="contained"
               size="small"
               color="secondary"

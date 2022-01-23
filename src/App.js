@@ -15,6 +15,8 @@ import MainPage from "./pages/MainPage/MainPage";
 import CustomerPage from "./pages/CustomerPage/CustomerPage";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
 import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
+import SearchWithAutoComplete from "./components/SearchBar/SearchWithAutoComplete";
+import Test from "./components/Test/Test";
 function App() {
   const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
@@ -48,6 +50,7 @@ function App() {
             </Route>
             <Route path="/main" component={MainPage} />
             <Route path="/customer-test" component={CustomerPage} />
+            <Route path="/test" component={Test} />
             <Route path="*" component={PageNotFound} />
           </Switch>
         </HashRouter>
