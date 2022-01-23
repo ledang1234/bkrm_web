@@ -26,7 +26,6 @@ const AddCategory = (props) => {
       try {
         const response = await productApi.getAllCategory(store_uuid);
         setCategoryList(response.data);
-        console.log(response.data);
       } catch (error) {}
     };
     fetchAllCategory();
@@ -34,7 +33,6 @@ const AddCategory = (props) => {
   const handleAddCategory = async () => {
     try {
       const response = await productApi.addCategory(store_uuid,categoryInfo)
-      console.log(response.data);
     } catch (error) {
       console.log(error)
     }

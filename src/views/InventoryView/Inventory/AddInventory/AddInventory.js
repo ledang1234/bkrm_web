@@ -113,15 +113,16 @@ const AddInventory = (props) => {
         "category_uuid",
         productInfo.category.uuid.toString()
       );
-      bodyFormData.append("img_url", imageURL.toString());
+      bodyFormData.append("img_url", imageURL);
       // bodyFormData.append("images[]", images);
       images.forEach((image) => bodyFormData.append("images[]", image));
-      console.log(productInfo);
+
       await productApi.createProduct(store_uuid, bodyFormData);
       dispatch(statusAction.successfulStatus("Create product successfully"));
       props.setReload(true);
     } catch (error) {
       console.log(error);
+      console.log(productInfo);
       dispatch(statusAction.failedStatus("Create product failed"));
     }
   };
@@ -179,12 +180,12 @@ const AddInventory = (props) => {
   const clearAllImages = () => {
     setDisplay([]);
     setImages([]);
-    setImageURL(null);
+    setImageURL("");
   };
   const clearImage = (displayImage) => {
     setDisplay(display.filter((img) => img != displayImage));
     if (displayImage.isUrl) {
-      setImageURL(null);
+      setImageURL("");
     } else {
       setImages(images.filter((image, index) => index !== displayImage.index));
     }
