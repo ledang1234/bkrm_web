@@ -3,6 +3,7 @@ import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { grey } from "@material-ui/core/colors";
+import AddIcon from "@material-ui/icons/Add";
 
 //import library
 import {
@@ -21,6 +22,9 @@ import {
   IconButton,
   TableBody,
   Typography,
+  ButtonBase,
+  Avatar,
+  Tooltip,
 } from "@material-ui/core";
 
 //import constant
@@ -47,6 +51,7 @@ import update from "immutability-helper";
 import { useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import moment from "moment";
+import AddInventory from "../Inventory/AddInventory/AddInventory";
 import supplierApi from "../../../api/supplierApi";
 
 
@@ -96,7 +101,7 @@ const Import = () => {
   // 1.Cart
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-
+  const [addProduct, setAddProduct] = useState(false);
   const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
   const [suppliers, setSuppliers] = React.useState([])
 
@@ -368,12 +373,15 @@ const Import = () => {
       alignItems="center"
       spacing={2}
     >
+      <AddInventory
+        open={addProduct}
+        handleClose={() => setAddProduct(false)}
+      />{" "}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
         open={openSnack}
         status={snackStatus}
       />
-
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={8}>
         <Card className={classes.root}>
@@ -416,10 +424,28 @@ const Import = () => {
                   </ListItem>
                 </Grid>
                 <Grid>
-                  {/* 1.1.3. Search */}
-                  <SearchProduct
-                    handleSearchBarSelect={handleSearchBarSelect}
-                  />
+                  <Box display="flex" flexDirection="row">
+                    {/* 1.1.3. Search */}
+                    <SearchProduct
+                      handleSearchBarSelect={handleSearchBarSelect}
+                    />
+                    <ButtonBase
+                      sx={{ borderRadius: "1px" }}
+                      onClick={() => {
+                        setAddProduct(true);
+                      }}
+                      style={{ marginLeft: 10 }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        className={classes.headerAvatar}
+                      >
+                        <Tooltip title="Thêm sản phẩm">
+                          <AddIcon stroke={1.5} size="1.3rem" />
+                        </Tooltip>
+                      </Avatar>
+                    </ButtonBase>
+                  </Box>
                 </Grid>
               </Grid>
 
@@ -467,7 +493,6 @@ const Import = () => {
           </Box>
         </Card>
       </Grid>
-
       {/* 2.SUMMARY CARD (right) */}
       <Grid item xs={12} sm={4} className={classes.root}>
         <Card className={classes.root}>
