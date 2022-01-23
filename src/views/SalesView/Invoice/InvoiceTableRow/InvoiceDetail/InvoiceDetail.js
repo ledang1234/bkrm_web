@@ -245,7 +245,7 @@ function InvoiceDetail(props) {
                 <TableCell component="th" scope="row">
                   {detail.bar_code}
                 </TableCell>
-                <TableCell>{detail.product_name}</TableCell>
+                <TableCell>{detail.name}</TableCell>
                 <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">
                   {detail.unit_price}
