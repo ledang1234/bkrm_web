@@ -31,7 +31,7 @@ const UserInfo = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Full Name"
+            label="Họ tên"
             value={userInfo.name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -41,7 +41,7 @@ const UserInfo = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Phone"
+            label="Số điện thoại"
             name="phone"
             autoComplete="phone"
             value={userInfo.phone}
@@ -66,7 +66,7 @@ const UserInfo = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Email Address"
+            label="Địa chỉ email"
             name="email"
             autoComplete="email"
             value={userInfo.email}
@@ -79,7 +79,7 @@ const UserInfo = (props) => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Mật khẩu"
             type="password"
             value={userInfo.password}
             onChange={(e) => setPassword(e.target.value)}
@@ -91,7 +91,7 @@ const UserInfo = (props) => {
             required
             fullWidth
             name="password"
-            label="Password Confirmation"
+            label="Nhập lại mật khẩu"
             type="password"
             value={userInfo.passwordConfirm}
             onChange={(e) => SetPasswordConfirm(e.target.value)}

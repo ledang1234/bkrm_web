@@ -67,5 +67,10 @@ const productApi = {
     const url = `stores/${storeUuid}/categories`;
     return axiosClient.post(url, body);
   },
+
+  searchDefaultProducts: (searchKey,page) => {
+    const url = `/searchDefaultProduct?searchKey=${searchKey}&page=${page}&limit=${15}`;
+    return axiosClient.get(url);
+  },
 };
 export default productApi;

@@ -11,6 +11,8 @@ import { Link } from "react-router-dom";
 import UserInfo from "../../components/SignUp/UserInfo";
 import StoreInfo from "../../components/SignUp/StoreInfo";
 import { loadingActions } from "../../store/slice/loadingSlice";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 export default function SignUp() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -29,13 +31,26 @@ export default function SignUp() {
     phone: "",
     dateOfBirth: "1991-01-01",
   });
-  const [storeInfo, setStoreInfo] = useState({
-    name: "",
-    phone: "",
-    city: { id: "", name: "" },
-    district: { id: "", name: "" },
-    ward: { id: "", name: "" },
-    address: "",
+  const store_formik = useFormik({
+    initialValues: {
+      name: "",
+      address: "",
+      ward: "",
+      district: "",
+      city: "",
+      phone: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên chi nhánh"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại")
+        .matches(/^\d+$/, "Số điển thoại không chính xác"),
+      address: Yup.string().required("Nhập địa chỉ"),
+      city: Yup.string().required("Chọn tỉnh/thành phố"),
+      district: Yup.string().required("Chọn quận/huyện"),
+      ward: Yup.string().required("Chọn phường/xã"),
+    }),
   });
   const dispatch = useDispatch();
   const handleSignUp = async () => {
@@ -49,12 +64,12 @@ export default function SignUp() {
         phone: userInfo.phone,
         date_of_birth: userInfo.dateOfBirth,
         status: "active",
-        store_name: storeInfo.name,
-        address: storeInfo.address,
-        ward: storeInfo.ward.name,
-        district: storeInfo.district.name,
-        province: storeInfo.city.name,
-        store_phone: storeInfo.phone,
+        store_name: store_formik.name,
+        address: store_formik.address,
+        ward: store_formik.ward,
+        district: store_formik.district,
+        province: store_formik.city,
+        store_phone: store_formik.phone,
         default_branch: true,
       });
       dispatch(loadingActions.finishLoad());
@@ -86,15 +101,15 @@ export default function SignUp() {
           {activeStep !== 1 ? (
             <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
           ) : (
-            <StoreInfo storeInfo={storeInfo} setStoreInfo={setStoreInfo} />
+            <StoreInfo store_formik={store_formik} />
           )}
           <Box className={classes.button}>
             <Button disabled={activeStep === 0} onClick={handleBack}>
-              Back
+              Trở về
             </Button>
             {activeStep !== 1 ? (
               <Button onClick={handleNext} variant="contained" color="primary">
-                Next
+                Tiếp tục
               </Button>
             ) : (
               <Button
@@ -103,7 +118,7 @@ export default function SignUp() {
                 className={classes.submit}
                 onClick={() => handleSignUp()}
               >
-                Sign Up
+                Đăng ký
               </Button>
             )}
           </Box>
@@ -114,7 +129,7 @@ export default function SignUp() {
                 component={Link}
                 to="/login"
               >
-                Already have an account? Sign in
+                Đã có tài khoản ? Đăng nhập ngay
               </Typography>
             </Grid>
           </Grid>
@@ -125,5 +140,5 @@ export default function SignUp() {
 }
 
 function getSteps() {
-  return ["Fill in owner information", "Fill in store information"];
+  return ["Điền thông tin người dùng", "Điền thông tin chủ cửa hàng"];
 }

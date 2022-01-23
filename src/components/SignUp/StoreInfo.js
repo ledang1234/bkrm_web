@@ -7,75 +7,69 @@ import {
   Button,
   FormControlLabel,
   Checkbox,
+  FormHelperText,
 } from "@material-ui/core";
-import React, { useState } from "react";
-import location from "../../assets/JsonData/provinces.json";
-
+import { useFormik } from "formik";
+import React, { useEffect, useState } from "react";
+import userApi from "../../api/userApi";
+import * as Yup from "yup";
+import { useDispatch } from "react-redux";
 const StoreInfo = (props) => {
-  const { storeInfo, setStoreInfo } = {
+  const { store_formik } = {
     ...props,
   };
-  const cityList = location.provinces;
-  const [districtList, setDistrictList] = useState(
-    location.districts.filter((d) => d.province_id === storeInfo.city.id)
-  );
-  const [wardList, setWardList] = useState(
-    location.wards.filter((w) => w.district_id === storeInfo.district.id)
-  );
-  const setName = (e) => {
-    setStoreInfo({ ...storeInfo, name: e });
-  };
-  const setPhone = (e) => {
-    setStoreInfo({ ...storeInfo, phone: e });
-  };
-  const setCity = (e) => {
-    setStoreInfo({
-      ...storeInfo,
-      district: { id: "", name: "" },
-      ward: { id: "", name: "" },
-    });
-    setWardList([]);
-    try {
-      const id = cityList.find((c) => c.name === e).id;
-      setStoreInfo({ ...storeInfo, city: { id: id, name: e } });
-      setDistrictList(
-        location.districts.filter((district) => district.province_id === id)
-      );
-    } catch (error) {}
-  };
-  const setAddress = (e) => {
-    setStoreInfo({ ...storeInfo, address: e });
-  };
-  const setDistrict = (e) => {
-    setStoreInfo({
-      ...storeInfo,
-      ward: { id: "", name: "" },
-    });
-    try {
-      const id = districtList.find((c) => c.name === e).id;
-      setStoreInfo({ ...storeInfo, district: { id: id, name: e } });
-      setWardList(location.wards.filter((ward) => ward.district_id === id));
-    } catch (error) {}
-  };
-  const setWard = (e) => {
-    try {
-      const id = wardList.find((c) => c.name === e);
-      setStoreInfo({ ...storeInfo, ward: { id: id, name: e } });
-    } catch (error) {}
-  };
+  const [cityList, setCityList] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [wardList, setWardList] = useState([]);
+  useEffect(() => {
+    const loadCity = async () => {
+      try {
+        const res = await userApi.getCity();
+        setCityList(res.provinces);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    loadCity();
+  }, []);
+  useEffect(() => {
+    const loadDistrict = async (city_id) => {
+      try {
+        const res = await userApi.getDistrict(city_id);
+        setDistrictList(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    loadDistrict(store_formik.values.city);
+    console.log(store_formik.errors);
+  }, [store_formik.values.city]);
+  useEffect(() => {
+    const loadWard = async (city_id, district_id) => {
+      try {
+        const res = await userApi.getWard(city_id, district_id);
+        setWardList(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    loadWard(store_formik.values.city, store_formik.values.district);
+  }, [store_formik.values.city, store_formik.values.district]);
   return (
     <React.Fragment>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{ maxWidth: 600, marginTop: 10 }}>
         <Grid item xs={12}>
           <TextField
-            autoComplete="name"
             name="name"
             variant="outlined"
             required
             fullWidth
-            label="Store Name"
-            value={storeInfo.name}
-            onChange={(e) => setName(e.target.value)}
+            label="Tên chi nhánh"
+            onChange={store_formik.handleChange}
+            value={store_formik.values.name}
+            error={store_formik.touched.name && store_formik.errors.name}
+            helperText={store_formik.touched.name ? store_formik.errors.name : null}
+            onBlur={store_formik.handleBlur}
           />
         </Grid>
         <Grid item xs={5}>
@@ -83,89 +77,108 @@ const StoreInfo = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Phone"
+            label="Số điện thoại"
             name="phone"
-            autoComplete="phone"
-            value={storeInfo.phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={store_formik.handleChange}
+            value={store_formik.values.phone}
+            error={store_formik.touched.phone && store_formik.errors.phone}
+            helperText={store_formik.touched.phone ? store_formik.errors.phone : null}
+            onBlur={store_formik.handleBlur}
           />
         </Grid>
         <Grid item xs={7}>
-          <FormControl required fullWidth variant="outlined">
-            <InputLabel>City</InputLabel>
+          <FormControl
+            required
+            fullWidth
+            variant="outlined"
+            error={store_formik.touched.city && store_formik.errors.city}
+          >
+            <InputLabel>Tỉnh</InputLabel>
             <Select
               native
-              value={storeInfo.city.name}
-              onChange={(e) => setCity(e.target.value)}
-              label="City"
-              style={{ maxHeight: 100 }}
+              name="city"
+              label="Tỉnh"
+              value={store_formik.values.city}
+              onChange={store_formik.handleChange}
+              onBlur={store_formik.handleBlur}
             >
-              <option aria-label="None" value="" />
+              <option value="" />
               {cityList.map((city) => (
-                <option key={city.id} value={city.name}>
-                  {city.name}
-                </option>
+                <option value={city.id}>{city.name}</option>
               ))}
             </Select>
+            {store_formik.touched.city ? (
+              <FormHelperText>{store_formik.errors.city}</FormHelperText>
+            ) : null}
           </FormControl>
         </Grid>
         <Grid item xs={6}>
-          <FormControl required fullWidth variant="outlined">
-            <InputLabel htmlFor="city">District</InputLabel>
+          <FormControl
+            required
+            fullWidth
+            variant="outlined"
+            error={store_formik.touched.district && store_formik.errors.district}
+          >
+            <InputLabel>Huyện</InputLabel>
             <Select
               native
-              value={storeInfo.district.name}
-              onChange={(e) => setDistrict(e.target.value)}
-              label="District"
+              label="Huyện"
+              name="district"
+              value={store_formik.values.district}
+              onChange={store_formik.handleChange}
+              onBlur={store_formik.handleBlur}
             >
-              <option aria-label="None" value="" />
+              <option value="" />
               {districtList.map((district) => (
-                <option key={district.id} value={district.name}>
-                  {district.name}
-                </option>
+                <option value={district.id}>{district.name}</option>
               ))}
             </Select>
+            {store_formik.touched.district ? (
+              <FormHelperText>{store_formik.errors.district}</FormHelperText>
+            ) : null}
           </FormControl>
         </Grid>
         <Grid item xs={6}>
-          <FormControl required fullWidth variant="outlined">
-            <InputLabel htmlFor="ward">Ward</InputLabel>
+          <FormControl
+            required
+            fullWidth
+            variant="outlined"
+            error={store_formik.touched.ward && store_formik.errors.ward}
+          >
+            <InputLabel htmlFor="ward">Xã</InputLabel>
             <Select
               native
-              value={storeInfo.ward.name}
-              onChange={(e) => setWard(e.target.value)}
-              label="Ward"
+              label="Xã"
+              name="ward"
+              value={store_formik.values.ward}
+              onChange={store_formik.handleChange}
+              onBlur={store_formik.handleBlur}
             >
               <option aria-label="None" value="" />
               {wardList.map((ward) => (
-                <option key={ward.id} value={ward.name}>
-                  {ward.name}
-                </option>
+                <option value={ward.id}>{ward.name}</option>
               ))}
             </Select>
+            {store_formik.touched.ward ? (
+              <FormHelperText>{store_formik.errors.ward}</FormHelperText>
+            ) : null}
           </FormControl>
         </Grid>
         <Grid item xs={12}>
           <TextField
-            autoComplete="address"
             name="address"
             variant="outlined"
             required
             fullWidth
-            label="Address"
-            onChange={(e) => setAddress(e.target.value)}
+            label="Địa chỉ"
+            onChange={store_formik.handleChange}
+            value={store_formik.values.address}
+            onBlur={store_formik.handleBlur}
+            error={store_formik.touched.address && store_formik.errors.address}
+            helperText={store_formik.touched.address ? store_formik.errors.address : null}
           />
         </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Set as the default branch"
-          />
-        </Grid>
-        <Grid item xs></Grid>
-      </Grid>
+      </Grid>{" "}
     </React.Fragment>
   );
 };

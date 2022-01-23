@@ -3,6 +3,7 @@ import {
   Button,
   createStyles,
   FormControl,
+  FormHelperText,
   Grid,
   InputLabel,
   makeStyles,
@@ -20,6 +21,7 @@ import { statusAction } from "../../../store/slice/statusSlice";
 import SimpleModal from "../../Modal/ModalWrapper";
 import getGeoCode from "../Geocode";
 import ConfirmPopUp from "../../ConfirmPopUp/ConfirmPopUp";
+import * as Yup from "yup";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -49,6 +51,14 @@ const EditBranch = (props) => {
       city: branch.province,
       phone: branch.phone,
     },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên chi nhánh"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại").matches(/^\d+$/),
+      address: Yup.string().required("Nhập địa chỉ"),
+      city: Yup.string().required("Chọn tỉnh/ thành phố"),
+    }),
   });
   useEffect(() => {
     const loadCity = async () => {
@@ -171,9 +181,12 @@ const EditBranch = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Name"
+            label="Tên chi nhánh"
             onChange={formik.handleChange}
             value={formik.values.name}
+            error={formik.touched.name && formik.errors.name}
+            helperText={formik.touched.name ? formik.errors.name : null}
+            onBlur={formik.handleBlur}
           />
         </Grid>
         <Grid item xs={5}>
@@ -181,35 +194,53 @@ const EditBranch = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Phone"
+            label="Số điện thoại"
             name="phone"
             onChange={formik.handleChange}
             value={formik.values.phone}
+            error={formik.touched.phone && formik.errors.phone}
+            helperText={formik.touched.phone ? formik.errors.phone : null}
+            onBlur={formik.handleBlur}
           />
         </Grid>
         <Grid item xs={7}>
-          <FormControl required fullWidth variant="outlined">
-            <InputLabel>City</InputLabel>
+          <FormControl
+            required
+            fullWidth
+            variant="outlined"
+            error={formik.touched.city && formik.errors.city}
+          >
+            <InputLabel>Tỉnh</InputLabel>
             <Select
               native
               name="city"
-              label="City"
+              label="Tỉnh"
               value={formik.values.city}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             >
               <option value="" />
               {cityList.map((city) => (
                 <option value={city.id}>{city.name}</option>
               ))}
             </Select>
+            {formik.touched.city ? (
+              <FormHelperText>{formik.errors.city}</FormHelperText>
+            ) : null}
           </FormControl>
         </Grid>
         <Grid item xs={6}>
-          <FormControl required fullWidth variant="outlined">
-            <InputLabel>District</InputLabel>
+          <FormControl
+            required
+            fullWidth
+            variant="outlined"
+            error={formik.touched.district && formik.errors.district}
+            onBlur={formik.handleBlur}
+          >
+            <InputLabel>Quận</InputLabel>
             <Select
               native
-              label="District"
+              label="Quận"
               name="district"
               value={formik.values.district}
               onChange={formik.handleChange}
@@ -223,10 +254,10 @@ const EditBranch = (props) => {
         </Grid>
         <Grid item xs={6}>
           <FormControl required fullWidth variant="outlined">
-            <InputLabel htmlFor="ward">Ward</InputLabel>
+            <InputLabel htmlFor="ward">Phường</InputLabel>
             <Select
               native
-              label="Ward"
+              label="Phường"
               name="ward"
               value={formik.values.ward}
               onChange={formik.handleChange}
@@ -244,7 +275,7 @@ const EditBranch = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Address"
+            label="Địa chỉ"
             onChange={formik.handleChange}
             value={formik.values.address}
           />

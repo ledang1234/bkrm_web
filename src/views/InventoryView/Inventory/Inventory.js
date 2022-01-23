@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
@@ -74,7 +74,7 @@ const Inventory = () => {
         console.log(err);
       }
     };
-    fetchProducts()
+    fetchProducts();
   }, [branch_uuid]);
 
   // useEffect(() => {
@@ -98,15 +98,8 @@ const Inventory = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = (status) => {
+  const handleClose = () => {
     setOpen(false);
-    setAddStatus(status);
-    if (status === "Success") {
-      setReload(true);
-      setOpenBar(true);
-    } else if (status === "Fail") {
-      setOpenBar(true);
-    }
   };
   //category
   const [openCategory, setOpenCategory] = React.useState(false);
@@ -150,11 +143,10 @@ const Inventory = () => {
     // setOrderBy(property);
   };
 
-
   // toolbar
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
+    content: () => componentRef.current,
   });
 
   return (
@@ -188,7 +180,11 @@ const Inventory = () => {
 
       {/* Popup add */}
       <Category open={openCategory} handleClose={handleCloseCategory} />
-      <AddInventory open={open} handleClose={handleClose} />
+      <AddInventory
+        open={open}
+        handleClose={handleClose}
+        setReload={setReload}
+      />
       {/* Noti */}
       <SnackBar
         openBar={openBar}
@@ -202,71 +198,73 @@ const Inventory = () => {
       {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
       <ToolBar
         dataTable={productList}
-        tableType={TableType.INVENTORY} 
+        tableType={TableType.INVENTORY}
         handlePrint={handlePrint}
         handleSearchValueChange={setSearchValue}
       />
 
       {/* 3. TABLE */}
-      <TableWrapper >
-
-          <TableHeader
-            classes={classes}
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            headerData={HeadCells.InventoryHeadCells}
-          />
-          <TableBody >
-            {productList.map((row, index) => {
-              return (
-                <InventoryTableRow
-                  key={row.uuid}
-                  row={row}
-                  setReload={setReload}
-                  openRow={openRow}
-                  handleOpenRow={handleOpenRow}
-                />
-              );
-            })}
-          </TableBody>
-
+      <TableWrapper>
+        <TableHeader
+          classes={classes}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+          headerData={HeadCells.InventoryHeadCells}
+        />
+        <TableBody>
+          {productList.map((row, index) => {
+            return (
+              <InventoryTableRow
+                key={row.uuid}
+                row={row}
+                setReload={setReload}
+                openRow={openRow}
+                handleOpenRow={handleOpenRow}
+              />
+            );
+          })}
+        </TableBody>
       </TableWrapper>
-      <div  style={{display:'none'}} >
-        <div ref={componentRef}  >
-        <ComponentToPrint  productList={productList} classes={classes}/>
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ComponentToPrint productList={productList} classes={classes} />
         </div>
-        
       </div>
     </Card>
   );
 };
 export default Inventory;
 
-const ComponentToPrint = ({productList,classes}) =>{
+const ComponentToPrint = ({ productList, classes }) => {
   return (
-      <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Kho hàng</Typography>
-        <div >
-          <TableHeader
-                classes={classes}
-                headerData={HeadCells.InventoryHeadCells}
-              />
-              <TableBody >
-                {productList.map((row, index) => {
-                  return (
-                    <InventoryTableRow
-                      key={row.uuid}
-                      row={row}
-                    
-                    />
-                  );
-                })}
-              </TableBody>
-        </div>
-  </div>
-  )
-}
+    <div>
+      <Typography
+        style={{
+          flexGrow: 1,
+          textAlign: "center",
+          fontSize: 25,
+          fontWeight: 500,
+          margin: 30,
+          color: "#000",
+        }}
+      >
+        Kho hàng
+      </Typography>
+      <div>
+        <TableHeader
+          classes={classes}
+          headerData={HeadCells.InventoryHeadCells}
+        />
+        <TableBody>
+          {productList.map((row, index) => {
+            return <InventoryTableRow key={row.uuid} row={row} />;
+          })}
+        </TableBody>
+      </div>
+    </div>
+  );
+};
 
 // PRINT làm lại sau
 
