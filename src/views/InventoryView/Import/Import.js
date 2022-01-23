@@ -124,7 +124,7 @@ const Import = () => {
 
     fetchSupplier();
     
-  })
+  }, [])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
