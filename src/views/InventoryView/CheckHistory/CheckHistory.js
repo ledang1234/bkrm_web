@@ -3,7 +3,19 @@ import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
+import {
+  Typography,
+  Card,
+  Button,
+  Divider,
+  Grid,
+  ButtonBase,
+  Avatar,
+  Tooltip,
+  TableBody,
+  Dialog,
+  DialogContent,
+} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import { useReactToPrint } from "react-to-print";
 
@@ -28,17 +40,50 @@ import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
 
 import JSONdata from '../../../assets/JsonData/check.json'
-
+import InventoryCheckPopUp from '../../../components/PopupCheck/InventoryCheckPopUp';
+import inventoryCheckApi from '../../../api/inventoryCheckApi';
 
 const CheckHistory = () => {
     // fetch data here
     const checkHistoryList = JSONdata;
+
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
+    const branch_uuid = info.branch.uuid;
+
+    const [inventoryChecks, setInventoryChecks] = useState([])
+
+    const loadData = async () => {
+      try {
+        const res = await inventoryCheckApi.getAllOfBranch(
+          store_uuid,
+          branch_uuid
+        );
+        console.log(res.data);
+        setInventoryChecks(res.data.reverse());
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    useEffect(() => {
+      loadData();
+    }, []);
 
 
     const theme = useTheme();
     const classes = useStyles(theme);
     const dispatch = useDispatch();
 
+    const [addOpen, setAddOpen] = useState(false);
+
+    const openInvetoryCheck = () => {
+      setAddOpen(true)
+    }
+
+     const closeInvetoryCheck = () => {
+       setAddOpen(false);
+     };
 
     //// 2. Table
     //collapse
@@ -76,70 +121,90 @@ const CheckHistory = () => {
     //3.3. loc cot
 
     return (
-      
-        <Card className={classes.root} >
-          <Grid 
-            container
-            direction="row"
-            justifyContent="space-between"  
-          > 
-              {/* 1. ADD POP UP */}
-                <Typography className={classes.headerTitle} variant="h5">
-                    Đơn kiểm kho
-                </Typography>
-
-                <Grid className={classes.btngroup1} >
-                    <ButtonBase 
-                        sx={{ borderRadius: '16px' }} 
-                        onClick={()=>{dispatch(customizeAction.setSidebarOpen(false));}}
-                        component={Link}
-                        to='/home/inventory/check-history/check' 
-                        >
-                        <Avatar variant="rounded" className={classes.headerAvatar}  >
-                            <Tooltip title="Kiểm kho">
-                            <AddIcon stroke={1.5} size="1.3rem" />
-                            </Tooltip>
-                        </Avatar>
-                    </ButtonBase>
-            </Grid>
-          </Grid>
-    
-          <Divider />
-          
-          {/* 2. SEARCH - FILTER - EXPORT*/}
-          {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          <ToolBar  dataTable={checkHistoryList} tableType={TableType.CHECK_LIST} textSearch={'#, Người kiểm,...'} /*handlePrint={handlePrint}*/ 
-           handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}
+      <Card className={classes.root}>
+        <Dialog
+          fullWidth={true}
+          maxWidth="lg"
+          open={addOpen}
+          onClose={closeInvetoryCheck}
+          aria-labelledby="form-dialog-title"
+        >
+          <InventoryCheckPopUp
+            handleCloseReturn={closeInvetoryCheck}
+            classes={classes}
           />
+        </Dialog>
+        <Grid container direction="row" justifyContent="space-between">
+          {/* 1. ADD POP UP */}
+          <Typography className={classes.headerTitle} variant="h5">
+            Đơn kiểm kho
+          </Typography>
 
-          <CheckHistoryFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+          <Grid className={classes.btngroup1}>
+            <ButtonBase
+              sx={{ borderRadius: "16px" }}
+              onClick={() => {
+                openInvetoryCheck();
+              }}
+            >
+              <Avatar variant="rounded" className={classes.headerAvatar}>
+                <Tooltip title="Kiểm kho">
+                  <AddIcon stroke={1.5} size="1.3rem" />
+                </Tooltip>
+              </Avatar>
+            </ButtonBase>
+          </Grid>
+        </Grid>
 
+        <Divider />
 
-          
-          {/* 3. TABLE */}
-          <TableWrapper>
-              <TableHeader
-                classes={classes}
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                headerData={HeadCells.CheckHistoryHeadCells}
-              />
-              <TableBody>
-                {checkHistoryList.map((row, index) => {
-                    return (
-                      <CheckHistoryTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
-                    );
-                })}
-              </TableBody>
-          </TableWrapper>
-          <div  style={{display:'none'}} >
-            <div ref={componentRef}  >
-            <ComponentToPrint  checkHistoryList={checkHistoryList} classes={classes}/>
-            </div>
+        {/* 2. SEARCH - FILTER - EXPORT*/}
+        {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
+        <ToolBar
+          dataTable={checkHistoryList}
+          tableType={TableType.CHECK_LIST}
+          textSearch={"#, Người kiểm,..."} /*handlePrint={handlePrint}*/
+          handleToggleFilter={handleToggleFilter}
+          handlePrint={handlePrint}
+        />
+
+        <CheckHistoryFilter
+          openFilter={openFilter}
+          handleToggleFilter={handleToggleFilter}
+        />
+
+        {/* 3. TABLE */}
+        <TableWrapper>
+          <TableHeader
+            classes={classes}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            headerData={HeadCells.CheckHistoryHeadCells}
+          />
+          <TableBody>
+            {inventoryChecks.map((row, index) => {
+              return (
+                <CheckHistoryTableRow
+                  key={row.uuid}
+                  row={row}
+                  openRow={openRow}
+                  handleOpenRow={handleOpenRow}
+                />
+              );
+            })}
+          </TableBody>
+        </TableWrapper>
+        <div style={{ display: "none" }}>
+          <div ref={componentRef}>
+            <ComponentToPrint
+              checkHistoryList={checkHistoryList}
+              classes={classes}
+            />
           </div>
-        </Card>
-    )
+        </div>
+      </Card>
+    );
 }
 
 export default CheckHistory

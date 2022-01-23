@@ -183,7 +183,7 @@ function InventoryReturnPopUp(props) {
       );
       setSnackStatus({
         style: 'success',
-        message: `Trả hàng thành công: ${res.data.purchase_order_code}`,
+        message: `Trả hàng thành công: ${res.data.purchase_return_code}`,
       });
       setOpenSnack(true);
     } catch (err) {

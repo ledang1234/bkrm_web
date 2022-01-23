@@ -12,35 +12,49 @@ const CheckHistoryTableRow = (props) => {
     const classes = useRowStyles();
 
     return (
-        <>
+      <>
         {/* ROW */}
-            <TableRow
-            onClick={() => handleOpenRow(row.uuid)}   
-            key={row.uuid}
-            className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
-            >
-                <TableCell align="left" >{row.id}</TableCell>
-                <TableCell align="left"className={classes.fontName}>{row.date}</TableCell>
-                <TableCell align="left">{row.branch}</TableCell>
-                <TableCell align="right" className={classes.fontName}>{row.tongtonkho}</TableCell>
-                <TableCell align="right" className={classes.fontName}>{row.tongSLthucte}</TableCell>
-                <TableCell align="right" className={classes.fontName}>{row.tongSLthucte - row.tongtonkho}</TableCell>
-                <TableCell align="center">
+        <TableRow
+          onClick={() => handleOpenRow(row.uuid)}
+          key={row.uuid}
+          className={clsx(
+            classes.row,
+            openRow === row.uuid ? classes.rowClicked : null
+          )}
+        >
+          <TableCell align="left">{row.inventory_check_code}</TableCell>
+          <TableCell align="left" className={classes.fontName}>
+            {row.created_at}
+          </TableCell>
+          <TableCell align="left">{row.branch_name}</TableCell>
+          <TableCell align="right" className={classes.fontName}>
+            {row.details
+              ?.map((detail) => detail.quantity)
+              .reduce((total, ele) => total + ele, 0)}
+          </TableCell>
+          <TableCell align="right" className={classes.fontName}>
+            {row.details
+              ?.map((detail) => Number(detail.quantity) * Number(detail.unit_price))
+              .reduce((total, num) => total + num, 0)}
+          </TableCell>
+          {/* <TableCell align="center">
                     <FormatedStatusCheck status={row.tongSLthucte - row.tongtonkho}/>
-                </TableCell>
-                <TableCell align="left">{row.employee}</TableCell>
-            </TableRow>
+                </TableCell> */}
+          <TableCell align="left">
+            {row.created_user_type === "owner" ? "Chủ cửa hàng" : "Nhân viên"}
+          </TableCell>
+          <TableCell align="left">{row.user_name}</TableCell>
+        </TableRow>
 
         {/* DETAIL */}
-            <TableRow>
-              {/* colspan  => số cột trong collapse */}
-              <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>           
-                    <CheckHistoryDetail parentProps={props}/>       
-              </TableCell>
-       
-            </TableRow>
-        </>
-    )
+        <TableRow>
+          {/* colspan  => số cột trong collapse */}
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+            <CheckHistoryDetail parentProps={props} />
+          </TableCell>
+        </TableRow>
+      </>
+    );
 }
 
 export default CheckHistoryTableRow
