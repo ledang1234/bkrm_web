@@ -29,6 +29,8 @@ import { useDispatch, useSelector } from "react-redux";
 import SearchWithAutoComplete from "../../../../components/SearchBar/SearchWithAutoComplete";
 import { urltoFile } from "../../../../api/helper";
 import { statusAction } from "../../../../store/slice/statusSlice";
+import SearchIcon from "@material-ui/icons/Search";
+import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
 const UploadImages = (img) => {
   return (
     <Box
@@ -190,16 +192,39 @@ const AddInventory = (props) => {
       setImages(images.filter((image, index) => index !== displayImage.index));
     }
   };
-  const renderNameInput = (params) => (
-    <TextField
-      {...params}
-      required
-      label="Tìm kiếm sản phẩm mẫu bằng tên hoặc mã vạch"
-      variant="outlined"
-      fullWidth
-      size="small"
-    />
-  );
+  const renderNameInput = (params) => {
+    return (
+      <TextField
+        {...params}
+        required
+        label="Tìm kiếm sản phẩm mẫu bằng tên hoặc mã vạch"
+        variant="outlined"
+        fullWidth
+        size="small"
+        InputProps={{
+          ...params.InputProps,
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
+    );
+  };
+  const renderOptionTest = (option) => {
+    return (
+      <Grid fullWidth container direction="row">
+        <Grid item xs={3}>
+          <FormatedImage url={option.img_url} />
+        </Grid>
+        <Grid item xs={9} container direction="column">
+          <Typography variant="h5">{option.name}</Typography>
+          <Typography variant="body2">{option.bar_code}</Typography>
+        </Grid>
+      </Grid>
+    );
+  };
   return (
     <Dialog
       open={open}
@@ -224,6 +249,7 @@ const AddInventory = (props) => {
               searchApiCall={searchSampleProductHandler}
               renderInput={renderNameInput}
               getOptionLabel={(option) => option.name}
+              renderOption={renderOptionTest}
             />
           </Box>
         </Box>

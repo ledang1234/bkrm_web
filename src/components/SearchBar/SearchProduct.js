@@ -32,7 +32,7 @@ const CustomTextField = withStyles({
     },
   })(TextField);
 
-const FormatedImage  = (props) => {
+export const FormatedImage  = (props) => {
     return (
       <Box
         component="img"

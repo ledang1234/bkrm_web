@@ -50,26 +50,14 @@ export default function SearchWithAutoComplete(props) {
     );
   };
 
-  const renderOptionTest = (option) => {
-    return (
-      <Grid fullWidth container direction="row">
-        <Grid item xs={3}>
-          <FormatedImage url={option.img_url} />
-        </Grid>
-        <Grid item xs={9} container direction="column">
-          <Typography variant="h5">{option.name}</Typography>
-          <Typography variant="body2">{option.bar_code}</Typography>
-        </Grid>
-      </Grid>
-    );
-  };
+
   return (
     <Autocomplete
       disableCloseOnSelect
       options={options}
       freeSolo={true}
       getOptionLabel={getOptionLabel}
-      renderOption={renderOptionTest}
+      renderOption={renderOption}
       onInputChange={loadingData}
       onChange={(e, value) => onSelect(value)}
       size="small"
