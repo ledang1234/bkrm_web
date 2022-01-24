@@ -107,7 +107,7 @@ const MenuItem = (props) => {
           onClick={()=>handleOnClick(item.id)}
           
         >
-          <ListItemIcon style={{marginRight:-5, padding:2}}>
+          <ListItemIcon style={{marginRight:-6, paddingTop:2,paddingBottom:2, marginLeft:-7}}>
 
              { getMenuIcon(theme.customization.menu)}
             
