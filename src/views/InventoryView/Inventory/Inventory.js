@@ -36,7 +36,11 @@ import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 import { useSelector } from "react-redux";
-import * as xlsx from 'xlsx'
+
+import * as excel from "../../../assets/constant/excel";
+
+import * as xlsx from "xlsx";
+
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);
@@ -47,15 +51,17 @@ const Inventory = () => {
 
   const importProductByJSON = async (jsonData) => {
     try {
-      const res = await storeApi.importProductJSON(store_uuid,jsonData);
+      console.log("loading = true");
+      const res = await storeApi.importProductJSON(store_uuid, jsonData);
       console.log(res.message);
-      setOpen(true);
+      console.log("loaidng false");
+
+      // setOpen(true);
     } catch (err) {
       console.log(err);
-      setOpen(false);
+      // setOpen(false);
     }
-  }
-
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -65,7 +71,7 @@ const Inventory = () => {
           branch_uuid
         );
         setProductList(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (err) {
         console.log(err);
       }
@@ -84,7 +90,7 @@ const Inventory = () => {
           branch_uuid
         );
         setProductList(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (err) {
         console.log(err);
       }
@@ -164,11 +170,12 @@ const Inventory = () => {
     content: () => componentRef.current,
   });
 
-  const [jsonData, setJson] = useState([])
-  // import excel
-  const importExcel = async (json) =>{
-    importProductByJSON(json)
-  }
+  const [jsonData, setJson] = useState([]);
+  //   // import excel
+  //   const importExcel = async (json) =>{
+  //     importProductByJSON(json)
+  //   }
+
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -221,10 +228,13 @@ const Inventory = () => {
         tableType={TableType.INVENTORY}
         handlePrint={handlePrint}
         handleSearchValueChange={setSearchValue}
-        importExcel={importExcel}
         hasImport={true}
+        importProductByJSON={importProductByJSON}
+        excel_head={excel.header_product}
+        excel_data={excel.excel_data_product}
+        excel_name={excel.excel_name_product}
       />
-      
+
       {/* 3. TABLE */}
       <TableWrapper>
         <TableHeader
