@@ -25,7 +25,12 @@ import NoteAddTwoToneIcon from '@material-ui/icons/NoteAddTwoTone';
 // import third party
 import xlsx from "xlsx";
 import SimpleModal from "../../Modal/ModalWrapper";
+
 import { Link } from "react-router-dom";
+
+import { applyMiddleware } from "@reduxjs/toolkit";
+
+
 //--thu vien nay bij loi font
 // import jsPDF from 'jspdf'
 // import 'jspdf-autotable'
@@ -80,7 +85,6 @@ const exportExcel = (dataTable,tableType, header=null)=>{
     xlsx.writeFile(workBook,`${tableType}.xlsx`)
 }
 
- 
 
 const ToolBar = (props) => {
     const {dataTable,tableType,handlePrint,textSearch,handleToggleFilter,hasImport,importProductByJSON,excel_head,excel_data,excel_name} = props;
@@ -88,6 +92,7 @@ const ToolBar = (props) => {
     const classes = useStyles(theme);
 
     const [openImport,setOpenImport] = useState(false);
+
 
     const [json,setJson] = useState(null);
 
@@ -126,6 +131,9 @@ const ToolBar = (props) => {
       importProductByJSON(json)
 
     }
+
+
+    const [jsonData, setJsonData] = useState([])
 
 
     return (
@@ -198,12 +206,23 @@ const ToolBar = (props) => {
                       type="file"
                       name="upload"
                       id="upload"
-                      onChange={readUploadFile}
+                      onChange={(e) =>{
+                        const result = readUploadFile(e, setJsonData)
+                      }}
                   />
               </form>
               {console.log(json)}
 
                <Button style={{marginTop:40}} variant="contained" fullWidth color="primary" onClick={handleImport}>Nhập hàng</Button>
+
+               <Button  onClick={() => {
+                 console.log(jsonData)
+                 if (jsonData) {
+                   importExcel(jsonData)
+                 } else {
+                  alert(jsonData)
+                 }
+              }}>Nhập</Button>
 
              </SimpleModal>
         </Box>
