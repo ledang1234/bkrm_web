@@ -20,11 +20,6 @@ import { grey} from '@material-ui/core/colors'
 import purchaseOrderApi from '../../../../../api/purchaseOrderApi';
 import {useSelector} from 'react-redux'
 
-
-import { VNDFormat ,ThousandFormat} from "../../../../../components/TextField/NumberFormatCustom";
-
-
-
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
@@ -189,10 +184,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng đơn nhập</Typography>    
                         </Grid>
                         <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">
-                             
-                              <VNDFormat value={row.total_amount} />
-                              </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.total_amount}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -244,16 +236,12 @@ const InventoryOrderDetail = (props) => {
                          {detail.bar_code}
                        </TableCell>
                        <TableCell>{detail.name}</TableCell>
+                       <TableCell align="right">{detail.quantity}</TableCell>
                        <TableCell align="right">
-                         
-                         <ThousandFormat value={detail.quantity}/>
-                        </TableCell>
-                       <TableCell align="right">
-                          <VNDFormat value= {detail.unit_price} />
-                        
+                         {detail.unit_price}
                        </TableCell>
                        <TableCell align="right" style={{fontWeight:700}}>
-                          <VNDFormat value= {Number(detail.quantity) * Number(detail.unit_price)} />
+                         {Number(detail.quantity) * Number(detail.unit_price)}
                        </TableCell>
                        
                      </TableRow>
@@ -275,9 +263,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng số mặt hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">
-                              <ThousandFormat value={purchaseOrder.details.length}/>
-                            </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{purchaseOrder.details.length}</Typography>
                         </Grid>
                     </Grid>
 
@@ -286,9 +272,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tiền hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">
-                            <VNDFormat value={purchaseOrder.total_amount}  />
-                            </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{purchaseOrder.total_amount} </Typography>
                         </Grid>
                     </Grid>
 
@@ -297,10 +281,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Giảm giá</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">
-                             
-                              <VNDFormat value= {purchaseOrder.discount} />
-                            </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{purchaseOrder.discount}</Typography>
                         </Grid>
                     </Grid>
 
@@ -309,10 +290,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng đơn nhập</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">
-                              {/* <VNDFormat value={row.total_amount - row.discount - row.paid_amount} /> */}
-                              <VNDFormat value={row.total_amount - row.discount } />
-                            </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.total_amount - row.discount - row.paid_amount}</Typography>
                         </Grid>
                     </Grid>
 
@@ -321,10 +299,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Đã trả NCC</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">
-                              
-                              <VNDFormat value={row.paid_amount} />
-                              </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.paid_amount}</Typography>
                         </Grid>
                     </Grid>
                     

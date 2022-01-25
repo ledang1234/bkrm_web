@@ -37,7 +37,7 @@ const ButtonQuantity = (props) =>{
             <RemoveIcon fontSize="inherit" />
           </IconButton>
         
-          <TextField  style={{width:35 }} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: "right" }}} value={quantity} onChange={(e) =>  setQuantity(parseInt(e.target.value))}/>
+          <TextField  id="standard-basic" style={{width:35 }} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: "right" }}} value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))}/>
           
           <IconButton style={{ display: show }} aria-label="delete" className={classes.margin} size="small" onClick={handleIncrement}>
             <AddIcon fontSize="inherit" />

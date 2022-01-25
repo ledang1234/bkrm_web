@@ -6,7 +6,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import AddSupplier from '../../../../views/InventoryView/Supplier/AddSupplier/AddSupplier'
 import VNDInput from '../../../TextField/NumberFormatCustom';
-import { VNDFormat ,ThousandFormat} from '../../../TextField/NumberFormatCustom';
+import { VNDFormat } from '../../../TextField/NumberFormatCustom';
 import SearchSupplier from '../../../SearchBar/SearchSupplier';
 
 //import project
@@ -130,8 +130,7 @@ const ImportSummary = (props) => {
                                     Tổng số mặt hàng
                                 </Typography>
                                 <Typography variant="body2">
-                                    
-                                    <ThousandFormat value={cartData.cartItem.length}></ ThousandFormat>
+                                    {cartData.cartItem.length}
                                 </Typography>
                             </Grid>
 
@@ -157,16 +156,16 @@ const ImportSummary = (props) => {
 
                             <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>
                                 <Typography variant="h5">
-                                    Tổng tiền
+                                    Cần trả NCC
                                 </Typography>
                                 <Typography variant="body2">
-                                    <VNDFormat style={{color:'#2096f3', fontWeight:500}} value={cartData.total_amount - cartData.discount} />
+                                    <VNDFormat value={cartData.total_amount - cartData.discount} />
                                 </Typography>
                             </Grid>
 
                             <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.marginRow}>
                                 <Typography variant="h5">
-                                    Trả trước
+                                    Đã trả NCC
                                 </Typography>
                                 <VNDInput id="standard-basic" style={{ width: 90 }}
                                     value={cartData.total_amount - cartData.discount}
@@ -175,11 +174,11 @@ const ImportSummary = (props) => {
                             </Grid>
                             <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.marginRow}>
                                 <Typography variant="h5">
-                                    Còn lại
+                                    Công nợ phải trả
                                 </Typography>
-                                <VNDFormat
-                                    // id="standard-basic" style={{ width: 90 }}
-                                    // size="small" inputProps={{ style: { textAlign: "right" } }}
+                                <VNDInput
+                                    id="standard-basic" style={{ width: 90 }}
+                                    size="small" inputProps={{ style: { textAlign: "right" } }}
                                     value={cartData.total_amount - cartData.discount - cartData.paid_amount}
                                 />
                             </Grid>

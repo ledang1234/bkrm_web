@@ -40,6 +40,7 @@ import { useSelector } from "react-redux";
 import * as excel from "../../../assets/constant/excel";
 
 import * as xlsx from "xlsx";
+
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);

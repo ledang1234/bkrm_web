@@ -25,19 +25,12 @@ import NoteAddTwoToneIcon from "@material-ui/icons/NoteAddTwoTone";
 // import third party
 import xlsx from "xlsx";
 import SimpleModal from "../../Modal/ModalWrapper";
-
-import { Link } from "react-router-dom";
-
 import { applyMiddleware } from "@reduxjs/toolkit";
 
 //--thu vien nay bij loi font
 // import jsPDF from 'jspdf'
 // import 'jspdf-autotable'
 
-import { useSelector } from "react-redux";
-//import api
-import productApi from "../../../api/productApi";
-import storeApi from "../../../api/storeApi";
 const useStyles = makeStyles((theme) =>
   createStyles({
     icon: {
