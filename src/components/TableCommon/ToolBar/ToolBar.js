@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{useState }from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 //import project
@@ -9,6 +9,8 @@ import {
   IconButton,
   InputAdornment,
   Box,
+  Button,
+  Typography
 } from "@material-ui/core";
 
 // import - icon
@@ -19,9 +21,10 @@ import FilterListTwoToneIcon from '@material-ui/icons/FilterListTwoTone';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
 import barcodeIcon from "../../../assets/img/icon/barcode_grey.png";
 import grey from '@material-ui/core/colors/grey';
-
+import NoteAddTwoToneIcon from '@material-ui/icons/NoteAddTwoTone';
 // import third party
-import XLSX from "xlsx";
+import xlsx from "xlsx";
+import SimpleModal from "../../Modal/ModalWrapper";
 
 //--thu vien nay bij loi font
 // import jsPDF from 'jspdf'
@@ -61,24 +64,52 @@ const useStyles = makeStyles((theme) =>
 const exportExcel = (dataTable,tableType)=>{
  
     const newData= dataTable;
-    const workSheet=XLSX.utils.json_to_sheet(newData)
-    const workBook=XLSX.utils.book_new()
+    const workSheet=xlsx.utils.json_to_sheet(newData)
+    const workBook=xlsx.utils.book_new()
 
-    XLSX.utils.book_append_sheet(workBook,workSheet,tableType)
+    xlsx.utils.book_append_sheet(workBook,workSheet,tableType)
     //Buffer
     //let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
     //Binary string
-    XLSX.write(workBook,{bookType:"xlsx",type:"binary"})
+    xlsx.write(workBook,{bookType:"xlsx",type:"binary"})
     //Download
-    XLSX.writeFile(workBook,`${tableType}.xlsx`)
+    xlsx.writeFile(workBook,`${tableType}.xlsx`)
 }
+const readUploadFile = (e) => {
+  e.preventDefault();
+  if (e.target.files) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+          const data = e.target.result;
+          const workbook = xlsx.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const header = ['product_code','bar_code','name','category_id','list_price','standard_price','quantity_per_unit','min_reorder_quantity','max_quantity','urls','description'];
+          const cell = ['A1','B1','C1','D1','E1','F1','G1','H1','I1','J1','K1'];
 
+          for (var i = 0; i < cell.length; i++) {
+            xlsx.utils.sheet_add_aoa(worksheet, [[header[i]]], {origin: cell[i]});
+          }
+          const json = xlsx.utils.sheet_to_json(worksheet);
+          
+        
+          for (var object in json){
+            json[object]['urls']=  json[object]['urls'].split(',');  
+          }
+          // JSON HERE
+          console.log(json);
+      };
+      reader.readAsArrayBuffer(e.target.files[0]);
+  }
+}
  
 
 const ToolBar = (props) => {
-    const {dataTable,tableType,handlePrint,textSearch,handleToggleFilter} = props;
+    const {dataTable,tableType,handlePrint,textSearch,handleToggleFilter,importExcel,hasImport} = props;
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    const [openImport,setOpenImport] = useState(false);
 
 
     return (
@@ -106,6 +137,12 @@ const ToolBar = (props) => {
           }
           action={
         <Box  className={classes.actions}>
+             <Tooltip title="Nhập excel" style={{display:hasImport?null:"none"}}>
+                <IconButton aria-label="filter list" onClick={()=>setOpenImport(true)}>
+                    <NoteAddTwoToneIcon className={classes.icon}/>
+                </IconButton>
+             </Tooltip>
+            
              <Tooltip title="Xuất excel">
                 <IconButton aria-label="filter list" onClick={() => { exportExcel(dataTable,tableType) }}>
                     <GetAppTwoToneIcon className={classes.icon}/>
@@ -131,7 +168,27 @@ const ToolBar = (props) => {
                     <FilterListTwoToneIcon className={classes.icon} />
                 </IconButton>
              </Tooltip>  
+
+
+
+
+             <SimpleModal title={"Nhập hàng từ file excel"} open={openImport} handleClose={()=>setOpenImport(false)}>
+               <Typography>(Tải về file mẫu: <a>Excel mẫu</a>)</Typography>
+               <form>
+                  <label htmlFor="upload">Upload File</label>
+                  <input
+                      type="file"
+                      name="upload"
+                      id="upload"
+                      onChange={readUploadFile}
+                  />
+              </form>
+
+               <Button  onClick={() => {importExcel() }}>Hello</Button>
+             </SimpleModal>
         </Box>
+
+        
       }
     />
   );
