@@ -18,6 +18,8 @@ import { StyledMenu, StyledMenuItem } from '../../../../../components/Button/Men
 import InvoiceReturnPopUp from '../../../../../components/PopUpReturn/InvoiceReturnPopUp/InvoiceReturnPopUp';
 
 import orderApi from '../../../../../api/orderApi';
+import { VNDFormat ,ThousandFormat} from "../../../../../components/TextField/NumberFormatCustom";
+
 
 const useStyles = makeStyles((theme) => createStyles({
   root: {
@@ -194,7 +196,11 @@ function InvoiceDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Tổng hoá đơn</Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant="body1" gutterBottom component="div">{order.total_amount}</Typography>
+                <Typography variant="body1" gutterBottom component="div">
+                 
+                  <VNDFormat value= {order.total_amount}/>
+                  
+                  </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
@@ -246,12 +252,16 @@ function InvoiceDetail(props) {
                   {detail.bar_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">
-                  {detail.unit_price}
+                  <ThousandFormat value={detail.quantity}/>
+                  </TableCell>
+                <TableCell align="right">
+                  <VNDFormat value={detail.unit_price}/>
+                  
                 </TableCell>
                 <TableCell align="right" style={{ fontWeight: 700 }}>
-                  {detail.quantity * detail.unit_price}
+                <VNDFormat value={detail.quantity * detail.unit_price}/>
+                  
                 </TableCell>
 
               </TableRow>
@@ -265,7 +275,10 @@ function InvoiceDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography variant="body1" gutterBottom component="div">{order.details.length}</Typography>
+                <Typography variant="body1" gutterBottom component="div">
+                
+                <ThousandFormat value={order.details.length}/>
+                </Typography>
               </Grid>
             </Grid>
 
@@ -275,7 +288,8 @@ function InvoiceDetail(props) {
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.total_amount}
+                 
+                  <VNDFormat value= {row.total_amount}/>
                   {' '}
                 </Typography>
               </Grid>
@@ -286,7 +300,10 @@ function InvoiceDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Giảm giá</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography variant="body1" gutterBottom component="div">{row.discount}</Typography>
+                <Typography variant="body1" gutterBottom component="div">
+                  
+                  <VNDFormat value={row.discount}/>
+                  </Typography>
               </Grid>
             </Grid>
 
@@ -295,7 +312,10 @@ function InvoiceDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Tổng hoá đơn</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography variant="body1" gutterBottom component="div">{row.total_amount - row.discount}</Typography>
+                <Typography variant="body1" gutterBottom component="div">
+                  
+                  <VNDFormat value={row.total_amount - row.discount}/>
+                </Typography>
               </Grid>
             </Grid>
 
@@ -304,7 +324,10 @@ function InvoiceDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Khách đã trả</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography variant="body1" gutterBottom component="div">{row.paid_amount}</Typography>
+                <Typography variant="body1" gutterBottom component="div">
+                <VNDFormat value={row.paid_amount}/>
+                  
+                </Typography>
               </Grid>
             </Grid>
 

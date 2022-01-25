@@ -6,6 +6,7 @@ import useRowStyles from '../../../../components/TableCommon/style/rowStyle';
 
 import { FormatedStatus } from '../../../../components/TableCommon/util/format';
 import InvoiceDetail from './InvoiceDetail/InvoiceDetail';
+import {VNDFormat} from '../../../../components/TextField/NumberFormatCustom'
 
 function InvoiceTableRow(props) {
   const { row, handleOpenRow, openRow } = props;
@@ -24,9 +25,11 @@ function InvoiceTableRow(props) {
         <TableCell align="left" style={{ minWidth: 150 }} className={classes.fontName}>{row.customer_name}</TableCell>
         <TableCell align="left">{row.branch_name}</TableCell>
         <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
-        <TableCell align="right" className={classes.fontName}>{row.total_amount}</TableCell>
+        <TableCell align="right" className={classes.fontName}>        
+            <VNDFormat value={row.total_amount}/>
+        </TableCell>
         <TableCell align="center">
-          <FormatedStatus debt={row.status === 'debt' ? 1 : 0} />
+          <FormatedStatus debt={row.status === 'debt' ? 0 : 1} />
         </TableCell>
 
       </TableRow>
