@@ -6,7 +6,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import clsx from "clsx";
 const ButtonQuantity = (props) =>{
     const classes = useStyles();
-    const {quantity,setQuantity, limit} = props;
+    const {quantity,setQuantity, limit, isReturn} = props;
     const [show, setShow] = React.useState('none');
   
     const handleIncrement = () => {
@@ -38,7 +38,7 @@ const ButtonQuantity = (props) =>{
           </IconButton>
         
           <TextField  id="standard-basic" style={{width:35 }} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: "right" }}} value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))}/>
-          
+          {isReturn ? `/${limit}`: null}
           <IconButton style={{ display: show }} aria-label="delete" className={classes.margin} size="small" onClick={handleIncrement}>
             <AddIcon fontSize="inherit" />
           </IconButton>

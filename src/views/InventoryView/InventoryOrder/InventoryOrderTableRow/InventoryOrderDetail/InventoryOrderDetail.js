@@ -290,7 +290,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Tổng đơn nhập</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">{row.total_amount - row.discount - row.paid_amount}</Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.total_amount - row.discount }</Typography>
                         </Grid>
                     </Grid>
 
