@@ -45,12 +45,14 @@ const Inventory = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-  const importProductByJSON = (jsonData) => {
+  const importProductByJSON = async (jsonData) => {
     try {
       const res = await storeApi.importProductJSON(store_uuid,jsonData);
       console.log(res.message);
+      setOpen(true);
     } catch (err) {
       console.log(err);
+      setOpen(false);
     }
   }
 
@@ -162,11 +164,11 @@ const Inventory = () => {
     content: () => componentRef.current,
   });
 
-
-// import excel
-const importExcel = () =>{
-  console.log("hello")
-}
+  const [jsonData, setJson] = useState([])
+  // import excel
+  const importExcel = async (json) =>{
+    importProductByJSON(json)
+  }
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">

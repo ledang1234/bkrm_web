@@ -25,6 +25,7 @@ import NoteAddTwoToneIcon from '@material-ui/icons/NoteAddTwoTone';
 // import third party
 import xlsx from "xlsx";
 import SimpleModal from "../../Modal/ModalWrapper";
+import { applyMiddleware } from "@reduxjs/toolkit";
 
 //--thu vien nay bij loi font
 // import jsPDF from 'jspdf'
@@ -75,7 +76,7 @@ const exportExcel = (dataTable,tableType)=>{
     //Download
     xlsx.writeFile(workBook,`${tableType}.xlsx`)
 }
-const readUploadFile = (e) => {
+const readUploadFile = (e, setData) => {
   e.preventDefault();
   if (e.target.files) {
       const reader = new FileReader();
@@ -84,8 +85,18 @@ const readUploadFile = (e) => {
           const workbook = xlsx.read(data, { type: "array" });
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const header = ['product_code','bar_code','name','category_id','list_price','standard_price','quantity_per_unit','min_reorder_quantity','max_quantity','urls','description'];
-          const cell = ['A1','B1','C1','D1','E1','F1','G1','H1','I1','J1','K1'];
+          const header = [
+            'product_code',
+            'bar_code',
+            'name',
+            'list_price',
+            'standard_price',
+            'quantity_per_unit',
+            'min_reorder_quantity',
+            'max_quantity',
+            'urls',
+            'description'];
+          const cell = ['A1','B1','C1','D1','E1','F1','G1','H1','I1','J1'];
 
           for (var i = 0; i < cell.length; i++) {
             xlsx.utils.sheet_add_aoa(worksheet, [[header[i]]], {origin: cell[i]});
@@ -95,12 +106,13 @@ const readUploadFile = (e) => {
         
           for (var object in json){
             json[object]['urls']=  json[object]['urls'].split(',');  
+            json[object]['bar_code'] =  json[object]['bar_code'].toString();
           }
           // JSON HERE
-          console.log(json);
+          setData(json)
       };
       reader.readAsArrayBuffer(e.target.files[0]);
-  }
+  } 
 }
  
 
@@ -110,7 +122,7 @@ const ToolBar = (props) => {
     const classes = useStyles(theme);
 
     const [openImport,setOpenImport] = useState(false);
-
+    const [jsonData, setJsonData] = useState([])
 
     return (
         <CardHeader
@@ -180,11 +192,20 @@ const ToolBar = (props) => {
                       type="file"
                       name="upload"
                       id="upload"
-                      onChange={readUploadFile}
+                      onChange={(e) =>{
+                        const result = readUploadFile(e, setJsonData)
+                      }}
                   />
               </form>
 
-               <Button  onClick={() => {importExcel() }}>Hello</Button>
+               <Button  onClick={() => {
+                 console.log(jsonData)
+                 if (jsonData) {
+                   importExcel(jsonData)
+                 } else {
+                  alert(jsonData)
+                 }
+              }}>Nhập</Button>
              </SimpleModal>
         </Box>
 
