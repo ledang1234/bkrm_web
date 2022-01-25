@@ -7,6 +7,9 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 //import project 
 import * as Input from '../../../../components/TextField/NumberFormatCustom'
 import ButtonQuantity from "../../../../components/Button/ButtonQuantity";
+// import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom"
+import VNDInput from "../../../../components/TextField/NumberFormatCustom";
+import {VNDFormat} from '../../../../components/TextField/NumberFormatCustom'
 
 import icon from '../../../../assets/img/product/tch.jpeg';
 
@@ -30,18 +33,23 @@ export const CartRow = (props) =>{
             </ListItem>  
             </TableCell>
           <TableCell align="right">
-            <Input.ThousandSeperatedInput 
+            {/* <Input.ThousandSeperatedInput 
               id="standard-basic" style={{width:70 }} size="small" 
               inputProps={{style: { textAlign: "right" }}} 
               defaultPrice={row.unit_price} 
-              onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}/>
+              onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}/> */}
+              <VNDInput
+                  id="standard-basic" style={{ width: 70 }} size="small"
+                  inputProps={{ style: { textAlign: "right" } }}
+                  value={row.unit_price}
+                  onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}
+                />
           </TableCell>
   
           <TableCell align="left" padding='none' >
             <ButtonQuantity quantity={row.quantity} setQuantity={updateQuantity}/> 
           </TableCell> 
-          
-          <TableCell align="right"className={classes.boldText}>{row.unit_price * row.quantity}</TableCell>
+          <TableCell align="right"className={classes.boldText}> <VNDFormat value={row.unit_price * row.quantity} /></TableCell>
           <TableCell align="right" >
             <IconButton aria-label="expand row" size="small" >
                 <DeleteForeverOutlinedIcon onClick={() => handleDeleteItemCart(row.uuid)}/>

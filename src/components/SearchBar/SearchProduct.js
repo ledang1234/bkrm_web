@@ -15,6 +15,9 @@ import productApi from '../../api/productApi'
 import { useSelector } from 'react-redux';
 import { render } from 'sass';
 
+import { VNDFormat,ThousandFormat } from '../../components/TextField/NumberFormatCustom';
+
+
 const useStyles = makeStyles((theme) =>
 createStyles({
     input:{
@@ -70,11 +73,12 @@ const SearchProduct = (props) => {
           <Grid fullWidth container direction="row"  >
           <Grid item xs={3}><FormatedImage url={option.img_url}/></Grid>
           <Grid item xs={9}container direction="column"  >
-          <Typography variant="h5">{`#${option.uuid}`}</Typography>
+          {/* <Typography variant="h5">{`#${option.uuid}`}</Typography> */}
+          <Typography variant="h5">{`# ${option.bar_code}`}</Typography>
               <Typography variant="h5">{option.name}</Typography>
               <Grid container item  direction="row" justifyContent="space-between" >
-              <Typography variant="body2">{`Tồn kho: ${option.branch_quantity}`} </Typography>
-              <Typography variant="body2">{`Giá bán: ${option.list_price}`} </Typography>     
+              <Typography variant="body2">Tồn kho:<ThousandFormat value={option.branch_quantity}></ThousandFormat></Typography>
+              <Typography variant="body2">Giá bán: <VNDFormat value={option.list_price}></VNDFormat>    </Typography>  
               </Grid> 
           </Grid>                
       </Grid>

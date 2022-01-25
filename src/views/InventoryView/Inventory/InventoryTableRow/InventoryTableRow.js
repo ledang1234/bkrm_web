@@ -17,7 +17,7 @@ import {
 import InventoryDetail from "./InventoryDetail/InventoryDetail";
 import { FormatedProductStatus } from "../../../../components/TableCommon/util/format";
 import icon from "../../../../assets/img/product/img.jpeg";
-import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
+import { VNDFormat ,ThousandFormat} from "../../../../components/TextField/NumberFormatCustom";
 
 const InventoryTableRow = (props) => {
   const { row, handleOpenRow, openRow } = props;
@@ -51,7 +51,7 @@ const InventoryTableRow = (props) => {
           <FormatedProductStatus quantity={row.branch_quantity} lowStock={row.min_reorder_quantity}/>
         </TableCell>
         <TableCell align="right" className={classes.fontName}>
-          {row.branch_quantity}
+          <ThousandFormat value={row.branch_quantity} />
         </TableCell>
       </TableRow>
 

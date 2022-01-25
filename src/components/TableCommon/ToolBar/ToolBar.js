@@ -25,11 +25,15 @@ import NoteAddTwoToneIcon from '@material-ui/icons/NoteAddTwoTone';
 // import third party
 import xlsx from "xlsx";
 import SimpleModal from "../../Modal/ModalWrapper";
-
+import { Link } from "react-router-dom";
 //--thu vien nay bij loi font
 // import jsPDF from 'jspdf'
 // import 'jspdf-autotable'
 
+import { useSelector } from "react-redux";
+//import api
+import productApi from "../../../api/productApi";
+import storeApi from "../../../api/storeApi";
 const useStyles = makeStyles((theme) =>
   createStyles({
     icon: {
@@ -61,7 +65,7 @@ const useStyles = makeStyles((theme) =>
 }));
 
 
-const exportExcel = (dataTable,tableType)=>{
+const exportExcel = (dataTable,tableType, header=null)=>{
  
     const newData= dataTable;
     const workSheet=xlsx.utils.json_to_sheet(newData)
@@ -75,41 +79,53 @@ const exportExcel = (dataTable,tableType)=>{
     //Download
     xlsx.writeFile(workBook,`${tableType}.xlsx`)
 }
-const readUploadFile = (e) => {
-  e.preventDefault();
-  if (e.target.files) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-          const data = e.target.result;
-          const workbook = xlsx.read(data, { type: "array" });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const header = ['product_code','bar_code','name','category_id','list_price','standard_price','quantity_per_unit','min_reorder_quantity','max_quantity','urls','description'];
-          const cell = ['A1','B1','C1','D1','E1','F1','G1','H1','I1','J1','K1'];
 
-          for (var i = 0; i < cell.length; i++) {
-            xlsx.utils.sheet_add_aoa(worksheet, [[header[i]]], {origin: cell[i]});
-          }
-          const json = xlsx.utils.sheet_to_json(worksheet);
-          
-        
-          for (var object in json){
-            json[object]['urls']=  json[object]['urls'].split(',');  
-          }
-          // JSON HERE
-          console.log(json);
-      };
-      reader.readAsArrayBuffer(e.target.files[0]);
-  }
-}
  
 
 const ToolBar = (props) => {
-    const {dataTable,tableType,handlePrint,textSearch,handleToggleFilter,importExcel,hasImport} = props;
+    const {dataTable,tableType,handlePrint,textSearch,handleToggleFilter,hasImport,importProductByJSON,excel_head,excel_data,excel_name} = props;
     const theme = useTheme();
     const classes = useStyles(theme);
 
     const [openImport,setOpenImport] = useState(false);
+
+    const [json,setJson] = useState(null);
+
+
+
+    const readUploadFile = (e) => {
+      e.preventDefault();
+      if (e.target.files) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+              const data = e.target.result;
+              const workbook = xlsx.read(data, { type: "array" });
+              const sheetName = workbook.SheetNames[0];
+              const worksheet = workbook.Sheets[sheetName];
+              // const header = ['product_code','bar_code','name','category_id','list_price','standard_price','quantity_per_unit','min_reorder_quantity','max_quantity','urls','description'];
+              const cell = ['A1','B1','C1','D1','E1','F1','G1','H1','I1','J1','K1'];
+    
+              for (var i = 0; i < excel_head.length; i++) {
+                xlsx.utils.sheet_add_aoa(worksheet, [[excel_head[i]]], {origin: cell[i]});
+              }
+              const json = xlsx.utils.sheet_to_json(worksheet);
+              
+            
+              for (var object in json){
+                json[object]['urls']=  json[object]['urls'].split(',');  
+              }
+              // JSON HERE
+              // console.log(json);
+              setJson(json)
+          };
+          reader.readAsArrayBuffer(e.target.files[0]);
+      }
+    }
+    const handleImport = () =>{
+      setOpenImport(false)
+      importProductByJSON(json)
+
+    }
 
 
     return (
@@ -173,9 +189,11 @@ const ToolBar = (props) => {
 
 
              <SimpleModal title={"Nhập hàng từ file excel"} open={openImport} handleClose={()=>setOpenImport(false)}>
-               <Typography>(Tải về file mẫu: <a>Excel mẫu</a>)</Typography>
+          
+                <Typography  style={{marginBottom:25}}> (Tải về file mẫu: <a style={{color:'blue', cursor: 'pointer',}} onClick={() => { exportExcel(excel_data,excel_name) }}>Excel mẫu</a> ) </Typography >
+               
                <form>
-                  <label htmlFor="upload">Upload File</label>
+                  <label htmlFor="upload">Chọn file: </label>
                   <input
                       type="file"
                       name="upload"
@@ -183,8 +201,10 @@ const ToolBar = (props) => {
                       onChange={readUploadFile}
                   />
               </form>
+              {console.log(json)}
 
-               <Button  onClick={() => {importExcel() }}>Hello</Button>
+               <Button style={{marginTop:40}} variant="contained" fullWidth color="primary" onClick={handleImport}>Nhập hàng</Button>
+
              </SimpleModal>
         </Box>
 
