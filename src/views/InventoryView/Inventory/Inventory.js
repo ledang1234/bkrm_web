@@ -36,11 +36,6 @@ import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 import { useSelector } from "react-redux";
-
-import * as excel from '../../../assets/constant/excel'
-
-
-
 import * as xlsx from 'xlsx'
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
@@ -50,9 +45,7 @@ const Inventory = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-
   const importProductByJSON = async (jsonData) => {
-
     try {
       const res = await storeApi.importProductJSON(store_uuid,jsonData);
       console.log(res.message);
@@ -171,13 +164,11 @@ const Inventory = () => {
     content: () => componentRef.current,
   });
 
-
   const [jsonData, setJson] = useState([])
-//   // import excel
-//   const importExcel = async (json) =>{
-//     importProductByJSON(json)
-//   }
-
+  // import excel
+  const importExcel = async (json) =>{
+    importProductByJSON(json)
+  }
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -230,13 +221,8 @@ const Inventory = () => {
         tableType={TableType.INVENTORY}
         handlePrint={handlePrint}
         handleSearchValueChange={setSearchValue}
-
+        importExcel={importExcel}
         hasImport={true}
-
-        importProductByJSON={importProductByJSON}
-        excel_head={excel.header_product}
-        excel_data={excel.excel_data_product}
-        excel_name={excel.excel_name_product}
       />
       
       {/* 3. TABLE */}

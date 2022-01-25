@@ -83,16 +83,3 @@ export function ThousandSeperatedInput(props) {
     />
   );
 }
-
-export const ThousandFormat = (props) => {
-  return (
-    <NumberFormat
-      {...props}
-      thousandSeparator
-      isNumericString
-      displayType="text"
-      type="text"
-      suffix=""
-    />
-  )
-}
