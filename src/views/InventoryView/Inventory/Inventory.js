@@ -19,6 +19,7 @@ import { useReactToPrint } from "react-to-print";
 
 //import api
 import productApi from "../../../api/productApi";
+import storeApi from "../../../api/storeApi";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -44,7 +45,15 @@ const Inventory = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-  
+  const importProductByJSON = (jsonData) => {
+    try {
+      const res = await storeApi.importProductJSON(store_uuid,jsonData);
+      console.log(res.message);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
 
   useEffect(() => {
     const fetchProducts = async () => {

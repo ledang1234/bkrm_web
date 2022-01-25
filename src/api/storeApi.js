@@ -87,5 +87,12 @@ const storeApi = {
       },
     });
   },
+
+  importProductJSON: (storeUuid, json) => {
+    const url = `stores/${storeUuid}/products/addProductByJson`;
+    return axiosClient.post(url, {
+      "json-data": json
+    });
+  }
 };
 export default storeApi;
