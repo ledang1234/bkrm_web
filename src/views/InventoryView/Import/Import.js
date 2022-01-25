@@ -54,7 +54,6 @@ import moment from "moment";
 import AddInventory from "../Inventory/AddInventory/AddInventory";
 import supplierApi from "../../../api/supplierApi";
 
-
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
@@ -67,8 +66,6 @@ const Import = () => {
   const store_uuid = info.store.uuid;
   const branch = info.branch;
 
-
- 
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -103,7 +100,7 @@ const Import = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [addProduct, setAddProduct] = useState(false);
   const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
-  const [suppliers, setSuppliers] = React.useState([])
+  const [suppliers, setSuppliers] = React.useState([]);
 
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
@@ -116,15 +113,13 @@ const Import = () => {
   }, [isUpdateTotalAmount]);
 
   useEffect(() => {
-
     const fetchSupplier = async () => {
       const response = await supplierApi.getSuppliers(store_uuid);
-      setSuppliers(response.data)
-    }
+      setSuppliers(response.data);
+    };
 
     fetchSupplier();
-    
-  }, [])
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -327,7 +322,7 @@ const Import = () => {
     let importTime = moment
       .unix(d)
       .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-
+    console.log(cart.total_amount, cart.discount, cart.paid_amount);
     let body = {
       supplier_uuid: cart.supplier?.uuid,
       total_amount: cart.total_amount.toString(),
@@ -335,7 +330,7 @@ const Import = () => {
       paid_amount: cart.paid_amount,
       discount: cart.discount.toString(),
       status:
-        Number(cart.total_amount) - Number(cart.discount) >=
+        Number(cart.total_amount) - Number(cart.discount) <=
         Number(cart.paid_amount)
           ? "closed"
           : "debt",
@@ -540,6 +535,6 @@ const Import = () => {
       </Grid>
     </Grid>
   );
-};;
+};
 
 export default Import;
