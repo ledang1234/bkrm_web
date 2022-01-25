@@ -283,6 +283,7 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
           setQuantity={handleChangeQuantity}
           show={show}
           setShow={setShow}
+          isReturn={true}
         />
       </TableCell>
 

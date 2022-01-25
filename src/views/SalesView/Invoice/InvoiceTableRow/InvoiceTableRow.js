@@ -26,7 +26,7 @@ function InvoiceTableRow(props) {
         <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
         <TableCell align="right" className={classes.fontName}>{row.total_amount}</TableCell>
         <TableCell align="center">
-          <FormatedStatus debt={row.status === 'debt' ? 1 : 0} />
+          <FormatedStatus debt={row.status === 'debt' ? 0 : 1} />
         </TableCell>
 
       </TableRow>

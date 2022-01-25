@@ -322,6 +322,8 @@ function ImportReturnTableRow({ detail, handleProductPriceChange, handleItemQuan
           show={show}
           setShow={setShow}
           limit={detail.quantity}
+          isReturn={true}
+          
         />
       </TableCell>
 
