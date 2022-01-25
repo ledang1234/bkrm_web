@@ -54,6 +54,7 @@ const Inventory = () => {
     }
   }
 
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -161,30 +162,11 @@ const Inventory = () => {
     content: () => componentRef.current,
   });
 
-  const readUploadFile = (e) => {
-    e.preventDefault();
-    if (e.target.files) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const data = e.target.result;
-            const workbook = xlsx.read(data, { type: "array" });
-            const sheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[sheetName];
 
-            const header = ['uuid','category','name','bar_code','standard_price','list_price','branch_quantity'];
-            const cell = ['A1','B1','C1','D1','E1','F1','G1'];
-
-            for (var i = 0; i < cell.length; i++) {
-              xlsx.utils.sheet_add_aoa(worksheet, [[header[i]]], {origin: cell[i]});
-            }
-           
-            const json = xlsx.utils.sheet_to_json(worksheet);
-            console.log(json);
-        };
-        reader.readAsArrayBuffer(e.target.files[0]);
-    }
+// import excel
+const importExcel = () =>{
+  console.log("hello")
 }
-
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -237,17 +219,10 @@ const Inventory = () => {
         tableType={TableType.INVENTORY}
         handlePrint={handlePrint}
         handleSearchValueChange={setSearchValue}
+        importExcel={importExcel}
+        hasImport={true}
       />
-      <form>
-        <label htmlFor="upload">Upload File</label>
-        <input
-            type="file"
-            name="upload"
-            id="upload"
-            onChange={readUploadFile}
-        />
-    </form>
-
+      
       {/* 3. TABLE */}
       <TableWrapper>
         <TableHeader
