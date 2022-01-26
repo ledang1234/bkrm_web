@@ -1,15 +1,23 @@
 import React from "react";
-import { Modal, Box, Paper ,Grid,ListItem,Typography,IconButton} from "@material-ui/core";
+import {
+  Modal,
+  Box,
+  Paper,
+  Grid,
+  ListItem,
+  Typography,
+  IconButton,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import CloseIcon from '@material-ui/icons/Close';
-import { grey} from '@material-ui/core/colors'
+import CloseIcon from "@material-ui/icons/Close";
+import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    padding:20,
+    padding: 20,
     minWidth: "100%",
   },
   modal: {
@@ -32,19 +40,7 @@ export default function SimpleModal(props) {
       >
         <React.Fragment>
           <Paper>
-            <Box className={classes.container}>
-              
-                <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h3" style={{ marginRight: 30 }}>{props.title}</Typography>
-                    
-                    <IconButton aria-label="close"   onClick={props.handleClose}>
-                      <CloseIcon  fontSize="small" />
-                    </IconButton>
-              </Grid>
-
-              {props.children}
-              
-              </Box>
+            <Box className={classes.container}>{props.children}</Box>
           </Paper>
         </React.Fragment>
       </Modal>

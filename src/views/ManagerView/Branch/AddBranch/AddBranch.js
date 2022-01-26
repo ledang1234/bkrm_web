@@ -128,7 +128,6 @@ const AddBranch = (props) => {
       dispatch(statusAction.failedStatus("Failed to createBranch"));
     }
   };
-  console.log("error", formik.errors, "touched", formik.touched);
   return (
     <SimpleModal open={open} handleClose={closeModalAndResetData}>
       <Typography variant="h4" gutterBottom>

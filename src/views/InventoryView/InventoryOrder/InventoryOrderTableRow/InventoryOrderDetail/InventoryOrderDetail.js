@@ -39,6 +39,7 @@ import { grey } from "@material-ui/core/colors";
 import purchaseOrderApi from "../../../../../api/purchaseOrderApi";
 import { useSelector } from "react-redux";
 import { VNDFormat } from "../../../../../components/TextField/NumberFormatCustom";
+import PayRemaining from "../../../../../components/Modal/PayRemaining";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -142,9 +143,24 @@ const InventoryOrderDetail = (props) => {
   }, [props.parentProps.openRow]);
 
   useEffect(() => {}, [purchaseOrder]);
-
+  const debtAmount =
+    Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount);
+  const [openPayRemaining, setOpenPayRemaining] = useState(false);
   return (
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+      <PayRemaining
+        onReload={props.parentProps.onReload}
+        uuid={row.uuid}
+        debt={debtAmount}
+        paid={Number(row.paid_amount)}
+        title={
+          <Typography variant="h4">
+            Trả nợ đơn nhập hàng <i>{row.purchase_order_code}</i>
+          </Typography>
+        }
+        open={openPayRemaining}
+        handleClose={() => setOpenPayRemaining(false)}
+      />
       {/* <Collapse in={ true } timeout="auto" unmountOnExit> */}
       <Box margin={1}>
         <Typography
@@ -209,28 +225,40 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={5}>
-            <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+          <Grid item xs={7}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Grid item xs={4}>
                 <Typography variant="h5" gutterBottom component="div">
                   Trạng thái
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
-                <Typography variant="body1" gutterBottom component="div">
-                  Còn nợ{" "}
-                  <VNDFormat
-                    value={
-                      Number(row.total_amount) -
-                      Number(row.discount) -
-                      Number(row.paid_amount)
-                    }
-                  />
-                </Typography>
+              <Grid item xs={3}>
+                <Box>
+                  <Typography variant="body1" gutterBottom component="div">
+                    Còn nợ <VNDFormat value={debtAmount} />
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={2}>
+                {debtAmount > 0 ? (
+                  <Button
+                    color="primary"
+                    size="small"
+                    variant="contained"
+                    onClick={() => setOpenPayRemaining(true)}
+                  >
+                    Trả tiếp
+                  </Button>
+                ) : null}
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng đơn nhập
                 </Typography>
@@ -242,7 +270,7 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography variant="h5" gutterBottom component="div">
                   Chi nhánh thực hiện
                 </Typography>
@@ -254,7 +282,7 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography variant="h5" gutterBottom component="div">
                   Phương thức thanh toán
                 </Typography>

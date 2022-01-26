@@ -19,7 +19,11 @@ const purchaseOrderApi = {
   },
   searchPurchaseOrder: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-orders/`;
-    return axiosClient.get(url, {params: query});
-  }
+    return axiosClient.get(url, { params: query });
+  },
+  editPurchaseOrder: (storeUuid, branchUuid, purchaseOrdersUuid, body) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-orders/${purchaseOrdersUuid}`;
+    return axiosClient.put(url, body)
+  },
 };
 export default purchaseOrderApi;
