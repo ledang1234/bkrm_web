@@ -146,6 +146,7 @@ const AddInventory = (props) => {
   }, [store_uuid]);
 
   const selectSampleProductHandler = (product) => {
+    clearAllImages();
     try {
       setProductInfo({
         ...productInfo,
@@ -248,8 +249,11 @@ const AddInventory = (props) => {
               onSelect={selectSampleProductHandler}
               searchApiCall={searchSampleProductHandler}
               renderInput={renderNameInput}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) =>
+                option.name + " " + "(" + option.bar_code + ")"
+              }
               renderOption={renderOptionTest}
+              filterOptions={(options, state) => options}
             />
           </Box>
         </Box>

@@ -25,6 +25,7 @@ export default function SearchWithAutoComplete(props) {
     const fetchData = async (searchKey = searchValue) => {
       try {
         const response = await searchApiCall(searchKey);
+        console.log(response);
         setOptions(response.data);
       } catch (error) {}
     };
@@ -35,24 +36,9 @@ export default function SearchWithAutoComplete(props) {
     console.log(value);
   }, [value]);
 
-  const FormatedImage = (props) => {
-    return (
-      <Box
-        component="img"
-        sx={{
-          height: 53,
-          width: 53,
-          borderRadius: 10,
-          marginRight: 15,
-        }}
-        src={props.url}
-      />
-    );
-  };
-
-
   return (
     <Autocomplete
+      autoComplete
       disableCloseOnSelect
       options={options}
       freeSolo={true}
