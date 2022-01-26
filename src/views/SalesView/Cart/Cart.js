@@ -62,7 +62,7 @@ const Cart = () => {
   const store_uuid = info.store.uuid;
   const branch = info.branch;
 
-  const [customers, setCustomers] = useState([])
+  const [customers, setCustomers] = useState([]);
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -85,9 +85,9 @@ const Cart = () => {
     {
       customer: null,
       cartItem: [],
-      total_amount: '0',
-      paid_amount: '0',
-      discount: '0',
+      total_amount: "0",
+      paid_amount: "0",
+      discount: "0",
       payment_method: "cash",
     },
   ]);
@@ -113,21 +113,19 @@ const Cart = () => {
       try {
         const response = await customerApi.getCustomers(store_uuid);
         setCustomers(response.data);
-      } catch(err) {
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
-      
     };
 
     loadingCustomer();
-  }, [])
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleCloseSnackBar = (event, reason) => {
-  
     setOpenSnack(false);
   };
 
@@ -148,7 +146,7 @@ const Cart = () => {
         total_amount: "0",
         paid_amount: "0",
         payment_method: "cash",
-        discount: '0',
+        discount: "0",
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -202,11 +200,9 @@ const Cart = () => {
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
     console.log(selectedOption);
-    let itemIndex = cartList[selectedIndex].cartItem.findIndex(
-      (item) => {
-        return item.uuid === selectedOption.uuid
-      }
-    );
+    let itemIndex = cartList[selectedIndex].cartItem.findIndex((item) => {
+      return item.uuid === selectedOption.uuid;
+    });
 
     if (itemIndex !== -1) {
       handleChangeItemQuantity(
@@ -223,7 +219,7 @@ const Cart = () => {
       unit_price: selectedOption.list_price,
       img_url: selectedOption.img_url,
       name: selectedOption.name,
-      branch_quantity: Number(selectedOption.branch_quantity)
+      branch_quantity: Number(selectedOption.branch_quantity),
     };
 
     let newCartList = update(cartList, {
@@ -318,85 +314,77 @@ const Cart = () => {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
     });
-    
+
     setCartList(newCartList);
   };
 
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
 
-    var emptyCart =  cart.cartItem.length === 0;
-    
-    var correctQuantity = cart.cartItem.every(function(element, index) {
-        console.log(element);
-        if(element.quantity > element.branch_quantity)
-            return false;
-        else
-            return true;
+    var emptyCart = cart.cartItem.length === 0;
+
+    var correctQuantity = cart.cartItem.every(function (element, index) {
+      console.log(element);
+      if (element.quantity > element.branch_quantity) return false;
+      else return true;
     });
-    if(emptyCart || !correctQuantity){
+    if (emptyCart || !correctQuantity) {
       setOpenSnack(true);
-      if(emptyCart){
+      if (emptyCart) {
         setSnackStatus({
           style: "error",
           message: "Giỏ hàng trống",
         });
-      }else{
+      } else {
         setSnackStatus({
           style: "error",
           message: "Giỏ hàng bị vượt tồn kho",
         });
       }
+    } else {
+      let d = moment.now() / 1000;
+
+      let orderTime = moment
+        .unix(d)
+        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+      console.log(orderTime);
+
+      let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
+      console.log(cart.paid_amount, cart.total_amount, cart.discount);
+      let body = {
+        customer_uuid: cart.customer.uuid,
+        total_amount: cart.total_amount.toString(),
+        payment_method: cart.payment_method,
+        paid_amount: cart.paid_amount,
+        discount: cart.discount,
+        status:
+          cart.paid_amount < cart.total_amount - cart.discount
+            ? "debt"
+            : "closed",
+        details: details,
+        creation_date: orderTime,
+        paid_date: orderTime,
+        tax: "0",
+        shipping: "0",
+      };
+
+      try {
+        let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
+        setSnackStatus({
+          style: "success",
+          message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
+        });
+        setOpenSnack(true);
+        handleDelete(selectedIndex);
+      } catch (err) {
+        setSnackStatus({
+          style: "error",
+          message: "Tạo hóa đơn thất bại! ",
+        });
+        setOpenSnack(true);
+        console.log(err);
+      }
     }
-    else{
-
-        let d = moment.now()/1000;
-        
-        let orderTime = moment.unix(d).format('YYYY-MM-DD HH:mm:ss',  { trim: false })
-        console.log(orderTime)
-        
-        let details = cart.cartItem.map(item => ({...item, discount: '0'}));
-
-        let body = {
-          customer_uuid: cart.customer.uuid,
-          total_amount: cart.total_amount.toString(),
-          payment_method: cart.payment_method,
-          paid_amount: cart.paid_amount,
-          discount: cart.discount,
-          status:
-            cart.paid_amount >= cart.payment_amount - cart.discount 
-              ? "closed"
-              : "debt",
-          details: details,
-          creation_date: orderTime,
-          paid_date: orderTime,
-          tax: '0',
-          shipping: '0'
-        };
-
-
-        try {
-          let res = await orderApi.addOrder(
-            store_uuid,
-            branch.uuid,
-            body
-          );
-          setSnackStatus({
-            style: "success",
-            message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
-          });
-          setOpenSnack(true);
-          handleDelete(selectedIndex);
-        } catch (err) {
-          setSnackStatus({
-            style: "error",
-            message: "Tạo hóa đơn thất bại! ",
-          });
-          setOpenSnack(true);
-          console.log(err);
-        }
-        }
-
   };
   return (
     <Grid
@@ -477,8 +465,8 @@ const Cart = () => {
                       cartList[selectedIndex].cartItem,
                       getComparator(order, orderBy)
                     ).map((row, index) => {
-                      console.log("row")
-                      console.log(row)
+                      console.log("row");
+                      console.log(row);
                       return (
                         <CartRow
                           row={row}

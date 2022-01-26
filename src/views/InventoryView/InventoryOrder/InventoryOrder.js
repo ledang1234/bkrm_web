@@ -65,7 +65,7 @@ const InventoryOrder = () => {
     setOpenFilter(!openFilter);
   };
   const onReload = () => {
-    setReload(true);
+    setReload(!reload);
   };
 
   const handleRequestSort = (event, property) => {

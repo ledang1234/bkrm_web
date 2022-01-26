@@ -140,13 +140,25 @@ const InventoryOrderDetail = (props) => {
     if (openRow === row.uuid) {
       loadData();
     }
-
   }, [props.parentProps.openRow]);
 
   useEffect(() => {}, [purchaseOrder]);
   const debtAmount =
     Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount);
   const [openPayRemaining, setOpenPayRemaining] = useState(false);
+  const editInventoryOrderApiCall = async (
+    store_uuid,
+    branch_uuid,
+    uuid,
+    body
+  ) => {
+    return purchaseOrderApi.editPurchaseOrder(
+      store_uuid,
+      branch_uuid,
+      uuid,
+      body
+    );
+  };
   return (
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
       <PayRemaining
@@ -161,6 +173,7 @@ const InventoryOrderDetail = (props) => {
         }
         open={openPayRemaining}
         handleClose={() => setOpenPayRemaining(false)}
+        editApiCall={editInventoryOrderApiCall}
       />
       {/* <Collapse in={ true } timeout="auto" unmountOnExit> */}
       <Box margin={1}>

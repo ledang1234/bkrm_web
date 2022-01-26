@@ -8,12 +8,13 @@ import purchaseOrderApi from "../../api/purchaseOrderApi";
 import { useDispatch, useSelector } from "react-redux";
 import { statusAction } from "../../store/slice/statusSlice";
 const PayRemaining = (props) => {
-  const { open } = props;
+  const { open, editApiCall } = props;
   const handleClose = () => {
     props.handleClose();
     formik.resetForm();
   };
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: { pay: props.debt },
     validationSchema: Yup.object({
       pay: Yup.number()
@@ -22,7 +23,6 @@ const PayRemaining = (props) => {
         .moreThan(0, "Tiền trả phải lớn hơn 0"),
     }),
   });
-
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
@@ -30,20 +30,15 @@ const PayRemaining = (props) => {
   const handleSubmit = async () => {
     handleClose();
     try {
-      const response = await purchaseOrderApi.editPurchaseOrder(
-        store_uuid,
-        branch_uuid,
-        props.uuid,
-        {
-          paid_amount: formik.values.pay + props.paid,
-          status: formik.values.pay === props.debt ? "closed" : "debt",
-        }
-      );
+      const response = await editApiCall(store_uuid, branch_uuid, props.uuid, {
+        paid_amount: Number(formik.values.pay) + props.paid,
+        status: formik.values.pay === props.debt ? "closed" : "debt",
+      });
       dispatch(statusAction.successfulStatus("Trả thêm tiền thành công"));
       props.onReload();
     } catch (error) {
       console.log(error);
-      dispatch(statusAction.successfulStatus("Trả thêm tiền thất bại"));
+      dispatch(statusAction.failedStatus("Trả thêm tiền thất bại"));
     }
   };
   return (
@@ -98,7 +93,12 @@ const PayRemaining = (props) => {
         </Grid>
         <Grid item xs={12}>
           <Box display="flex" flexDirection="row" justifyContent="flex-end">
-            <Button variant="contained" size="small" color="secondary">
+            <Button
+              variant="contained"
+              size="small"
+              color="secondary"
+              onClick={handleClose}
+            >
               Hủy
             </Button>
             <Button
