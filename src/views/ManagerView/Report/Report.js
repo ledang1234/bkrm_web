@@ -60,7 +60,7 @@ const Report = () => {
     const classes = useStyles(theme);
 
     //0. set time
-    const [time, setTime] = React.useState('');
+    const [time, setTime] = React.useState('30day');
 
     const handleChangeTime = (event) => {
       setTime(event.target.value);
@@ -68,11 +68,8 @@ const Report = () => {
 
     // 1.data for Overall Report
 
+
     // 2.data for customer
-
-
-  
-    
     
   const [categoryList, setCategoryList] = useState([{name: 'áo', total: 100},{name: 'quần', total: 200}]);
   const [productList, setProductList] = useState([]);
@@ -123,6 +120,7 @@ const Report = () => {
 
   useEffect(() => {
     const fetchReports = async () => {
+
       // overview: number of employees, customers, suppliers, in money, out money
       const overViewRes = await storeApi.getReportOverview(store_uuid, fromDate, toDate);
       setOverview(overViewRes.data)
@@ -173,9 +171,9 @@ const Report = () => {
       );
       setTopData(topDataRes)
       // uncomment here
-      // setIsLoaded(true)
+      setIsLoaded(true)
     }
-
+    console.log("overview")
     console.log(overview)
     console.log(topItemByCategory)
     console.log(revenue)
@@ -304,7 +302,7 @@ const Report = () => {
            {/* <Divider className={classes.divider}/> */}
         
            {/* 2. OverallReport  */}
-            <OverallReport  data={data}/>
+            <OverallReport  data={overview}/>
            
             {/* 3.  */}
             <Grid container spacing={3} >
