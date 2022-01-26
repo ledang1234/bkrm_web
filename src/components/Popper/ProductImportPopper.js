@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Popper from "@material-ui/core/Popper";
 import Paper from "@material-ui/core/Paper";
@@ -21,81 +21,57 @@ const useStyles = makeStyles((theme) => ({
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: "center",
+  textAlign: "left",
   color: theme.palette.text.secondary,
   height: 50,
 }));
 
+const errorHeadings = {
+  list_price: "Giá bán",
+  standard_price: "Giá nhập",
+  min_reorder_quantity: "Tồn kho tối thiểu",
+  max_quantity: "Tồn kho tối đa",
+  urls: "Link ảnh",
+  description: "Mô tả",
+  quantity_per_unit: "Đơn vị",
+  code: "Mã sản phẩm, barcode",
+};
+
 const ProductImportPopper = ({ open, loading, errors, handleClose }) => {
   const classes = useStyles();
+  const [dataTable, setDataTable] = useState([]);
+
+  const errorMessages = (error) => {
+    const message = [];
+    for (let errField in error) {
+      message.push(`${errorHeadings[errField]}: ${error[errField]}`);
+    }
+    return message;
+  };
+
+  useEffect(() => {
+    const mappedData = [];
+    console.log(errors);
+    errors.forEach((error) => {
+      mappedData.push({
+        id: `Dòng ${error.row + 1}`,
+        product_name: error.product.name,
+        bar_code: error.product.bar_code,
+        product_code: error.product.product_code,
+        error: errorMessages(error.error),
+      });
+    });
+
+    setDataTable(mappedData);
+    console.log(mappedData);
+  }, [errors]);
 
   const renderErrorCard = () => {
-    return errors?.map((error) => (
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="space-between"
-      >
-        <Grid item xs={2}>
-          <Item>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {`Dòng ${error.row}`}
-            </Typography>
-          </Item>
-        </Grid>
-
-        <Grid item xs={2}>
-          <Item>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {error.product.name}
-            </Typography>
-          </Item>
-        </Grid>
-        <Grid item xs={2}>
-          <Item>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {error.product.product_code}
-            </Typography>
-          </Item>
-        </Grid>
-
-        <Grid item xs={2}>
-          <Item>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {error.product?.bar_code}
-            </Typography>
-          </Item>
-        </Grid>
-
-        <Grid item xs={4}>
-          <Item>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {error.error[0].code}
-            </Typography>
-          </Item>
-        </Grid>
-      </Grid>
+    return dataTable?.map((error) => (
+      <div style={{ textAlign: "left", color: "red" }}>
+        <Typography>{error.id}</Typography>
+        <Typography>{error.error.join(", ")}</Typography>
+      </div>
     ));
   };
 
@@ -116,22 +92,24 @@ const ProductImportPopper = ({ open, loading, errors, handleClose }) => {
           style={{
             height: 400,
             width: 500,
+            padding: 20,
           }}
         >
           <Grid container spacing={2}>
-            <Grid item xs={8}>
-              Xử lý file exel
+            <Grid item xs={10}>
+              <Typography variant="h6">Xử lý file excel</Typography>
             </Grid>
-            <Grid item xs={4}>
-              <Button onClick={handleClose}>Close</Button>
+            <Grid item xs={2} alignContent={"flex-end"}>
+              <Button onClick={handleClose}>Đóng</Button>
             </Grid>
 
             <Grid
               container
               spacing={2}
               direction="column"
-              justifyContent="space-between"
+              justifyContent="center"
               alignItems="center"
+              style={{ marginTop: 30 }}
             >
               {loading ? <CircularProgress /> : <div>{renderErrorCard()}</div>}
             </Grid>

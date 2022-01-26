@@ -55,14 +55,19 @@ const Inventory = () => {
       setOpenProductImportPopper(true);
       setIsLoadingProduct(true);
       const res = await storeApi.importProductJSON(store_uuid, jsonData);
-      setIsLoadingProduct(false);
-      setOpenProductImportPopper(false);
-      setReload(!reload);
+      if (res.status === "error") {
+        setIsLoadingProduct(false);
+        setProductErrors(res.data);
+      } else {
+        setIsLoadingProduct(false);
+        setOpenProductImportPopper(false);
+        setReload(!reload);
+      }
+
       // setOpen(true);
     } catch (err) {
-      // console.log(err.response.data.message);
+      console.log(err);
       setIsLoadingProduct(false);
-      setProductErrors(err.response.data.message);
       // setOpen(false);
     }
   };
