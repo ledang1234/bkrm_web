@@ -30,7 +30,7 @@ export const InventoryReturnOrderHeadCells = [
     { id: 'supplier', align: 'left', disablePadding: false, label: 'Nhà cung cấp' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
-    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng đơn trả hàng' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng tiền trả' },
     { id: 'import_id', align: 'left', disablePadding: false, label: '#Đơn nhập' },
     { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },
     
@@ -54,7 +54,7 @@ export const InvoiceHeadCells = [
     { id: 'customer', align: 'left', disablePadding: false, label: 'Khách hàng' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
-    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng hoá đơn' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng tiền' },
     { id: 'debt', align: 'left', disablePadding: false, label: 'Trạng thái' }, 
 ];
 export const InvoiceReturnHeadCells = [
@@ -63,7 +63,7 @@ export const InvoiceReturnHeadCells = [
     { id: 'customer', align: 'left', disablePadding: false, label: 'Khách hàng' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
-    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng đơn trả' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng tiền trả' },
     { id: 'invoid_id', align: 'left', disablePadding: false, label: '#Hoá đơn' },
     { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },  
 ];

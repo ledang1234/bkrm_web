@@ -244,7 +244,9 @@ function InvoiceDetail(props) {
               </Grid>
               <Grid item xs={3}>
                 <Typography variant="body1" gutterBottom component="div">
-                  Cần thu <VNDFormat value={debtAmount} />
+                  {/* Cần thu <VNDFormat value={debtAmount} /> */}
+                  {debtAmount >  0 ?"Cần thu thêm " :"Trả đủ"}
+                    {debtAmount >  0 ?<VNDFormat value={debtAmount} />  :null } 
                 </Typography>
               </Grid>
               <Grid item xs={2}>

@@ -254,7 +254,8 @@ const InventoryOrderDetail = (props) => {
               <Grid item xs={3}>
                 <Box>
                   <Typography variant="body1" gutterBottom component="div">
-                    Còn nợ <VNDFormat value={debtAmount} />
+                   {debtAmount >  0 ?"Còn nợ " :"Trả đủ"}
+                    {debtAmount >  0 ?<VNDFormat value={debtAmount} />  :null } 
                   </Typography>
                 </Box>
               </Grid>
@@ -274,7 +275,7 @@ const InventoryOrderDetail = (props) => {
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={4}>
                 <Typography variant="h5" gutterBottom component="div">
-                  Tổng đơn nhập
+                  Tổng tiền nhập
                 </Typography>
               </Grid>
               <Grid item xs={4}>
@@ -409,13 +410,13 @@ const InventoryOrderDetail = (props) => {
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
                 <Typography variant="h5" gutterBottom component="div">
-                  Tổng đơn nhập
+                  Tổng tiền nhập
                 </Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat
-                    value={row.total_amount - row.discount - row.paid_amount}
+                    value={row.total_amount - row.discount }
                   />
                 </Typography>
               </Grid>

@@ -5,6 +5,8 @@ import clsx from "clsx";
 import {useTheme,makeStyles,withStyles,createStyles,lighten} from "@material-ui/core/styles";
 import { grey, blue,purple} from '@material-ui/core/colors'
 import FolderIcon from '@material-ui/icons/Folder';
+import {VNDFormat, ThousandFormat} from "../../../components/TextField/NumberFormatCustom"
+
 
 const useStyles = makeStyles((theme) =>
 createStyles({
@@ -252,14 +254,14 @@ export const OverallReport = ({data}) => {
                 <Grid item md={4}xs={12}>
                     <Card className={classes.hoverCard}>
                         <Typography>Tổng thu</Typography>
-                        <Typography className={classes.number}>{data.inAccount}</Typography>
+                        <Typography className={classes.number}><ThousandFormat value={data.inAccount}/></Typography>
                         <Chart {...chartIncome} />   
                     </Card>
                 </Grid>
                 <Grid item md={4}xs={12}>
                     <Card className={classes.hoverCard}>
                         <Typography>Tổng chi</Typography>
-                         <Typography className={classes.number}>{data.outAccount}</Typography>
+                         <Typography className={classes.number}><ThousandFormat value={data.outAccount}/></Typography>
                         <Chart {...chartExpense}/>    
                     </Card>
                 </Grid>

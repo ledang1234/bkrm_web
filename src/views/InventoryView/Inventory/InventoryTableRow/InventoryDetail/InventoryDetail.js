@@ -184,7 +184,8 @@ const InventoryDetail = (props) => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {productDetail.uuid}{" "}
+                      {/* {productDetail.uuid}{" "} */}
+                      {productDetail.bar_code}{" "}
                     </Typography>
                   </Grid>
                 </Grid>
