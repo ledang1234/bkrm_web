@@ -457,7 +457,7 @@ const Cart = () => {
                     order={order}
                     orderBy={orderBy}
                     onRequestSort={handleRequestSort}
-                    headerData={HeadCells.ImportHeadCells}
+                    headerData={HeadCells.CartHeadCells}
                     isCart={true}
                   />
                   <TableBody>

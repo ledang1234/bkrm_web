@@ -22,6 +22,7 @@ import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 const InventoryTableRow = (props) => {
   const { row, handleOpenRow, openRow } = props;
   const classes = useRowStyles();
+  console.log(row.product_code.lenght === 0)
   return (
     <>
       <TableRow
@@ -32,6 +33,8 @@ const InventoryTableRow = (props) => {
         )}
       >
         <TableCell align="left">{row.bar_code}</TableCell>
+        {/* <TableCell align="left">{ row.prooduct_code}</TableCell> */}
+
         <TableCell align="left" style={{ minWidth: 200 }}>
           <ListItem
             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}

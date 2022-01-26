@@ -197,7 +197,7 @@ const Inventory = () => {
       <Grid container direction="row" justifyContent="space-between">
         {/* 1. ADD POP UP */}
         <Typography className={classes.headerTitle} variant="h5">
-          Kho hàng
+          Sản phẩm
         </Typography>
         <Grid className={classes.btngroup}>
           <Tooltip title="Xem danh mục">
