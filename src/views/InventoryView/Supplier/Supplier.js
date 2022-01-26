@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
@@ -113,7 +113,7 @@ const Supplier = () => {
   // toolbar
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
+    content: () => componentRef.current,
   });
   //3.1. search
 
@@ -145,7 +145,7 @@ const Supplier = () => {
       </Grid>
 
       {/* Popup add */}
-      <AddSupplier open={open} handleClose={handleClose} />
+      <AddSupplier open={open} handleClose={handleClose} onReload={onReload} />
       {/* Noti */}
       <SnackBar
         openBar={openBar}
@@ -192,11 +192,10 @@ const Supplier = () => {
           })}
         </TableBody>
       </TableWrapper>
-      <div  style={{display:'none'}} >
-        <div ref={componentRef}  >
-        <ComponentToPrint  supplerList={supplerList} classes={classes}/>
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ComponentToPrint supplerList={supplerList} classes={classes} />
         </div>
-        
       </div>
     </Card>
   );
@@ -204,28 +203,32 @@ const Supplier = () => {
 
 export default Supplier;
 
-
-const ComponentToPrint = ({supplerList,classes}) =>{
+const ComponentToPrint = ({ supplerList, classes }) => {
   return (
-      <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Nhà cung cấp</Typography>
-        <div >
-          <TableHeader
-                classes={classes}
-                headerData={HeadCells.SupplierHeadCells}
-              />
-              <TableBody >
-                {supplerList.map((row, index) => {
-                  return (
-                    <SupplierTableRow
-                      key={row.uuid}
-                      row={row}
-                    
-                    />
-                  );
-                })}
-              </TableBody>
-        </div>
-  </div>
-  )
-}
+    <div>
+      <Typography
+        style={{
+          flexGrow: 1,
+          textAlign: "center",
+          fontSize: 25,
+          fontWeight: 500,
+          margin: 30,
+          color: "#000",
+        }}
+      >
+        Nhà cung cấp
+      </Typography>
+      <div>
+        <TableHeader
+          classes={classes}
+          headerData={HeadCells.SupplierHeadCells}
+        />
+        <TableBody>
+          {supplerList.map((row, index) => {
+            return <SupplierTableRow key={row.uuid} row={row} />;
+          })}
+        </TableBody>
+      </div>
+    </div>
+  );
+};
