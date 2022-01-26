@@ -2,7 +2,11 @@ import axiosClient from "./axiosClient";
 const supplierApi = {
   createSupplier: (storeUuid, body) => {
     const url = `stores/${storeUuid}/suppliers`;
-    return axiosClient.post(url, body);
+    return axiosClient.post(url, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
   getSuppliers: (storeUuid) => {
     const url = `/stores/${storeUuid}/suppliers`;
