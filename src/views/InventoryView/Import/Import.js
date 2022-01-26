@@ -268,7 +268,6 @@ const Import = () => {
     });
     setCartList(newCartList);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
-    
   };
 
   const handleSelectSupplier = (selectedSupplier) => {
@@ -282,7 +281,7 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { paid_amount: { $set: amount } },
     });
-   
+
     setCartList(newCartList);
   };
 
@@ -310,7 +309,6 @@ const Import = () => {
       [selectedIndex]: { total_amount: { $set: total } },
     });
 
-
     newCartList = update(newCartList, {
       [selectedIndex]: {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
@@ -327,16 +325,14 @@ const Import = () => {
     // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
     //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
-
-    var emptyCart =  cart.cartItem.length === 0;
-    if(emptyCart ){
-
+    var emptyCart = cart.cartItem.length === 0;
+    if (emptyCart) {
       setOpenSnack(true);
       setSnackStatus({
         style: "error",
         message: "Giỏ hàng trống",
       });
-    }else{
+    } else {
       let d = moment.now() / 1000;
       let importTime = moment
         .unix(d)
@@ -352,7 +348,7 @@ const Import = () => {
           Number(cart.total_amount) - Number(cart.discount) >=
           Number(cart.paid_amount)
             ? "debt"
-            : "closed" ,
+            : "closed",
         details: cart.cartItem,
         import_date: importTime,
       };
@@ -378,9 +374,7 @@ const Import = () => {
         setOpenSnack(true);
         console.log(err);
       }
-
     }
-    
   };
   return (
     <Grid
@@ -393,6 +387,7 @@ const Import = () => {
       <AddInventory
         open={addProduct}
         handleClose={() => setAddProduct(false)}
+        setReload={() => {}}
       />{" "}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
