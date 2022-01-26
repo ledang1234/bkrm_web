@@ -54,7 +54,6 @@ import moment from "moment";
 import AddInventory from "../Inventory/AddInventory/AddInventory";
 import supplierApi from "../../../api/supplierApi";
 
-
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
@@ -67,8 +66,6 @@ const Import = () => {
   const store_uuid = info.store.uuid;
   const branch = info.branch;
 
-
- 
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -103,7 +100,7 @@ const Import = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [addProduct, setAddProduct] = useState(false);
   const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
-  const [suppliers, setSuppliers] = React.useState([])
+  const [suppliers, setSuppliers] = React.useState([]);
 
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
@@ -116,15 +113,13 @@ const Import = () => {
   }, [isUpdateTotalAmount]);
 
   useEffect(() => {
-
     const fetchSupplier = async () => {
       const response = await supplierApi.getSuppliers(store_uuid);
-      setSuppliers(response.data)
-    }
+      setSuppliers(response.data);
+    };
 
     fetchSupplier();
-    
-  }, [])
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -315,11 +310,13 @@ const Import = () => {
       [selectedIndex]: { total_amount: { $set: total } },
     });
 
+
     newCartList = update(newCartList, {
       [selectedIndex]: {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
     });
+
     setCartList(newCartList);
   };
 
@@ -330,8 +327,10 @@ const Import = () => {
     // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
     //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
+
     var emptyCart =  cart.cartItem.length === 0;
     if(emptyCart ){
+
       setOpenSnack(true);
       setSnackStatus({
         style: "error",
@@ -558,6 +557,6 @@ const Import = () => {
       </Grid>
     </Grid>
   );
-};;
+};
 
 export default Import;

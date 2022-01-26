@@ -1,11 +1,19 @@
-
-import React, {useState, useEffect,useRef} from 'react'
-import {useTheme} from "@material-ui/core/styles";
+import React, { useState, useEffect, useRef } from "react";
+import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import {
+  Typography,
+  Card,
+  Divider,
+  Grid,
+  ButtonBase,
+  Avatar,
+  Tooltip,
+  TableBody,
+} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
 
 // import redux
@@ -27,169 +35,175 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 import purchaseOrderApi from "../../../api/purchaseOrderApi";
 
 const InventoryOrder = () => {
-    // fetch data here
-    const [purchaseOrders, setPurchaseOrders] = useState([])
+  // fetch data here
+  const [purchaseOrders, setPurchaseOrders] = useState([]);
 
-    const theme = useTheme();
-    const classes = useStyles(theme);
-    const dispatch = useDispatch();
+  const theme = useTheme();
+  const classes = useStyles(theme);
+  const dispatch = useDispatch();
 
-    //// 2. Table
-    //collapse
-    const [openRow, setRowOpen] = React.useState(null);
-    const handleOpenRow = (row) => {
-      console.log(row)
-      console.log(openRow)
-        if (row !==  openRow){
-          setRowOpen(row);}
-        else{setRowOpen(null)}  
-    };
-
-    // header sort 
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('id');
-
-    //3.2. filter
-    const [openFilter, setOpenFilter] = React.useState(false);
-    const handleToggleFilter = () => {
-      setOpenFilter(!openFilter);
-    };
-    
-    const handleRequestSort = (event, property) => {
-      //// (gửi order vs orderBy lên api) -> fetch lại data để sort
-      // const isAsc = orderBy === property && order === 'asc';
-      // setOrder(isAsc ? 'desc' : 'asc');
-      // setOrderBy(property);
-    };
-
-     // toolbar
-    const componentRef = useRef();
-    const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    });
-
-    const info = useSelector(state => state.info)
-    const store_uuid = info.store.uuid
-
-    const loadData = async () => {
-      try {
-        const res = await purchaseOrderApi.getAllOfStore(store_uuid);
-        console.log(res.data)
-        setPurchaseOrders(res.data.reverse());
-      } catch (error) {
-        console.log(error)
-      }
+  //// 2. Table
+  //collapse
+  const [openRow, setRowOpen] = React.useState(null);
+  const handleOpenRow = (row) => {
+    console.log(row);
+    console.log(openRow);
+    if (row !== openRow) {
+      setRowOpen(row);
+    } else {
+      setRowOpen(null);
     }
+  };
 
-    useEffect(() => {
-      loadData();
-    }, [])
+  // header sort
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("id");
+  const [reload, setReload] = React.useState(false);
+  //3.2. filter
+  const [openFilter, setOpenFilter] = React.useState(false);
+  const handleToggleFilter = () => {
+    setOpenFilter(!openFilter);
+  };
+  const onReload = () => {
+    setReload(true);
+  };
 
-    return (
-      
-        <Card className={classes.root} >
-          <Grid 
-            container
-            direction="row"
-            justifyContent="space-between"  
-          > 
-              {/* 1. ADD POP UP */}
-                <Typography className={classes.headerTitle} variant="h5">
-                    Đơn nhập hàng
-                </Typography>
+  const handleRequestSort = (event, property) => {
+    //// (gửi order vs orderBy lên api) -> fetch lại data để sort
+    // const isAsc = orderBy === property && order === 'asc';
+    // setOrder(isAsc ? 'desc' : 'asc');
+    // setOrderBy(property);
+  };
 
-                <Grid className={classes.btngroup1} >
-                    <ButtonBase 
-                        sx={{ borderRadius: '16px' }} 
-                        onClick={()=>{dispatch(customizeAction.setSidebarOpen(false));dispatch(customizeAction.setItemMenuOpen(4));}}
-                        component={Link}
-                        to='/home/inventory/import' 
-                        >
-                        <Avatar variant="rounded" className={classes.headerAvatar}  >
-                            <Tooltip title="Nhập hàng">
-                            <AddIcon stroke={1.5} size="1.3rem" />
-                            </Tooltip>
-                        </Avatar>
-                    </ButtonBase>
-            </Grid>
-          </Grid>
+  // toolbar
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
-         
-          <Divider />
-          
-          {/* 2. SEARCH - FILTER - EXPORT*/}
-          {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-          {/* <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ }
-          <ToolBar  
-            dataTable={purchaseOrders} 
-            tableType={TableType.INVENTORY_ORDER}  
-            textSearch={'#, NCC, Nguoi nhap,...'}
-            handleToggleFilter={handleToggleFilter}
-            handlePrint={handlePrint}
-          /> 
-   
-          <InventoryOrderFilter 
-            openFilter={openFilter} 
-            setPurchaseOrders={setPurchaseOrders}
-            handleToggleFilter={handleToggleFilter}/>
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
 
-          
-          {/* 3. TABLE */}
-          <TableWrapper>
+  const loadData = async () => {
+    try {
+      const res = await purchaseOrderApi.getAllOfStore(store_uuid);
+      console.log(res.data);
+      setPurchaseOrders(res.data.reverse());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-              <TableHeader
-                classes={classes}
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                headerData={HeadCells.InventoryOrderHeadCells}
+  useEffect(() => {
+    loadData();
+  }, [reload]);
+
+  return (
+    <Card className={classes.root}>
+      <Grid container direction="row" justifyContent="space-between">
+        {/* 1. ADD POP UP */}
+        <Typography className={classes.headerTitle} variant="h5">
+          Đơn nhập hàng
+        </Typography>
+
+        <Grid className={classes.btngroup1}>
+          <ButtonBase
+            sx={{ borderRadius: "16px" }}
+            onClick={() => {
+              dispatch(customizeAction.setSidebarOpen(false));
+              dispatch(customizeAction.setItemMenuOpen(4));
+            }}
+            component={Link}
+            to="/home/inventory/import"
+          >
+            <Avatar variant="rounded" className={classes.headerAvatar}>
+              <Tooltip title="Nhập hàng">
+                <AddIcon stroke={1.5} size="1.3rem" />
+              </Tooltip>
+            </Avatar>
+          </ButtonBase>
+        </Grid>
+      </Grid>
+
+      <Divider />
+
+      {/* 2. SEARCH - FILTER - EXPORT*/}
+      {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
+      {/* <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/}
+      <ToolBar
+        dataTable={purchaseOrders}
+        tableType={TableType.INVENTORY_ORDER}
+        textSearch={"#, NCC, Nguoi nhap,..."}
+        handleToggleFilter={handleToggleFilter}
+        handlePrint={handlePrint}
+      />
+
+      <InventoryOrderFilter
+        openFilter={openFilter}
+        setPurchaseOrders={setPurchaseOrders}
+        handleToggleFilter={handleToggleFilter}
+      />
+
+      {/* 3. TABLE */}
+      <TableWrapper>
+        <TableHeader
+          classes={classes}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+          headerData={HeadCells.InventoryOrderHeadCells}
+        />
+        <TableBody>
+          {purchaseOrders.map((row, index) => {
+            return (
+              <InventoryOrderTableRow
+                key={row.uuid}
+                row={row}
+                openRow={openRow}
+                handleOpenRow={handleOpenRow}
+                onReload={onReload}
               />
-              <TableBody>
-                {purchaseOrders.map((row, index) => {
-                    return (
-                      <InventoryOrderTableRow 
-                        key={row.uuid} row={row}  
-                        openRow={openRow} 
-                        handleOpenRow={handleOpenRow} />
-                    );
-                })}
-              </TableBody>
-
-          </TableWrapper>
-        <div  style={{display:'none'}} >
-          <div ref={componentRef}  >
-            <ComponentToPrint  purchaseOrders={purchaseOrders} classes={classes}/>
-            </div> 
+            );
+          })}
+        </TableBody>
+      </TableWrapper>
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ComponentToPrint purchaseOrders={purchaseOrders} classes={classes} />
         </div>
-        </Card>
-    )
-}
-
+      </div>
+    </Card>
+  );
+};
 
 export default InventoryOrder;
 
-
-const ComponentToPrint = ({purchaseOrders,classes}) =>{
+const ComponentToPrint = ({ purchaseOrders, classes }) => {
   return (
-      <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Đơn nhập hàng</Typography>
-        <div >
-          <TableHeader
-                classes={classes}
-                headerData={HeadCells.InventoryOrderHeadCells}
-              />
-              <TableBody >
-                {purchaseOrders.map((row, index) => {
-                  return (
-                    <InventoryOrderTableRow
-                      key={row.uuid}
-                      row={row}
-                    
-                    />
-                  );
-                })}
-              </TableBody>
-        </div>
-  </div>
-  )
-}
+    <div>
+      <Typography
+        style={{
+          flexGrow: 1,
+          textAlign: "center",
+          fontSize: 25,
+          fontWeight: 500,
+          margin: 30,
+          color: "#000",
+        }}
+      >
+        Đơn nhập hàng
+      </Typography>
+      <div>
+        <TableHeader
+          classes={classes}
+          headerData={HeadCells.InventoryOrderHeadCells}
+        />
+        <TableBody>
+          {purchaseOrders.map((row, index) => {
+            return <InventoryOrderTableRow key={row.uuid} row={row} />;
+          })}
+        </TableBody>
+      </div>
+    </div>
+  );
+};

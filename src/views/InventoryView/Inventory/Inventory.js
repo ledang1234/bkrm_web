@@ -40,6 +40,7 @@ import { useSelector } from "react-redux";
 import * as excel from "../../../assets/constant/excel";
 
 import * as xlsx from "xlsx";
+import ProductImportPopper from "../../../components/Popper/ProductImportPopper";
 
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
@@ -51,14 +52,17 @@ const Inventory = () => {
 
   const importProductByJSON = async (jsonData) => {
     try {
-      console.log("loading = true");
+      setOpenProductImportPopper(true);
+      setIsLoadingProduct(true);
       const res = await storeApi.importProductJSON(store_uuid, jsonData);
-      console.log(res.message);
-      console.log("loaidng false");
-
+      setIsLoadingProduct(false);
+      setOpenProductImportPopper(false);
+      setReload(!reload);
       // setOpen(true);
     } catch (err) {
-      console.log(err);
+      // console.log(err.response.data.message);
+      setIsLoadingProduct(false);
+      setProductErrors(err.response.data.message);
       // setOpen(false);
     }
   };
@@ -89,8 +93,9 @@ const Inventory = () => {
           store_uuid,
           branch_uuid
         );
+
         setProductList(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (err) {
         console.log(err);
       }
@@ -170,14 +175,20 @@ const Inventory = () => {
     content: () => componentRef.current,
   });
 
-  const [jsonData, setJson] = useState([]);
-  //   // import excel
-  //   const importExcel = async (json) =>{
-  //     importProductByJSON(json)
-  //   }
+  /// import product by file
+  const [openProductImportPopper, setOpenProductImportPopper] = useState(true);
+  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
+  const [productErrors, setProductErrors] = useState([]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   return (
     <Card className={classes.root}>
+      <ProductImportPopper
+        open={openProductImportPopper}
+        loading={isLoadingProduct}
+        errors={productErrors}
+        handleClose={() => setOpenProductImportPopper(false)}
+      />
       <Grid container direction="row" justifyContent="space-between">
         {/* 1. ADD POP UP */}
         <Typography className={classes.headerTitle} variant="h5">
