@@ -133,7 +133,7 @@ const ToolBar = (props) => {
           json[object]["bar_code"] = json[object]["bar_code"].toString();
         }
         // JSON HERE
-        // console.log(json);
+        console.log(json);
         setJsonData(json);
       };
       reader.readAsArrayBuffer(e.target.files[0]);

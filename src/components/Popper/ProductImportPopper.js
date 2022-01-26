@@ -54,7 +54,7 @@ const ProductImportPopper = ({ open, loading, errors, handleClose }) => {
     console.log(errors);
     errors.forEach((error) => {
       mappedData.push({
-        id: `Dòng ${error.row}`,
+        id: `Dòng ${error.row + 1}`,
         product_name: error.product.name,
         bar_code: error.product.bar_code,
         product_code: error.product.product_code,
