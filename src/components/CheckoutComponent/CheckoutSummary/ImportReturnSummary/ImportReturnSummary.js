@@ -85,7 +85,7 @@ const ImportReturnSummary = ({data, handlePaidAmountChange, handlePaymentMethodC
 
                 <Grid container direction="row" justifyContent="space-between" className={classes.marginBox}>
                     <Typography variant="h5" >
-                        Tổng mặt hàng trả
+                        Tổng số mặt hàng trả
                     </Typography>
                     <Typography variant="body2">
                         {data.details.length}
@@ -94,7 +94,16 @@ const ImportReturnSummary = ({data, handlePaidAmountChange, handlePaymentMethodC
 
                 <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>
                     <Typography variant="h5">
-                        Tổng tiền hàng trả
+                        Tổng tiền gốc
+                    </Typography>
+                    <Typography variant="body2">
+                        {data.total_amount}
+                    </Typography>
+                </Grid>
+
+                <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>
+                    <Typography variant="h5">
+                        Tổng tiền trả
                     </Typography>
                     <Typography variant="body2">
                         {data.total_amount}

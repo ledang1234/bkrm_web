@@ -124,6 +124,7 @@ const SearchProduct = (props) => {
 
               onChange={(event, value) => {
                 if (value) {
+                
                   setSelectedOption(value);
                   props.handleSearchBarSelect(value);
                 } 

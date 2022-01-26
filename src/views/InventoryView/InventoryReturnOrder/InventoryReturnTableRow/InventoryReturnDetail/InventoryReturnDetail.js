@@ -152,7 +152,7 @@ const InventoryReturnDetail = (props) => {
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={6} >
-                <Typography variant="h5" gutterBottom component="div">Tổng đơn trả hàng</Typography>
+                <Typography variant="h5" gutterBottom component="div">Tổng tiền trả </Typography>
               </Grid>
               <Grid item xs={4} >
                 <Typography variant="body1" gutterBottom component="div">{row.total_amount}</Typography>
@@ -268,7 +268,7 @@ const InventoryReturnDetail = (props) => {
             </Grid> */}
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2} >
-                <Typography variant="h5" gutterBottom component="div">Tổng đơn trả hàng</Typography>
+                <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
               </Grid>
               <Grid item xs={2} >
                 <Typography variant="body1" gutterBottom component="div">

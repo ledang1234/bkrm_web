@@ -67,7 +67,8 @@ function InventoryReturnPopUp(props) {
     total_amount: 0,
     details: purchaseOrder.details.map((detail) => ({
       ...detail,
-      returnQuantity: detail.quantity,
+      // returnQuantity: detail.quantity,
+      returnQuantity:0,
       returnPrice: detail.unit_price,
     })),
     payment_method: 'cash',
