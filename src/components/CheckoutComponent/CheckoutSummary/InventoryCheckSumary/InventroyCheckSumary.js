@@ -125,8 +125,6 @@ function InventoryCheckSummary({
           </Grid> */}
         </Grid>
 
-       
-
         <Grid
           container
           direction="row"
