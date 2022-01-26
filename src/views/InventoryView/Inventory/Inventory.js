@@ -181,7 +181,7 @@ const Inventory = () => {
   });
 
   /// import product by file
-  const [openProductImportPopper, setOpenProductImportPopper] = useState(true);
+  const [openProductImportPopper, setOpenProductImportPopper] = useState(false);
   const [isLoadingProduct, setIsLoadingProduct] = useState(false);
   const [productErrors, setProductErrors] = useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
