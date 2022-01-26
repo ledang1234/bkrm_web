@@ -26,9 +26,11 @@ const InventoryReturnTableRow = (props) => {
                 <TableCell align="left">{row.branch_name}</TableCell>
                 <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
                 <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_amount} /></TableCell>
-                <TableCell align="center" className={classes.fontName}>
+                {/* <TableCell align="center" className={classes.fontName}>
                     <FormatedStatus debt={row.status === 'debt' ? 1 : 0} />
-                </TableCell>
+                </TableCell> */}
+                {/* <TableCell align="right" ></TableCell>
+                <TableCell align="right" ></TableCell> */}
             </TableRow>
 
             {/* DETAIL */}

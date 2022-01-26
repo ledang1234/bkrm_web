@@ -133,7 +133,7 @@ function InvoiceDetail(props) {
           <Grid item xs={5}>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={5}>
-                <Typography variant="h5" gutterBottom component="div">Mã hoá đơn </Typography>
+                <Typography variant="h5" gutterBottom component="div">Mã hoá đơn</Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">
@@ -191,7 +191,7 @@ function InvoiceDetail(props) {
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={6}>
-                <Typography variant="h5" gutterBottom component="div">Tổng hoá đơn</Typography>
+                <Typography variant="h5" gutterBottom component="div">Tổng tiền hoá đơn</Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">{order.total_amount}</Typography>
@@ -262,7 +262,8 @@ function InvoiceDetail(props) {
           <Grid container direction="column">
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
-                <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>
+                {/* <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography> */}
+                <Typography variant="h5" gutterBottom component="div">Tổng số mặt hàng</Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">{order.details.length}</Typography>
@@ -292,7 +293,7 @@ function InvoiceDetail(props) {
 
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
-                <Typography variant="h5" gutterBottom component="div">Tổng hoá đơn</Typography>
+                <Typography variant="h5" gutterBottom component="div">Tổng tiền hoá đơn</Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">{row.total_amount - row.discount}</Typography>

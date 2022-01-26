@@ -140,6 +140,7 @@ const InventoryOrderDetail = (props) => {
     if (openRow === row.uuid) {
       loadData();
     }
+
   }, [props.parentProps.openRow]);
 
   useEffect(() => {}, [purchaseOrder]);
@@ -344,6 +345,7 @@ const InventoryOrderDetail = (props) => {
         >
           <Grid container direction="column">
             {/* <Grid container direction="row" justifyContent="flex-end">
+
                         <Grid item xs={2} >
                             <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>    
                         </Grid>
@@ -351,6 +353,7 @@ const InventoryOrderDetail = (props) => {
                             <Typography variant="body1" gutterBottom component="div">4 </Typography>
                         </Grid>
                     </Grid> */}
+
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
                 <Typography variant="h5" gutterBottom component="div">

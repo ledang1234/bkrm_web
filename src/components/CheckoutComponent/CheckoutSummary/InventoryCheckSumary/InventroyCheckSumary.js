@@ -55,6 +55,7 @@ function InventoryCheckSummary({
 
   useEffect(() => {}, [data, userName, branchName]);
 
+
   return (
     <Box style={{ padding: 30, minHeight: "75vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -124,16 +125,29 @@ function InventoryCheckSummary({
           </Grid> */}
         </Grid>
 
+       
+
         <Grid
           container
           direction="row"
           justifyContent="space-between"
           className={classes.marginBox}
         >
-          <Typography variant="h5">Số lượng sản phẩm trả</Typography>
+          <Typography variant="h5">Số mặt hàng lệch</Typography>
           <Typography variant="body2">
-            {data.details.filter((item) => Number(item.branch_inventory) !== Number(item.real_quantity)).length}
+            {data.details.filter((item) => Number(item.branch_quantity) !== Number(item.real_quantity)).length}
+          
+
           </Typography>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-between"
+          className={classes.marginRow}
+        >
+          <Typography variant="h5">Tổng sản phẩm lệch</Typography>
+          <Typography variant="body2">{data.details.map(item => Number(item.real_quantity) -  Number(item.branch_quantity)).reduce((a, b) => a + b, 0)}</Typography>
         </Grid>
 
         <Grid
@@ -142,7 +156,7 @@ function InventoryCheckSummary({
           justifyContent="space-between"
           className={classes.marginRow}
         >
-          <Typography variant="h5">Tổng giá trị</Typography>
+          <Typography variant="h5">Tổng giá trị lệch</Typography>
           <Typography variant="body2">{data.total_amount}</Typography>
         </Grid>
 

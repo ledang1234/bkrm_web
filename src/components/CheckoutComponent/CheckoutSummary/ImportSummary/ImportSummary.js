@@ -169,7 +169,8 @@ const ImportSummary = (props) => {
                                 </Typography>
                                 <VNDInput id="standard-basic" style={{ width: 90 }}
                                     // defaultPrice={cartData.total_amount - cartData.discount}
-                                    defaultPrice={(cartData.total_amount - cartData.discount).toString()}
+                                    // defaultPrice={(cartData.total_amount - cartData.discount).toString()}
+                                    value={cartData.paid_amount}
                                     size="small" inputProps={{ style: { textAlign: "right" } }}
                                     onChange={(e) => handleUpdatePaidAmount(e.target.value)} />
                             </Grid>

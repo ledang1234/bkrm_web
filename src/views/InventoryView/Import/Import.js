@@ -268,6 +268,7 @@ const Import = () => {
     });
     setCartList(newCartList);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
+    
   };
 
   const handleSelectSupplier = (selectedSupplier) => {
@@ -281,6 +282,7 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { paid_amount: { $set: amount } },
     });
+   
     setCartList(newCartList);
   };
 
@@ -308,6 +310,13 @@ const Import = () => {
       [selectedIndex]: { total_amount: { $set: total } },
     });
 
+
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        paid_amount: { $set: total - cartList[selectedIndex].discount },
+      },
+    });
+
     setCartList(newCartList);
   };
 
@@ -318,48 +327,60 @@ const Import = () => {
     // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
     //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
-    let d = moment.now() / 1000;
 
-    let importTime = moment
-      .unix(d)
-      .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-    console.log(cart.total_amount, cart.discount, cart.paid_amount);
-    let body = {
-      supplier_uuid: cart.supplier?.uuid,
-      total_amount: cart.total_amount.toString(),
-      payment_method: cart.payment_method,
-      paid_amount: cart.paid_amount,
-      discount: cart.discount.toString(),
-      status:
-        Number(cart.total_amount) - Number(cart.discount) <=
-        Number(cart.paid_amount)
-          ? "closed"
-          : "debt",
-      details: cart.cartItem,
-      import_date: importTime,
-    };
-    // console.log(importTime);
+    var emptyCart =  cart.cartItem.length === 0;
+    if(emptyCart ){
 
-    try {
-      let res = await purchaseOrderApi.addInventory(
-        store_uuid,
-        branch.uuid,
-        body
-      );
-      setSnackStatus({
-        style: "success",
-        message: "Nhập hàng thành công: " + res.data.purchase_order_code,
-      });
       setOpenSnack(true);
-      handleDelete(selectedIndex);
-    } catch (err) {
       setSnackStatus({
         style: "error",
-        message: "Nhập hàng thất bại! ",
+        message: "Giỏ hàng trống",
       });
-      setOpenSnack(true);
-      console.log(err);
+    }else{
+      let d = moment.now() / 1000;
+      let importTime = moment
+        .unix(d)
+        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
+      let body = {
+        supplier_uuid: cart.supplier?.uuid,
+        total_amount: cart.total_amount.toString(),
+        payment_method: cart.payment_method,
+        paid_amount: cart.paid_amount,
+        discount: cart.discount.toString(),
+        status:
+          Number(cart.total_amount) - Number(cart.discount) >=
+          Number(cart.paid_amount)
+            ? "debt"
+            : "closed" ,
+        details: cart.cartItem,
+        import_date: importTime,
+      };
+      // console.log(importTime);
+
+      try {
+        let res = await purchaseOrderApi.addInventory(
+          store_uuid,
+          branch.uuid,
+          body
+        );
+        setSnackStatus({
+          style: "success",
+          message: "Nhập hàng thành công: " + res.data.purchase_order_code,
+        });
+        setOpenSnack(true);
+        handleDelete(selectedIndex);
+      } catch (err) {
+        setSnackStatus({
+          style: "error",
+          message: "Nhập hàng thất bại! ",
+        });
+        setOpenSnack(true);
+        console.log(err);
+      }
+
     }
+    
   };
   return (
     <Grid

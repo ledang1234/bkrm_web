@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import {
   Card,
   ListItem,
@@ -31,8 +31,19 @@ import TableWrapper from "../TableCommon/TableWrapper/TableWrapper";
 import inventoryCheckApi from "../../api/inventoryCheckApi";
 import SnackBarGeneral from "../SnackBar/SnackBarGeneral";
 import InventoryCheckSummary from "../CheckoutComponent/CheckoutSummary/InventoryCheckSumary/InventroyCheckSumary";
+import SimpleModal from "../Modal/ModalWrapper";
+import ButtonQuantity from '../Button/ButtonQuantity';
+
+
 function InventoryCheckPopUp({ classes, handleCloseReturn }) {
   
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () =>{
+    setOpen(false)
+  }
+
+
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("stt");
   const handleRequestSort = (event, property) => {
@@ -108,46 +119,63 @@ function InventoryCheckPopUp({ classes, handleCloseReturn }) {
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
 
-  const handleConfirm = async () => {
-    const d = moment.now() / 1000;
-
-    const export_date = moment
-      .unix(d)
-      .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-
-    const body = {
-      total_amount: inventoryCheck.total_amount,
-      details: inventoryCheck.details.map((detail) => ({
-        product_id: detail.id,
-        quantity: Number(detail.real_quantity) - Number(detail.branch_quantity),
-        unit_price: detail.standard_price,
-        uuid: detail.uuid,
-        branch_inventory: detail.branch_quantity,
-      })),
-      note: inventoryCheck.note
-    };
-
-    console.log(body);
-
-    try {
-      const res = await inventoryCheckApi.create(
-        store_uuid,
-        branch_uuid,
-        body
-      );
-      setSnackStatus({
-        style: "success",
-        message: `Kiểm kho thành công ${res.data?.inventory_check_code}`,
-      });
+  const handleConfirm = () =>{
+    var emptyCart =  inventoryCheck.details.length === 0;
+    if(emptyCart){
       setOpenSnack(true);
-    } catch (err) {
       setSnackStatus({
         style: "error",
-        message: "Kiểm kho thất bại! ",
+        message: "Kiểm kho trống",
       });
-      setOpenSnack(true);
-      console.log(err);
+    }else{
+      setOpen(true);
+    
     }
+}
+
+  const handleConfirmBalance = async () => {
+      const d = moment.now() / 1000;
+
+      const export_date = moment
+        .unix(d)
+        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
+      const body = {
+        total_amount: inventoryCheck.total_amount,
+        details: inventoryCheck.details.map((detail) => ({
+          product_id: detail.id,
+          quantity: Number(detail.real_quantity) - Number(detail.branch_quantity),
+          unit_price: detail.standard_price,
+          uuid: detail.uuid,
+          branch_inventory: detail.branch_quantity,
+        })),
+        note: inventoryCheck.note
+      };
+
+      console.log(body);
+
+      try {
+        const res = await inventoryCheckApi.create(
+          store_uuid,
+          branch_uuid,
+          body
+        );
+        setSnackStatus({
+          style: "success",
+          message: `Kiểm kho thành công ${res.data?.inventory_check_code}`,
+        });
+        setOpenSnack(true);
+        handleClose();
+      
+      } catch (err) {
+        setSnackStatus({
+          style: "error",
+          message: "Kiểm kho thất bại! ",
+        });
+        setOpenSnack(true);
+        console.log(err);
+      }
+      
   };
   const handleCloseSnackBar = (event, reason) => {
     setOpenSnack(false);
@@ -157,7 +185,8 @@ function InventoryCheckPopUp({ classes, handleCloseReturn }) {
     console.log(product)
     const newDetails = [...inventoryCheck.details, {
       ...product,
-      real_quantity: 0,
+      // real_quantity: 0,
+      real_quantity: Number(product.branch_quantity) ,
     }]
     console.log(newDetails)
     setInventoryCheck({...inventoryCheck, details: newDetails})
@@ -176,15 +205,19 @@ function InventoryCheckPopUp({ classes, handleCloseReturn }) {
           open={openSnack}
           status={snackStatus}
         />
-
-        <ListItem style={{ paddingTop: 20, marginBottom: -20, marginLeft: 25 }}>
+      <Grid item>
+      <ListItem style={{ paddingTop: 20, marginBottom: -20, marginLeft: 25 }}>
           <Typography variant="h3" style={{ marginRight: 20 }}>
             Kiểm kho
           </Typography>
 
           <SearchProduct handleSearchBarSelect={handleProductSelect} />
+          
         </ListItem>
 
+      </Grid>
+        
+        <Grid item>
         <IconButton
           aria-label="close"
           className={classes.closeButton}
@@ -192,6 +225,8 @@ function InventoryCheckPopUp({ classes, handleCloseReturn }) {
         >
           <CloseIcon />
         </IconButton>
+        </Grid>
+       
       </Grid>
 
       <DialogContent style={{ marginTop: 25 }}>
@@ -239,7 +274,37 @@ function InventoryCheckPopUp({ classes, handleCloseReturn }) {
               />
             </Card>
           </Grid>
-        </Grid>
+
+
+
+          <SimpleModal title="Cân bằng kho" open={open} handleClose={handleClose}>
+            <Typography style={{marginTop:10, marginBottom:10}}>Cân bằng kho sẽ thay đổi tồn kho hiện tại của hàng hóa được lưu trong hệ thống.</Typography>
+            <Typography style={{fontWeight:500}}>Bạn có chắc chắn muốn Cân bằng kho?</Typography>
+           
+                <Button
+                  onClick={() => handleClose()}
+                  variant="contained"
+                  size="small"
+                  color="secondary"
+                >
+                  Huỷ
+                </Button>
+                <Button
+                  style={{ marginTop: 40 }}
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  onClick={() => {
+                    handleConfirmBalance();
+                    
+                    // handleCloseReturn();
+                  }}
+                >
+                  Xác nhận
+                </Button>
+                    </SimpleModal>
+
+                </Grid>
       </DialogContent>
     </>
   );
@@ -265,13 +330,22 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange }) {
       <TableCell align="left">{detail.name}</TableCell>
       <TableCell align="right">{detail.branch_quantity}</TableCell>
       <TableCell align="center">
-        <Input
+        {/* <Input
           id="standard-basic"
           style={{ width: 70 }}
           size="small"
           inputProps={{ style: { textAlign: "right" } }}
-          defaultValue={detail.real_quantity}
+          defaultValue={detail.branch_quantity}
           onChange={(e) => onChangeRealQuantity(e.target.value)}
+        /> */}
+        <ButtonQuantity
+          quantity={detail.real_quantity}
+          setQuantity={onChangeRealQuantity}
+          show={show}
+          setShow={setShow}
+          limit={detail.quantity}
+          isReturn={false}
+          
         />
       </TableCell>
 

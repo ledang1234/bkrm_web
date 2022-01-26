@@ -163,8 +163,10 @@ const SearchProduct = (props) => {
         renderOption={renderOption}
         filterOptions={filterOptions}
       />
+
     </div>
   );
 };
+
 
 export default SearchProduct;
