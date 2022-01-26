@@ -153,7 +153,7 @@ const AddInventory = (props) => {
         name: product.name,
         barcode: product.bar_code,
       });
-      setDisplay([...display, { link: product.img_url, isUrl: true }]);
+      setDisplay([{ link: product.img_url, isUrl: true }]);
       setImages([]);
       setImageURL(product.img_url);
     } catch (error) {
