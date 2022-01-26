@@ -307,6 +307,7 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { total_amount: { $set: total } },
     });
+
     setCartList(newCartList);
   };
 
