@@ -2,7 +2,7 @@ import React from 'react'
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { Grid, Box, Typography, DialogActions, DialogContent, Button, Dialog, FormControlLabel, Checkbox, FormControl, RadioGroup, Radio } from '@material-ui/core'
 
-import AddSupplier from '../../../../views/InventoryView/Supplier/AddSupplier/AddSupplier'
+import AddCustomer from '../../../../views/ManagerView/Customer/AddCustomer/AddCustomer'
 
 import SearchCustomer from '../../../SearchBar/SearchCustomer';
 
@@ -127,7 +127,7 @@ const CartSummary = (props) => {
                         handleSearchBarSelect={handleSelectCustomer} />
                 </div>
 
-                <AddSupplier open={open} handleClose={handleClose} />
+                <AddCustomer open={open} handleClose={handleClose} />
 
                 {/* when change mode to menu product */}
                 {props.children}
