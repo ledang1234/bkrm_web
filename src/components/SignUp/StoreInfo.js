@@ -15,46 +15,9 @@ import userApi from "../../api/userApi";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 const StoreInfo = (props) => {
-  const { store_formik } = {
+  const { store_formik,cityList,districtList,wardList } = {
     ...props,
   };
-  const [cityList, setCityList] = useState([]);
-  const [districtList, setDistrictList] = useState([]);
-  const [wardList, setWardList] = useState([]);
-  useEffect(() => {
-    const loadCity = async () => {
-      try {
-        const res = await userApi.getCity();
-        setCityList(res.provinces);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    loadCity();
-  }, []);
-  useEffect(() => {
-    const loadDistrict = async (city_id) => {
-      try {
-        const res = await userApi.getDistrict(city_id);
-        setDistrictList(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    loadDistrict(store_formik.values.city);
-    console.log(store_formik.errors);
-  }, [store_formik.values.city]);
-  useEffect(() => {
-    const loadWard = async (city_id, district_id) => {
-      try {
-        const res = await userApi.getWard(city_id, district_id);
-        setWardList(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    loadWard(store_formik.values.city, store_formik.values.district);
-  }, [store_formik.values.city, store_formik.values.district]);
   return (
     <React.Fragment>
       <Grid container spacing={2} style={{ maxWidth: 600, marginTop: 10 }}>

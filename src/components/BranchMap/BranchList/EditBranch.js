@@ -73,22 +73,26 @@ const EditBranch = (props) => {
   }, []);
   useEffect(() => {
     const loadDistrict = async (city_id) => {
-      try {
-        const res = await userApi.getDistrict(city_id);
-        setDistrictList(res.data);
-      } catch (error) {
-        console.log(error);
+      if (city_id) {
+        try {
+          const res = await userApi.getDistrict(city_id);
+          setDistrictList(res.data);
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     loadDistrict(formik.values.city);
   }, [formik.values.city]);
   useEffect(() => {
     const loadWard = async (city_id, district_id) => {
-      try {
-        const res = await userApi.getWard(city_id, district_id);
-        setWardList(res.data);
-      } catch (error) {
-        console.log(error);
+      if (city_id && district_id) {
+        try {
+          const res = await userApi.getWard(city_id, district_id);
+          setWardList(res.data);
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     loadWard(formik.values.city, formik.values.district);

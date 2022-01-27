@@ -100,7 +100,6 @@ const Inventory = () => {
         );
 
         setProductList(response.data);
-        // console.log(response.data);
       } catch (err) {
         console.log(err);
       }
@@ -123,8 +122,6 @@ const Inventory = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  //// 1. Add pop up + noti
-  //add
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -150,8 +147,6 @@ const Inventory = () => {
   const handleCloseBar = () => {
     setOpenBar(false);
   };
-
-  //// 2. Table
 
   //collapse
   const [openRow, setRowOpen] = React.useState(null);
@@ -184,7 +179,6 @@ const Inventory = () => {
   const [openProductImportPopper, setOpenProductImportPopper] = useState(false);
   const [isLoadingProduct, setIsLoadingProduct] = useState(false);
   const [productErrors, setProductErrors] = useState([]);
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
   return (
     <Card className={classes.root}>

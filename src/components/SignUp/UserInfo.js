@@ -2,7 +2,7 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import React from "react";
 
 const UserInfo = (props) => {
-  const { userInfo, setUserInfo } = { ...props };
+  const { userInfo, setUserInfo ,user_formik} = { ...props };
   const setName = (e) => {
     setUserInfo({ ...userInfo, name: e });
   };
@@ -26,14 +26,16 @@ const UserInfo = (props) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
-            autoComplete="name"
             name="name"
             variant="outlined"
             required
             fullWidth
             label="Họ tên"
-            value={userInfo.name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={user_formik.handleChange}
+            value={user_formik.values.name}
+            error={user_formik.touched.name && user_formik.errors.name}
+            helperText={user_formik.touched.name ? user_formik.errors.name : null}
+            onBlur={user_formik.handleBlur}
           />
         </Grid>
         <Grid item xs={6}>
@@ -43,9 +45,11 @@ const UserInfo = (props) => {
             fullWidth
             label="Số điện thoại"
             name="phone"
-            autoComplete="phone"
-            value={userInfo.phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={user_formik.handleChange}
+            value={user_formik.values.phone}
+            error={user_formik.touched.phone && user_formik.errors.phone}
+            helperText={user_formik.touched.phone ? user_formik.errors.phone : null}
+            onBlur={user_formik.handleBlur}
           />
         </Grid>
         <Grid item xs={6}>
@@ -53,12 +57,12 @@ const UserInfo = (props) => {
             variant="outlined"
             required
             fullWidth
-            name="date"
+            name="dateOfBirth"
             type="date"
             defaultValue="1991-01-01"
-            label="Date"
-            value={userInfo.dateOfBirth}
-            onChange={(e) => setDateOfBirth(e.target.value)}
+            label="Ngày sinh"
+            onChange={user_formik.handleChange}
+            value={user_formik.values.dateOfBirth}
           />
         </Grid>
         <Grid item xs={12}>
@@ -68,9 +72,11 @@ const UserInfo = (props) => {
             fullWidth
             label="Địa chỉ email"
             name="email"
-            autoComplete="email"
-            value={userInfo.email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={user_formik.handleChange}
+            value={user_formik.values.email}
+            error={user_formik.touched.email && user_formik.errors.email}
+            helperText={user_formik.touched.email ? user_formik.errors.email : null}
+            onBlur={user_formik.handleBlur}
           />
         </Grid>
         <Grid item xs={12}>
@@ -81,8 +87,11 @@ const UserInfo = (props) => {
             name="password"
             label="Mật khẩu"
             type="password"
-            value={userInfo.password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={user_formik.handleChange}
+            value={user_formik.values.password}
+            error={user_formik.touched.password && user_formik.errors.password}
+            helperText={user_formik.touched.password ? user_formik.errors.password : null}
+            onBlur={user_formik.handleBlur}
           />
         </Grid>
         <Grid item xs={12}>
@@ -90,14 +99,14 @@ const UserInfo = (props) => {
             variant="outlined"
             required
             fullWidth
-            name="password"
+            name="passwordConfirm"
             label="Nhập lại mật khẩu"
             type="password"
-            value={userInfo.passwordConfirm}
-            onChange={(e) => SetPasswordConfirm(e.target.value)}
-            error={
-              userInfo.passwordConfirm === userInfo.password ? false : true
-            }
+            onChange={user_formik.handleChange}
+            value={user_formik.values.passwordConfirm}
+            error={user_formik.touched.passwordConfirm && user_formik.errors.passwordConfirm}
+            helperText={user_formik.touched.passwordConfirm ? user_formik.errors.passwordConfirm : null}
+            onBlur={user_formik.handleBlur}
           />
         </Grid>
       </Grid>

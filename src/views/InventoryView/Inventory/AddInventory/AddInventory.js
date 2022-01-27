@@ -31,6 +31,7 @@ import { urltoFile } from "../../../../api/helper";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import SearchIcon from "@material-ui/icons/Search";
 import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
+import { useFormik } from "formik";
 const UploadImages = (img) => {
   return (
     <Box
@@ -88,6 +89,21 @@ const AddInventory = (props) => {
     unit: "",
     re_order_point: "",
   });
+
+  const productFormik = useFormik({
+    initialValues: {
+      name: "",
+      barcode: "",
+      importedPrice: 0,
+      salesPrice: 0,
+      category: {
+        uuid: "",
+        name: "Mặc Định",
+      },
+      unit: "",
+      re_order_point: "",
+    }
+  })
 
   // redux
   const info = useSelector((state) => state.info);
