@@ -86,7 +86,7 @@ export const CustomerHeadCells = [
 
 export const CartHeadCells = [
     { id: 'stt', align: 'left', disablePadding: true, label: 'Stt' },
-    // { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'id', align: 'left', disablePadding: true, label: 'Mã SP' },
     { id: 'name', align: 'left', disablePadding: true, label: 'Tên' },
     { id: 'price', align: 'right', disablePadding: true, label: 'Đơn giá' },
     { id: 'quantity', align: 'center', disablePadding: true, label: 'Số lượng' },
