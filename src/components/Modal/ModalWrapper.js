@@ -30,6 +30,21 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleModal(props) {
   const classes = useStyles();
   return (
+//     <React.Fragment>
+//       <Modal
+//         open={props.open}
+//         onClose={props.handleClose}
+//         aria-labelledby="simple-modal-title"
+//         aria-describedby="simple-modal-description"
+//         className={classes.modal}
+//       >
+//         <React.Fragment>
+//           <Paper>
+//             <Box className={classes.container}>{props.children}</Box>
+//           </Paper>
+//         </React.Fragment>
+//       </Modal>
+//     </React.Fragment>
     <React.Fragment>
       <Modal
         open={props.open}
@@ -40,7 +55,19 @@ export default function SimpleModal(props) {
       >
         <React.Fragment>
           <Paper>
-            <Box className={classes.container}>{props.children}</Box>
+            <Box className={classes.container}>
+              
+                <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="h3" style={{ marginRight: 30 }}>{props.title}</Typography>
+                    
+                    <IconButton aria-label="close"   onClick={props.handleClose}>
+                      <CloseIcon  fontSize="small" />
+                    </IconButton>
+              </Grid>
+
+              {props.children}
+              
+              </Box>
           </Paper>
         </React.Fragment>
       </Modal>
