@@ -22,13 +22,13 @@ import {
 //import project
 import NumberFormatCustom from "../../../../components/TextField/NumberFormatCustom";
 import MultipleSelect from "../../../../components/MultipleSelect/MultipleSelect";
-import { EmailRounded } from "@material-ui/icons";
+import { EmailRounded, Image } from "@material-ui/icons";
 import branchApi from "../../../../api/branchApi";
 
 // api
 import { useSelector } from "react-redux";
 import employeeApi from "../../../../api/employeeApi";
-
+import { statusAction } from "../../../../store/slice/statusSlice";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -93,6 +93,8 @@ const AddEmployee = (props) => {
   const [permissions, setPermissions] = React.useState([]);
   const [branches, setBranches] = React.useState([]);
   const [empWorkBranches, setEmpWorkBranches] = React.useState([]);
+  const [image, setImage] = React.useState();
+  const [imageToShow, setImageToShow] = React.useState("")
 
   // redux
   const info = useSelector((state) => state.info);
@@ -130,16 +132,30 @@ const AddEmployee = (props) => {
 
       <DialogContent>
         <div className={classes.root}>
-          {/* <Grid container direction="row">
+          <Grid container direction="row">
 
 
-            <Avatar alt="Remy Sharp" className={classes.ava} />
+            <Avatar alt="Remy Sharp" className={classes.ava} src={imageToShow}/>
             <input
               accept="image/*"
               className={classes.input}
               id="contained-button-file"
               multiple
               type="file"
+              accept="image/*" 
+              capture="environment"
+              onChange={(event) => {
+                setImage(event.target.files[0])
+
+                // read the selected file and display on the avata
+                var file = event.target.files[0];
+                var reader = new FileReader();
+                reader.onloadend = function() {
+                  setImageToShow(reader.result);
+                }
+
+                reader.readAsDataURL(file);
+              }}
             />
             <label htmlFor="contained-button-file">
               <Button
@@ -150,7 +166,7 @@ const AddEmployee = (props) => {
                 Chọn ảnh
               </Button>
             </label>
-          </Grid> */}
+          </Grid>
 
           <Grid
             container
@@ -311,39 +327,48 @@ const AddEmployee = (props) => {
                 handleSelect={handleSelectPermission}
               />
 
-              <Select
-                label="Chi nhánh"
-                multiple
-                variant="outlined"
+              <FormControl
+                className={classes.formControl}
                 fullWidth
                 size="small"
-                value={empWorkBranches}
-                renderValue={(selected) =>
-                  selected
-                    .map((empWorkBranch) => {
-                      return branches.find(
-                        (branch) => branch.id === empWorkBranch
-                      )?.name;
-                    })
-                    .join(", ")
-                }
-                onChange={(e) => {
-                  setEmpWorkBranches(e.target.value);
-                  console.log(e.target.value);
-                }}
-                input={<OutlinedInput label="Name" />}
-                // MenuProps={MenuProps}
+                variant="outlined"
+                style={{ marginTop: 8 }}
               >
-                {branches.map((branch) => (
-                  <MenuItem
-                    key={branch.name}
-                    value={branch.id}
-                    // style={getStyles(name, personName, theme)}
-                  >
-                    {branch.name}
-                  </MenuItem>
-                ))}
-              </Select>
+                <InputLabel id="branchSelect">Chi nhánh </InputLabel>
+                <Select
+                  label="Chi nhánh"
+                  id="branchSelect"
+                  multiple
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  value={empWorkBranches}
+                  renderValue={(selected) =>
+                    selected
+                      .map((empWorkBranch) => {
+                        return branches.find(
+                          (branch) => branch.id === empWorkBranch
+                        )?.name;
+                      })
+                      .join(", ")
+                  }
+                  onChange={(e) => {
+                    setEmpWorkBranches(e.target.value);
+                    console.log(e.target.value);
+                  }}
+                  input={<OutlinedInput label="Name" />}
+                >
+                  {branches.map((branch) => (
+                    <MenuItem
+                      key={branch.name}
+                      value={branch.id}
+                    >
+                      {branch.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              
             </Grid>
           </Grid>
         </div>
@@ -360,26 +385,33 @@ const AddEmployee = (props) => {
         </Button>
         <Button
           onClick={async () => {
-            let body = {
-              name: name,
-              email: email,
-              password: empPassword,
-              password_confirmation: empPassword,
-              phone: phone,
-              date_of_birth: dateOfBirth,
-              status: "active",
-              gender: gender,
-              id_card_num: idCardNum,
-              salary: salary,
-              salary_type: salaryType,
-              address: address,
-              permissions: permissions,
-            };
+            let formData = new FormData(); //formdata object
+
+            formData.append("name", name); 
+            formData.append("email", email);
+            formData.append("password", empPassword); 
+            formData.append("password_confirmation", empPassword); 
+            formData.append("phone", phone);
+            formData.append("date_of_birth", dateOfBirth);
+            formData.append("status", "active");
+            formData.append("gender", gender);
+            formData.append("id_card_num", idCardNum);
+            formData.append("salary", salary);
+            formData.append("salary_type", salaryType);
+            formData.append("address", address);
+            formData.append("image", image)
+
+            for (var i = 0; i < permissions.length; i++) {
+              formData.append('permissions[]', permissions[i]);
+            }
+            for (var i = 0; i < empWorkBranches.length; i++) {
+              formData.append('branches[]', empWorkBranches[i]);
+            }
 
             try {
               const response = await employeeApi.createEmployee(
                 store_uuid,
-                body
+                formData
               );
               handleClose("Success");
               console.log(response.status);

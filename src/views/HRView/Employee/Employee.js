@@ -39,7 +39,7 @@ const Employee = () => {
   const [employeeList, setEmployeeList] = useState([]);
   const [reload, setReload] = useState(false);
 
-  const onReload = () => setReload(!reload);
+  const onReload = () => {setReload(!reload); console.log('reload called')};
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 

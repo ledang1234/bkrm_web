@@ -68,11 +68,10 @@ export const InvoiceReturnHeadCells = [
     { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },  
 ];
 export const EmployeeHeadCells = [
-    { id: 'id', align: 'left', disablePadding: true, label: '#' },
     { id: 'name', align: 'left', disablePadding: true, label: 'Nhân viên' },
     { id: 'phone', align: 'left', disablePadding: true, label: 'Số điện thoại' },
     { id: 'email', align: 'left', disablePadding: true, label: 'Email' },
-    { id: 'function', align: 'left', disablePadding: false, label: 'Quyền' },  
+    { id: 'function', align: 'left', disablePadding: false, label: 'Trạng thái' },  
 ];
 
 export const CustomerHeadCells = [

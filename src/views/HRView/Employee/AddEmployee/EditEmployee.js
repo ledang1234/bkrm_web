@@ -23,6 +23,8 @@ import { useFormik } from "formik";
 import NumberFormatCustom from "../../../../components/TextField/NumberFormatCustom";
 import MultipleSelect from "../../../../components/MultipleSelect/MultipleSelect";
 import { EmailRounded } from "@material-ui/icons";
+import branchApi from "../../../../api/branchApi";
+
 
 // api
 import { useSelector } from "react-redux";
@@ -49,11 +51,12 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-let choices = [
-  { key: "manage-employees", value: "Nhân sự" },
-  { key: "manage-orders", value: "Bán hàng" },
-  { key: "manage-purchase-orders", value: "Nhập hàng" },
-  { key: "manage-purchase-returns", value: "Trả hàng" },
+let permissionChoices = [
+  { id: 1, name: "inventory", description: "Kho hàng" },
+  { id: 2, name: "employee", description: "Nhân sự" },
+  { id: 3, name: "sales", description: "Bán hàng" },
+  { id: 4, name: "product", description: "Sản phẩm" },
+  { id: 5, name: "report", description: "Báo cáo" },
 ];
 
 const EditEmployee = ({ handleClose, open, employee }) => {
@@ -61,6 +64,8 @@ const EditEmployee = ({ handleClose, open, employee }) => {
   const classes = useStyles(theme);
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+
+  const [branches, setBranches] = React.useState([]);
 
   // đổi thành state sau (price format)
   const [values, setValues] = React.useState({
@@ -76,14 +81,30 @@ const EditEmployee = ({ handleClose, open, employee }) => {
   // employee info
   // const [typeSalary, setTypeSalary] = React.useState("");
 
-  useEffect(() => {}, [employee]);
+  useEffect(() => {
+   
+  }, [employee]);
+
+  React.useEffect(() => {
+    const loadBranches = async () => {
+      try {
+        const response = await branchApi.getAllBranches(store_uuid);
+        console.log(response.data);
+        setBranches(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loadBranches();
+   
+  }, [store_uuid]);
 
   const formik = useFormik({
     initialValues: {
       uuid: employee.uuid,
       name: employee.name,
       phone: employee.phone,
-      permissions: employee.permissions,
+      permissions: employee.permissions.map(p => p.id),
       email: employee.email,
       salary: employee.salary,
       salary_type: employee.salary_type,
@@ -91,6 +112,7 @@ const EditEmployee = ({ handleClose, open, employee }) => {
       gender: employee.gender,
       date_of_birth: employee.date_of_birth,
       address: employee.address,
+      branches: employee.branches.map(b => b.id),
     },
     onSubmit: async (values) => {
       console.log(values);
@@ -276,10 +298,79 @@ const EditEmployee = ({ handleClose, open, employee }) => {
               />
               {/* <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/> */}
 
-              <MultipleSelect
-                choices={choices}
-                selected={formik.values.permissions}
-              />
+              <FormControl
+                className={classes.formControl}
+                fullWidth
+                size="small"
+                variant="outlined"
+                style={{ marginTop: 8 }}
+              >
+                <InputLabel id="branchSelect">Chức năng</InputLabel>
+                <Select
+                  multiple
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  name="permissions"
+                  value={formik.values.permissions}
+                  renderValue={(selected) =>
+                    selected
+                      .map((permission) => {
+                        return permissionChoices.find(
+                          (p) => p.id === permission
+                        )?.description
+                      })
+                      .join(", ")
+                  }
+                  onChange={formik.handleChange}
+                >
+                  {permissionChoices.map((branch) => (
+                    <MenuItem
+                      key={branch.name}
+                      value={branch.id}
+                    >
+                      {branch.description}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl
+                className={classes.formControl}
+                fullWidth
+                size="small"
+                variant="outlined"
+                style={{ marginTop: 8 }}
+              >
+                <InputLabel id="branchSelect">Chi nhánh </InputLabel>
+                <Select
+                  multiple
+                  variant="outlined"
+                  fullWidth
+                  name="branches"
+                  onChange={formik.handleChange}
+                  size="small"
+                  value={formik.initialValues.branches}
+                  renderValue={(selected) =>
+                    selected
+                      .map((empWorkBranch) => {
+                        return branches.find(
+                          (branch) => branch.id === empWorkBranch
+                        )?.name;
+                      })
+                      .join(", ")
+                  }
+                >
+                  {branches.map((branch) => (
+                    <MenuItem
+                      key={branch.name}
+                      value={branch.id}
+                    >
+                      {branch.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </div>
