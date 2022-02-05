@@ -15,6 +15,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  OutlinedInput,
   Dialog,
 } from "@material-ui/core";
 
@@ -22,6 +23,7 @@ import {
 import NumberFormatCustom from "../../../../components/TextField/NumberFormatCustom";
 import MultipleSelect from "../../../../components/MultipleSelect/MultipleSelect";
 import { EmailRounded } from "@material-ui/icons";
+import branchApi from "../../../../api/branchApi";
 
 // api
 import { useSelector } from "react-redux";
@@ -89,6 +91,8 @@ const AddEmployee = (props) => {
   const [salaryType, setSalaryType] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [permissions, setPermissions] = React.useState([]);
+  const [branches, setBranches] = React.useState([]);
+  const [empWorkBranches, setEmpWorkBranches] = React.useState([]);
 
   // redux
   const info = useSelector((state) => state.info);
@@ -98,6 +102,19 @@ const AddEmployee = (props) => {
     let permissions = selected.map((permission) => permission.id);
     setPermissions(permissions);
   };
+
+  React.useEffect(() => {
+    const loadBranches = async () => {
+      try {
+        const response = await branchApi.getAllBranches(store_uuid);
+        console.log(response.data);
+        setBranches(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loadBranches();
+  }, [store_uuid]);
 
   return (
     <Dialog
@@ -293,6 +310,40 @@ const AddEmployee = (props) => {
                 choices={choices}
                 handleSelect={handleSelectPermission}
               />
+
+              <Select
+                label="Chi nhánh"
+                multiple
+                variant="outlined"
+                fullWidth
+                size="small"
+                value={empWorkBranches}
+                renderValue={(selected) =>
+                  selected
+                    .map((empWorkBranch) => {
+                      return branches.find(
+                        (branch) => branch.id === empWorkBranch
+                      )?.name;
+                    })
+                    .join(", ")
+                }
+                onChange={(e) => {
+                  setEmpWorkBranches(e.target.value);
+                  console.log(e.target.value);
+                }}
+                input={<OutlinedInput label="Name" />}
+                // MenuProps={MenuProps}
+              >
+                {branches.map((branch) => (
+                  <MenuItem
+                    key={branch.name}
+                    value={branch.id}
+                    // style={getStyles(name, personName, theme)}
+                  >
+                    {branch.name}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
           </Grid>
         </div>

@@ -8,6 +8,10 @@ const branchApi = {
     const url = `/stores/${storeUuid}/branches`;
     return axiosClient.get(url);
   },
+  getAllBranches: (storeUuid) => {
+    const url = `/stores/${storeUuid}/branches/getAllBranches`;
+    return axiosClient.get(url);
+  },
 
   getBranch: (storeUuid, branchUuid) => {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
