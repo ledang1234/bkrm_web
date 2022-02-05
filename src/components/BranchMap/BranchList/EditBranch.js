@@ -120,8 +120,8 @@ const EditBranch = (props) => {
         district: district,
         phone: formik.values.phone,
         status: "active",
-        lng: `${lng}`,
-        lat: `${lat}`,
+        lng: lng,
+        lat: lat,
       };
       const response = await branchApi.updateBranch(
         store_uuid,
@@ -175,7 +175,7 @@ const EditBranch = (props) => {
           color="secondary"
           onClick={() => setIsDelete(true)}
         >
-          Xóa
+          Xóa chi nhánh
         </Button>
       </Box>
       <Grid container spacing={2} style={{ maxWidth: 600, marginTop: 10 }}>

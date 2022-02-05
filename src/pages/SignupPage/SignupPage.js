@@ -128,7 +128,6 @@ export default function SignUp() {
       }
     };
     loadCity()
-    return () => { console.log("component unmout") }
   }, []);
   useEffect(() => {
     const loadDistrict = async (city_id) => {

@@ -120,8 +120,8 @@ const AddBranch = (props) => {
       district: district,
       phone: formik.values.phone,
       status: "active",
-      lng: `${lng}`,
-      lat: `${lat}`,
+      lng: lng,
+      lat: lat
     };
     try {
       const response = await branchApi.createBranch(store_uuid, body);

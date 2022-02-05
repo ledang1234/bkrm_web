@@ -1,11 +1,11 @@
 /* eslint-disable no-use-before-define */
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { Box, Button, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
 import productApi from "../../api/productApi";
 import { useEffect } from "react";
-
+import SearchIcon from "@material-ui/icons/Search";
 export default function SearchWithAutoComplete(props) {
   const {
     searchApiCall,
@@ -14,6 +14,8 @@ export default function SearchWithAutoComplete(props) {
     renderOption,
     getOptionLabel,
     value,
+    nextRef,
+    handleDefaultSelect
   } = props;
   const [options, setOptions] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -21,33 +23,36 @@ export default function SearchWithAutoComplete(props) {
   const loadingData = async (e, searchKey) => {
     setSearchValue(searchKey);
   };
+
+
   useEffect(() => {
     const fetchData = async (searchKey = searchValue) => {
-      try {
-        const response = await searchApiCall(searchKey);
-        console.log(response);
-        setOptions(response.data);
-      } catch (error) {}
+      if (searchKey !== "") {
+        try {
+          const key = searchKey.slice(0, searchKey.indexOf("("))
+          const response = await searchApiCall(key);
+          setOptions(response.data);
+          onSelect(response.data[0])
+        } catch (error) {
+          console.log(error)
+        }
+      }
     };
     const timer = setTimeout(() => fetchData(), 500);
     return () => clearTimeout(timer);
   }, [searchValue]);
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
-
   return (
     <Autocomplete
       autoComplete
       disableCloseOnSelect
       options={options}
-      freeSolo={true}
       getOptionLabel={getOptionLabel}
       renderOption={renderOption}
       onInputChange={loadingData}
-      onChange={(e, value) => onSelect(value)}
+      onChange={(e, value) => { console.log("here"); onSelect(value); }}
       size="small"
       renderInput={renderInput}
+
     />
   );
 }

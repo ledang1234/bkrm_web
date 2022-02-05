@@ -22,7 +22,6 @@ import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 const InventoryTableRow = (props) => {
   const { row, handleOpenRow, openRow } = props;
   const classes = useRowStyles();
-  console.log(row.product_code.lenght === 0)
   return (
     <>
       <TableRow
@@ -51,7 +50,7 @@ const InventoryTableRow = (props) => {
         <TableCell align="right"><VNDFormat value={row.list_price} /></TableCell>
         <TableCell align="right"><VNDFormat value={row.standard_price} /></TableCell>
         <TableCell align="center">
-          <FormatedProductStatus quantity={row.branch_quantity} lowStock={row.min_reorder_quantity}/>
+          <FormatedProductStatus quantity={row.branch_quantity} lowStock={row.min_reorder_quantity} />
         </TableCell>
         <TableCell align="right" className={classes.fontName}>
           {row.branch_quantity}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
 import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 //import library
@@ -32,6 +32,7 @@ import { statusAction } from "../../../../store/slice/statusSlice";
 import SearchIcon from "@material-ui/icons/Search";
 import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 const UploadImages = (img) => {
   return (
     <Box
@@ -61,6 +62,15 @@ const AddInventory = (props) => {
     },
   ]);
 
+  const handleEnter = (event) => {
+    if (event.key.toLowerCase() === "enter") {
+      const form = event.target.form;
+      const index = [...form].indexOf(event.target);
+      console.log(index)
+      form.elements[index + 1].focus()
+    }
+  }
+
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
   const [imageURL, setImageURL] = useState();
@@ -82,10 +92,7 @@ const AddInventory = (props) => {
     barcode: "",
     importedPrice: 0,
     salesPrice: 0,
-    category: {
-      uuid: "",
-      name: "Mặc Định",
-    },
+    category: "",
     unit: "",
     re_order_point: "",
   });
@@ -96,13 +103,16 @@ const AddInventory = (props) => {
       barcode: "",
       importedPrice: 0,
       salesPrice: 0,
-      category: {
-        uuid: "",
-        name: "Mặc Định",
-      },
+      category: "",
       unit: "",
       re_order_point: "",
-    }
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên sản phẩm "),
+      importedPrice: Yup.number().required("Nhập giá vốn").moreThan(0, "Giá vốn không được âm"),
+      salesPrice: Yup.number().required("Nhập giá bán").moreThan(0, "Giá bán không được âm"),
+      re_order_point: Yup.number("Phải là một số").moreThan(0, "Số lượng đặt hàng lại không được âm"),
+    }),
   })
 
   // redux
@@ -112,37 +122,38 @@ const AddInventory = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const addProductHandler = async () => {
-    handleCloseAndReset();
-    try {
-      var bodyFormData = new FormData();
-      bodyFormData.append("name", productInfo.name.toString());
-      bodyFormData.append("list_price", productInfo.salesPrice.toString());
-      bodyFormData.append(
-        "standard_price",
-        productInfo.importedPrice.toString()
-      );
-      bodyFormData.append("bar_code", productInfo.barcode.toString());
-      bodyFormData.append("quantity_per_unit", productInfo.unit.toString());
-      bodyFormData.append(
-        "min_reorder_quantity",
-        productInfo.re_order_point.toString()
-      );
-      bodyFormData.append(
-        "category_uuid",
-        productInfo.category.uuid.toString()
-      );
-      bodyFormData.append("img_url", imageURL);
-      // bodyFormData.append("images[]", images);
-      images.forEach((image) => bodyFormData.append("images[]", image));
 
-      await productApi.createProduct(store_uuid, bodyFormData);
-      dispatch(statusAction.successfulStatus("Create product successfully"));
-      props.setReload(true);
-    } catch (error) {
-      console.log(error);
-      console.log(productInfo);
-      dispatch(statusAction.failedStatus("Create product failed"));
-    }
+    console.log(productInfo)
+    // handleCloseAndReset();
+    // try {
+    //   var bodyFormData = new FormData();
+    //   bodyFormData.append("name", productInfo.name.toString());
+    //   bodyFormData.append("list_price", productInfo.salesPrice.toString());
+    //   bodyFormData.append(
+    //     "standard_price",
+    //     productInfo.importedPrice.toString()
+    //   );
+    //   bodyFormData.append("bar_code", productInfo.barcode.toString());
+    //   bodyFormData.append("quantity_per_unit", productInfo.unit.toString());
+    //   bodyFormData.append(
+    //     "min_reorder_quantity",
+    //     productInfo.re_order_point.toString()
+    //   );
+    //   bodyFormData.append(
+    //     "category_uuid",
+    //     productInfo.category.toString()
+    //   );
+    //   bodyFormData.append("img_url", imageURL);
+
+    //   images.forEach((image) => bodyFormData.append("images[]", image));
+
+    //   await productApi.createProduct(store_uuid, bodyFormData);
+    //   dispatch(statusAction.successfulStatus("Create product successfully"));
+    //   props.setReload(true);
+    // } catch (error) {
+    //   console.log(error);
+    //   dispatch(statusAction.failedStatus("Create product failed"));
+    // }
   };
   useEffect(() => {
     const fetchCategoryList = async () => {
@@ -162,13 +173,10 @@ const AddInventory = (props) => {
   }, [store_uuid]);
 
   const selectSampleProductHandler = (product) => {
-    clearAllImages();
     try {
-      setProductInfo({
-        ...productInfo,
-        name: product.name,
-        barcode: product.bar_code,
-      });
+      productFormik.setFieldValue("name", product.name, true)
+      productFormik.setFieldValue("barcode", product.bar_code, true)
+      clearAllImages();
       setDisplay([{ link: product.img_url, isUrl: true }]);
       setImages([]);
       setImageURL(product.img_url);
@@ -182,18 +190,7 @@ const AddInventory = (props) => {
   };
   const handleCloseAndReset = () => {
     handleClose();
-    setProductInfo({
-      name: "",
-      barcode: "",
-      importedPrice: 0,
-      salesPrice: 0,
-      category: {
-        uuid: "",
-        name: "Mặc Định",
-      },
-      unit: "",
-      re_order_point: 0,
-    });
+    productFormik.resetForm()
     clearAllImages();
   };
   const clearAllImages = () => {
@@ -217,6 +214,7 @@ const AddInventory = (props) => {
         label="Tìm kiếm sản phẩm mẫu bằng tên hoặc mã vạch"
         variant="outlined"
         fullWidth
+        autoFocus
         size="small"
         InputProps={{
           ...params.InputProps,
@@ -225,6 +223,11 @@ const AddInventory = (props) => {
               <SearchIcon />
             </InputAdornment>
           ),
+          onKeyDown: (e) => {
+            if (e.key === 'Enter') {
+              onFocus(salesPriceRef)
+            }
+          }
         }}
       />
     );
@@ -242,6 +245,11 @@ const AddInventory = (props) => {
       </Grid>
     );
   };
+  const salesPriceRef = useRef()
+  const onFocus = (ref) => {
+    ref.current.focus()
+  }
+
   return (
     <Dialog
       open={open}
@@ -262,6 +270,7 @@ const AddInventory = (props) => {
           </Typography>
           <Box style={{ width: "70%" }}>
             <SearchWithAutoComplete
+              handleDefaultSelect={selectSampleProductHandler}
               onSelect={selectSampleProductHandler}
               searchApiCall={searchSampleProductHandler}
               renderInput={renderNameInput}
@@ -281,21 +290,28 @@ const AddInventory = (props) => {
         >
           <Grid item sm={7} xs={12}>
             <TextField
+              required
               label="Tên sản phẩm"
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.name}
-              onChange={(e) =>
-                setProductInfo({ ...productInfo, name: e.target.value })
-              }
+              name="name"
+              onChange={productFormik.handleChange}
+              value={productFormik.values.name}
+              error={productFormik.touched.name && productFormik.errors.name}
+              helperText={productFormik.touched.name ? productFormik.errors.name : null}
+              onBlur={productFormik.handleBlur}
+              type="text"
             />
             <TextField
               label="Mã vạch (mặc định)"
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.barcode}
+              name="barcode"
+              onKeyDown={(e) => { }}
+              onChange={productFormik.handleChange}
+              value={productFormik.values.barcode}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -307,9 +323,6 @@ const AddInventory = (props) => {
                   </InputAdornment>
                 ),
               }}
-              onChange={(e) =>
-                setProductInfo({ ...productInfo, barcode: e.target.value })
-              }
               className={classes.margin}
             />
             <TextField
@@ -318,28 +331,21 @@ const AddInventory = (props) => {
               fullWidth
               size="small"
               className={classes.margin}
-              value={productInfo.unit}
-              onChange={(e) => {
-                setProductInfo({ ...productInfo, unit: e.target.value });
-              }}
+              name="unit"
+              onChange={productFormik.handleChange}
+              value={productFormik.values.unit}
             />
             <Box className={`${classes.box} ${classes.margin}`}>
               <FormControl required size="small" variant="outlined" fullWidth>
                 <InputLabel htmlFor="category">Danh mục</InputLabel>
                 <Select
                   native
-                  value={productInfo.category.uuid}
-                  onChange={(e) => {
-                    const cat = categoryList.find(
-                      (item) => item.uuid === e.target.value
-                    );
-                    setProductInfo({
-                      ...productInfo,
-                      category: cat,
-                    });
-                  }}
                   label="Danh mục"
                   id="category"
+                  name="category"
+                  value={productFormik.values.category}
+                  onChange={productFormik.handleChange}
+                  onBlur={productFormik.handleBlur}
                 >
                   {categoryList.map((category) => (
                     <option key={category.uuid} value={category.uuid}>
@@ -366,13 +372,13 @@ const AddInventory = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.importedPrice}
-              onChange={(e) =>
-                setProductInfo({
-                  ...productInfo,
-                  importedPrice: e.target.value,
-                })
-              }
+              name="salesPrice"
+              inputRef={salesPriceRef}
+              value={productFormik.values.salesPrice}
+              onChange={productFormik.handleChange}
+              error={productFormik.touched.salesPrice && productFormik.errors.salesPrice}
+              helperText={productFormik.touched.salesPrice ? productFormik.errors.salesPrice : null}
+              onBlur={productFormik.handleBlur}
             />
             <VNDInput
               required
@@ -380,10 +386,12 @@ const AddInventory = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.salesPrice}
-              onChange={(e) => {
-                setProductInfo({ ...productInfo, salesPrice: e.target.value });
-              }}
+              name="importedPrice"
+              value={productFormik.values.importedPrice}
+              onChange={productFormik.handleChange}
+              error={productFormik.touched.importedPrice && productFormik.errors.importedPrice}
+              helperText={productFormik.touched.importedPrice ? productFormik.errors.importedPrice : null}
+              onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
 
@@ -393,13 +401,12 @@ const AddInventory = (props) => {
               fullWidth
               size="small"
               className={classes.margin}
-              onChange={(e) =>
-                setProductInfo({
-                  ...productInfo,
-                  re_order_point: e.target.value,
-                })
-              }
-              value={productInfo.re_order_point}
+              name="re_order_point"
+              value={productFormik.values.re_order_point}
+              onChange={productFormik.handleChange}
+              error={productFormik.touched.re_order_point && productFormik.errors.re_order_point}
+              helperText={productFormik.touched.re_order_point ? productFormik.errors.re_order_point : null}
+              onBlur={productFormik.handleBlur}
             />
           </Grid>
         </Grid>
@@ -471,7 +478,7 @@ const AddInventory = (props) => {
           </Grid>
         </Grid>
       </Box>
-    </Dialog>
+    </Dialog >
   );
 };
 
