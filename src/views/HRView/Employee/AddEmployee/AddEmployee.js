@@ -16,6 +16,7 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
+  FormHelperText,
   Dialog,
 } from "@material-ui/core";
 
@@ -29,6 +30,8 @@ import branchApi from "../../../../api/branchApi";
 import { useSelector } from "react-redux";
 import employeeApi from "../../../../api/employeeApi";
 import { statusAction } from "../../../../store/slice/statusSlice";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -50,7 +53,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-let choices = [
+let permissionChoices = [
   { id: 1, name: "inventory", description: "Kho hàng" },
   { id: 2, name: "employee", description: "Nhân sự" },
   { id: 3, name: "sales", description: "Bán hàng" },
@@ -78,32 +81,76 @@ const AddEmployee = (props) => {
     });
   };
 
-  // employee info
-  // const [typeSalary, setTypeSalary] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [empPassword, setEmpPassword] = React.useState("");
-  const [dateOfBirth, setDateOfBirth] = React.useState("");
-  const [gender, setGender] = React.useState("");
-  const [idCardNum, setIdCardNum] = React.useState("");
-  const [salary, setSalary] = React.useState("");
-  const [salaryType, setSalaryType] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [permissions, setPermissions] = React.useState([]);
   const [branches, setBranches] = React.useState([]);
-  const [empWorkBranches, setEmpWorkBranches] = React.useState([]);
-  const [image, setImage] = React.useState();
+  const [image, setImage] = React.useState("");
   const [imageToShow, setImageToShow] = React.useState("")
+
+  const formik = useFormik({
+    initialValues: {
+      uuid: "",
+      name: "",
+      phone: "",
+      permissions: [],
+      password: "",
+      email: "",
+      salary: "",
+      salary_type: "",
+      id_card_num: "",
+      gender: "",
+      date_of_birth: "",
+      address: "",
+      branches: [],
+    },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required("Bắt buộc!"),
+      phone: Yup.string().required("Bắt buộc!"),
+      password: Yup.string().required("Bắt buộc!"),
+      branches: Yup.array().min(1, "Ít nhất một chi nhánh"),
+      permissions: Yup.array().min(1, "Ít nhất một chức năng"),
+    }),
+
+    onSubmit: async (values, actions) => {
+      let formData = new FormData();
+
+      for (let value in values) {
+        if (value === "permissions") {
+          for (var i = 0; i < values["permissions"].length; i++) {
+            formData.append("permissions[]", values["permissions"][i]);
+          }
+        } else if (value === "branches") {
+          for (var i = 0; i < values["branches"].length; i++) {
+            formData.append("branches[]", values["branches"][i]);
+          }
+        } else if (value === "password") {
+          formData.append(value, values[value]);
+          formData.append("password_confirmation", values[value]);
+        } else {
+          formData.append(value, values[value]);
+        }
+      }
+
+      formData.append("image", image);
+      formData.append("status", "active");
+
+      console.log(formData);
+
+      try {
+        const response = await employeeApi.createEmployee(
+          store_uuid,
+          formData
+        );
+        handleClose("Success");
+      } catch (error) {
+        handleClose("Failed");
+      }
+    },
+  });
 
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
-  const handleSelectPermission = (selected) => {
-    let permissions = selected.map((permission) => permission.id);
-    setPermissions(permissions);
-  };
+
 
   React.useEffect(() => {
     const loadBranches = async () => {
@@ -117,6 +164,8 @@ const AddEmployee = (props) => {
     };
     loadBranches();
   }, [store_uuid]);
+
+
 
   return (
     <Dialog
@@ -178,12 +227,50 @@ const AddEmployee = (props) => {
               <TextField
                 id="outlined-basic"
                 label="Tên nhân viên"
-                value={name}
+                required
+                value={formik.values.name}
+                name="name"
                 variant="outlined"
                 fullWidth
                 size="small"
-                onChange={(event) => setName(event.target.value)}
+                onChange={formik.handleChange}
               />
+
+              {formik.errors.name && formik.touched.name && (
+                <FormHelperText error>{formik.errors.name}</FormHelperText>
+              )}
+
+              <TextField
+                id="outlined-basic"
+                label="Số điện thoại"
+                required
+                value={formik.values.phone}
+                variant="outlined"
+                name="phone"
+                fullWidth
+                size="small"
+                onChange={formik.handleChange}
+              />
+
+              {formik.errors.phone && formik.touched.phone && (
+                <FormHelperText error>{formik.errors.phone}</FormHelperText>
+              )}
+
+              <TextField
+                id="outlined-basic"
+                label="Mật khẩu tài khoản"
+                required
+                variant="outlined"
+                fullWidth
+                name="password"
+                size="small"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+              />
+
+              {formik.errors.password && formik.touched.password && (
+                <FormHelperText error>{formik.errors.password}</FormHelperText>
+              )}
 
               <TextField
                 id="date"
@@ -192,21 +279,23 @@ const AddEmployee = (props) => {
                 defaultValue="" //null
                 variant="outlined"
                 size="small"
+                name="date_of_birth"
                 fullWidth
-                value={dateOfBirth}
+                value={formik.values.date_of_birth}
                 className={classes.textField}
                 InputLabelProps={{ shrink: true }}
-                onChange={(event) => setDateOfBirth(event.target.value)}
+                onChange={formik.handleChange}
               />
 
               <TextField
                 id="outlined-basic"
                 label="CMND"
-                value={idCardNum}
+                value={formik.values.id_card_num}
                 variant="outlined"
+                name="id_card_num"
                 fullWidth
                 size="small"
-                onChange={(event) => setIdCardNum(event.target.value)}
+                onChange={formik.handleChange}
               />
 
               <FormControl
@@ -222,45 +311,38 @@ const AddEmployee = (props) => {
                 <Select
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
-                  onChange={(event) => {
-                    setGender(event.target.value);
-                  }}
+                  name="gender"
+                  onChange={formik.handleChange}
                   label="Gender"
-                  value={gender}
+                  value={formik.values.gender}
                 >
                   <MenuItem value="male">Nam</MenuItem>
                   <MenuItem value="female">Nữ</MenuItem>
                 </Select>
               </FormControl>
 
-              <TextField
-                id="outlined-basic"
-                label="Số điện thoại"
-                value={phone}
-                variant="outlined"
-                fullWidth
-                size="small"
-                onChange={(event) => setPhone(event.target.value)}
-              />
+              
 
               <TextField
                 id="outlined-basic"
                 label="Email"
-                value={email}
+                name="email"
+                value={formik.values.email}
                 variant="outlined"
                 fullWidth
                 size="small"
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={formik.handleChange}
               />
 
               <TextField
                 id="outlined-basic"
                 label="Địa chỉ"
-                value={address}
+                name="address"
+                value={formik.values.address}
                 variant="outlined"
                 fullWidth
                 size="small"
-                onChange={(event) => setAddress(event.target.value)}
+                onChange={formik.handleChange}
               />
             </Grid>
 
@@ -279,11 +361,9 @@ const AddEmployee = (props) => {
                 <Select
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
-                  onChange={(event) => {
-                    setSalaryType(event.target.value);
-                  }}
-                  label="Age"
-                  value={salaryType}
+                  name="salary_type"
+                  value={formik.values.salary_type}
+                  onChange={formik.handleChange}
                 >
                   <MenuItem value="none">
                     <em>None</em>
@@ -298,35 +378,56 @@ const AddEmployee = (props) => {
                 variant="outlined"
                 fullWidth
                 size="small"
-                value={salary}
+                value={formik.values.salary}
+                name="salary"
                 // value={values.numberformat}
                 // onChange={handleChange}
-                onChange={(event) => setSalary(event.target.value)}
-                name="numberformat"
+                onChange={formik.handleChange}
                 id="formatted-numberformat-input"
                 InputProps={{
                   inputComponent: NumberFormatCustom,
                 }}
               />
 
-              {/**đăng nhập bằng sđt */}
-              <TextField
-                id="outlined-basic"
-                label="Mật khẩu tài khoản"
-                variant="outlined"
-                fullWidth
-                size="small"
-                value={empPassword}
-                onChange={(event) => setEmpPassword(event.target.value)}
-              />
-
+          
               {/* <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/> */}
 
-              <MultipleSelect
-                choices={choices}
-                handleSelect={handleSelectPermission}
-              />
-
+              <FormControl
+                className={classes.formControl}
+                fullWidth
+                size="small"
+                variant="outlined"
+                style={{ marginTop: 8 }}
+              >
+                <InputLabel id="branchSelect">Chức năng</InputLabel>
+                <Select
+                  multiple
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  name="permissions"
+                  value={formik.values.permissions}
+                  renderValue={(selected) =>
+                    selected
+                      .map((permission) => {
+                        return permissionChoices.find(
+                          (p) => p.id === permission
+                        )?.description;
+                      })
+                      .join(", ")
+                  }
+                  onChange={formik.handleChange}
+                >
+                  {permissionChoices.map((branch) => (
+                    <MenuItem key={branch.name} value={branch.id}>
+                      {branch.description}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {formik.errors.permissions && formik.touched.permissions && (
+                <FormHelperText error>{formik.errors.permissions}</FormHelperText>
+              )}
               <FormControl
                 className={classes.formControl}
                 fullWidth
@@ -336,13 +437,14 @@ const AddEmployee = (props) => {
               >
                 <InputLabel id="branchSelect">Chi nhánh </InputLabel>
                 <Select
-                  label="Chi nhánh"
-                  id="branchSelect"
                   multiple
                   variant="outlined"
                   fullWidth
+                  id="branches"
+                  name="branches"
+                  onChange={formik.handleChange}
                   size="small"
-                  value={empWorkBranches}
+                  value={formik.values.branches}
                   renderValue={(selected) =>
                     selected
                       .map((empWorkBranch) => {
@@ -352,21 +454,17 @@ const AddEmployee = (props) => {
                       })
                       .join(", ")
                   }
-                  onChange={(e) => {
-                    setEmpWorkBranches(e.target.value);
-                    console.log(e.target.value);
-                  }}
-                  input={<OutlinedInput label="Name" />}
                 >
                   {branches.map((branch) => (
-                    <MenuItem
-                      key={branch.name}
-                      value={branch.id}
-                    >
+                    <MenuItem key={branch.name} value={branch.id}>
                       {branch.name}
                     </MenuItem>
                   ))}
                 </Select>
+
+                {formik.errors.branches && formik.touched.branches && (
+                <FormHelperText error>{formik.errors.branches}</FormHelperText>
+              )}
               </FormControl>
               
             </Grid>
@@ -384,44 +482,7 @@ const AddEmployee = (props) => {
           Huỷ
         </Button>
         <Button
-          onClick={async () => {
-            let formData = new FormData(); //formdata object
-
-            formData.append("name", name); 
-            formData.append("email", email);
-            formData.append("password", empPassword); 
-            formData.append("password_confirmation", empPassword); 
-            formData.append("phone", phone);
-            formData.append("date_of_birth", dateOfBirth);
-            formData.append("status", "active");
-            formData.append("gender", gender);
-            formData.append("id_card_num", idCardNum);
-            formData.append("salary", salary);
-            formData.append("salary_type", salaryType);
-            formData.append("address", address);
-            formData.append("image", image)
-
-            for (var i = 0; i < permissions.length; i++) {
-              formData.append('permissions[]', permissions[i]);
-            }
-            for (var i = 0; i < empWorkBranches.length; i++) {
-              formData.append('branches[]', empWorkBranches[i]);
-            }
-
-            try {
-              const response = await employeeApi.createEmployee(
-                store_uuid,
-                formData
-              );
-              handleClose("Success");
-              console.log(response.status);
-            } catch (err) {
-              handleClose("Failed");
-            }
-          }}
-          variant="contained"
-          size="small"
-          color="primary"
+          onClick={formik.handleSubmit}
         >
           Thêm
         </Button>

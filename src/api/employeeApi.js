@@ -20,9 +20,12 @@ const employeeApi = {
     const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
     return axiosClient.delete(url);
   },
-  updateEmployee: (storeUuid, employeeUuid, body) => {
+  updateEmployee: (storeUuid, employeeUuid, formData) => {
+    const config = {
+      headers: { "content-type": "multipart/form-data" },
+    };
     const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
-    return axiosClient.put(url, body);
+    return axiosClient.post(url, formData, config);
   },
   inactiveEmployee: (storeUuid, employeeUuid) => {
     const url = `/stores/${storeUuid}/employees/${employeeUuid}`;

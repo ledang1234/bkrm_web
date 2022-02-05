@@ -146,7 +146,7 @@ const Employee = () => {
       </Grid>
 
       {/* Popup add */}
-      <AddEmployee open={open} handleClose={handleClose} />
+      {open && <AddEmployee open={open} handleClose={handleClose} />}
       {/* Noti */}
       <SnackBar
         openBar={openBar}
