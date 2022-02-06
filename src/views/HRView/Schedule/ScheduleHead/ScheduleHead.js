@@ -5,11 +5,16 @@ import PrintTwoToneIcon from '@material-ui/icons/PrintTwoTone';
 import SwapVertTwoToneIcon from '@material-ui/icons/SwapVertTwoTone';
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 import { useStyles } from '../style';
+import { useSelector } from 'react-redux';
 
 
 const ScheduleHead = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    const info = useSelector((state) => state.info);
+    const branch = info.branch;
+
     return (
         <Grid container direction="row" justifyContent="space-between">
                 <TextField  
@@ -28,7 +33,7 @@ const ScheduleHead = () => {
                         Ca làm việc
                     </Typography>
                     <Typography className={classes.textTitle} variant="body2">
-                        ( Chi nhánh trung tâm )
+                        {`(${branch.name})`}
                     </Typography> 
                 </Box>
                 

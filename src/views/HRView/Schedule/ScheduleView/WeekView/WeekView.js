@@ -25,7 +25,7 @@ const HeadWeekBox =({date, _day,now}) =>{
     )
 }
 
-export const HeadWeek =({selectedDate}) =>{
+export const HeadWeek =({selectedDate, openAddShift}) =>{
     const theme = useTheme();
     const classes = useStyles(theme);
     const now = new Date();
@@ -37,7 +37,7 @@ export const HeadWeek =({selectedDate}) =>{
                         <Typography variant="h4" style={{fontSize:16, marginLeft:5, marginTop:10}} >
                             Ca làm việc
                         </Typography>
-                        <ButtonBase   className={classes.addBtn} style={{marginTop:10,marginLeft:25 ,marginRight:10}} >
+                        <ButtonBase onClick={openAddShift}  className={classes.addBtn} style={{marginTop:10,marginLeft:25 ,marginRight:10}} >
                             <Tooltip title='Thêm ca'>
                                 <AddIcon  size="small" className={classes.addShiftIcon} />
                             </Tooltip>
@@ -90,7 +90,7 @@ const BodyWeekBox =({day,groupList,handlePopUp,setClickSchedule ,shift,mode}) =>
     
     const handleClickBox = () =>{
         var _shift ={...shift} 
-        _shift.scheduleList = _shift.scheduleList.filter(schedule => schedule.date === day)
+        _shift.schedules = _shift.schedules.filter(schedule => schedule.date === day)
         setClickSchedule(_shift)
         handlePopUp();
     }
@@ -102,7 +102,7 @@ const BodyWeekBox =({day,groupList,handlePopUp,setClickSchedule ,shift,mode}) =>
                     <Grid  container  direction="row" justifyContent={"space-around"} alignItems="center" >
                         {item.map(subitem =>{
                             return(
-                                <EmployeeItemAva status={subitem.status}/>
+                                <EmployeeItemAva status={subitem.status} src={subitem.employee_img_url} name={subitem.employee_name}/>
                             )
                         })}
                         {/* //    chinh css thoi */}
@@ -117,7 +117,7 @@ const BodyWeekBox =({day,groupList,handlePopUp,setClickSchedule ,shift,mode}) =>
                         <Box className={clsx(classes.boxName,item.status === -1 && classes.boxRed,item.status === 0 && classes.boxYellow,item.status === 1 && classes.boxGreen)} > 
                             <Box style={{width:120,flexGrow: 1,textAlign: "center"}}>
                             <Typography className={classes.nameText} noWrap={false}>
-                                {item.name}
+                                {item.employee_name}
                             </Typography>
                             </Box>
                         </Box>
@@ -136,13 +136,13 @@ export const ShiftWeekBox = ({shift,selectedDate,handlePopUp,setClickSchedule,mo
     const classes = useStyles(theme);
 
     var groupBy = function(xs, key) {
-        return xs.reduce(function(rv, x) {
+        return xs?.reduce(function(rv, x) {
           (rv[x[key]] = rv[x[key]] || []).push(x);
           return rv;
         }, {});
       };
       
-   var groupList = groupBy(shift.scheduleList, 'date')
+   var groupList = groupBy(shift.schedules, 'date')
       
 
     return (
@@ -153,7 +153,7 @@ export const ShiftWeekBox = ({shift,selectedDate,handlePopUp,setClickSchedule,mo
                         {shift.name}
                     </Typography>
                     <Typography variant="body2" style={{marginLeft:5, marginTop:5}} >
-                        {shift.fromTime} - {shift.toTime}
+                        {shift.start_time} - {shift.end_time}
                     </Typography>
                     {/* Con thieu EDIT _ DELETE */}
                 </Box>

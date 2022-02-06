@@ -16,7 +16,7 @@ import { useStyles } from '../style';
 import AddIcon from '@material-ui/icons/Add';
 import {formatDate} from '../dateUtil'
 
-const ScheduleToolBar = ({selectedBtn,handleModeBtn,setSelectedBtn,selectedDate,handleDateChange,anchorEl,setAnchorEl}) => {
+const ScheduleToolBar = ({selectedBtn,handleModeBtn,setSelectedBtn,selectedDate,handleDateChange,anchorEl,setAnchorEl, openAddSchedule}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -58,7 +58,7 @@ const ScheduleToolBar = ({selectedBtn,handleModeBtn,setSelectedBtn,selectedDate,
                 </Grid>
                 <PopUpChooseDate id={id} open={open} anchorEl={anchorEl}handleClose={handleClose}selectedDate={selectedDate}handleDateChange={handleDateChange}/>
 
-                <ButtonBase   className={classes.addBtn} style={{marginLeft:70}} >
+                <ButtonBase onclick={openAddSchedule}  className={classes.addBtn} style={{marginLeft:70}} >
                     <Tooltip title='Thêm lịch làm việc'>
                         <AddIcon  size="small" className={classes.addIcon} />
                     </Tooltip>
