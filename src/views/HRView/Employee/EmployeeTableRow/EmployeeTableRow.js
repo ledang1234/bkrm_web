@@ -31,14 +31,13 @@ const EmployeeTableRow = (props) => {
           openRow === row.uuid ? classes.rowClicked : null
         )}
       >
-        <TableCell align="left">{row.uuid}</TableCell>
         <TableCell align="left" style={{ minWidth: 200 }}>
           <ListItem
-            style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
+            style={{ marginLeft: 30, marginTop: -10, marginBottom: -10 }}
           >
             <Avatar
               alt="Remy Sharp"
-              src={ava}
+              src={row.img_url}
               style={{ marginRight: 20 }}
               className={classes.ava}
             />
@@ -48,7 +47,7 @@ const EmployeeTableRow = (props) => {
 
         <TableCell align="left">{row.phone}</TableCell>
         <TableCell align="left">{row.email}</TableCell>
-        <TableCell align="left">{row.permissions}</TableCell>
+        <TableCell align="left">{row.status === 'active' ? 'Hoạt động' : 'Ngưng hoạt động'}</TableCell>
       </TableRow>
 
       {/* DETAIL */}

@@ -20,6 +20,7 @@ import HighlightOffTwoToneIcon from "@material-ui/icons/HighlightOffTwoTone";
 
 //import image
 import avaUpload from "../../../../../assets/img/product/lyimg.jpeg";
+import {statusAction} from "../../../../../store/slice/statusSlice"
 
 //import project
 import {
@@ -27,7 +28,7 @@ import {
   StyledMenuItem,
 } from "../../../../../components/Button/MenuButton";
 import employeeApi from "../../../../../api/employeeApi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import EditEmployee from "../../AddEmployee/EditEmployee";
 
 const useStyles = makeStyles((theme) =>
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const UploadImage = () => {
+const UploadImage = ({src}) => {
   return (
     <Box
       component="img"
@@ -56,7 +57,7 @@ const UploadImage = () => {
         borderRadius: 120,
         marginLeft: 15,
       }}
-      src={avaUpload}
+      src={src}
     />
   );
 };
@@ -75,6 +76,7 @@ const salaryTypeMapping = {
 
 const EmployeeDetail = (props) => {
   const { row, openRow, handleReload } = props.parentProps;
+  const dispatch = useDispatch();
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -93,6 +95,7 @@ const EmployeeDetail = (props) => {
     permissions: [],
     salary_type: "",
     salary: "",
+    branches: []
   });
 
   const handleClick = (event) => {
@@ -123,22 +126,25 @@ const EmployeeDetail = (props) => {
           permissions: [],
           salary_type: "",
           salary: "",
+          branches: []
         });
       }
     };
-    fetchEmp();
-  }, []);
+    if (openRow === row.uuid) {
+      fetchEmp();
+    }
+  }, [openRow]);
 
   return (
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
-      <EditEmployee
+      {openEdit && (<EditEmployee
         handleClose={() => {
           setOpenEdit(false);
           handleReload();
         }}
         open={openEdit}
         employee={employeeDetail}
-      />
+      />)}
       <Box margin={1}>
         <Typography
           variant="h3"
@@ -151,7 +157,7 @@ const EmployeeDetail = (props) => {
 
         <Grid container direction="row" justifyContent="flex-start">
           <Grid item xs={3}>
-            <UploadImage />
+            <UploadImage src={employeeDetail.img_url}/>
           </Grid>
           <Grid item xs={5}>
             <Grid container direction="row" justifyContent="flex-start">
@@ -258,6 +264,20 @@ const EmployeeDetail = (props) => {
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={6}>
                 <Typography variant="h5" gutterBottom component="div">
+                  Chi nhánh
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.branches?.map((branch) => (
+                    <Chip label={branch.name} />
+                  ))}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={6}>
+                <Typography variant="h5" gutterBottom component="div">
                   Loại lương
                 </Typography>
               </Grid>
@@ -299,8 +319,26 @@ const EmployeeDetail = (props) => {
           >
             Sửa
           </Button>
-          <Button variant="contained" size="small" style={{ marginLeft: 15 }}>
-            Ngưng hoạt động
+          <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick={async () => {
+            if (employeeDetail.status === "inactive") {
+              try {
+                const response = await employeeApi.activeEmployee(store_uuid, employeeDetail.uuid)
+                dispatch(statusAction.successfulStatus("Kích hoạt thành công"))
+              } catch (err) {
+                console.log(err)
+                dispatch(statusAction.failedStatus("Kích hoạt thất bại"))
+              }
+            } else if (employeeDetail.status === "active") {
+              try {
+                const response = await employeeApi.inactiveEmployee(store_uuid, employeeDetail.uuid)
+                dispatch(statusAction.successfulStatus("Ngưng hoạt động thành công"))
+              } catch (err) {
+                dispatch(statusAction.failedStatus("Ngưng hoạt động thất bại"))
+              }
+            }
+            
+          }}>
+            {employeeDetail.status === "inactive" ? "Kích hoạt" : "Ngưng hoạt động"}
           </Button>
 
           <IconButton
@@ -321,11 +359,20 @@ const EmployeeDetail = (props) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem>
+            <StyledMenuItem  onClick={async () => {
+                console.log('here')
+                try {
+                  const response = await employeeApi.deleteEmployee(store_uuid, employeeDetail.uuid)
+                  dispatch(statusAction.successfulStatus("Xoá nhân viên thành công"))
+                  handleReload()
+                } catch (err) {
+                  dispatch(statusAction.failedStatus("Xoá nhân viên thất bại"))
+                }
+              }} >
               <ListItemIcon style={{ marginRight: -15 }}>
                 <HighlightOffTwoToneIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Xoá" />
+              <ListItemText primary="Xoá"/>
             </StyledMenuItem>
           </StyledMenu>
         </Grid>
