@@ -43,13 +43,14 @@ export default function SearchWithAutoComplete(props) {
   }, [searchValue]);
   return (
     <Autocomplete
-      autoComplete
-      disableCloseOnSelect
       options={options}
+      freeSolo
       getOptionLabel={getOptionLabel}
       renderOption={renderOption}
       onInputChange={loadingData}
-      onChange={(e, value) => { console.log("here"); onSelect(value); }}
+      autoSelect
+      getOptionSelected={(option, value) => option.bar_code === value.bar_code}
+      onChange={(e, value) => onSelect(value)}
       size="small"
       renderInput={renderInput}
 

@@ -173,15 +173,18 @@ const AddInventory = (props) => {
   }, [store_uuid]);
 
   const selectSampleProductHandler = (product) => {
-    try {
-      productFormik.setFieldValue("name", product.name, true)
-      productFormik.setFieldValue("barcode", product.bar_code, true)
-      clearAllImages();
-      setDisplay([{ link: product.img_url, isUrl: true }]);
-      setImages([]);
-      setImageURL(product.img_url);
-    } catch (error) {
-      console.log(error);
+    if (product && product.name) {
+      try {
+        productFormik.setFieldValue("name", product.name, true)
+        productFormik.setFieldValue("barcode", product.bar_code, true)
+        clearAllImages();
+        setDisplay([{ link: product.img_url, isUrl: true }]);
+        setImages([]);
+        setImageURL(product.img_url);
+        onFocus(salesPriceRef)
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -224,7 +227,7 @@ const AddInventory = (props) => {
             </InputAdornment>
           ),
           onKeyDown: (e) => {
-            if (e.key === 'Enter') {
+            if (e.key.toLowerCase() === "arrowdown") {
               onFocus(salesPriceRef)
             }
           }
@@ -245,11 +248,16 @@ const AddInventory = (props) => {
       </Grid>
     );
   };
+  const getOptionLabel = (option) => {
+    if (option.name) {
+      return option.name + " " + "(" + option.bar_code + ")"
+    }
+    return option
+  }
   const salesPriceRef = useRef()
   const onFocus = (ref) => {
     ref.current.focus()
   }
-
   return (
     <Dialog
       open={open}
@@ -274,9 +282,7 @@ const AddInventory = (props) => {
               onSelect={selectSampleProductHandler}
               searchApiCall={searchSampleProductHandler}
               renderInput={renderNameInput}
-              getOptionLabel={(option) =>
-                option.name + " " + "(" + option.bar_code + ")"
-              }
+              getOptionLabel={getOptionLabel}
               renderOption={renderOptionTest}
               filterOptions={(options, state) => options}
             />
