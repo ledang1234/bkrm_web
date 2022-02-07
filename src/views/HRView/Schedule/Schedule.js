@@ -28,7 +28,8 @@ const Schedule = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const [addShiftOpen, setAddShiftOpen] = React.useState(false)
-    const [addScheduleOpen, setAddScheduleOpen] = React.useState(true);
+    const [addScheduleOpen, setAddScheduleOpen] = React.useState(false);
+    const [reload, setReload] = React.useState(false)
 
     // A. LOAD DATA from api
     // shiftInfo,schedule,...
@@ -59,36 +60,38 @@ const Schedule = () => {
     const branch_uuid = info.branch.uuid;
 
     React.useEffect(() => {
-    
-
       let selected_date = moment
         .unix(selectedDate.getTime() / 1000)
         .format("YYYY-MM-DD", { trim: false });
-let mode = "";
-        switch (selectedBtn) {
-            case 0:
-                mode = "day";
-                break;
-            case 1:
-                mode = "week";
-                break;
-            case 2: 
-                mode = "month";
-                break;
+      let mode = "";
+      switch (selectedBtn) {
+        case 0:
+          mode = "day";
+          break;
+        case 1:
+          mode = "week";
+          break;
+        case 2:
+          mode = "month";
+          break;
+      }
+
+      const fetchSchedule = async () => {
+        try {
+          const response = await scheduleApi.getSchedule(
+            store_uuid,
+            branch_uuid,
+            selected_date,
+            mode
+          );
+          setShiftInfo(response.data);
+          console.log(response.data);
+        } catch (err) {
+          console.log(err);
         }
-        
-        const fetchSchedule = async () => {
-            try {
-                const response = await scheduleApi.getSchedule(store_uuid, branch_uuid, selected_date, mode);
-                setShiftInfo(response.data);
-                console.log(response.data)
-            } catch (err) {
-                console.log(err)
-            }
-            
-        }
-        fetchSchedule();
-    }, [selectedBtn, selectedDate])
+      };
+      fetchSchedule();
+    }, [selectedBtn, selectedDate, branch_uuid, reload]);
 
     const handleModeBtn = (mode) =>{
         setSelectedBtn(mode)
@@ -130,8 +133,8 @@ let mode = "";
              {/* 1. search + choose branch */}
             <ScheduleHead />
 
-            {addShiftOpen && <AddShiftPopup addShiftOpen={addShiftOpen} handleClose={() => setAddShiftOpen(false)}/>}
-            {addScheduleOpen && <AddSchedulePopup addScheduleOpen={addScheduleOpen} handleClose={() => setAddScheduleOpen(false)}/>}
+            {addShiftOpen && <AddShiftPopup addShiftOpen={addShiftOpen} handleClose={() => setAddShiftOpen(false)} reload={() => setReload(!reload)}/> }
+            {addScheduleOpen && <AddSchedulePopup addScheduleOpen={addScheduleOpen} handleClose={() => setAddScheduleOpen(false)} reload={() => setReload(!reload)}/>}
              
             <Divider className={classes.divider}/>
 

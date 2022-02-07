@@ -22,7 +22,7 @@ import {
 
 
 // api
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 const AddShiftPopup = (props) => {
-  const { handleClose, addShiftOpen } = props;
+  const { handleClose, addShiftOpen, reload } = props;
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -70,8 +70,11 @@ const AddShiftPopup = (props) => {
     onSubmit: async (values, actions) => {
       try {
         const response = await scheduleApi.createShift(store_uuid, branch_uuid, values);
+        dispatch(statusAction.successfulStatus("Thêm ca thành công"))
+        reload();
         handleClose("Success");
       } catch (error) {
+        dispatch(statusAction.failedStatus("Thêm ca thất bại"))
         handleClose("Failed");
       }
     },
@@ -81,6 +84,7 @@ const AddShiftPopup = (props) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const dispatch = useDispatch();
 
   return (
     <Dialog

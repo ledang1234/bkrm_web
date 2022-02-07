@@ -17,7 +17,7 @@ const ScheduleHead = () => {
 
     return (
         <Grid container direction="row" justifyContent="space-between">
-                <TextField  
+                {/* <TextField  
                     variant="outlined" 
                     InputProps={{
                         startAdornment: (
@@ -27,7 +27,7 @@ const ScheduleHead = () => {
                         ),
                         className:classes.search
                     }}
-                /> 
+                />  */}
                 <Box>
                     <Typography className={classes.headerTitle} variant="h2">
                         Ca làm việc
@@ -43,11 +43,11 @@ const ScheduleHead = () => {
                             <PrintTwoToneIcon className={classes.icon} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Đổi chi nhánh">
+                    {/* <Tooltip title="Đổi chi nhánh">
                         <IconButton aria-label="filter list" style={{height:50, marginTop:5}}>
                             <SwapVertTwoToneIcon className={classes.icon} />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                 </Box>
             </Grid>
     )

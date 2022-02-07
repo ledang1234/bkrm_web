@@ -17,6 +17,11 @@ const scheduleApi = {
       selected_date: selectedDate,
       mode: mode
     }});
-  }
+  },
+  // this is support for assign schedule for employee pop up
+  getEmpAndShiftOfBranch: (storeUuid, branchUuid) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/getEmpAndShiftOfBranch`;
+    return axiosClient.get(url, {});
+  },
 };
 export default scheduleApi;

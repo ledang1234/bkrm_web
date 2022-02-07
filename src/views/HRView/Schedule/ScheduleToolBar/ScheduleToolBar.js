@@ -58,7 +58,7 @@ const ScheduleToolBar = ({selectedBtn,handleModeBtn,setSelectedBtn,selectedDate,
                 </Grid>
                 <PopUpChooseDate id={id} open={open} anchorEl={anchorEl}handleClose={handleClose}selectedDate={selectedDate}handleDateChange={handleDateChange}/>
 
-                <ButtonBase onclick={openAddSchedule}  className={classes.addBtn} style={{marginLeft:70}} >
+                <ButtonBase onClick={openAddSchedule}  className={classes.addBtn} style={{marginLeft:70}} >
                     <Tooltip title='Thêm lịch làm việc'>
                         <AddIcon  size="small" className={classes.addIcon} />
                     </Tooltip>
