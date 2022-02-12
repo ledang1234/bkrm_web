@@ -25,6 +25,7 @@ import {
   TableBody,
   Typography,
 } from "@material-ui/core";
+import SearchBarCode from "../../../components/SearchBar/SearchBarCode"
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -386,6 +387,10 @@ const Cart = () => {
       }
     }
   };
+  const [barcodeChecked, setBarcodeChecked] = useState(true)
+  const handleSwitchChange = () => {
+    setBarcodeChecked(!barcodeChecked)
+  }
   return (
     <Grid
       container
@@ -442,10 +447,25 @@ const Cart = () => {
                   </ListItem>
                 </Grid>
                 <Grid>
-                  {/* 1.1.3. Search */}
-                  <SearchProduct
-                    handleSearchBarSelect={handleSearchBarSelect}
-                  />
+                  <Grid container alignItems="center">
+                    <Grid item>
+                      <FormControlLabel
+                        control={<Switch
+                          checked={barcodeChecked} onChange={handleSwitchChange}
+                          color="primary" />}
+                        label={"Dùng mã vạch"}
+                      />
+                    </Grid>
+                    <Grid item>
+                      {
+                        barcodeChecked ?
+                          <SearchBarCode handleSearchBarSelect={handleSearchBarSelect} /> :
+                          <SearchProduct
+                            handleSearchBarSelect={handleSearchBarSelect}
+                          />
+                      }
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
 

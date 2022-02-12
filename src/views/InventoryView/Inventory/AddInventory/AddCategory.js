@@ -12,7 +12,6 @@ import ModalWrapper from "../../../../components/Modal/ModalWrapper";
 import productApi from "../../../../api/productApi";
 import { useSelector } from "react-redux";
 
-
 const AddCategory = (props) => {
   const [categoryList, setCategoryList] = useState([]);
   const [categoryInfo, setCategoryInfo] = useState({
@@ -32,9 +31,9 @@ const AddCategory = (props) => {
   }, []);
   const handleAddCategory = async () => {
     try {
-      const response = await productApi.addCategory(store_uuid,categoryInfo)
+      const response = await productApi.addCategory(store_uuid, categoryInfo);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   return (

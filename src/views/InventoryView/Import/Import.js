@@ -11,24 +11,20 @@ import {
   Card,
   Box,
   TableContainer,
-  CardContent,
-  CardMedia,
-  CardActionArea,
   FormControlLabel,
   Switch,
-  Menu,
-  MenuItem,
   ListItem,
-  IconButton,
   TableBody,
   Typography,
   ButtonBase,
   Avatar,
   Tooltip,
+  TextField
 } from "@material-ui/core";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
+import SearchBarCode from "../../../components/SearchBar/SearchBarCode"
 
 //import project
 //rieng
@@ -346,7 +342,7 @@ const Import = () => {
         discount: cart.discount.toString(),
         status:
           Number(cart.total_amount) - Number(cart.discount) >=
-          Number(cart.paid_amount)
+            Number(cart.paid_amount)
             ? "debt"
             : "closed",
         details: cart.cartItem,
@@ -376,6 +372,11 @@ const Import = () => {
       }
     }
   };
+
+  const [barcodeChecked, setBarcodeChecked] = useState(true)
+  const handleSwitchChange = () => {
+    setBarcodeChecked(!barcodeChecked)
+  }
   return (
     <Grid
       container
@@ -387,7 +388,7 @@ const Import = () => {
       <AddInventory
         open={addProduct}
         handleClose={() => setAddProduct(false)}
-        setReload={() => {}}
+        setReload={() => { }}
       />{" "}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
@@ -436,28 +437,43 @@ const Import = () => {
                   </ListItem>
                 </Grid>
                 <Grid>
-                  <Box display="flex" flexDirection="row">
-                    {/* 1.1.3. Search */}
-                    <SearchProduct
-                      handleSearchBarSelect={handleSearchBarSelect}
-                    />
-                    <ButtonBase
-                      sx={{ borderRadius: "1px" }}
-                      onClick={() => {
-                        setAddProduct(true);
-                      }}
-                      style={{ marginLeft: 10 }}
-                    >
-                      <Avatar
-                        variant="rounded"
-                        className={classes.headerAvatar}
+                  <Grid container alignItems="center">
+                    <Grid item>
+                      <FormControlLabel
+                        control={<Switch
+                          checked={barcodeChecked} onChange={handleSwitchChange}
+                          color="primary" />}
+                        label={"Dùng mã vạch"}
+                      />
+                    </Grid>
+                    <Grid item>
+                      {
+                        barcodeChecked ?
+                          <SearchBarCode handleSearchBarSelect={handleSearchBarSelect}/> :
+                          <SearchProduct
+                            handleSearchBarSelect={handleSearchBarSelect}
+                          />
+                      }
+                    </Grid>
+                    <Grid item>
+                      <ButtonBase
+                        sx={{ borderRadius: "1px" }}
+                        onClick={() => {
+                          setAddProduct(true);
+                        }}
+                        style={{ marginLeft: 10 }}
                       >
-                        <Tooltip title="Thêm sản phẩm">
-                          <AddIcon stroke={1.5} size="1.3rem" />
-                        </Tooltip>
-                      </Avatar>
-                    </ButtonBase>
-                  </Box>
+                        <Avatar
+                          variant="rounded"
+                          className={classes.headerAvatar}
+                        >
+                          <Tooltip title="Thêm sản phẩm">
+                            <AddIcon stroke={1.5} size="1.3rem" />
+                          </Tooltip>
+                        </Avatar>
+                      </ButtonBase>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
 

@@ -122,48 +122,43 @@ const AddInventory = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const addProductHandler = async () => {
+    handleCloseAndReset();
+    try {
+      var bodyFormData = new FormData();
+      bodyFormData.append("name", productFormik.values.name.toString());
+      bodyFormData.append("list_price", productFormik.values.salesPrice.toString());
+      bodyFormData.append(
+        "standard_price",
+        productInfo.importedPrice.toString()
+      );
+      bodyFormData.append("bar_code", productFormik.values.barcode.toString());
+      bodyFormData.append("quantity_per_unit", productFormik.values.unit.toString());
+      bodyFormData.append(
+        "min_reorder_quantity",
+        productFormik.values.re_order_point.toString()
+      );
+      bodyFormData.append(
+        "category_uuid",
+        productFormik.values.category.toString()
+      );
+      bodyFormData.append("img_url", imageURL);
 
-    console.log(productInfo)
-    // handleCloseAndReset();
-    // try {
-    //   var bodyFormData = new FormData();
-    //   bodyFormData.append("name", productInfo.name.toString());
-    //   bodyFormData.append("list_price", productInfo.salesPrice.toString());
-    //   bodyFormData.append(
-    //     "standard_price",
-    //     productInfo.importedPrice.toString()
-    //   );
-    //   bodyFormData.append("bar_code", productInfo.barcode.toString());
-    //   bodyFormData.append("quantity_per_unit", productInfo.unit.toString());
-    //   bodyFormData.append(
-    //     "min_reorder_quantity",
-    //     productInfo.re_order_point.toString()
-    //   );
-    //   bodyFormData.append(
-    //     "category_uuid",
-    //     productInfo.category.toString()
-    //   );
-    //   bodyFormData.append("img_url", imageURL);
+      images.forEach((image) => bodyFormData.append("images[]", image));
 
-    //   images.forEach((image) => bodyFormData.append("images[]", image));
-
-    //   await productApi.createProduct(store_uuid, bodyFormData);
-    //   dispatch(statusAction.successfulStatus("Create product successfully"));
-    //   props.setReload(true);
-    // } catch (error) {
-    //   console.log(error);
-    //   dispatch(statusAction.failedStatus("Create product failed"));
-    // }
+      await productApi.createProduct(store_uuid, bodyFormData);
+      dispatch(statusAction.successfulStatus("Create product successfully"));
+      props.setReload(true);
+    } catch (error) {
+      console.log(error);
+      dispatch(statusAction.failedStatus("Create product failed"));
+    }
   };
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
         const response = await productApi.getAllCategory(store_uuid);
-        const defautCategory = response.data[0];
-        setCategoryList(response.data);
-        setProductInfo((productInfo) => {
-          return { ...productInfo, category: { ...defautCategory } };
-        });
+        setCategoryList(response.data)
+        productFormik.setFieldValue("category",response.data[0].uuid)
       } catch (error) {
         console.log(error);
         return [];
@@ -181,7 +176,6 @@ const AddInventory = (props) => {
         setDisplay([{ link: product.img_url, isUrl: true }]);
         setImages([]);
         setImageURL(product.img_url);
-        onFocus(salesPriceRef)
       } catch (error) {
         console.log(error);
       }

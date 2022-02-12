@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const CustomTextField = withStyles({
+export const CustomTextField = withStyles({
   root: {
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
@@ -116,7 +116,7 @@ const SearchProduct = (props) => {
     <CustomTextField
       {...params}
       fullWidth
-      placeholder="Tìm sản phẩm (mã, tên, mã vạch)"
+      placeholder="Tìm sản phẩm (mã sp, tên)"
       variant="outlined"
       size="small"
       InputProps={{
