@@ -175,10 +175,12 @@ const Inventory = () => {
     content: () => componentRef.current,
   });
 
+
   /// import product by file
   const [openProductImportPopper, setOpenProductImportPopper] = useState(false);
   const [isLoadingProduct, setIsLoadingProduct] = useState(false);
   const [productErrors, setProductErrors] = useState([]);
+
 
   return (
     <Card className={classes.root}>

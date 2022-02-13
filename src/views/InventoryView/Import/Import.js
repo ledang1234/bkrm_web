@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef, useEffect, useState } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { grey } from "@material-ui/core/colors";
+
 import AddIcon from "@material-ui/icons/Add";
 
+
+
+import AddIcon from "@material-ui/icons/Add";
+import { useReactToPrint } from "react-to-print";
+import {ImportReceiptPrinter} from "../../../components/ReceiptPrinter/ReceiptPrinter"
 //import library
 import {
   Grid,
@@ -328,11 +334,16 @@ const Import = () => {
         style: "error",
         message: "Giỏ hàng trống",
       });
+
+      setOpenSnack(true);
+      console.log(err);
+
     } else {
       let d = moment.now() / 1000;
       let importTime = moment
         .unix(d)
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
 
       let body = {
         supplier_uuid: cart.supplier?.uuid,
@@ -342,7 +353,8 @@ const Import = () => {
         discount: cart.discount.toString(),
         status:
           Number(cart.total_amount) - Number(cart.discount) >=
-            Number(cart.paid_amount)
+          Number(cart.paid_amount)
+
             ? "debt"
             : "closed",
         details: cart.cartItem,
@@ -361,7 +373,11 @@ const Import = () => {
           message: "Nhập hàng thành công: " + res.data.purchase_order_code,
         });
         setOpenSnack(true);
+
+        handlePrint();
         handleDelete(selectedIndex);
+        
+
       } catch (err) {
         setSnackStatus({
           style: "error",
@@ -370,6 +386,20 @@ const Import = () => {
         setOpenSnack(true);
         console.log(err);
       }
+
+    }
+  };
+
+  //print
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+  content: () => componentRef.current,
+  });
+
+  console.log(order)
+
+
+
     }
   };
 
@@ -377,6 +407,7 @@ const Import = () => {
   const handleSwitchChange = () => {
     setBarcodeChecked(!barcodeChecked)
   }
+
   return (
     <Grid
       container
@@ -490,7 +521,7 @@ const Import = () => {
                   />
                   <TableBody>
                     {stableSort(
-                      cartList[selectedIndex].cartItem,
+                      cartList[selectedIndex].cartItem.reverse(),
                       getComparator(order, orderBy)
                     ).map((row, index) => {
                       return (
@@ -566,6 +597,14 @@ const Import = () => {
           </Box>
         </Card>
       </Grid>
+
+       {/* 3. Receipt */}
+       <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ImportReceiptPrinter cart={cartList[selectedIndex]}  />
+        </div>
+      </div>
+
     </Grid>
   );
 };

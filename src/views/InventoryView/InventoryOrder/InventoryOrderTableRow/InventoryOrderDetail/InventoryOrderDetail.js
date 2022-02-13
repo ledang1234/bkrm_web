@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from "react";
+
+import React, {useRef, useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import { useReactToPrint } from "react-to-print";
+import {ImportReceiptPrinter} from "../../../../../components/ReceiptPrinter/ReceiptPrinter"
+
 
 //import library
 import {
@@ -89,6 +93,7 @@ const useStyles = makeStyles((theme) =>
 const InventoryOrderDetail = (props) => {
   const { row, openRow } = props.parentProps;
   //  tam thoi
+
   const currentUser = "Minh Tri";
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
@@ -136,6 +141,7 @@ const InventoryOrderDetail = (props) => {
           details: [],
         });
       }
+
     };
     if (openRow === row.uuid) {
       loadData();
@@ -171,6 +177,51 @@ const InventoryOrderDetail = (props) => {
             Trả nợ đơn nhập hàng <i>{row.purchase_order_code}</i>
           </Typography>
         }
+
+    if (openRow === row.uuid) {
+      loadData();
+    }
+  }, [props.parentProps.openRow]);
+
+  useEffect(() => {}, [purchaseOrder]);
+  const debtAmount =
+    Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount);
+  const [openPayRemaining, setOpenPayRemaining] = useState(false);
+  const editInventoryOrderApiCall = async (
+    store_uuid,
+    branch_uuid,
+    uuid,
+    body
+  ) => {
+    return purchaseOrderApi.editPurchaseOrder(
+      store_uuid,
+      branch_uuid,
+      uuid,
+      body
+    );
+  };
+
+  //print
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
+  console.log("purchaseOrder");
+  console.log(purchaseOrder);
+  return (
+    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+      <PayRemaining
+        onReload={props.parentProps.onReload}
+        uuid={row.uuid}
+        debt={debtAmount}
+        paid={Number(row.paid_amount)}
+        title={
+          <Typography variant="h4">
+            Trả nợ đơn nhập hàng <i>{row.purchase_order_code}</i>
+          </Typography>
+        }
+
         open={openPayRemaining}
         handleClose={() => setOpenPayRemaining(false)}
         editApiCall={editInventoryOrderApiCall}
@@ -227,7 +278,8 @@ const InventoryOrderDetail = (props) => {
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={5}>
                 <Typography variant="h5" gutterBottom component="div">
-                  Người trả
+                  Người nhập
+
                 </Typography>
               </Grid>
               <Grid item xs={4}>
@@ -360,6 +412,7 @@ const InventoryOrderDetail = (props) => {
           <Grid container direction="column">
             {/* <Grid container direction="row" justifyContent="flex-end">
 
+
                         <Grid item xs={2} >
                             <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>    
                         </Grid>
@@ -400,6 +453,7 @@ const InventoryOrderDetail = (props) => {
                   Giảm giá
                 </Typography>
               </Grid>
+
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.discount} />
@@ -422,6 +476,7 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
 
+
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
                 <Typography variant="h5" gutterBottom component="div">
@@ -433,6 +488,7 @@ const InventoryOrderDetail = (props) => {
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
               </Grid>
+
             </Grid>
           </Grid>
         </Box>
@@ -491,7 +547,8 @@ const InventoryOrderDetail = (props) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem>
+            <StyledMenuItem onClick={()=> handlePrint()}>
+
               <ListItemIcon style={{ marginRight: -15 }}>
                 <PrintTwoToneIcon fontSize="small" />
               </ListItemIcon>
@@ -506,6 +563,16 @@ const InventoryOrderDetail = (props) => {
             </StyledMenuItem>
           </StyledMenu>
         </Grid>
+
+
+      {/* 3. Receipt */}
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ImportReceiptPrinter cart={purchaseOrder}  date={row.creation_date}/>
+        </div>
+      </div>
+
+      {/* Tra hang */}
 
         <Dialog
           fullWidth={true}
@@ -526,6 +593,7 @@ const InventoryOrderDetail = (props) => {
 };
 
 export default InventoryOrderDetail;
+
 
 const headCells = [
   { id: "stt", numeric: false, disablePadding: true, label: "Stt" },

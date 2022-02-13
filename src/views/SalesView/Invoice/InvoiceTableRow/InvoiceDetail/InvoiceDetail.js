@@ -1,5 +1,9 @@
-import React, { useState, useEffect } from "react";
+
+
+import React, { useRef,useState, useEffect } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import { useReactToPrint } from "react-to-print";
+import {ReceiptPrinter} from "../../../../../components/ReceiptPrinter/ReceiptPrinter"
 
 // import library
 import {
@@ -137,6 +141,12 @@ function InvoiceDetail(props) {
           details: [],
         });
       }
+
+    },
+    [props.parentProps.openRow],
+  );
+
+
     };
     if (openRow === row.uuid) {
       loadData();
@@ -152,6 +162,17 @@ function InvoiceDetail(props) {
   ) => {
     return orderApi.editOrderApi(store_uuid, branch_uuid, uuid, body);
   };
+
+  //print
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
+
+  console.log("order")
+  console.log(order)
+
   return (
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
       <PayRemaining
@@ -468,9 +489,9 @@ function InvoiceDetail(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem>
-              <ListItemIcon style={{ marginRight: -15 }}>
-                <PrintTwoToneIcon fontSize="small" />
+            <StyledMenuItem onClick={()=> handlePrint()}>
+              <ListItemIcon style={{ marginRight: -15 }}  >
+                <PrintTwoToneIcon fontSize="small"/>
               </ListItemIcon>
               <ListItemText primary="In hoá đơn" />
             </StyledMenuItem>
@@ -484,6 +505,19 @@ function InvoiceDetail(props) {
           </StyledMenu>
         </Grid>
       </Box>
+
+      <Dialog fullWidth maxWidth="lg" open={open} onClose={handleCloseReturn} aria-labelledby="form-dialog-title">
+        <InvoiceReturnPopUp handleCloseReturn={handleCloseReturn} order={order} classes={classes} />
+
+      {/* 3. Receipt */}
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ReceiptPrinter cart={order} date={row.creation_date} />
+        </div>
+      </div>
+
+      {/* Tra hang */}
+
       <Dialog
         fullWidth
         maxWidth="lg"
@@ -496,6 +530,7 @@ function InvoiceDetail(props) {
           order={order}
           classes={classes}
         />
+
       </Dialog>
     </Collapse>
   );
