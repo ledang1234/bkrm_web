@@ -477,6 +477,7 @@ const Cart = () => {
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
         });
         setOpenSnack(true);
+        handlePrint();
         handleDelete(selectedIndex);
       } catch (err) {
         setSnackStatus({
