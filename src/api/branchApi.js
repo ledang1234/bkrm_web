@@ -8,6 +8,10 @@ const branchApi = {
     const url = `/stores/${storeUuid}/branches`;
     return axiosClient.get(url);
   },
+  getAllBranches: (storeUuid) => {
+    const url = `/stores/${storeUuid}/branches/getAllBranches`;
+    return axiosClient.get(url);
+  },
 
   getBranch: (storeUuid, branchUuid) => {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
@@ -22,6 +26,14 @@ const branchApi = {
   updateBranch: (storeUuid, branchUuid, body) => {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
     return axiosClient.put(url, body);
+  },
+  inactiveBranch: (storeUuid, branchUuid) => {
+    const url = `/stores/${storeUuid}/branches/${branchUuid}`;
+    return axiosClient.put(url, { status: "inactive" });
+  },
+  activeBranch: (storeUuid, branchUuid) => {
+    const url = `/stores/${storeUuid}/branches/${branchUuid}`;
+    return axiosClient.put(url, { status: "active" });
   },
 };
 export default branchApi;

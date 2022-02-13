@@ -156,7 +156,7 @@ function InvoiceReturnDetail(props) {
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={6}>
-                <Typography variant="h5" gutterBottom component="div">Tổng đơn trả</Typography>
+                <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography variant="body1" gutterBottom component="div">{row.total_amount}</Typography>
@@ -229,7 +229,7 @@ function InvoiceReturnDetail(props) {
 
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
-                <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>
+                <Typography variant="h5" gutterBottom component="div">Tổng số mặt hàng</Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">{refund.details?.length}</Typography>
@@ -238,7 +238,7 @@ function InvoiceReturnDetail(props) {
 
             <Grid container direction="row" justifyContent="flex-end">
               <Grid item xs={2}>
-                <Typography variant="h5" gutterBottom component="div">Tiền hàng trả</Typography>
+                <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body1" gutterBottom component="div">

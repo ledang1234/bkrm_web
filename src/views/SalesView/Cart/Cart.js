@@ -27,6 +27,7 @@ import {
   TableBody,
   Typography,
 } from "@material-ui/core";
+import SearchBarCode from "../../../components/SearchBar/SearchBarCode"
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -51,7 +52,7 @@ import orderApi from "../../../api/orderApi";
 import update from "immutability-helper";
 import { useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
-
+import customerApi from "../../../api/customerApi";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Cart = () => {
@@ -63,6 +64,8 @@ const Cart = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch = info.branch;
+
+  const [customers, setCustomers] = useState([]);
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -85,9 +88,9 @@ const Cart = () => {
     {
       customer: null,
       cartItem: [],
-      total_amount: '0',
-      paid_amount: '0',
-      discount: '0',
+      total_amount: "0",
+      paid_amount: "0",
+      discount: "0",
       payment_method: "cash",
     },
   ]);
@@ -108,12 +111,24 @@ const Cart = () => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
 
+  useEffect(() => {
+    const loadingCustomer = async () => {
+      try {
+        const response = await customerApi.getCustomers(store_uuid);
+        setCustomers(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    loadingCustomer();
+  }, []);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleCloseSnackBar = (event, reason) => {
-  
     setOpenSnack(false);
   };
 
@@ -134,7 +149,7 @@ const Cart = () => {
         total_amount: "0",
         paid_amount: "0",
         payment_method: "cash",
-        discount: '0',
+        discount: "0",
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -146,7 +161,7 @@ const Cart = () => {
     if (cartList.length === 0) {
       setCartList([
         {
-          customer: null,
+          customer: customers[0],
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -187,11 +202,10 @@ const Cart = () => {
 
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
-    let itemIndex = cartList[selectedIndex].cartItem.findIndex(
-      (item) => {
-        return item.uuid === selectedOption.uuid
-      }
-    );
+    console.log(selectedOption);
+    let itemIndex = cartList[selectedIndex].cartItem.findIndex((item) => {
+      return item.uuid === selectedOption.uuid;
+    });
 
     if (itemIndex !== -1) {
       handleChangeItemQuantity(
@@ -208,6 +222,7 @@ const Cart = () => {
       unit_price: selectedOption.list_price,
       img_url: selectedOption.img_url,
       name: selectedOption.name,
+      branch_quantity: Number(selectedOption.branch_quantity),
     };
 
     let newCartList = update(cartList, {
@@ -296,6 +311,13 @@ const Cart = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { total_amount: { $set: total } },
     });
+
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        paid_amount: { $set: total - cartList[selectedIndex].discount },
+      },
+    });
+
     setCartList(newCartList);
   };
 
@@ -303,30 +325,7 @@ const Cart = () => {
     // handlePrint();
     let cart = cartList[selectedIndex];
 
-    let d = moment.now()/1000;
-    
-    let orderTime = moment.unix(d).format('YYYY-MM-DD HH:mm:ss',  { trim: false })
-    console.log(orderTime)
-    
-    let details = cart.cartItem.map(item => ({...item, discount: '0'}));
-
-    let body = {
-      customer_uuid: cart.customer.uuid,
-      total_amount: cart.total_amount.toString(),
-      payment_method: cart.payment_method,
-      paid_amount: cart.paid_amount,
-      discount: cart.discount,
-      status:
-        cart.paid_amount >= cart.payment_amount - cart.discount 
-          ? "closed"
-          : "debt",
-      details: details,
-      creation_date: orderTime,
-      paid_date: orderTime,
-      tax: '0',
-      shipping: '0'
-    };
-
+    var emptyCart = cart.cartItem.length === 0;
 
     try {
       let res = await orderApi.addOrder(
@@ -339,7 +338,7 @@ const Cart = () => {
         message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
       });
       setOpenSnack(true);
-<<<<<<< Updated upstream
+
       handleDelete(selectedIndex);
     } catch (err) {
       setSnackStatus({
@@ -348,7 +347,15 @@ const Cart = () => {
       });
       setOpenSnack(true);
       console.log(err);
-=======
+
+    var correctQuantity = cart.cartItem.every(function (element, index) {
+      console.log(element);
+      if (element.quantity > element.branch_quantity) return false;
+      else return true;
+    });
+    if (emptyCart || !correctQuantity) {
+      setOpenSnack(true);
+
       if (emptyCart) {
         setSnackStatus({
           style: "error",
@@ -362,15 +369,14 @@ const Cart = () => {
       }
     } else {
       let d = moment.now() / 1000;
-        // 
 
-      // let orderTime = moment
-      //   .unix(d)
-      //   .format("DD/MM/YYY HH:mm", { trim: false });
 
       let orderTime = moment
         .unix(d)
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
+      console.log(orderTime);
+
 
       let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
       console.log(cart.paid_amount, cart.total_amount, cart.discount);
@@ -398,9 +404,11 @@ const Cart = () => {
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
         });
         setOpenSnack(true);
+
         handlePrint();
         handleDelete(selectedIndex);
         
+
       } catch (err) {
         setSnackStatus({
           style: "error",
@@ -409,8 +417,7 @@ const Cart = () => {
         setOpenSnack(true);
         console.log(err);
       }
-      
->>>>>>> Stashed changes
+
     }
   };
 //print
@@ -420,6 +427,14 @@ const Cart = () => {
       content: () => componentRef.current,
   });
 
+
+
+    }
+  };
+  const [barcodeChecked, setBarcodeChecked] = useState(true)
+  const handleSwitchChange = () => {
+    setBarcodeChecked(!barcodeChecked)
+  }
 
   return (
     <Grid
@@ -477,10 +492,25 @@ const Cart = () => {
                   </ListItem>
                 </Grid>
                 <Grid>
-                  {/* 1.1.3. Search */}
-                  <SearchProduct
-                    handleSearchBarSelect={handleSearchBarSelect}
-                  />
+                  <Grid container alignItems="center">
+                    <Grid item>
+                      <FormControlLabel
+                        control={<Switch
+                          checked={barcodeChecked} onChange={handleSwitchChange}
+                          color="primary" />}
+                        label={"Dùng mã vạch"}
+                      />
+                    </Grid>
+                    <Grid item>
+                      {
+                        barcodeChecked ?
+                          <SearchBarCode handleSearchBarSelect={handleSearchBarSelect} /> :
+                          <SearchProduct
+                            handleSearchBarSelect={handleSearchBarSelect}
+                          />
+                      }
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
 
@@ -492,7 +522,7 @@ const Cart = () => {
                     order={order}
                     orderBy={orderBy}
                     onRequestSort={handleRequestSort}
-                    headerData={HeadCells.ImportHeadCells}
+                    headerData={HeadCells.CartHeadCells}
                     isCart={true}
                   />
                   <TableBody>
@@ -500,6 +530,8 @@ const Cart = () => {
                       cartList[selectedIndex].cartItem.reverse(),
                       getComparator(order, orderBy)
                     ).map((row, index) => {
+                      console.log("row");
+                      console.log(row);
                       return (
                         <CartRow
                           row={row}
@@ -547,6 +579,7 @@ const Cart = () => {
                 currentCustomer={cartList[selectedIndex].customer}
                 currentBranch={branch}
                 mode={mode}
+                customers={customers}
               />
             ) : (
               <CartSummary

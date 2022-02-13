@@ -11,6 +11,10 @@ import { Link } from "react-router-dom";
 import UserInfo from "../../components/SignUp/UserInfo";
 import StoreInfo from "../../components/SignUp/StoreInfo";
 import { loadingActions } from "../../store/slice/loadingSlice";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { statusAction } from "../../store/slice/statusSlice";
+import getGeoCode from "../../components/BranchMap/Geocode";
 export default function SignUp() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -29,42 +33,128 @@ export default function SignUp() {
     phone: "",
     dateOfBirth: "1991-01-01",
   });
-  const [storeInfo, setStoreInfo] = useState({
-    name: "",
-    phone: "",
-    city: { id: "", name: "" },
-    district: { id: "", name: "" },
-    ward: { id: "", name: "" },
-    address: "",
+  const user_formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+      phone: "",
+      dateOfBirth: "1991-01-01",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên chủ cửa hàng"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại")
+        .matches(/^\d+$/, "Số điển thoại không chính xác"),
+      password: Yup.string().required("Nhập mật khẩu").min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+      passwordConfirm: Yup.string().required("Nhập lại mật khẩu").oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp'),
+      email: Yup.string().required("Nhập địa chỉ email").email("Email không chính xác")
+    })
+  })
+  const store_formik = useFormik({
+    initialValues: {
+      name: "",
+      address: "",
+      ward: "",
+      district: "",
+      city: "",
+      phone: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên chi nhánh"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại")
+        .matches(/^\d+$/, "Số điển thoại không chính xác"),
+      address: Yup.string().required("Nhập địa chỉ"),
+      city: Yup.string().required("Chọn tỉnh/thành phố"),
+      district: Yup.string().required("Chọn quận/huyện"),
+      ward: Yup.string().required("Chọn phường/xã"),
+    }),
   });
   const dispatch = useDispatch();
   const handleSignUp = async () => {
+    const ward = wardList.find((ward) => ward.id === store_formik.values.ward).name;
+    const province = cityList.find(
+      (city) => city.id === store_formik.values.city
+    ).name;
+    const district = districtList.find(
+      (district) => district.id === store_formik.values.district
+    ).name;
+    const { lat, lng } = await getGeoCode(
+      store_formik.values.address + " " + ward + " " + district + " " + province
+    );
+    const body = {
+      name: user_formik.values.name,
+      email: user_formik.values.email,
+      password: user_formik.values.password,
+      password_confirmation: user_formik.values.passwordConfirm,
+      phone: user_formik.values.phone,
+      date_of_birth: user_formik.values.dateOfBirth,
+      status: "active",
+      store_name: store_formik.values.name,
+      address: store_formik.values.address,
+      ward: ward,
+      district: district,
+      province: province,
+      store_phone: store_formik.values.phone,
+      default_branch: true,
+      lat: lat,
+      lng: lng
+    }
     try {
-      dispatch(loadingActions.startLoad());
-      const response = await userApi.ownerRegister({
-        name: userInfo.name,
-        email: userInfo.email,
-        password: userInfo.password,
-        password_confirmation: userInfo.passwordConfirm,
-        phone: userInfo.phone,
-        date_of_birth: userInfo.dateOfBirth,
-        status: "active",
-        store_name: storeInfo.name,
-        address: storeInfo.address,
-        ward: storeInfo.ward.name,
-        district: storeInfo.district.name,
-        province: storeInfo.city.name,
-        store_phone: storeInfo.phone,
-        default_branch: true,
-      });
-      dispatch(loadingActions.finishLoad());
+      const response = await userApi.ownerRegister(body);
+      dispatch(statusAction.successfulStatus("Tạo cửa hàng thành công"))
       if (response.message === "User successfully registered") {
-        dispatch(logInHandler(userInfo.phone, userInfo.password));
+        dispatch(logInHandler(user_formik.values.phone, user_formik.values.password));
       }
     } catch (error) {
-      dispatch(loadingActions.finishLoad());
+      console.log(error)
+      dispatch(statusAction.failedStatus("Số điện thoại hoặc email đã được sử dụng)"))
     }
   };
+  const [cityList, setCityList] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [wardList, setWardList] = useState([]);
+  useEffect(() => {
+    const loadCity = async () => {
+      try {
+        const res = await userApi.getCity();
+        setCityList(res.provinces);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    loadCity()
+  }, []);
+  useEffect(() => {
+    const loadDistrict = async (city_id) => {
+      if (city_id) {
+        try {
+          const res = await userApi.getDistrict(city_id);
+          setDistrictList(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    loadDistrict(store_formik.values.city);
+  }, [store_formik.values.city]);
+  useEffect(() => {
+    const loadWard = async (city_id, district_id) => {
+      if (city_id && district_id) {
+        try {
+          const res = await userApi.getWard(city_id, district_id);
+          setWardList(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    loadWard(store_formik.values.city, store_formik.values.district);
+  }, [store_formik.values.city, store_formik.values.district]);
   return (
     <Box className={classes.background}>
       <Paper className={classes.container}>
@@ -84,26 +174,27 @@ export default function SignUp() {
             ))}
           </Stepper>
           {activeStep !== 1 ? (
-            <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
+            <UserInfo user_formik={user_formik} />
           ) : (
-            <StoreInfo storeInfo={storeInfo} setStoreInfo={setStoreInfo} />
+            <StoreInfo store_formik={store_formik} cityList={cityList} districtList={districtList} wardList={wardList} />
           )}
           <Box className={classes.button}>
             <Button disabled={activeStep === 0} onClick={handleBack}>
-              Back
+              Trở về
             </Button>
             {activeStep !== 1 ? (
-              <Button onClick={handleNext} variant="contained" color="primary">
-                Next
+              <Button onClick={handleNext} variant="contained" color="primary" disabled={!(user_formik.isValid && Object.keys(user_formik.touched).length > 0)}>
+                Tiếp tục
               </Button>
             ) : (
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={() => handleSignUp()}
+                onClick={handleSignUp}
+                disabled={!(store_formik.isValid && Object.keys(store_formik.touched).length > 0)}
               >
-                Sign Up
+                Đăng ký
               </Button>
             )}
           </Box>
@@ -114,7 +205,7 @@ export default function SignUp() {
                 component={Link}
                 to="/login"
               >
-                Already have an account? Sign in
+                Đã có tài khoản ? Đăng nhập ngay
               </Typography>
             </Grid>
           </Grid>
@@ -125,5 +216,5 @@ export default function SignUp() {
 }
 
 function getSteps() {
-  return ["Fill in owner information", "Fill in store information"];
+  return ["Điền thông tin người dùng", "Điền thông tin chủ cửa hàng"];
 }

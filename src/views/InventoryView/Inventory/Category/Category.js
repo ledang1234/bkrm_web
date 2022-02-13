@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 
 //import library
 import { Typography, Box, IconButton } from "@material-ui/core";
@@ -31,10 +31,13 @@ const Category = (props) => {
   const handleCloseCategory = () => {
     setOpenAddCategory(false);
   };
-
+  const [reset,setReset] = useState(true)
+  const onReset = () =>{
+    setReset(reset => !reset)
+  }
   return (
     <Modal open={open} handleClose={handleClose}>
-      <AddCategory open={openAddCategory} handleClose={handleCloseCategory} />
+      <AddCategory onReset={onReset} open={openAddCategory} handleClose={handleCloseCategory} />
       <Box
         flexDirection="row"
         display="flex"
@@ -56,7 +59,7 @@ const Category = (props) => {
         </IconButton>
       </Box>
 
-      <CategoryTree style={{ width: 500, maxWith: "80%" }} />
+      <CategoryTree style={{ width: 500, maxWith: "80%" }} reset={reset}/>
     </Modal>
   );
 };

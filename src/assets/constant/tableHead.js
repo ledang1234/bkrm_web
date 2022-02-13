@@ -30,7 +30,7 @@ export const InventoryReturnOrderHeadCells = [
     { id: 'supplier', align: 'left', disablePadding: false, label: 'Nhà cung cấp' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
-    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng đơn trả hàng' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng tiền trả' },
     { id: 'import_id', align: 'left', disablePadding: false, label: '#Đơn nhập' },
     { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },
     
@@ -54,7 +54,7 @@ export const InvoiceHeadCells = [
     { id: 'customer', align: 'left', disablePadding: false, label: 'Khách hàng' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
-    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng hoá đơn' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng tiền' },
     { id: 'debt', align: 'left', disablePadding: false, label: 'Trạng thái' }, 
 ];
 export const InvoiceReturnHeadCells = [
@@ -63,16 +63,15 @@ export const InvoiceReturnHeadCells = [
     { id: 'customer', align: 'left', disablePadding: false, label: 'Khách hàng' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
     { id: 'payment', align: 'left', disablePadding: false, label: 'Hình thức trả' },
-    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng đơn trả' },
+    { id: 'total', align: 'right', disablePadding: false, label: 'Tổng tiền trả' },
     { id: 'invoid_id', align: 'left', disablePadding: false, label: '#Hoá đơn' },
     { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },  
 ];
 export const EmployeeHeadCells = [
-    { id: 'id', align: 'left', disablePadding: true, label: '#' },
     { id: 'name', align: 'left', disablePadding: true, label: 'Nhân viên' },
     { id: 'phone', align: 'left', disablePadding: true, label: 'Số điện thoại' },
     { id: 'email', align: 'left', disablePadding: true, label: 'Email' },
-    { id: 'function', align: 'left', disablePadding: false, label: 'Quyền' },  
+    { id: 'function', align: 'left', disablePadding: false, label: 'Trạng thái' },  
 ];
 
 export const CustomerHeadCells = [
@@ -86,7 +85,7 @@ export const CustomerHeadCells = [
 
 export const CartHeadCells = [
     { id: 'stt', align: 'left', disablePadding: true, label: 'Stt' },
-    // { id: 'id', align: 'left', disablePadding: true, label: '#' },
+    { id: 'id', align: 'left', disablePadding: true, label: 'Mã SP' },
     { id: 'name', align: 'left', disablePadding: true, label: 'Tên' },
     { id: 'price', align: 'right', disablePadding: true, label: 'Đơn giá' },
     { id: 'quantity', align: 'center', disablePadding: true, label: 'Số lượng' },
@@ -156,10 +155,9 @@ export  const CheckHistoryHeadCells = [
     { id: 'id', align: 'left', disablePadding: true, label: '#' },
     { id: 'date', align: 'left', disablePadding: false, label: 'Ngày kiểm' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
-    { id: 'inventory', align: 'right', disablePadding: false, label: 'Tồn kho' },
-    { id: 'real', align: 'center', disablePadding: false, label: 'SL thực tế' },
-    { id: 'substract', align: 'right', disablePadding: false, label: 'Lệch'},
-    { id: 'status', align: 'center', disablePadding: false, label: 'Trạng thái' },
+    { id: 'inventory', align: 'right', disablePadding: false, label: 'Tổng số lượng lêch' },
+    { id: 'substract', align: 'right', disablePadding: false, label: 'Tổng giá trị lệch'},
+    { id: 'status', align: 'center', disablePadding: false, label: 'Chức vụ' },
     { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },
 ]; 
 
@@ -182,3 +180,16 @@ export const EmployeeScheduleHeadCells = [
     { id: 'function', align: 'left', disablePadding: false, label: 'Quyền' },  
 ];
 
+export const InventoryCheckHeadCells = [
+  { id: "id", align: "left", disablePadding: true, label: "#" },
+  { id: "name", align: "left", disablePadding: false, label: "Tên sản phẩm" },
+  { id: "inventory", align: "left", disablePadding: false, label: "Tồn kho" },
+  { id: "real", align: "left", disablePadding: false, label: "Thực tế" },
+  {
+    id: "diffQuantity",
+    align: "left",
+    disablePadding: false,
+    label: "SL lệch",
+  },
+  { id: "total", align: "right", disablePadding: false, label: "Giá trị lệch" },
+]; 

@@ -20,7 +20,7 @@ export const CartRow = (props) =>{
     }
     
     return (
-      <TableRow hover key={props.row.uuid}>
+      <TableRow hover key={props.row.uuid} >
           <TableCell align="left">{row.id + 1}</TableCell>
           <TableCell align="left" style={{width:5}}>{row.barcode}</TableCell>
           <TableCell align="left" style={{minWidth:200}}>
@@ -38,7 +38,7 @@ export const CartRow = (props) =>{
           </TableCell>
   
           <TableCell align="left" padding='none' >
-            <ButtonQuantity quantity={row.quantity} setQuantity={updateQuantity}/> 
+            <ButtonQuantity quantity={row.quantity} setQuantity={updateQuantity}  branch_quantity={row.branch_quantity}/> 
           </TableCell> 
           
           <TableCell align="right"className={classes.boldText}>{row.unit_price * row.quantity}</TableCell>

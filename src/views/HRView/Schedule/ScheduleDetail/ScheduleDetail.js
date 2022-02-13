@@ -38,7 +38,7 @@ const ScheduleDetail = ({open,handlePopUp,clickSchedule}) => {
     const theme = useTheme();
   const classes = useStyles(theme);
 
-   //2. Table sort
+   // 2. Table sort
    const [order, setOrder] = React.useState("desc");
    const [orderBy, setOrderBy] = React.useState("stt");
    const handleRequestSort = (event, property) => {
@@ -50,13 +50,13 @@ const ScheduleDetail = ({open,handlePopUp,clickSchedule}) => {
         <Dialog maxWidth='lg'open={open} onClose={handlePopUp} aria-labelledby="form-dialog-title" >
             <DialogTitle id="form-dialog-title">
             <Typography  variant="h2" style={{marginBottom:10, color:theme.customization.primaryColor[500],flexGrow: 1,textAlign: "center"}}>
-                    {clickSchedule.scheduleList[0].date}
+                    {clickSchedule.schedules ? clickSchedule.schedules[0].date : ""}
                 </Typography>
                 <Typography className={classes.headerTitle}  variant="h5">
                     {clickSchedule.name}
                 </Typography>
                 <Typography className={classes.headerTitle} style={{color:grey[600]}} variant="h5">
-                    {clickSchedule.fromTime} - {clickSchedule.toTime}
+                    {clickSchedule.start_time} - {clickSchedule.end_time}
                 </Typography>
                 
             </DialogTitle>
@@ -71,8 +71,8 @@ const ScheduleDetail = ({open,handlePopUp,clickSchedule}) => {
                     isCart={true}
                   />
                   <TableBody>
-                    {stableSort(
-                      clickSchedule.scheduleList,
+                    {/* {stableSort(
+                      clickSchedule.schedules,
                       getComparator(order, orderBy)
                     ).map((row, index) => {
                       return (
@@ -83,7 +83,7 @@ const ScheduleDetail = ({open,handlePopUp,clickSchedule}) => {
                           // handleChangeItemQuantity={handleChangeItemQuantity}
                         />
                       );
-                    })}
+                    })} */}
                   </TableBody>
                 </TableWrapper>
         </Dialog>

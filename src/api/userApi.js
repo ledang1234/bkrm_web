@@ -24,9 +24,9 @@ const userAPi = {
     const url = "/address/provinces";
     return axiosClient.get(`${url}/${id}/districts`);
   },
-  getWard: (cityId,districtId) => {
+  getWard: (cityId, districtId) => {
     const url = "/address/provinces";
-    return axiosClient.get(`${url}/${cityId}/districts/${districtId}/wards`);
+      return axiosClient.get(`${url}/${cityId}/districts/${districtId}/wards`);
   },
 };
 export default userAPi;

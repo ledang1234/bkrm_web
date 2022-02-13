@@ -32,9 +32,10 @@ function InvoiceReturn() {
   // api
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
   const loadData = async () => {
     try {
-      const res = await refundApi.getAllOfStore(store_uuid);
+      const res = await refundApi.getAllOfBranch(store_uuid, branch_uuid);
       console.log(res.data);
       setRefunds(res.data.reverse());
     } catch (error) {
@@ -44,7 +45,7 @@ function InvoiceReturn() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [branch_uuid]);
 
   const theme = useTheme();
   const classes = useStyles(theme);

@@ -5,14 +5,19 @@ import PrintTwoToneIcon from '@material-ui/icons/PrintTwoTone';
 import SwapVertTwoToneIcon from '@material-ui/icons/SwapVertTwoTone';
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 import { useStyles } from '../style';
+import { useSelector } from 'react-redux';
 
 
 const ScheduleHead = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    const info = useSelector((state) => state.info);
+    const branch = info.branch;
+
     return (
         <Grid container direction="row" justifyContent="space-between">
-                <TextField  
+                {/* <TextField  
                     variant="outlined" 
                     InputProps={{
                         startAdornment: (
@@ -22,13 +27,13 @@ const ScheduleHead = () => {
                         ),
                         className:classes.search
                     }}
-                /> 
+                />  */}
                 <Box>
                     <Typography className={classes.headerTitle} variant="h2">
                         Ca làm việc
                     </Typography>
                     <Typography className={classes.textTitle} variant="body2">
-                        ( Chi nhánh trung tâm )
+                        {`(${branch.name})`}
                     </Typography> 
                 </Box>
                 
@@ -38,11 +43,11 @@ const ScheduleHead = () => {
                             <PrintTwoToneIcon className={classes.icon} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Đổi chi nhánh">
+                    {/* <Tooltip title="Đổi chi nhánh">
                         <IconButton aria-label="filter list" style={{height:50, marginTop:5}}>
                             <SwapVertTwoToneIcon className={classes.icon} />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                 </Box>
             </Grid>
     )

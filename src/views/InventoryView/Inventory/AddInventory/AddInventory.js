@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
+import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 //import library
 import {
   Button,
@@ -24,8 +25,14 @@ import barcodeIcon from "../../../../assets/img/icon/barcode1.png";
 import AddCategory from "./AddCategory";
 import useStyles from "./styles";
 import productApi from "../../../../api/productApi";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import SearchWithAutoComplete from "../../../../components/SearchBar/SearchWithAutoComplete";
+import { urltoFile } from "../../../../api/helper";
+import { statusAction } from "../../../../store/slice/statusSlice";
+import SearchIcon from "@material-ui/icons/Search";
+import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 const UploadImages = (img) => {
   return (
     <Box
@@ -42,7 +49,6 @@ const UploadImages = (img) => {
   );
 };
 const AddInventory = (props) => {
-
   const { handleClose, open } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
   const handleCloseCategory = () => setOpenAddCategory(false);
@@ -58,92 +64,229 @@ const AddInventory = (props) => {
 
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
-  const onChange = (e) => {
+  const [imageURL, setImageURL] = useState();
+  const addImageHandler = (e) => {
+    console.log(e.target.files[0]);
+    console.log(URL.createObjectURL(e.target.files[0]));
     setImages([...images, e.target.files[0]]);
-    setDisplay([...display, URL.createObjectURL(e.target.files[0])]);
+    setDisplay([
+      ...display,
+      {
+        index: images.length,
+        link: URL.createObjectURL(e.target.files[0]),
+        isUrl: false,
+      },
+    ]);
   };
   const [productInfo, setProductInfo] = useState({
     name: "",
+    barcode: "",
     importedPrice: 0,
     salesPrice: 0,
-    barcode: "",
-    category: {
-      uuid: "",
-      name: "Mặc Định",
-    },
+    category: "",
     unit: "",
-    re_order_point: 0,
+    re_order_point: "",
   });
+
+  const productFormik = useFormik({
+    initialValues: {
+      name: "",
+      barcode: "",
+      importedPrice: 0,
+      salesPrice: 0,
+      category: "",
+      unit: "",
+      re_order_point: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên sản phẩm "),
+      importedPrice: Yup.number().required("Nhập giá vốn").moreThan(0, "Giá vốn không được âm"),
+      salesPrice: Yup.number().required("Nhập giá bán").moreThan(0, "Giá bán không được âm"),
+      re_order_point: Yup.number("Phải là một số").moreThan(0, "Số lượng đặt hàng lại không được âm"),
+    }),
+  })
 
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-
+  const dispatch = useDispatch();
   const theme = useTheme();
   const classes = useStyles(theme);
   const addProductHandler = async () => {
-    console.log("herere");
+    handleCloseAndReset();
     try {
       var bodyFormData = new FormData();
-      bodyFormData.append("name", productInfo.name.toString());
-      bodyFormData.append("list_price", productInfo.salesPrice.toString());
+      bodyFormData.append("name", productFormik.values.name.toString());
+      bodyFormData.append("list_price", productFormik.values.salesPrice.toString());
       bodyFormData.append(
         "standard_price",
         productInfo.importedPrice.toString()
       );
-      bodyFormData.append("bar_code", productInfo.barcode.toString());
-      bodyFormData.append("quantity_per_unit", productInfo.unit.toString());
+      bodyFormData.append("bar_code", productFormik.values.barcode.toString());
+      bodyFormData.append("quantity_per_unit", productFormik.values.unit.toString());
       bodyFormData.append(
         "min_reorder_quantity",
-        productInfo.re_order_point.toString()
+        productFormik.values.re_order_point.toString()
       );
       bodyFormData.append(
         "category_uuid",
-        productInfo.category.uuid.toString()
+        productFormik.values.category.toString()
       );
-      // bodyFormData.append("images[]", images);
+      bodyFormData.append("img_url", imageURL);
+
       images.forEach((image) => bodyFormData.append("images[]", image));
+
       await productApi.createProduct(store_uuid, bodyFormData);
-      handleClose("Success");
+      dispatch(statusAction.successfulStatus("Create product successfully"));
+      props.setReload(true);
     } catch (error) {
-      console.log(error)
-      console.log(productInfo)
-      handleClose("Failed");
+      console.log(error);
+      dispatch(statusAction.failedStatus("Create product failed"));
     }
   };
+
+  const [reset,setReset] = useState(true)
+  const onReset = () =>{
+    setReset(reset => !reset)
+  }
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
         const response = await productApi.getAllCategory(store_uuid);
-        const defautCategory = response.data[0];
-        setCategoryList(response.data);
-        setProductInfo(productInfo => {
-          return { ...productInfo, category: { ...defautCategory } }
-        })
+        setCategoryList(response.data)
+        productFormik.setFieldValue("category",response.data[0].uuid)
       } catch (error) {
         console.log(error);
         return [];
       }
     };
     fetchCategoryList();
-  }, [store_uuid]);
+  }, [store_uuid,reset]);
 
+  const selectSampleProductHandler = (product) => {
+    if (product && product.name) {
+      try {
+        productFormik.setFieldValue("name", product.name, true)
+        productFormik.setFieldValue("barcode", product.bar_code, true)
+        clearAllImages();
+        setDisplay([{ link: product.img_url, isUrl: true }]);
+        setImages([]);
+        setImageURL(product.img_url);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const searchSampleProductHandler = async (searchKey) => {
+    return productApi.searchDefaultProducts(searchKey, 1);
+  };
+  const handleCloseAndReset = () => {
+    handleClose();
+    productFormik.resetForm()
+    clearAllImages();
+  };
+  const clearAllImages = () => {
+    setDisplay([]);
+    setImages([]);
+    setImageURL("");
+  };
+  const clearImage = (displayImage) => {
+    setDisplay(display.filter((img) => img != displayImage));
+    if (displayImage.isUrl) {
+      setImageURL("");
+    } else {
+      setImages(images.filter((image, index) => index !== displayImage.index));
+    }
+  };
+  const renderNameInput = (params) => {
+    return (
+      <TextField
+        {...params}
+        required
+        label="Tìm kiếm sp mẫu bằng tên hoặc mã vạch"
+        variant="outlined"
+        fullWidth
+        autoFocus
+        size="small"
+        InputProps={{
+          ...params.InputProps,
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+                <Box
+                    component="img"
+                    sx={{ height: 23, width: 23,marginRight:-30}}
+                    src={barcodeIcon}
+                />
+            </InputAdornment>
+        ),
+          onKeyDown: (e) => {
+            if (e.key.toLowerCase() === "arrowdown") {
+              onFocus(salesPriceRef)
+            }
+          }
+        }}
+      />
+    );
+  };
+  const renderOptionTest = (option) => {
+    return (
+      <Grid fullWidth container direction="row">
+        <Grid item xs={3}>
+          <FormatedImage url={option.img_url} />
+        </Grid>
+        <Grid item xs={9} container direction="column">
+          <Typography variant="h5">{option.name}</Typography>
+          <Typography variant="body2">{option.bar_code}</Typography>
+        </Grid>
+      </Grid>
+    );
+  };
+  const getOptionLabel = (option) => {
+    if (option.name) {
+      return option.name + " " + "(" + option.bar_code + ")"
+    }
+    return option
+  }
+  const salesPriceRef = useRef()
+  const onFocus = (ref) => {
+    ref.current.focus()
+  }
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={handleCloseAndReset}
       aria-labelledby="form-dialog-title"
     >
       <Box className={classes.root}>
-        <AddCategory open={openAddCategory} handleClose={handleCloseCategory} />
-        <Typography
-          className={classes.headerTitle}
-          variant="h5"
-          gutterBottom
+        <AddCategory open={openAddCategory} handleClose={handleCloseCategory} onReset={onReset} />
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
           style={{ marginBottom: 20 }}
         >
-          Thêm sản phẩm
-        </Typography>
+          <Typography className={classes.headerTitle} variant="h5">
+            Thêm sản phẩm
+          </Typography>
+          <Box style={{ width: "70%" }}>
+            <SearchWithAutoComplete
+              handleDefaultSelect={selectSampleProductHandler}
+              onSelect={selectSampleProductHandler}
+              searchApiCall={searchSampleProductHandler}
+              renderInput={renderNameInput}
+              getOptionLabel={getOptionLabel}
+              renderOption={renderOptionTest}
+              filterOptions={(options, state) => options}
+            />
+          </Box>
+        </Box>
         <Grid
           container
           direction="row"
@@ -157,18 +300,23 @@ const AddInventory = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              onChange={(e) =>
-                setProductInfo({ ...productInfo, name: e.target.value })
-              }
-              value={productInfo.name}
+              name="name"
+              onChange={productFormik.handleChange}
+              value={productFormik.values.name}
+              error={productFormik.touched.name && productFormik.errors.name}
+              helperText={productFormik.touched.name ? productFormik.errors.name : null}
+              onBlur={productFormik.handleBlur}
+              type="text"
             />
-
             <TextField
               label="Mã vạch (mặc định)"
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.barcode}
+              name="barcode"
+              onKeyDown={(e) => { }}
+              onChange={productFormik.handleChange}
+              value={productFormik.values.barcode}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -180,9 +328,6 @@ const AddInventory = (props) => {
                   </InputAdornment>
                 ),
               }}
-              onChange={(e) =>
-                setProductInfo({ ...productInfo, barcode: e.target.value })
-              }
               className={classes.margin}
             />
             <TextField
@@ -191,28 +336,21 @@ const AddInventory = (props) => {
               fullWidth
               size="small"
               className={classes.margin}
-              value={productInfo.unit}
-              onChange={(e) => {
-                setProductInfo({ ...productInfo, unit: e.target.value });
-              }}
+              name="unit"
+              onChange={productFormik.handleChange}
+              value={productFormik.values.unit}
             />
             <Box className={`${classes.box} ${classes.margin}`}>
               <FormControl required size="small" variant="outlined" fullWidth>
                 <InputLabel htmlFor="category">Danh mục</InputLabel>
                 <Select
                   native
-                  value={productInfo.category.uuid}
-                  onChange={(e) => {
-                    const cat = categoryList.find(
-                      (item) => item.uuid === e.target.value
-                    );
-                    setProductInfo({
-                      ...productInfo,
-                      category: cat,
-                    });
-                  }}
                   label="Danh mục"
                   id="category"
+                  name="category"
+                  value={productFormik.values.category}
+                  onChange={productFormik.handleChange}
+                  onBlur={productFormik.handleBlur}
                 >
                   {categoryList.map((category) => (
                     <option key={category.uuid} value={category.uuid}>
@@ -239,13 +377,13 @@ const AddInventory = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.importedPrice}
-              onChange={(e) =>
-                setProductInfo({
-                  ...productInfo,
-                  importedPrice: e.target.value,
-                })
-              }
+              name="salesPrice"
+              inputRef={salesPriceRef}
+              value={productFormik.values.salesPrice}
+              onChange={productFormik.handleChange}
+              error={productFormik.touched.salesPrice && productFormik.errors.salesPrice}
+              helperText={productFormik.touched.salesPrice ? productFormik.errors.salesPrice : null}
+              onBlur={productFormik.handleBlur}
             />
             <VNDInput
               required
@@ -253,10 +391,12 @@ const AddInventory = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.salesPrice}
-              onChange={(e) => {
-                setProductInfo({ ...productInfo, salesPrice: e.target.value });
-              }}
+              name="importedPrice"
+              value={productFormik.values.importedPrice}
+              onChange={productFormik.handleChange}
+              error={productFormik.touched.importedPrice && productFormik.errors.importedPrice}
+              helperText={productFormik.touched.importedPrice ? productFormik.errors.importedPrice : null}
+              onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
 
@@ -266,13 +406,12 @@ const AddInventory = (props) => {
               fullWidth
               size="small"
               className={classes.margin}
-              onChange={(e) =>
-                setProductInfo({
-                  ...productInfo,
-                  re_order_point: e.target.value,
-                })
-              }
-              value={productInfo.re_order_point}
+              name="re_order_point"
+              value={productFormik.values.re_order_point}
+              onChange={productFormik.handleChange}
+              error={productFormik.touched.re_order_point && productFormik.errors.re_order_point}
+              helperText={productFormik.touched.re_order_point ? productFormik.errors.re_order_point : null}
+              onBlur={productFormik.handleBlur}
             />
           </Grid>
         </Grid>
@@ -285,13 +424,8 @@ const AddInventory = (props) => {
               style={{ marginTop: 10 }}
             >
               {display.map((img) => (
-                <Tooltip title="Xóa">
-                  <Button
-                    size="small"
-                    onClick={() =>
-                      setDisplay(display.filter((item) => item !== img))
-                    }
-                  >
+                <Tooltip title="Xóa tất cả hình ảnh">
+                  <Button size="small" onClick={() => clearImage(img)}>
                     <Box
                       component="img"
                       sx={{
@@ -301,7 +435,7 @@ const AddInventory = (props) => {
                         marginRight: 7,
                         borderRadius: 2,
                       }}
-                      src={img}
+                      src={img.link}
                     />
                   </Button>
                 </Tooltip>
@@ -313,7 +447,7 @@ const AddInventory = (props) => {
                 size="medium"
                 component="label"
               >
-                <input type="file" hidden onChange={onChange} />
+                <input type="file" hidden onChange={addImageHandler} />
                 <AddIcon />
               </IconButton>
             </Box>
@@ -328,7 +462,7 @@ const AddInventory = (props) => {
             }}
           >
             <Button
-              onClick={() => handleClose(null)}
+              onClick={handleCloseAndReset}
               variant="contained"
               size="small"
               color="secondary"
@@ -349,7 +483,7 @@ const AddInventory = (props) => {
           </Grid>
         </Grid>
       </Box>
-    </Dialog>
+    </Dialog >
   );
 };
 

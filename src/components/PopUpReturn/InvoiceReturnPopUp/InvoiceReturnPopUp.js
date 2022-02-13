@@ -49,7 +49,8 @@ function InvoiceReturnPopUp(props) {
     total_amount: 0,
     details: order.details.map((detail) => ({
       ...detail,
-      returnQuantity: detail.quantity,
+      // returnQuantity: detail.quantity,
+      returnQuantity: 0,
       returnPrice: detail.unit_price,
     })),
     payment_method: 'cash',
@@ -160,7 +161,7 @@ function InvoiceReturnPopUp(props) {
       );
       setSnackStatus({
         style: 'success',
-        message: `Trả hàng thành công: ${res.data.purchase_order_code}`,
+        message: `Trả hàng thành công: ${res.data.refund_code}`,
       });
       setOpenSnack(true);
     } catch (err) {
@@ -283,6 +284,7 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
           setQuantity={handleChangeQuantity}
           show={show}
           setShow={setShow}
+          isReturn={true}
         />
       </TableCell>
 

@@ -6,7 +6,7 @@ const purchaseReturnApi = {
     return axiosClient.post(url, body);
   },
   getAllOfBranch: (storeUuid, branchUuid) => {
-    const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-orders/`;
+    const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-returns/`;
     return axiosClient.get(url, {});
   },
   getAllOfStore: (storeUuid) => {

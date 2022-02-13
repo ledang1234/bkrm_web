@@ -2,21 +2,23 @@ import React from 'react'
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { Grid, Box, Typography, DialogActions, DialogContent, Button, Dialog, FormControlLabel, Checkbox, FormControl, RadioGroup, Radio } from '@material-ui/core'
 
-import AddSupplier from '../../../../views/InventoryView/Supplier/AddSupplier/AddSupplier'
+import AddCustomer from '../../../../views/ManagerView/Customer/AddCustomer/AddCustomer'
 
 import SearchCustomer from '../../../SearchBar/SearchCustomer';
 
 //import project
 import * as Input from '../../../TextField/NumberFormatCustom'
 
-<<<<<<< Updated upstream
-=======
+
 import VNDInput from '../../../TextField/NumberFormatCustom';
 import { VNDFormat,ThousandFormat } from '../../../TextField/NumberFormatCustom';
 
 
 
->>>>>>> Stashed changes
+import VNDInput from '../../../TextField/NumberFormatCustom';
+import { VNDFormat,ThousandFormat } from '../../../TextField/NumberFormatCustom';
+
+
 const useStyles = makeStyles((theme) =>
     createStyles({
         marginBox: {
@@ -45,6 +47,7 @@ const CartSummary = (props) => {
         handleConfirm,
         selectedBranch,
         setSelectedBranch,
+        customers,
         currentBranch,
         mode
     } = props;
@@ -78,7 +81,23 @@ const CartSummary = (props) => {
 
     // so tien khach đưa
     const [customerMoney, setCustomerMoney] = React.useState('0');
-    React.useEffect(() => {console.log(currentBranch)})
+    // React.useEffect(() => {console.log(currentBranch)})
+
+    // console.log("cartItem")
+    // console.log(cartData.cartItem)
+    // var emptyCart =  cartData.cartItem.length === 0;
+    
+    // var correctQuantity = cartData.cartItem.every(function(element, index) {
+    //     console.log(element);
+    //     if(element.quantity > element.branch_quantity)
+    //         return false;
+    //     else
+    //         return true;
+    // });
+    // console.log("correctQuantity")
+    // console.log(correctQuantity)
+    // console.log("emptyCart")
+    // console.log(emptyCart)
     return (
 
         <Box style={{ padding: 30, minHeight: '80vh' }}>
@@ -112,11 +131,12 @@ const CartSummary = (props) => {
                 <div style={{ width: '100%' }}>
                     <SearchCustomer
                         handleClickOpen={handleClickOpen}
+                        customers={customers}
                         selectedCustomer={currentCustomer ? currentCustomer : { name: "", phone: "" }}
                         handleSearchBarSelect={handleSelectCustomer} />
                 </div>
 
-                <AddSupplier open={open} handleClose={handleClose} />
+                <AddCustomer open={open} handleClose={handleClose} />
 
                 {/* when change mode to menu product */}
                 {props.children}
@@ -131,7 +151,7 @@ const CartSummary = (props) => {
                                     Tổng số mặt hàng
                                 </Typography>
                                 <Typography variant="body2">
-                                    {cartData.cartItem.length}
+                                <ThousandFormat value={cartData.cartItem.length}></ ThousandFormat>
                                 </Typography>
                             </Grid>
 
@@ -140,7 +160,7 @@ const CartSummary = (props) => {
                                     Tổng tiền hàng
                                 </Typography>
                                 <Typography variant="body2">
-                                    {cartData.total_amount}
+                                    <VNDFormat value={cartData.total_amount}/>
                                 </Typography>
                             </Grid>
 
@@ -148,7 +168,7 @@ const CartSummary = (props) => {
                                 <Typography variant="h5">
                                     Giảm giá
                                 </Typography>
-                                <Input.ThousandSeperatedInput id="standard-basic" style={{ width: 90 }}
+                                <VNDInput id="standard-basic" style={{ width: 90 }}
                                     size="small" inputProps={{ style: { textAlign: "right" } }}
                                     onChange={(e) => handleUpdateDiscount(e.target.value)}
                                 />
@@ -156,10 +176,10 @@ const CartSummary = (props) => {
 
                             <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>
                                 <Typography variant="h5">
-                                    Khách cần trả
+                                    Tổng tiền
                                 </Typography>
                                 <Typography variant="body2">
-                                    {cartData.total_amount - cartData.discount}
+                                <VNDFormat style={{color:'#2096f3', fontWeight:500}} value={cartData.total_amount - cartData.discount} />
                                 </Typography>
                             </Grid>
 
@@ -167,31 +187,39 @@ const CartSummary = (props) => {
                                 <Typography variant="h5">
                                     Khách thanh toán
                                 </Typography>
-                                <Input.ThousandSeperatedInput id="standard-basic" style={{ width: 90 }}
-                                    defaultPrice={(cartData.total_amount - cartData.discount).toString()}
+                                <VNDInput id="standard-basic" style={{ width: 90 }}
+                                    // defaultPrice={(cartData.total_amount - cartData.discount).toString()}
+                                    // defaultValue={(cartData.total_amount - cartData.discount).toString()}
+                                    value={cartData.paid_amount}
                                     size="small" inputProps={{ style: { textAlign: "right" } }}
                                     onChange={(e) => handleUpdatePaidAmount(e.target.value)} />
                             </Grid>
 
-                            <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.marginRow}>
+                            {/* <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.marginRow}>
                                 <Typography variant="h5">
                                     Khách đưa
                                 </Typography>
-                                <Input.ThousandSeperatedInput id="standard-basic" style={{ width: 90 }}
-                                    defaultPrice={(cartData.total_amount - cartData.discount).toString()}
+                                <VNDInput id="standard-basic" style={{ width: 90 }}
+                                    // defaultValue={(cartData.total_amount - cartData.discount).toString()}
+                                    defaultValue={cartData.total_amount - cartData.discount}
+                                    // value={cartData.paid_amount}
+                                    // value={cartData.total_amount - cartData.discount}
                                     size="small" inputProps={{ style: { textAlign: "right" } }}
                                     onChange={(e) => setCustomerMoney(e.target.value)} />
-                            </Grid>
+                            </Grid> */}
 
                             <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.marginRow}>
                                 <Typography variant="h5">
                                     Tiền thối
                                 </Typography>
-                                <Input.ThousandSeperatedInput
+                                {/* <Input.ThousandSeperatedInput
                                     id="standard-basic" style={{ width: 90 }}
                                     size="small" inputProps={{ style: { textAlign: "right" } }}
                                     value={Number(customerMoney) - cartData.paid_amount}
-                                />
+                                /> */}
+                                <Typography variant="body2" >                              
+                                    <VNDFormat value={ cartData.paid_amount- (cartData.total_amount - cartData.discount)  }/>
+                                </Typography>
                             </Grid>
 
                             <Grid container direction="row" justifyContent="flex-end" alignItems="center" className={classes.marginRow}>

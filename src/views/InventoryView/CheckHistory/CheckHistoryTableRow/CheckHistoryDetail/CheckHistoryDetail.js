@@ -60,7 +60,7 @@ createStyles({
 
 
 const CheckHistoryDetail = (props) => {
-    const {row,openRow }= props.parentProps;
+    const {row, openRow }= props.parentProps;
   //  tam thoi
     const currentUser = "Minh Tri";
 
@@ -79,185 +79,256 @@ const CheckHistoryDetail = (props) => {
 
 
     return (
-        // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
-        <Collapse in={ true } timeout="auto" unmountOnExit>
-             <Box margin={1}>
-                <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
-                 {row.name}
-               </Typography>
+      // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
+      <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+        <Box margin={1}>
+          <Typography
+            variant="h3"
+            gutterBottom
+            component="div"
+            className={classes.typo}
+          >
+            {row.product_name}
+          </Typography>
 
-             <Grid  container direction="row" justifyContent="flex-start">
+          <Grid container direction="row" justifyContent="flex-start">
+            <Grid item xs={5}>
+              <Grid container direction="row" justifyContent="flex-start">
                 <Grid item xs={5}>
-                  <Grid container direction="row" justifyContent="flex-start" > 
-                      <Grid item xs={5} >
-                        <Typography variant="h5" gutterBottom component="div">Mã đơn kiểm</Typography>    
-                      </Grid>
-                      <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
-                      </Grid>
-                  </Grid>
-                  <Grid container direction="row" justifyContent="flex-start">
-                      <Grid item xs={5} >
-                        <Typography variant="h5" gutterBottom component="div">Ngày kiểm </Typography>    
-                      </Grid>
-                      <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.date} </Typography>
-                      </Grid>
-                  </Grid>
-                  <Grid container direction="row" justifyContent="flex-start">
-                      <Grid item xs={5} >
-                        <Typography variant="h5" gutterBottom component="div">Tổng tồn kho</Typography>    
-                      </Grid>
-                      <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.tongtonkho}</Typography>
-                      </Grid>
-                  </Grid>
-                  <Grid container direction="row" justifyContent="flex-start">
-                      <Grid item xs={5} >
-                        <Typography variant="h5"gutterBottom component="div">SL thực tế</Typography>    
-                      </Grid>
-                      <Grid item xs={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.tongSLthucte} </Typography>
-                      </Grid>
-                  </Grid>
-                     
-                  </Grid>
-                    <Grid item xs={5}>
-                    <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
-                            <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
-                        </Grid>
-                        <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">Không cân bằng</Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
-                            <Typography variant="h5" gutterBottom component="div">Tổng lệch</Typography>    
-                        </Grid>
-                        <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{row.tongSLthucte - row.tongtonkho }</Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
-                            <Typography variant="h5" gutterBottom component="div">Chi nhánh thực hiện</Typography>    
-                        </Grid>
-                        <Grid item xs={4} >
-                            <Typography variant="body1" gutterBottom component="div">{row.branch}</Typography>
-                        </Grid>
-                    </Grid>
-            
-                    
-                  </Grid>  
-               </Grid>
-
-               <Typography variant="h4" gutterBottom component="div" style={{marginTop:30}}>
-                 Danh sách sản phẩm
-               </Typography>
-               <Table size="small" aria-label="purchases">
-                 <TableHead>
-                   <TableRow>
-                     <TableCell>#</TableCell>
-                     <TableCell>Sản phẩm</TableCell>
-                     <TableCell align="right">Tồn kho</TableCell>
-                     <TableCell align="right">SL thực tế</TableCell>
-                     <TableCell align="right">Lệch</TableCell>
-                   </TableRow>
-                 </TableHead>
-                 <TableBody>
-                    {row.list.map((historyRow) => (
-                     <TableRow key={historyRow.product_id}>
-                       <TableCell component="th" scope="row">
-                         {historyRow.product_id}
-                       </TableCell>
-                       <TableCell>{historyRow.name}</TableCell>
-                       <TableCell align="right">{historyRow.tonkho}</TableCell>
-                       <TableCell align="right">
-                         {historyRow.SLthucte}
-                       </TableCell>
-                       <TableCell align="right" style={{fontWeight:700}}>
-                         {historyRow.SLthucte - historyRow.tonkho}
-                       </TableCell>
-                       
-                     </TableRow>
-                   ))}
-                 </TableBody>
-               </Table> 
-               <Box  className={classes.background}style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
-               <Grid container direction="column" >
-                    <Grid container direction="row" justifyContent="flex-end">
-                        <Grid item xs={2} >
-                            <Typography variant="h5" gutterBottom component="div">Tổng tồn kho</Typography>    
-                        </Grid>
-                        <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">4</Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" justifyContent="flex-end">
-                        <Grid item xs={2} >
-                            <Typography variant="h5" gutterBottom component="div">Tổng SL thực tế</Typography>    
-                        </Grid>
-                        <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">4 </Typography>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container direction="row" justifyContent="flex-end">
-                        <Grid item xs={2} >
-                            <Typography variant="h5" gutterBottom component="div">Tổng lệch</Typography>    
-                        </Grid>
-                        <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div">{row.total} </Typography>
-                        </Grid>
-                    </Grid>
-                    
+                  <Typography variant="h5" gutterBottom component="div">
+                    Mã đơn kiểm
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.inventory_check_code}{" "}
+                  </Typography>
+                </Grid>
               </Grid>
-              </Box>
+              <Grid container direction="row" justifyContent="flex-start">
+                <Grid item xs={5}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Ngày kiểm{" "}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.created_at}{" "}
+                  </Typography>
+                </Grid>
+              </Grid>
+              {/* <Grid container direction="row" justifyContent="flex-start">
+                <Grid item xs={5}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Tổng tồn kho
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.tongtonkho}
+                  </Typography>
+                </Grid>
+              </Grid> */}
+              {/* <Grid container direction="row" justifyContent="flex-start">
+                <Grid item xs={5}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    SL thực tế
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.details.sum}{" "}
+                  </Typography>
+                </Grid>
+              </Grid> */}
+            </Grid>
+            <Grid item xs={5}>
+              {/* <Grid container direction="row" justifyContent="flex-start">
+                <Grid item xs={6}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Trạng thái
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    Không cân bằng
+                  </Typography>
+                </Grid>
+              </Grid> */}
+              {/* <Grid container direction="row" justifyContent="flex-start">
+                <Grid item xs={6}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Tổng lệch
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.tongSLthucte - row.tongtonkho}
+                  </Typography>
+                </Grid>
+              </Grid> */}
+              <Grid container direction="row" justifyContent="flex-start">
+                <Grid item xs={6}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Chi nhánh thực hiện
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.branch_name}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" justifyContent="flex-start">
+                <Grid item xs={6}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Người thực hiện
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.user_name}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
 
-              <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
-                   
-                  <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                    size="small"
-                    style={{marginLeft:10}}
-
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-
-                  <StyledMenu
-                    id="customized-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <StyledMenuItem>
-                      <ListItemIcon style={{marginRight:-15}}>
-                        <PrintTwoToneIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText primary="In đơn nhập" />
-                    </StyledMenuItem>
-
-                    <StyledMenuItem>
-                      <ListItemIcon style={{marginRight:-15}}>
-                        <GetAppTwoToneIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText primary="Xuất excel" />
-                    </StyledMenuItem>
-                  </StyledMenu>
-                  
+          <Typography
+            variant="h4"
+            gutterBottom
+            component="div"
+            style={{ marginTop: 30 }}
+          >
+            Danh sách sản phẩm
+          </Typography>
+          <Table size="small" aria-label="purchases">
+            <TableHead>
+              <TableRow>
+                <TableCell>#</TableCell>
+                <TableCell>Sản phẩm</TableCell>
+                <TableCell align="right">Tồn kho</TableCell>
+                <TableCell align="right">SL thực tế</TableCell>
+                <TableCell align="right">Lệch</TableCell>
+                <TableCell align="right">Giá trị</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {row.details?.map((detail) => (
+                <TableRow key={detail.product_id}>
+                  <TableCell component="th" scope="row">
+                    {detail.product_id}
+                  </TableCell>
+                  <TableCell>{detail.product_name}</TableCell>
+                  <TableCell align="right">{detail.branch_inventory}</TableCell>
+                  <TableCell align="right">
+                    {Number(detail.branch_inventory) + Number(detail.quantity)}
+                  </TableCell>
+                  <TableCell align="right" style={{ fontWeight: 700 }}>
+                    {detail.quantity}
+                  </TableCell>
+                  <TableCell align="right" style={{ fontWeight: 700 }}>
+                    {detail.quantity * detail.unit_price}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <Box
+            className={classes.background}
+            style={{
+              padding: 10,
+              borderRadius: theme.customization.borderRadius,
+              marginTop: 10,
+            }}
+          >
+            <Grid container direction="column">
+              <Grid container direction="row" justifyContent="flex-end">
+                <Grid item xs={2}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Tổng số lượng lệch
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.details
+                      ?.map((detail) => detail.quantity )
+                      .reduce((total, ele) => total + ele, 0)}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" justifyContent="flex-end">
+                <Grid item xs={2}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Tổng giá trị lệch
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.details
+                      ?.map((detail) => detail.quantity * detail.unit_price)
+                      .reduce((total, ele) => total + ele, 0)}
+                  </Typography>
+                </Grid>
               </Grid>
 
-       
-                
-             </Box>
-           </Collapse>
-    )
+              {/* <Grid container direction="row" justifyContent="flex-end">
+                <Grid item xs={2}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Tổng lệch
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.total}{" "}
+                  </Typography>
+                </Grid>
+              </Grid> */}
+            </Grid>
+          </Box>
+
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            style={{ marginTop: 20 }}
+          >
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+              size="small"
+              style={{ marginLeft: 10 }}
+            >
+              <MoreVertIcon />
+            </IconButton>
+
+            <StyledMenu
+              id="customized-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <StyledMenuItem>
+                <ListItemIcon style={{ marginRight: -15 }}>
+                  <PrintTwoToneIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="In đơn nhập" />
+              </StyledMenuItem>
+
+              <StyledMenuItem>
+                <ListItemIcon style={{ marginRight: -15 }}>
+                  <GetAppTwoToneIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Xuất excel" />
+              </StyledMenuItem>
+            </StyledMenu>
+          </Grid>
+        </Box>
+      </Collapse>
+    );
 }
 
 export default CheckHistoryDetail

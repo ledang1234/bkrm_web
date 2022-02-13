@@ -26,12 +26,12 @@ import { Box, Button, Grid, Slider, Typography } from "@material-ui/core";
 const useStyles = makeStyles((theme) =>
   createStyles({
     btn: {
-      maxWidth: "30px",
-      maxHeight: "33px",
-      minWidth: "30px",
-      minHeight: "33px",
-      borderRadius: "30px",
-      margin: 10,
+      maxWidth: "27px",
+      maxHeight: "30px",
+      minWidth: "27px",
+      minHeight: "30px",
+      borderRadius: "27px",
+      margin: 8,
     },
     btnPink: {
       background: pink[500],
@@ -157,7 +157,7 @@ const ButtonGroup = (props) => {
   const { set, title, colorChoosen } = props;
   return (
     <CardWrapper title={title}>
-      <Grid spacing={3}>
+      <Grid spacing={1}>
         <Button
           variant="outlined"
           className={clsx(

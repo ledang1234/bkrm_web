@@ -3,6 +3,7 @@ import {
   Button,
   createStyles,
   FormControl,
+  FormHelperText,
   Grid,
   InputLabel,
   makeStyles,
@@ -18,6 +19,9 @@ import branchApi from "../../../api/branchApi";
 import userApi from "../../../api/userApi";
 import { statusAction } from "../../../store/slice/statusSlice";
 import SimpleModal from "../../Modal/ModalWrapper";
+import getGeoCode from "../Geocode";
+import ConfirmPopUp from "../../ConfirmPopUp/ConfirmPopUp";
+import * as Yup from "yup";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,6 +40,7 @@ const EditBranch = (props) => {
   const [cityList, setCityList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
+  const [isDelete, setIsDelete] = useState(false);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -43,9 +48,17 @@ const EditBranch = (props) => {
       address: branch.address,
       ward: branch.ward,
       district: branch.district,
-      city: branch.city,
+      city: branch.province,
       phone: branch.phone,
     },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên chi nhánh"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại").matches(/^\d+$/),
+      address: Yup.string().required("Nhập địa chỉ"),
+      city: Yup.string().required("Chọn tỉnh/ thành phố"),
+    }),
   });
   useEffect(() => {
     const loadCity = async () => {
@@ -60,22 +73,26 @@ const EditBranch = (props) => {
   }, []);
   useEffect(() => {
     const loadDistrict = async (city_id) => {
-      try {
-        const res = await userApi.getDistrict(city_id);
-        setDistrictList(res.data);
-      } catch (error) {
-        console.log(error);
+      if (city_id) {
+        try {
+          const res = await userApi.getDistrict(city_id);
+          setDistrictList(res.data);
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     loadDistrict(formik.values.city);
   }, [formik.values.city]);
   useEffect(() => {
     const loadWard = async (city_id, district_id) => {
-      try {
-        const res = await userApi.getWard(city_id, district_id);
-        setWardList(res.data);
-      } catch (error) {
-        console.log(error);
+      if (city_id && district_id) {
+        try {
+          const res = await userApi.getWard(city_id, district_id);
+          setWardList(res.data);
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     loadWard(formik.values.city, formik.values.district);
@@ -83,37 +100,84 @@ const EditBranch = (props) => {
 
   const dispatch = useDispatch();
   const handleEditBranch = async () => {
+    const ward = wardList.find((ward) => ward.id === formik.values.ward).name;
+    const province = cityList.find(
+      (city) => city.id === formik.values.city
+    ).name;
+    const district = districtList.find(
+      (district) => district.id === formik.values.district
+    ).name;
+    const { lat, lng } = await getGeoCode(
+      formik.values.address + " " + ward + " " + district + " " + province
+    );
     handleClose();
     try {
       const body = {
         name: formik.values.name,
         address: formik.values.address,
-        ward: wardList.find((ward) => ward.id === formik.values.ward).name,
-        provinces: cityList.find((city) => city.id === formik.values.city).name,
-        district: districtList.find(
-          (district) => district.id === formik.values.district
-        ).name,
+        ward: ward,
+        province: province,
+        district: district,
         phone: formik.values.phone,
         status: "active",
+        lng: lng,
+        lat: lat,
       };
       const response = await branchApi.updateBranch(
         store_uuid,
         branch.uuid,
         body
       );
-      console.log(response);
       dispatch(statusAction.successfulStatus("Edit branch successfully"));
       props.onReload();
     } catch (error) {
-      console.log(error, store_uuid, branch.uuid);
+      console.log(error);
       dispatch(statusAction.failedStatus("Failed to edit branch"));
+    }
+  };
+  const handleDeleteBranch = async () => {
+    setIsDelete(false);
+    handleClose();
+    try {
+      await branchApi.deleteBranch(store_uuid, branch.uuid);
+      props.onReload();
+      dispatch(statusAction.successfulStatus("Delete branch successfully"));
+    } catch (error) {
+      console.log(error);
+      dispatch(statusAction.failedStatus("Delete branch failed"));
     }
   };
   return (
     <SimpleModal open={open} handleClose={handleClose}>
-      <Typography variant="h4" gutterBottom>
-        Chỉnh sửa chi nhánh mới
-      </Typography>
+      <ConfirmPopUp
+        open={isDelete}
+        handleConfirm={handleDeleteBranch}
+        handleClose={() => setIsDelete(false)}
+        message={
+          <Typography>
+            Xóa vĩnh viễn chi nhánh <b>{branch.name} ?</b>
+          </Typography>
+        }
+      />
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h4" gutterBottom>
+          Chỉnh sửa chi nhánh mới
+        </Typography>
+        <Button
+          variant="contained"
+          size="small"
+          style={{ marginRight: 20 }}
+          color="secondary"
+          onClick={() => setIsDelete(true)}
+        >
+          Xóa chi nhánh
+        </Button>
+      </Box>
       <Grid container spacing={2} style={{ maxWidth: 600, marginTop: 10 }}>
         <Grid item xs={12}>
           <TextField
@@ -121,9 +185,12 @@ const EditBranch = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Name"
+            label="Tên chi nhánh"
             onChange={formik.handleChange}
             value={formik.values.name}
+            error={formik.touched.name && formik.errors.name}
+            helperText={formik.touched.name ? formik.errors.name : null}
+            onBlur={formik.handleBlur}
           />
         </Grid>
         <Grid item xs={5}>
@@ -131,35 +198,53 @@ const EditBranch = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Phone"
+            label="Số điện thoại"
             name="phone"
             onChange={formik.handleChange}
             value={formik.values.phone}
+            error={formik.touched.phone && formik.errors.phone}
+            helperText={formik.touched.phone ? formik.errors.phone : null}
+            onBlur={formik.handleBlur}
           />
         </Grid>
         <Grid item xs={7}>
-          <FormControl required fullWidth variant="outlined">
-            <InputLabel>City</InputLabel>
+          <FormControl
+            required
+            fullWidth
+            variant="outlined"
+            error={formik.touched.city && formik.errors.city}
+          >
+            <InputLabel>Tỉnh</InputLabel>
             <Select
               native
               name="city"
-              label="City"
+              label="Tỉnh"
               value={formik.values.city}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             >
               <option value="" />
               {cityList.map((city) => (
                 <option value={city.id}>{city.name}</option>
               ))}
             </Select>
+            {formik.touched.city ? (
+              <FormHelperText>{formik.errors.city}</FormHelperText>
+            ) : null}
           </FormControl>
         </Grid>
         <Grid item xs={6}>
-          <FormControl required fullWidth variant="outlined">
-            <InputLabel>District</InputLabel>
+          <FormControl
+            required
+            fullWidth
+            variant="outlined"
+            error={formik.touched.district && formik.errors.district}
+            onBlur={formik.handleBlur}
+          >
+            <InputLabel>Quận</InputLabel>
             <Select
               native
-              label="District"
+              label="Quận"
               name="district"
               value={formik.values.district}
               onChange={formik.handleChange}
@@ -173,10 +258,10 @@ const EditBranch = (props) => {
         </Grid>
         <Grid item xs={6}>
           <FormControl required fullWidth variant="outlined">
-            <InputLabel htmlFor="ward">Ward</InputLabel>
+            <InputLabel htmlFor="ward">Phường</InputLabel>
             <Select
               native
-              label="Ward"
+              label="Phường"
               name="ward"
               value={formik.values.ward}
               onChange={formik.handleChange}
@@ -194,7 +279,7 @@ const EditBranch = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Address"
+            label="Địa chỉ"
             onChange={formik.handleChange}
             value={formik.values.address}
           />
@@ -214,7 +299,6 @@ const EditBranch = (props) => {
           variant="contained"
           size="small"
           style={{ marginRight: 20 }}
-          color="secondary"
           onClick={handleClose}
         >
           Hủy
@@ -224,6 +308,7 @@ const EditBranch = (props) => {
           size="small"
           color="primary"
           onClick={handleEditBranch}
+          style={{ marginRight: 20 }}
         >
           Sửa
         </Button>

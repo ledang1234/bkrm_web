@@ -32,6 +32,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UpdateInventory from "./UpdateInventory/UpdateInventory";
 import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
 import { statusAction } from "../../../../../store/slice/statusSlice";
+import { VNDFormat } from "../../../../../components/TextField/NumberFormatCustom";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -183,7 +184,8 @@ const InventoryDetail = (props) => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {productDetail.uuid}{" "}
+                      {/* {productDetail.uuid}{" "} */}
+                      {productDetail.bar_code}{" "}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -245,7 +247,7 @@ const InventoryDetail = (props) => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {productDetail.list_price}{" "}
+                      <VNDFormat value={productDetail.list_price}></VNDFormat>
                     </Typography>
                   </Grid>
                 </Grid>
@@ -257,7 +259,9 @@ const InventoryDetail = (props) => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {productDetail.standard_price}{" "}
+                      <VNDFormat
+                        value={productDetail.standard_price}
+                      ></VNDFormat>{" "}
                     </Typography>
                   </Grid>
                 </Grid>

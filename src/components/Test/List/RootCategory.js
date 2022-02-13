@@ -39,7 +39,7 @@ export default function RootCategory(props) {
       }
     };
     fetchCategoryList();
-  }, [store_uuid, props.category.uuid]);
+  }, [store_uuid, props.category.uuid,props.reset]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 

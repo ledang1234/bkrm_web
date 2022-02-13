@@ -60,7 +60,7 @@ const Report = () => {
     const classes = useStyles(theme);
 
     //0. set time
-    const [time, setTime] = React.useState('');
+    const [time, setTime] = React.useState('30day');
 
     const handleChangeTime = (event) => {
       setTime(event.target.value);
@@ -68,11 +68,8 @@ const Report = () => {
 
     // 1.data for Overall Report
 
+
     // 2.data for customer
-
-
-  
-    
     
   const [categoryList, setCategoryList] = useState([{name: 'áo', total: 100},{name: 'quần', total: 200}]);
   const [productList, setProductList] = useState([]);
@@ -92,6 +89,100 @@ const Report = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+
+  // report apis call here 
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  // must be in format
+  const [fromDate, setFromDate] = useState('2021-12-20');
+  const [toDate, setToDate] = useState("2022-01-31");
+
+  // top 10, 20
+  const [limit, setLimit] = useState(10);
+
+  // unit used for chart data split by day/ month/ year
+  const [unit, setUnit] = useState("day");
+
+  // category id to view to item by root category
+  // should be selected by a drop down and pass as category_id
+  const [categoryId, setCategoryId] = useState(4);
+
+  // response data state
+  const [overview, setOverview] = useState({})
+  const [topItemByCategory, setTopItemByCategory] = useState([])
+  
+  const [revenue, setRevenue] = useState({})
+  const [purchase, setPurchase] = useState({})
+  const [captital, setCapital] = useState({})
+  const [profit, setProfit] = useState({})
+
+  const [topData, setTopData] = useState({})
+
+  useEffect(() => {
+    const fetchReports = async () => {
+
+      // overview: number of employees, customers, suppliers, in money, out money
+      const overViewRes = await storeApi.getReportOverview(store_uuid, fromDate, toDate);
+      setOverview(overViewRes.data)
+
+      // top 'limit' of items by category
+      const topItemByCategoryRes = await storeApi.getReportProduct(store_uuid, fromDate, toDate, limit, categoryId);
+      setTopItemByCategory(topItemByCategoryRes);
+
+      // revenue, captital, profit, purchase data by 'unit'
+      const revenueRes = await storeApi.getReportRevenue(
+        store_uuid,
+        fromDate,
+        toDate,
+        unit
+      );
+      setRevenue(revenueRes)
+
+      const captitalRes = await storeApi.getReportCaptital(
+        store_uuid,
+        fromDate,
+        toDate,
+        unit
+      );
+      setCapital(captitalRes)
+
+      const profitRes = await storeApi.getReportProfit(
+        store_uuid,
+        fromDate,
+        toDate,
+        unit
+      );
+      setProfit(profitRes);
+
+      const purchaseRes = await storeApi.getReportPurchase(
+        store_uuid,
+        fromDate,
+        toDate,
+        unit
+      );
+      setPurchase(purchaseRes);
+
+      // top employees, customers, products, suppliers,...
+      const topDataRes = await storeApi.getReportTop(
+        store_uuid,
+        fromDate,
+        toDate,
+        limit
+      );
+      setTopData(topDataRes)
+      // uncomment here
+      setIsLoaded(true)
+    }
+    console.log("overview")
+    console.log(overview)
+    console.log(topItemByCategory)
+    console.log(revenue)
+    console.log(topData)
+
+    fetchReports()
+    
+  }, [])
+  
 
     useEffect(() => {
       customerApi.getCustomers(store_uuid)
@@ -140,20 +231,20 @@ const Report = () => {
     });
     
     
-    const fetchReport = async (period) => {
-      const res = await storeApi.getReport(store_uuid, period);
-      console.log(res.data);
-      setData(res.data)
-    };
+    // const fetchReport = async (period) => {
+    //   const res = await storeApi.getReport(store_uuid, period);
+    //   console.log(res.data);
+    //   setData(res.data)
+    // };
   
-    useEffect(() => {
-      fetchReport(7)
-    }, [])
+    // useEffect(() => {
+    //   fetchReport(7)
+    // }, [])
 
     // console.log("data")
     // console.log(data)
 
-    return (
+    return isLoaded && (
       <Card className={classes.root}>
              {/* 1. */}
             <div className={classes.row}>
@@ -211,7 +302,7 @@ const Report = () => {
            {/* <Divider className={classes.divider}/> */}
         
            {/* 2. OverallReport  */}
-            <OverallReport  data={data}/>
+            <OverallReport  data={overview}/>
            
             {/* 3.  */}
             <Grid container spacing={3} >

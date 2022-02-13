@@ -17,18 +17,24 @@ import ScheduleHead from './ScheduleHead/ScheduleHead';
 import ScheduleToolBar from './ScheduleToolBar/ScheduleToolBar';
 import {HeadWeek,ShiftWeekBox} from './ScheduleView/WeekView/WeekView'
 import {HeadDay,ShiftDayBox} from './ScheduleView/DayView/DayView'
-import {HeadMonth,ShiftMonthBox} from './ScheduleView/MonthView/MonthView'
-
+import {HeadMonth,ShiftMonthBox} from './ScheduleView/MonthView/MonthView';
+import scheduleApi from '../../../api/scheduleApi';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
+import AddShiftPopup from './AddShiftPopup/AddShiftPopup';
+import AddSchedulePopup from './AddSchedulePopup/AddSchedulePopup';
 import ScheduleDetail from './ScheduleDetail/ScheduleDetail';
 const Schedule = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
-
+    const [addShiftOpen, setAddShiftOpen] = React.useState(false)
+    const [addScheduleOpen, setAddScheduleOpen] = React.useState(false);
+    const [reload, setReload] = React.useState(false)
 
     // A. LOAD DATA from api
     // shiftInfo,schedule,...
     // load here ...........
-    const [shiftInfo, setShiftInfo] = React.useState(shiftInfoWeek);
+    const [shiftInfo, setShiftInfo] = React.useState([]);
     // B. Xu ly sate
     //// 1. Tool bar
     // 1.1 choose branch
@@ -48,23 +54,62 @@ const Schedule = () => {
     // 2.2 choose mode day-week-month
     const [selectedBtn, setSelectedBtn] = React.useState(1);
 
+    // api to get schedule
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
+    const branch_uuid = info.branch.uuid;
+
+    React.useEffect(() => {
+      let selected_date = moment
+        .unix(selectedDate.getTime() / 1000)
+        .format("YYYY-MM-DD", { trim: false });
+      let mode = "";
+      switch (selectedBtn) {
+        case 0:
+          mode = "day";
+          break;
+        case 1:
+          mode = "week";
+          break;
+        case 2:
+          mode = "month";
+          break;
+      }
+
+      const fetchSchedule = async () => {
+        try {
+          const response = await scheduleApi.getSchedule(
+            store_uuid,
+            branch_uuid,
+            selected_date,
+            mode
+          );
+          setShiftInfo(response.data);
+          console.log(response.data);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchSchedule();
+    }, [selectedBtn, selectedDate, branch_uuid, reload]);
+
     const handleModeBtn = (mode) =>{
         setSelectedBtn(mode)
         
         // re-load data  
         // cai nay để tạm thôi
-        if (mode === 0){
-            setShiftInfo(shiftInfoWeek) //Day
-        }else if (mode === 1){
-            setShiftInfo(shiftInfoWeek) //Week
-        }else{
-            setShiftInfo(shiftInfoMonth) //Week
-        }
+        // if (mode === 0){
+        //     setShiftInfo(shiftInfoWeek) //Day
+        // }else if (mode === 1){
+        //     setShiftInfo(shiftInfoWeek) //Week
+        // }else{
+        //     setShiftInfo(shiftInfoMonth) //Week
+        // }
     }
 
 
     // 2.3 onClickSchedule (shift- day)
-    const [clickSchedule, setClickSchedule] = React.useState(shiftInfoWeek[0]);
+    const [clickSchedule, setClickSchedule] = React.useState({});
     //popUpDetail
     const [open, setOpen] = React.useState(false);
     const handlePopUp = () => {
@@ -87,17 +132,20 @@ const Schedule = () => {
 
              {/* 1. search + choose branch */}
             <ScheduleHead />
+
+            {addShiftOpen && <AddShiftPopup addShiftOpen={addShiftOpen} handleClose={() => setAddShiftOpen(false)} reload={() => setReload(!reload)}/> }
+            {addScheduleOpen && <AddSchedulePopup addScheduleOpen={addScheduleOpen} handleClose={() => setAddScheduleOpen(false)} reload={() => setReload(!reload)}/>}
              
             <Divider className={classes.divider}/>
 
             {/* 2. choose mode + choose date + add schedule */}
-            <ScheduleToolBar selectedBtn={selectedBtn}  handleModeBtn={handleModeBtn}setSelectedBtn={setSelectedBtn} selectedDate={selectedDate} handleDateChange={handleDateChange}anchorEl={anchorEl} setAnchorEl={setAnchorEl}/>
+            <ScheduleToolBar openAddSchedule={() =>  setAddScheduleOpen(true)} selectedBtn={selectedBtn}  handleModeBtn={handleModeBtn}setSelectedBtn={setSelectedBtn} selectedDate={selectedDate} handleDateChange={handleDateChange}anchorEl={anchorEl} setAnchorEl={setAnchorEl}/>
             {(()=>{
                 switch(selectedBtn){
                     case 0:  
                     return(
                         <>
-                        <HeadDay selectedDate={selectedDate} /> 
+                        <HeadDay selectedDate={selectedDate} openAddShift={() => setAddShiftOpen(true)}/> 
                         {shiftInfo.map(shift =>{
                             return (
                                 // !!!! shift with schedultList have only Select Date
@@ -110,7 +158,7 @@ const Schedule = () => {
                         return(
                             <>
                             <TableContainer>
-                                <HeadWeek selectedDate={selectedDate} />  
+                                <HeadWeek selectedDate={selectedDate} openAddShift={() => setAddShiftOpen(true)} />  
                                 {shiftInfo.map(shift =>{
                                     return (
                                         <ShiftWeekBox selectedDate={selectedDate}  shift={shift} handlePopUp={handlePopUp} setClickSchedule={setClickSchedule} mode={mode}/>    
@@ -127,7 +175,7 @@ const Schedule = () => {
                         return(
                             <>
                             <TableContainer>
-                                <HeadMonth selectedDate={selectedDate} /> 
+                                <HeadMonth selectedDate={selectedDate} openAddShift={() => setAddShiftOpen(true)} /> 
                                 {shiftInfo.map(shift =>{
                                     return (
                                         <ShiftMonthBox selectedDate={selectedDate}  shift={shift} modeMonth={modeMonth}/>    
@@ -143,7 +191,7 @@ const Schedule = () => {
                 }
             })()}  
 
-            <ScheduleDetail open={open} handlePopUp={handlePopUp} clickSchedule={clickSchedule}/>
+            {/* <ScheduleDetail open={open} handlePopUp={handlePopUp} clickSchedule={clickSchedule}/> */}
             {/* Con pop up check attendance cho employee cu the */}
 
             

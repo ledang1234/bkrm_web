@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
@@ -19,6 +19,7 @@ import { useReactToPrint } from "react-to-print";
 
 //import api
 import productApi from "../../../api/productApi";
+import storeApi from "../../../api/storeApi";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -36,6 +37,11 @@ import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 import { useSelector } from "react-redux";
 
+import * as excel from "../../../assets/constant/excel";
+
+import * as xlsx from "xlsx";
+import ProductImportPopper from "../../../components/Popper/ProductImportPopper";
+
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);
@@ -43,12 +49,6 @@ const Inventory = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
-
-<<<<<<< Updated upstream
-=======
-
-
-
 
   const importProductByJSON = async (jsonData) => {
     try {
@@ -72,7 +72,6 @@ const Inventory = () => {
     }
   };
 
->>>>>>> Stashed changes
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -81,6 +80,7 @@ const Inventory = () => {
           branch_uuid
         );
         setProductList(response.data);
+        console.log(response.data);
       } catch (err) {
         console.log(err);
       }
@@ -90,6 +90,22 @@ const Inventory = () => {
       setReload(false);
     }
   }, [reload, store_uuid, branch_uuid]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await productApi.getProductsOfBranch(
+          store_uuid,
+          branch_uuid
+        );
+
+        setProductList(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchProducts();
+  }, [branch_uuid]);
 
   // useEffect(() => {
   //   const identifier = setTimeout(async () => {
@@ -106,21 +122,12 @@ const Inventory = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  //// 1. Add pop up + noti
-  //add
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = (status) => {
+  const handleClose = () => {
     setOpen(false);
-    setAddStatus(status);
-    if (status === "Success") {
-      setReload(true);
-      setOpenBar(true);
-    } else if (status === "Fail") {
-      setOpenBar(true);
-    }
   };
   //category
   const [openCategory, setOpenCategory] = React.useState(false);
@@ -140,8 +147,6 @@ const Inventory = () => {
   const handleCloseBar = () => {
     setOpenBar(false);
   };
-
-  //// 2. Table
 
   //collapse
   const [openRow, setRowOpen] = React.useState(null);
@@ -164,28 +169,31 @@ const Inventory = () => {
     // setOrderBy(property);
   };
 
-
   // toolbar
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
+    content: () => componentRef.current,
   });
 
-<<<<<<< Updated upstream
-=======
+
   /// import product by file
   const [openProductImportPopper, setOpenProductImportPopper] = useState(false);
   const [isLoadingProduct, setIsLoadingProduct] = useState(false);
   const [productErrors, setProductErrors] = useState([]);
 
 
->>>>>>> Stashed changes
   return (
     <Card className={classes.root}>
+      <ProductImportPopper
+        open={openProductImportPopper}
+        loading={isLoadingProduct}
+        errors={productErrors}
+        handleClose={() => setOpenProductImportPopper(false)}
+      />
       <Grid container direction="row" justifyContent="space-between">
         {/* 1. ADD POP UP */}
         <Typography className={classes.headerTitle} variant="h5">
-          Kho hàng
+          Sản phẩm
         </Typography>
         <Grid className={classes.btngroup}>
           <Tooltip title="Xem danh mục">
@@ -211,7 +219,11 @@ const Inventory = () => {
 
       {/* Popup add */}
       <Category open={openCategory} handleClose={handleCloseCategory} />
-      <AddInventory open={open} handleClose={handleClose} />
+      <AddInventory
+        open={open}
+        handleClose={handleClose}
+        setReload={setReload}
+      />
       {/* Noti */}
       <SnackBar
         openBar={openBar}
@@ -225,71 +237,78 @@ const Inventory = () => {
       {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
       <ToolBar
         dataTable={productList}
-        tableType={TableType.INVENTORY} 
+        tableType={TableType.INVENTORY}
         handlePrint={handlePrint}
         handleSearchValueChange={setSearchValue}
+        hasImport={true}
+        importProductByJSON={importProductByJSON}
+        excel_head={excel.header_product}
+        excel_data={excel.excel_data_product}
+        excel_name={excel.excel_name_product}
       />
 
       {/* 3. TABLE */}
-      <TableWrapper >
-        <div >
-          <TableHeader
-            classes={classes}
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            headerData={HeadCells.InventoryHeadCells}
-          />
-          <TableBody >
-            {productList.map((row, index) => {
-              return (
-                <InventoryTableRow
-                  key={row.uuid}
-                  row={row}
-                  setReload={setReload}
-                  openRow={openRow}
-                  handleOpenRow={handleOpenRow}
-                />
-              );
-            })}
-          </TableBody>
-        </div>
+      <TableWrapper>
+        <TableHeader
+          classes={classes}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+          headerData={HeadCells.InventoryHeadCells}
+        />
+        <TableBody>
+          {productList.map((row, index) => {
+            return (
+              <InventoryTableRow
+                key={row.uuid}
+                row={row}
+                setReload={setReload}
+                openRow={openRow}
+                handleOpenRow={handleOpenRow}
+              />
+            );
+          })}
+        </TableBody>
       </TableWrapper>
-      <div  style={{display:'none'}} >
-        <div ref={componentRef}  >
-        <ComponentToPrint  productList={productList} classes={classes}/>
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ComponentToPrint productList={productList} classes={classes} />
         </div>
-        
       </div>
     </Card>
   );
 };
 export default Inventory;
 
-const ComponentToPrint = ({productList,classes}) =>{
+const ComponentToPrint = ({ productList, classes }) => {
   return (
-      <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Kho hàng</Typography>
-        <div >
-          <TableHeader
-                classes={classes}
-                headerData={HeadCells.InventoryHeadCells}
-              />
-              <TableBody >
-                {productList.map((row, index) => {
-                  return (
-                    <InventoryTableRow
-                      key={row.uuid}
-                      row={row}
-                    
-                    />
-                  );
-                })}
-              </TableBody>
-        </div>
-  </div>
-  )
-}
+    <div>
+      <Typography
+        style={{
+          flexGrow: 1,
+          textAlign: "center",
+          fontSize: 25,
+          fontWeight: 500,
+          margin: 30,
+          color: "#000",
+        }}
+      >
+        Kho hàng
+      </Typography>
+      <div>
+        <TableHeader
+          classes={classes}
+          headerData={HeadCells.InventoryHeadCells}
+        />
+        <TableBody>
+          {productList.map((row, index) => {
+            return <InventoryTableRow key={row.uuid} row={row} />;
+          })}
+        </TableBody>
+      </div>
+    </div>
+  );
+};
 
 // PRINT làm lại sau
 

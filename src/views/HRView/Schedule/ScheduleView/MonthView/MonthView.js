@@ -11,7 +11,7 @@ import AddIcon from '@material-ui/icons/Add';
 import clsx from 'clsx'
 import { amber, pink,green } from '@material-ui/core/colors';
 import {Dot} from '../../EmployeeItem/EmployeeItemAva'
-export const HeadMonth =({selectedDate}) =>{
+export const HeadMonth =({selectedDate, openAddShift}) =>{
     const theme = useTheme();
     const classes = useStyles(theme);
     var firstDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
@@ -26,7 +26,7 @@ export const HeadMonth =({selectedDate}) =>{
                         <Typography variant="h4" style={{fontSize:16, marginLeft:5, marginTop:10}} >
                             Ca làm việc
                         </Typography>
-                        <ButtonBase   className={classes.addBtn} style={{marginTop:10,marginLeft:25 ,marginRight:10}} >
+                        <ButtonBase onClick={openAddShift}  className={classes.addBtn} style={{marginTop:10,marginLeft:25 ,marginRight:10}} >
                             <Tooltip title='Thêm ca'>
                                 <AddIcon  size="small" className={classes.addShiftIcon} />
                             </Tooltip>
@@ -71,7 +71,7 @@ export const ShiftMonthBox = ({shift,selectedDate,handleChangeModeMonth,modeMont
         }, {});
       };
       
-   var employeeGroup = groupBy(shift.scheduleList, 'employeeId')
+   var employeeGroup = groupBy(shift.schedules, 'employee_id')
       
     function getColor (day,dateGroup, month, year) {
             if(dateGroup[`${day}/${month}/${year}`] !== undefined) {
@@ -99,7 +99,7 @@ export const ShiftMonthBox = ({shift,selectedDate,handleChangeModeMonth,modeMont
                         {shift.name}
                     </Typography>
                     <Typography variant="body2" style={{marginLeft:5, marginTop:5}} >
-                        {shift.fromTime} - {shift.toTime}
+                        {shift.start_time} - {shift.end_time}
                     </Typography>
                     {/* Con thieu EDIT _ DELETE */}
                 </Box>
@@ -114,7 +114,7 @@ export const ShiftMonthBox = ({shift,selectedDate,handleChangeModeMonth,modeMont
                             <Grid  container  direction="row" alignItems="center" >
                                 <Box border={1} borderLeft={0}  borderTop={0}style={{borderColor:grey[300],width:160,height:55}} > 
                                     <Typography variant="h4" style={{fontSize:16, marginLeft:5, marginTop:10,width:150,}} >
-                                        {employeeGroup[key][0].name}
+                                        {employeeGroup[key][0].employee_name}
                                     </Typography>
                                     <Typography variant="body2" style={{fontSize:14, marginLeft:5,}} >
                                         {/* {employeeGroup[key][0].role} */}

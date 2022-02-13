@@ -9,7 +9,7 @@ import InvoiceReturnDetail from './InvoiceReturnDetail/InvoiceReturnDetail';
 function InvoiceReturnTableRow(props) {
   const { row, handleOpenRow, openRow } = props;
   const classes = useRowStyles();
-
+  console.log(row);
   return (
     <>
       {/* ROW */}
@@ -24,6 +24,9 @@ function InvoiceReturnTableRow(props) {
         <TableCell align="left">{row.branch_name}</TableCell>
         <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
         <TableCell align="right" className={classes.fontName}>{row.total_amount}</TableCell>
+        {/* <TableCell align="right" ></TableCell>
+        <TableCell align="right" ></TableCell> */}
+        
       </TableRow>
 
       {/* DETAIL */}

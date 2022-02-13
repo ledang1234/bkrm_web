@@ -14,6 +14,18 @@ export const VNDFormat = (props) => {
     />
   )
 }
+export const ThousandFormat = (props) => {
+  return (
+    <NumberFormat
+      {...props}
+      thousandSeparator
+      isNumericString
+      displayType="text"
+      type="text"
+      suffix=""
+    />
+  )
+}
 
 function VNDFormatCustom(props) {
   const { inputRef, onChange, ...other } = props;

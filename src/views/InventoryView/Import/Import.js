@@ -3,34 +3,34 @@ import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { grey } from "@material-ui/core/colors";
-<<<<<<< Updated upstream
 
-=======
+import AddIcon from "@material-ui/icons/Add";
+
+
+
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
 import {ImportReceiptPrinter} from "../../../components/ReceiptPrinter/ReceiptPrinter"
->>>>>>> Stashed changes
 //import library
 import {
   Grid,
   Card,
   Box,
   TableContainer,
-  CardContent,
-  CardMedia,
-  CardActionArea,
   FormControlLabel,
   Switch,
-  Menu,
-  MenuItem,
   ListItem,
-  IconButton,
   TableBody,
   Typography,
+  ButtonBase,
+  Avatar,
+  Tooltip,
+  TextField
 } from "@material-ui/core";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
+import SearchBarCode from "../../../components/SearchBar/SearchBarCode"
 
 //import project
 //rieng
@@ -53,6 +53,9 @@ import update from "immutability-helper";
 import { useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import moment from "moment";
+import AddInventory from "../Inventory/AddInventory/AddInventory";
+import supplierApi from "../../../api/supplierApi";
+
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
@@ -64,6 +67,7 @@ const Import = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch = info.branch;
+
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -96,8 +100,9 @@ const Import = () => {
   // 1.Cart
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-
+  const [addProduct, setAddProduct] = useState(false);
   const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
+  const [suppliers, setSuppliers] = React.useState([]);
 
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
@@ -108,6 +113,15 @@ const Import = () => {
   useEffect(() => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
+
+  useEffect(() => {
+    const fetchSupplier = async () => {
+      const response = await supplierApi.getSuppliers(store_uuid);
+      setSuppliers(response.data);
+    };
+
+    fetchSupplier();
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -129,7 +143,7 @@ const Import = () => {
     setCartList([
       ...cartList,
       {
-        supplier: null,
+        supplier: suppliers[0],
         cartItem: [],
         total_amount: "0",
         paid_amount: "0",
@@ -146,7 +160,7 @@ const Import = () => {
     if (cartList.length === 0) {
       setCartList([
         {
-          supplier: null,
+          supplier: suppliers[0],
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -154,6 +168,7 @@ const Import = () => {
           payment_method: "cash",
         },
       ]);
+      setSelectedIndex(0);
     } else {
       setCartList(cartList);
     }
@@ -268,6 +283,7 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { paid_amount: { $set: amount } },
     });
+
     setCartList(newCartList);
   };
 
@@ -294,6 +310,13 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { total_amount: { $set: total } },
     });
+
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        paid_amount: { $set: total - cartList[selectedIndex].discount },
+      },
+    });
+
     setCartList(newCartList);
   };
 
@@ -304,54 +327,23 @@ const Import = () => {
     // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
     //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
-    let d = moment.now() / 1000;
-
-    let importTime = moment
-      .unix(d)
-      .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-
-    let body = {
-      supplier_uuid: cart.supplier.uuid,
-      total_amount: cart.total_amount.toString(),
-      payment_method: cart.payment_method,
-      paid_amount: cart.paid_amount,
-      discount: cart.discount.toString(),
-      status:
-        Number(cart.total_amount) - Number(cart.discount) >=
-        Number(cart.paid_amount)
-          ? "closed"
-          : "debt",
-      details: cart.cartItem,
-      import_date: importTime,
-    };
-    console.log(importTime);
-
-    try {
-      let res = await purchaseOrderApi.addInventory(
-        store_uuid,
-        branch.uuid,
-        body
-      );
-      setSnackStatus({
-        style: "success",
-        message: "Nhập hàng thành công: " + res.data.purchase_order_code,
-      });
+    var emptyCart = cart.cartItem.length === 0;
+    if (emptyCart) {
       setOpenSnack(true);
-      handleDelete(selectedIndex);
-    } catch (err) {
       setSnackStatus({
         style: "error",
-        message: "Nhập hàng thất bại! ",
+        message: "Giỏ hàng trống",
       });
-<<<<<<< Updated upstream
+
       setOpenSnack(true);
       console.log(err);
-=======
+
     } else {
       let d = moment.now() / 1000;
       let importTime = moment
         .unix(d)
-        .format("DD/MM/YYY HH:mm", { trim: false });
+        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
 
       let body = {
         supplier_uuid: cart.supplier?.uuid,
@@ -362,6 +354,7 @@ const Import = () => {
         status:
           Number(cart.total_amount) - Number(cart.discount) >=
           Number(cart.paid_amount)
+
             ? "debt"
             : "closed",
         details: cart.cartItem,
@@ -380,9 +373,11 @@ const Import = () => {
           message: "Nhập hàng thành công: " + res.data.purchase_order_code,
         });
         setOpenSnack(true);
-        // handlePrint();
+
+        handlePrint();
         handleDelete(selectedIndex);
         
+
       } catch (err) {
         setSnackStatus({
           style: "error",
@@ -391,9 +386,7 @@ const Import = () => {
         setOpenSnack(true);
         console.log(err);
       }
-      
-      
->>>>>>> Stashed changes
+
     }
   };
 
@@ -406,6 +399,15 @@ const Import = () => {
   console.log(order)
 
 
+
+    }
+  };
+
+  const [barcodeChecked, setBarcodeChecked] = useState(true)
+  const handleSwitchChange = () => {
+    setBarcodeChecked(!barcodeChecked)
+  }
+
   return (
     <Grid
       container
@@ -414,12 +416,16 @@ const Import = () => {
       alignItems="center"
       spacing={2}
     >
+      <AddInventory
+        open={addProduct}
+        handleClose={() => setAddProduct(false)}
+        setReload={() => { }}
+      />{" "}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
         open={openSnack}
         status={snackStatus}
       />
-
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={8}>
         <Card className={classes.root}>
@@ -462,10 +468,43 @@ const Import = () => {
                   </ListItem>
                 </Grid>
                 <Grid>
-                  {/* 1.1.3. Search */}
-                  <SearchProduct
-                    handleSearchBarSelect={handleSearchBarSelect}
-                  />
+                  <Grid container alignItems="center">
+                    <Grid item>
+                      <FormControlLabel
+                        control={<Switch
+                          checked={barcodeChecked} onChange={handleSwitchChange}
+                          color="primary" />}
+                        label={"Dùng mã vạch"}
+                      />
+                    </Grid>
+                    <Grid item>
+                      {
+                        barcodeChecked ?
+                          <SearchBarCode handleSearchBarSelect={handleSearchBarSelect}/> :
+                          <SearchProduct
+                            handleSearchBarSelect={handleSearchBarSelect}
+                          />
+                      }
+                    </Grid>
+                    <Grid item>
+                      <ButtonBase
+                        sx={{ borderRadius: "1px" }}
+                        onClick={() => {
+                          setAddProduct(true);
+                        }}
+                        style={{ marginLeft: 10 }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          className={classes.headerAvatar}
+                        >
+                          <Tooltip title="Thêm sản phẩm">
+                            <AddIcon stroke={1.5} size="1.3rem" />
+                          </Tooltip>
+                        </Avatar>
+                      </ButtonBase>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
 
@@ -513,7 +552,6 @@ const Import = () => {
           </Box>
         </Card>
       </Grid>
-
       {/* 2.SUMMARY CARD (right) */}
       <Grid item xs={12} sm={4} className={classes.root}>
         <Card className={classes.root}>
@@ -532,6 +570,7 @@ const Import = () => {
                 currentSupplier={cartList[selectedIndex].supplier}
                 mode={mode}
                 currentBranch={branch}
+                suppliers={suppliers}
               />
             ) : (
               <ImportSummary

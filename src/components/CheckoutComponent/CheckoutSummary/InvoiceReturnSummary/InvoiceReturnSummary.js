@@ -87,7 +87,8 @@ function InvoiceReturnSummary({
 
         <Grid container direction="row" justifyContent="space-between" className={classes.marginBox}>
           <Typography variant="h5">
-            Số lượng sản phẩm trả
+            {/* Số lượng sản phẩm trả */}
+            Tổng số mặt hàng trả
           </Typography>
           <Typography variant="body2">
             {data.details.filter((item) => item.returnQuantity !== 0).length}
@@ -96,7 +97,7 @@ function InvoiceReturnSummary({
 
         <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>
           <Typography variant="h5">
-            Tổng tiền gốc hàng trả
+            Tổng tiền gốc
           </Typography>
           <Typography variant="body2">
             {data.order_total_amount}
@@ -105,7 +106,7 @@ function InvoiceReturnSummary({
 
         <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>
           <Typography variant="h5">
-            Tổng đơn trả
+            Tổng tiền trả
           </Typography>
           <Typography variant="body2">
             {data.total_amount}

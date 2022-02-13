@@ -32,6 +32,8 @@ const InventoryTableRow = (props) => {
         )}
       >
         <TableCell align="left">{row.bar_code}</TableCell>
+        {/* <TableCell align="left">{ row.prooduct_code}</TableCell> */}
+
         <TableCell align="left" style={{ minWidth: 200 }}>
           <ListItem
             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
@@ -44,11 +46,11 @@ const InventoryTableRow = (props) => {
             <Typography className={classes.fontName}>{row.name}</Typography>
           </ListItem>
         </TableCell>
-        <TableCell align="left">{row.category.name}</TableCell>
+        <TableCell align="left">{row.category?.name}</TableCell>
         <TableCell align="right"><VNDFormat value={row.list_price} /></TableCell>
         <TableCell align="right"><VNDFormat value={row.standard_price} /></TableCell>
         <TableCell align="center">
-          <FormatedProductStatus quantity={row.branch_quantity} lowStock={row.min_reorder_quantity}/>
+          <FormatedProductStatus quantity={row.branch_quantity} lowStock={row.min_reorder_quantity} />
         </TableCell>
         <TableCell align="right" className={classes.fontName}>
           {row.branch_quantity}

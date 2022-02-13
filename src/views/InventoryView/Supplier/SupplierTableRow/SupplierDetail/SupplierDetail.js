@@ -62,6 +62,7 @@ const SupplierDetail = (props) => {
   };
 
   const handleDeleteSupplier = async () => {
+    console.log(store_uuid, row.uuid);
     try {
       const response = await supplierApi.deleteSupplier(store_uuid, row.uuid);
       dispatch(statusAction.successfulStatus("Xóa thành công"));

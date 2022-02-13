@@ -15,6 +15,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  FormHelperText,
   Dialog,
 } from "@material-ui/core";
 import { useFormik } from "formik";
@@ -22,8 +23,10 @@ import { useFormik } from "formik";
 //import project
 import NumberFormatCustom from "../../../../components/TextField/NumberFormatCustom";
 import MultipleSelect from "../../../../components/MultipleSelect/MultipleSelect";
-import { EmailRounded } from "@material-ui/icons";
+import { EmailRounded, YouTube } from "@material-ui/icons";
+import branchApi from "../../../../api/branchApi";
 
+import * as Yup from "yup";
 // api
 import { useSelector } from "react-redux";
 import employeeApi from "../../../../api/employeeApi";
@@ -49,11 +52,12 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-let choices = [
-  { key: "manage-employees", value: "Nhân sự" },
-  { key: "manage-orders", value: "Bán hàng" },
-  { key: "manage-purchase-orders", value: "Nhập hàng" },
-  { key: "manage-purchase-returns", value: "Trả hàng" },
+let permissionChoices = [
+  { id: 1, name: "inventory", description: "Kho hàng" },
+  { id: 2, name: "employee", description: "Nhân sự" },
+  { id: 3, name: "sales", description: "Bán hàng" },
+  { id: 4, name: "product", description: "Sản phẩm" },
+  { id: 5, name: "report", description: "Báo cáo" },
 ];
 
 const EditEmployee = ({ handleClose, open, employee }) => {
@@ -61,6 +65,8 @@ const EditEmployee = ({ handleClose, open, employee }) => {
   const classes = useStyles(theme);
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+
+  const [branches, setBranches] = React.useState([]);
 
   // đổi thành state sau (price format)
   const [values, setValues] = React.useState({
@@ -78,12 +84,27 @@ const EditEmployee = ({ handleClose, open, employee }) => {
 
   useEffect(() => {}, [employee]);
 
+  React.useEffect(() => {
+    const loadBranches = async () => {
+      try {
+        const response = await branchApi.getAllBranches(store_uuid);
+        console.log(response.data);
+        setBranches(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loadBranches();
+  }, [store_uuid]);
+
+  const [imageToShow, setImageToShow] = React.useState(employee.img_url);
+  const [image, setImage] = React.useState(null);
   const formik = useFormik({
     initialValues: {
       uuid: employee.uuid,
       name: employee.name,
       phone: employee.phone,
-      permissions: employee.permissions,
+      permissions: employee.permissions.map((p) => p.id),
       email: employee.email,
       salary: employee.salary,
       salary_type: employee.salary_type,
@@ -91,17 +112,43 @@ const EditEmployee = ({ handleClose, open, employee }) => {
       gender: employee.gender,
       date_of_birth: employee.date_of_birth,
       address: employee.address,
+      branches: employee.branches.map((b) => b.id),
     },
-    onSubmit: async (values) => {
-      console.log(values);
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required("Bắt buộc!"),
+      phone: Yup.string().required("Bắt buộc!"),
+      branches: Yup.array().min(1, "Ít nhất một chi nhánh"),
+      permissions: Yup.array().min(1, "Ít nhất một chức năng"),
+    }),
+
+    onSubmit: async (values, actions) => {
+      let formData = new FormData();
+
+      for (let value in values) {
+        if (value === "permissions") {
+          for (var i = 0; i < values["permissions"].length; i++) {
+            formData.append("permissions[]", values["permissions"][i]);
+          }
+        } else if (value === "branches") {
+          for (var i = 0; i < values["branches"].length; i++) {
+            formData.append("branches[]", values["branches"][i]);
+          }
+        } else {
+          formData.append(value, values[value]);
+        }
+      }
+
+      formData.append("image", image);
+
+      console.log(formData);
+
       try {
         const response = await employeeApi.updateEmployee(
           store_uuid,
           employee.uuid,
-          values
+          formData
         );
         handleClose("Success");
-        console.log(response.status);
       } catch (error) {
         handleClose("Failed");
       }
@@ -129,6 +176,44 @@ const EditEmployee = ({ handleClose, open, employee }) => {
 
       <DialogContent>
         <div className={classes.root}>
+          <Grid container direction="row">
+            <Avatar
+              alt="Remy Sharp"
+              className={classes.ava}
+              src={imageToShow}
+            />
+            <input
+              accept="image/*"
+              className={classes.input}
+              id="contained-button-file"
+              multiple
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={(event) => {
+                setImage(event.target.files[0]);
+
+                // read the selected file and display on the avata
+                var file = event.target.files[0];
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                  setImageToShow(reader.result);
+                };
+
+                reader.readAsDataURL(file);
+              }}
+            />
+            <label htmlFor="contained-button-file">
+              <Button
+                variant="contained"
+                component="span"
+                style={{ height: 22, textTransform: "none", marginLeft: 20 }}
+              >
+                Chọn ảnh
+              </Button>
+            </label>
+          </Grid>
+
           <Grid
             container
             direction="row"
@@ -146,6 +231,10 @@ const EditEmployee = ({ handleClose, open, employee }) => {
                 // name="name"
                 onChange={formik.handleChange}
               />
+
+              {formik.errors.name && formik.touched.name && (
+                <FormHelperText error>{formik.errors.name}</FormHelperText>
+              )}
 
               <TextField
                 id="date"
@@ -206,6 +295,10 @@ const EditEmployee = ({ handleClose, open, employee }) => {
                 name="phone"
                 onChange={formik.handleChange}
               />
+              {formik.errors.phone && formik.touched.phone && (
+                <FormHelperText error>{formik.errors.phone}</FormHelperText>
+              )}
+
 
               <TextField
                 id="outlined-basic"
@@ -276,10 +369,80 @@ const EditEmployee = ({ handleClose, open, employee }) => {
               />
               {/* <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/> */}
 
-              <MultipleSelect
-                choices={choices}
-                selected={formik.values.permissions}
-              />
+              <FormControl
+                className={classes.formControl}
+                fullWidth
+                size="small"
+                variant="outlined"
+                style={{ marginTop: 8 }}
+              >
+                <InputLabel id="branchSelect">Chức năng</InputLabel>
+                <Select
+                  multiple
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  name="permissions"
+                  value={formik.values.permissions}
+                  renderValue={(selected) =>
+                    selected
+                      .map((permission) => {
+                        return permissionChoices.find(
+                          (p) => p.id === permission
+                        )?.description;
+                      })
+                      .join(", ")
+                  }
+                  onChange={formik.handleChange}
+                >
+                  {permissionChoices.map((branch) => (
+                    <MenuItem key={branch.name} value={branch.id}>
+                      {branch.description}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {formik.errors.permissions && formik.touched.permissions && (
+                <FormHelperText error>{formik.errors.permissions}</FormHelperText>
+              )}
+              <FormControl
+                className={classes.formControl}
+                fullWidth
+                size="small"
+                variant="outlined"
+                style={{ marginTop: 8 }}
+              >
+                <InputLabel id="branchSelect">Chi nhánh </InputLabel>
+                <Select
+                  multiple
+                  variant="outlined"
+                  fullWidth
+                  id="branches"
+                  name="branches"
+                  onChange={formik.handleChange}
+                  size="small"
+                  value={formik.values.branches}
+                  renderValue={(selected) =>
+                    selected
+                      .map((empWorkBranch) => {
+                        return branches.find(
+                          (branch) => branch.id === empWorkBranch
+                        )?.name;
+                      })
+                      .join(", ")
+                  }
+                >
+                  {branches.map((branch) => (
+                    <MenuItem key={branch.name} value={branch.id}>
+                      {branch.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+
+                {formik.errors.branches && formik.touched.branches && (
+                <FormHelperText error>{formik.errors.branches}</FormHelperText>
+              )}
+              </FormControl>
             </Grid>
           </Grid>
         </div>

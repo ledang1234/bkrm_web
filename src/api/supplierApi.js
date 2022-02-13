@@ -2,13 +2,17 @@ import axiosClient from "./axiosClient";
 const supplierApi = {
   createSupplier: (storeUuid, body) => {
     const url = `stores/${storeUuid}/suppliers`;
-    return axiosClient.post(url, body);
+    return axiosClient.post(url, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
-  getSuppliers: (storeUuid, ) => {
+  getSuppliers: (storeUuid) => {
     const url = `/stores/${storeUuid}/suppliers`;
     return axiosClient.get(url);
   },
-  
+
   getSupplier: (storeUuid, supplierUuid) => {
     const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
     return axiosClient.get(url);
@@ -16,6 +20,14 @@ const supplierApi = {
   deleteSupplier: (storeUuid, supplierUuid) => {
     const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
     return axiosClient.delete(url);
+  },
+  inactiveSupplier: (storeUuid, supplierUuid) => {
+    const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
+    return axiosClient.put(url, { status: "inactive" });
+  },
+  activeSupplier: (storeUuid, supplierUuid) => {
+    const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
+    return axiosClient.put(url, { status: "active" });
   },
 };
 export default supplierApi;

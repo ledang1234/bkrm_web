@@ -194,7 +194,7 @@ const inventoryModule = {
     },
     {
       id: 5,
-      title: "Kho Hàng",
+      title: "Sản phẩm",
       url: "/home/inventory/inventory",
       icon: inventoryIcon,
       icon1: icons.ThumbUpAltOutlinedIcon,

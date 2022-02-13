@@ -10,8 +10,8 @@ import {
 import React, { useEffect, useState } from "react";
 import ModalWrapper from "../../../../components/Modal/ModalWrapper";
 import productApi from "../../../../api/productApi";
-import { useSelector } from "react-redux";
-
+import { useSelector,useDispatch } from "react-redux";
+import {statusAction} from "../../../../store/slice/statusSlice"
 
 const AddCategory = (props) => {
   const [categoryList, setCategoryList] = useState([]);
@@ -26,23 +26,33 @@ const AddCategory = (props) => {
       try {
         const response = await productApi.getAllCategory(store_uuid);
         setCategoryList(response.data);
-        console.log(response.data);
-      } catch (error) {}
+      } catch (error) { }
     };
     fetchAllCategory();
   }, []);
+  const dispatch = useDispatch();
   const handleAddCategory = async () => {
+    handleCloseAndReset()
     try {
-      const response = await productApi.addCategory(store_uuid,categoryInfo)
-      console.log(response.data);
+      const response = await productApi.addCategory(store_uuid, categoryInfo);
+      props.onReset()
+      dispatch(statusAction.successfulStatus("Tạo danh mục thành công"));
+      
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      dispatch(statusAction.successfulStatus("Tạo danh mục thất bại"));
     }
   };
+  const handleCloseAndReset = () => {
+    props.handleClose()
+    setCategoryInfo({
+      name: "",
+      parent_category_uuid: "",
+    })
+  }
   return (
     <ModalWrapper {...props}>
       <Typography variant="h4" gutterBottom>
-        {" "}
         Thêm danh mục mới
       </Typography>
       <Grid container spacing={2} style={{ marginTop: 10, maxWidth: 300 }}>
@@ -104,7 +114,7 @@ const AddCategory = (props) => {
             color="primary"
             variant="contained"
             size="small"
-            onClick={() => handleAddCategory()}
+            onClick={handleAddCategory}
           >
             Thêm
           </Button>

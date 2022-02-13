@@ -27,7 +27,7 @@ const InventoryOrderTableRow = (props) => {
                 <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
                 <TableCell align="right"><VNDFormat value={row.total_amount}/></TableCell>
                 <TableCell align="center" className={classes.fontName}>
-                    <FormatedStatus debt={row.status === 'debt' ? 1 : 0}/>
+                    <FormatedStatus debt={row.status === 'debt' ? 0 : 1}/>
                 </TableCell>
                
             </TableRow>
