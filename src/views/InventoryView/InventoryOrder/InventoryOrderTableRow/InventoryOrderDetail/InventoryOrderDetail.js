@@ -165,41 +165,6 @@ const InventoryOrderDetail = (props) => {
       body
     );
   };
-  return (
-    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
-      <PayRemaining
-        onReload={props.parentProps.onReload}
-        uuid={row.uuid}
-        debt={debtAmount}
-        paid={Number(row.paid_amount)}
-        title={
-          <Typography variant="h4">
-            Trả nợ đơn nhập hàng <i>{row.purchase_order_code}</i>
-          </Typography>
-        }
-
-    if (openRow === row.uuid) {
-      loadData();
-    }
-  }, [props.parentProps.openRow]);
-
-  useEffect(() => {}, [purchaseOrder]);
-  const debtAmount =
-    Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount);
-  const [openPayRemaining, setOpenPayRemaining] = useState(false);
-  const editInventoryOrderApiCall = async (
-    store_uuid,
-    branch_uuid,
-    uuid,
-    body
-  ) => {
-    return purchaseOrderApi.editPurchaseOrder(
-      store_uuid,
-      branch_uuid,
-      uuid,
-      body
-    );
-  };
 
   //print
 
@@ -207,9 +172,10 @@ const InventoryOrderDetail = (props) => {
   const handlePrint = useReactToPrint({
       content: () => componentRef.current,
   });
-  console.log("purchaseOrder");
-  console.log(purchaseOrder);
+  
   return (
+
+
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
       <PayRemaining
         onReload={props.parentProps.onReload}
