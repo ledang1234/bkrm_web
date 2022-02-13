@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef, useEffect, useState } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { grey } from "@material-ui/core/colors";
 import moment from "moment";
+import { useReactToPrint } from "react-to-print";
+import {ReceiptPrinter} from "../../../components/ReceiptPrinter/ReceiptPrinter"
 
 //import library
 import {
@@ -298,6 +300,7 @@ const Cart = () => {
   };
 
   const handleConfirm = async () => {
+    // handlePrint();
     let cart = cartList[selectedIndex];
 
     let d = moment.now()/1000;
@@ -336,6 +339,7 @@ const Cart = () => {
         message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
       });
       setOpenSnack(true);
+<<<<<<< Updated upstream
       handleDelete(selectedIndex);
     } catch (err) {
       setSnackStatus({
@@ -344,8 +348,79 @@ const Cart = () => {
       });
       setOpenSnack(true);
       console.log(err);
+=======
+      if (emptyCart) {
+        setSnackStatus({
+          style: "error",
+          message: "Giỏ hàng trống",
+        });
+      } else {
+        setSnackStatus({
+          style: "error",
+          message: "Giỏ hàng bị vượt tồn kho",
+        });
+      }
+    } else {
+      let d = moment.now() / 1000;
+        // 
+
+      // let orderTime = moment
+      //   .unix(d)
+      //   .format("DD/MM/YYY HH:mm", { trim: false });
+
+      let orderTime = moment
+        .unix(d)
+        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
+      let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
+      console.log(cart.paid_amount, cart.total_amount, cart.discount);
+      let body = {
+        customer_uuid: cart.customer.uuid,
+        total_amount: cart.total_amount.toString(),
+        payment_method: cart.payment_method,
+        paid_amount: cart.paid_amount,
+        discount: cart.discount,
+        status:
+          cart.paid_amount < cart.total_amount - cart.discount
+            ? "debt"
+            : "closed",
+        details: details,
+        creation_date: orderTime,
+        paid_date: orderTime,
+        tax: "0",
+        shipping: "0",
+      };
+
+      try {
+        let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
+        setSnackStatus({
+          style: "success",
+          message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
+        });
+        setOpenSnack(true);
+        handlePrint();
+        handleDelete(selectedIndex);
+        
+      } catch (err) {
+        setSnackStatus({
+          style: "error",
+          message: "Tạo hóa đơn thất bại! ",
+        });
+        setOpenSnack(true);
+        console.log(err);
+      }
+      
+>>>>>>> Stashed changes
     }
   };
+//print
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
+
+
   return (
     <Grid
       container
@@ -359,7 +434,7 @@ const Cart = () => {
         open={openSnack}
         status={snackStatus}
       />
-
+  
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={8}>
         <Card className={classes.root}>
@@ -422,7 +497,7 @@ const Cart = () => {
                   />
                   <TableBody>
                     {stableSort(
-                      cartList[selectedIndex].cartItem,
+                      cartList[selectedIndex].cartItem.reverse(),
                       getComparator(order, orderBy)
                     ).map((row, index) => {
                       return (
@@ -494,10 +569,20 @@ const Cart = () => {
                   </TableBody>
                 </TableContainer>
               </CartSummary>
+
+
             )}
           </Box>
         </Card>
       </Grid>
+
+      {/* 3. Receipt */}
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ReceiptPrinter cart={cartList[selectedIndex]}  />
+        </div>
+      </div>
+
     </Grid>
   );
 };

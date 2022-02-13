@@ -9,6 +9,14 @@ import SearchCustomer from '../../../SearchBar/SearchCustomer';
 //import project
 import * as Input from '../../../TextField/NumberFormatCustom'
 
+<<<<<<< Updated upstream
+=======
+import VNDInput from '../../../TextField/NumberFormatCustom';
+import { VNDFormat,ThousandFormat } from '../../../TextField/NumberFormatCustom';
+
+
+
+>>>>>>> Stashed changes
 const useStyles = makeStyles((theme) =>
     createStyles({
         marginBox: {
@@ -25,6 +33,8 @@ const useStyles = makeStyles((theme) =>
         }
     }));
 const CartSummary = (props) => {
+   
+
     const {
         cartData,
         handleSelectCustomer,

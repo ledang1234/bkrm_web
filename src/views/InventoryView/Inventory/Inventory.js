@@ -44,6 +44,35 @@ const Inventory = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
+<<<<<<< Updated upstream
+=======
+
+
+
+
+  const importProductByJSON = async (jsonData) => {
+    try {
+      setOpenProductImportPopper(true);
+      setIsLoadingProduct(true);
+      const res = await storeApi.importProductJSON(store_uuid, jsonData);
+      if (res.status === "error") {
+        setIsLoadingProduct(false);
+        setProductErrors(res.data);
+      } else {
+        setIsLoadingProduct(false);
+        setOpenProductImportPopper(false);
+        setReload(!reload);
+      }
+
+      // setOpen(true);
+    } catch (err) {
+      console.log(err);
+      setIsLoadingProduct(false);
+      // setOpen(false);
+    }
+  };
+
+>>>>>>> Stashed changes
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -142,6 +171,15 @@ const Inventory = () => {
       content: () => componentRef.current,
   });
 
+<<<<<<< Updated upstream
+=======
+  /// import product by file
+  const [openProductImportPopper, setOpenProductImportPopper] = useState(false);
+  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
+  const [productErrors, setProductErrors] = useState([]);
+
+
+>>>>>>> Stashed changes
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">

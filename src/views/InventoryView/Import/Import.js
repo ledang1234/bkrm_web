@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef, useEffect, useState } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { grey } from "@material-ui/core/colors";
+<<<<<<< Updated upstream
 
+=======
+import AddIcon from "@material-ui/icons/Add";
+import { useReactToPrint } from "react-to-print";
+import {ImportReceiptPrinter} from "../../../components/ReceiptPrinter/ReceiptPrinter"
+>>>>>>> Stashed changes
 //import library
 import {
   Grid,
@@ -337,10 +343,69 @@ const Import = () => {
         style: "error",
         message: "Nhập hàng thất bại! ",
       });
+<<<<<<< Updated upstream
       setOpenSnack(true);
       console.log(err);
+=======
+    } else {
+      let d = moment.now() / 1000;
+      let importTime = moment
+        .unix(d)
+        .format("DD/MM/YYY HH:mm", { trim: false });
+
+      let body = {
+        supplier_uuid: cart.supplier?.uuid,
+        total_amount: cart.total_amount.toString(),
+        payment_method: cart.payment_method,
+        paid_amount: cart.paid_amount,
+        discount: cart.discount.toString(),
+        status:
+          Number(cart.total_amount) - Number(cart.discount) >=
+          Number(cart.paid_amount)
+            ? "debt"
+            : "closed",
+        details: cart.cartItem,
+        import_date: importTime,
+      };
+      // console.log(importTime);
+
+      try {
+        let res = await purchaseOrderApi.addInventory(
+          store_uuid,
+          branch.uuid,
+          body
+        );
+        setSnackStatus({
+          style: "success",
+          message: "Nhập hàng thành công: " + res.data.purchase_order_code,
+        });
+        setOpenSnack(true);
+        // handlePrint();
+        handleDelete(selectedIndex);
+        
+      } catch (err) {
+        setSnackStatus({
+          style: "error",
+          message: "Nhập hàng thất bại! ",
+        });
+        setOpenSnack(true);
+        console.log(err);
+      }
+      
+      
+>>>>>>> Stashed changes
     }
   };
+
+  //print
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+  content: () => componentRef.current,
+  });
+
+  console.log(order)
+
+
   return (
     <Grid
       container
@@ -417,7 +482,7 @@ const Import = () => {
                   />
                   <TableBody>
                     {stableSort(
-                      cartList[selectedIndex].cartItem,
+                      cartList[selectedIndex].cartItem.reverse(),
                       getComparator(order, orderBy)
                     ).map((row, index) => {
                       return (
@@ -493,6 +558,14 @@ const Import = () => {
           </Box>
         </Card>
       </Grid>
+
+       {/* 3. Receipt */}
+       <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ImportReceiptPrinter cart={cartList[selectedIndex]}  />
+        </div>
+      </div>
+
     </Grid>
   );
 };
