@@ -34,9 +34,9 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
         textAlign: "center",
-        fontSize: 25,
+        fontSize: 12,
         fontWeight: 700,
-        marginTop:20,
+        marginTop:10,
         color: "#000",
     },
     centerQR:{
@@ -48,17 +48,18 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         textAlign: "center",
         color: "#000",
-        fontSize: 18,
+        fontSize: 10,
     },
     right:{
         flexGrow: 1,
         textAlign: "right",
         color: "#000",
-        fontSize: 18,
+        fontSize: 10,
     },
     text:{
         color: "#000",
-        fontSize: 18,
+        fontSize: 10,
+        textAlign: "center",
     },
     media: {
       // height: '10%',
@@ -95,11 +96,11 @@ export const ReceiptPrinter = ({cart, date}) => {
 
     console.log(info)
     return (
-        <div style={{margin:20}}>
+        <div >
             {/* Logo */}
            {logo? 
             <div className={classes.centerQR} style={{marginBottom:10}}  >
-              <img src={logo} style={{height:80}}/>
+              <img src={logo} style={{height:60}}/>
             </div>:null}
               
            {/* In đơn cũ thì ko lấy store?? */}
@@ -120,118 +121,96 @@ export const ReceiptPrinter = ({cart, date}) => {
             {/*  */}
             <Typography className={classes.title}>HOÁ ĐƠN BÁN HÀNG</Typography>
             <Typography className={classes.center}>Mã HĐ: {}</Typography>
-            <Typography className={classes.center} style={{marginBottom:20}}>Thời gian: {date? date: orderTime}</Typography>
+            <Typography className={classes.center} style={{marginBottom:10}}>Thời gian: {date? date: orderTime}</Typography>
            
 
             <Typography className={classes.text} >Thu ngân: {cart.created_by_user? cart.created_by_user.name: info.user.name}</Typography>
-            <Typography className={classes.text}>Khách hàng: {cart.customer?.name} - {cart.customer?.phone}</Typography>
+            <Typography className={classes.text} style={{marginBottom:20}}>Khách hàng: {cart.customer?.name} - {cart.customer?.phone}</Typography>
            
             {/* List */}
-        
-            <TableContainer >
-                <Table  >
-                    <TableHead >
-                        <TableRow >
-                            <TableCell align="left" className={classes.text}>Sản phẩm</TableCell>
-                            <TableCell align="center" className={classes.text}>SL</TableCell>
-                            <TableCell align="right" className={classes.text}>Thành tiền</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
+
+                    <Grid container direction="row" justifyContent="space-between">
+                        <Grid item xs={5}>
+                        <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                        <Typography className={clsx(classes.text,classes.weight)} >SL</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography className={clsx(classes.text,classes.weight)} >Thành tiền</Typography>
+                        </Grid>
+                    </Grid>
+                       
+                    {/* <TableBody> */}
                     {/* {cart.cartItem.map((row, index) => { */}
                     {item.map((row, index) => {
                     return (
                         <>
+                        
+                         {/* <TableCell align="left" className={classes.text} >{row.name}</TableCell>   
                           <TableRow >
-                              <TableCell align="left" className={classes.text} >{row.name}</TableCell>    
+                              <TableCell align="left" className={classes.text} >{row.unit_price}</TableCell>    
                               <TableCell align="center" className={classes.text} ><ThousandFormat value={row.quantity}/></TableCell> 
                               <TableCell align="right" className={classes.text} > <ThousandFormat value={row.quantity * row.unit_price}/></TableCell>
                               
-                          </TableRow>
+                          </TableRow> */}
+                          <Typography className={classes.text} >{row.name}</Typography>
+                          <Grid container direction="row" justifyContent="space-between">
+                            <Grid item xs={5}>
+                            <Typography className={classes.text} ><ThousandFormat value={row.unit_price}/></Typography>
+                            </Grid>
+                            <Grid item xs={3}>
+                            <Typography className={classes.text} ><ThousandFormat value={row.quantity}/></Typography>
+                            </Grid>
+                            <Grid item xs={4}>
+                            <Typography className={classes.text} ><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
+                            </Grid>
+                        </Grid>
                         </>
                     );
                 })}
-                </TableBody>
-                </Table>
+                {/* </TableBody> */}
+              
 
-            </TableContainer>
-            
-
-        <Grid container direction="column" style={{marginTop:20, marginBottom:30}}>
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={3}>
+            <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}>
+              <Grid item xs={6}>
                 <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                {/* <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount.toString()} /></Typography> */}
-                <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount} /></Typography>
-
-              </Grid>
-            </Grid>
-
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={3}>
-              <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography >
-                  <ThousandFormat className={clsx(classes.text,classes.weight)} value={cart.discount} />
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={3}>
+                <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
                 <Typography className={clsx(classes.text,classes.weight)}>
                 Tổng cộng:{" "} 
                 </Typography>
-              </Grid>
-              <Grid item xs={2}>
-              {/* <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount.toString()- cart.discount}/></Typography> */}
-              <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount}/></Typography>
-
-                
-              </Grid>
-            </Grid>
-
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={3}>
                 <Typography className={clsx(classes.text,classes.weight)}>
                 Tiền khách đưa:{" "}
                 </Typography>
-              </Grid>
-              <Grid item xs={2}>
-              <Typography className={clsx(classes.text,classes.weight)}> <ThousandFormat value={cart.paid_amount} /></Typography>
-
-              </Grid>
-            </Grid>
-
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={3}>
                 <Typography className={clsx(classes.text,classes.weight)}>
                 Tiền thối:{" "}
                 </Typography>
               </Grid>
-              <Grid item xs={2}>
-                  {/* <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount.toString()- cart.discount)} /></Typography> */}
-                  <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount- cart.discount)} /></Typography>
+              <Grid item xs={4}>
+                <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount} /></Typography>
+                <Typography >
+                  <ThousandFormat className={clsx(classes.text,classes.weight)} value={cart.discount} />
+                </Typography>
+                <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount}/></Typography>
+                <Typography className={clsx(classes.text,classes.weight)}> <ThousandFormat value={cart.paid_amount} /></Typography>
+                <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount- cart.discount)} /></Typography>
 
               </Grid>
             </Grid>
-          </Grid>
 
-            {/* Mã QR nếu có*/}
+            
+
+       
             <Typography className={classes.center}> --------------------------</Typography>
 
             {link? 
             <>
-                <Typography className={classes.center}> Mở camera và quét mã để truy cập trang web tải app </Typography>
-                <Box className={classes.centerQR} style={{marginBottom:15, marginTop:10}}>
-                   <QRCode value={link} />
-                </Box> 
+                <Typography className={classes.center}> Mở camera và quét mã để truy cập trang web</Typography>
+                <div className={classes.centerQR} style={{marginBottom:15, marginTop:10, }}>
+                   <QRCode value={link} style={{height:"50%", width:"45%"}} />
+                </div> 
                 </>
             : null}
-            {/* Footer */}
             <Typography className={classes.center}>Xin cảm ơn và hẹn gặp lại !</Typography> 
         </div>
     )
