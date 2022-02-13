@@ -9,6 +9,8 @@ import productApi from "../../api/productApi";
 import { CustomTextField } from "./SearchProduct"
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { statusAction } from "../../store/slice/statusSlice";
 
 const SearchBarCode = (props) => {
     const info = useSelector((state) => state.info);
@@ -17,6 +19,7 @@ const SearchBarCode = (props) => {
 
     const [barcode,setBarcode] = useState("")
 
+    const dispatch = useDispatch();
     const onEnter = async (e) =>{
         if(e.key === "Enter" && barcode != ""){
             try {
@@ -28,9 +31,11 @@ const SearchBarCode = (props) => {
                   if (response.data.length > 0){
                     props.handleSearchBarSelect(response.data[0]);
                     setBarcode("")
+                    dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
                   }
             } catch (error) {
                 console.log(error)
+                dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
             }
         }
     }

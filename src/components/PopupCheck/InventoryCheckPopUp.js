@@ -15,10 +15,13 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
+  Switch,
+  FormControlLabel
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import update from "immutability-helper";
 import { useSelector } from "react-redux";
+import SearchBarCode from "../SearchBar/SearchBarCode"
 import moment from "moment";
 import { Input } from "@mui/material";
 
@@ -183,6 +186,10 @@ function InventoryCheckPopUp({
     setInventoryCheck({ ...inventoryCheck, details: newDetails });
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
+  const [barcodeChecked, setBarcodeChecked] = useState(true)
+  const handleSwitchChange = () => {
+    setBarcodeChecked(!barcodeChecked)
+  }
   return (
     <>
       <Grid
@@ -195,11 +202,29 @@ function InventoryCheckPopUp({
           <ListItem
             style={{ paddingTop: 20, marginBottom: -20, marginLeft: 25 }}
           >
-            <Typography variant="h3" style={{ marginRight: 20 }}>
-              Kiểm kho
-            </Typography>
-
-            <SearchProduct handleSearchBarSelect={handleProductSelect} />
+            <Grid container alignItems="center">
+              <Grid item>
+                <Typography variant="h3" style={{ marginRight: 20 }}>
+                  Kiểm kho
+                </Typography></Grid>
+              <Grid item>
+                <FormControlLabel
+                  control={<Switch
+                    checked={barcodeChecked} onChange={handleSwitchChange}
+                    color="primary" />}
+                  label={"Dùng mã vạch"}
+                />
+              </Grid>
+              <Grid item>
+                {
+                  barcodeChecked ?
+                    <SearchBarCode handleSearchBarSelect={handleProductSelect} /> :
+                    <SearchProduct
+                      handleSearchBarSelect={handleProductSelect}
+                    />
+                }
+              </Grid>
+            </Grid>
           </ListItem>
         </Grid>
 
@@ -308,7 +333,7 @@ export default InventoryCheckPopUp;
 function InventoryCheckTableRow({ detail, handleItemRealQuantityChange }) {
   const classes = useStyles();
   const [show, setShow] = React.useState("none");
-  useEffect(() => {}, [detail]);
+  useEffect(() => { }, [detail]);
 
   const onChangeRealQuantity = (newQuantity) => {
     handleItemRealQuantityChange(detail.id, newQuantity);

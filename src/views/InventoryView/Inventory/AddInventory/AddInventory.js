@@ -62,15 +62,6 @@ const AddInventory = (props) => {
     },
   ]);
 
-  const handleEnter = (event) => {
-    if (event.key.toLowerCase() === "enter") {
-      const form = event.target.form;
-      const index = [...form].indexOf(event.target);
-      console.log(index)
-      form.elements[index + 1].focus()
-    }
-  }
-
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
   const [imageURL, setImageURL] = useState();
@@ -153,6 +144,11 @@ const AddInventory = (props) => {
       dispatch(statusAction.failedStatus("Create product failed"));
     }
   };
+
+  const [reset,setReset] = useState(true)
+  const onReset = () =>{
+    setReset(reset => !reset)
+  }
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
@@ -165,7 +161,7 @@ const AddInventory = (props) => {
       }
     };
     fetchCategoryList();
-  }, [store_uuid]);
+  }, [store_uuid,reset]);
 
   const selectSampleProductHandler = (product) => {
     if (product && product.name) {
@@ -208,7 +204,7 @@ const AddInventory = (props) => {
       <TextField
         {...params}
         required
-        label="Tìm kiếm sản phẩm mẫu bằng tên hoặc mã vạch"
+        label="Tìm kiếm sp mẫu bằng tên hoặc mã vạch"
         variant="outlined"
         fullWidth
         autoFocus
@@ -220,6 +216,15 @@ const AddInventory = (props) => {
               <SearchIcon />
             </InputAdornment>
           ),
+          endAdornment: (
+            <InputAdornment position="end">
+                <Box
+                    component="img"
+                    sx={{ height: 23, width: 23,marginRight:-30}}
+                    src={barcodeIcon}
+                />
+            </InputAdornment>
+        ),
           onKeyDown: (e) => {
             if (e.key.toLowerCase() === "arrowdown") {
               onFocus(salesPriceRef)
@@ -259,7 +264,7 @@ const AddInventory = (props) => {
       aria-labelledby="form-dialog-title"
     >
       <Box className={classes.root}>
-        <AddCategory open={openAddCategory} handleClose={handleCloseCategory} />
+        <AddCategory open={openAddCategory} handleClose={handleCloseCategory} onReset={onReset} />
         <Box
           display="flex"
           flexDirection="row"
