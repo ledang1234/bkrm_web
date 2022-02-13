@@ -321,32 +321,109 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
+  // const handleConfirm = async () => {
+  //   // handlePrint();
+  //   let cart = cartList[selectedIndex];
+
+  //   var emptyCart = cart.cartItem.length === 0;
+
+  //   try {
+  //     let res = await orderApi.addOrder(
+  //       store_uuid,
+  //       branch.uuid,
+  //       body
+  //     );
+  //     setSnackStatus({
+  //       style: "success",
+  //       message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
+  //     });
+  //     setOpenSnack(true);
+
+  //     handleDelete(selectedIndex);
+  //   } catch (err) {
+  //     setSnackStatus({
+  //       style: "error",
+  //       message: "Tạo hóa đơn thất bại! ",
+  //     });
+  //     setOpenSnack(true);
+  //     console.log(err);
+
+  //   var correctQuantity = cart.cartItem.every(function (element, index) {
+  //     console.log(element);
+  //     if (element.quantity > element.branch_quantity) return false;
+  //     else return true;
+  //   });
+  //   if (emptyCart || !correctQuantity) {
+  //     setOpenSnack(true);
+
+  //     if (emptyCart) {
+  //       setSnackStatus({
+  //         style: "error",
+  //         message: "Giỏ hàng trống",
+  //       });
+  //     } else {
+  //       setSnackStatus({
+  //         style: "error",
+  //         message: "Giỏ hàng bị vượt tồn kho",
+  //       });
+  //     }
+  //   } else {
+  //     let d = moment.now() / 1000;
+
+
+  //     let orderTime = moment
+  //       .unix(d)
+  //       .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
+  //     console.log(orderTime);
+
+
+  //     let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
+  //     console.log(cart.paid_amount, cart.total_amount, cart.discount);
+  //     let body = {
+  //       customer_uuid: cart.customer.uuid,
+  //       total_amount: cart.total_amount.toString(),
+  //       payment_method: cart.payment_method,
+  //       paid_amount: cart.paid_amount,
+  //       discount: cart.discount,
+  //       status:
+  //         cart.paid_amount < cart.total_amount - cart.discount
+  //           ? "debt"
+  //           : "closed",
+  //       details: details,
+  //       creation_date: orderTime,
+  //       paid_date: orderTime,
+  //       tax: "0",
+  //       shipping: "0",
+  //     };
+
+  //     try {
+  //       let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
+  //       setSnackStatus({
+  //         style: "success",
+  //         message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
+  //       });
+  //       setOpenSnack(true);
+
+  //       handlePrint();
+  //       handleDelete(selectedIndex);
+        
+
+  //     } catch (err) {
+  //       setSnackStatus({
+  //         style: "error",
+  //         message: "Tạo hóa đơn thất bại! ",
+  //       });
+  //       setOpenSnack(true);
+  //       console.log(err);
+  //     }
+
+  //   }
+  // };
   const handleConfirm = async () => {
-    // handlePrint();
     let cart = cartList[selectedIndex];
 
     var emptyCart = cart.cartItem.length === 0;
-
-    try {
-      let res = await orderApi.addOrder(
-        store_uuid,
-        branch.uuid,
-        body
-      );
-      setSnackStatus({
-        style: "success",
-        message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
-      });
-      setOpenSnack(true);
-
-      handleDelete(selectedIndex);
-    } catch (err) {
-      setSnackStatus({
-        style: "error",
-        message: "Tạo hóa đơn thất bại! ",
-      });
-      setOpenSnack(true);
-      console.log(err);
 
     var correctQuantity = cart.cartItem.every(function (element, index) {
       console.log(element);
@@ -355,7 +432,6 @@ const Cart = () => {
     });
     if (emptyCart || !correctQuantity) {
       setOpenSnack(true);
-
       if (emptyCart) {
         setSnackStatus({
           style: "error",
@@ -370,13 +446,10 @@ const Cart = () => {
     } else {
       let d = moment.now() / 1000;
 
-
       let orderTime = moment
         .unix(d)
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-
       console.log(orderTime);
-
 
       let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
       console.log(cart.paid_amount, cart.total_amount, cart.discount);
@@ -404,11 +477,7 @@ const Cart = () => {
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
         });
         setOpenSnack(true);
-
-        handlePrint();
         handleDelete(selectedIndex);
-        
-
       } catch (err) {
         setSnackStatus({
           style: "error",
@@ -417,7 +486,6 @@ const Cart = () => {
         setOpenSnack(true);
         console.log(err);
       }
-
     }
   };
 //print
@@ -427,10 +495,8 @@ const Cart = () => {
       content: () => componentRef.current,
   });
 
-
-
-    }
-  };
+  //   }
+  // };
   const [barcodeChecked, setBarcodeChecked] = useState(true)
   const handleSwitchChange = () => {
     setBarcodeChecked(!barcodeChecked)

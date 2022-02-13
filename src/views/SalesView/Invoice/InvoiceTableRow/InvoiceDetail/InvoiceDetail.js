@@ -142,9 +142,9 @@ function InvoiceDetail(props) {
         });
       }
 
-    },
-    [props.parentProps.openRow],
-  );
+    // },
+  //   [props.parentProps.openRow],
+  // );
 
 
     };
@@ -505,9 +505,9 @@ function InvoiceDetail(props) {
           </StyledMenu>
         </Grid>
       </Box>
-
+{/* 
       <Dialog fullWidth maxWidth="lg" open={open} onClose={handleCloseReturn} aria-labelledby="form-dialog-title">
-        <InvoiceReturnPopUp handleCloseReturn={handleCloseReturn} order={order} classes={classes} />
+        <InvoiceReturnPopUp handleCloseReturn={handleCloseReturn} order={order} classes={classes} /> */}
 
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>

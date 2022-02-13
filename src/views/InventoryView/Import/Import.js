@@ -6,9 +6,6 @@ import { grey } from "@material-ui/core/colors";
 
 import AddIcon from "@material-ui/icons/Add";
 
-
-
-import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
 import {ImportReceiptPrinter} from "../../../components/ReceiptPrinter/ReceiptPrinter"
 //import library
@@ -336,7 +333,7 @@ const Import = () => {
       });
 
       setOpenSnack(true);
-      console.log(err);
+      // console.log(err);
 
     } else {
       let d = moment.now() / 1000;
@@ -400,8 +397,8 @@ const Import = () => {
 
 
 
-    }
-  };
+  //   }
+  // };
 
   const [barcodeChecked, setBarcodeChecked] = useState(true)
   const handleSwitchChange = () => {

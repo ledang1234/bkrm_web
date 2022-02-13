@@ -10,8 +10,8 @@ import SearchCustomer from '../../../SearchBar/SearchCustomer';
 import * as Input from '../../../TextField/NumberFormatCustom'
 
 
-import VNDInput from '../../../TextField/NumberFormatCustom';
-import { VNDFormat,ThousandFormat } from '../../../TextField/NumberFormatCustom';
+// import VNDInput from '../../../TextField/NumberFormatCustom';
+// import { VNDFormat,ThousandFormat } from '../../../TextField/NumberFormatCustom';
 
 
 
