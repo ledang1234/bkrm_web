@@ -3,7 +3,7 @@ import {
   Dialog, TextField, Card, ListItem, DialogContent, Box, Grid, TableHead, TableBody, Typography, Table, TableCell, TableRow, Collapse, Button, ListItemIcon, ListItemText, IconButton,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import update from 'immutability-helper';
 import moment from 'moment';
 import useStyles from '../../TableCommon/style/mainViewStyle';
@@ -22,12 +22,15 @@ import * as Input from '../../TextField/NumberFormatCustom';
 import ButtonQuantity from '../../Button/ButtonQuantity';
 import refundApi from '../../../api/refundApi';
 import SnackBarGeneral from '../../SnackBar/SnackBarGeneral';
+import {statusAction} from '../../../store/slice/statusSlice';
+
 
 function InvoiceReturnPopUp(props) {
-  const { order, classes, handleCloseReturn } = props;
+  const { order, classes, handleCloseReturn , reload, reloadDetail } = props;
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const dispatch = useDispatch();
   // 2. Table sort
   // const [order, setOrder] = React.useState('desc');
   // const [orderBy, setOrderBy] = React.useState('stt');
@@ -148,7 +151,7 @@ function InvoiceReturnPopUp(props) {
         product_id: detail.product_id,
         quantity: detail.returnQuantity,
         unit_price: detail.returnPrice,
-
+        order_detail_id: detail.id
       })),
       import_date,
     };
@@ -159,16 +162,12 @@ function InvoiceReturnPopUp(props) {
         refund.branch.uuid,
         body,
       );
-      setSnackStatus({
-        style: 'success',
-        message: `Trả hàng thành công: ${res.data.refund_code}`,
-      });
-      setOpenSnack(true);
+      dispatch(statusAction.successfulStatus(`Trả hàng thành công: ${res.data.refund_code}`))
+      reload();
+      reloadDetail();
+      handleCloseReturn()
     } catch (err) {
-      setSnackStatus({
-        style: 'error',
-        message: 'Trả hàng thất bại! ',
-      });
+      dispatch(statusAction.failedStatus('Trả hàng thất bại!'))
       setOpenSnack(true);
       console.log(err);
     }
@@ -280,7 +279,7 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
       <TableCell align="left" padding="none">
         <ButtonQuantity
           quantity={detail.returnQuantity}
-          limit={detail.quantity}
+          limit={detail.quantity - detail.returned_quantity}
           setQuantity={handleChangeQuantity}
           show={show}
           setShow={setShow}

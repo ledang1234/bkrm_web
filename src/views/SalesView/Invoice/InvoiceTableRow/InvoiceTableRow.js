@@ -9,7 +9,7 @@ import InvoiceDetail from "./InvoiceDetail/InvoiceDetail";
 import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 
 function InvoiceTableRow(props) {
-  const { row, handleOpenRow, openRow } = props;
+  const { row, handleOpenRow, openRow, onReload } = props;
   const classes = useRowStyles();
 
   return (

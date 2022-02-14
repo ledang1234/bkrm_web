@@ -126,6 +126,8 @@ const InventoryOrderDetail = (props) => {
     details: [],
   });
 
+  const [reload, setReload] = useState(false)
+
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -146,7 +148,7 @@ const InventoryOrderDetail = (props) => {
     if (openRow === row.uuid) {
       loadData();
     }
-  }, [props.parentProps.openRow]);
+  }, [props.parentProps.openRow, reload]);
 
   useEffect(() => {}, [purchaseOrder]);
   const debtAmount =
@@ -178,6 +180,7 @@ const InventoryOrderDetail = (props) => {
 
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
       <PayRemaining
+        reloadDetail={() => setReload(!reload)}
         onReload={props.parentProps.onReload}
         uuid={row.uuid}
         debt={debtAmount}
@@ -343,6 +346,7 @@ const InventoryOrderDetail = (props) => {
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
               <TableCell align="right">Số lượng</TableCell>
+              <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá nhập</TableCell>
               <TableCell align="right">Thành tiền</TableCell>
             </TableRow>
@@ -355,6 +359,7 @@ const InventoryOrderDetail = (props) => {
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
                 <TableCell align="right">{detail.quantity}</TableCell>
+                <TableCell align="right">{detail.returned_quantity}</TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
                 </TableCell>
@@ -551,6 +556,8 @@ const InventoryOrderDetail = (props) => {
             handleCloseReturn={handleCloseReturn}
             purchaseOrder={purchaseOrder}
             classes={classes}
+            reload={props.parentProps.onReload}
+            reloadDetail={() => setReload(!reload)}
           />
         </Dialog>
       </Box>

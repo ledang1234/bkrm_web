@@ -98,6 +98,12 @@ const InventoryOrder = () => {
     loadData();
   }, [reload]);
 
+  const [snackStatus, setSnackStatus] = React.useState({
+    style: "error",
+    message: "Kiểm kho thất bại",
+  });
+
+  
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">

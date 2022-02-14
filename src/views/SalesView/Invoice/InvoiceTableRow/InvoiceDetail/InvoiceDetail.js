@@ -90,12 +90,13 @@ const useStyles = makeStyles((theme) =>
 );
 
 function InvoiceDetail(props) {
-  const { row, openRow } = props.parentProps;
+  const { row, openRow, onReload } = props.parentProps;
   //  tam thoi
   const currentUser = "Phuong Gia Le";
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const [reload, setReload] = React.useState(false)
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -151,7 +152,7 @@ function InvoiceDetail(props) {
     if (openRow === row.uuid) {
       loadData();
     }
-  }, [props.parentProps.openRow]);
+  }, [props.parentProps.openRow, reload]);
   const debtAmount = order.total_amount - order.paid_amount;
   const [openPayRemaining, setOpenPayRemaining] = useState(false);
   const editInventoryOrderApiCall = async (
@@ -170,13 +171,11 @@ function InvoiceDetail(props) {
       content: () => componentRef.current,
   });
 
-  console.log("order")
-  console.log(order)
-
   return (
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
       <PayRemaining
         onReload={props.parentProps.onReload}
+        reloadDetail={() => setReload(!reload)}
         uuid={row.uuid}
         debt={debtAmount}
         paid={Number(row.paid_amount)}
@@ -336,6 +335,7 @@ function InvoiceDetail(props) {
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
               <TableCell align="right">Số lượng</TableCell>
+              <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá bán</TableCell>
               <TableCell align="right">Thành tiền</TableCell>
             </TableRow>
@@ -348,6 +348,7 @@ function InvoiceDetail(props) {
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
                 <TableCell align="right">{detail.quantity}</TableCell>
+                <TableCell align="right">{detail.returned_quantity}</TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
                 </TableCell>
@@ -529,6 +530,8 @@ function InvoiceDetail(props) {
           handleCloseReturn={handleCloseReturn}
           order={order}
           classes={classes}
+          reloadDetail={() => setReload(!reload)}
+          reload={onReload}
         />
 
       </Dialog>
