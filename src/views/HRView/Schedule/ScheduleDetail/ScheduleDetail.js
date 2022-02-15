@@ -19,6 +19,7 @@ import {
   ButtonBase,
   InputAdornment,
   ButtonGroup,
+  DialogActions,
   Button,
   Tooltip,
   Checkbox,
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) =>
     },
   })
 );
-const ScheduleDetail = ({ open, handlePopUp, clickSchedule }) => {
+const ScheduleDetail = ({ open, handlePopUp, clickSchedule, handleSubmit }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -70,9 +71,25 @@ const ScheduleDetail = ({ open, handlePopUp, clickSchedule }) => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+  const [schedules, setSchedules] = React.useState([]);
 
+  const handleCheckSchedule = (schedule_id) => {
+    const newSchedule = [];
+
+    schedules.forEach((s) => {
+      if (s.schedule_id === schedule_id) {
+        newSchedule.push({ ...s, status: !s.status });
+      } else {
+        newSchedule.push(s);
+      }
+    });
+
+    setSchedules(newSchedule);
+  };
   useEffect(() => {
-    console.log(clickSchedule);
+    if (clickSchedule) {
+      setSchedules(clickSchedule.schedules);
+    }
   }, [clickSchedule]);
   return (
     <Dialog
@@ -115,10 +132,11 @@ const ScheduleDetail = ({ open, handlePopUp, clickSchedule }) => {
           isCart={true}
         />
         <TableBody>
-          {clickSchedule.schedules?.map((row, index) => {
+          {schedules?.map((row, index) => {
             return (
               <EmployeeTableRow
                 row={row}
+                handleCheckSchedule={handleCheckSchedule}
                 // handleDeleteItemCart={handleDeleteItemCart}
                 // handleChangeItemPrice={handleChangeItemPrice}
                 // handleChangeItemQuantity={handleChangeItemQuantity}
@@ -127,12 +145,29 @@ const ScheduleDetail = ({ open, handlePopUp, clickSchedule }) => {
           })}
         </TableBody>
       </TableWrapper>
+
+      <DialogActions>
+        <Button
+          color="primary"
+          onClick={() => {
+            handleSubmit(
+              schedules.map((s) => ({
+                schedule_id: s.schedule_id,
+                status: s.status,
+              }))
+            );
+          }}
+        >
+          Lưu thay đổi
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
-const EmployeeTableRow = ({ row }) => {
+const EmployeeTableRow = ({ row, handleCheckSchedule }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
+
   return (
     <TableRow>
       <TableCell align="left">{row.schedule_id}</TableCell>
@@ -157,6 +192,7 @@ const EmployeeTableRow = ({ row }) => {
         <Checkbox
           checked={row.status}
           inputProps={{ "aria-label": "primary checkbox" }}
+          onChange={() => handleCheckSchedule(row.schedule_id)}
         />
       </TableCell>
     </TableRow>

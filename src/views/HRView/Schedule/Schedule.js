@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useDebugValue } from "react";
 import { useStyles } from "./style";
 import { useState } from "react";
 import {
@@ -43,11 +43,12 @@ import { HeadWeek, ShiftWeekBox } from "./ScheduleView/WeekView/WeekView";
 import { HeadDay, ShiftDayBox } from "./ScheduleView/DayView/DayView";
 import { HeadMonth, ShiftMonthBox } from "./ScheduleView/MonthView/MonthView";
 import scheduleApi from "../../../api/scheduleApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import AddShiftPopup from "./AddShiftPopup/AddShiftPopup";
 import AddSchedulePopup from "./AddSchedulePopup/AddSchedulePopup";
 import ScheduleDetail from "./ScheduleDetail/ScheduleDetail";
+import { statusAction } from "../../../store/slice/statusSlice";
 const Schedule = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -148,6 +149,24 @@ const Schedule = () => {
   const [modeMonth, setModeMonth] = React.useState(true);
   const handleChangeModeMonth = (event) => {
     setModeMonth(event.target.checked);
+  };
+  const dispatch = useDispatch();
+
+  const handleSubmitSchedule = async (schedules) => {
+    try {
+      const response = await scheduleApi.checkAttendance(
+        store_uuid,
+        branch_uuid,
+        schedules
+      );
+
+      dispatch(statusAction.successfulStatus("Chấm công thành công"));
+      setReload(!reload);
+      setOpen(false);
+    } catch (err) {
+      console.log(err);
+      dispatch(statusAction.failedStatus("Chấm công thất bại"));
+    }
   };
 
   return (
@@ -277,6 +296,7 @@ const Schedule = () => {
         open={open}
         handlePopUp={handlePopUp}
         clickSchedule={clickSchedule}
+        handleSubmit={handleSubmitSchedule}
       />
       {/* Con pop up check attendance cho employee cu the */}
     </Card>
