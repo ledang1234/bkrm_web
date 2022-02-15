@@ -179,11 +179,7 @@ function InvoiceReturnPopUp(props) {
   return (
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
-        <SnackBarGeneral
-          handleClose={handleCloseSnackBar}
-          open={openSnack}
-          status={snackStatus}
-        />
+       
         <ListItem style={{ paddingTop: 20, marginBottom: -20, marginLeft: 25 }}>
           <Typography variant="h3" style={{ marginRight: 30 }}>Trả hàng</Typography>
 
