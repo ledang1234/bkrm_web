@@ -82,7 +82,7 @@ const AddSupplier = (props) => {
   };
   const dispatch = useDispatch();
   const handleAddSupplier = async () => {
-    handleClose();
+    // handleClose();
 
     try {
       var bodyFormData = new FormData();
@@ -99,9 +99,11 @@ const AddSupplier = (props) => {
       );
       dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
       props.onReload();
+      props.handleClose("Success");
     } catch (err) {
       dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thất bại"));
       console.log(err);
+      props.handleClose("Failure");
     }
   };
   return (

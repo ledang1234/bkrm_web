@@ -44,17 +44,11 @@ const useStyles = makeStyles((theme) =>
     },
   })
 );
-function InventoryCheckSummary({
-  data,
-  handleConfirm,
-  userName,
-  branchName
-}) {
+function InventoryCheckSummary({ data, handleConfirm, userName, branchName }) {
   const theme = useTheme();
   const classes = useStyles(theme);
 
   useEffect(() => {}, [data, userName, branchName]);
-
 
   return (
     <Box style={{ padding: 30, minHeight: "75vh" }}>
@@ -133,9 +127,12 @@ function InventoryCheckSummary({
         >
           <Typography variant="h5">Số mặt hàng lệch</Typography>
           <Typography variant="body2">
-            {data.details.filter((item) => Number(item.branch_quantity) !== Number(item.real_quantity)).length}
-          
-
+            {
+              data.details.filter(
+                (item) =>
+                  Number(item.branch_quantity) !== Number(item.real_quantity)
+              ).length
+            }
           </Typography>
         </Grid>
         <Grid
@@ -145,7 +142,14 @@ function InventoryCheckSummary({
           className={classes.marginRow}
         >
           <Typography variant="h5">Tổng sản phẩm lệch</Typography>
-          <Typography variant="body2">{data.details.map(item => Number(item.real_quantity) -  Number(item.branch_quantity)).reduce((a, b) => a + b, 0)}</Typography>
+          <Typography variant="body2">
+            {data.details
+              .map(
+                (item) =>
+                  Number(item.real_quantity) - Number(item.branch_quantity)
+              )
+              .reduce((a, b) => a + b, 0)}
+          </Typography>
         </Grid>
 
         <Grid
@@ -158,14 +162,13 @@ function InventoryCheckSummary({
           <Typography variant="body2">{data.total_amount}</Typography>
         </Grid>
 
-        
- 
         <Button
           variant="contained"
           fullWidth
           color="primary"
           style={{ marginTop: 40 }}
           onClick={handleConfirm}
+          disabled={data.total_amount === 0}
         >
           Kiểm kho
         </Button>

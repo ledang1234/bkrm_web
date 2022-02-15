@@ -1,11 +1,11 @@
-import React, {useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { grey } from "@material-ui/core/colors";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
-import {ReceiptPrinter} from "../../../components/ReceiptPrinter/ReceiptPrinter"
+import { ReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
 
 //import library
 import {
@@ -27,7 +27,7 @@ import {
   TableBody,
   Typography,
 } from "@material-ui/core";
-import SearchBarCode from "../../../components/SearchBar/SearchBarCode"
+import SearchBarCode from "../../../components/SearchBar/SearchBarCode";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -66,6 +66,7 @@ const Cart = () => {
   const branch = info.branch;
 
   const [customers, setCustomers] = useState([]);
+
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -86,7 +87,7 @@ const Cart = () => {
 
   const [cartList, setCartList] = React.useState([
     {
-      customer: null,
+      customer: customers.length ? customers[0] : null,
       cartItem: [],
       total_amount: "0",
       paid_amount: "0",
@@ -94,6 +95,10 @@ const Cart = () => {
       payment_method: "cash",
     },
   ]);
+
+  useEffect(() => {
+    console.log(cartList);
+  }, [cartList]);
   //// ----------II. FUNCTION
   // 1.Cart
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -116,6 +121,16 @@ const Cart = () => {
       try {
         const response = await customerApi.getCustomers(store_uuid);
         setCustomers(response.data);
+        setCartList([
+          {
+            customer: response.data.length ? response.data[0] : null,
+            cartItem: [],
+            total_amount: "0",
+            paid_amount: "0",
+            discount: "0",
+            payment_method: "cash",
+          },
+        ]);
       } catch (err) {
         console.log(err);
       }
@@ -123,6 +138,20 @@ const Cart = () => {
 
     loadingCustomer();
   }, []);
+
+  const [reloadCustomers, setReloadCustomers] = useState(false);
+  useEffect(() => {
+    const loadingCustomer = async () => {
+      try {
+        const response = await customerApi.getCustomers(store_uuid);
+        setCustomers(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    loadingCustomer();
+  }, [reloadCustomers]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -144,7 +173,7 @@ const Cart = () => {
     setCartList([
       ...cartList,
       {
-        customer: null,
+        customer: customers.length ? customers[0] : null,
         cartItem: [],
         total_amount: "0",
         paid_amount: "0",
@@ -161,7 +190,7 @@ const Cart = () => {
     if (cartList.length === 0) {
       setCartList([
         {
-          customer: customers[0],
+          customer: customers.length ? customers[0] : null,
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -370,13 +399,11 @@ const Cart = () => {
   //   } else {
   //     let d = moment.now() / 1000;
 
-
   //     let orderTime = moment
   //       .unix(d)
   //       .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
   //     console.log(orderTime);
-
 
   //     let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
   //     console.log(cart.paid_amount, cart.total_amount, cart.discount);
@@ -407,7 +434,6 @@ const Cart = () => {
 
   //       handlePrint();
   //       handleDelete(selectedIndex);
-        
 
   //     } catch (err) {
   //       setSnackStatus({
@@ -489,19 +515,19 @@ const Cart = () => {
       }
     }
   };
-//print
+  //print
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
+    content: () => componentRef.current,
   });
 
   //   }
   // };
-  const [barcodeChecked, setBarcodeChecked] = useState(true)
+  const [barcodeChecked, setBarcodeChecked] = useState(true);
   const handleSwitchChange = () => {
-    setBarcodeChecked(!barcodeChecked)
-  }
+    setBarcodeChecked(!barcodeChecked);
+  };
 
   return (
     <Grid
@@ -516,7 +542,7 @@ const Cart = () => {
         open={openSnack}
         status={snackStatus}
       />
-  
+
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={8}>
         <Card className={classes.root}>
@@ -562,20 +588,26 @@ const Cart = () => {
                   <Grid container alignItems="center">
                     <Grid item>
                       <FormControlLabel
-                        control={<Switch
-                          checked={barcodeChecked} onChange={handleSwitchChange}
-                          color="primary" />}
+                        control={
+                          <Switch
+                            checked={barcodeChecked}
+                            onChange={handleSwitchChange}
+                            color="primary"
+                          />
+                        }
                         label={"Dùng mã vạch"}
                       />
                     </Grid>
                     <Grid item>
-                      {
-                        barcodeChecked ?
-                          <SearchBarCode handleSearchBarSelect={handleSearchBarSelect} /> :
-                          <SearchProduct
-                            handleSearchBarSelect={handleSearchBarSelect}
-                          />
-                      }
+                      {barcodeChecked ? (
+                        <SearchBarCode
+                          handleSearchBarSelect={handleSearchBarSelect}
+                        />
+                      ) : (
+                        <SearchProduct
+                          handleSearchBarSelect={handleSearchBarSelect}
+                        />
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -647,6 +679,7 @@ const Cart = () => {
                 currentBranch={branch}
                 mode={mode}
                 customers={customers}
+                reloadCustomers={() => setReloadCustomers(!reloadCustomers)}
               />
             ) : (
               <CartSummary
@@ -669,8 +702,6 @@ const Cart = () => {
                   </TableBody>
                 </TableContainer>
               </CartSummary>
-
-
             )}
           </Box>
         </Card>
@@ -679,10 +710,9 @@ const Cart = () => {
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ReceiptPrinter cart={cartList[selectedIndex]}  />
+          <ReceiptPrinter cart={cartList[selectedIndex]} />
         </div>
       </div>
-
     </Grid>
   );
 };

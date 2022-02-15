@@ -1,5 +1,11 @@
-import React, { useEffect , useState} from "react";
-import {Grid, Typography,TextField,InputAdornment,IconButton} from '@material-ui/core'
+import React, { useEffect, useState } from "react";
+import {
+  Grid,
+  Typography,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from "@material-ui/core";
 import {
   useTheme,
   withStyles,
@@ -12,7 +18,7 @@ import AddIcon from "@material-ui/icons/Add";
 
 import supplierApi from "../../api/supplierApi";
 import { useSelector } from "react-redux";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { render } from "sass";
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -44,7 +50,7 @@ const SearchSupplier = (props) => {
 
   useEffect(() => {
     // loadingData();
-  }, [])
+  }, []);
 
   // const loadingData = async () => {
   //   const response = await supplierApi.getSuppliers(store_uuid);
@@ -96,13 +102,24 @@ const SearchSupplier = (props) => {
                   <SearchIcon style={{ color: grey[500] }} />
                 </InputAdornment>
               ),
+
+              endAdornment: (
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  onClick={props.handleClickOpen}
+                  style={{ marginRight: -30 }}
+                >
+                  <AddIcon />
+                </IconButton>
+              ),
             }
       }
     />
   );
 
-  const getOptionLabel = (option) =>  option.name ? option.name : ""
-  
+  const getOptionLabel = (option) => (option.name ? option.name : "");
+
   return (
     <div style={{ width: "100%" }}>
       <Autocomplete
