@@ -169,9 +169,11 @@ const CartSummary = (props) => {
                                     Giảm giá
                                 </Typography>
                                 <VNDInput id="standard-basic" style={{ width: 90 }}
+                                    value={cartData.discount}
                                     size="small" inputProps={{ style: { textAlign: "right" } }}
                                     onChange={(e) => handleUpdateDiscount(e.target.value)}
                                 />
+                               
                             </Grid>
 
                             <Grid container direction="row" justifyContent="space-between" className={classes.marginRow}>

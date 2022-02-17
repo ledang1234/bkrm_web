@@ -27,7 +27,7 @@ import customerIcon from "../../assets/img/icon/customer.png";
 import statisticIcon from "../../assets/img/icon/statistics.png";
 
 import webIcon from "../../assets/img/icon/www.png";
-
+import settingIcon from "../../assets/img/icon/setting.png"
 import deliveryIcon from "../../assets/img/icon/history3.png";
 
 //ICON
@@ -294,22 +294,29 @@ const reportModule = {
       icon: branchIcon,
       icon1: icons.StorefrontOutlinedIcon,
       icon2: icons1.StorefrontTwoToneIcon,
-    },
+    }, 
     {
       id: 18,
-      title: "Trang Web",
-      url: "/home/manager/web",
-      icon: webIcon,
-      icon1: icons.LanguageOutlinedIcon,
-      icon2: icons1.LanguageTwoToneIcon,
-    },
-    {
-      id: 19,
       title: "Khách Hàng",
       url: "/home/manager/customer",
       icon: customerIcon,
       icon1: icons.FavoriteBorderOutlinedIcon,
       icon2: icons1.FavoriteTwoToneIcon,
+    },
+    {
+      id: 19,
+      title: "Cài đặt",
+      url: "/home/manager/setting",
+      // icon: webIcon,
+      icon: settingIcon,
+      icon1: icons.LanguageOutlinedIcon,
+      icon2: icons1.LanguageTwoToneIcon,
+      children: [
+        { id: 19.1, title: "Cài đặt chung", url: "/home/manager/setting" },
+        { id: 19.2, title: "Khuyến mãi", url: "/home/manager/setting-discount" },
+        { id: 19.3, title: "Voucher", url: "/home/manager/setting-voucher" },
+        { id: 19.4, title: "Trang web", url: "/home/manager/setting-web" },
+      ],
     },
     {
       id: 20.1,

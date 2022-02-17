@@ -7,6 +7,7 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 //import project 
 import * as Input from '../../../../components/TextField/NumberFormatCustom'
 import ButtonQuantity from "../../../../components/Button/ButtonQuantity";
+import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom"
 
 import icon from '../../../../assets/img/product/tch.jpeg';
 
@@ -41,7 +42,7 @@ export const CartRow = (props) =>{
             <ButtonQuantity quantity={row.quantity} setQuantity={updateQuantity}  branch_quantity={row.branch_quantity}/> 
           </TableCell> 
           
-          <TableCell align="right"className={classes.boldText}>{row.unit_price * row.quantity}</TableCell>
+          <TableCell align="right"className={classes.boldText}><VNDFormat value={row.unit_price * row.quantity} /></TableCell>
           <TableCell align="right" >
             <IconButton aria-label="expand row" size="small" >
                 <DeleteForeverOutlinedIcon onClick={() => handleDeleteItemCart(row.uuid)}/>

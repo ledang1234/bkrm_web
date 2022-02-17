@@ -44,7 +44,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight:800
   },
   openIcon:{
-    marginLeft:40
+
+    flexGrow: 1,textAlign: "right",
+    marginRight:-25
   }
 }));
 

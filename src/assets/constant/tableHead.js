@@ -155,8 +155,8 @@ export  const CheckHistoryHeadCells = [
     { id: 'id', align: 'left', disablePadding: true, label: '#' },
     { id: 'date', align: 'left', disablePadding: false, label: 'Ngày kiểm' },
     { id: 'branch', align: 'left', disablePadding: false, label: 'Chi nhánh' },
-    { id: 'inventory', align: 'right', disablePadding: false, label: 'Tổng số lượng lêch' },
-    { id: 'substract', align: 'right', disablePadding: false, label: 'Tổng giá trị lệch'},
+    { id: 'inventory', align: 'right', disablePadding: false, label: 'Tổng SL lêch' },
+    { id: 'substract', align: 'right', disablePadding: false, label: 'Tổng tiền lệch'},
     { id: 'status', align: 'center', disablePadding: false, label: 'Chức vụ' },
     { id: 'employee', align: 'left', disablePadding: false, label: 'Người thực hiện' },
 ]; 
