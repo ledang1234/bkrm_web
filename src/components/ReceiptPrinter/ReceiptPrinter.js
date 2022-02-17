@@ -27,14 +27,15 @@ import {
     Typography,
     Table,
     TableHead,
-    TableRow,TableCell,
+    TableRow,TableCell,Divider
   } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
         textAlign: "center",
-        fontSize: 12,
+        fontSize: "13.5px",
+        // fontSize: "12em",
         fontWeight: 700,
         marginTop:10,
         color: "#000",
@@ -48,18 +49,21 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         textAlign: "center",
         color: "#000",
-        fontSize: 10,
+        fontSize:"10px",
+        // fontSize: "10em",
     },
     right:{
         flexGrow: 1,
         textAlign: "right",
         color: "#000",
-        fontSize: 10,
+        fontSize: "10px",
+        // fontSize: "10em",
     },
     text:{
         color: "#000",
-        fontSize: 10,
-        textAlign: "center",
+        fontSize: "10px",
+        // fontSize: "10em",
+        // textAlign: "center",
     },
     media: {
       // height: '10%',
@@ -74,6 +78,10 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: 10,
       
     },
+    divider: {
+      // Theme Color, or use css color in quote
+      background: '#000',
+  },
 }));
 let d = moment.now() / 1000;
 
@@ -100,7 +108,7 @@ export const ReceiptPrinter = ({cart, date}) => {
             {/* Logo */}
            {logo? 
             <div className={classes.centerQR} style={{marginBottom:10}}  >
-              <img src={logo} style={{height:60}}/>
+              <img src={logo} style={{height:50}}/>
             </div>:null}
               
            {/* In đơn cũ thì ko lấy store?? */}
@@ -125,47 +133,39 @@ export const ReceiptPrinter = ({cart, date}) => {
            
 
             <Typography className={classes.text} >Thu ngân: {cart.created_by_user? cart.created_by_user.name: info.user.name}</Typography>
-            <Typography className={classes.text} style={{marginBottom:20}}>Khách hàng: {cart.customer?.name} - {cart.customer?.phone}</Typography>
+            <Typography className={classes.text} style={{marginBottom:20}}>Khách hàng: {cart.customer?.name} </Typography>
            
             {/* List */}
-
+                <Divider classes={{root: classes.divider}}/>
                     <Grid container direction="row" justifyContent="space-between">
                         <Grid item xs={5}>
                         <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
                         </Grid>
                         <Grid item xs={3}>
-                        <Typography className={clsx(classes.text,classes.weight)} >SL</Typography>
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SL</Typography>
                         </Grid>
                         <Grid item xs={4}>
-                        <Typography className={clsx(classes.text,classes.weight)} >Thành tiền</Typography>
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>T.Tiền</Typography>
                         </Grid>
                     </Grid>
-                       
-                    {/* <TableBody> */}
-                    {/* {cart.cartItem.map((row, index) => { */}
+                    <Divider classes={{root: classes.divider}}/>      
+                
                     {item.map((row, index) => {
                     return (
                         <>
-                        
-                         {/* <TableCell align="left" className={classes.text} >{row.name}</TableCell>   
-                          <TableRow >
-                              <TableCell align="left" className={classes.text} >{row.unit_price}</TableCell>    
-                              <TableCell align="center" className={classes.text} ><ThousandFormat value={row.quantity}/></TableCell> 
-                              <TableCell align="right" className={classes.text} > <ThousandFormat value={row.quantity * row.unit_price}/></TableCell>
-                              
-                          </TableRow> */}
                           <Typography className={classes.text} >{row.name}</Typography>
                           <Grid container direction="row" justifyContent="space-between">
                             <Grid item xs={5}>
                             <Typography className={classes.text} ><ThousandFormat value={row.unit_price}/></Typography>
                             </Grid>
                             <Grid item xs={3}>
-                            <Typography className={classes.text} ><ThousandFormat value={row.quantity}/></Typography>
+                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity}/></Typography>
                             </Grid>
                             <Grid item xs={4}>
-                            <Typography className={classes.text} ><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
+                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
                             </Grid>
                         </Grid>
+                        <Divider classes={{root: classes.divider}}/>
                         </>
                     );
                 })}
@@ -173,7 +173,7 @@ export const ReceiptPrinter = ({cart, date}) => {
               
 
             <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}>
-              <Grid item xs={6}>
+              <Grid item xs={5}>
                 <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
                 <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
                 <Typography className={clsx(classes.text,classes.weight)}>
@@ -206,8 +206,9 @@ export const ReceiptPrinter = ({cart, date}) => {
             {link? 
             <>
                 <Typography className={classes.center}> Mở camera và quét mã để truy cập trang web</Typography>
-                <div className={classes.centerQR} style={{marginBottom:15, marginTop:10, }}>
-                   <QRCode value={link} style={{height:"50%", width:"45%"}} />
+                <div className={classes.centerQR} style={{marginBottom:15, marginTop:10 }}>
+                   {/* <QRCode value={link}  style={{height:"50%", width:"50%"}}/> */}
+                   <QRCode value={link}  size={65}/>
                 </div> 
                 </>
             : null}
@@ -224,110 +225,99 @@ export const ImportReceiptPrinter = ({cart, date}) => {
 
   const item = cart.cartItem? cart.cartItem :cart.details
     return (
-          <div style={{margin:20}}>
+          <div >
 
           {/*  */}
-          <Typography className={classes.title} style={{marginTop:50}}>PHIẾU NHẬP HÀNG</Typography>
+          <Typography className={classes.title} >PHIẾU NHẬP HÀNG</Typography>
           <Typography className={classes.center}>Mã phiếu: {}</Typography>
           <Typography className={classes.center} style={{marginBottom:25}}>Thời gian: {date? date: orderTime}</Typography>
         
           
           <Typography className={classes.text} >Chi nhánh nhập: {cart.branch ? cart.branch.name :info.branch.name}</Typography>
           <Typography className={classes.text} >Người tạo: {cart.created_by_user ? cart.created_by_user.name :info.user.name}</Typography>
-          <Typography className={classes.text}>Nhà cung cấp: {cart.supplier?.name} - {cart.supplier?.phone}</Typography>
+          <Typography className={classes.text} style={{marginBottom:10}}>Nhà cung cấp: {cart.supplier?.name} </Typography>
         
           {/* List */}
       
-          <TableContainer >
-              <Table  >
-                  <TableHead >
-                      <TableRow >
-                          <TableCell align="left" className={classes.text}>STT</TableCell>
-                          <TableCell align="left" className={classes.text}>Mã hàng</TableCell>
-                          <TableCell align="left" className={classes.text}>Sản phẩm</TableCell>
-                          <TableCell align="center" className={classes.text}>Đơn giá</TableCell>
-                          <TableCell align="center" className={classes.text}>SL</TableCell>
-                          <TableCell align="right" className={classes.text}>Thành tiền</TableCell>
-                      </TableRow>
-                  </TableHead>
-                  <TableBody>
+          <Divider classes={{root: classes.divider}}/>
+              <Grid container direction="row" justifyContent="space-between">
+                  <Grid item xs={1}>
+                  <Typography className={clsx(classes.text,classes.weight)} >STT</Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                  <Typography className={clsx(classes.text,classes.weight)} >Mã hàng</Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                  <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                  <Typography className={clsx(classes.text,classes.weight)} >Đơn giá</Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                  <Typography className={clsx(classes.text,classes.weight)} >SL</Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                  <Typography className={clsx(classes.text,classes.weight)} >T.Tiền</Typography>
+                  </Grid>
+              </Grid>
+              <Divider classes={{root: classes.divider}}/>      
+
+         
                   {item.map((row, index) => {
                   return (
                       <>
-                      <TableRow >
-                          <TableCell align="left" className={classes.text} >{index+1}</TableCell> 
-                          <TableCell align="left" className={classes.text} >{row.bar_code}</TableCell>   
-                          <TableCell align="left" className={classes.text} >{row.name}</TableCell>    
-                          <TableCell align="center" className={classes.text} ><ThousandFormat value={row.unit_price}/></TableCell>    
-                          <TableCell align="center" className={classes.text} ><ThousandFormat value={row.quantity}/></TableCell> 
-                          <TableCell align="right" className={classes.text} > <ThousandFormat value={row.quantity * row.unit_price}/></TableCell>
-                          
-                      </TableRow>
+                     
+                      <Grid container direction="row" justifyContent="space-between">
+                        <Grid item xs={1}>
+                        <Typography className={clsx(classes.text,classes.weight)} >{index+1}</Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                        <Typography className={clsx(classes.text,classes.weight)} >{row.bar_code}</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography className={clsx(classes.text,classes.weight)} >{row.name}</Typography>
+                        </Grid>
+                       
+                        <Grid item xs={2}>
+                        <Typography className={clsx(classes.text,classes.weight)} ><ThousandFormat value={row.unit_price}/></Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                        <Typography className={clsx(classes.text,classes.weight)} ><ThousandFormat value={row.quantity}/></Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                        <Typography className={clsx(classes.text,classes.weight)} ><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
+                        </Grid>
+                    </Grid>
+                    <Divider classes={{root: classes.divider}}/>      
                       </>
                   );
               })}
-              </TableBody>
-              </Table>
-
-          </TableContainer>
-          
-
-      <Grid container direction="column" style={{marginTop:20, marginBottom:50}}>
-          <Grid container direction="row" justifyContent="flex-end">
-            <Grid item xs={3}>
-              <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount}/></Typography>
-            </Grid>
-          </Grid>
-
-          <Grid container direction="row" justifyContent="flex-end">
-            <Grid item xs={3}>
-            <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography >
-                <ThousandFormat className={clsx(classes.text,classes.weight)} value={cart.discount} />
-              </Typography>
-            </Grid>
-          </Grid>
-
-          <Grid container direction="row" justifyContent="flex-end">
-            <Grid item xs={3}>
-              <Typography className={clsx(classes.text,classes.weight)}>
-              Tổng cộng:{" "} 
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-            <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount- cart.discount}/></Typography>
-              
-            </Grid>
-          </Grid>
-
-          <Grid container direction="row" justifyContent="flex-end">
-            <Grid item xs={3}>
-              <Typography className={clsx(classes.text,classes.weight)}>
-              Tiền trả NCC:{" "}
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-            <Typography className={clsx(classes.text,classes.weight)}> <ThousandFormat value={cart.paid_amount} /></Typography>
-
-            </Grid>
-          </Grid>
-
-          <Grid container direction="row" justifyContent="flex-end">
-            <Grid item xs={3}>
-              <Typography className={clsx(classes.text,classes.weight)}>
-              Còn lại:{" "}
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
+            
+            <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}>
+              <Grid item xs={5}>
+                <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
+                <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
+                <Typography className={clsx(classes.text,classes.weight)}>
+                Tổng cộng:{" "} 
+                </Typography>
+                <Typography className={clsx(classes.text,classes.weight)}>
+                Tiền trả NCC:{" "}
+                </Typography>
+                <Typography className={clsx(classes.text,classes.weight)}>
+                Còn lại:{" "}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount} /></Typography>
+                <Typography >
+                  <ThousandFormat className={clsx(classes.text,classes.weight)} value={cart.discount} />
+                </Typography>
+                <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount}/></Typography>
+                <Typography className={clsx(classes.text,classes.weight)}> <ThousandFormat value={cart.paid_amount} /></Typography>
                 <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount- cart.discount)} /></Typography>
-            </Grid>
-          </Grid>
-        </Grid>
+
+              </Grid>
+            </Grid>   
 
         <Grid container direction="row" justifyContent="space-around">
               <Typography className={clsx(classes.text,classes.weight)}>

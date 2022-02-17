@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import CloseIcon from '@material-ui/icons/Close';
 
 //import project
 import {
@@ -11,6 +12,7 @@ import {
   Box,
   Button,
   Typography,
+  Grid
 } from "@material-ui/core";
 
 // import - icon
@@ -219,11 +221,18 @@ const ToolBar = (props) => {
             </IconButton>
           </Tooltip>
 
-          <SimpleModal
-            title={"Nhập hàng từ file excel"}
+          <SimpleModal     
             open={openImport}
             handleClose={() => setOpenImport(false)}
           >
+            <Box className={classes.container}>   
+              <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                  <Typography variant="h3" style={{ marginRight: 30 }}>Nhập hàng từ file excel</Typography>
+                  <IconButton aria-label="close"   onClick={() => setOpenImport(false)}>
+                    <CloseIcon  fontSize="small" />
+                  </IconButton>
+            </Grid>
+            </Box>
             <Typography style={{ marginBottom: 25 }}>
               {" "}
               (Tải về file mẫu:{" "}

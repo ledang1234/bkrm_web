@@ -195,6 +195,7 @@ const CartSummary = (props) => {
               </Typography>
             </Grid>
 
+
             <Grid
               container
               direction="row"
@@ -210,6 +211,7 @@ const CartSummary = (props) => {
                 onChange={(e) => handleUpdateDiscount(e.target.value)}
               />
             </Grid>
+
 
             <Grid
               container

@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef,useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import { useReactToPrint } from "react-to-print";
+import {ReceiptPrinter} from "../../../../../components/ReceiptPrinter/ReceiptPrinter"
+
 
 //import library
 import {
@@ -103,6 +106,14 @@ const InventoryReturnDetail = (props) => {
       loadData();
     }
   }, [props.parentProps.openRow]);
+
+  //print
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+  });
+
 
   return (
     <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
@@ -396,7 +407,7 @@ const InventoryReturnDetail = (props) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem>
+            <StyledMenuItem onClick={()=> handlePrint()}>
               <ListItemIcon style={{ marginRight: -15 }}>
                 <PrintTwoToneIcon fontSize="small" />
               </ListItemIcon>
@@ -412,6 +423,15 @@ const InventoryReturnDetail = (props) => {
           </StyledMenu>
         </Grid>
       </Box>
+
+       {/* 3. Receipt */}
+       <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ReceiptPrinter cart={purchaseReturn} date={row.creation_date} />
+        </div>
+      </div>
+
+
     </Collapse>
   );
 };

@@ -151,12 +151,14 @@ const SearchProduct = (props) => {
       <Autocomplete
         options={options}
         freeSolo={true}
-        getOptionLabel={getOptionLabel}
+        // BỎ CÁI NÀY TỰ EMPTY
+        // getOptionLabel={getOptionLabel}
         onChange={(event, value) => {
           if (value) {
-            setSelectedOption(value);
+            // setSelectedOption(value);
             props.handleSearchBarSelect(value);
           }
+  
         }}
         onInputChange={loadingData}
         renderInput={renderInput}

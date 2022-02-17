@@ -350,6 +350,7 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
+
   // const handleConfirm = async () => {
   //   // handlePrint();
   //   let cart = cartList[selectedIndex];
@@ -444,8 +445,7 @@ const Cart = () => {
   //       console.log(err);
   //     }
 
-  //   }
-  // };
+
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
 
