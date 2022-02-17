@@ -1,5 +1,11 @@
-import React, { useEffect , useState} from "react";
-import {Grid, Typography,TextField,InputAdornment,IconButton} from '@material-ui/core'
+import React, { useEffect, useState } from "react";
+import {
+  Grid,
+  Typography,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from "@material-ui/core";
 import {
   useTheme,
   withStyles,
@@ -12,7 +18,7 @@ import AddIcon from "@material-ui/icons/Add";
 
 import customerApi from "../../api/customerApi";
 import { useSelector } from "react-redux";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -38,7 +44,7 @@ const SearchCustomer = (props) => {
   // const [selectedOption, setSelectedOption] = useState(props.selected)
   // const [options, setOptions] = React.useState([]);
 
-  useEffect(() => {}, [props.selected]);
+  useEffect(() => {}, [props.selectedCustomer]);
 
   // const loadingData = async () => {
   //   const response = await customerApi.getCustomers(store_uuid);
@@ -64,7 +70,7 @@ const SearchCustomer = (props) => {
       placeholder="Tìm khách hàng"
       margin="normal"
       InputProps={
-        props.selectedSupplier === {}
+        props.selectedCustomer
           ? {
               ...params.InputProps,
               startAdornment: (
@@ -90,13 +96,23 @@ const SearchCustomer = (props) => {
                   <SearchIcon style={{ color: grey[500] }} />
                 </InputAdornment>
               ),
+              endAdornment: (
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  onClick={props.handleClickOpen}
+                  style={{ marginRight: -30 }}
+                >
+                  <AddIcon />
+                </IconButton>
+              ),
             }
       }
     />
   );
 
-  const getOptionLabel = (option) =>  option.name ? option.name : ""
-  
+  const getOptionLabel = (option) => (option.name ? option.name : "");
+
   return (
     <div style={{ width: "100%" }}>
       <Autocomplete

@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import update from 'immutability-helper';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import ImportReturnSummary from '../../CheckoutComponent/CheckoutSummary/ImportReturnSummary/ImportReturnSummary';
 
@@ -42,8 +42,10 @@ import ButtonQuantity from '../../Button/ButtonQuantity';
 import purchaseReturnApi from '../../../api/purchaseReturnApi';
 import SnackBarGeneral from '../../SnackBar/SnackBarGeneral';
 
+import {statusAction} from '../../../store/slice/statusSlice';
+
 function InventoryReturnPopUp(props) {
-  const { purchaseOrder, classes, handleCloseReturn } = props;
+  const { purchaseOrder, classes, handleCloseReturn, reload, reloadDetail } = props;
 
   // 2. Table sort
   const [order, setOrder] = React.useState('desc');
@@ -152,6 +154,8 @@ function InventoryReturnPopUp(props) {
     setPurchaseReturn(newPurchaseReturn);
   };
 
+  const dispatch = useDispatch()
+
   const handleConfirm = async () => {
     const d = moment.now() / 1000;
 
@@ -171,7 +175,7 @@ function InventoryReturnPopUp(props) {
         product_id: detail.product_id,
         quantity: detail.returnQuantity,
         unit_price: detail.returnPrice,
-
+        purchase_order_detail_id: detail.id,
       })),
       export_date,
     };
@@ -182,16 +186,12 @@ function InventoryReturnPopUp(props) {
         purchaseOrder.branch.uuid,
         body,
       );
-      setSnackStatus({
-        style: 'success',
-        message: `Trả hàng thành công: ${res.data.purchase_return_code}`,
-      });
-      setOpenSnack(true);
+      dispatch(statusAction.successfulStatus(`Trả hàng thành công: ${res.data.purchase_return_code}`))
+      reload();
+      reloadDetail();
+      handleCloseReturn()
     } catch (err) {
-      setSnackStatus({
-        style: 'error',
-        message: 'Trả hàng thất bại! ',
-      });
+      dispatch(statusAction.failedStatus('Trả hàng thất bại!'))
       setOpenSnack(true);
       console.log(err);
     }
@@ -208,11 +208,7 @@ function InventoryReturnPopUp(props) {
         justifyContent="space-between"
         alignItems="center"
       >
-        <SnackBarGeneral
-          handleClose={handleCloseSnackBar}
-          open={openSnack}
-          status={snackStatus}
-        />
+        
 
         <ListItem style={{ paddingTop: 20, marginBottom: -20, marginLeft: 25 }}>
           <Typography variant="h3" style={{ marginRight: 20 }}>
@@ -322,7 +318,7 @@ function ImportReturnTableRow({ detail, handleProductPriceChange, handleItemQuan
           setQuantity={handleChangeQuantity}
           show={show}
           setShow={setShow}
-          limit={detail.quantity}
+          limit={detail.quantity - detail.returned_quantity}
           isReturn={true}
           
         />

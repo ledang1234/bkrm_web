@@ -8,7 +8,7 @@ import purchaseOrderApi from "../../api/purchaseOrderApi";
 import { useDispatch, useSelector } from "react-redux";
 import { statusAction } from "../../store/slice/statusSlice";
 const PayRemaining = (props) => {
-  const { open, editApiCall } = props;
+  const { open, editApiCall, reloadDetail } = props;
   const handleClose = () => {
     props.handleClose();
     formik.resetForm();
@@ -36,6 +36,8 @@ const PayRemaining = (props) => {
       });
       dispatch(statusAction.successfulStatus("Trả thêm tiền thành công"));
       props.onReload();
+
+      reloadDetail();
     } catch (error) {
       console.log(error);
       dispatch(statusAction.failedStatus("Trả thêm tiền thất bại"));

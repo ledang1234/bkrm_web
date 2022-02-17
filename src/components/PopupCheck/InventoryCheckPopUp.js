@@ -35,6 +35,7 @@ import inventoryCheckApi from "../../api/inventoryCheckApi";
 import SnackBarGeneral from "../SnackBar/SnackBarGeneral";
 import InventoryCheckSummary from "../CheckoutComponent/CheckoutSummary/InventoryCheckSumary/InventroyCheckSumary";
 import SimpleModal from "../Modal/ModalWrapper";
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import ButtonQuantity from "../Button/ButtonQuantity";
 function InventoryCheckPopUp({
   classes,
@@ -268,6 +269,7 @@ function InventoryCheckPopUp({
                           handleItemRealQuantityChange
                         }
                         detail={detail}
+                        handleDeleteItem={handleDeleteItem}
                       />
                     ))}
                   </TableBody>
@@ -330,7 +332,7 @@ function InventoryCheckPopUp({
 
 export default InventoryCheckPopUp;
 
-function InventoryCheckTableRow({ detail, handleItemRealQuantityChange }) {
+function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDeleteItem }) {
   const classes = useStyles();
   const [show, setShow] = React.useState("none");
   useEffect(() => { }, [detail]);
@@ -372,6 +374,11 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange }) {
       <TableCell align="center" className={classes.boldText}>
         {(Number(detail.real_quantity) - Number(detail.branch_quantity)) *
           detail.standard_price}
+      </TableCell>
+      <TableCell align="right" className={classes.boldText}>
+          <IconButton aria-label="expand row" size="small"style={{marginLeft:-25}} >
+            <DeleteForeverOutlinedIcon onClick={() => handleDeleteItem(detail.id)}/>
+          </IconButton>
       </TableCell>
     </TableRow>
   );

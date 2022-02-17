@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
@@ -7,7 +7,7 @@ import { grey } from "@material-ui/core/colors";
 import AddIcon from "@material-ui/icons/Add";
 
 import { useReactToPrint } from "react-to-print";
-import {ImportReceiptPrinter} from "../../../components/ReceiptPrinter/ReceiptPrinter"
+import { ImportReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
 //import library
 import {
   Grid,
@@ -22,12 +22,12 @@ import {
   ButtonBase,
   Avatar,
   Tooltip,
-  TextField
+  TextField,
 } from "@material-ui/core";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
-import SearchBarCode from "../../../components/SearchBar/SearchBarCode"
+import SearchBarCode from "../../../components/SearchBar/SearchBarCode";
 
 //import project
 //rieng
@@ -115,10 +115,30 @@ const Import = () => {
     const fetchSupplier = async () => {
       const response = await supplierApi.getSuppliers(store_uuid);
       setSuppliers(response.data);
+      setCartList([
+        {
+          supplier: response.data.length ? response.data[0] : null,
+          cartItem: [],
+          total_amount: "0",
+          paid_amount: "0",
+          discount: "0",
+          payment_method: "cash",
+        },
+      ]);
     };
 
     fetchSupplier();
   }, []);
+
+  const [reloadSupplier, setReloadSupplier] = useState(false);
+  useEffect(() => {
+    const fetchSupplier = async () => {
+      const response = await supplierApi.getSuppliers(store_uuid);
+      setSuppliers(response.data);
+    };
+
+    fetchSupplier();
+  }, [reloadSupplier]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -140,12 +160,12 @@ const Import = () => {
     setCartList([
       ...cartList,
       {
-        supplier: suppliers[0],
+        supplier: suppliers.length ? suppliers[0] : null,
         cartItem: [],
-        total_amount: "0",
-        paid_amount: "0",
+        total_amount: 0,
+        paid_amount: 0,
+        discount: 0,
         payment_method: "cash",
-        discount: "0",
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -157,7 +177,7 @@ const Import = () => {
     if (cartList.length === 0) {
       setCartList([
         {
-          supplier: suppliers[0],
+          supplier: suppliers.length ? suppliers[0] : null,
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -334,13 +354,11 @@ const Import = () => {
 
       setOpenSnack(true);
       // console.log(err);
-
     } else {
       let d = moment.now() / 1000;
       let importTime = moment
         .unix(d)
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-
 
       let body = {
         supplier_uuid: cart.supplier?.uuid,
@@ -351,7 +369,6 @@ const Import = () => {
         status:
           Number(cart.total_amount) - Number(cart.discount) >=
           Number(cart.paid_amount)
-
             ? "debt"
             : "closed",
         details: cart.cartItem,
@@ -373,8 +390,6 @@ const Import = () => {
 
         handlePrint();
         handleDelete(selectedIndex);
-        
-
       } catch (err) {
         setSnackStatus({
           style: "error",
@@ -383,27 +398,24 @@ const Import = () => {
         setOpenSnack(true);
         console.log(err);
       }
-
     }
   };
 
   //print
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-  content: () => componentRef.current,
+    content: () => componentRef.current,
   });
 
-  console.log(order)
-
-
+  console.log(order);
 
   //   }
   // };
 
-  const [barcodeChecked, setBarcodeChecked] = useState(true)
+  const [barcodeChecked, setBarcodeChecked] = useState(true);
   const handleSwitchChange = () => {
-    setBarcodeChecked(!barcodeChecked)
-  }
+    setBarcodeChecked(!barcodeChecked);
+  };
 
   return (
     <Grid
@@ -416,7 +428,7 @@ const Import = () => {
       <AddInventory
         open={addProduct}
         handleClose={() => setAddProduct(false)}
-        setReload={() => { }}
+        setReload={() => {}}
       />{" "}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
@@ -468,20 +480,26 @@ const Import = () => {
                   <Grid container alignItems="center">
                     <Grid item>
                       <FormControlLabel
-                        control={<Switch
-                          checked={barcodeChecked} onChange={handleSwitchChange}
-                          color="primary" />}
+                        control={
+                          <Switch
+                            checked={barcodeChecked}
+                            onChange={handleSwitchChange}
+                            color="primary"
+                          />
+                        }
                         label={"Dùng mã vạch"}
                       />
                     </Grid>
                     <Grid item>
-                      {
-                        barcodeChecked ?
-                          <SearchBarCode handleSearchBarSelect={handleSearchBarSelect}/> :
-                          <SearchProduct
-                            handleSearchBarSelect={handleSearchBarSelect}
-                          />
-                      }
+                      {barcodeChecked ? (
+                        <SearchBarCode
+                          handleSearchBarSelect={handleSearchBarSelect}
+                        />
+                      ) : (
+                        <SearchProduct
+                          handleSearchBarSelect={handleSearchBarSelect}
+                        />
+                      )}
                     </Grid>
                     <Grid item>
                       <ButtonBase
@@ -568,6 +586,7 @@ const Import = () => {
                 mode={mode}
                 currentBranch={branch}
                 suppliers={suppliers}
+                reloadSuppliers={() => setReloadSupplier(!reloadSupplier)}
               />
             ) : (
               <ImportSummary
@@ -594,14 +613,12 @@ const Import = () => {
           </Box>
         </Card>
       </Grid>
-
-       {/* 3. Receipt */}
-       <div style={{ display: "none" }}>
+      {/* 3. Receipt */}
+      <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ImportReceiptPrinter cart={cartList[selectedIndex]}  />
+          <ImportReceiptPrinter cart={cartList[selectedIndex]} />
         </div>
       </div>
-
     </Grid>
   );
 };
