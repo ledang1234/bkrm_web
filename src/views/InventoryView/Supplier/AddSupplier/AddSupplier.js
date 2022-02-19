@@ -101,7 +101,7 @@ const AddSupplier = (props) => {
       props.onReload();
       props.handleClose("Success");
     } catch (err) {
-      dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thất bại"));
+      dispatch(statusAction.failedStatus("Tạo nhà cung cấp thất bại"));
       console.log(err);
       props.handleClose("Failure");
     }

@@ -13,13 +13,27 @@ import { Paper } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logInHandler, empLogInHandler } from "../../store/actionCreator";
+import { useFormik  } from "formik";
+import * as Yup from "yup";
 export default function SignIn() {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
   const [isOwner, setIsOwner] = useState(false);
+  const loginFormik = useFormik({
+    initialValues: {
+      phone: "",
+      password: ""
+    },
+    validationSchema : Yup.object({
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại")
+        .matches(/^\d+$/, "Số điển thoại không chính xác"),
+      password: Yup.string().required("Nhập mật khẩu"),
+    })
+  }
+  )
   const dispatch = useDispatch();
   const classes = useStyles();
-
+  console.log(loginFormik.touched,"errorS:",loginFormik.errors,loginFormik.values)
   return (
     <Box className={classes.background}>
       <Paper className={classes.container}>
@@ -45,7 +59,11 @@ export default function SignIn() {
                 label="Số điện thoại"
                 name="phone"
                 autoFocus
-                onChange={(e) => setUserName(e.target.value)}
+                value = {loginFormik.values.phone}
+                onChange= {loginFormik.handleChange}
+                error={loginFormik.touched.phone && loginFormik.errors.phone}
+                helperText={loginFormik.touched.phone ? loginFormik.errors.phone : null}
+                onBlur={loginFormik.handleBlur}
               />
               <TextField
                 variant="outlined"
@@ -55,7 +73,11 @@ export default function SignIn() {
                 name="password"
                 label="Mật khẩu"
                 type="password"
-                onChange={(e) => setPassword(e.target.value)}
+                value = {loginFormik.values.password}
+                onChange= {loginFormik.handleChange}
+                error={loginFormik.touched.password && loginFormik.errors.password}
+                helperText={loginFormik.touched.password ? loginFormik.errors.password : null}
+                onBlur={loginFormik.handleBlur}
               />
               <FormControlLabel
                 control={
@@ -73,11 +95,12 @@ export default function SignIn() {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
+                disabled = {!(loginFormik.isValid && Object.keys(loginFormik.touched).length > 0)}
                 onClick={() => {
                   if (isOwner) {
-                    dispatch(logInHandler(userName, password));
+                    dispatch(logInHandler(loginFormik.values.phone, loginFormik.values.password));
                   } else {
-                    dispatch(empLogInHandler(userName, password));
+                    dispatch(empLogInHandler(loginFormik.values.phone, loginFormik.values.password));
                   }
                 }}
               >

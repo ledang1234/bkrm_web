@@ -102,7 +102,6 @@ export const ReceiptPrinter = ({cart, date}) => {
 
     const item = cart.cartItem? cart.cartItem :cart.details
 
-    console.log(info)
     return (
         <div >
             {/* Logo */}
