@@ -16,7 +16,6 @@ export const verifyToken = () => {
       const rs = await verifyToken();
       if (rs) {
         dispatch(authActions.logIn());
-        dispatch(loadingActions.finishLoad());
         if (rs.role == "owner") {
           dispatch(
             infoActions.setUser({
@@ -39,8 +38,8 @@ export const verifyToken = () => {
         dispatch(infoActions.setRole(rs.role));
       } else {
         dispatch(authActions.logOut());
-        dispatch(loadingActions.finishLoad());
       }
+      dispatch(loadingActions.finishLoad());
     } catch (error) {
       dispatch(authActions.logOut());
       dispatch(loadingActions.finishLoad());

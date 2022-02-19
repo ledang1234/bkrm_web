@@ -1,6 +1,6 @@
 import themes from "./theme";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Route, Switch, Redirect, HashRouter } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect, HashRouter,useLocation } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
@@ -27,6 +27,7 @@ function App() {
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
   }, [dispatch]);
+  const prevPath = sessionStorage.getItem("BKRMprev")
   return (
     <ThemeProvider theme={themes(customization)}>
       <Box>
@@ -43,10 +44,10 @@ function App() {
               <HomePage />
             </PrivateRoute>
             <Route path="/login" exact>
-              {isLoggedIn ? <Redirect to="/home" /> : <LoginPage />}
+              {isLoggedIn ?  <Redirect to={prevPath ? prevPath : "/home"}/>: <LoginPage />}
             </Route>
             <Route path="/signup" exact>
-              {isLoggedIn ? <Redirect to="/home" /> : <SignupPage />}
+              {isLoggedIn ? <Redirect to={prevPath ? prevPath : "/home"} /> : <SignupPage />}
             </Route>
             <Route path="/main" component={MainPage} />
             <Route path="/customer-test" component={CustomerPage} />
