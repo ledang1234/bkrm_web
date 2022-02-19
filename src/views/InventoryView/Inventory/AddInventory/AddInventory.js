@@ -137,11 +137,11 @@ const AddInventory = (props) => {
       images.forEach((image) => bodyFormData.append("images[]", image));
 
       await productApi.createProduct(store_uuid, bodyFormData);
-      dispatch(statusAction.successfulStatus("Create product successfully"));
+      dispatch(statusAction.successfulStatus("Tạo sản phẩm thành công"));
       props.setReload(true);
     } catch (error) {
       console.log(error);
-      dispatch(statusAction.failedStatus("Create product failed"));
+      dispatch(statusAction.failedStatus("Tạo sản phẩm thất bại"));
     }
   };
 
