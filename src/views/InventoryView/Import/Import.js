@@ -243,7 +243,6 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { cartItem: { $push: [newCartItem] } },
     });
-    console.log(newCartList);
     setCartList(newCartList);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
@@ -406,8 +405,6 @@ const Import = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-
-  console.log(order);
 
   //   }
   // };

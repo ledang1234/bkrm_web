@@ -114,7 +114,6 @@ const Customization = () => {
   };
 
   const mode = customization.mode;
-  {console.log(customization.mode)}
   const handleMode = (mode) => {
     dispatch(customizeAction.setMode(mode));
     updateLocalStorage({ type: "MODE", payload: mode });
