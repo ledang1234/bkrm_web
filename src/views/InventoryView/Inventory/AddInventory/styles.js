@@ -24,7 +24,7 @@ export default makeStyles((theme) => ({
     transform: 'rotate(180deg)',
   },
   attrCard:{
-    margin:"25px 0px 25px 0px", 
+    margin:"5px 0px 25px 0px", 
     boxShadow: "none",border: '1px solid' , borderColor:"#c9c9c9"
   },
   attrHead:{

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import TagsInput from "../../../../components/TextField/TagsInput"
 import { useTheme, makeStyles, styled } from "@material-ui/core/styles";
 
-import AddIcon from '@material-ui/icons/Add';
 import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
+import SimpleModal from "../../../../components/Modal/ModalWrapper";
+
+import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWithClose";
 
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
-
-import {Button, Grid, FormControl, Select,MenuItem} from "@material-ui/core";
+import AddIcon from '@material-ui/icons/Add';
+import {Button,TextField, Grid, FormControl, Select,MenuItem,Typography, ListItem} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -27,6 +29,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
 
     const theme = useTheme();
     const classes = useStyles(theme);
+
     
     function generateList   ()  {
         let newArr = [...datas];
@@ -95,6 +98,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
                 Thêm thuộc tính
             </Button>
 
+            
         </div>
     )
 }
@@ -105,6 +109,11 @@ export default AddAttribute
 const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, deleteAttr, setDatas ,updateValueChanged}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    //  popup
+  const [openPopupAddAttr, setOpenPopupAddAttr] = useState(false);
+  const [isEditPopUp, setIsEditPopUp] = useState(false);
+
 
     const [value, setValue] = React.useState([]);
 
@@ -134,14 +143,18 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
             <Grid container item xs={11} alignItems="center" >
                 <FormControl className={classes.formControl}>
                     <Select value={data.key} onChange={handleChangeAttr}  >
-                        {/* <MenuItem value="" selected disabled hidden>Chọn thuộc tính...</MenuItem> */}
+                        <MenuItem value="unset" selected disabled hidden>Chọn thuộc tính...</MenuItem>
                         {attributeList.map((attr) => {
                             return (<MenuItem value={attr.name}>{attr.name}</MenuItem>)
                         })}
+                        <MenuItem   hidden>
+                            <AddIcon fontSize="small"style={{marginRight:5, marginLeft:-5}}/>
+                            <Typography style={{color:"#000", fontSize:12}} onClick={()=>{setOpenPopupAddAttr(true); setIsEditPopUp(false)}}>Tạo thuộc tính mới</Typography>
+                        </MenuItem>
                     </Select>
 
                 </FormControl>
-                <EditTwoToneIcon style={{ marginRight: 60 }} />
+                <EditTwoToneIcon style={{ marginRight: 60 }}  onClick={()=>{setOpenPopupAddAttr(true); setIsEditPopUp(true)}}/>
                 <TagsInput style={{ minWidth: 270 }} selectedTags={handleSelecetedTags} selectedItem={selectedItem} setSelectedItem={setSelectedItem} placeholder="Nhấn giá trị và enter"
                 />
             </Grid>
@@ -149,6 +162,32 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
             <Grid container item xs={1} >
                 <DeleteForeverTwoToneIcon onClick={() => { deleteAttr(data.key) }} />
             </Grid>
+
+            <ModalWrapperWithClose     
+                open={openPopupAddAttr}
+                handleClose={() => setOpenPopupAddAttr(false)}
+                title={isEditPopUp? "Sửa thuộc tính" :"Thêm thuộc tính"}
+            >
+                 <Grid container alignItems="center" style={{margin:"20px 10px 30px 10px"}}>
+                    <Typography style={{marginRight:40, color:"#000", fontWeight:500}}>Tên thuộc tính:  </Typography> 
+                    <TextField />
+                 </Grid>
+                 {isEditPopUp?
+                    //  Edit, Delete
+                    // null
+                    <div style={{flexGrow: 1,textAlign: "right"}}>
+                        <Button size="small" variant="contained" color="secondary">Xoá</Button>
+                        <Button size="small" variant="contained" color="primary" style={{marginLeft:10}}>Sửa</Button>
+                    </div>
+                    :
+                    // add
+                    <Button style={{flexGrow: 1,textAlign: "center"}} variant="contained" color="primary">hello</Button>
+
+                                    
+                }
+                
+                        
+            </ModalWrapperWithClose>
 
         </Grid>
     )
