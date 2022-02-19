@@ -23,6 +23,7 @@
     "apexcharts": "^3.29.0",
     "axios": "^0.23.0",
     "date-fns": "^2.8.1",
+    "downshift": "^6.1.7",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "google-map-react": "^2.1.10",

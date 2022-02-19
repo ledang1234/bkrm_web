@@ -42,6 +42,7 @@ const CustomerReport = (props) => {
                 <TableHeader
                     classes={classes}
                     headerData={CustomerHeadCells}
+                    notSort={true}
                 />
                 <TableBody>
                 {customerSales.map((row, index) => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme,makeStyles } from "@material-ui/core/styles";
+
 import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 //import library
 import {
@@ -15,6 +16,12 @@ import {
   IconButton,
   Tooltip,
   Dialog,
+  FormControlLabel,
+  Switch,
+  Collapse,
+  Paper,
+  Card,
+  CardHeader
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
@@ -33,6 +40,11 @@ import SearchIcon from "@material-ui/icons/Search";
 import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import clsx from "clsx"
+import TagsInput from "../../../../components/TextField/TagsInput"
+import AddAttribute from "./AddAttribute"
+import RelaltedItemList from "./RelaltedItemList"
 const UploadImages = (img) => {
   return (
     <Box
@@ -48,6 +60,7 @@ const UploadImages = (img) => {
     />
   );
 };
+
 const AddInventory = (props) => {
   const { handleClose, open } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
@@ -257,11 +270,48 @@ const AddInventory = (props) => {
   const onFocus = (ref) => {
     ref.current.focus()
   }
+
+  //ATTRIBUTE
+  // api get all attribute
+  const attributeList = [
+    {
+      id:"1",
+      name:'MÀU'
+    },
+    {
+      id:"2",
+      name:'SIZE'
+    },
+    {
+      id:"3",
+      name:'RAM'
+    },
+  ]
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+  
+  
+
+  // Attr
+  const [datas, setDatas] = useState([ { key:  "",  items: []}]);
+
+  // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}
+  const [relatedList, setRelatedList] =  useState([]);
+
+  console.log("relatedList",relatedList)
+  
+ 
+  
+
   return (
     <Dialog
       open={open}
       onClose={handleCloseAndReset}
       aria-labelledby="form-dialog-title"
+      maxWidth="md"
     >
       <Box className={classes.root}>
         <AddCategory open={openAddCategory} handleClose={handleCloseCategory} onReset={onReset} />
@@ -399,7 +449,6 @@ const AddInventory = (props) => {
               onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
-
             <TextField
               label="Số lượng đặt hàng lại"
               variant="outlined"
@@ -452,6 +501,45 @@ const AddInventory = (props) => {
               </IconButton>
             </Box>
           </Grid>
+          
+        </Grid>
+
+
+      {/* ATTRIBUTE */}
+        <Card className={classes.attrCard}>
+          <CardHeader
+           onClick={handleExpandClick}
+            action={
+              <IconButton 
+              size="small"
+              className={clsx(classes.expand, {[classes.expandOpen]: expanded,})}
+              onClick={handleExpandClick}
+              aria-expanded={expanded} >
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+            title="Thuộc tính"
+            className={classes.attrHead}
+          />
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <AddAttribute attributeList={attributeList} datas={datas} setDatas={setDatas} setRelatedList={setRelatedList}/>
+          </Collapse>
+    
+      </Card>
+      {/* GENERATE ATTR */}
+      {relatedList.length > 0 ?
+       <Card className={classes.attrCard}>
+       <CardHeader
+         title="Danh sách hàng cùng loại"
+         className={classes.attrHead}
+       />
+          <RelaltedItemList relatedList={relatedList} setRelatedList={setRelatedList}/>
+    </Card>
+    : null}
+     
+
+
+      {/* Button */}
           <Grid
             item
             xs={12}
@@ -481,8 +569,18 @@ const AddInventory = (props) => {
               Thêm
             </Button>
           </Grid>
-        </Grid>
+
+
       </Box>
+      
+
+
+
+
+
+     
+     
+       
     </Dialog >
   );
 };

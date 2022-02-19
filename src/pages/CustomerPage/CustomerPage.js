@@ -13,7 +13,7 @@ import {
   Box,
   Button,
   Grid,
-} from "@material-ui/core";
+} from "@material-ui/core"
 
 import NavBar from "./NavBar/NavBar";
 import MainPage  from "./MainPage/MainPage"
