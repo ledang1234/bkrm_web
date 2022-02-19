@@ -2,25 +2,7 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import React from "react";
 
 const UserInfo = (props) => {
-  const { userInfo, setUserInfo ,user_formik} = { ...props };
-  const setName = (e) => {
-    setUserInfo({ ...userInfo, name: e });
-  };
-  const setPhone = (e) => {
-    setUserInfo({ ...userInfo, phone: e });
-  };
-  const setEmail = (e) => {
-    setUserInfo({ ...userInfo, email: e });
-  };
-  const setDateOfBirth = (e) => {
-    setUserInfo({ ...userInfo, dateOfBirth: e });
-  };
-  const setPassword = (e) => {
-    setUserInfo({ ...userInfo, password: e });
-  };
-  const SetPasswordConfirm = (e) => {
-    setUserInfo({ ...userInfo, passwordConfirm: e });
-  };
+  const { user_formik} = { ...props };
   return (
     <React.Fragment>
       <Grid container spacing={2}>
