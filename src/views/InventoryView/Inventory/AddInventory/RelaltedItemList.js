@@ -30,7 +30,6 @@ const RelaltedItemList = ({relatedList, setRelatedList}) => {
         var newArr = [...relatedList];
         newArr = newArr.filter(row => row.name !== index)
         setRelatedList(newArr)
-
     }
 
     return (

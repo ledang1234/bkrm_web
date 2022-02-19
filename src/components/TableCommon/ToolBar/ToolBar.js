@@ -27,7 +27,10 @@ import NoteAddTwoToneIcon from "@material-ui/icons/NoteAddTwoTone";
 // import third party
 import xlsx from "xlsx";
 import SimpleModal from "../../Modal/ModalWrapper";
+
+import ModalWrapperWithClose from "../../Modal/ModalWrapperWithClose";
 import { applyMiddleware } from "@reduxjs/toolkit";
+// import SimpleModal from "../../Modal/ModalWrapper";
 
 //--thu vien nay bij loi font
 // import jsPDF from 'jspdf'
@@ -221,18 +224,12 @@ const ToolBar = (props) => {
             </IconButton>
           </Tooltip>
 
-          <SimpleModal     
+          <ModalWrapperWithClose     
             open={openImport}
             handleClose={() => setOpenImport(false)}
+            title="Nhập hàng từ file excel"
           >
-            <Box className={classes.container}>   
-              <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="h3" style={{ marginRight: 30 }}>Nhập hàng từ file excel</Typography>
-                  <IconButton aria-label="close"   onClick={() => setOpenImport(false)}>
-                    <CloseIcon  fontSize="small" />
-                  </IconButton>
-            </Grid>
-            </Box>
+        
             <Typography style={{ marginBottom: 25 }}>
               {" "}
               (Tải về file mẫu:{" "}
@@ -270,7 +267,7 @@ const ToolBar = (props) => {
             >
               Nhập hàng
             </Button>
-          </SimpleModal>
+          </ModalWrapperWithClose>
         </Box>
       }
     />

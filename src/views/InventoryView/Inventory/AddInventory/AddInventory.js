@@ -21,7 +21,8 @@ import {
   Collapse,
   Paper,
   Card,
-  CardHeader
+  CardHeader,
+  Checkbox
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
@@ -293,10 +294,11 @@ const AddInventory = (props) => {
     setExpanded(!expanded);
   };
   
-  
+  //Lô, HSD
+  const [outOfDate, setOutOfDate] = React.useState("false")
 
   // Attr
-  const [datas, setDatas] = useState([ { key:  "",  items: []}]);
+  const [datas, setDatas] = useState([ { key:  "unset",  items: []}]);
 
   // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}
   const [relatedList, setRelatedList] =  useState([]);
@@ -304,6 +306,7 @@ const AddInventory = (props) => {
   console.log("relatedList",relatedList)
   
  
+  
   
 
   return (
@@ -503,7 +506,14 @@ const AddInventory = (props) => {
           </Grid>
           
         </Grid>
+        <div style={{flexGrow: 1,textAlign: "right"}}>
+        <FormControlLabel
+          control={<Checkbox checked={outOfDate} onChange={(event)=>setOutOfDate(event.target.checked)} />}
+          label="Lô, hạn sử dụng"
+        />
+        </div>
 
+        
 
       {/* ATTRIBUTE */}
         <Card className={classes.attrCard}>
@@ -533,6 +543,7 @@ const AddInventory = (props) => {
          title="Danh sách hàng cùng loại"
          className={classes.attrHead}
        />
+          {/*  !!!! Handle value phần này */}
           <RelaltedItemList relatedList={relatedList} setRelatedList={setRelatedList}/>
     </Card>
     : null}
