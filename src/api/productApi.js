@@ -9,14 +9,9 @@ const productApi = {
       },
     });
   },
-  getProducts: (storeUuid) => {
-    const url = `stores/${storeUuid}/products`;
-    return axiosClient.get(url);
-  },
-
-  getProductsOfBranch: (storeUuid, branchUuid) => {
+  getProductsOfBranch: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/products`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, { params: query });
   },
 
   getProduct: (storeUuid, productUuid) => {
@@ -68,7 +63,12 @@ const productApi = {
     return axiosClient.post(url, body);
   },
 
-  searchDefaultProducts: (searchKey,page) => {
+  getNestedCategory: (storeUuid) => {
+    const url = `stores/${storeUuid}/categories/getNestedCategory`;
+    return axiosClient.get(url);
+  },
+
+  searchDefaultProducts: (searchKey, page) => {
     const url = `/searchDefaultProduct?searchKey=${searchKey}&page=${page}&limit=${15}`;
     return axiosClient.get(url);
   },
