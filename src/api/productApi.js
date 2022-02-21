@@ -9,6 +9,14 @@ const productApi = {
       },
     });
   },
+  addProductWithVaration: (storeUuid, params) => {
+    const url = `stores/${storeUuid}/products/addProductWithVariation`;
+    return axiosClient.post(url, params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
   getProductsOfBranch: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/products`;
     return axiosClient.get(url, { params: query });

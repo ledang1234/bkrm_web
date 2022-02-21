@@ -179,25 +179,24 @@ const InventoryDetail = (props) => {
                 <Grid container direction="row" justifyContent="flex-start">
                   <Grid item xs={6}>
                     <Typography variant="h5" gutterBottom component="div">
-                      Mã hàng{" "}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="body1" gutterBottom component="div">
-                      {/* {productDetail.uuid}{" "} */}
-                      {productDetail.bar_code}{" "}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" justifyContent="flex-start">
-                  <Grid item xs={6}>
-                    <Typography variant="h5" gutterBottom component="div">
                       Tên sản phẩm
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="body1" gutterBottom component="div">
                       {productDetail.name}{" "}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container direction="row" justifyContent="flex-start">
+                  <Grid item xs={6}>
+                    <Typography variant="h5" gutterBottom component="div">
+                      Mã sản phẩm
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="body1" gutterBottom component="div">
+                      {productDetail.product_code}{" "}
                     </Typography>
                   </Grid>
                 </Grid>
