@@ -209,7 +209,7 @@ export default Employee;
 const ComponentToPrint = ({employeeList,classes}) =>{
   return (
       <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Nhân viên</Typography>
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách nhân viên</Typography>
         <div >
           <TableHeader
                 classes={classes}

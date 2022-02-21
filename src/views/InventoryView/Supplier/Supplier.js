@@ -210,13 +210,13 @@ const ComponentToPrint = ({ supplerList, classes }) => {
         style={{
           flexGrow: 1,
           textAlign: "center",
-          fontSize: 25,
+          fontSize: 20,
           fontWeight: 500,
           margin: 30,
           color: "#000",
         }}
       >
-        Nhà cung cấp
+        Danh sách nhà cung cấp
       </Typography>
       <div>
         <TableHeader

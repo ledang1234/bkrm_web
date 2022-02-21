@@ -1,34 +1,34 @@
 import React, {useState, useEffect,useRef} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
-import useStyles from "../../../components/TableCommon/style/mainViewStyle";
+import useStyles from "../../../../components/TableCommon/style/mainViewStyle";
 //import lib
 import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useReactToPrint } from "react-to-print";
 //import api 
-import customerApi from '../../../api/customerApi'
+import customerApi from '../../../../api/customerApi'
 import { useSelector } from 'react-redux'
 
 //import constant
-import * as HeadCells from '../../../assets/constant/tableHead'
-import *  as TableType from '../../../assets/constant/tableType'
+import * as HeadCells from '../../../../assets/constant/tableHead'
+import *  as TableType from '../../../../assets/constant/tableType'
 
 ////import project
 //riêng
-import AddCustomer from './AddCustomer/AddCustomer'
-import CustomerFilter from './CustomerTool/CustomerFilter'
+import AddDiscount from './AddDiscount/AddDiscount'
+import DiscountFilter from './DiscountTool/DiscountFilter'
 
-import CustomerTableRow from './CustomerTableRow/CustomerTableRow'
+import DiscountTableRow from './DiscountTableRow/DiscountTableRow'
 //chung
-import SnackBar from '../../../components/SnackBar/SnackBar'
-import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
-import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
-import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
+import SnackBar from '../../../../components/SnackBar/SnackBar'
+import TableHeader  from '../../../../components/TableCommon/TableHeader/TableHeader'
+import ToolBar from '../../../../components/TableCommon/ToolBar/ToolBar'
+import TableWrapper from '../../../../components/TableCommon/TableWrapper/TableWrapper'
 
 
-const Customer = () => {
-    const [customerList, setCustomerList] = useState([]);
+const DiscountSetting = () => {
+    const [discountList, setDiscountList] = useState([]);
     const [reload, setReload] = useState(false);
 
     const onReload = () => setReload(!reload)
@@ -40,7 +40,7 @@ const Customer = () => {
         customerApi.getCustomers(store_uuid)
         .then(response => response.data, err => console.log(err))
         .then(data => {
-            setCustomerList(data)
+          setDiscountList(data)
         })
 
     }, [reload, store_uuid]);
@@ -76,7 +76,7 @@ const Customer = () => {
     };
 
     //// 2. Table
-  
+
     //collapse
     const [openRow, setRowOpen] = React.useState(null);
     const handleOpenRow = (row) => {
@@ -116,42 +116,39 @@ const Customer = () => {
     return (
 
     <Card className={classes.root} >
-        <Grid 
-          container
-          direction="row"
-          justifyContent="space-between"  
-        > 
-            {/* 1. ADD POP UP */}
-              <Typography className={classes.headerTitle} variant="h5">
-                    Khách hàng
-              </Typography>
+    
+        <Grid container direction="row" alignItems="center">
+            <Typography style={{flexGrow: 1,textAlign: "center", marginTop: 15,}} variant="h2">
+              Khuyến mãi
+            </Typography>
+              <Grid className={classes.btngroup1}  style={{ marginTop:10}}>
+                    <ButtonBase sx={{ borderRadius: '16px' }} 
+                        onClick={handleClickOpen}
+                    >
+                    <Avatar variant="rounded" className={classes.headerAvatar}  >
+                        <Tooltip title='Thêm chương trình khuyến mãi'>
+                        <AddIcon stroke={1.5} size="1.3rem" />
+                        </Tooltip>
+                    </Avatar>
+                </ButtonBase>
+              </Grid>
 
-              <Grid className={classes.btngroup1} >
-                  <ButtonBase sx={{ borderRadius: '16px' }} 
-                      onClick={handleClickOpen}
-                  >
-                  <Avatar variant="rounded" className={classes.headerAvatar}  >
-                      <Tooltip title='Thêm khách hàng'>
-                      <AddIcon stroke={1.5} size="1.3rem" />
-                      </Tooltip>
-                  </Avatar>
-              </ButtonBase>
-            </Grid>
+              {/* Popup add */}
+              <AddDiscount open={open} handleClose={handleClose} />
         </Grid>
 
-        {/* Popup add */}
-        <AddCustomer open={open} handleClose={handleClose} />
+       
         {/* Noti */}
         <SnackBar openBar={openBar} handleCloseBar={handleCloseBar} addStatus={addStatus}/>
 
         
-        <Divider  openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+        {/* <Divider  openFilter={openFilter} handleToggleFilter={handleToggleFilter}/> */}
         
         {/* 2. SEARCH - FILTER - EXPORT*/}
         {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-        <ToolBar  dataTable={customerList} tableType={TableType.CUSTOMER} textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
+        <ToolBar  dataTable={discountList} tableType={TableType.CUSTOMER} textSearch={'Mã, tên khuyến mãi  '} /*handlePrint={handlePrint}*/ 
         handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
-        <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+        <DiscountFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
         <TableWrapper>
             <TableHeader
@@ -162,16 +159,16 @@ const Customer = () => {
               headerData={HeadCells.CustomerHeadCells}
             />
             <TableBody>
-              {customerList.map((row, index) => {
+              {discountList?.map((row, index) => {
                   return (
-                    <CustomerTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
+                    <DiscountTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
                   );
               })}
             </TableBody>
         </TableWrapper>
         <div  style={{display:'none'}} >
         <div ref={componentRef}  >
-        <ComponentToPrint  customerList={customerList} classes={classes}/>
+        <ComponentToPrint  discountList={discountList} classes={classes}/>
         </div>
         
       </div>
@@ -179,21 +176,21 @@ const Customer = () => {
     )
 }
 
-export default Customer
+export default DiscountSetting
 
-const ComponentToPrint = ({customerList,classes}) =>{
+const ComponentToPrint = ({discountList,classes}) =>{
   return (
       <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách khách hàng</Typography>
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách khuyến mãi</Typography>
         <div >
           <TableHeader
                 classes={classes}
                 headerData={HeadCells.CustomerHeadCells}
               />
               <TableBody >
-                {customerList.map((row, index) => {
+                {discountList?.map((row, index) => {
                   return (
-                    <CustomerTableRow
+                    <DiscountTableRow
                       key={row.uuid}
                       row={row}
                     
