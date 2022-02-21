@@ -191,13 +191,13 @@ const ComponentToPrint = ({ purchaseOrders, classes }) => {
         style={{
           flexGrow: 1,
           textAlign: "center",
-          fontSize: 25,
+          fontSize: 20,
           fontWeight: 500,
           margin: 30,
           color: "#000",
         }}
       >
-        Đơn nhập hàng
+        Danh sách đơn nhập hàng
       </Typography>
       <div>
         <TableHeader

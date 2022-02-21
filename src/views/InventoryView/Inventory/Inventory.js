@@ -330,13 +330,13 @@ const ComponentToPrint = ({ productList, classes }) => {
         style={{
           flexGrow: 1,
           textAlign: "center",
-          fontSize: 25,
+          fontSize: 20,
           fontWeight: 500,
           margin: 30,
           color: "#000",
         }}
       >
-        Kho hàng
+        Danh sách sản phẩm
       </Typography>
       <div>
         <TableHeader

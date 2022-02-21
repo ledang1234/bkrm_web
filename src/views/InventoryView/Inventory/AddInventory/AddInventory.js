@@ -513,8 +513,6 @@ const AddInventory = (props) => {
         />
         </div>
 
-        
-
       {/* ATTRIBUTE */}
         <Card className={classes.attrCard}>
           <CardHeader
@@ -546,7 +544,7 @@ const AddInventory = (props) => {
           {/*  !!!! Handle value phần này */}
           <RelaltedItemList relatedList={relatedList} setRelatedList={setRelatedList}/>
     </Card>
-    : null}
+    : null } 
      
 
 

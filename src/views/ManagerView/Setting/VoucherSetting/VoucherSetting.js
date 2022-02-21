@@ -1,34 +1,34 @@
 import React, {useState, useEffect,useRef} from 'react'
 import {useTheme} from "@material-ui/core/styles";
 //import style
-import useStyles from "../../../components/TableCommon/style/mainViewStyle";
+import useStyles from "../../../../components/TableCommon/style/mainViewStyle";
 //import lib
 import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useReactToPrint } from "react-to-print";
 //import api 
-import customerApi from '../../../api/customerApi'
+import customerApi from '../../../../api/customerApi'
 import { useSelector } from 'react-redux'
 
 //import constant
-import * as HeadCells from '../../../assets/constant/tableHead'
-import *  as TableType from '../../../assets/constant/tableType'
+import * as HeadCells from '../../../../assets/constant/tableHead'
+import *  as TableType from '../../../../assets/constant/tableType'
 
 ////import project
 //riêng
-import AddCustomer from './AddCustomer/AddCustomer'
-import CustomerFilter from './CustomerTool/CustomerFilter'
+import AddVoucher from './AddVoucher/AddVoucher'
+import VoucherFilter from './VoucherTool/VoucherFilter'
 
-import CustomerTableRow from './CustomerTableRow/CustomerTableRow'
+import VoucherTableRow from './VoucherTableRow/VoucherTableRow'
 //chung
-import SnackBar from '../../../components/SnackBar/SnackBar'
-import TableHeader  from '../../../components/TableCommon/TableHeader/TableHeader'
-import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
-import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
+import SnackBar from '../../../../components/SnackBar/SnackBar'
+import TableHeader  from '../../../../components/TableCommon/TableHeader/TableHeader'
+import ToolBar from '../../../../components/TableCommon/ToolBar/ToolBar'
+import TableWrapper from '../../../../components/TableCommon/TableWrapper/TableWrapper'
 
 
-const Customer = () => {
-    const [customerList, setCustomerList] = useState([]);
+const VoucherSetting = () => {
+    const [voucherList, setVoucherList] = useState([]);
     const [reload, setReload] = useState(false);
 
     const onReload = () => setReload(!reload)
@@ -40,7 +40,7 @@ const Customer = () => {
         customerApi.getCustomers(store_uuid)
         .then(response => response.data, err => console.log(err))
         .then(data => {
-            setCustomerList(data)
+          setVoucherList(data)
         })
 
     }, [reload, store_uuid]);
@@ -116,42 +116,35 @@ const Customer = () => {
     return (
 
     <Card className={classes.root} >
-        <Grid 
-          container
-          direction="row"
-          justifyContent="space-between"  
-        > 
-            {/* 1. ADD POP UP */}
-              <Typography className={classes.headerTitle} variant="h5">
-                    Khách hàng
-              </Typography>
+        <Grid container direction="row" alignItems="center">
+            <Typography style={{flexGrow: 1,textAlign: "center", marginTop: 15,}} variant="h2">
+              Voucher
+            </Typography>
+              <Grid className={classes.btngroup1}  style={{ marginTop:10}}>
+                    <ButtonBase sx={{ borderRadius: '16px' }} 
+                        onClick={handleClickOpen}
+                    >
+                    <Avatar variant="rounded" className={classes.headerAvatar}  >
+                        <Tooltip title='Thêm voucher'>
+                        <AddIcon stroke={1.5} size="1.3rem" />
+                        </Tooltip>
+                    </Avatar>
+                </ButtonBase>
+              </Grid>
 
-              <Grid className={classes.btngroup1} >
-                  <ButtonBase sx={{ borderRadius: '16px' }} 
-                      onClick={handleClickOpen}
-                  >
-                  <Avatar variant="rounded" className={classes.headerAvatar}  >
-                      <Tooltip title='Thêm khách hàng'>
-                      <AddIcon stroke={1.5} size="1.3rem" />
-                      </Tooltip>
-                  </Avatar>
-              </ButtonBase>
-            </Grid>
+              {/* Popup add */}
+              <AddVoucher open={open} handleClose={handleClose} />
         </Grid>
 
-        {/* Popup add */}
-        <AddCustomer open={open} handleClose={handleClose} />
         {/* Noti */}
         <SnackBar openBar={openBar} handleCloseBar={handleCloseBar} addStatus={addStatus}/>
 
-        
-        <Divider  openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
-        
+              
         {/* 2. SEARCH - FILTER - EXPORT*/}
         {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-        <ToolBar  dataTable={customerList} tableType={TableType.CUSTOMER} textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
+        <ToolBar  dataTable={voucherList} tableType={TableType.CUSTOMER} textSearch={'Mã, tên voucher '} /*handlePrint={handlePrint}*/ 
         handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
-        <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+        <VoucherFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
         <TableWrapper>
             <TableHeader
@@ -162,16 +155,16 @@ const Customer = () => {
               headerData={HeadCells.CustomerHeadCells}
             />
             <TableBody>
-              {customerList.map((row, index) => {
+              {voucherList?.map((row, index) => {
                   return (
-                    <CustomerTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
+                    <VoucherTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
                   );
               })}
             </TableBody>
         </TableWrapper>
         <div  style={{display:'none'}} >
         <div ref={componentRef}  >
-        <ComponentToPrint  customerList={customerList} classes={classes}/>
+        <ComponentToPrint  voucherList={voucherList} classes={classes}/>
         </div>
         
       </div>
@@ -179,21 +172,21 @@ const Customer = () => {
     )
 }
 
-export default Customer
+export default VoucherSetting
 
-const ComponentToPrint = ({customerList,classes}) =>{
+const ComponentToPrint = ({voucherList,classes}) =>{
   return (
       <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách khách hàng</Typography>
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách voucher</Typography>
         <div >
           <TableHeader
                 classes={classes}
                 headerData={HeadCells.CustomerHeadCells}
               />
               <TableBody >
-                {customerList.map((row, index) => {
+                {voucherList?.map((row, index) => {
                   return (
-                    <CustomerTableRow
+                    <VoucherTableRow
                       key={row.uuid}
                       row={row}
                     
