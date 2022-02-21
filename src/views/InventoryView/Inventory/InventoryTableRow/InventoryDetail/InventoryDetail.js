@@ -43,6 +43,7 @@ import {
 import clsx from "clsx";
 
 import { FormatedProductStatus } from "../../../../../components/TableCommon/util/format";
+import VarianceModal from "./VarianceModal";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -121,10 +122,12 @@ const InventoryDetail = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid
 
+  const [isOpenVarianceDetailModal, setIsOpenVariaceDetailModal] = useState(false)
+  const [selectedVariance, setSelectedVariance] = useState({})
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await productApi.getProduct(store_uuid, row.uuid, {branch_uuid: branch_uuid});
+        const response = await productApi.getProduct(store_uuid, row.uuid, { branch_uuid: branch_uuid });
         setProductDetail(response.data);
       } catch (err) {
         console.log(err);
@@ -136,49 +139,62 @@ const InventoryDetail = (props) => {
   }, [store_uuid, openRow]);
 
   return row.has_variance ? (<>
-    { openRow === row.uuid && 
+    {openRow === row.uuid &&
       productDetail.variations?.map(variance => (
+        <>
+          <TableRow>
+            <TableCell align="left">
+              {"               "}
+            </TableCell>
+            <TableCell align="left">
+              {variance.product_code}
+            </TableCell>
+            <TableCell align="left" style={{ minWidth: 200 }}>
+              <ListItem
+                style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
+              >
+                <Box
+                  component="img"
+                  sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}
+                  src={row.img_url}
+                />
+                <Typography className={classes.fontName}>{variance.name}</Typography>
+              </ListItem>
+            </TableCell>
+            <TableCell align="left">{variance.bar_code}</TableCell>
 
-        <TableRow>
-          <TableCell align="left">
-            {"               "}
-          </TableCell>
-          <TableCell align="left">
-            {variance.product_code}
-          </TableCell>
-          <TableCell align="left" style={{ minWidth: 200 }}>
-            <ListItem
-              style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
-            >
-              <Box
-                component="img"
-                sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}
-                src={row.img_url}
+            <TableCell align="left">{variance.category?.name}</TableCell>
+            <TableCell align="right">
+              <VNDFormat value={variance.list_price} />
+            </TableCell>
+            <TableCell align="right">
+              <VNDFormat value={variance.standard_price} />
+            </TableCell>
+            <TableCell align="center">
+              <FormatedProductStatus
+                quantity={variance.branch_quantity}
+                lowStock={variance.min_reorder_quantity}
               />
-              <Typography className={classes.fontName}>{variance.name}</Typography>
-            </ListItem>
-          </TableCell>
-          <TableCell align="left">{variance.bar_code}</TableCell>
+            </TableCell>
+            <TableCell align="right" className={classes.fontName}>
+              {variance.branch_quantity}
+            </TableCell>
+            <TableCell onClick={() => {
+              setIsOpenVariaceDetailModal(true)
+              setSelectedVariance(variance)
+            }}><Button size="small" color="primary" variant="outlined">Chi tiết</Button></TableCell>
+          </TableRow>
 
-          <TableCell align="left">{variance.category?.name}</TableCell>
-          <TableCell align="right">
-            <VNDFormat value={variance.list_price} />
-          </TableCell>
-          <TableCell align="right">
-            <VNDFormat value={variance.standard_price} />
-          </TableCell>
-          <TableCell align="center">
-            <FormatedProductStatus
-              quantity={variance.branch_quantity}
-              lowStock={variance.min_reorder_quantity}
-            />
-          </TableCell>
-          <TableCell align="right" className={classes.fontName}>
-            {variance.branch_quantity}
-          </TableCell>
-        </TableRow>))
+        </>
+      ))
+
     }
-
+    {isOpenVarianceDetailModal && (
+      <VarianceModal 
+        open={isOpenVarianceDetailModal}
+        parentProps={props.parentProps}
+        row={selectedVariance} 
+        handleClose={() => setIsOpenVariaceDetailModal(false)} />)}
   </>)
     : (
       <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>

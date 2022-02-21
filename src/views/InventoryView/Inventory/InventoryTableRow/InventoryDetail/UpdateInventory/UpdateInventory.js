@@ -87,6 +87,7 @@ const UpdateInventory = (props) => {
       bodyFormData.append("list_price", productInfo.importedPrice.toString());
       bodyFormData.append("standard_price", productInfo.salesPrice.toString());
       bodyFormData.append("bar_code", productInfo.barcode.toString());
+      bodyFormData.append("product_code", productInfo.product_code.toString());
       bodyFormData.append("quantity_per_unit", productInfo.unit.toString());
       bodyFormData.append(
         "min_reorder_quantity",
@@ -166,7 +167,28 @@ const UpdateInventory = (props) => {
               }
               value={productInfo.name}
             />
-
+            <TextField
+              label="Mã sản phẩm (tự động)"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={productInfo.barcode}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Box
+                      component="img"
+                      sx={{ height: 25, width: 25 }}
+                      src={barcodeIcon}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={(e) =>
+                setProductInfo({ ...productInfo, product_code: e.target.value })
+              }
+              className={classes.margin}
+            />
             <TextField
               label="Mã vạch (mặc định)"
               variant="outlined"
