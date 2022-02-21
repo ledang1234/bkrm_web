@@ -22,9 +22,9 @@ const productApi = {
     return axiosClient.get(url, { params: query });
   },
 
-  getProduct: (storeUuid, productUuid) => {
+  getProduct: (storeUuid, productUuid, query) => {
     const url = `stores/${storeUuid}/products/${productUuid}`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: query});
   },
 
   createCategory: (storeUuid, params) => {

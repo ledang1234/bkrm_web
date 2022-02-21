@@ -347,7 +347,9 @@ const AddInventory = (props) => {
 
       bodyFormData.append("img_url", imageURL);
 
+     
       images.forEach((image) => bodyFormData.append("images[]", image));
+     
 
       await productApi.addProductWithVaration(store_uuid, bodyFormData);
       dispatch(statusAction.successfulStatus("Tạo sản phẩm thành công"));
