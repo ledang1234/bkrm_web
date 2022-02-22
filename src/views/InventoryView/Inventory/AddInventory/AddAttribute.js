@@ -25,12 +25,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
-    console.log("init", datas)
+    // console.log("init", datas)
 
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    
     function generateList   ()  {
         let newArr = [...datas];
 
@@ -49,9 +48,9 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
 
                     }
                 }
-                console.log("_set",_set)
+                // console.log("_set",_set)
                 if(_set.length !== 0) {mySet = _set}
-                console.log("mySet",mySet)
+                // console.log("mySet",mySet)
             }
          }
         return mySet
@@ -69,7 +68,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
         newArr[index].items = value;
         setDatas(newArr);
         var list = []
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}))
+        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
         setRelatedList(list)
     }
 
@@ -78,7 +77,15 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
         newArr = newArr.filter(row => row.key !== key)
         setDatas(newArr);
         var list = []
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}))
+        generateList().map((e) =>
+          list.push({
+            name: e,
+            product_code: "",
+            bar_code: "",
+            standard_price: 0,
+            list_price: 0,
+          })
+        );
         setRelatedList(list)
     }
 
@@ -87,7 +94,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
         newArr.push({ key: "unset", items: []})
         setDatas(newArr);
         var list = []
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}))
+        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
         setRelatedList(list)
     }
 
