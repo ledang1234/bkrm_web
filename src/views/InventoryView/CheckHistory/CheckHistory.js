@@ -259,13 +259,13 @@ const ComponentToPrint = ({ checkHistoryList, classes }) => {
         style={{
           flexGrow: 1,
           textAlign: "center",
-          fontSize: 25,
+          fontSize: 20,
           fontWeight: 500,
           margin: 30,
           color: "#000",
         }}
       >
-        Đơn kiểm kho
+        Danh sách đơn kiểm kho
       </Typography>
       <div>
         <TableHeader

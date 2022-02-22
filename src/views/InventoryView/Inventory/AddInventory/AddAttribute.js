@@ -32,15 +32,21 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
 
     function generateList   ()  {
         let newArr = [...datas];
+
         var mySet  = [];
         for (let i = 0; i < newArr.length ; i++){
-            if(mySet.length === 0 ){mySet= newArr[i].items}
+            if(mySet.length === 0 ){
+                mySet= newArr[i].items
+              
+            }
             else{
                 var _set = [];
                 for (let j = 0; j < mySet.length ; j++ ){
-                for (let k = 0; k < newArr[i].items.length ; k++ ){
-                    _set.push(mySet[j].concat( ' - ',newArr[i].items[k]))
-                }
+                    for (let k = 0; k < newArr[i].items.length ; k++ ){
+                        _set.push(mySet[j].concat( ' - ',newArr[i].items[k]))
+                        // _set.push({name:mySet[j].concat( ' - ',newArr[i].items[k]), attList:[]})
+
+                    }
                 }
                 // console.log("_set",_set)
                 if(_set.length !== 0) {mySet = _set}
@@ -188,12 +194,8 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
                     </div>
                     :
                     // add
-                    <Button style={{flexGrow: 1,textAlign: "center"}} variant="contained" color="primary">hello</Button>
-
-                                    
-                }
-                
-                        
+                    <Button style={{flexGrow: 1,textAlign: "center"}} variant="contained" color="primary">Thêm</Button>               
+                }       
             </ModalWrapperWithClose>
 
         </Grid>

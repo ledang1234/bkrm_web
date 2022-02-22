@@ -158,7 +158,7 @@ const InventoryReturnOrder = () => {
 const ComponentToPrint = ({purchaseReturns,classes}) =>{
   return (
       <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Đơn trả hàng nhập</Typography>
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách đơn trả hàng nhập</Typography>
         <div >
           <TableHeader
                 classes={classes}

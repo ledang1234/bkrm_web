@@ -608,7 +608,6 @@ const AddInventory = (props) => {
           />
         </div>
 
-        {/* ATTRIBUTE */}
         <Card className={classes.attrCard}>
           <CardHeader
             onClick={handleExpandClick}
@@ -635,6 +634,7 @@ const AddInventory = (props) => {
               setRelatedList={setRelatedList}
             />
           </Collapse>
+
         </Card>
         {/* GENERATE ATTR */}
         {relatedList.length > 0 ? (
@@ -650,6 +650,7 @@ const AddInventory = (props) => {
             />
           </Card>
         ) : null}
+
 
         {/* Button */}
         <Grid

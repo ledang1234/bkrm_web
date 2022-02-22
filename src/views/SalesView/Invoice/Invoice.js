@@ -186,13 +186,13 @@ const ComponentToPrint = ({ orders, classes }) => {
         style={{
           flexGrow: 1,
           textAlign: "center",
-          fontSize: 25,
+          fontSize: 20,
           fontWeight: 500,
           margin: 30,
           color: "#000",
         }}
       >
-        Hoá đơn
+        Danh sách hoá đơn
       </Typography>
       <div>
         <TableHeader

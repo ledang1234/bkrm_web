@@ -152,7 +152,7 @@ export default OrderProductList
 const ComponentToPrint = ({orderProductList,classes}) =>{
   return (
       <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Đơn đặt hàng NCC</Typography>
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sác đơn đặt hàng NCC</Typography>
         <div >
           <TableHeader
                 classes={classes}
