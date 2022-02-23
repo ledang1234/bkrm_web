@@ -25,6 +25,9 @@ import StorePage from './StorePage/StorePage'
 import AboutUsPage from './AboutUsPage/AboutUsPage'
 import PromotionPage from './PromotionPage/PromotionPage'
 import CartPage from './CartPage/CartPage'
+import customerPageApi from "../../api/customerPageApi";
+import StoreContext from "./StoreContext";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     // display: "flex",
@@ -106,7 +109,22 @@ const CustomerPage = () => {
     return routeItems;
   }
 
+  const [storeInfo, setStoreInfo] = React.useState()
+
+  useEffect(() => {
+    const store_web_page  = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+    const fetchStore = async () => {
+      const res = await customerPageApi.storeInfo(store_web_page);
+      console.log(res.data)
+      setStoreInfo(res.data);
+    }
+    fetchStore();
+  },[])
+
+  
+
   return (
+    <StoreContext.Provider value={storeInfo}>
     <div className={classes.root}>
       <NavBar mainColor={mainColor} category={category} navColor={navColor} textNav={textNav}handleClickItem={handleClickItem} />  
       <CartButton />
@@ -114,6 +132,7 @@ const CustomerPage = () => {
             <Switch>
               <Route exact  path={path}> 
                   <MainPage 
+                    storeInfo={storeInfo}
                     mainColor={mainColor} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}
                   />
               </Route>
@@ -155,6 +174,7 @@ const CustomerPage = () => {
 
         {/* <Footer/> */}
     </div>
+    </StoreContext.Provider>
   );
 };
 

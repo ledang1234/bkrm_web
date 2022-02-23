@@ -50,7 +50,7 @@ function App() {
               {isLoggedIn ? <Redirect to={prevPath ? prevPath : "/home"} /> : <SignupPage />}
             </Route>
             <Route path="/main" component={MainPage} />
-            <Route path="/customer-test" component={CustomerPage} />
+            <Route path="/store/*" component={CustomerPage} />
             <Route path="/test" component={Test} />
             <Route path="*" component={PageNotFound} />
           </Switch>
