@@ -55,7 +55,7 @@ const ColorButton = styled(Button)(({ theme, mainColor,navColor }) => ({
   }));
 
 const NavBar = (props) => {
-    const {handleClickItem,mainColor,category,navColor,textNav} = props;
+    const {handleClickItem,mainColor,category,navColor,textNav,storeInfo} = props;
     const theme = useTheme();
     const classes = useStyles(theme);
     const matchDownXs = useMediaQuery(theme.breakpoints.down("xs"));
@@ -73,8 +73,19 @@ const NavBar = (props) => {
    
 
     return (
-        <AppBar position="fixed" className={classes.appBar}  style={{background:navColor? mainColor:theme.palette.background.paper}}>
-        <Toolbar className={classes.toolBar} style={{background: navColor? mainColor:theme.palette.background.paper}}>
+      <AppBar
+        position="fixed"
+        className={classes.appBar}
+        style={{
+          background: navColor ? mainColor : theme.palette.background.paper,
+        }}
+      >
+        <Toolbar
+          className={classes.toolBar}
+          style={{
+            background: navColor ? mainColor : theme.palette.background.paper,
+          }}
+        >
           <Grid
             container
             direction="row"
@@ -92,7 +103,7 @@ const NavBar = (props) => {
                   aria-label="open drawer"
                   onClick={() => {}}
                   edge="start"
-                  style={{marginBottom:-5}}
+                  style={{ marginBottom: -5 }}
                 >
                   <MenuIcon />
                 </IconButton>
@@ -100,14 +111,19 @@ const NavBar = (props) => {
             ) : (
               <Grid container item sm={10} direction="row" alignItems="center">
                 <Grid container item sm={8} direction="row">
-                  <Button 
+                  <Button
                     className={classes.btnNav}
-                    component={Link} to={'/customer-test'}
-                    style={{color:textColor, fontWeight:textBold, fontSize:textSize}}
-                  
-                  >Trang chủ
+                    component={Link}
+                    to={`/store/${props.storeInfo?.web_page}/`}
+                    style={{
+                      color: textColor,
+                      fontWeight: textBold,
+                      fontSize: textSize,
+                    }}
+                  >
+                    Trang chủ
                   </Button>
-                  <HoverMenuBtn 
+                  <HoverMenuBtn
                     className={classes.btnNav}
                     handleClickItem={handleClickItem}
                     category={category}
@@ -116,11 +132,44 @@ const NavBar = (props) => {
                     textSize={textSize}
                     textBold={textBold}
                   >
-                   {/* Sản phẩm */}
+                    {/* Sản phẩm */}
                   </HoverMenuBtn>
-                  <Button className={classes.btnNav} component={Link} to={'/customer-test/promotion'} style={{color:textColor, fontWeight:textBold, fontSize:textSize}}>Khuyến mãi</Button>
-                  <Button className={classes.btnNav} component={Link} to={'/customer-test/store'} style={{color:textColor, fontWeight:textBold, fontSize:textSize}}>Cửa hàng</Button>
-                  <Button className={classes.btnNav} component={Link} to={'/customer-test/aboutus'}style={{color:textColor, fontWeight:textBold, fontSize:textSize}}>Giới thiệu</Button>
+                  <Button
+                    className={classes.btnNav}
+                    component={Link}
+                    to={`/store/${props.storeInfo?.web_page}/promotion`}
+                    style={{
+                      color: textColor,
+                      fontWeight: textBold,
+                      fontSize: textSize,
+                    }}
+                  >
+                    Khuyến mãi
+                  </Button>
+                  <Button
+                    className={classes.btnNav}
+                    component={Link}
+                    to={`/store/${props.storeInfo?.web_page}/storeInfo`}
+                    style={{
+                      color: textColor,
+                      fontWeight: textBold,
+                      fontSize: textSize,
+                    }}
+                  >
+                    Cửa hàng
+                  </Button>
+                  <Button
+                    className={classes.btnNav}
+                    component={Link}
+                    to={`/store/${props.storeInfo?.web_page}/aboutUs`}
+                    style={{
+                      color: textColor,
+                      fontWeight: textBold,
+                      fontSize: textSize,
+                    }}
+                  >
+                    Giới thiệu
+                  </Button>
                 </Grid>
                 <Grid
                   container
@@ -158,7 +207,7 @@ const NavBar = (props) => {
           </Grid>
         </Toolbar>
       </AppBar>
-    )
+    );
 }
 
 export default NavBar
