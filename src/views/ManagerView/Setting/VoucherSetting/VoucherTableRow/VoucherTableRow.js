@@ -23,20 +23,15 @@ const VoucherTableRow = (props) => {
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
-                <TableCell align="left">{row.id}</TableCell>
-                <TableCell align="left" style={{minWidth:200}} >
-                    <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}>
-                        <Avatar alt="Remy Sharp" src={ava} style={{marginRight:20}} className={classes.ava} />
-                        <Typography className={classes.fontName}>{row.name}</Typography>
-                    </ListItem>  
-                </TableCell>
+                <TableCell align="left">MÃ</TableCell>
+                <TableCell align="left">TÊN</TableCell>
+                <TableCell align="left">TỪ NGÀY</TableCell>
+                <TableCell align="left" >ĐẾN NGÀY</TableCell> 
+                {/* nhớ format .000 */}
+                <TableCell align="left" >SỐ LƯỢNG</TableCell> 
+                <TableCell align="left" >MÊNH GIÁ</TableCell> 
 
-                <TableCell align="left">{row.phone}</TableCell>
-                <TableCell align="right" >{row.total_cost}</TableCell> 
-                <TableCell align="center" >
-                    <FormatedStatus debt={row.debt} />
-                    
-                </TableCell>
+                <TableCell align="left" >TRẠNG THÁI</TableCell> 
             </TableRow>
 
         {/* DETAIL */}

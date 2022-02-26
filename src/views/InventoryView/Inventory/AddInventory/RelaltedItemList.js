@@ -56,6 +56,7 @@ const RelaltedItemList = ({relatedList, setRelatedList}) => {
                 <TableBody>
                 {relatedList.map((row, index) => {
                     return (
+
                       <TableRow>
                         <TableCell align="center">{row.name}</TableCell>
                         <TableCell align="center">
@@ -113,6 +114,7 @@ const RelaltedItemList = ({relatedList, setRelatedList}) => {
                           />
                         </TableCell>
                       </TableRow>
+
                     );
                 })}
                 </TableBody>

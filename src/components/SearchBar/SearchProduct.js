@@ -70,6 +70,7 @@ export const FormatedImage = (props) => {
 };
 
 const SearchProduct = (props) => {
+
   const theme = useTheme();
   const classes = useStyles(theme);
   const [selectedOption, setSelectedOption] = useState(props.selected);
@@ -114,11 +115,14 @@ const SearchProduct = (props) => {
 
   const renderInput = (params) => (
     <CustomTextField
+    
       {...params}
+      id="autoValue"
       fullWidth
       placeholder="Tìm sản phẩm (mã sp, tên)"
       variant="outlined"
       size="small"
+     
       InputProps={{
         ...params.InputProps,
         startAdornment: (
@@ -135,6 +139,7 @@ const SearchProduct = (props) => {
             />
           </InputAdornment>
         ),
+        
         style: {
           padding: " 10px",
         },
@@ -149,10 +154,14 @@ const SearchProduct = (props) => {
   return (
     <div style={{ width: 320, paddingLeft: 20 }}>
       <Autocomplete
+     
         options={options}
-        freeSolo={true}
+        // freeSolo={true}
+        // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
+        // inputValue={inputValue}
+
         // BỎ CÁI NÀY TỰ EMPTY
-        // getOptionLabel={getOptionLabel}
+        getOptionLabel={getOptionLabel}
         onChange={(event, value) => {
           if (value) {
             // setSelectedOption(value);

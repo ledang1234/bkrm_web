@@ -156,7 +156,7 @@ const DiscountSetting = () => {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              headerData={HeadCells.CustomerHeadCells}
+              headerData={HeadCells.DiscountHeadCells}
             />
             <TableBody>
               {discountList?.map((row, index) => {

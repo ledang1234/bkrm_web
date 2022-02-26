@@ -203,8 +203,8 @@ const Import = () => {
   };
 
   //2. Table sort
-  const [order, setOrder] = React.useState("desc");
-  const [orderBy, setOrderBy] = React.useState("stt");
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState(null);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -533,7 +533,7 @@ const Import = () => {
                   />
                   <TableBody>
                     {stableSort(
-                      cartList[selectedIndex].cartItem.reverse(),
+                      cartList[selectedIndex].cartItem,
                       getComparator(order, orderBy)
                     ).map((row, index) => {
                       return (
