@@ -29,7 +29,9 @@ import {
   CardHeader,
   Input,
   Chip,
-
+  ListItem,
+  RadioGroup,
+  Radio
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
@@ -43,7 +45,7 @@ import DeleteForeverTwoToneIcon from "@material-ui/icons/DeleteForeverTwoTone";
 import promotionCouponApi from "../../../../../api/promotionCouponApi";
 import { useDispatch } from "react-redux";
 import { statusAction } from "../../../../../store/slice/statusSlice";
-
+import ListIcon from '@material-ui/icons/List';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -81,6 +83,7 @@ const useStyles = makeStyles((theme) =>
       height: 40,
       color: "#000",
     },
+   
   })
 );
 
@@ -107,14 +110,14 @@ const AddDiscount = (props) => {
 
     setDiscountType(event.target.value === "invoice" ? "discountInvoice": "sendGift")
     const d = new Date();
-    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" }])
+    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[] ,typeDiscountItem:"price",listGiftCategory:[],listBuyCategory:[],listGiftCategory:[],listBuyCategory:[],}])
 
   };
   const [discountType, setDiscountType] = React.useState("discountInvoice"); //discountInvoice , sendGift, sendVoucher,priceByQuantity
   const handleChangeType = (event) => {
     setDiscountType(event.target.value);
     const d = new Date();
-    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" }])
+    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" ,listGiftCategory:[],listBuyCategory:[],}])
   };
 
   // Khuyên mãi theo
@@ -130,13 +133,16 @@ const AddDiscount = (props) => {
 
       numberGiftItem:1,
       listGiftItem:[],
+     
 
        //item
       numberBuyItem:1,
       listBuyItem:[],
-      typeDiscountItem:"price"
+      typeDiscountItem:"price",
 
-     
+      listGiftCategory:[],
+      listBuyCategory:[],
+      
 
     }]);
 
@@ -144,6 +150,12 @@ const AddDiscount = (props) => {
     console.log("rowsInvoice",rowsInvoice)
     let newArr = [...rowsInvoice];
     newArr[index].type = value;
+    setRowsInvoice(newArr);
+  }
+  const  handleChangeDiscountType = (index, value) => {
+    console.log("rowsInvoice",rowsInvoice)
+    let newArr = [...rowsInvoice];
+    newArr[index].typeDiscountItem = value;
     setRowsInvoice(newArr);
   }
 
@@ -196,7 +208,7 @@ const AddDiscount = (props) => {
     let newArr = [...rowsInvoice];
     const d = new Date();
 
-    newArr.push({key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" })
+    newArr.push({key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[], typeDiscountItem:"price", listGiftCategory:[],listBuyCategory:[],})
 
     setRowsInvoice(newArr);
   };
@@ -318,9 +330,34 @@ const AddDiscount = (props) => {
               ( Bắt buộc )
             </Typography>
           )}
+          <ListItem>
+            <Typography variant="h5" className={classes.text} style={{marginRight:15}}>Trạng thái:</Typography>
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    name="status"
+                    // value={payment}
+                    // onChange={handleChangePayment}
+                  >
+                    <Grid container direction="row">
+                      <FormControlLabel
+                        labelPlacement="end"
+                        value="active"
+                        control={<Radio size="small" />}
+                        label="Kích hoạt"
+                      />
+                      <FormControlLabel
+                        labelPlacement="end"
+                        value="inactive"
+                        control={<Radio size="small" />}
+                        label="Chưa áp dụng"
+                      />
+                    </Grid>
+                  </RadioGroup>
+                </FormControl>
+          </ListItem>
           <Card
             className={classes.attrCard}
-            style={{ marginTop: 20, marginBottom: 10 }}
+            style={{ marginTop: 0, marginBottom: 10 }}
           >
             <CardHeader
               title="Hình thức khuyến mãi"
@@ -399,7 +436,7 @@ const AddDiscount = (props) => {
                 <Typography className={clsx(classes.text,classes.weight)} >Tổng tiền hàng</Typography>
               </Grid>:null
               }
-              {discountKey ==="product" && discountType ==="sendGift" ?
+              {discountKey ==="product" && discountType ==="sendGift" || discountType=="priceByQuantity" ?
               <>
               <Grid item style={{width:50, marginRight:50}}>
                   <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SL mua</Typography>
@@ -451,77 +488,102 @@ const AddDiscount = (props) => {
                           <Grid item> <ThousandSeperatedInput  style={{width:100}} onChange={(event)=>handleChangeTotalCost(event, index)} value={row.totalCost} /> </Grid> 
                       </Grid>:null
                       }
-                      {discountKey ==="product" && discountType ==="sendGift" ?
+                      {discountKey ==="product" && discountType ==="sendGift" || discountType ==='priceByQuantity'?
                       <>
-                      <Grid item style={{width:50,marginRight:30, height:40, marginTop:4}} >
+                      <Grid item style={{width:50,height:40, marginTop:4}} >
                         <ThousandSeperatedInput  style={{width:50}} onChange={(event)=>handleChangeNumberBuyItem(event, index)} value={row.numberBuyItem} /> 
                       </Grid>
-                      <Grid item style={{ marginTop:4, marginRight:30}} >
-                          <SearchMultiple
+                      <Grid item style={{ marginTop:4, }} >
+                          {/* <SearchMultiple
                             selectedOption={row.listBuyItem}
                             handleSelectedOption={handleChangeListBuyItem}
                             index={index}
-                          />
+                          /> */}
+                          <ListItem style={{height:25,width:360, marginTop:4}}>
+                            <SearchMultiple
+                                selectedOption={row.listBuyItem}
+                                handleSelectedOption={handleChangeListBuyItem}
+                                index={index}
+                              />
+                              {/* CATEGORY */}
+                            <ListIcon />
+                          </ListItem>
                         </Grid> 
                       </>
                       :null }
+                      {
+                        discountType ==='priceByQuantity'? 
+                        <>
+                          <Grid item style={{width:50,marginRight:50, height:40, marginTop:4}} >
+                              <FormControl className={classes.formControl}>
+                                <Select value={row.typeDiscountItem}  onClick={(e) => handleChangeDiscountType(index, e.target.value)}>
+                                  <MenuItem value="price">Giá bán</MenuItem>
+                                  <MenuItem value="percent">Giảm giá</MenuItem>
+                                </Select>
+                              </FormControl>
+                          </Grid>
+                     
+                        </>
+                        :null
+                      }
                       {/* col 2 */}
-                      {discountType ==="discountInvoice"?
+                      {discountType ==="discountInvoice"  || discountType ==='priceByQuantity'?
                       <Grid item >
                         <Grid item  container direction="row" alignItems="center" style={{height:40}}>
                           {/*!! Nếu la % nhớ handle maximum change là 100% */}
-                          <Grid item> <ThousandSeperatedInput style={{marginRight:10, color:"#000"}} onChange={(event)=>handleChangeValue(event, index)} value={row.discountValue}  />  </Grid> 
-                          <Grid item style={{ marginRight:5}}> 
-                              <ButtonBase sx={{ borderRadius: '16px', }} 
-                                  onClick={()=>handleChangeMoneyType(index,"VND")}
-
-                                >
-                                  <Avatar
-                                variant="rounded"
-                                style={{
-                                  width: theme.spacing(4),
-                                  height: theme.spacing(3),
-                                  background:
-                                    row.type === "%"
-                                      ? theme.palette.primary.main
-                                      : null,
-                                }}
+                        <Grid item> <ThousandSeperatedInput style={{marginRight:10, color:"#000"}} onChange={(event)=>handleChangeValue(event, index)} value={row.discountValue}  />  </Grid> 
+                        <Grid item style={{ marginRight:5}}> 
+                            <ButtonBase sx={{ borderRadius: '16px', }} 
+                                onClick={()=>handleChangeMoneyType(index,"VND")}
                               >
-                                <Typography
-                                  style={{ fontSize: 13, fontWeight: 500 }}
-                                >
-                                  VND
-                                </Typography>
-                              </Avatar>
-                            </ButtonBase>
-                          </Grid>
-                          <Grid item>
-                            <ButtonBase
-                              sx={{ borderRadius: "16px" }}
-                              onClick={() => handleChangeMoneyType(index, "%")}
+                                <Avatar
+                              variant="rounded"
+                              style={{
+                                width: theme.spacing(4),
+                                height: theme.spacing(3),
+                                background:
+                                  row.type === "VND"
+                                    ? theme.palette.primary.main
+                                    : null,
+                              }}
                             >
-                              <Avatar
-                                variant="rounded"
-                                style={{
-                                  width: theme.spacing(4),
-                                  height: theme.spacing(3),
-                                  background:
-                                    row.type === "%"
-                                      ? theme.palette.primary.main
-                                      : null,
-                                }}
+                              <Typography
+                                style={{ fontSize: 13, fontWeight: 500 }}
                               >
-                                <Typography
-                                  style={{ fontSize: 13, fontWeight: 500 }}
-                                >
-                                  %
-                                </Typography>
-                              </Avatar>
-                            </ButtonBase>
-
-                           </Grid> 
+                                VND
+                              </Typography>
+                            </Avatar>
+                          </ButtonBase>
                         </Grid>
-                      </Grid>:null
+                        <Grid item>
+                          <ButtonBase
+                            sx={{ borderRadius: "16px" }}
+                            onClick={() => handleChangeMoneyType(index, "%")}
+                          >
+                            <Avatar
+                              variant="rounded"
+                              style={{
+                                width: theme.spacing(4),
+                                height: theme.spacing(3),
+                                background:
+                                  row.type === "%"
+                                    ? theme.palette.primary.main
+                                    : null,
+                              }}
+                            >
+                              <Typography
+                                style={{ fontSize: 13, fontWeight: 500 }}
+                              >
+                                %
+                              </Typography>
+                            </Avatar>
+                          </ButtonBase>
+
+                        </Grid> 
+                      </Grid>
+
+                      </Grid>
+                      :null
                       }
                     {/* col 3 */}
                     {['sendGift','sendVoucher'].includes(discountType) ?
@@ -531,12 +593,20 @@ const AddDiscount = (props) => {
                     }
                     {discountType ==="sendGift"?
                           <Grid item style={{ marginTop:4}} >
-                            <SearchMultiple
-                              selectedOption={row.listGiftItem}
-                              handleSelectedOption={handleChangeListGiftItem}
-                              index={index}
-                            />
-                          </Grid> :null
+                          
+                                <ListItem style={{height:25, marginTop:4}}>
+                                  <SearchMultiple
+                                      selectedOption={row.listBuyItem}
+                                      handleSelectedOption={handleChangeListBuyItem}
+                                      index={index}
+                                    />
+                                    {/* CATEGORY */}
+                                  <ListIcon />
+                                </ListItem>
+                          </Grid> 
+                          
+                          
+                          :null
                     }
                     {discountType ==="sendVoucher"?
     
@@ -551,7 +621,7 @@ const AddDiscount = (props) => {
                     }
                   
                       <Grid item container direction="row" justifyContent="flex-end">
-                          <DeleteForeverTwoToneIcon style={{marginTop:-30}} onClick={() => {deleteAttr(row.key)}} />
+                          <DeleteForeverTwoToneIcon style={{marginTop:-35}} onClick={() => {deleteAttr(row.key)}} />
                       </Grid>
                 </Grid>
                 </div>
@@ -700,6 +770,7 @@ const AddDiscount = (props) => {
 
             />
           </Card>
+          
         </div>
       </DialogContent>
 
@@ -727,6 +798,7 @@ const AddDiscount = (props) => {
 };
 
 export default AddDiscount;
+
 
 const month = [
   "Tháng 1",

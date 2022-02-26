@@ -50,7 +50,7 @@ const Label = styled('label')`
 `;
 
 const InputWrapper = styled('div')`
-  width: 300px;
+  width: 280px;
   border: 1px solid #d9d9d9;
   background-color: #fff;
   border-radius: 4px;
@@ -120,7 +120,7 @@ const Tag = styled(({ label, onDelete, ...props }) => (
 `;
 
 const Listbox = styled('ul')`
-  width: 300px;
+  width: 280px;
   margin: 2px 0 0;
   padding: 0;
   position: absolute;
@@ -202,7 +202,7 @@ export default function SearchMultiple(props) {
           <FormatedImage url={option.img_url} />
         </Grid>
         <Grid item xs={9} container direction="column">
-          <Typography variant="h5">{`#${option.bar_code}`}</Typography>
+          <Typography variant="h5">{`#${option.product}`}</Typography>
           <Typography variant="h5">{option.name}</Typography>
           <Grid container item direction="row" justifyContent="space-between">
             <Typography variant="body2">
@@ -248,7 +248,7 @@ export default function SearchMultiple(props) {
           {/* {selectedOption.length== 0 ?<Typography style={{margin:"5px 0px 0px 9px"}}>Chọn sản phẩm tặng...</Typography> :null} */}
           { !isVoucher ?selectedOption.map((option) => (
               // suawr laij product_code sau
-              <Tag label={option.bar_code.concat(" - ").concat(option.name)} onDelete={()=>{handleSelectedOption(option,index,"delete"); console.log("selectedOption",selectedOption)}} />
+              <Tag label={option.product_code.concat(" - ").concat(option.name)} onDelete={()=>{handleSelectedOption(option,index,"delete"); console.log("selectedOption",selectedOption)}} />
             )): 
             selectedOption.map((option) => (
               <Tag label={option.name} onDelete={()=>{handleSelectedOption(option,index,"delete"); console.log("selectedOption",selectedOption)}} />
