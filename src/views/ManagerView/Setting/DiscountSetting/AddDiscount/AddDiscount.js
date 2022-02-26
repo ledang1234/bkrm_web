@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import MultipleSelect from "../../../../../components/Select/MultipleSelect";
+import {ThousandSeperatedInput} from "../../../../../components/TextField/NumberFormatCustom";
+import SearchMultiple from "../../../../../components/SearchBar/SearchMultiple";
+
 //import library
 import {
   Button,
@@ -353,35 +356,9 @@ const AddDiscount = (props) => {
                 </Grid>
               </Grid>
 
-              <Grid container item sm={4} alignItems="center">
-                <Grid item sm={4}>
-                  <Typography
-                    style={{
-                      fontWeight: 500,
-                      color: theme.customization.primaryColor[500],
-                      marginRight: 10,
-                    }}
-                  >
-                    Hình thức
-                  </Typography>
-                </Grid>
-                <Grid item sm={8}>
-                  {discountKey === "invoice" ? (
-                    <FormControl className={classes.formControl}>
-                      <Select value={discountType} onChange={handleChangeType}>
-                        <MenuItem value="discountInvoice">
-                          Giảm giá hoá đơn
-                        </MenuItem>
-                        <MenuItem value="gift">Tặng hàng</MenuItem>
-                        <MenuItem value="sendVoucher">Tặng voucher</MenuItem>
-                      </Select>
-                    </FormControl>
-               
-                </Grid>
-            </Grid>
 
             <Grid container item sm={4} alignItems="center">
-              <Grid item sm={4}>
+                  <Grid item sm={4}>
                     <Typography style={{fontWeight:500, color:theme.customization.primaryColor[500], marginRight:10}}>Hình thức</Typography>
                   </Grid>
                   <Grid item sm={8}>
@@ -407,9 +384,9 @@ const AddDiscount = (props) => {
 
                       </Select>
                     </FormControl>
-                  )}
+                  }
                 </Grid>
-              </Grid>
+            </Grid>
             </Grid>
 
 
@@ -498,6 +475,20 @@ const AddDiscount = (props) => {
                               <ButtonBase sx={{ borderRadius: '16px', }} 
                                   onClick={()=>handleChangeMoneyType(index,"VND")}
 
+                                >
+                                  <Avatar
+                                variant="rounded"
+                                style={{
+                                  width: theme.spacing(4),
+                                  height: theme.spacing(3),
+                                  background:
+                                    row.type === "%"
+                                      ? theme.palette.primary.main
+                                      : null,
+                                }}
+                              >
+                                <Typography
+                                  style={{ fontSize: 13, fontWeight: 500 }}
                                 >
                                   VND
                                 </Typography>
