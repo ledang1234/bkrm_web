@@ -1,6 +1,13 @@
 import themes from "./theme";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Route, Switch, Redirect, HashRouter,useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  Redirect,
+  HashRouter,
+  useLocation,
+} from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
@@ -17,6 +24,7 @@ import { Box, CssBaseline, makeStyles } from "@material-ui/core";
 import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
 import SearchWithAutoComplete from "./components/SearchBar/SearchWithAutoComplete";
 import Test from "./components/Test/Test";
+import { SwitchCamera } from "@material-ui/icons";
 function App() {
   const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
@@ -27,7 +35,7 @@ function App() {
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
   }, [dispatch]);
-  const prevPath = sessionStorage.getItem("BKRMprev")
+  const prevPath = sessionStorage.getItem("BKRMprev");
   return (
     <ThemeProvider theme={themes(customization)}>
       <Box>
@@ -44,13 +52,27 @@ function App() {
               <HomePage />
             </PrivateRoute>
             <Route path="/login" exact>
-              {isLoggedIn ?  <Redirect to={prevPath ? prevPath : "/home"}/>: <LoginPage />}
+              {isLoggedIn ? (
+                <Redirect to={prevPath ? prevPath : "/home"} />
+              ) : (
+                <LoginPage />
+              )}
             </Route>
             <Route path="/signup" exact>
-              {isLoggedIn ? <Redirect to={prevPath ? prevPath : "/home"} /> : <SignupPage />}
+              {isLoggedIn ? (
+                <Redirect to={prevPath ? prevPath : "/home"} />
+              ) : (
+                <SignupPage />
+              )}
             </Route>
             <Route path="/main" component={MainPage} />
-            <Route path="/customer-test" component={CustomerPage} />
+            <Route path="/store">
+              <Switch>
+                <Route path={"/store/:storeWebPage"}>
+                  <CustomerPage />
+                </Route>
+              </Switch>
+            </Route>
             <Route path="/test" component={Test} />
             <Route path="*" component={PageNotFound} />
           </Switch>

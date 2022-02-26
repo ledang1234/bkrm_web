@@ -105,17 +105,17 @@ const ProductList = (props) => {
         <Box className={classes.container} style={{marginLeft:`${marginContainer}vw`,marginRight:`${marginContainer}vw`,}}>
             <Grid container direction="row" spacing={2} >
              {/* Đổi list đúng với category */}
-             {InventoryList.map(item=>{
+             {InventoryList?.map(item=>{
                  return( 
                      <>
                      {isBox?
                      <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{margin:`${boxDistance}%`, width:widthSize, borderRadius:border?7:0}} >
                          
                          {/* SỬA PATH NÈEEEEEE */}
-                        <CardActionArea component={Link} to={`${path}/${item.id}`} >
+                        <CardActionArea component={Link} to={`${path}/${item.product_code}`} >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border&& isMargin ?7:0}}
-                                image={icon}
+                                image={item.img_urls.length ? item.img_urls[0].url : ''}
                             />
                             <Box style={{marginTop:10}}>
                                 <CardContent>

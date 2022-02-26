@@ -23,13 +23,27 @@ const RelaltedItemList = ({relatedList, setRelatedList}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
-      // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}
+      // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0, attribute_values}
 
 
     const handleDelete = (index)=> {
         var newArr = [...relatedList];
         newArr = newArr.filter(row => row.name !== index)
         setRelatedList(newArr)
+    }
+
+    const handleChangeProperties = (index, property, newValue) => {
+        const newArr = relatedList.map(row => {
+            if (row.name === index) {
+                const newRow = {...row}
+                newRow[property] = newValue;
+                return newRow;
+            } else {
+                return row
+            }
+        })
+        console.log(newArr)
+        setRelatedList(newArr);
     }
 
     return (
@@ -42,14 +56,65 @@ const RelaltedItemList = ({relatedList, setRelatedList}) => {
                 <TableBody>
                 {relatedList.map((row, index) => {
                     return (
-                        <TableRow >
-                            <TableCell align="center" >{row.name}</TableCell>
-                            <TableCell align="center" ><TextField placeholder="Tạo tự động" value={row.product_code}  /></TableCell>
-                            <TableCell align="center" ><TextField value={row.bar_code}  /></TableCell>
-                            <TableCell align="center" ><ThousandSeperatedInput  value={row.standard_price} /></TableCell>
-                            <TableCell align="center" ><ThousandSeperatedInput  value={row.unit_price}/></TableCell>
-                            <TableCell align="center" ><DeleteForeverTwoToneIcon onClick={()=>handleDelete(row.name)} /></TableCell> 
-                        </TableRow>
+
+                      <TableRow>
+                        <TableCell align="center">{row.name}</TableCell>
+                        <TableCell align="center">
+                          <TextField
+                            value={row.product_code}
+                            onChange={(e) =>
+                              handleChangeProperties(
+                                row.name,
+                                "product_code",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <TextField
+                            value={row.bar_code}
+                            onChange={(e) =>
+                              handleChangeProperties(
+                                row.name,
+                                "bar_code",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <ThousandSeperatedInput
+                            value={row.standard_price}
+                            onChange={(e) =>{
+                              handleChangeProperties(
+                                row.name,
+                                "standard_price",
+                                e.target.value
+                              )}
+                            }
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <ThousandSeperatedInput
+                            value={row.list_price}
+                            onChange={(e) => {
+                                handleChangeProperties(
+                                  row.name,
+                                  "list_price",
+                                  e.target.value
+                                )
+                            }
+                            }
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <DeleteForeverTwoToneIcon
+                            onClick={() => handleDelete(row.name)}
+                          />
+                        </TableCell>
+                      </TableRow>
+
                     );
                 })}
                 </TableBody>

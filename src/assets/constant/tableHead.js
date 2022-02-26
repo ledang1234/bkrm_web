@@ -3,8 +3,9 @@
 //  ID phải trùng tên ATTRIBUTE THÌ MỚI SORT ĐC
 
 export const InventoryHeadCells = [
-  { id: "id", align: "left", disablePadding: true, label: "#" },
-  { id: "name", align: "left", disablePadding: false, label: "Sản phẩm" },
+  { id: "id", align: "left", disablePadding: true, label: "Mã SP" },
+  { id: "name", align: "center", disablePadding: false, label: "Sản phẩm" },
+  { id: "bar_code", align: "center", disablePadding: true, label: "Mã vạch" },
   { id: "category", align: "left", disablePadding: false, label: "Danh mục" },
   { id: "price", align: "right", disablePadding: false, label: "Giá bán" },
   {
