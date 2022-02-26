@@ -76,13 +76,11 @@ const VoucherDetail = (props) => {
                </Typography>
 
               <Grid  container direction="row" justifyContent="flex-start">
-                  <Grid item xs={3}>
-                      <UploadImage />
-                  </Grid>
-                <Grid item xs={5}>
+                  
+                <Grid item >
                       <Grid container direction="row" justifyContent="flex-start" > 
                         <Grid item xs={5} >
-                          <Typography variant="h5" gutterBottom component="div">Mã khách hàng </Typography>    
+                          <Typography variant="h5" gutterBottom component="div">Mã voucher </Typography>    
                         </Grid>
                         <Grid item xs={6} >
                           <Typography variant="body1" gutterBottom component="div">{row.uuid} </Typography>
@@ -90,7 +88,7 @@ const VoucherDetail = (props) => {
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={5} >
-                          <Typography variant="h5" gutterBottom component="div">Tên khách hàng </Typography>    
+                          <Typography variant="h5" gutterBottom component="div">Tên voucher </Typography>    
                         </Grid>
                         <Grid item xs={6} >
                           <Typography variant="body1" gutterBottom component="div">{row.name} </Typography>
@@ -98,7 +96,7 @@ const VoucherDetail = (props) => {
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
                           <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Số điện thoại</Typography>    
+                            <Typography variant="h5" gutterBottom component="div">Mệnh giá</Typography>    
                           </Grid>
                           <Grid item xs={6} >
                             <Typography variant="body1" gutterBottom component="div">{row.phone}</Typography>
@@ -106,35 +104,18 @@ const VoucherDetail = (props) => {
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
                           <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Thông tin thanh toán</Typography>    
+                            <Typography variant="h5" gutterBottom component="div">Số lượng</Typography>    
                           </Grid>
                           <Grid item xs={6} >
                             <Typography variant="body1" gutterBottom component="div">{row.payment_info}</Typography>
                           </Grid>
                       </Grid>
-                      <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Địa chỉ</Typography>    
-                          </Grid>
-                          <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.address} </Typography>
-                          </Grid>
-                      </Grid>
-                      <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
-                            <Typography variant="h5" gutterBottom component="div">Email</Typography>    
-                          </Grid>
-                          <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.address} </Typography>
-                          </Grid>
-                      </Grid>
+                      
                   </Grid>
-
-
                 <Grid item xs={4}>
                     <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={6} >
-                          <Typography variant="h5" gutterBottom component="div">Tổng tiền mua</Typography>    
+                          <Typography variant="h5" gutterBottom component="div">Thời gian</Typography>    
                         </Grid>
                         <Grid item xs={6} >
                           <Typography variant="body1" gutterBottom component="div">3.000.000</Typography>
@@ -142,7 +123,7 @@ const VoucherDetail = (props) => {
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={6} >
-                          <Typography variant="h5" gutterBottom component="div">Còn nợ</Typography>    
+                          <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
                         </Grid>
                         <Grid item xs={6} >
                           <Typography variant="body1" gutterBottom component="div">500.000</Typography>
