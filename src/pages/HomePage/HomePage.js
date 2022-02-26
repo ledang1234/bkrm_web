@@ -61,7 +61,6 @@ const HomePage = (props) => {
 
   useEffect(() => {
     dispatch(customizeAction.setSidebarOpen(!smallScreen));
-    console.log(permissions);
   }, [smallScreen, permissions]);
 
   const handleToggleSidebar = (open) => {
@@ -114,8 +113,9 @@ const HomePage = (props) => {
   };
   const dispatch = useDispatch();
   const logOutHandler = () => {
-    localStorage.removeItem("token");
     dispatch(authActions.logOut());
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("BKRMprev");
   };
   return (
     <div className={classes.root}>

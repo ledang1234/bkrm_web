@@ -1,13 +1,6 @@
 import themes from "./theme";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Redirect,
-  HashRouter,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect, HashRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
@@ -22,20 +15,42 @@ import MainPage from "./pages/MainPage/MainPage";
 import CustomerPage from "./pages/CustomerPage/CustomerPage";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
 import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
-import SearchWithAutoComplete from "./components/SearchBar/SearchWithAutoComplete";
 import Test from "./components/Test/Test";
+import { customizeAction } from "./store/slice/customizeSlice";
 import { SwitchCamera } from "@material-ui/icons";
 function App() {
-  const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const permissions = useSelector((state) => state.info.user.permissions);
   const dispatch = useDispatch();
+  const [path,setPath] = useState()
   useEffect(() => {
-    setLoading(false);
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
   }, [dispatch]);
-  const prevPath = sessionStorage.getItem("BKRMprev");
+  useEffect(()=>{
+    const getPath = () =>{
+      const prevPath = sessionStorage.getItem("BKRMprev")
+      if (prevPath != "/home"){
+        setPath( prevPath)
+      }else if (permissions){
+        if(permissions.find((p) => p.name === "sales")){
+          setPath("/home/sales/cart")
+          dispatch(customizeAction.setItemMenuOpen(1));
+        }else if (permissions.find((p) => p.name === "inventory")){
+          setPath("/home/inventory/import")
+          dispatch(customizeAction.setItemMenuOpen(4));
+        }else if (permissions.find((p) => p.name === "employee")){
+          setPath("/home/hr/employee")
+          dispatch(customizeAction.setItemMenuOpen(14));
+        }else if (permissions.find((p) => p.name === "report")){
+          setPath("/home/manager/history")
+          dispatch(customizeAction.setItemMenuOpen(16));
+        }
+      }
+    }
+    getPath()
+  },[permissions])
   return (
     <ThemeProvider theme={themes(customization)}>
       <Box>
@@ -52,18 +67,10 @@ function App() {
               <HomePage />
             </PrivateRoute>
             <Route path="/login" exact>
-              {isLoggedIn ? (
-                <Redirect to={prevPath ? prevPath : "/home"} />
-              ) : (
-                <LoginPage />
-              )}
+              {isLoggedIn ?  <Redirect to={path ? path :"/home" }/>: <LoginPage />}
             </Route>
             <Route path="/signup" exact>
-              {isLoggedIn ? (
-                <Redirect to={prevPath ? prevPath : "/home"} />
-              ) : (
-                <SignupPage />
-              )}
+              {isLoggedIn ? <Redirect to={path? path: "/home"} /> : <SignupPage />
             </Route>
             <Route path="/main" component={MainPage} />
             <Route path="/store">
@@ -82,5 +89,4 @@ function App() {
     </ThemeProvider>
   );
 }
-
 export default App;
