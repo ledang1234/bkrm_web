@@ -1,69 +1,139 @@
-một số lỗi - chưa hoàn thiện:
-1. tai sao redux chua luu vao local ???
+import React, { useEffect, useState }  from 'react'
+import TagsInput from "../../../../components/TextField/TagsInput"
+import { useTheme, makeStyles, styled } from "@material-ui/core/styles";
+
+import AddIcon from '@material-ui/icons/Add';
+import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
+
+import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
+
+import {
+    Button,
+    TextField,
+    Typography,
+    Grid,
+    Box,
+    InputAdornment,
+    FormControl,
+    InputLabel,
+    Select,
+    IconButton,
+    Tooltip,
+    Dialog,
+    FormControlLabel,
+    Switch,
+    Collapse,
+    Paper,
+    Card,
+    CardHeader,
+    MenuItem
+  } from "@material-ui/core";
+
+  const useStyles = makeStyles((theme) => ({
+    formControl: {
+        marginRight:10,
+        minWidth: 220,
+      },
+    row:{
+        margin: "15px 20px 10px 20px", 
+    }
+    
+  }));
+
+const AddAttribute = ({attributeList,datas,setDatas}) => {
+
+    const theme = useTheme();
+    const classes = useStyles(theme);
 
 
-/////box menu save
-//   <Card className={classes.hoverCard} style={{  width:141, height:230,borderRadius:10,}}>
-//       <CardActionArea style={{paddingBottom:7,borderRadius:10,}}>
-//           <Box style={{minHeight:185}}>
-//               <Box component="img" sx={{ height: 125, width: 125,  borderRadius:10, margin:8, marginBottom:1 }}src={icon} />
-//               <Box style={{marginLeft:10 , fontWeight:500, }}>{item.name}</Box>
-//           </Box>
-//           <ListItem style={{marginLeft:-5}}>
-//               <Box style={{marginRight:30}}>{item.price}.000đ</Box>
-//               <IconButton size="small"style={{backgroundColor:"#fa8c16", color:'#fff'}}><AddIcon/></IconButton>
-//           </ListItem>  
-//       </CardActionArea>                           
-//   </Card>
+    const updateFieldChanged = (index, attr,value) =>  {
+        let newArr = [...datas]; 
+        newArr[index] = {"key" :attr, "items": value};
+        setDatas(newArr); 
+    }
 
-  
-     //// BOX 1
-//      <Card className={classes.hoverCard} style={{ width:141, height:230,borderRadius:10,}}>
-//      <CardActionArea style={{paddingBottom:7,borderRadius:10,}}>
-//            <Box style={{minHeight:190}}>
-//              <Box component="img" sx={{ height: 125, width: 125,  borderRadius:10, margin:8, marginBottom:1 }}src={icon} />
-//           <Box style={{marginLeft:10 , fontWeight:500, marginBottom:5}}>{item.name}</Box>
-             
-//           </Box>
-//            <Box style={{marginLeft:10 ,marginBottom:-5}}>{item.price}.000đ</Box>    
-//            <Typography style={{marginRight:10 ,flexGrow: 1,textAlign: "right",fontWeight:700,color:"#fa8c16"}}>Tồn: {item.quantity}</Typography>                                   
-//      </CardActionArea>
-//  </Card>
+    const deleteAttr = (key) =>{
+        console.log("key,",key)
+        var newArr = [...datas]; 
+        newArr =  newArr.filter(row => row.key !== key)  
+        setDatas(newArr); 
+    }
 
-//// BOX 2
-{/* <Card className={classes.hoverCard} style={{  width:141, height:230,borderRadius:10,}}>  
-<CardActionArea style={{paddingBottom:7,borderRadius:10,}}>       
-    <Box style={{minHeight:185}}>
-        <Box component="img" sx={{ height: 125, width: 125,  borderRadius:10, margin:8, marginBottom:1 }}src={icon} />
-        <Box style={{marginLeft:10 , fontWeight:500, }}>{item.name}</Box>
-    </Box>
-    <ListItem style={{marginLeft:-5}}>
-        <Box style={{marginRight:30}}>{item.price}.000đ</Box>
-        <IconButton size="small"style={{backgroundColor:"#fa8c16", color:'#fff'}}><AddIcon/></IconButton>
-    </ListItem>   
- </CardActionArea>                          
-</Card> */}
+    const addAttrRow = () =>{
+        let newArr = [...datas]; 
+        newArr = [...datas,datas.push({ key:  "unset",  items: []})];
+        setDatas(newArr); 
+    }
+      
+    console.log("datas",datas)
+    return (
+        <div style={{marginBottom:10}}>
+            { datas.map( (data, index) => {
+                return (
+                    <AttributeRow attributeList={attributeList} index={index} data={data}  updateFieldChanged={updateFieldChanged} deleteAttr={deleteAttr}/>
+                )
+            }) }
+            <Button variant="outlined"size="small" color="primary" style={{marginLeft:20,marginTop:10,textTransform: "none"}}
+                startIcon={<AddIcon />}
+                onClick={()=>addAttrRow()}>
+                    Thêm thuộc tính
+            </Button>
 
-//BOX 3
-{/* <Card className={classes.hoverCard} style={{  width:136, height:230,borderRadius:10,}}>
-    <CardActionArea style={{paddingBottom:7,borderRadius:10,}}>
-        <Box style={{minHeight:185}}>
-            <Box component="img" sx={{ height: 120, width: 120,  borderRadius:10, margin:8, marginBottom:2 }}src={icon} />
-            <Typography style={{marginLeft:5,marginRight:5,flexGrow: 1,textAlign: "center",fontWeight:500,marginBottom:10}}>{item.name}</Typography>
-        </Box>
-        <Typography style={{flexGrow: 1,textAlign: "center",marginBottom:2}}>200.000 đ</Typography>
-        <Typography style={{flexGrow: 1,textAlign: "center",color:grey[500]}}>Tồn: {item.quantity}</Typography>
-    </CardActionArea>
-</Card>                               */}
-//BOX 4
+        </div>
+    )
+}
 
-// <Box  container item onClick={()=> console.log('add item to cart', item)} >
-// <Box component="img" style={{marginLeft:20}} sx={{ height: 120, borderRadius:120, }}src={icon} />
-// <Card className={classes.hoverCard} style={{  width:160, height:190,borderRadius:10,marginTop:-90, paddingTop:95}}>
-// <Typography style={{marginLeft:5,marginRight:5,flexGrow: 1,textAlign: "center",fontWeight:500,marginBottom:10, minHeight:35}}>{item.name}</Typography>
-// <Typography style={{flexGrow: 1,textAlign: "center",marginBottom:2}}>200.000 đ</Typography>
-// <Typography style={{flexGrow: 1,textAlign: "center",color:grey[500]}}>Tồn: {item.quantity}</Typography>
-// </Card>                              
-// </Box> 
+export default AddAttribute
 
-//
+
+const AttributeRow = ({attributeList,data,datas,updateFieldChanged,index,deleteAttr,setDatas}) => {
+    const theme = useTheme();
+    const classes = useStyles(theme);
+
+    const [attr, setAtt] = React.useState('unset');
+    const [value, setValue] = React.useState([]);
+
+
+    const handleChangeAttr = (event) => {
+        setAtt(event.target.value)
+        updateFieldChanged(index, event.target.value,value)
+    };
+
+    function handleSelecetedTags(items) {  
+        setValue(items);
+        // updateFieldChanged(index, 'leoo', items)
+
+    }
+
+    useEffect(() => {
+        console.log("value",value)
+        updateFieldChanged(index, attr,value);
+    }, [  value ]);
+
+
+ 
+   
+    return (
+      <Grid container className={classes.row} alignItems="center">
+            <Grid container item xs={11} alignItems="center" >
+                 <FormControl className={classes.formControl}>                     
+                        <Select  value={data.key} onChange={handleChangeAttr}  >
+                            <MenuItem value="unset" selected disabled hidden>Chọn thuộc tính...</MenuItem>
+                            {attributeList.map((attr)=>{
+                            return (<MenuItem value={attr.name}>{attr.name}</MenuItem>)
+                            }) }
+                        </Select>
+                        
+                    </FormControl>
+                    <EditTwoToneIcon style={{ marginRight:60}}/>
+                    <TagsInput style={{minWidth: 270}} selectedTags={handleSelecetedTags} placeholder="Nhấn giá trị và enter" 
+                    />
+            </Grid>
+
+            <Grid container item xs={1} >
+                <DeleteForeverTwoToneIcon onClick={()=>{deleteAttr(data.key)}}/>
+            </Grid>
+            
+    </Grid>
+    )
+}

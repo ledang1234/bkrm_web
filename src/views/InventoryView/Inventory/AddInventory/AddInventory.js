@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme,makeStyles } from "@material-ui/core/styles";
+
 import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 //import library
 import {
@@ -15,6 +16,13 @@ import {
   IconButton,
   Tooltip,
   Dialog,
+  FormControlLabel,
+  Switch,
+  Collapse,
+  Paper,
+  Card,
+  CardHeader,
+  Checkbox
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
@@ -33,6 +41,11 @@ import SearchIcon from "@material-ui/icons/Search";
 import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import clsx from "clsx"
+import TagsInput from "../../../../components/TextField/TagsInput"
+import AddAttribute from "./AddAttribute"
+import RelaltedItemList from "./RelaltedItemList"
 const UploadImages = (img) => {
   return (
     <Box
@@ -48,6 +61,7 @@ const UploadImages = (img) => {
     />
   );
 };
+
 const AddInventory = (props) => {
   const { handleClose, open } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
@@ -97,6 +111,7 @@ const AddInventory = (props) => {
       category: "",
       unit: "",
       re_order_point: "",
+      product_code: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
@@ -120,9 +135,10 @@ const AddInventory = (props) => {
       bodyFormData.append("list_price", productFormik.values.salesPrice.toString());
       bodyFormData.append(
         "standard_price",
-        productInfo.importedPrice.toString()
+        productFormik.values.importedPrice.toString()
       );
       bodyFormData.append("bar_code", productFormik.values.barcode.toString());
+      bodyFormData.append("product_code", productFormik.values.product_code.toString());
       bodyFormData.append("quantity_per_unit", productFormik.values.unit.toString());
       bodyFormData.append(
         "min_reorder_quantity",
@@ -257,14 +273,108 @@ const AddInventory = (props) => {
   const onFocus = (ref) => {
     ref.current.focus()
   }
+
+  //ATTRIBUTE
+  // api get all attribute
+  const attributeList = [
+    {
+      id:"1",
+      name:'MÀU'
+    },
+    {
+      id:"2",
+      name:'SIZE'
+    },
+    {
+      id:"3",
+      name:'RAM'
+    },
+  ]
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+  
+  //Lô, HSD
+  const [outOfDate, setOutOfDate] = React.useState("false")
+
+  // Attr
+  const [datas, setDatas] = useState([ { key:  "unset",  items: []}]);
+
+  // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}
+  const [relatedList, setRelatedList] =  useState([]);
+
+  // console.log("relatedList",relatedList)
+  
+  const handleAddProductWithVariation = async () => {
+    handleCloseAndReset();
+    try {
+      var bodyFormData = new FormData();
+      bodyFormData.append("name", productFormik.values.name.toString());
+      bodyFormData.append(
+        "list_price",
+        productFormik.values.salesPrice.toString()
+      );
+      bodyFormData.append(
+        "standard_price",
+        productFormik.values.importedPrice.toString()
+      );
+      bodyFormData.append("bar_code", productFormik.values.barcode.toString());
+      bodyFormData.append(
+        "product_code",
+        productFormik.values.product_code.toString()
+      );
+      bodyFormData.append(
+        "quantity_per_unit",
+        productFormik.values.unit.toString()
+      );
+      bodyFormData.append(
+        "min_reorder_quantity",
+        productFormik.values.re_order_point.toString()
+      );
+
+      bodyFormData.append(
+        "category_uuid",
+        productFormik.values.category.toString()
+      );
+      console.log(relatedList)
+      
+      for (var i = 0; i < relatedList.length; i++) {
+        bodyFormData.append("variations[]", JSON.stringify(relatedList[i]));
+      }
+
+
+      bodyFormData.append("img_url", imageURL);
+
+     
+      images.forEach((image) => bodyFormData.append("images[]", image));
+     
+
+      await productApi.addProductWithVaration(store_uuid, bodyFormData);
+      dispatch(statusAction.successfulStatus("Tạo sản phẩm thành công"));
+      props.setReload(true);
+    } catch (error) {
+      console.log(error);
+      dispatch(statusAction.failedStatus("Tạo sản phẩm thất bại"));
+    }
+  };
+  
+  
+
   return (
     <Dialog
       open={open}
       onClose={handleCloseAndReset}
       aria-labelledby="form-dialog-title"
+      maxWidth="md"
     >
       <Box className={classes.root}>
-        <AddCategory open={openAddCategory} handleClose={handleCloseCategory} onReset={onReset} />
+        <AddCategory
+          open={openAddCategory}
+          handleClose={handleCloseCategory}
+          onReset={onReset}
+        />
         <Box
           display="flex"
           flexDirection="row"
@@ -304,17 +414,29 @@ const AddInventory = (props) => {
               onChange={productFormik.handleChange}
               value={productFormik.values.name}
               error={productFormik.touched.name && productFormik.errors.name}
-              helperText={productFormik.touched.name ? productFormik.errors.name : null}
+              helperText={
+                productFormik.touched.name ? productFormik.errors.name : null
+              }
               onBlur={productFormik.handleBlur}
               type="text"
             />
             <TextField
-              label="Mã vạch (mặc định)"
+              label="Mã sản phẩm (tự động)"
+              variant="outlined"
+              fullWidth
+              size="small"
+              className={classes.margin}
+              name="product_code"
+              onChange={productFormik.handleChange}
+              value={productFormik.values.product_code}
+            />
+            <TextField
+              label="Mã vạch"
               variant="outlined"
               fullWidth
               size="small"
               name="barcode"
-              onKeyDown={(e) => { }}
+              onKeyDown={(e) => {}}
               onChange={productFormik.handleChange}
               value={productFormik.values.barcode}
               InputProps={{
@@ -340,6 +462,7 @@ const AddInventory = (props) => {
               onChange={productFormik.handleChange}
               value={productFormik.values.unit}
             />
+
             <Box className={`${classes.box} ${classes.margin}`}>
               <FormControl required size="small" variant="outlined" fullWidth>
                 <InputLabel htmlFor="category">Danh mục</InputLabel>
@@ -381,8 +504,15 @@ const AddInventory = (props) => {
               inputRef={salesPriceRef}
               value={productFormik.values.salesPrice}
               onChange={productFormik.handleChange}
-              error={productFormik.touched.salesPrice && productFormik.errors.salesPrice}
-              helperText={productFormik.touched.salesPrice ? productFormik.errors.salesPrice : null}
+              error={
+                productFormik.touched.salesPrice &&
+                productFormik.errors.salesPrice
+              }
+              helperText={
+                productFormik.touched.salesPrice
+                  ? productFormik.errors.salesPrice
+                  : null
+              }
               onBlur={productFormik.handleBlur}
             />
             <VNDInput
@@ -394,12 +524,18 @@ const AddInventory = (props) => {
               name="importedPrice"
               value={productFormik.values.importedPrice}
               onChange={productFormik.handleChange}
-              error={productFormik.touched.importedPrice && productFormik.errors.importedPrice}
-              helperText={productFormik.touched.importedPrice ? productFormik.errors.importedPrice : null}
+              error={
+                productFormik.touched.importedPrice &&
+                productFormik.errors.importedPrice
+              }
+              helperText={
+                productFormik.touched.importedPrice
+                  ? productFormik.errors.importedPrice
+                  : null
+              }
               onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
-
             <TextField
               label="Số lượng đặt hàng lại"
               variant="outlined"
@@ -409,8 +545,15 @@ const AddInventory = (props) => {
               name="re_order_point"
               value={productFormik.values.re_order_point}
               onChange={productFormik.handleChange}
-              error={productFormik.touched.re_order_point && productFormik.errors.re_order_point}
-              helperText={productFormik.touched.re_order_point ? productFormik.errors.re_order_point : null}
+              error={
+                productFormik.touched.re_order_point &&
+                productFormik.errors.re_order_point
+              }
+              helperText={
+                productFormik.touched.re_order_point
+                  ? productFormik.errors.re_order_point
+                  : null
+              }
               onBlur={productFormik.handleBlur}
             />
           </Grid>
@@ -452,38 +595,99 @@ const AddInventory = (props) => {
               </IconButton>
             </Box>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
-            }}
+        </Grid>
+        <div style={{ flexGrow: 1, textAlign: "right" }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={outOfDate}
+                onChange={(event) => setOutOfDate(event.target.checked)}
+              />
+            }
+            label="Lô, hạn sử dụng"
+          />
+        </div>
+
+        <Card className={classes.attrCard}>
+          <CardHeader
+            onClick={handleExpandClick}
+            action={
+              <IconButton
+                size="small"
+                className={clsx(classes.expand, {
+                  [classes.expandOpen]: expanded,
+                })}
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+            title="Thuộc tính"
+            className={classes.attrHead}
+          />
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <AddAttribute
+              attributeList={attributeList}
+              datas={datas}
+              setDatas={setDatas}
+              setRelatedList={setRelatedList}
+            />
+          </Collapse>
+
+        </Card>
+        {/* GENERATE ATTR */}
+        {relatedList.length > 0 ? (
+          <Card className={classes.attrCard}>
+            <CardHeader
+              title="Danh sách hàng cùng loại"
+              className={classes.attrHead}
+            />
+            {/*  !!!! Handle value phần này */}
+            <RelaltedItemList
+              relatedList={relatedList}
+              setRelatedList={setRelatedList}
+            />
+          </Card>
+        ) : null}
+
+
+        {/* Button */}
+        <Grid
+          item
+          xs={12}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button
+            onClick={handleCloseAndReset}
+            variant="contained"
+            size="small"
+            color="secondary"
+            style={{ marginRight: 20 }}
           >
-            <Button
-              onClick={handleCloseAndReset}
-              variant="contained"
-              size="small"
-              color="secondary"
-              style={{ marginRight: 20 }}
-            >
-              Huỷ
-            </Button>
-            <Button
-              onClick={() => {
+            Huỷ
+          </Button>
+          <Button
+            onClick={() => {
+              if (relatedList.length) {
+                handleAddProductWithVariation();
+              } else {
                 addProductHandler();
-              }}
-              variant="contained"
-              size="small"
-              color="primary"
-            >
-              Thêm
-            </Button>
-          </Grid>
+              }
+            }}
+            variant="contained"
+            size="small"
+            color="primary"
+          >
+            Thêm
+          </Button>
         </Grid>
       </Box>
-    </Dialog >
+    </Dialog>
   );
 };
 

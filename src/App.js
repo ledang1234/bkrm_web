@@ -17,6 +17,7 @@ import { Box, CssBaseline, makeStyles } from "@material-ui/core";
 import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
 import Test from "./components/Test/Test";
 import { customizeAction } from "./store/slice/customizeSlice";
+import { SwitchCamera } from "@material-ui/icons";
 function App() {
   const customization = useSelector((state) => state.customize);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -69,10 +70,16 @@ function App() {
               {isLoggedIn ?  <Redirect to={path ? path :"/home" }/>: <LoginPage />}
             </Route>
             <Route path="/signup" exact>
-              {isLoggedIn ? <Redirect to={path? path: "/home"} /> : <SignupPage />}
+              {isLoggedIn ? <Redirect to={path? path: "/home"} /> : <SignupPage />
             </Route>
             <Route path="/main" component={MainPage} />
-            <Route path="/customer-test" component={CustomerPage} />
+            <Route path="/store">
+              <Switch>
+                <Route path={"/store/:storeWebPage"}>
+                  <CustomerPage />
+                </Route>
+              </Switch>
+            </Route>
             <Route path="/test" component={Test} />
             <Route path="*" component={PageNotFound} />
           </Switch>

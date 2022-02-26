@@ -3,8 +3,9 @@
 //  ID phải trùng tên ATTRIBUTE THÌ MỚI SORT ĐC
 
 export const InventoryHeadCells = [
-  { id: "id", align: "left", disablePadding: true, label: "#" },
-  { id: "name", align: "left", disablePadding: false, label: "Sản phẩm" },
+  { id: "id", align: "left", disablePadding: true, label: "Mã SP" },
+  { id: "name", align: "center", disablePadding: false, label: "Sản phẩm" },
+  { id: "bar_code", align: "center", disablePadding: true, label: "Mã vạch" },
   { id: "category", align: "left", disablePadding: false, label: "Danh mục" },
   { id: "price", align: "right", disablePadding: false, label: "Giá bán" },
   {
@@ -304,4 +305,25 @@ export const InventoryCheckHeadCells = [
     label: "SL lệch",
   },
   { id: "total", align: "right", disablePadding: false, label: "Giá trị lệch" },
+];
+
+
+
+export const VoucherHeadCells = [
+  { id: "id", align: "left", disablePadding: true, label: "#" },
+  { id: "name", align: "left", disablePadding: true, label: "Tên voucher" },
+  { id: "fromDate", align: "left", disablePadding: true, label: "Từ ngày" },
+  { id: "toDate", align: "left", disablePadding: true, label: "Đến ngày" },
+  { id: "quantity", align: "left", disablePadding: true, label: "Số lượng" },
+  { id: "value", align: "left", disablePadding: true, label: "Mệnh giá" },
+  { id: "status", align: "left", disablePadding: true, label: "Trạng thái" },
+];
+
+export const DiscountHeadCells = [
+  { id: "id", align: "left", disablePadding: true, label: "#" },
+  { id: "name", align: "left", disablePadding: true, label: "Tên chương trình" },
+  { id: "fromDate", align: "left", disablePadding: true, label: "Từ ngày" },
+  { id: "toDate", align: "left", disablePadding: true, label: "Đến ngày" },
+  { id: "type", align: "left", disablePadding: true, label: "Hình thức" },
+  { id: "status", align: "left", disablePadding: true, label: "Trạng thái" },
 ];

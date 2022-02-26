@@ -54,6 +54,7 @@ const Customer = () => {
     const handleClickOpen = () => {
       setOpen(true);
     };
+
     const handleClose = (status) => {
       setOpen(false);
       setAddStatus(status);
@@ -97,10 +98,10 @@ const Customer = () => {
     //3. ToolBar
 
     // toolbar
-  const componentRef = useRef();
-  const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
-  });
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
     //3.1. search
 
     //3.2. filter
@@ -183,7 +184,7 @@ export default Customer
 const ComponentToPrint = ({customerList,classes}) =>{
   return (
       <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:25, fontWeight:500, margin:30, color:'#000'}} >Khách hàng</Typography>
+        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách khách hàng</Typography>
         <div >
           <TableHeader
                 classes={classes}

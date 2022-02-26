@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTheme, makeStyles, styled , lighten} from "@material-ui/core/styles";
 import { Carousel } from "react-responsive-carousel";
 import {IconButton,Typography,Box} from '@material-ui/core';
@@ -8,6 +8,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import clsx from "clsx";
 import InventoryList from '../../../assets/JsonData/inventory.json'
+import StoreContext from '../StoreContext';
+import customerPageApi from '../../../api/customerPageApi';
 
 const useStyles = makeStyles((theme) => ({
     arrow: {
@@ -31,10 +33,24 @@ const images=[
 ]
 
 const MainPage = (props) => {
-    const {mainColor, priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,marginContainer,boxDistance} = props;
+    const {mainColor, priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,storeInfo,marginContainer,boxDistance} = props;
 
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    const [inventoryList, setInventoryList] = useState([])
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await customerPageApi.storeProducts(storeInfo.uuid)
+                setInventoryList(res.data)
+                console.log(res.data)
+            } catch(err) {
+                console.log(err)
+            }
+        }
+        fetchProducts();
+    }, [storeInfo])
     return (
 <>
     {/* // 1. CAROUSE */}
@@ -58,14 +74,14 @@ const MainPage = (props) => {
     {/* // 2. BEST SELLERS  */}
     <Box>
         <Typography variant="h2" style={{flexGrow: 1,textAlign: "center", marginBottom:30,marginTop:50}}>Bán chạy</Typography>
-        <ProductList InventoryList={InventoryList} mainColor={mainColor} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={10} boxDistance={2}/>
+        <ProductList InventoryList={inventoryList} mainColor={mainColor} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={10} boxDistance={2}/>
     </Box>
 
     {/* // 3. NEWS IN  */}
-    <Box style={{backgroundColor:lighten(mainColor, 0.9),paddingBottom:20,marginTop:50}}>
+    {/* <Box style={{backgroundColor:lighten(mainColor, 0.9),paddingBottom:20,marginTop:50}}>
         <Typography variant="h2" style={{flexGrow: 1,textAlign: "center", marginBottom:30,paddingTop:50}}>Sản phẩm mới</Typography>
         <ProductList InventoryList={InventoryList} mainColor={mainColor} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={10} boxDistance={2}/>
-    </Box>
+    </Box> */}
     
 </>  
 

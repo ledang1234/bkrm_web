@@ -40,7 +40,7 @@ function TableHeader(props) {
                 style={{color:theme.themeText}}
                 >
                 {headCell.label}
-                {orderBy === headCell.id ? (
+                {orderBy === headCell.id  ? (
                     <span className={classes.visuallyHidden}>
                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                     </span>

@@ -32,6 +32,7 @@ import employeeApi from "../../../../api/employeeApi";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import VNDInput from "../../../../components/TextField/NumberFormatCustom";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -373,7 +374,7 @@ const AddEmployee = (props) => {
                 </Select>
               </FormControl>
 
-              <TextField
+              {/* <TextField
                 label="Mức lương"
                 variant="outlined"
                 fullWidth
@@ -383,10 +384,23 @@ const AddEmployee = (props) => {
                 // value={values.numberformat}
                 // onChange={handleChange}
                 onChange={formik.handleChange}
-                id="formatted-numberformat-input"
                 InputProps={{
                   inputComponent: NumberFormatCustom,
                 }}
+              /> */}
+              <VNDInput
+                label="Mức lương"
+                variant="outlined"
+                fullWidth
+                size="small"
+                value={formik.values.salary}
+                name="salary"
+                // value={values.numberformat}
+                // onChange={handleChange}
+                onChange={formik.handleChange}
+                // InputProps={{
+                //   inputComponent: NumberFormatCustom,
+                // }}
               />
 
           
@@ -424,10 +438,12 @@ const AddEmployee = (props) => {
                     </MenuItem>
                   ))}
                 </Select>
+
               </FormControl>
               {formik.errors.permissions && formik.touched.permissions && (
                 <FormHelperText error>{formik.errors.permissions}</FormHelperText>
               )}
+
               <FormControl
                 className={classes.formControl}
                 fullWidth
@@ -483,6 +499,9 @@ const AddEmployee = (props) => {
         </Button>
         <Button
           onClick={formik.handleSubmit}
+          variant="contained"
+          size="small"
+          color="primary"
         >
           Thêm
         </Button>

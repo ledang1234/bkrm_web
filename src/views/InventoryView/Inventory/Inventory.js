@@ -16,6 +16,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
+import Pagination from "@material-ui/lab/Pagination";
 
 //import api
 import productApi from "../../../api/productApi";
@@ -49,6 +50,11 @@ const Inventory = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const [pagingState, setPagingState] = useState({
+    page: 0,
+    limit: 10,
+    total: 0,
+  });
 
   const importProductByJSON = async (jsonData) => {
     try {
@@ -77,7 +83,11 @@ const Inventory = () => {
       try {
         const response = await productApi.getProductsOfBranch(
           store_uuid,
-          branch_uuid
+          branch_uuid,
+          {
+            page: pagingState.page,
+            limit: pagingState.limit,
+          }
         );
         setProductList(response.data);
         console.log(response.data);
@@ -96,10 +106,39 @@ const Inventory = () => {
       try {
         const response = await productApi.getProductsOfBranch(
           store_uuid,
+          branch_uuid,
+          {
+            page: pagingState.page,
+            limit: pagingState.limit,
+          }
+        );
+        setProductList(response.data);
+        console.log(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProducts();
+  }, [pagingState]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await productApi.getProductsOfBranch(
+          store_uuid,
           branch_uuid
         );
 
         setProductList(response.data);
+
+        setPagingState({
+          page: 0,
+          limit: 10,
+          total_page: response.total_rows
+            ? Math.ceil(response.total_rows / pagingState.limit)
+            : 0,
+        });
       } catch (err) {
         console.log(err);
       }
@@ -175,12 +214,10 @@ const Inventory = () => {
     content: () => componentRef.current,
   });
 
-
   /// import product by file
   const [openProductImportPopper, setOpenProductImportPopper] = useState(false);
   const [isLoadingProduct, setIsLoadingProduct] = useState(false);
   const [productErrors, setProductErrors] = useState([]);
-
 
   return (
     <Card className={classes.root}>
@@ -270,6 +307,12 @@ const Inventory = () => {
           })}
         </TableBody>
       </TableWrapper>
+      <Pagination
+        page={pagingState.page}
+        count={pagingState.total_page}
+        onChange={(e, page) => setPagingState({ ...pagingState, page: page })}
+        color="primary"
+      />
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint productList={productList} classes={classes} />
@@ -287,13 +330,13 @@ const ComponentToPrint = ({ productList, classes }) => {
         style={{
           flexGrow: 1,
           textAlign: "center",
-          fontSize: 25,
+          fontSize: 20,
           fontWeight: 500,
           margin: 30,
           color: "#000",
         }}
       >
-        Kho hàng
+        Danh sách sản phẩm
       </Typography>
       <div>
         <TableHeader

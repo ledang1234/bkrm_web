@@ -9,19 +9,22 @@ const productApi = {
       },
     });
   },
-  getProducts: (storeUuid) => {
-    const url = `stores/${storeUuid}/products`;
-    return axiosClient.get(url);
+  addProductWithVaration: (storeUuid, params) => {
+    const url = `stores/${storeUuid}/products/addProductWithVariation`;
+    return axiosClient.post(url, params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
-
-  getProductsOfBranch: (storeUuid, branchUuid) => {
+  getProductsOfBranch: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/products`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, { params: query });
   },
 
-  getProduct: (storeUuid, productUuid) => {
+  getProduct: (storeUuid, productUuid, query) => {
     const url = `stores/${storeUuid}/products/${productUuid}`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: query});
   },
 
   createCategory: (storeUuid, params) => {
@@ -68,7 +71,12 @@ const productApi = {
     return axiosClient.post(url, body);
   },
 
-  searchDefaultProducts: (searchKey,page) => {
+  getNestedCategory: (storeUuid) => {
+    const url = `stores/${storeUuid}/categories/getNestedCategory`;
+    return axiosClient.get(url);
+  },
+
+  searchDefaultProducts: (searchKey, page) => {
     const url = `/searchDefaultProduct?searchKey=${searchKey}&page=${page}&limit=${15}`;
     return axiosClient.get(url);
   },
