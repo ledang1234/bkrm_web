@@ -1,12 +1,32 @@
 function descendingComparator(a, b, orderBy) {
+   if ( orderBy !== null){
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
     if (b[orderBy] > a[orderBy]) {
         return 1;
     }
+    
+    } else{
+        if (b.id< a.id) {
+            return -1;
+        }
+        if (b.id > a.id) {
+            return 1;
+        }
+        return 0;
+    }
     return 0;
 }
+// function descendingComparator(a, b, orderBy) {
+//     if (b.id< a.id) {
+//         return -1;
+//     }
+//     if (b.id > a.id) {
+//         return 1;
+//     }
+//     return 0;
+// }
 export function getComparator(order, orderBy) {
     return order === 'desc'
       ? (a, b) => descendingComparator(a, b, orderBy)

@@ -21,7 +21,8 @@ import {
 //import project
 import customerApi from "../../../../../api/customerApi";
 import {useSelector} from 'react-redux'
-
+import VNDInput from "../../../../../components/TextField/NumberFormatCustom";
+import {ThousandSeperatedInput} from "../../../../../components/TextField/NumberFormatCustom";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -84,6 +85,7 @@ const AddVoucher = (props) => {
             spacing={3}
           >
             <Grid item sm={6}>
+           
               <TextField
                 id="outlined-basic"
                 label="Tên voucher (*)"
@@ -93,7 +95,7 @@ const AddVoucher = (props) => {
                 // value={name}
                 // onChange={(event)=>setName(event.target.value)}
               />
-              <TextField
+              <VNDInput
                 id="outlined-basic"
                 label="Mệnh giá voucher (*)"
                 // value={phone}
@@ -108,21 +110,29 @@ const AddVoucher = (props) => {
 
             <Grid item sm={6}>
               {/* nếu ko điền mặc định là ko giới hạn */}
-              <TextField
-                id="outlined-basic"
-                label="Số lượng voucher"
-                variant="outlined"
+              <ThousandSeperatedInput
+                label={<Typography style={{fontWeight:500, fontSize:15, marginTop:-6, marginRight:-15}}>Số lượng voucher</Typography>}
+                placeholder="Không giới hạn"
                 fullWidth
                 size="small"
+                variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }} 
                 // value={address}
                 // onChange={(event)=>setAddress(event.target.value)}
               />
-              <TextField
+              <VNDInput
                 id="outlined-basic"
-                label="Tiền hoá đơn tối thiểu"
+                label={<Typography style={{fontWeight:500, fontSize:15, marginTop:-6, marginRight:-15}}>Tiền hoá đơn tối thiểu</Typography>}
+                // label="Tiền hoá đơn tối thiểu"
                 variant="outlined"
                 fullWidth
                 size="small"
+                placeholder="Không tối thiểu"
+                InputLabelProps={{
+                  shrink: true,
+                }} 
                 // value={address}
                 // onChange={(event)=>setAddress(event.target.value)}
               />

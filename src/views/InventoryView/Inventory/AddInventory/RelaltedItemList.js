@@ -44,7 +44,7 @@ const RelaltedItemList = ({relatedList, setRelatedList}) => {
                     return (
                         <TableRow >
                             <TableCell align="center" >{row.name}</TableCell>
-                            <TableCell align="center" ><TextField value={row.product_code}  /></TableCell>
+                            <TableCell align="center" ><TextField placeholder="Tạo tự động" value={row.product_code}  /></TableCell>
                             <TableCell align="center" ><TextField value={row.bar_code}  /></TableCell>
                             <TableCell align="center" ><ThousandSeperatedInput  value={row.standard_price} /></TableCell>
                             <TableCell align="center" ><ThousandSeperatedInput  value={row.unit_price}/></TableCell>

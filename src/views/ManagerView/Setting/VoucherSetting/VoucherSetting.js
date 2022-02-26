@@ -152,7 +152,7 @@ const VoucherSetting = () => {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              headerData={HeadCells.CustomerHeadCells}
+              headerData={HeadCells.VoucherHeadCells}
             />
             <TableBody>
               {voucherList?.map((row, index) => {

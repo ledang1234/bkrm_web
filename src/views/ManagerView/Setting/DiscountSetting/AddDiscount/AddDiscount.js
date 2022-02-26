@@ -25,8 +25,10 @@ import {
   Tooltip,
   CardHeader,
   Input,
-  Chip
+  Chip,
+  
 } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 //import project
 import customerApi from "../../../../../api/customerApi";
@@ -34,6 +36,8 @@ import {useSelector} from 'react-redux'
 import MoreInfo from "../../../../../components/MoreInfo/MoreInfo"
 import clsx from "clsx"
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
+import { ThousandSeperatedInput } from "../../../../../components/TextField/NumberFormatCustom";
+import SearchMultiple from "../../../../../components/SearchBar/SearchMultiple";
 
 
 const useStyles = makeStyles((theme) =>
@@ -88,24 +92,40 @@ const AddDiscount = (props) => {
 
 
   //Khuyến mãi theo - Hình thức
-  const [discountKey, setDiscountKey] = React.useState("invoice");
+  const [discountKey, setDiscountKey] = React.useState("invoice");   // invoice, product
   const handleChangeKey = (event) => {
     setDiscountKey(event.target.value);
     setDiscountType(event.target.value === "invoice" ? "discountInvoice": "sendGift")
+    const d = new Date();
+    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" }])
   };
-  const [discountType, setDiscountType] = React.useState("discountInvoice");
+  const [discountType, setDiscountType] = React.useState("discountInvoice"); //discountInvoice , sendGift, sendVoucher,priceByQuantity
   const handleChangeType = (event) => {
     setDiscountType(event.target.value);
+    const d = new Date();
+    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" }])
   };
 
   // Khuyên mãi theo 
   const [rowsInvoice, setRowsInvoice] = React.useState([
     {
+      //invoive
       key:"1", //  ID dung để delete row , ko liên quan database
       totalCost:0, 
-      number:0,
-      listItem:[],
-      type:"VND" // "%"
+      type:"VND" ,// "%"
+
+      discountValue:0,
+
+      numberGiftItem:1,
+      listGiftItem:[],
+
+       //item
+      numberBuyItem:1,
+      listBuyItem:[],
+      typeDiscountItem:"price"
+
+     
+
     }]);
 
   const  handleChangeMoneyType = (index, value) => {
@@ -114,6 +134,7 @@ const AddDiscount = (props) => {
     newArr[index].type = value;
     setRowsInvoice(newArr);
   }
+
   const  handleChangeTotalCost = (event, index) => {
     let newArr = [...rowsInvoice];
     newArr[index].totalCost = event.target.value;
@@ -121,15 +142,48 @@ const AddDiscount = (props) => {
   }
   const  handleChangeValue = (event, index) => {
     let newArr = [...rowsInvoice];
-    newArr[index].number = event.target.value;
+    newArr[index].discountValue = event.target.value;
     setRowsInvoice(newArr);
   }
+  const  handleChangeNumberGiftItem = (event, index) => {
+    let newArr = [...rowsInvoice];
+    newArr[index].numberGiftItem = event.target.value;
+    setRowsInvoice(newArr);
+  }
+  const  handleChangeListGiftItem = (option, index,typeChange) => {
+    let newArr = [...rowsInvoice];
+    if (typeChange === "delete"){
+      newArr[index].listGiftItem = newArr[index].listGiftItem.filter(item => item.uuid !== option.uuid)
+    }else{
+      newArr[index].listGiftItem.push(option)
+    }
+   
+    setRowsInvoice(newArr);
+  }
+  const  handleChangeNumberBuyItem = (event, index) => {
+    let newArr = [...rowsInvoice];
+    newArr[index].numberBuyItem = event.target.value;
+    setRowsInvoice(newArr);
+  }
+  const  handleChangeListBuyItem = (option, index,typeChange) => {
+    let newArr = [...rowsInvoice];
+    if (typeChange === "delete"){
+      newArr[index].listBuyItem = newArr[index].listBuyItem.filter(item => item.uuid !== option.uuid)
+    }else{
+      newArr[index].listBuyItem.push(option)
+    }
+   
+    setRowsInvoice(newArr);
+  }
+  
+  
+  
   
 
   const addConditionRow = () => {
     let newArr = [...rowsInvoice];
     const d = new Date();
-    newArr.push({key:d.toString(),  totalCost:0,  number:1,listItem:[], type:"VND"  })
+    newArr.push({key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" })
     setRowsInvoice(newArr);
   }
 
@@ -249,7 +303,7 @@ const AddDiscount = (props) => {
                           onChange={handleChangeType}
                         >
                             <MenuItem value="discountInvoice">Giảm giá hoá đơn</MenuItem>
-                            <MenuItem value="gift">Tặng hàng</MenuItem>
+                            <MenuItem value="sendGift">Tặng hàng</MenuItem>
                             <MenuItem value="sendVoucher">Tặng voucher</MenuItem>
                         </Select>
                       </FormControl>
@@ -269,32 +323,87 @@ const AddDiscount = (props) => {
             </Grid>
          </Grid>
 
-    
+      {/* Header */}
          <div style={{backgroundColor:theme.customization.primaryColor[50], height:35, marginTop:20,paddingTop:10, paddingLeft:15, marginLeft:10, marginRight:10}}>
           <Grid  container direction="row" justifyContent="">
+              {/* col 1 */}
+              {discountKey ==="invoice"?
               <Grid item style={{width:150, marginRight:30}}>
                 <Typography className={clsx(classes.text,classes.weight)} >Tổng tiền hàng</Typography>
+              </Grid>:null
+              }
+              {discountKey ==="product" && discountType ==="sendGift" ?
+              <>
+              <Grid item style={{width:50, marginRight:50}}>
+                  <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SL mua</Typography>
               </Grid>
-              <Grid item >
-                <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>Giá trị khuyến mại</Typography>
-              </Grid> 
+              <Grid item style={{ marginRight:190}}>
+                  <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SP/nhóm hàng mua</Typography>
+              </Grid>
+               </>:null
+              }
+               { discountType ==="discountInvoice"?
+                  <Grid item >
+                  <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>Giá trị khuyến mãi</Typography>
+                </Grid>:null
+                }
+                {['sendGift','sendVoucher'].includes(discountType) ?
+                  <Grid item style={{width:50, marginRight:50}}>
+                  <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SL tặng</Typography>
+              </Grid>:null
+                }
+                {discountType ==="sendGift"?
+                    <Grid item >
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SP/nhóm hàng tặng</Typography>
+                    </Grid> :null
+               }
+               {discountType ==="sendVoucher"?
+                    <Grid item >
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>Voucher</Typography>
+                    </Grid> :null
+               }
+                 
+                 
+           
+              
           </Grid>
           
           </div>
            <Divider classes={{root: classes.divider}} style={{marginLeft:10, marginRight:10}}/>      
        
+       {/* List Khuyen mai */}
           {rowsInvoice.map((row, index) => {
               return (
                   <>
                   <div style={{paddingLeft:15, marginLeft:10, marginRight:10}}>
                   <Grid container direction="row" justifyContent="">
-                      <Grid item  container direction="row" alignItems="center" style={{width:130,marginRight:30, height:40}} >
+                      {/* col 1 */}
+                      {discountKey ==="invoice"?
+                      <Grid item  container direction="row" alignItems="center" style={{width:130,marginRight:52, height:40}} >
                           <Grid item> <Typography style={{marginRight:10, color:"#000", fontSize:13}}> Từ </Typography> </Grid> 
-                          <Grid item> <TextField  style={{width:100}} onChange={(event)=>handleChangeTotalCost(event, index)} value={row.totalCost} /> </Grid> 
+                          <Grid item> <ThousandSeperatedInput  style={{width:100}} onChange={(event)=>handleChangeTotalCost(event, index)} value={row.totalCost} /> </Grid> 
+                      </Grid>:null
+                      }
+                      {discountKey ==="product" && discountType ==="sendGift" ?
+                      <>
+                      <Grid item style={{width:50,marginRight:30, height:40, marginTop:4}} >
+                        <ThousandSeperatedInput  style={{width:50}} onChange={(event)=>handleChangeNumberBuyItem(event, index)} value={row.numberBuyItem} /> 
                       </Grid>
+                      <Grid item style={{ marginTop:4, marginRight:30}} >
+                          <SearchMultiple
+                            selectedOption={row.listBuyItem}
+                            handleSelectedOption={handleChangeListBuyItem}
+                            index={index}
+                          />
+                        </Grid> 
+                      </>
+                      :null }
+                      {/* col 2 */}
+                      {discountType ==="discountInvoice"?
                       <Grid item >
-                      <Grid item  container direction="row" alignItems="center" style={{height:40}}>
-                          <Grid item> <TextField style={{marginRight:10, color:"#000"}} onChange={(event)=>handleChangeValue(event, index)} value={row.number}  />  </Grid> 
+                        <Grid item  container direction="row" alignItems="center" style={{height:40}}>
+                          {/*!! Nếu la % nhớ handle maximum change là 100% */}
+                          <Grid item> <ThousandSeperatedInput style={{marginRight:10, color:"#000"}} onChange={(event)=>handleChangeValue(event, index)} value={row.discountValue}  />  </Grid> 
                           <Grid item style={{ marginRight:5}}> 
                               <ButtonBase sx={{ borderRadius: '16px', }} 
                                   onClick={()=>handleChangeMoneyType(index,"VND")}
@@ -314,9 +423,36 @@ const AddDiscount = (props) => {
                                 
                             </ButtonBase>
                            </Grid> 
- 
-                      </Grid>
-                      </Grid>
+                        </Grid>
+                      </Grid>:null
+                      }
+                    {/* col 3 */}
+                    {['sendGift','sendVoucher'].includes(discountType) ?
+                    <Grid item style={{width:50,marginRight:30, height:40, marginTop:4}} >
+                        <ThousandSeperatedInput  style={{width:50}} onChange={(event)=>handleChangeNumberGiftItem(event, index)} value={row.numberGiftItem} /> 
+                    </Grid>:null
+                    }
+                    {discountType ==="sendGift"?
+                          <Grid item style={{ marginTop:4}} >
+                            <SearchMultiple
+                              selectedOption={row.listGiftItem}
+                              handleSelectedOption={handleChangeListGiftItem}
+                              index={index}
+                            />
+                          </Grid> :null
+                    }
+                    {discountType ==="sendVoucher"?
+    
+                          <Grid item style={{ marginTop:4}} >
+                            <SearchMultiple
+                              isVoucher={true}
+                              selectedOption={row.listGiftItem}
+                              handleSelectedOption={handleChangeListGiftItem}
+                              index={index}
+                            />
+                          </Grid> :null
+                    }
+                  
                       <Grid item container direction="row" justifyContent="flex-end">
                           <DeleteForeverTwoToneIcon style={{marginTop:-30}} onClick={() => {deleteAttr(row.key)}} />
                       </Grid>
@@ -370,7 +506,7 @@ const AddDiscount = (props) => {
         </Grid>
         {/*  */}
         <Divider style={{margin:"25px 10px 0px 10px"}} />
-        <Typography style={{fontWeight:500, color:"#707070", marginTop:15, marginBottom:-15}}>Cài đặt nâng cao:</Typography>
+        <Typography style={{fontWeight:500, color:"#707070", marginTop:15, marginBottom:-10}}>Cài đặt nâng cao:</Typography>
             <MultipleSelect  chonsenValue={byMonth} handleAction={handleByMonthChange} handleDeleteChip={handleDeleteMonth} label="Theo tháng" options={month}/>
             <MultipleSelect  chonsenValue={byDay} handleAction={handleByDayChange} handleDeleteChip={handleDeleteDay}label="Theo ngày" options={day}/>
             <MultipleSelect  chonsenValue={byDate} handleAction={handleByDateChange} handleDeleteChip={handleDeleteDate}label="Theo thứ" options={date}/>
@@ -448,3 +584,4 @@ const month = [
 const day = ['Ngày 1','Ngày 2','Ngày 3','Ngày 4','Ngày 5','Ngày 6','Ngày 7','Ngày 8','Ngày 9','Ngày 10','Ngày 11','Ngày 12','Ngày 13','Ngày 14','Ngày 15','Ngày 16','Ngày 17','Ngày 18','Ngày 19','Ngày 20','Ngày 21','Ngày 22','Ngày 23','Ngày 24','Ngày 25','Ngày 26','Ngày 27','Ngày 28','Ngày 29','Ngày 30','Ngày 31'];
 const date=['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ nhật']
 const time = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']
+

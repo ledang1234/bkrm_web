@@ -305,3 +305,24 @@ export const InventoryCheckHeadCells = [
   },
   { id: "total", align: "right", disablePadding: false, label: "Giá trị lệch" },
 ];
+
+
+
+export const VoucherHeadCells = [
+  { id: "id", align: "left", disablePadding: true, label: "#" },
+  { id: "name", align: "left", disablePadding: true, label: "Tên voucher" },
+  { id: "fromDate", align: "left", disablePadding: true, label: "Từ ngày" },
+  { id: "toDate", align: "left", disablePadding: true, label: "Đến ngày" },
+  { id: "quantity", align: "left", disablePadding: true, label: "Số lượng" },
+  { id: "value", align: "left", disablePadding: true, label: "Mệnh giá" },
+  { id: "status", align: "left", disablePadding: true, label: "Trạng thái" },
+];
+
+export const DiscountHeadCells = [
+  { id: "id", align: "left", disablePadding: true, label: "#" },
+  { id: "name", align: "left", disablePadding: true, label: "Tên chương trình" },
+  { id: "fromDate", align: "left", disablePadding: true, label: "Từ ngày" },
+  { id: "toDate", align: "left", disablePadding: true, label: "Đến ngày" },
+  { id: "type", align: "left", disablePadding: true, label: "Hình thức" },
+  { id: "status", align: "left", disablePadding: true, label: "Trạng thái" },
+];

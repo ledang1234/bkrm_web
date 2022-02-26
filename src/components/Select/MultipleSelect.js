@@ -60,8 +60,8 @@ const MultipleSelect = ({chonsenValue,handleAction, label,options,handleDeleteCh
             MenuProps={MenuProps}
             >
              {options.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={chonsenValue.indexOf(name) > -1} />
+            <MenuItem key={name} value={name} style={{height:40}}>
+              <Checkbox checked={chonsenValue.indexOf(name) > -1} style={{marginLeft:-10}}/>
               <ListItemText primary={name} />
             </MenuItem>
           ))}
