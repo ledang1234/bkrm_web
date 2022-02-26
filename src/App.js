@@ -70,7 +70,7 @@ function App() {
               {isLoggedIn ?  <Redirect to={path ? path :"/home" }/>: <LoginPage />}
             </Route>
             <Route path="/signup" exact>
-              {isLoggedIn ? <Redirect to={path? path: "/home"} /> : <SignupPage />
+              {isLoggedIn ? <Redirect to={path? path: "/home"} /> : <SignupPage />}
             </Route>
             <Route path="/main" component={MainPage} />
             <Route path="/store">
