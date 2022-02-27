@@ -13,7 +13,7 @@ const initialState = {
   secondaryColor: pink,
   colorLevel: 50,
   isSidebarOpen: null,
-  itemMenuOpen:  sessionStorage.getItem("BKRMopening") ? sessionStorage.getItem("BKRMopening"):3 ,
+  itemMenuOpen:  sessionStorage.getItem("BKRMopening") ? sessionStorage.getItem("BKRMopening"):-1 ,
 };
 
 const customizeSlice = createSlice({

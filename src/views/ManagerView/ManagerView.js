@@ -1,4 +1,4 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import History from "./History/History";
 import Branch from "./Branch/Branch";
 
@@ -9,13 +9,17 @@ import WebSetting from "./Setting/WebSetting/WebSetting";
 import StoreSetting from "./Setting/StoreSetting/StoreSetting"
 import Customer from "./Customer/Customer";
 import Report from "./Report/Report";
+import { useSelector } from "react-redux";
 
 const ManagerView = (props) => {
   
   const { path } = useRouteMatch();
+  const permissions = useSelector((state) => state.info.user.permissions);
   return (
     <Switch>
-      <Route exact path={path} component={History} />
+      <Route exact path={path} component={History} >
+        <Redirect to={permissions?.find((p) => p.name === "report") ? `${path}/history` : "/home"}/>
+      </Route>
       <Route exact path={`${path}/history`} component={History} />
       <Route path={`${path}/branch`} component={Branch} />
       

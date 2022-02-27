@@ -21,36 +21,13 @@ import { SwitchCamera } from "@material-ui/icons";
 function App() {
   const customization = useSelector((state) => state.customize);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const permissions = useSelector((state) => state.info.user.permissions);
   const dispatch = useDispatch();
-  const [path,setPath] = useState()
+  const [path,setPath] = useState("/home")
   useEffect(() => {
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
+    setPath(sessionStorage.getItem("BKRMprev"))
   }, [dispatch]);
-  useEffect(()=>{
-    const getPath = () =>{
-      const prevPath = sessionStorage.getItem("BKRMprev")
-      if (prevPath != "/home"){
-        setPath( prevPath)
-      }else if (permissions){
-        if(permissions.find((p) => p.name === "sales")){
-          setPath("/home/sales/cart")
-          dispatch(customizeAction.setItemMenuOpen(1));
-        }else if (permissions.find((p) => p.name === "inventory")){
-          setPath("/home/inventory/import")
-          dispatch(customizeAction.setItemMenuOpen(4));
-        }else if (permissions.find((p) => p.name === "employee")){
-          setPath("/home/hr/employee")
-          dispatch(customizeAction.setItemMenuOpen(14));
-        }else if (permissions.find((p) => p.name === "report")){
-          setPath("/home/manager/history")
-          dispatch(customizeAction.setItemMenuOpen(16));
-        }
-      }
-    }
-    getPath()
-  },[permissions])
   return (
     <ThemeProvider theme={themes(customization)}>
       <Box>
@@ -67,10 +44,10 @@ function App() {
               <HomePage />
             </PrivateRoute>
             <Route path="/login" exact>
-              {isLoggedIn ?  <Redirect to={path ? path :"/home" }/>: <LoginPage />}
+              {isLoggedIn ?  <Redirect to={path}/>: <LoginPage />}
             </Route>
             <Route path="/signup" exact>
-              {isLoggedIn ? <Redirect to={path? path: "/home"} /> : <SignupPage />}
+              {isLoggedIn ? <Redirect to={path} /> : <SignupPage />}
             </Route>
             <Route path="/main" component={MainPage} />
             <Route path="/store">
