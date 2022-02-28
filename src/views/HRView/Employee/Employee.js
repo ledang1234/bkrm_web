@@ -181,6 +181,15 @@ const Employee = () => {
         } /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+        columnsToKeep = {[
+          {dbName:"name",displayName:"Tên nhân viên"},
+          {dbName:"phone",displayName:"Số điện thoại"},
+          {dbName:"email",displayName:"Email"},
+          {dbName:"date_of_birth",displayName:"Ngày sinh"},
+          {dbName:"id_card_num",displayName:"CMND"},
+          {dbName:"salary_type",displayName:"Loại lương"},
+          {dbName:"salary",displayName:"Mức lương"},
+        ]}
       />
 
       <EmployeeFilter

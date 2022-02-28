@@ -152,6 +152,15 @@ const Invoice = () => {
         textSearch={"#, Khách, Người bán,...  "} /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+        columnsToKeep = {[
+          {dbName:"order_code",displayName:"Mã hoá đơn"},
+          {dbName:"customer_name",displayName:"Khách hàng"},
+          {dbName:"creation_date",displayName:"Ngày bán"},
+          {dbName:"total_amount",displayName:"Tổng tiền hoá đơn"},
+          {dbName:"paid_amount",displayName:"Tiền khách đã trả"},
+          {dbName:"status",displayName:"Trạng thái"},
+          {dbName:"payment_method",displayName:"Phương thức thanh toán"},
+        ]}
       />
       <InvoiceFilter
         openFilter={openFilter}

@@ -219,11 +219,18 @@ const CheckHistory = () => {
       {/* 2. SEARCH - FILTER - EXPORT*/}
       {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
       <ToolBar
-        dataTable={checkHistoryList}
+        dataTable={inventoryChecks}
         tableType={TableType.CHECK_LIST}
         textSearch={"#, Người kiểm,..."} /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+        columnsToKeep = {[
+          {dbName:"inventory_check_code",displayName:"Mã đợt kiểm"},
+          {dbName:"user_name",displayName:"Người kiểm"},
+          {dbName:"created_at",displayName:"Ngày kiểm"},
+          {dbName:"total_amount",displayName:"Tổng giá trị lệch"},
+          {dbName:"branch_name",displayName:"Tên chi nhánh"},
+        ]}
       />
 
       <CheckHistoryFilter
