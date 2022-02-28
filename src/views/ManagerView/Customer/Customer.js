@@ -183,7 +183,7 @@ const Customer = () => {
               headerData={HeadCells.CustomerHeadCells}
             />
             <TableBody>
-              {customerList.map((row, index) => {
+              {customerList?.map((row, index) => {
                   return (
                     <CustomerTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
                   );
@@ -212,7 +212,7 @@ const ComponentToPrint = ({customerList,classes}) =>{
                 headerData={HeadCells.CustomerHeadCells}
               />
               <TableBody >
-                {customerList.map((row, index) => {
+                {customerList?.map((row, index) => {
                   return (
                     <CustomerTableRow
                       key={row.uuid}

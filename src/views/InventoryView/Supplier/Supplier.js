@@ -181,6 +181,14 @@ const Supplier = () => {
         textSearch={"#, Tên, sđt, email, địa chỉ, ...  "}
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+        columnsToKeep = {[
+          {dbName:"name",displayName:"Tên nhà cung cấp"},
+          {dbName:"phone",displayName:"Số điện thoại"},
+          {dbName:"email",displayName:"Email"},
+          {dbName:"address",displayName:"Địa chỉ"},
+          {dbName:"company",displayName:"Công ty"},
+          {dbName:"payment_info",displayName:"Thông tin thanh toán"},
+        ]}
       />
       <SupplierFilter
         openFilter={openFilter}

@@ -157,6 +157,15 @@ const InventoryOrder = () => {
         textSearch={"#, NCC, Nguoi nhap,..."}
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+        columnsToKeep = {[
+          {dbName:"purchase_order_code",displayName:"Mã đơn nhập"},
+          {dbName:"payment_date",displayName:"Ngày nhập"},
+          {dbName:"supplier_name",displayName:"Nhà cung cấp"},
+          {dbName:"total_amount",displayName:"Tổng tiền nhập"}, 
+          {dbName:"paid_amount",displayName:"Tiền đã trả"}, 
+          {dbName:"branch_name",displayName:"Chi nhánh thực hiện"},
+          {dbName:"payment_method",displayName:"Phương thức thanh toán"}
+        ]}
       />
 
       <InventoryOrderFilter
