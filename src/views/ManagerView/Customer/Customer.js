@@ -36,15 +36,6 @@ const Customer = () => {
     const info = useSelector(state => state.info)
     const store_uuid = info.store.uuid
 
-    useEffect(() => {
-        customerApi.getCustomers(store_uuid)
-        .then(response => response.data, err => console.log(err))
-        .then(data => {
-            setCustomerList(data)
-        })
-
-    }, [reload, store_uuid]);
-
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -113,6 +104,33 @@ const Customer = () => {
     //3.3. loc cot
 
 
+    const [pagingState, setPagingState] = useState({
+      page: 0,
+      limit: 10,
+      total_rows: 0,
+    });
+  
+  
+    useEffect(() => {
+      setPagingState({...pagingState, page: 0})
+    }, [reload, store_uuid])
+  
+    useEffect(() => {
+      const loadData = async () => {
+        try {
+          const response = await customerApi.getCustomers(store_uuid, {
+            page: pagingState.page,
+            limit: pagingState.limit
+          });
+          
+          setPagingState({...pagingState, total_rows: response.total_rows})
+          setCustomerList(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      loadData();
+    }, [pagingState.page, pagingState.limit]);
     return (
 
     <Card className={classes.root} >
@@ -153,7 +171,10 @@ const Customer = () => {
         handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
         <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
-        <TableWrapper>
+        <TableWrapper
+          pagingState={pagingState}
+          setPagingState={setPagingState}
+        >
             <TableHeader
               classes={classes}
               order={order}

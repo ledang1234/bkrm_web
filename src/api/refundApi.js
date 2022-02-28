@@ -5,9 +5,9 @@ const refundApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/refunds/removeInventory`;
     return axiosClient.post(url, body);
   },
-  getAllOfBranch: (storeUuid, branchUuid) => {
+  getAllOfBranch: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/refunds/`;
-    return axiosClient.get(url, {});
+    return axiosClient.get(url, {params: query});
   },
   getAllOfStore: (storeUuid) => {
     const url = `stores/${storeUuid}/refunds/`;
