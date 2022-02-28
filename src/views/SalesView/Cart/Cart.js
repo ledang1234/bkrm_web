@@ -351,101 +351,6 @@ const Cart = () => {
   };
 
 
-  // const handleConfirm = async () => {
-  //   // handlePrint();
-  //   let cart = cartList[selectedIndex];
-
-  //   var emptyCart = cart.cartItem.length === 0;
-
-  //   try {
-  //     let res = await orderApi.addOrder(
-  //       store_uuid,
-  //       branch.uuid,
-  //       body
-  //     );
-  //     setSnackStatus({
-  //       style: "success",
-  //       message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
-  //     });
-  //     setOpenSnack(true);
-
-  //     handleDelete(selectedIndex);
-  //   } catch (err) {
-  //     setSnackStatus({
-  //       style: "error",
-  //       message: "Tạo hóa đơn thất bại! ",
-  //     });
-  //     setOpenSnack(true);
-  //     console.log(err);
-
-  //   var correctQuantity = cart.cartItem.every(function (element, index) {
-  //     console.log(element);
-  //     if (element.quantity > element.branch_quantity) return false;
-  //     else return true;
-  //   });
-  //   if (emptyCart || !correctQuantity) {
-  //     setOpenSnack(true);
-
-  //     if (emptyCart) {
-  //       setSnackStatus({
-  //         style: "error",
-  //         message: "Giỏ hàng trống",
-  //       });
-  //     } else {
-  //       setSnackStatus({
-  //         style: "error",
-  //         message: "Giỏ hàng bị vượt tồn kho",
-  //       });
-  //     }
-  //   } else {
-  //     let d = moment.now() / 1000;
-
-  //     let orderTime = moment
-  //       .unix(d)
-  //       .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-
-  //     console.log(orderTime);
-
-  //     let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
-  //     console.log(cart.paid_amount, cart.total_amount, cart.discount);
-  //     let body = {
-  //       customer_uuid: cart.customer.uuid,
-  //       total_amount: cart.total_amount.toString(),
-  //       payment_method: cart.payment_method,
-  //       paid_amount: cart.paid_amount,
-  //       discount: cart.discount,
-  //       status:
-  //         cart.paid_amount < cart.total_amount - cart.discount
-  //           ? "debt"
-  //           : "closed",
-  //       details: details,
-  //       creation_date: orderTime,
-  //       paid_date: orderTime,
-  //       tax: "0",
-  //       shipping: "0",
-  //     };
-
-  //     try {
-  //       let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
-  //       setSnackStatus({
-  //         style: "success",
-  //         message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
-  //       });
-  //       setOpenSnack(true);
-
-  //       handlePrint();
-  //       handleDelete(selectedIndex);
-
-  //     } catch (err) {
-  //       setSnackStatus({
-  //         style: "error",
-  //         message: "Tạo hóa đơn thất bại! ",
-  //       });
-  //       setOpenSnack(true);
-  //       console.log(err);
-  //     }
-
-
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
 
@@ -638,6 +543,7 @@ const Cart = () => {
                           handleDeleteItemCart={handleDeleteItemCart}
                           handleChangeItemPrice={handleChangeItemPrice}
                           handleChangeItemQuantity={handleChangeItemQuantity}
+                          discountData={discountData.filter(discount => discount.discountKey === "product")}
                         />
                       );
                     })}
@@ -681,6 +587,8 @@ const Cart = () => {
                 mode={mode}
                 customers={customers}
                 reloadCustomers={() => setReloadCustomers(!reloadCustomers)}
+                //discount
+                discountData={discountData.filter(discount => discount.discountKey === "invoice")}
               />
             ) : (
               <CartSummary
@@ -719,3 +627,84 @@ const Cart = () => {
 };
 
 export default Cart;
+
+
+const discountData = [
+  {
+    name:'Discount Invoice',
+    discountKey:'invoice',
+    discountType:'discountInvoice',//discountInvoice , sendGift, sendVoucher,priceByQuantity
+    detail:[
+      {
+        key:"1", //  ID dung để delete row , ko liên quan database
+        totalCost:1000, 
+        type:"VND" ,// "%"
+        discountValue:20000,
+  
+        numberGiftItem:1,
+        listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+
+        numberBuyItem:1,
+        listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        typeDiscountItem:"percent",
+        listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+      },
+      {
+        key:"2", //  ID dung để delete row , ko liên quan database
+        totalCost:1000, 
+        type:"VND" ,// "%"
+        discountValue:20000,
+  
+        numberGiftItem:1,
+        listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+
+        numberBuyItem:1,
+        listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        typeDiscountItem:"percent",
+        listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+      }
+    ]
+
+  },
+  //2
+  {
+    name:'Product Send Gift',
+    discountKey:'product',
+    discountType:'sendGift',//discountInvoice , sendGift, sendVoucher,priceByQuantity
+    detail:[
+      {
+        key:"3", //  ID dung để delete row , ko liên quan database
+        totalCost:1000, 
+        type:"VND" ,// "%"
+        discountValue:20000,
+  
+        numberGiftItem:1,
+        listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+
+        numberBuyItem:1,
+        listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        typeDiscountItem:"percent",
+        listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+      },
+      {
+        key:"4", //  ID dung để delete row , ko liên quan database
+        totalCost:1000, 
+        type:"VND" ,// "%"
+        discountValue:20000,
+  
+        numberGiftItem:1,
+        listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+
+        numberBuyItem:1,
+        listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        typeDiscountItem:"percent",
+        listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+      }
+    ]
+
+  }
+]

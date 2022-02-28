@@ -53,7 +53,7 @@ const Inventory = () => {
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total: 0,
+    total_rows: 0,
   });
 
   const importProductByJSON = async (jsonData) => {
@@ -79,30 +79,10 @@ const Inventory = () => {
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await productApi.getProductsOfBranch(
-          store_uuid,
-          branch_uuid,
-          {
-            page: pagingState.page,
-            limit: pagingState.limit,
-          }
-        );
-        setProductList(response.data);
-        console.log(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (reload) {
-      fetchProducts();
-      setReload(false);
-    }
+    setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid]);
-
   useEffect(() => {
-    const fetchProducts = async () => {
+    const loadData = async () => {
       try {
         const response = await productApi.getProductsOfBranch(
           store_uuid,
@@ -112,52 +92,14 @@ const Inventory = () => {
             limit: pagingState.limit,
           }
         );
+        setPagingState({ ...pagingState, total_rows: response.total_rows });
         setProductList(response.data);
-        console.log(response.data);
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log(error);
       }
     };
-
-    fetchProducts();
-  }, [pagingState]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await productApi.getProductsOfBranch(
-          store_uuid,
-          branch_uuid
-        );
-
-        setProductList(response.data);
-
-        setPagingState({
-          page: 0,
-          limit: 10,
-          total_page: response.total_rows
-            ? Math.ceil(response.total_rows / pagingState.limit)
-            : 0,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchProducts();
-  }, [branch_uuid]);
-
-  // useEffect(() => {
-  //   const identifier = setTimeout(async () => {
-  //     try {
-  //       const response = await productApi.searchProduct(
-  //         store_uuid,
-  //         searchValue
-  //       );
-  //       setProductList(response.data);
-  //     } catch (error) {}
-  //   }, 500);
-  //   return () => clearTimeout(identifier);
-  // }, [searchValue]);
+    loadData();
+  }, [pagingState.page, pagingState.limit, branch_uuid]);
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -294,7 +236,7 @@ const Inventory = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper>
+      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
@@ -316,12 +258,7 @@ const Inventory = () => {
           })}
         </TableBody>
       </TableWrapper>
-      <Pagination
-        page={pagingState.page}
-        count={pagingState.total_page}
-        onChange={(e, page) => setPagingState({ ...pagingState, page: page })}
-        color="primary"
-      />
+
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint productList={productList} classes={classes} />

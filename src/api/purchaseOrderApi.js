@@ -5,9 +5,9 @@ const purchaseOrderApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-orders/addInventory`;
     return axiosClient.post(url, body);
   },
-  getAllOfBranch: (storeUuid, branchUuid) => {
-    const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-orders/`;
-    return axiosClient.get(url, {});
+  getAllOfBranch: (storeUuid, branchUuid, query) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-orders`;
+    return axiosClient.get(url, {params: query});
   },
   getAllOfStore: (storeUuid) => {
     const url = `stores/${storeUuid}/purchase-orders/`;

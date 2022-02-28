@@ -36,6 +36,7 @@ import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 
+
 const Supplier = () => {
   const [supplerList, setSupplierList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -44,18 +45,6 @@ const Supplier = () => {
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-
-  useEffect(() => {
-    const fetchSupplierList = async () => {
-      try {
-        const response = await supplierApi.getSuppliers(store_uuid);
-        setSupplierList(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchSupplierList();
-  }, [reload]);
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -125,6 +114,35 @@ const Supplier = () => {
 
   //3.3. loc cot
 
+  const [pagingState, setPagingState] = useState({
+    page: 0,
+    limit: 10,
+    total_rows: 0,
+  });
+
+  useEffect(() => {
+    setPagingState({...pagingState, page: 0})
+  }, [reload, store_uuid])
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await supplierApi.getSuppliers(store_uuid, {
+          page: pagingState.page,
+          limit: pagingState.limit
+        });
+        
+        setSupplierList(response.data);
+        setPagingState({...pagingState, total_rows: response.total_rows})
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
+    loadData();
+    
+  }, [pagingState.page, pagingState.limit]);
+
+
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -170,7 +188,10 @@ const Supplier = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper>
+      <TableWrapper
+        pagingState={pagingState}
+        setPagingState={setPagingState}
+      >
         <TableHeader
           classes={classes}
           order={order}

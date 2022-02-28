@@ -4,9 +4,9 @@ const customerApi = {
     const url = `/stores/${storeUuid}/customers`;
     return axiosClient.post(url, body);
   },
-  getCustomers: (storeUuid) => {
+  getCustomers: (storeUuid, query) => {
     const url = `/stores/${storeUuid}/customers`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: query});
   },
 
   getCustomer: (storeUuid, customerUuid) => {

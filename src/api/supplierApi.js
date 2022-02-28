@@ -8,9 +8,9 @@ const supplierApi = {
       },
     });
   },
-  getSuppliers: (storeUuid) => {
+  getSuppliers: (storeUuid, query) => {
     const url = `/stores/${storeUuid}/suppliers`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: query});
   },
 
   getSupplier: (storeUuid, supplierUuid) => {

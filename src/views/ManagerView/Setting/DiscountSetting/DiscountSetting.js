@@ -134,7 +134,7 @@ const DiscountSetting = () => {
               </Grid>
 
               {/* Popup add */}
-              <AddDiscount open={open} handleClose={handleClose} />
+              {open && <AddDiscount open={open} handleClose={handleClose} />}
         </Grid>
 
        

@@ -341,7 +341,12 @@ const AddInventory = (props) => {
       console.log(relatedList)
       
       for (var i = 0; i < relatedList.length; i++) {
-        bodyFormData.append("variations[]", JSON.stringify(relatedList[i]));
+        const values = relatedList[i].split('-')
+        const attributeValues = attributeList.map((att,index) => ({
+          name: att.name,
+          value: values[index]
+        }))
+        bodyFormData.append("variations[]", JSON.stringify({...relatedList[i], attribute_value: attributeValues}));
       }
 
 

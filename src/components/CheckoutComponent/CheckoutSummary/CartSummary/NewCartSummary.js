@@ -13,9 +13,13 @@ import {
   FormControl,
   RadioGroup,
   Radio,
+  ListItem
 } from "@material-ui/core";
 
 import AddCustomer from "../../../../views/ManagerView/Customer/AddCustomer/AddCustomer";
+import giftBox from "../../../../assets/img/icon/giftbox.png";
+// import giftBox from "../../../../assets/img/icon/gift.png";
+// import giftBox from "../../../../assets/img/icon/gift2.png";
 
 import SearchCustomer from "../../../SearchBar/SearchCustomer";
 
@@ -32,7 +36,7 @@ import {
 } from "../../../TextField/NumberFormatCustom";
 import { useDispatch } from "react-redux";
 import { statusAction } from "../../../../store/slice/statusSlice";
-
+import DiscountPopUp from "../../../../views/SalesView/Cart/DiscountPopup/DiscountPopup"
 const useStyles = makeStyles((theme) =>
   createStyles({
     marginBox: {
@@ -64,6 +68,7 @@ const CartSummary = (props) => {
     currentBranch,
     mode,
     reloadCustomers,
+    discountData
   } = props;
 
   const theme = useTheme();
@@ -100,8 +105,11 @@ const CartSummary = (props) => {
     setDeliver(event.target.checked);
   };
 
+
   // so tien khach đưa
   const [customerMoney, setCustomerMoney] = React.useState("0");
+  
+  
   // React.useEffect(() => {console.log(currentBranch)})
 
   // console.log("cartItem")
@@ -119,6 +127,23 @@ const CartSummary = (props) => {
   // console.log(correctQuantity)
   // console.log("emptyCart")
   // console.log(emptyCart)
+
+
+  // Discount
+  // let haveDiscount = discountData.every(row => row.detail.totalCost > parseInt(cartData.total_amount))
+  // let haveDiscount = discountData.some(row => row.detail.map((i)=> i.totalCost) < parseInt(cartData.total_amount))
+  function checkHaveDiscount  () {
+        for (let i = 0; i < discountData.length; i++) {
+            for (let j = 0; j < discountData[i]?.detail.length; j++) {
+                if( discountData[i].detail[j].totalCost < parseInt(cartData.total_amount)){
+                  return true;
+                }
+            }         
+        }
+        return false
+  }
+  let haveDiscount = checkHaveDiscount();
+  const [openDiscount, setOpenDiscount] = React.useState(false);
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -189,7 +214,22 @@ const CartSummary = (props) => {
               justifyContent="space-between"
               className={classes.marginRow}
             >
-              <Typography variant="h5">Tổng tiền hàng</Typography>
+              <div>
+                <ListItem style={{padding: 0,margin:0}}>
+                <Typography variant="h5">Tổng tiền hàng</Typography>
+                {haveDiscount ? 
+                <div onClick={()=>{setOpenDiscount(!openDiscount);console.log("hello")}}>
+                    <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} />
+
+                </div>
+                :null}
+                
+                </ListItem>
+              
+              </div>
+              {openDiscount && <DiscountPopUp open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}}/>}
+
+              
               <Typography variant="body2">
                 <VNDFormat value={cartData.total_amount} />
               </Typography>
