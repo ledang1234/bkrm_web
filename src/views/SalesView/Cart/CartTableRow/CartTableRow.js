@@ -8,27 +8,40 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 import * as Input from '../../../../components/TextField/NumberFormatCustom'
 import ButtonQuantity from "../../../../components/Button/ButtonQuantity";
 import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom"
-
+import DiscountPopUp from "../DiscountPopup/DiscountPopup"
 import icon from '../../../../assets/img/product/tch.jpeg';
 
 
 export const CartRow = (props) =>{
     const classes = useStyles(); 
-    const {row, handleDeleteItemCart, handleChangeItemQuantity, handleChangeItemPrice} = props
+    const {row,discountData, handleDeleteItemCart, handleChangeItemQuantity, handleChangeItemPrice} = props
+    const haveDiscount = true;
 
     const updateQuantity = (newQuantity) => {
       handleChangeItemQuantity(row.uuid, newQuantity)
     }
+    const [openDiscount, setOpenDiscount] = React.useState(false);
+    const handleOpenDiscount = () =>{
+      setOpenDiscount(!openDiscount)
+    }
+
+    
     
     return (
       <TableRow hover key={props.row.uuid} >
           <TableCell align="left">{row.id + 1}</TableCell>
+          {/* Sửa lại thành product_code */}
           <TableCell align="left" style={{width:5}}>{row.barcode}</TableCell>
-          <TableCell align="left" style={{minWidth:200}}>
-            <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}> 
+          <TableCell align="left" style={{minWidth:200, }}>
+            <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10,  }}> 
                 <Box component="img" sx={{ height: 40, width: 40,  borderRadius:10,  marginRight:15 }}src={row.img_url} />
-                {row.name}
-            </ListItem>  
+                <Typography  >{row.name}</Typography>
+                {haveDiscount ? 
+                <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} onClick={()=>setOpenDiscount(true)}/>
+                :null}
+            </ListItem> 
+            {openDiscount && <DiscountPopUp open={openDiscount} title={`Khuyến mãi trên ${row.product_code} - ${row.name}`} onClose={()=>{setOpenDiscount(false)}}/>}
+ 
             </TableCell>
           <TableCell align="right">
             <Input.ThousandSeperatedInput 

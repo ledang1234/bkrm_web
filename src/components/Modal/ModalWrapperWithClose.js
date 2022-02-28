@@ -37,6 +37,9 @@ export default function ModalWrapperWithClose(props) {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         className={classes.modal}
+        maxWidth="md"
+        fullWidth={true}
+
       >
         <React.Fragment>
           <Paper>
