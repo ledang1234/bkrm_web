@@ -79,8 +79,8 @@ const Inventory = () => {
   };
 
   useEffect(() => {
-    setPagingState({...pagingState, page: 0})
-  }, [reload, store_uuid, branch_uuid])
+    setPagingState({ ...pagingState, page: 0 });
+  }, [reload, store_uuid, branch_uuid]);
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -92,14 +92,14 @@ const Inventory = () => {
             limit: pagingState.limit,
           }
         );
-        setPagingState({...pagingState, total_rows: response.total_rows})
+        setPagingState({ ...pagingState, total_rows: response.total_rows });
         setProductList(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit]);
+  }, [pagingState.page, pagingState.limit, branch_uuid]);
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -227,16 +227,13 @@ const Inventory = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper
-      pagingState={pagingState}
-      setPagingState={setPagingState}>
+      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
           orderBy={orderBy}
           onRequestSort={handleRequestSort}
           headerData={HeadCells.InventoryHeadCells}
-          
         />
         <TableBody>
           {productList.map((row, index) => {
@@ -252,7 +249,7 @@ const Inventory = () => {
           })}
         </TableBody>
       </TableWrapper>
-      
+
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint productList={productList} classes={classes} />

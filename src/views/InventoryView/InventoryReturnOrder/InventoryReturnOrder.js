@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
@@ -38,41 +38,44 @@ import purchaseReturnApi from "../../../api/purchaseReturnApi";
 const InventoryReturnOrder = () => {
   const [purchaseReturns, setPurchaseReturns] = useState([]);
   const [openRow, setRowOpen] = React.useState(null);
-  
+
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [reload, setReload] = useState(false)
+  const [reload, setReload] = useState(false);
 
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
     total_rows: 0,
   });
-  
+
   useEffect(() => {
-    setPagingState({...pagingState, page: 0})
-  }, [reload, store_uuid, branch_uuid])
+    setPagingState({ ...pagingState, page: 0 });
+  }, [reload, store_uuid, branch_uuid]);
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await purchaseReturnApi.getAllOfBranch(store_uuid, branch_uuid, {
-          page: pagingState.page,
-          limit: pagingState.limit
-        });
-        setPagingState({...pagingState, total_rows: response.total_rows})
+        const response = await purchaseReturnApi.getAllOfBranch(
+          store_uuid,
+          branch_uuid,
+          {
+            page: pagingState.page,
+            limit: pagingState.limit,
+          }
+        );
+        setPagingState({ ...pagingState, total_rows: response.total_rows });
         setPurchaseReturns(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit]);
+  }, [pagingState.page, pagingState.limit, branch_uuid]);
 
-  
   const handleOpenRow = (row) => {
     if (row !== openRow) {
       setRowOpen(row);
@@ -96,7 +99,7 @@ const InventoryReturnOrder = () => {
   // toolbar
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
+    content: () => componentRef.current,
   });
   //3.1. search
 
@@ -136,10 +139,7 @@ const InventoryReturnOrder = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper
-        pagingState={pagingState}
-        setPagingState={setPagingState}
-      >
+      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
@@ -160,40 +160,46 @@ const InventoryReturnOrder = () => {
           })}
         </TableBody>
       </TableWrapper>
-      <div  style={{display:'none'}} >
-        <div ref={componentRef}  >
-        <ComponentToPrint  purchaseReturns={purchaseReturns} classes={classes}/>
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <ComponentToPrint
+            purchaseReturns={purchaseReturns}
+            classes={classes}
+          />
         </div>
-        
       </div>
     </Card>
   );
 };
 
-
-const ComponentToPrint = ({purchaseReturns,classes}) =>{
+const ComponentToPrint = ({ purchaseReturns, classes }) => {
   return (
-      <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách đơn trả hàng nhập</Typography>
-        <div >
-          <TableHeader
-                classes={classes}
-                headerData={HeadCells.InventoryReturnOrderHeadCells}
-              />
-              <TableBody >
-                {purchaseReturns.map((row, index) => {
-                  return (
-                    <InventoryReturnTableRow
-                      key={row.uuid}
-                      row={row}
-                    
-                    />
-                  );
-                })}
-              </TableBody>
-        </div>
-  </div>
-  )
-}
+    <div>
+      <Typography
+        style={{
+          flexGrow: 1,
+          textAlign: "center",
+          fontSize: 20,
+          fontWeight: 500,
+          margin: 30,
+          color: "#000",
+        }}
+      >
+        Danh sách đơn trả hàng nhập
+      </Typography>
+      <div>
+        <TableHeader
+          classes={classes}
+          headerData={HeadCells.InventoryReturnOrderHeadCells}
+        />
+        <TableBody>
+          {purchaseReturns.map((row, index) => {
+            return <InventoryReturnTableRow key={row.uuid} row={row} />;
+          })}
+        </TableBody>
+      </div>
+    </div>
+  );
+};
 
 export default InventoryReturnOrder;

@@ -93,23 +93,27 @@ const Invoice = () => {
   };
 
   useEffect(() => {
-    setPagingState({...pagingState, page: 0})
-  }, [reload, store_uuid, branch_uuid])
+    setPagingState({ ...pagingState, page: 0 });
+  }, [reload, store_uuid, branch_uuid]);
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await orderApi.getAllOfBranch(store_uuid, branch_uuid, {
-          page: pagingState.page,
-          limit: pagingState.limit
-        });
-        setPagingState({...pagingState, total_rows: response.total_rows})
+        const response = await orderApi.getAllOfBranch(
+          store_uuid,
+          branch_uuid,
+          {
+            page: pagingState.page,
+            limit: pagingState.limit,
+          }
+        );
+        setPagingState({ ...pagingState, total_rows: response.total_rows });
         setOrders(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit]);
+  }, [pagingState.page, pagingState.limit, branch_uuid]);
 
   return (
     <Card className={classes.root}>
@@ -156,10 +160,7 @@ const Invoice = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper
-        pagingState={pagingState}
-        setPagingState={setPagingState}
-      >
+      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}

@@ -74,7 +74,6 @@ const InventoryOrder = () => {
     setReload(!reload);
   };
 
-  
   const handleRequestSort = (event, property) => {
     //// (gửi order vs orderBy lên api) -> fetch lại data để sort
     // const isAsc = orderBy === property && order === 'asc';
@@ -91,32 +90,35 @@ const InventoryOrder = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
-  
+
   useEffect(() => {
-    setPagingState({...pagingState, page: 0})
-  }, [reload, store_uuid, branch_uuid])
+    setPagingState({ ...pagingState, page: 0 });
+  }, [reload, store_uuid, branch_uuid]);
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await purchaseOrderApi.getAllOfBranch(store_uuid, branch_uuid, {
-          page: pagingState.page,
-          limit: pagingState.limit
-        });
-        setPagingState({...pagingState, total_rows: response.total_rows})
+        const response = await purchaseOrderApi.getAllOfBranch(
+          store_uuid,
+          branch_uuid,
+          {
+            page: pagingState.page,
+            limit: pagingState.limit,
+          }
+        );
+        setPagingState({ ...pagingState, total_rows: response.total_rows });
         setPurchaseOrders(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit]);
+  }, [pagingState.page, pagingState.limit, branch_uuid]);
 
   const [snackStatus, setSnackStatus] = React.useState({
     style: "error",
     message: "Kiểm kho thất bại",
   });
 
-  
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -164,10 +166,7 @@ const InventoryOrder = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper
-        pagingState={pagingState}
-        setPagingState={setPagingState}
-      >
+      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
