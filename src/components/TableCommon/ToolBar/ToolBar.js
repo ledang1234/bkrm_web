@@ -67,9 +67,15 @@ const useStyles = makeStyles((theme) =>
     },
   })
 );
-
-const exportExcel = (dataTable, tableType, header = null) => {
-  const newData = dataTable;
+const exportExcel = (dataTable, tableType,columnsToKeep =[]) => {
+  const newData = []
+  dataTable.map((row)=>{
+    let rowRs = {}
+    columnsToKeep.map((cl) => {
+      rowRs = {...rowRs,[cl.displayName]:row[cl.dbName]}
+    })
+    newData.push(rowRs)
+  })
   const workSheet = xlsx.utils.json_to_sheet(newData);
   const workBook = xlsx.utils.book_new();
 
@@ -94,6 +100,7 @@ const ToolBar = (props) => {
     excel_head,
     excel_data,
     excel_name,
+    columnsToKeep,
   } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -205,7 +212,7 @@ const ToolBar = (props) => {
             <IconButton
               aria-label="filter list"
               onClick={() => {
-                exportExcel(dataTable, tableType);
+                exportExcel(dataTable, tableType,columnsToKeep);
               }}
             >
               <GetAppTwoToneIcon className={classes.icon} />
