@@ -1,13 +1,6 @@
 import themes from "./theme";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Redirect,
-  HashRouter,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect, HashRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
@@ -22,20 +15,19 @@ import MainPage from "./pages/MainPage/MainPage";
 import CustomerPage from "./pages/CustomerPage/CustomerPage";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
 import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
-import SearchWithAutoComplete from "./components/SearchBar/SearchWithAutoComplete";
 import Test from "./components/Test/Test";
+import { customizeAction } from "./store/slice/customizeSlice";
 import { SwitchCamera } from "@material-ui/icons";
 function App() {
-  const [loading, setLoading] = useState(true);
   const customization = useSelector((state) => state.customize);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
+  const [path,setPath] = useState("/home")
   useEffect(() => {
-    setLoading(false);
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
+    setPath(sessionStorage.getItem("BKRMprev"))
   }, [dispatch]);
-  const prevPath = sessionStorage.getItem("BKRMprev");
   return (
     <ThemeProvider theme={themes(customization)}>
       <Box>
@@ -52,18 +44,10 @@ function App() {
               <HomePage />
             </PrivateRoute>
             <Route path="/login" exact>
-              {isLoggedIn ? (
-                <Redirect to={prevPath ? prevPath : "/home"} />
-              ) : (
-                <LoginPage />
-              )}
+              {isLoggedIn ?  <Redirect to={path}/>: <LoginPage />}
             </Route>
             <Route path="/signup" exact>
-              {isLoggedIn ? (
-                <Redirect to={prevPath ? prevPath : "/home"} />
-              ) : (
-                <SignupPage />
-              )}
+              {isLoggedIn ? <Redirect to={path} /> : <SignupPage />}
             </Route>
             <Route path="/main" component={MainPage} />
             <Route path="/store">
@@ -82,5 +66,4 @@ function App() {
     </ThemeProvider>
   );
 }
-
 export default App;

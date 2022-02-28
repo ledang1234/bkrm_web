@@ -7,9 +7,9 @@ const employeeApi = {
     const url = `stores/${storeUuid}/employees`;
     return axiosClient.post(url, formData, config);
   },
-  getEmployees: (storeUuid) => {
+  getEmployees: (storeUuid, query) => {
     const url = `/stores/${storeUuid}/employees`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: query});
   },
 
   getEmployee: (storeUuid, employeeUuid) => {

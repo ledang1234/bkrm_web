@@ -59,6 +59,12 @@ const InventoryOrder = () => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("id");
   const [reload, setReload] = React.useState(false);
+  const [pagingState, setPagingState] = useState({
+    page: 0,
+    limit: 10,
+    total_rows: 0,
+  });
+
   //3.2. filter
   const [openFilter, setOpenFilter] = React.useState(false);
   const handleToggleFilter = () => {
@@ -68,6 +74,7 @@ const InventoryOrder = () => {
     setReload(!reload);
   };
 
+  
   const handleRequestSort = (event, property) => {
     //// (gửi order vs orderBy lên api) -> fetch lại data để sort
     // const isAsc = orderBy === property && order === 'asc';
@@ -83,20 +90,26 @@ const InventoryOrder = () => {
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-
-  const loadData = async () => {
-    try {
-      const res = await purchaseOrderApi.getAllOfStore(store_uuid);
-      console.log(res.data);
-      setPurchaseOrders(res.data.reverse());
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  const branch_uuid = info.branch.uuid;
+  
   useEffect(() => {
+    setPagingState({...pagingState, page: 0})
+  }, [reload, store_uuid, branch_uuid])
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await purchaseOrderApi.getAllOfBranch(store_uuid, branch_uuid, {
+          page: pagingState.page,
+          limit: pagingState.limit
+        });
+        setPagingState({...pagingState, total_rows: response.total_rows})
+        setPurchaseOrders(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     loadData();
-  }, [reload]);
+  }, [pagingState.page, pagingState.limit]);
 
   const [snackStatus, setSnackStatus] = React.useState({
     style: "error",
@@ -151,13 +164,18 @@ const InventoryOrder = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper>
+      <TableWrapper
+        pagingState={pagingState}
+        setPagingState={setPagingState}
+      >
         <TableHeader
           classes={classes}
           order={order}
           orderBy={orderBy}
           onRequestSort={handleRequestSort}
           headerData={HeadCells.InventoryOrderHeadCells}
+          pagingState={pagingState}
+          setPagingState={setPagingState}
         />
         <TableBody>
           {purchaseOrders.map((row, index) => {

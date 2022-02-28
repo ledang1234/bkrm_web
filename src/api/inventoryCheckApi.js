@@ -5,9 +5,9 @@ const inventoryCheckApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/inventory-checks/`;
     return axiosClient.post(url, body);
   },
-  getAllOfBranch: (storeUuid, branchUuid) => {
+  getAllOfBranch: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/inventory-checks/`;
-    return axiosClient.get(url, {});
+    return axiosClient.get(url, {params: query});
   },
   search: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/inventory-checks/`;

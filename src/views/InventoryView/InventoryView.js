@@ -1,4 +1,4 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import Import from './Import/Import'
 import Inventory from './Inventory/Inventory'
 import InventoryOrder from './InventoryOrder/InventoryOrder'
@@ -12,12 +12,17 @@ import PageNotFound from '../../pages/PageNotFound/PageNotFound'
 
 
 import React from "react";
+import { useSelector } from "react-redux";
 
 const InventoryView = (props) => {
   const { path } = useRouteMatch();
+  const permissions = useSelector((state) => state.info.user.permissions);
+  console.log()
   return (
       <Switch>
-          <Route exact path={path} component={Import}/>
+          <Route exact path={path} >
+            <Redirect to = {permissions?.find((p) => p.name === "inventory") ? `${path}/import` : "/home"}/>
+          </Route>
           <Route exact path={`${path}/import`} component={Import} />
           <Route path={`${path}/inventory`} component={Inventory} />
           <Route path={`${path}/receipt`}  component={InventoryOrder}/>

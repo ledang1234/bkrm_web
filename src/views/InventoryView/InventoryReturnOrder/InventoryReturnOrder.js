@@ -45,19 +45,32 @@ const InventoryReturnOrder = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  
-  const loadData = async () => {
-    try {
-      const res = await purchaseReturnApi.getAllOfBranch(store_uuid, branch_uuid);
-      setPurchaseReturns(res.data.reverse());
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [reload, setReload] = useState(false)
+
+  const [pagingState, setPagingState] = useState({
+    page: 0,
+    limit: 10,
+    total_rows: 0,
+  });
   
   useEffect(() => {
+    setPagingState({...pagingState, page: 0})
+  }, [reload, store_uuid, branch_uuid])
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await purchaseReturnApi.getAllOfBranch(store_uuid, branch_uuid, {
+          page: pagingState.page,
+          limit: pagingState.limit
+        });
+        setPagingState({...pagingState, total_rows: response.total_rows})
+        setPurchaseReturns(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     loadData();
-  }, [branch_uuid]);
+  }, [pagingState.page, pagingState.limit]);
 
   
   const handleOpenRow = (row) => {
@@ -123,7 +136,10 @@ const InventoryReturnOrder = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper>
+      <TableWrapper
+        pagingState={pagingState}
+        setPagingState={setPagingState}
+      >
         <TableHeader
           classes={classes}
           order={order}

@@ -38,7 +38,7 @@ import clsx from "clsx"
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 import { ThousandSeperatedInput } from "../../../../../components/TextField/NumberFormatCustom";
 import SearchMultiple from "../../../../../components/SearchBar/SearchMultiple";
-
+import promotionCouponApi from "../../../../../api/promotionCouponApi";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -84,7 +84,7 @@ const AddDiscount = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  // const [name, setName] = React.useState("");
+  const [name, setName] = React.useState("");
   // const [email, setEmail] = React.useState("");
   // const [phone, setPhone] = React.useState("");
   // const [address, setAddress] = React.useState("");
@@ -237,7 +237,8 @@ const AddDiscount = (props) => {
   };
   
 
-
+  const [startDate, setStartDate] = React.useState()
+  const [endDate, setEndDate] = React.useState()
 
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
@@ -260,8 +261,8 @@ const AddDiscount = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              // value={name}
-              // onChange={(event)=>setName(event.target.value)}
+              value={name}
+              onChange={(event)=>setName(event.target.value)}
             />
          <Card className={classes.attrCard} style={{marginTop:20, marginBottom:10}}>
           <CardHeader
@@ -487,20 +488,20 @@ const AddDiscount = (props) => {
                       variant="outlined" size="small" fullWidth 
                       className={classes.textField} 
                       InputLabelProps={{ shrink: true }} 
-                      // value={formik.values.startDate} 
-                      // onChange={formik.handleChange}
+                      value={startDate} 
+                      onChange={e => setStartDate(e.target.value)}
                     />
             </Grid>
             
             <Grid item xs={6}>
               <TextField 
                   id="endDate" label="Đến" type="date" name="endDate"
-                  // defaultValue={formik.values.endDate} 
+                  defaultValue={new Date().toDateString()} 
                   variant="outlined" size="small" 
                   fullWidth className={classes.textField} 
                   InputLabelProps={{ shrink: true }} 
-                  // value={formik.values.endDate}  
-                  // onChange={formik.handleChange}
+                  value={endDate}  
+                  onChange={e => setEndDate(e.target.value)}
                 />
             </Grid> 
         </Grid>
@@ -535,25 +536,30 @@ const AddDiscount = (props) => {
           Huỷ
         </Button>
         <Button
-          // onClick={async () => {
-          //   let body = {
-          //     name: name,
-          //     email: email,
-          //     phone: phone,
-          //     address: address,
-          //     payment_info: paymentInfo,
-          //   };
+          onClick={async () => {
+            let body = {
+              name: name,
+              start_date: startDate,
+              end_date: endDate,
 
-          //   try {
-          //     const response = await customerApi.createCustomer(store_uuid, body)
-          //     handleClose("Success")
-          //     console.log(response.status)
+              promotion_condition: JSON.stringify({
+                discountKey: discountKey,
+                discountType: discountType,
+                rowsInvoice: rowsInvoice,
+              }),
+              customer_birth: checkedBirthday,
+            };
 
-          //   } catch (err) {
-          //     handleClose("Failed");
-          //   }
+            try {
+              const response = await promotionCouponApi.createPromotion(store_uuid, body)
+              handleClose("Success")
+              console.log(response.status)
 
-          // }}
+            } catch (err) {
+              handleClose("Failed");
+            }
+
+          }}
           variant="contained"
           size="small"
           color="primary"

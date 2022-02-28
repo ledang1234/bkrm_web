@@ -283,6 +283,22 @@ const VarianceModal = (props) => {
                                 </Grid>
                             </Grid>
 
+
+                            
+                            {JSON.parse(row.attribute_value ? row.attribute_value : "[]").map(attVal => <Grid container direction="row">
+                                <Grid item xs={6}>
+                                    <div style={{border: "2px solid #eee", textAlign: "center",padding: "5px 0", marginRight: 10, borderRadius: 5}}>
+                                        {attVal.name}
+                                    </div>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <div style={{border: "2px solid #eee", textAlign: "center" ,padding: '5px 0', borderRadius: 5}}>
+                                        <strong>{attVal.value}</strong>
+                                    </div>
+                                </Grid>
+                            </Grid>)}
+                            
+
                             <Grid
                                 container
                                 direction="row"

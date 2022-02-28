@@ -1,11 +1,11 @@
 import React from 'react'
 import { makeStyles, useTheme,withStyles } from "@material-ui/core/styles";
 import { grey} from '@material-ui/core/colors'
-import {Table,TableContainer,FormControlLabel,Switch,Paper} from '@material-ui/core';
+import {Table,TableContainer,FormControlLabel,Switch,Paper, TablePagination} from '@material-ui/core';
 
 
 const TableWrapper = (props) => {
-    const {isCart, isReport} = props;
+    const {isCart, isReport, pagingState, setPagingState} = props;
 
     const theme = useTheme();
     // const classes = useStyles(theme);
@@ -30,15 +30,30 @@ const TableWrapper = (props) => {
                     {props.children}
 
                 </Table>
+                
             </TableContainer>
+            
         </StyledPaper>
 
-         {/* Add page navigation here...  */}
-        {isCart ? null :<FormControlLabel
-            control={<Switch checked={dense} onChange={handleChangeDense} />}
-            label="Thu nhỏ"
-            style={{display: "flex",justifyContent: "flex-end",}}
-        />}
+            {/* Add page navigation here...  */}
+            {isCart ? null :
+                <div style={{display: 'flex', flexDirection: 'row-reverse', gap: 10}}>
+                    <TablePagination
+                        rowsPerPageOptions={[10, 25, 100]}
+                        labelRowsPerPage={"Số dòng"}
+                        component="div"
+                        count={pagingState?.total_rows}
+                        rowsPerPage={pagingState?.limit}
+                        page={pagingState?.page}
+                        onPageChange={(e, page) => setPagingState({ ...pagingState, page: page })}
+                        onRowsPerPageChange={(e) => setPagingState({ ...pagingState, page: 0, limit: +e.target.value })}
+                    />
+                    <FormControlLabel
+                        control={<Switch checked={dense} onChange={handleChangeDense} />}
+                        label="Thu nhỏ"
+                        style={{ display: "flex", justifyContent: "flex-end", }}
+                    />
+                </div>}
     </>
     )
 }

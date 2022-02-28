@@ -35,7 +35,7 @@ import { applyMiddleware } from "@reduxjs/toolkit";
 //--thu vien nay bij loi font
 // import jsPDF from 'jspdf'
 // import 'jspdf-autotable'
-
+const cell = ["A1","B1","C1","D1","E1","F1","G1","H1","I1","J1","K1",];
 const useStyles = makeStyles((theme) =>
   createStyles({
     icon: {
@@ -99,7 +99,20 @@ const ToolBar = (props) => {
   const classes = useStyles(theme);
 
   const [openImport, setOpenImport] = useState(false);
-
+  const [custom, setCustom] = useState(false)
+  const [customCl, setCustomCl] = useState({
+    product_code: "Mã hàng",
+    bar_code: "Mã vạch",
+    name: "Tên",
+    category_id: "Danh mục",
+    list_price: "Giá bán",
+    standard_price: "Giá vốn",
+    quantity_per_unit: "Đơn vị",
+    min_reorder_quantity: "Tồn kho nhỏ nhất",
+    max_quantity: "Tồn kho lớn nhất",
+    urls: "Hình ảnh (url1, url2,...)",
+    description: "Mô tả",
+  })
   // const [json, setJson] = useState(null);
 
   const readUploadFile = (e, setJsonData) => {
@@ -111,34 +124,34 @@ const ToolBar = (props) => {
         const workbook = xlsx.read(data, { type: "array" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        // const header = ['product_code','bar_code','name','category_id','list_price','standard_price','quantity_per_unit','min_reorder_quantity','max_quantity','urls','description'];
-        const cell = [
-          "A1",
-          "B1",
-          "C1",
-          "D1",
-          "E1",
-          "F1",
-          "G1",
-          "H1",
-          "I1",
-          "J1",
-          "K1",
-        ];
-
-        for (var i = 0; i < excel_head.length; i++) {
-          xlsx.utils.sheet_add_aoa(worksheet, [[excel_head[i]]], {
-            origin: cell[i],
-          });
-        }
-        const json = xlsx.utils.sheet_to_json(worksheet);
-
-        for (var object in json) {
-          json[object]["urls"] = json[object]["urls"].split(",");
-          json[object]["bar_code"] = json[object]["bar_code"].toString();
-        }
-        // JSON HERE
-        console.log(json);
+        const myJson = xlsx.utils.sheet_to_json(worksheet)
+        console.log("input", myJson)
+        const json = []
+        myJson.map((product) => {
+          json.push({
+            product_code: product[customCl.product_code],
+            bar_code: product[customCl.bar_code].toString(),
+            name: product[customCl.name],
+            category_id: product[customCl.category_id],
+            list_price: product[customCl.list_price],
+            standard_price: product[customCl.standard_price],
+            quantity_per_unit: product[customCl.quantity_per_unit],
+            min_reorder_quantity: product[customCl.min_reorder_quantity],
+            max_quantity: product[customCl.max_quantity],
+            urls: product[customCl.urls].split(","),
+            description: product[customCl.description]
+          })
+        })
+        // for (var i = 0; i < excel_head.length; i++) {
+        //   xlsx.utils.sheet_add_aoa(worksheet, [[excel_head[i]]], {
+        //     origin: cell[i],
+        //   });
+        // }
+        // const json = xlsx.utils.sheet_to_json(worksheet);
+        // for (var object in json) {
+        //   json[object]["urls"] = json[object]["urls"].split(",");
+        //   json[object]["bar_code"] = json[object]["bar_code"].toString();
+        // }
         setJsonData(json);
       };
       reader.readAsArrayBuffer(e.target.files[0]);
@@ -224,26 +237,98 @@ const ToolBar = (props) => {
             </IconButton>
           </Tooltip>
 
-          <ModalWrapperWithClose     
+          <ModalWrapperWithClose
             open={openImport}
             handleClose={() => setOpenImport(false)}
             title="Nhập hàng từ file excel"
           >
-        
-            <Typography style={{ marginBottom: 25 }}>
+
+            <Typography style={{ marginBottom: 15 }}>
               {" "}
               (Tải về file mẫu:{" "}
               <a
                 style={{ color: "blue", cursor: "pointer" }}
                 onClick={() => {
                   exportExcel(excel_data, excel_name);
+                  setCustom(false)
                 }}
               >
                 Excel mẫu
-              </a>{" "}
-              ){" "}
+              </a>
+              {" "} hoặc <a style={{ color: "blue", cursor: "pointer" }} onClick={() => setCustom(!custom)}> tùy chỉnh </a>
+              )
             </Typography>
-
+            {
+              custom &&
+              <Grid container spacing={2} style={{ marginBottom: 15, width: 600, maxWidth: "90vw" }} container direction="row" justifyContent="center" alignItems="center">
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center" >
+                    <Typography><b>Mã hàng</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.product_code} onChange={(e) => { setCustomCl({ ...customCl, product_code: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Mã vạch</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.bar_code} onChange={(e) => { setCustomCl({ ...customCl, bar_code: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Tên sản phẩm</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.name} onChange={(e) => { setCustomCl({ ...customCl, name: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Danh mục</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.category_id} onChange={(e) => { setCustomCl({ ...customCl, category_id: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Giá bán</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.list_price} onChange={(e) => { setCustomCl({ ...customCl, list_price: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Giá vốn</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.standard_price} onChange={(e) => { setCustomCl({ ...customCl, standard_price: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Đơn vị</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.quantity_per_unit} onChange={(e) => { setCustomCl({ ...customCl, quantity_per_unit: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Tồn kho nhỏ</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.min_reorder_quantity} onChange={(e) => { setCustomCl({ ...customCl, min_reorder_quantity: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Tồn kho lớn</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.max_quantity} onChange={(e) => { setCustomCl({ ...customCl, max_quantity: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Hình ảnh</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.urls} onChange={(e) => { setCustomCl({ ...customCl, urls: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography><b>Mô tả</b></Typography>
+                    <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.description} onChange={(e) => { setCustomCl({ ...customCl, description: e.target.value }) }}></TextField>
+                  </Box>
+                </Grid>
+              </Grid>
+            }
             <form>
               <label htmlFor="upload">Chọn file: </label>
               <input

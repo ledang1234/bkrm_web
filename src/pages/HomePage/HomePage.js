@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTheme, createStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -61,7 +61,6 @@ const HomePage = (props) => {
 
   useEffect(() => {
     dispatch(customizeAction.setSidebarOpen(!smallScreen));
-    console.log(permissions);
   }, [smallScreen, permissions]);
 
   const handleToggleSidebar = (open) => {
@@ -114,9 +113,11 @@ const HomePage = (props) => {
   };
   const dispatch = useDispatch();
   const logOutHandler = () => {
-    localStorage.removeItem("token");
     dispatch(authActions.logOut());
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("BKRMprev");
   };
+  console.log("home")
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -182,13 +183,13 @@ const HomePage = (props) => {
         }}
         ModalProps={{ keepMounted: true }}
         color="inherit"
-        // style={{height:30}}
+      // style={{height:30}}
       >
-         {_divLogo()} 
+        {_divLogo()}
         {/* <PerfectScrollbar component="div" className={classes.scroll}> */}
-         
-          <MenuList permissions={permissions} />
-          {/* <div>hello</div> */}
+
+        <MenuList permissions={permissions} />
+        {/* <div>hello</div> */}
         {/* </PerfectScrollbar> */}
       </Drawer>
 
@@ -217,6 +218,11 @@ const HomePage = (props) => {
             {permissions?.find((p) => p.name === "report") && (
               <Route path={`${path}/manager`} component={ManagerView} />
             )}
+            <Route path={`${path}/`} >
+              {/* only redirect whenever permissions is successfully loaded => length at least = 1 */}
+              {permissions.length > 0 ? 
+              (<Redirect to={permissions?.find((p) => p.name === "sales") ? `${path}/sales` : permissions?.find((p) => p.name === "inventory") ? `${path}/inventory` : permissions?.find((p) => p.name === "employee") ? `${path}/hr` : `${path}/manager`} />) :null }
+            </Route>
             <Route path={`${path}/*`} component={PageNotFound} />
           </Switch>
         </Box>

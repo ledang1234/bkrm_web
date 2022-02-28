@@ -53,23 +53,35 @@ const CheckHistory = () => {
 
   const [inventoryChecks, setInventoryChecks] = useState([]);
 
-  const loadData = async () => {
-    try {
-      const res = await inventoryCheckApi.getAllOfBranch(
-        store_uuid,
-        branch_uuid
-      );
-      console.log(res.data);
-      setInventoryChecks(res.data.reverse());
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [pagingState, setPagingState] = useState({
+    page: 0,
+    limit: 10,
+    total_rows: 0,
+  });
 
-  const [reload, setReload] = useState(false);
+  const [reload, setReload] = useState(false)
+
   useEffect(() => {
-    loadData();
-  }, [reload]);
+    setPagingState({...pagingState, page: 0})
+  }, [branch_uuid, store_uuid, reload])
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await inventoryCheckApi.getAllOfBranch(store_uuid, branch_uuid, {
+          page: pagingState.page,
+          limit: pagingState.limit
+        });
+        
+        setInventoryChecks(response.data);
+        setPagingState({...pagingState, total_rows: response.total_rows})
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    loadData()
+  }, [pagingState.page, pagingState.limit]);
+
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -217,7 +229,10 @@ const CheckHistory = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper>
+      <TableWrapper
+        pagingState={pagingState}
+        setPagingState={setPagingState}
+      >
         <TableHeader
           classes={classes}
           order={order}

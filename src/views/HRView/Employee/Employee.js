@@ -42,22 +42,37 @@ const Employee = () => {
   const onReload = () => {setReload(!reload); console.log('reload called')};
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
+  // paging
+  const [pagingState, setPagingState] = useState({
+    page: 0,
+    limit: 10,
+    total_rows: 0,
+  });
 
   useEffect(() => {
-    const fetchEmployees = async () => {
+    setPagingState({...pagingState, page: 0})
+  }, [reload, store_uuid])
+
+  useEffect(() => {
+    const loadData = async () => {
       try {
-        const response = await employeeApi.getEmployees(store_uuid);
+        const response = await employeeApi.getEmployees(store_uuid, {
+          page: pagingState.page,
+          limit: pagingState.limit
+        });
+        
+        setPagingState({...pagingState, total_rows: response.total_rows})
         setEmployeeList(response.data);
       } catch (error) {
-        setEmployeeList([]);
         console.log(error);
       }
     };
-    fetchEmployees();
-  }, [reload, store_uuid]);
+    loadData();
+  }, [pagingState.page, pagingState.limit]);
 
-  const theme = useTheme();
-  const classes = useStyles(theme);
 
   //// 1. Add pop up + noti
   //add
@@ -173,7 +188,10 @@ const Employee = () => {
         handleToggleFilter={handleToggleFilter}
       />
       {/* 3. TABLE */}
-      <TableWrapper>
+      <TableWrapper
+        pagingState={pagingState}
+        setPagingState={setPagingState}
+      >
         <TableHeader
           classes={classes}
           order={order}
