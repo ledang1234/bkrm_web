@@ -58,7 +58,7 @@ const productApi = {
   },
 
   updateProduct: (storeUuid, productUuid, params) => {
-    const url = `stores/${storeUuid}/products/${productUuid}?_method=PUT`;
+    const url = `stores/${storeUuid}/products/${productUuid}`;
     return axiosClient.post(url, params, {
       headers: {
         "Content-Type": "multipart/form-data",

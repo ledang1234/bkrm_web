@@ -92,15 +92,6 @@ const AddInventory = (props) => {
       },
     ]);
   };
-  const [productInfo, setProductInfo] = useState({
-    name: "",
-    barcode: "",
-    importedPrice: 0,
-    salesPrice: 0,
-    category: "",
-    unit: "",
-    re_order_point: "",
-  });
 
   const productFormik = useFormik({
     initialValues: {
@@ -110,14 +101,14 @@ const AddInventory = (props) => {
       salesPrice: 0,
       category: "",
       unit: "",
-      re_order_point: "",
+      re_order_point: 0,
       product_code: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
-      importedPrice: Yup.number().required("Nhập giá vốn").moreThan(0, "Giá vốn không được âm"),
-      salesPrice: Yup.number().required("Nhập giá bán").moreThan(0, "Giá bán không được âm"),
-      re_order_point: Yup.number("Phải là một số").moreThan(0, "Số lượng đặt hàng lại không được âm"),
+      importedPrice: Yup.number().required("Nhập giá vốn").moreThan(0, "Giá vốn phải lớn hơn không"),
+      salesPrice: Yup.number().required("Nhập giá bán").moreThan(0, "Giá bán phải lớn hơn không"),
+      re_order_point: Yup.number("Phải là một số").moreThan(-1, "Số lượng đặt hàng lại không được âm"),
     }),
   })
 
@@ -687,6 +678,7 @@ const AddInventory = (props) => {
             variant="contained"
             size="small"
             color="primary"
+            disabled = {!(productFormik.isValid && Object.keys(productFormik.touched).length > 0) }
           >
             Thêm
           </Button>

@@ -81,6 +81,7 @@ const InventoryDetail = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [thisReload, setThisReload] = useState(false);
   const dispatch = useDispatch();
   const [productDetail, setProductDetail] = useState({
     name: "",
@@ -95,12 +96,6 @@ const InventoryDetail = (props) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-  const handleCloseUpdate = (status) => {
-    if (status) {
-      props.parentProps.setReload(true);
-    }
-    setIsOpenUpdate(false);
   };
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const handleCloseDelete = () => {
@@ -136,8 +131,11 @@ const InventoryDetail = (props) => {
     if (openRow === row.uuid) {
       fetchProduct();
     }
-  }, [store_uuid, openRow]);
-
+  }, [store_uuid, openRow,thisReload]);
+  const handleCloseUpdate = (status) => {
+    setIsOpenUpdate(false);
+  };
+  console.log(productDetail)
   return row.has_variance ? (<>
     {openRow === row.uuid &&
       productDetail.variations?.map(variance => (
@@ -199,13 +197,16 @@ const InventoryDetail = (props) => {
     : (
       <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
         <UpdateInventory
-          open={isOpenUpdate}
           handleClose={handleCloseUpdate}
+          open={isOpenUpdate}
           productInfo={productDetail}
+          setReload = {() => {
+            props.parentProps.setReload();
+            setThisReload(!thisReload)
+          }}
         />
         <ConfirmPopUp
           open={deleteConfirm}
-          handleClose={handleCloseDelete}
           handleConfirm={handleConfirmDelete}
           message={
             <Typography>

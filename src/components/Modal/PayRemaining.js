@@ -108,7 +108,7 @@ const PayRemaining = (props) => {
               size="small"
               style={{ marginLeft: 20 }}
               color="primary"
-              disabled={!formik.isValid}
+              disabled={!(formik.isValid && Object.keys(formik.touched).length > 0)}
               onClick={handleSubmit}
             >
               Xác nhận

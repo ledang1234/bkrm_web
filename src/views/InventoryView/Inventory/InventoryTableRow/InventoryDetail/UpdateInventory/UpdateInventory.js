@@ -26,6 +26,8 @@ import useStyles from "./styles";
 import productApi from "../../../../../../api/productApi";
 import { useDispatch, useSelector } from "react-redux";
 import { statusAction } from "../../../../../../store/slice/statusSlice";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 const UploadImages = (img) => {
   return (
     <Box
@@ -57,57 +59,85 @@ const UpdateInventory = (props) => {
   ]);
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
-  const onChange = (e) => {
+  useEffect(()=>{
+    const displayList = props.productInfo.images.map((img) => ({link:img.url,isUrl: true}))
+    setDisplay(displayList)
+  },[props.productInfo.images])
+  const addImageHandler = (e) => {
+    console.log(e.target.files[0]);
+    console.log(URL.createObjectURL(e.target.files[0]));
     setImages([...images, e.target.files[0]]);
-    setDisplay([...display, URL.createObjectURL(e.target.files[0])]);
+    setDisplay([
+      ...display,
+      {
+        index: images.length,
+        link: URL.createObjectURL(e.target.files[0]),
+        isUrl: false,
+      },
+    ]);
   };
-  const [productInfo, setProductInfo] = useState({
-    name: "",
-    importedPrice: "",
-    salesPrice: "",
-    barcode: "",
-    category: {
-      uuid: "37526a21-06e1-43ee-bb77-dca5e901ff32",
-      parent_category_id: null,
-      name: "Mặc Định",
+  const productFormik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      name: props.productInfo.name,
+      barcode: props.productInfo.bar_code,
+      importedPrice: props.productInfo.standard_price,
+      salesPrice: props.productInfo.list_price,
+      category: props.productInfo.category.uuid,
+      unit: props.productInfo.quantity_per_unit,
+      re_order_point: props.productInfo.min_reorder_quantity || 0,
+      product_code: props.productInfo.product_code,
     },
-    unit: "",
-    re_order_point: "",
-  });
-
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên sản phẩm "),
+      importedPrice: Yup.number().required("Nhập giá vốn").moreThan(0, "Giá vốn phải lớn hơn không"),
+      salesPrice: Yup.number().required("Nhập giá bán").moreThan(0, "Giá bán phải lớn hơn không"),
+      re_order_point: Yup.number("Phải là một số").moreThan(-1, "Số lượng đặt hàng lại không được âm"),
+    }),
+  })
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
   const theme = useTheme();
   const classes = useStyles(theme);
   const updateProductHandler = async () => {
+    handleCloseAndReset();
     try {
       var bodyFormData = new FormData();
-      bodyFormData.append("name", productInfo.name.toString());
-      bodyFormData.append("list_price", productInfo.importedPrice.toString());
-      bodyFormData.append("standard_price", productInfo.salesPrice.toString());
-      bodyFormData.append("bar_code", productInfo.barcode.toString());
-      bodyFormData.append("product_code", productInfo.product_code.toString());
-      bodyFormData.append("quantity_per_unit", productInfo.unit.toString());
+      console.log(props.productInfo);
+      bodyFormData.append("name", productFormik.values.name.toString());
+      bodyFormData.append("list_price", productFormik.values.importedPrice.toString());
+      bodyFormData.append("standard_price",productFormik.values.salesPrice.toString());
+      bodyFormData.append("bar_code", productFormik.values.barcode.toString());
+      bodyFormData.append("product_code", productFormik.values.product_code.toString());
+      bodyFormData.append("quantity_per_unit", productFormik.values.unit.toString());
       bodyFormData.append(
         "min_reorder_quantity",
-        productInfo.re_order_point.toString()
+        productFormik.values.re_order_point.toString()
       );
+
       bodyFormData.append(
         "category_uuid",
-        productInfo.category.uuid.toString()
+        productFormik.values.category.toString()
       );
-      // images.forEach((image) => bodyFormData.append("images[]", image));
+      const img_url = display.reduce((prev,cur) =>{
+        if(cur.isUrl){
+          return prev.concat(cur.link,",")
+        }
+        return prev
+      },"")
+      bodyFormData.append("img_urls", img_url);
+
+      images.forEach((image) => bodyFormData.append("images[]", image));
       const response = await productApi.updateProduct(
         store_uuid,
         props.productInfo.uuid,
         bodyFormData
       );
-      handleClose(1);
-      dispatch(statusAction.successfulStatus("Sửa thành công"));
+      dispatch(statusAction.successfulStatus("Sửa sản phẩm thành công"));
+      props.setReload(true);
     } catch (error) {
       console.log("here", error);
-      handleClose(0);
       dispatch(statusAction.failedStatus("Sửa thất bại"));
     }
   };
@@ -122,17 +152,23 @@ const UpdateInventory = (props) => {
       }
     };
     fetchCategoryList();
-    setProductInfo({
-      name: props.productInfo.name,
-      importedPrice: props.productInfo.list_price,
-      salesPrice: props.productInfo.standard_price,
-      barcode: props.productInfo.bar_code,
-      category: props.productInfo.category,
-      unit: props.productInfo.quantity_per_unit,
-      re_order_point: props.productInfo.min_reorder_quantity,
-    });
   }, [store_uuid, props.productInfo]);
-
+  
+  const handleCloseAndReset = () => {
+    handleClose();
+    productFormik.resetForm()
+    clearAllImages();
+  };
+  const clearAllImages = () => {
+    setDisplay([]);
+    setImages([]);
+  };
+  const clearImage = (displayImage) => {
+    setDisplay(display.filter((img) => img != displayImage));
+    if (!displayImage.isUrl) {
+      setImages(images.filter((image, index) => index !== displayImage.index));
+    }
+  };
   return (
     <Dialog
       open={open}
@@ -162,39 +198,35 @@ const UpdateInventory = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              onChange={(e) =>
-                setProductInfo({ ...productInfo, name: e.target.value })
+              name="name"
+              onChange={productFormik.handleChange}
+              value={productFormik.values.name}
+              error={productFormik.touched.name && productFormik.errors.name}
+              helperText={
+                productFormik.touched.name ? productFormik.errors.name : null
               }
-              value={productInfo.name}
+              onBlur={productFormik.handleBlur}
+              type="text"
             />
             <TextField
               label="Mã sản phẩm (tự động)"
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.barcode}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Box
-                      component="img"
-                      sx={{ height: 25, width: 25 }}
-                      src={barcodeIcon}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) =>
-                setProductInfo({ ...productInfo, product_code: e.target.value })
-              }
               className={classes.margin}
+              name="product_code"
+              onChange={productFormik.handleChange}
+              value={productFormik.values.product_code}
             />
             <TextField
-              label="Mã vạch (mặc định)"
+              label="Mã vạch"
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.barcode}
+              name="barcode"
+              onKeyDown={(e) => {}}
+              onChange={productFormik.handleChange}
+              value={productFormik.values.barcode}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -206,9 +238,6 @@ const UpdateInventory = (props) => {
                   </InputAdornment>
                 ),
               }}
-              onChange={(e) =>
-                setProductInfo({ ...productInfo, barcode: e.target.value })
-              }
               className={classes.margin}
             />
             <TextField
@@ -217,29 +246,22 @@ const UpdateInventory = (props) => {
               fullWidth
               size="small"
               className={classes.margin}
-              value={productInfo.unit}
-              onChange={(e) => {
-                setProductInfo({ ...productInfo, unit: e.target.value });
-              }}
+              name="unit"
+              onChange={productFormik.handleChange}
+              value={productFormik.values.unit}
             />
+
             <Box className={`${classes.box} ${classes.margin}`}>
               <FormControl required size="small" variant="outlined" fullWidth>
                 <InputLabel htmlFor="category">Danh mục</InputLabel>
                 <Select
                   native
-                  value={productInfo.category.uuid}
-                  InputLabelProps={{ shrink: !!productInfo.category.uuid }}
-                  onChange={(e) => {
-                    const cat = categoryList.find(
-                      (item) => item.uuid === e.target.value
-                    );
-                    setProductInfo({
-                      ...productInfo,
-                      category: cat,
-                    });
-                  }}
                   label="Danh mục"
                   id="category"
+                  name="category"
+                  value={productFormik.values.category}
+                  onChange={productFormik.handleChange}
+                  onBlur={productFormik.handleBlur}
                 >
                   {categoryList.map((category) => (
                     <option key={category.uuid} value={category.uuid}>
@@ -266,13 +288,19 @@ const UpdateInventory = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.importedPrice}
-              onChange={(e) =>
-                setProductInfo({
-                  ...productInfo,
-                  importedPrice: e.target.value,
-                })
+              name="salesPrice"
+              value={productFormik.values.salesPrice}
+              onChange={productFormik.handleChange}
+              error={
+                productFormik.touched.salesPrice &&
+                productFormik.errors.salesPrice
               }
+              helperText={
+                productFormik.touched.salesPrice
+                  ? productFormik.errors.salesPrice
+                  : null
+              }
+              onBlur={productFormik.handleBlur}
             />
             <VNDInput
               required
@@ -280,31 +308,44 @@ const UpdateInventory = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              value={productInfo.salesPrice}
-              onChange={(e) => {
-                setProductInfo({ ...productInfo, salesPrice: e.target.value });
-              }}
+              name="importedPrice"
+              value={productFormik.values.importedPrice}
+              onChange={productFormik.handleChange}
+              error={
+                productFormik.touched.importedPrice &&
+                productFormik.errors.importedPrice
+              }
+              helperText={
+                productFormik.touched.importedPrice
+                  ? productFormik.errors.importedPrice
+                  : null
+              }
+              onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
-
             <TextField
               label="Số lượng đặt hàng lại"
               variant="outlined"
               fullWidth
               size="small"
               className={classes.margin}
-              onChange={(e) =>
-                setProductInfo({
-                  ...productInfo,
-                  re_order_point: e.target.value,
-                })
+              name="re_order_point"
+              value={productFormik.values.re_order_point}
+              onChange={productFormik.handleChange}
+              error={
+                productFormik.touched.re_order_point &&
+                productFormik.errors.re_order_point
               }
-              value={productInfo.re_order_point}
+              helperText={
+                productFormik.touched.re_order_point
+                  ? productFormik.errors.re_order_point
+                  : null
+              }
+              onBlur={productFormik.handleBlur}
             />
           </Grid>
         </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs>
+        <Grid container spacing={2}>          <Grid item xs>
             <Box
               display="flex"
               flexDirection="row"
@@ -312,13 +353,8 @@ const UpdateInventory = (props) => {
               style={{ marginTop: 10 }}
             >
               {display.map((img) => (
-                <Tooltip title="Xóa">
-                  <Button
-                    size="small"
-                    onClick={() =>
-                      setDisplay(display.filter((item) => item !== img))
-                    }
-                  >
+                <Tooltip title="Xóa tất cả hình ảnh">
+                  <Button size="small" onClick={() => clearImage(img)}>
                     <Box
                       component="img"
                       sx={{
@@ -328,7 +364,7 @@ const UpdateInventory = (props) => {
                         marginRight: 7,
                         borderRadius: 2,
                       }}
-                      src={img}
+                      src={img.link}
                     />
                   </Button>
                 </Tooltip>
@@ -340,7 +376,7 @@ const UpdateInventory = (props) => {
                 size="medium"
                 component="label"
               >
-                <input type="file" hidden onChange={onChange} />
+                <input type="file" hidden onChange={addImageHandler} />
                 <AddIcon />
               </IconButton>
             </Box>
@@ -355,7 +391,7 @@ const UpdateInventory = (props) => {
             }}
           >
             <Button
-              onClick={() => handleClose(null)}
+              onClick={handleCloseAndReset}
               variant="contained"
               size="small"
               color="secondary"
@@ -370,6 +406,7 @@ const UpdateInventory = (props) => {
               variant="contained"
               size="small"
               color="primary"
+              disabled = {!(productFormik.isValid ) }
             >
               Sửa
             </Button>
