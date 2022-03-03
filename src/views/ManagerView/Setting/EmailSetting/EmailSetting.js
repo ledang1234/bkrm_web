@@ -38,7 +38,7 @@ const EmailSetting = () => {
        <Typography className={classes.headerTitle} variant="h3">
             Email
         </Typography>
-        <ReactQuill style={{minHeight:300}} theme="snow" value={value} onChange={setValue}  modules={modules} formats={formats}  placeholder={'Write something...'}/>
+        <ReactQuill style={{minHeight:300, borderRaidus:5}} theme="snow" value={value} onChange={setValue}  modules={modules} formats={formats}  placeholder={'Write something...'}/>
 
     </Card>
 
