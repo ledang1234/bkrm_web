@@ -10,80 +10,119 @@ import {
   Box,
   Button,
   Grid,
+  Tooltip,
+  ButtonBase,
+  Avatar,
+  Badge,
+  List,
+  Drawer,
+  ListItem,
+  ListItemText,
+  Divider
 } from "@material-ui/core";
 //import icons
 import MenuIcon from "@material-ui/icons/Menu";
 import HoverMenuBtn from "../../../components/Button/HoverMenuBtn";
 import { Link } from "react-router-dom";
+import AccountCircleTwoToneIcon from '@material-ui/icons/AccountCircleTwoTone';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
+import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import {ColorButton,ColorOutlineButton} from "../../../components/Button/ColorButton"
+import clsx from 'clsx';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
-        // background: theme.palette.background.paper,
         paddingLeft: 20,
         paddingRight: 20,
         boxShadow: "none",
     },
     toolBar: {
-        // background: theme.palette.background.paper,
         color: theme.customization.themeGreyText,
-
     },
     btnNav: {
         textTransform: "none",
         marginRight: 10,
-    },
-    
+    },   
 }));
 
-const ColorButton = styled(Button)(({ theme, mainColor,navColor }) => ({
-    color: "#ffffff",
-    backgroundColor: navColor? lighten(mainColor, 0.2):mainColor ,
-    width: 100,
-    "&:hover": {
-      backgroundColor: navColor?lighten(mainColor, 0.1) :lighten(mainColor, 0.3),
-      
-    },
-  }));
-  const ColorOutlineButton = styled(Button)(({ theme ,mainColor,navColor}) => ({
-    color: mainColor,
-    borderColor: mainColor,
-    boxShadow:navColor?'0px 2px 2px rgba(0,0,0,0.2)':null,
-    backgroundColor: navColor?lighten(mainColor, 0.8):theme.palette.background.paper,
-    "&:hover": {
-      backgroundColor:navColor?lighten(mainColor, 0.6) :lighten(mainColor, 0.8),
-    },
-  }));
-
 const NavBar = (props) => {
-    const {handleClickItem,mainColor,category,navColor,textNav,storeInfo} = props;
+    const {storeInfo,logo, handleClickItem,category} = props;
+    const {buttonLogin,buttonCart,navColor,textNav} = props.webInfo.navBar;
+    const mainColor=`rgba(${ props.webInfo.mainColor.r }, ${ props.webInfo.mainColor.g }, ${ props.webInfo.mainColor.b }, ${ props.webInfo.mainColor.a })`
+
+    // 
     const theme = useTheme();
     const classes = useStyles(theme);
-    const matchDownXs = useMediaQuery(theme.breakpoints.down("xs"));
     const matchDownSm = useMediaQuery(theme.breakpoints.down("sm"));
 
+    // customization
     function handleColor (type) {
       if(type===0){return '#000'}
       else if (type===1){return '#fff'}
       else if (type===3){return mainColor}
       else{return theme.darkTextPrimary }
-  }
-    const textColor = handleColor(textNav[0]);
-    const textSize = textNav[1]?17:14
-    const textBold = textNav[2]?600:500
-   
+    }
+    const textColor = handleColor(parseInt(textNav[0]));
+    const textSize = parseInt(textNav[1])
+    const textBold = parseInt(textNav[2])
+  
+    //
+    const [state, setState] = React.useState(false);
+    const toggleDrawer = (open) => {
+      setState(open);
+    };
+
+    const drawer = () => (
+      <div
+        className={clsx(classes.list)}
+        role="presentation"
+        onClick={()=>toggleDrawer(false)}
+        onKeyDown={()=>toggleDrawer(false)}
+      >
+        <List>
+          {[{text:'Trang chủ', link:''}, {text:'Sản phẩm', link:''}, {text:'Cửa hàng', link:'storeInfo'}].map((tab, index) => {
+            if(tab.text !== "Sản phẩm" ){
+              return(
+              <>
+                <ListItem button key={tab.text} style={{width:220, margin:7}}
+                component={Link}
+                to={`/store/${props.storeInfo?.web_page}/${tab.link}`}>
+                <Typography style={{ color: '#000',  fontWeight: textBold,  fontSize: textSize,}}>
+                  {tab.text} 
+                </Typography>
+              </ListItem>
+                <Divider />
+              </>
+              )
+            }else{
+              return( /* Sửa Link Sản Phẩm Sau */
+              <>
+              <ListItem button key={tab.text}  style={{width:220, margin:7}}>  
+                <Typography   style={{ color: '#000',  fontWeight: textBold, fontSize: textSize,}}>
+                  {tab.text} 
+                </Typography>
+               </ListItem>
+               <Divider />
+            </>)
+            }})}
+        </List>
+      </div>
+    );
 
     return (
       <AppBar
         position="fixed"
         className={classes.appBar}
         style={{
-          background: navColor ? mainColor : theme.palette.background.paper,
+          background: parseInt(navColor) ? mainColor : theme.palette.background.paper,
         }}
       >
         <Toolbar
           className={classes.toolBar}
           style={{
-            background: navColor ? mainColor : theme.palette.background.paper,
+            background: parseInt(navColor) ? mainColor : theme.palette.background.paper,
           }}
         >
           <Grid
@@ -92,23 +131,31 @@ const NavBar = (props) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Grid item sm={2}>
-              <Typography variant="h3" noWrap className={classes.searchEngine}>
-                LOGO
-              </Typography>
+            <Grid item sm={2} 
+            component={Link}
+            to={`/store/${props.storeInfo?.web_page}/`}
+            >
+              <img src={logo} style={{height:45,marginTop:-5,marginBottom:-5}}/>
             </Grid>
+            {/* Small screen */}
             {matchDownSm ? (
               <Grid>
                 <IconButton
                   aria-label="open drawer"
-                  onClick={() => {}}
+                  onClick={()=>toggleDrawer( true)}
                   edge="start"
                   style={{ marginBottom: -5 }}
                 >
                   <MenuIcon />
                 </IconButton>
+                <React.Fragment key={'right'}>
+                  <Drawer anchor="right" open={state} onClose={()=>toggleDrawer(false)}>
+                    {drawer()}
+                  </Drawer>
+                </React.Fragment>
               </Grid>
             ) : (
+              //Nav bar
               <Grid container item sm={10} direction="row" alignItems="center">
                 <Grid container item sm={8} direction="row">
                   <Button
@@ -132,7 +179,6 @@ const NavBar = (props) => {
                     textSize={textSize}
                     textBold={textBold}
                   >
-                    {/* Sản phẩm */}
                   </HoverMenuBtn>
                   <Button
                     className={classes.btnNav}
@@ -158,7 +204,7 @@ const NavBar = (props) => {
                   >
                     Cửa hàng
                   </Button>
-                  <Button
+                  {/* <Button
                     className={classes.btnNav}
                     component={Link}
                     to={`/store/${props.storeInfo?.web_page}/aboutUs`}
@@ -169,8 +215,10 @@ const NavBar = (props) => {
                     }}
                   >
                     Giới thiệu
-                  </Button>
+                  </Button> */}
                 </Grid>
+
+                {/* Nút đặng nhập */}
                 <Grid
                   container
                   item
@@ -178,29 +226,50 @@ const NavBar = (props) => {
                   direction="row"
                   justifyContent="flex-end"
                 >
-                  <ColorOutlineButton
-                    mainColor={mainColor}
-                    navColor={navColor}
-                    className={classes.btnNav}
-                    variant="outlined"
-                    style={{ borderRadius: 20, marginBottom: 5 }}
-                  >
-                    Đăng nhập
-                  </ColorOutlineButton>
-                  <ColorButton
-                    mainColor={mainColor}
-                    navColor={navColor}
-                    className={classes.btnNav}
-                    variant="contained"
-                    color="secondary"
-                    style={{
-                      borderRadius: 20,
-                      marginLeft: 10,
-                      marginBottom: 5,
-                    }}
-                  >
-                    Đăng ký
-                  </ColorButton>
+                  {parseInt(buttonLogin) == 0? 
+                  <>
+                   <ColorOutlineButton
+                   mainColor={mainColor}
+                   navColor={parseInt(navColor)}
+                   className={classes.btnNav}
+                   variant="outlined"
+                   style={{ borderRadius: 20, marginBottom: 5 }}
+                 >
+                   Đăng nhập
+                 </ColorOutlineButton>
+                 <ColorButton
+                   mainColor={mainColor}
+                   navColor={parseInt(navColor)}
+                   className={classes.btnNav}
+                   variant="contained"
+                   color="secondary"
+                   style={{
+                     borderRadius: 20,
+                     marginLeft: 10,
+                     marginBottom: 5,
+                   }}
+                 >
+                   Đăng ký
+                 </ColorButton>
+                 </>
+                  : 
+                  <AccountCircleRoundedIcon  style={{width:40, height:40, color:parseInt(navColor) === 0? mainColor:"#fff"}}/>
+                  }
+                  {/* Nút cart */}
+                  {parseInt(buttonCart) === 1 ? 
+                    <div style={{backgroundColor:parseInt(navColor) === 0? mainColor:'#fff',width:37, height:37,marginTop:2,paddingTop:7, paddingLeft:7,borderRadius:40,marginLeft:15}}
+                    component={Link}
+                    to={`/store/${props.storeInfo?.web_page}/cart`}
+                    >
+                      <Tooltip title="Giỏ hàng">
+                        <StyledBadge color="error" badgeContent={3}>
+                          <ShoppingCartIcon  style={{color:parseInt(navColor) === 0?"#fff":mainColor}}/>
+                        </StyledBadge>
+                      </Tooltip>
+                  </div>
+                 :null
+                  }
+                 
                 </Grid>
               </Grid>
             )}
@@ -211,3 +280,10 @@ const NavBar = (props) => {
 }
 
 export default NavBar
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    border: `1px solid #000`,
+    padding: "0 4px",
+  },
+}));

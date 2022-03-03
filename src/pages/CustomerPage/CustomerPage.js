@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { useTheme, makeStyles, styled } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
@@ -31,13 +31,14 @@ import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // display: "flex",
     background: theme.palette.background.default,
   },
 }));
 
 const CustomerPage = () => {
   let { path } = useRouteMatch();
+
+
   // 1. Customer setting
   //1.1 NavBar
   // // -----recomendation 1
@@ -51,29 +52,49 @@ const CustomerPage = () => {
   const textNav = [1, 1, 1];
 
   //1.2 Box show
-  // ---- recomendation 1
-  // const mainColor = '#f2a5ae'; //#fa8c16
-  // const priceStyle = [0,0,0]; //0-left 1-right //color: normal-grey-maincolor, size: small - large(16),  bold:no() -yes (600)
-  // const nameStyle = [0,0,0,0]; //0-left 1-right //color: normal-grey-maincolor, size: small - large(16), bold:no() -yes (600) , maxNumberOFline: 1-2
-  // const btnStyle = [1,1];//0-left 1-right //haveBtn: no-yes, style:circle - box
-  // const isBox= false;
-  // const isMargin = true
-  // const border = true
-  // const alignCenter = false
-  // const marginContainer = 10;
-  // const boxDistance = 0.75;
 
-  // ---- recomendation 2
-  const mainColor = "#fa8c16"; //#
-  const priceStyle = [0, 0, 0]; //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
-  const nameStyle = [0, 1, 0, 0]; //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
-  const btnStyle = [1, 0]; //0-left 1-right //haveBtn: no-yes, style:circle - box
-  const isBox = true;
-  const isMargin = true;
-  const border = true;
-  const alignCenter = false;
-  const marginContainer = 0;
-  const boxDistance = 1;
+//   const webInfo = {
+//     webAddress :'lyquochai',
+//     status:'inactive',
+//     mainColor: {  r: '250', g: '140', b: '22',  a: '1', hex:'#fa8c16'} ,//{  r: '241', g: '112', b: '19',  a: '1', },
+//     // mainColor: {  r: '242', g: '165', b: '174',  a: '1', hex:'#f2a5ae'},
+//     priceStyle :[0, 0, 0], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
+//     nameStyle: [0,0,0,0],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
+//     btnStyle:[1, 1],  //0-left 1-right //haveBtn: no-yes, style:circle - box
+//     isBox:false,
+//     isMargin:true,
+//     border:true,
+//     alignCenter:false,
+//     marginContainer:10,
+//     boxDistance:0.75,
+// }
+  const webInfo = {
+      webAddress :'lyquochai',
+      status:'inactive',
+      // mainColor: {  r: '250', g: '140', b: '22',  a: '1', hex:'#fa8c16'} ,
+      mainColor: {  r: '242', g: '165', b: '174',  a: '1', hex:'#f2a5ae'},  
+      bgColor:{r: '255', g: '255', b: '255',  a: '1',hex:'#ffffff'},
+      navBar:{
+        buttonLogin: "1" ,  // 0: nut, 1:icon
+        buttonCart:"0" , //0: special, 1: normal
+        navColor : "1", //0:white, 1- maincolor
+        textNav : ["1",17, 600],  //0-left 1-right //color: black-white-grey-maincolor, size: small - large(16):,  bold:no() -yes (600)
+      },
+      listProduct:{
+        priceStyle :[0, 0, 0],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
+        nameStyle: [0, 1, 0, 0],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
+        btnStyle:[1, 0], //0-left 1-right //haveBtn: no-yes, style:circle - box
+        isBox:false,
+        isMargin:true,
+        border:true,
+        alignCenter:false,
+        marginContainer:0,
+        boxDistance:1,
+        // marginContainer:10,
+        // boxDistance:2,
+      }   
+  }
+  var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -92,16 +113,8 @@ const CustomerPage = () => {
         <Route exact path={`${path}/products/${items.id}`}>
           <ProductPage
             clickItem={clickItem}
-            mainColor={mainColor}
-            priceStyle={priceStyle}
-            btnStyle={btnStyle}
-            isMargin={isMargin}
-            border={border}
-            alignCenter={alignCenter}
-            nameStyle={nameStyle}
-            isBox={isBox}
-            marginContainer={marginContainer}
-            boxDistance={boxDistance}
+            webInfo={webInfo}
+    
           />
         </Route>
         {Array.isArray(items.children)
@@ -137,29 +150,23 @@ const CustomerPage = () => {
       <div className={classes.root}>
         <NavBar
           storeInfo={storeInfo}
-          mainColor={mainColor}
-          category={category}
-          navColor={navColor}
-          textNav={textNav}
           handleClickItem={handleClickItem}
+          category={category}
+
+          logo={logoStore}
+          webInfo={webInfo}
         />
-        <CartButton storeInfo={storeInfo} />
+        {parseInt(webInfo.navBar.buttonCart) === 0 ?
+         <CartButton storeInfo={storeInfo} />:null
+        }
+        
 
         <Box style={{ marginTop: 73 }}>
           <Switch>
             <Route exact path={`${path}`}>
               <MainPage
                 storeInfo={storeInfo}
-                mainColor={mainColor}
-                priceStyle={priceStyle}
-                btnStyle={btnStyle}
-                isMargin={isMargin}
-                border={border}
-                alignCenter={alignCenter}
-                nameStyle={nameStyle}
-                isBox={isBox}
-                marginContainer={marginContainer}
-                boxDistance={boxDistance}
+                webInfo={webInfo}
               />
             </Route>
             <Route exact path={`${path}/promotion`}>
@@ -168,9 +175,9 @@ const CustomerPage = () => {
             <Route exact path={`${path}/storeInfo`}>
               <StorePage />
             </Route>
-            <Route exact path={`${path}/aboutUs`}>
+            {/* <Route exact path={`${path}/aboutUs`}>
               <AboutUsPage />
-            </Route>
+            </Route> */}
 
             <Route exact path={`${path}/cart`}>
               <CartPage />
@@ -179,16 +186,7 @@ const CustomerPage = () => {
             {/* Path product */}
             <Route exact path={`${path}/products/all`}>
               <ProductPage
-                mainColor={mainColor}
-                priceStyle={priceStyle}
-                btnStyle={btnStyle}
-                isMargin={isMargin}
-                border={border}
-                alignCenter={alignCenter}
-                nameStyle={nameStyle}
-                isBox={isBox}
-                marginContainer={marginContainer}
-                boxDistance={boxDistance}
+                webInfo={webInfo}
               />
             </Route>
             {/* Tại sao define route detail trong ProductPage 

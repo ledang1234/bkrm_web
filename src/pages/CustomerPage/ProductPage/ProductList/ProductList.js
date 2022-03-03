@@ -14,80 +14,33 @@ import icon from '../../../../assets/img/product/tradao.jpeg';
 import { grey} from '@material-ui/core/colors'
 import { Link } from "react-router-dom";
 import { Route, useRouteMatch } from "react-router-dom";
-
-const useStyles = makeStyles((theme,) => ({
-    container:{
-        display: 'flex',
-        flexWrap: 'wrap',
-        // marginLeft:'10vw',
-        // marginRight:'10vw',
-    },
-    grid:{
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    item:{  
-        marginBottom:20,
-        // margin:'0.75%'
-    },
-    colorCard:{
-        background: theme.customization.mode === "Light"? null: grey[800],
-    },
-    multiLineEllipsis: {
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        display: "-webkit-box",
-        "-webkit-line-clamp": 2,
-        "-webkit-box-orient": "vertical",
-        height:37, 
-        marginBottom:12,
-    },
-    oneLineEllipsis: {    
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        display: "-webkit-box",
-        "-webkit-line-clamp": 1,
-        "-webkit-box-orient": "vertical",
-        marginBottom:8,
-       
-    },
-    name:{
-         
-    },
-    hoverCard:{
-        boxShadow:'0px 10px 20px rgba(0,0,0,0.1)',
-        "&:hover": {
-          boxShadow:'0px 10px 20px rgba(0,0,0,0.15)',
-        }
-    },
-    alignCenter:{
-        flexGrow: 1,textAlign: "center"
-    }
-}));
+import {useStyles} from './style'
+import {ColorOutlineButtonCart} from "../../../../components/Button/ColorButton"
 
 const ProductList = (props) => {
-    let { path } = useRouteMatch();
+    let {path} = useRouteMatch();
     const {InventoryList,mainColor, priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,marginContainer,boxDistance} = props;
     const theme = useTheme();
     const classes = useStyles(theme);
 
+    //customization 
     const lgScreen = useMediaQuery(theme.breakpoints.down("lg")) ;
     const mdScreen = useMediaQuery(theme.breakpoints.down("md")) ;
     const smScreen = useMediaQuery(theme.breakpoints.down("sm")) ;
     const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
     let numOfItemInRow = 6;
-    if(xsScreen){numOfItemInRow=3}
-    else if(smScreen){numOfItemInRow=4}
-    else if(mdScreen){numOfItemInRow=5}
+    if(xsScreen){numOfItemInRow=2}
+    else if(smScreen){numOfItemInRow=3}
+    else if(mdScreen){numOfItemInRow=4}
     else if(lgScreen){numOfItemInRow=5}
     else {numOfItemInRow=6}
     let widthSize = `${((100-marginContainer*2)/numOfItemInRow)-boxDistance*2}vw`
-
     function handleColor (type) {
         if(type===0){return theme.heading}
         else if (type===1){return theme.darkTextPrimary }
         else{return mainColor}
     }
+
     const nameColor = handleColor(nameStyle[0])
     const nameSize = nameStyle[1]?"h4":"h5";
     const nameBold = nameStyle[2]? 600:500;
@@ -103,46 +56,41 @@ const ProductList = (props) => {
     
     return (
         <Box className={classes.container} style={{marginLeft:`${marginContainer}vw`,marginRight:`${marginContainer}vw`,}}>
-            <Grid container direction="row" spacing={2} >
+            <Grid container direction="row" spacing={2} justifyContent="center" >
              {/* Đổi list đúng với category */}
              {InventoryList?.map(item=>{
+                 console.log("item",item)
                  return( 
                      <>
                      {isBox?
                      <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{margin:`${boxDistance}%`, width:widthSize, borderRadius:border?7:0}} >
-                         
-                         {/* SỬA PATH NÈEEEEEE */}
                         <CardActionArea component={Link} to={`${path}/${item.product_code}`} >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border&& isMargin ?7:0}}
-                                image={item.img_urls.length ? item.img_urls[0].url : ''}
+                                image={item.img_urls.length  ? item.img_urls[0].url : ''}
                             />
                             <Box style={{marginTop:10}}>
                                 <CardContent>
-                                    < InfoComponent openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                    {/* < InfoComponent openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} /> */}
                                 </CardContent>   
                             </Box>
-                        
                         </CardActionArea>
-                    </Card>:
+                    </Card> :
                     <Box  className={clsx(/*classes.hoverCard,*/classes.item)} style={{margin:`${boxDistance}%`,width:widthSize, borderRadius:border?7:0}} >
-                        {/* SỬA PATH NÈEEEEEE  */}
-                        <CardActionArea component={Link} to={`${path}/${item.id}`}>
+                        <CardActionArea component={Link} to={`${path}/${item.product_code}`}>
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border?7:0}}
-                                image={icon}
+                                image={item.img_urls.length  ? item.img_urls[0].url : ''}
                             />
                             <Box style={{marginTop:10}}>
                                 {isMargin? 
                                 <CardContent>
-                                    < InfoComponent openPopUp={openPopUp} item={item} mainColor={mainColor} priceStyle={priceStyle} btnStyle={btnStyle} alignCenter={alignCenter} nameStyle={nameStyle}/>
+                                    < InfoComponent openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                                 </CardContent>
                                 :
-                                < InfoComponent item={item} mainColor={mainColor} priceStyle={priceStyle} btnStyle={btnStyle} alignCenter={alignCenter} nameStyle={nameStyle}/>
-                                }
-                                   
+                                < InfoComponent openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                            }    
                             </Box>
-                        
                         </CardActionArea>
                     </Box>
                      } 
@@ -154,7 +102,7 @@ const ProductList = (props) => {
         
     )
 }
-const InfoComponent = (props)=>{
+export const InfoComponent = (props)=>{
     const {openPopUp,item,mainColor,btnStyle,alignCenter, nameColor,priceColor,nameSize,nameBold,nameLineClass,priceSize,priceBold} = props;
     let { path } = useRouteMatch();
     const theme = useTheme();
@@ -198,7 +146,7 @@ const InfoComponent = (props)=>{
             </Typography>
 
             {btnStyle[0]?
-            <ColorOutlineButton variant="outlined" fullWidth mainColor={mainColor} 
+            <ColorOutlineButtonCart variant="outlined" fullWidth mainColor={mainColor} 
                 onClick={(event) => {
                     // Prevent CardActionArea Click
                     event.preventDefault()
@@ -206,7 +154,7 @@ const InfoComponent = (props)=>{
                 }}
                 >
                 Giỏ hàng
-            </ColorOutlineButton>   
+            </ColorOutlineButtonCart>   
             
             :null }
             </>
@@ -215,23 +163,6 @@ const InfoComponent = (props)=>{
     )
 }
 
-const ColorOutlineButton = styled(Button)(({ theme ,mainColor}) => ({
-    color: mainColor,
-    borderColor: mainColor,
-    backgroundColor:lighten(mainColor, 0.8),
-    "&:hover": {
-      backgroundColor:lighten(mainColor, 0.6),
-    },
-    //dark mode
-    // color: '#000',
-    // borderColor: '#fff',
-    // backgroundColor:mainColor,
-    // "&:hover": {
-    //   backgroundColor:darken(mainColor, 0.1),
-    // },
 
-    textTransform: "none",
-    marginTop:20
-  }));
 
 export default ProductList

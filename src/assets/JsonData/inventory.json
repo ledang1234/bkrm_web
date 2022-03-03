@@ -2,7 +2,7 @@
 [
     {
         "id": 1,
-        "name": "Quần dài Viet Nam Viet Nam Viet Nam Viet Nam Viet Nam",
+        "name": "Quần dài Viet Nam ",
         "price":200,
         "import_price": 100,
         "barcode": 23443355545,
@@ -60,67 +60,8 @@
         "quantity":30,
         "category":"Quan ao"
 
-    },
-    {
-        "id": 6,
-        "name": "Quần dài",
-        "price":200,
-        "import_price": 100,
-        "barcode": 23443355545,
-        "category_id":"3",
-        "status":"active",
-        "image_url":"/src/assets/img/product/9830.jpg",
-        "quantity":10,
-        "category":"Quan ao"
-    },
-    {
-        "id": 7,
-        "name": "Khăn giấy",
-        "price":200,
-        "import_price": 100,
-        "barcode": 23443355545,
-        "category_id":"3",
-        "status":"active",
-        "image_url":"/src/assets/img/product/9830.jpg",
-        "quantity":4,
-        "category":"Quan ao"
-    },
-    {
-        "id": 8,
-        "name": "Túi xách",
-        "price":203,
-        "import_price": 150,
-        "barcode": 23443355545,
-        "category_id":"4",
-        "status":"active",
-        "image_url":"/src/assets/img/product/9830.jpg",
-        "quantity":3,
-        "category":"Quan ao"
-    },
-    {
-        "id": 9,
-        "name": "Laptop",
-        "price":203,
-        "import_price": 152,
-        "barcode": 23443355545,
-        "category_id":"4",
-        "status":"active",
-        "image_url":"/src/assets/img/product/1.jpg",
-        "quantity":45,
-        "category":"Quan ao"
-    },
-    {
-        "id": 10,
-        "name": "Máy tính",
-        "price":203,
-        "import_price": 152,
-        "barcode": 23443355545,
-        "category_id":"4",
-        "status":"active",
-        "image_url":"/src/assets/img/product/1.jpg",
-        "quantity":3,
-        "category":"Quan ao"
     }
+    
 
 
 ]
