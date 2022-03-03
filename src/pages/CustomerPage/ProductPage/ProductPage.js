@@ -17,8 +17,11 @@ import DetailPage from './DetailPage/DetailPage'
     })
     return routeItems;
   }
+  
 const ProductPage = (props) => {
-    const {clickItem,mainColor, priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,marginContainer,boxDistance} = props;
+    const {clickItem} = props;
+    const {mainColor}=props.webInfo;
+    const {priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,marginContainer,boxDistance} = props.webInfo.listProduct;
     let { path } = useRouteMatch();
     //2.  API GET PRODUCT (base on category and page)
     //....
@@ -31,7 +34,7 @@ const ProductPage = (props) => {
             
             {/* 2. LIST */}
             {/* // InventoryList theo category get from api */}
-            <ProductList InventoryList={InventoryList} mainColor={mainColor} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/>
+            <ProductList InventoryList={InventoryList} mainColor={`rgba(${ mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/>
             
 
             {/* 3. NAVIGATION PAGE NAV  */}

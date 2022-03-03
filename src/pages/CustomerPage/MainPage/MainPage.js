@@ -33,7 +33,9 @@ const images=[
 ]
 
 const MainPage = (props) => {
-    const {mainColor, priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,storeInfo,marginContainer,boxDistance} = props;
+    const {storeInfo} = props;
+    const {mainColor} = props.webInfo;
+    const {priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,marginContainer,boxDistance}=props.webInfo.listProduct;
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -74,7 +76,9 @@ const MainPage = (props) => {
     {/* // 2. BEST SELLERS  */}
     <Box>
         <Typography variant="h2" style={{flexGrow: 1,textAlign: "center", marginBottom:30,marginTop:50}}>Bán chạy</Typography>
-        <ProductList InventoryList={inventoryList} mainColor={mainColor} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={10} boxDistance={2}/>
+        {/* <ProductList InventoryList={inventoryList} mainColor={`rgba(${mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${ mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={10} boxDistance={2}/> */}
+        <ProductList InventoryList={inventoryList} mainColor={`rgba(${mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${ mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/>
+
     </Box>
 
     {/* // 3. NEWS IN  */}

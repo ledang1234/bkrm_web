@@ -27,19 +27,31 @@ const GeneralSetting = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const [checked, setChecked] = React.useState(['wifi']);
+  const [checked, setChecked] = React.useState({
+    inventory:{status:true},
+    recommendedProduct:{status:true},
+    variation:{status:true},
+    expiryDate:{status:true},
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+    customerScore:{status:true},
+    email:{status:true},
+    notifyDebt:{status:true},
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+    returnLimit:{status:true}
+    
+  });
 
-    setChecked(newChecked);
+  const handleToggle = (event) => {
+    const {name,checked} = event.target;
+    setChecked((prevState) => {
+      return {
+        ...prevState,
+        [name]:{
+          ...prevState[name],
+          status:checked
+        },
+      };
+    });
   };
 
 
@@ -48,48 +60,47 @@ const GeneralSetting = () => {
        <Typography className={classes.headerTitle} variant="h3">
           Cài đặt chung
         </Typography>
+        {/* 1 */}
         <List subheader={<ListSubheader>Hàng hoá</ListSubheader>} className={classes.root}>
 
             <ListItem>
                 <ListItemIcon>
-                    <WifiIcon style={{ fill: checked.indexOf('wifi')  ?  null : theme.customization.secondaryColor[500] }}/>
+                    <WifiIcon style={{ fill: checked.inventory.status ?  theme.customization.secondaryColor[500]:null }}/>
                 </ListItemIcon>
-                <ListItemText id="switch-list-label-wifi" 
+                <ListItemText
                 primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Quản lý tồn kho</Typography>} 
                 secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>Quản lý sản phẩm theo số lượng tồn kho</Typography>} />
                 <ListItemSecondaryAction>
                     <IOSSwitch
                         edge="end"
-                        onChange={handleToggle('wifi')}
-                        checked={checked.indexOf('wifi') !== -1}
-                        inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
+                        name="inventory"
+                        onChange={handleToggle}
+                        checked={checked.inventory.status}
                     />
                 </ListItemSecondaryAction>
             </ListItem>
             <Divider />
-
             <ListItem>
                 <ListItemIcon>
-                    <WifiIcon style={{ fill: checked.indexOf('wifi')  ?  null : theme.customization.secondaryColor[500] }}/>
+                    <WifiIcon style={{ fill: checked.recommendedProduct.status ?  theme.customization.secondaryColor[500]:null }}/>
                 </ListItemIcon>
-                <ListItemText id="switch-list-label-wifi" 
+                <ListItemText
                 primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Tự động gợi ý thông tin hàng hoá</Typography>} 
                 secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>Cho phép tự động gợi ý tên, mã, mô tả, hình ảnh hàng hóa khi thêm mới</Typography>} />
                 <ListItemSecondaryAction>
                     <IOSSwitch
                         edge="end"
-                        onChange={handleToggle('wifi')}
-                        checked={checked.indexOf('wifi') !== -1}
-                        inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
+                        name="recommendedProduct"
+                        onChange={handleToggle}
+                        checked={checked.recommendedProduct.status}
                     />
                 </ListItemSecondaryAction>
             </ListItem>
             <Divider />
 
-
             <ListItem>
                 <ListItemIcon>
-                    <WifiIcon style={{ fill: checked.indexOf('wifi')  ?  null : theme.customization.secondaryColor[500] }}/>
+                    <WifiIcon style={{ fill: checked.variation.status  ? theme.customization.secondaryColor[500] :null}}/>
                 </ListItemIcon>
                 <ListItemText id="switch-list-label-wifi" 
                 primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Hàng hoá có thuộc tính</Typography>} 
@@ -97,8 +108,9 @@ const GeneralSetting = () => {
                 <ListItemSecondaryAction>
                     <IOSSwitch
                         edge="end"
-                        onChange={handleToggle('wifi')}
-                        checked={checked.indexOf('wifi') !== -1}
+                        name="variation"
+                        onChange={handleToggle}
+                        checked={checked.variation.status}
                         inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
                     />
                 </ListItemSecondaryAction>
@@ -107,64 +119,62 @@ const GeneralSetting = () => {
 
             <ListItem>
                 <ListItemIcon>
-                    <WifiIcon style={{ fill: checked.indexOf('wifi')  ?  null : theme.customization.secondaryColor[500] }}/>
+                    <WifiIcon style={{ fill: checked.expiryDate.status ?  theme.customization.secondaryColor[500]:null }}/>
                 </ListItemIcon>
                 <ListItemText id="switch-list-label-wifi" 
                 primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Quản lý tồn kho theo Lô/Date</Typography>} 
-                secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>Quản lý sản phẩm theo số lượng tồn kho</Typography>} />
+                secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>...</Typography>} />
                 <ListItemSecondaryAction>
                     <IOSSwitch
                         edge="end"
-                        onChange={handleToggle('wifi')}
-                        checked={checked.indexOf('wifi') !== -1}
-                        inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
+                        name="expiryDate"
+                        onChange={handleToggle}
+                        checked={checked.expiryDate.status}
                     />
                 </ListItemSecondaryAction>
             </ListItem>
             <Divider />
+      </List>
+      {/* 2 */}
+      <List subheader={<ListSubheader>Khách hàng</ListSubheader>} className={classes.root}>
+      <ListItem>
+            <ListItemIcon>
+                <WifiIcon style={{ fill: checked.customerScore.status ?  theme.customization.secondaryColor[500]:null }}/>
+            </ListItemIcon>
+            <ListItemText id="switch-list-label-wifi" 
+            primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Tích điểm</Typography>} 
+            secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>Tích điểm thưởng cho khách hàng khi mua hàng quy đổi điểm thưởng để thanh toán đơn hàng hoặc sử dụng điểm thưởng để chia nhóm khách hàng.</Typography>} />
+            <ListItemSecondaryAction>
+                <IOSSwitch
+                    edge="end"
+                    name="customerScore"
+                    onChange={handleToggle}
+                    checked={checked.customerScore.status}
+                />
+            </ListItemSecondaryAction>
+        </ListItem>
+        <Divider />
+        <ListItem>
+            <ListItemIcon>
+                <WifiIcon style={{ fill: checked.email.status ?  theme.customization.secondaryColor[500]:null }}/>
+            </ListItemIcon>
+            <ListItemText id="switch-list-label-wifi" 
+            primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Gửi SMS - Email - Zalo</Typography>} 
+            secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>...</Typography>} />
+            <ListItemSecondaryAction>
+                <IOSSwitch
+                    edge="end"
+                    name="email"
+                    onChange={handleToggle}
+                    checked={checked.email.status}
+                />
+            </ListItemSecondaryAction>
+        </ListItem>
+        <Divider />
 
-
-        </List>
-
-        <List subheader={<ListSubheader>Khách hàng</ListSubheader>} className={classes.root}>
-            <ListItem>
+        <ListItem>
                 <ListItemIcon>
-                    <WifiIcon style={{ fill: checked.indexOf('wifi')  ?  null : theme.customization.secondaryColor[500] }}/>
-                </ListItemIcon>
-                <ListItemText id="switch-list-label-wifi" 
-                primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Tích điểm</Typography>} 
-                secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}> Tích điểm thưởng cho khách hàng khi mua hàng quy đổi điểm thưởng để thanh toán đơn hàng hoặc sử dụng điểm thưởng để chia nhóm khách hàng.</Typography>} />
-                <ListItemSecondaryAction>
-                    <IOSSwitch
-                        edge="end"
-                        onChange={handleToggle('wifi')}
-                        checked={checked.indexOf('wifi') !== -1}
-                        inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
-                    />
-                </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-
-            <ListItem>
-                <ListItemIcon>
-                    <WifiIcon style={{ fill: checked.indexOf('wifi')  ?  null : theme.customization.secondaryColor[500] }}/>
-                </ListItemIcon>
-                <ListItemText id="switch-list-label-wifi" 
-                primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Gửi SMS - Email - Zalo</Typography>} 
-                secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}> Cho phép thiết lập hạn mức công nợ để cảnh báo khách hàng.</Typography>} />
-                <ListItemSecondaryAction>
-                    <IOSSwitch
-                        edge="end"
-                        onChange={handleToggle('wifi')}
-                        checked={checked.indexOf('wifi') !== -1}
-                        inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
-                    />
-                </ListItemSecondaryAction>
-            </ListItem>
-
-            <ListItem>
-                <ListItemIcon>
-                    <WifiIcon style={{ fill: checked.indexOf('wifi')  ?  null : theme.customization.secondaryColor[500] }}/>
+                    <WifiIcon style={{ fill: checked.notifyDebt.status  ? theme.customization.secondaryColor[500] :null}}/>
                 </ListItemIcon>
                 <ListItemText id="switch-list-label-wifi" 
                 primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Cảnh báo công nợ khách hàng</Typography>} 
@@ -172,36 +182,38 @@ const GeneralSetting = () => {
                 <ListItemSecondaryAction>
                     <IOSSwitch
                         edge="end"
-                        onChange={handleToggle('wifi')}
-                        checked={checked.indexOf('wifi') !== -1}
-                        inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
+                        name="notifyDebt"
+                        onChange={handleToggle}
+                        checked={checked.notifyDebt.status}
                     />
                 </ListItemSecondaryAction>
             </ListItem>
             <Divider />
-
+        
+        
         </List>
-
-
         <List subheader={<ListSubheader>Giao dịch</ListSubheader>} className={classes.root}>
             <ListItem>
                 <ListItemIcon>
-                    <WifiIcon style={{ fill: checked.indexOf('wifi')  ?  null : theme.customization.secondaryColor[500] }}/>
+                    <WifiIcon style={{ fill: checked.returnLimit.status  ? theme.customization.secondaryColor[500]:null }}/>
                 </ListItemIcon>
-                <ListItemText id="switch-list-label-wifi" 
+                <ListItemText 
                 primary={<Typography style={{ fontSize:16,fontWeight:500 }}>Giới hạn thời gian trả hàng</Typography>} 
                 secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}> Cho phép thiết lập hạn mức công nợ để cảnh báo khách hàng.</Typography>} />
                 <ListItemSecondaryAction>
                     <IOSSwitch
                         edge="end"
-                        onChange={handleToggle('wifi')}
-                        checked={checked.indexOf('wifi') !== -1}
-                        inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
+                        name="returnLimit"
+                        onChange={handleToggle}
+                        checked={checked.returnLimit.status }
                     />
                 </ListItemSecondaryAction>
             </ListItem>
             <Divider />
-        </List>
+        </List> 
+
+
+     
 
     </Card>
 
