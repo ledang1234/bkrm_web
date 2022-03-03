@@ -56,14 +56,8 @@ const Supplier = () => {
     setOpen(true);
   };
   const handleClose = (status) => {
+    onReload();
     setOpen(false);
-    setAddStatus(status);
-    if (status === "Success") {
-      onReload();
-      setOpenBar(true);
-    } else if (status === "Fail") {
-      setOpenBar(true);
-    }
   };
 
   //status add
@@ -140,7 +134,7 @@ const Supplier = () => {
     
     loadData();
     
-  }, [pagingState.page, pagingState.limit]);
+  }, [reload,pagingState.page, pagingState.limit]);
 
 
   return (

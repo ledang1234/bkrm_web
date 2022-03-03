@@ -22,6 +22,8 @@ import SimpleModal from "../../../../components/Modal/ModalWrapper";
 import avaUpload from "../../../../assets/img/product/default-product.png";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import { statusAction } from "../../../../store/slice/statusSlice";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const UploadImages = (img) => {
   return (
@@ -67,12 +69,23 @@ const AddSupplier = (props) => {
     setDisplay(URL.createObjectURL(e.target.files[0]));
   };
 
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [company, setCompany] = React.useState("");
-  const [paymentInfo, setPaymentInfo] = React.useState("");
+  const supplierFormik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      company:"",
+      paymentInfo:"",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên nhà cung cấp"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại").matches(/^\d+$/),
+      address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+    }),
+  })
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
@@ -82,34 +95,38 @@ const AddSupplier = (props) => {
   };
   const dispatch = useDispatch();
   const handleAddSupplier = async () => {
-    // handleClose();
-
+    handleCloseAndReset()
     try {
       var bodyFormData = new FormData();
-      bodyFormData.append("name", name.toString());
-      bodyFormData.append("email", email.toString());
-      bodyFormData.append("phone", phone.toString());
-      bodyFormData.append("payment_info", paymentInfo.toString());
-      bodyFormData.append("address", address.toString());
+      bodyFormData.append("name", supplierFormik.values.name.toString());
+      bodyFormData.append("email", supplierFormik.values.email.toString());
+      bodyFormData.append("phone", supplierFormik.values.phone.toString());
+      bodyFormData.append("payment_info", supplierFormik.values.paymentInfo.toString());
+      bodyFormData.append("payment_info", supplierFormik.values.company.toString());
+      bodyFormData.append("address", supplierFormik.values.address.toString());
       bodyFormData.append("image", image);
 
-      const response = await supplierApi.createSupplier(
+      await supplierApi.createSupplier(
         store_uuid,
         bodyFormData
       );
       dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
       props.onReload();
-      props.handleClose("Success");
     } catch (err) {
       dispatch(statusAction.failedStatus("Tạo nhà cung cấp thất bại"));
       console.log(err);
-      props.handleClose("Failure");
     }
   };
+  const handleCloseAndReset =() =>{
+    handleClose()
+    setImage([])
+    setDisplay([])
+    supplierFormik.resetForm()
+  } 
   return (
     <SimpleModal
       open={open}
-      handleClose={handleClose}
+      handleClose={handleCloseAndReset}
       aria-labelledby="form-dialog-title"
     >
       <Box style={{ width: 550, maxWidth: "100%" }}>
@@ -159,24 +176,34 @@ const AddSupplier = (props) => {
         <Grid container spacing={2} style={{ marginTop: 10 }}>
           <Grid item xs={12}>
             <TextField
+              required
               id="outlined-basic"
-              label="Tên nhà cung cấp (*)"
+              label="Tên nhà cung cấp"
               variant="outlined"
               fullWidth
               size="small"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
+              name = "name"
+              onChange={supplierFormik.handleChange}
+              value={supplierFormik.values.name}
+              error={supplierFormik.touched.name && supplierFormik.errors.name}
+              helperText={supplierFormik.touched.name ? supplierFormik.errors.name : null}
+              onBlur={supplierFormik.handleBlur}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
+              required
               id="outlined-basic"
               label="Địa chỉ"
               variant="outlined"
               fullWidth
               size="small"
-              value={address}
-              onChange={(event) => setAddress(event.target.value)}
+              name= "address"
+              onChange={supplierFormik.handleChange}
+              value={supplierFormik.values.address}
+              error={supplierFormik.touched.address && supplierFormik.errors.address}
+              helperText={supplierFormik.touched.address ? supplierFormik.errors.address : null}
+              onBlur={supplierFormik.handleBlur}
             />
           </Grid>
           <Grid item xs={4}>
@@ -186,8 +213,13 @@ const AddSupplier = (props) => {
               variant="outlined"
               size="small"
               fullWidth
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
+              required
+              name="phone"
+              onChange={supplierFormik.handleChange}
+              value={supplierFormik.values.phone}
+              error={supplierFormik.touched.phone && supplierFormik.errors.phone}
+              helperText={supplierFormik.touched.phone ? supplierFormik.errors.phone : null}
+              onBlur={supplierFormik.handleBlur}
             />
           </Grid>
           <Grid item xs={8}>
@@ -197,8 +229,12 @@ const AddSupplier = (props) => {
               variant="outlined"
               size="small"
               fullWidth
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              name = "email"
+              onChange={supplierFormik.handleChange}
+              value={supplierFormik.values.email}
+              error={supplierFormik.touched.email && supplierFormik.errors.email}
+              helperText={supplierFormik.touched.email ? supplierFormik.errors.email : null}
+              onBlur={supplierFormik.handleBlur}
             />
           </Grid>
           <Grid item xs={12}>
@@ -208,8 +244,12 @@ const AddSupplier = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              value={company}
-              onChange={(event) => setCompany(event.target.value)}
+              name = "company"
+              onChange={supplierFormik.handleChange}
+              value={supplierFormik.values.company}
+              error={supplierFormik.touched.company && supplierFormik.errors.company}
+              helperText={supplierFormik.touched.company ? supplierFormik.errors.company : null}
+              onBlur={supplierFormik.handleBlur}
             />
           </Grid>
           <Grid item xs={12}>
@@ -219,8 +259,12 @@ const AddSupplier = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              value={paymentInfo}
-              onChange={(event) => setPaymentInfo(event.target.value)}
+              name = "paymentInfo"
+              onChange={supplierFormik.handleChange}
+              value={supplierFormik.values.paymentInfo}
+              error={supplierFormik.touched.paymentInfo && supplierFormik.errors.paymentInfo}
+              helperText={supplierFormik.touched.paymentInfo ? supplierFormik.errors.paymentInfo : null}
+              onBlur={supplierFormik.handleBlur}
             />
           </Grid>
         </Grid>
@@ -235,7 +279,7 @@ const AddSupplier = (props) => {
           }}
         >
           <Button
-            onClick={() => handleClose(null)}
+            onClick={handleCloseAndReset}
             variant="contained"
             size="small"
             color="secondary"
@@ -248,6 +292,7 @@ const AddSupplier = (props) => {
             variant="contained"
             size="small"
             color="primary"
+            disabled = {!(supplierFormik.isValid && Object.keys(supplierFormik.touched).length > 0)}
           >
             Thêm
           </Button>

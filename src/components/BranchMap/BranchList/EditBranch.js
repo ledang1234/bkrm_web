@@ -309,6 +309,7 @@ const EditBranch = (props) => {
           color="primary"
           onClick={handleEditBranch}
           style={{ marginRight: 20 }}
+          disabled= {!(formik.isValid && Object.keys(formik.touched).length > 0)}
         >
           Sửa
         </Button>

@@ -16,7 +16,10 @@ import {
 
 //import project
 import customerApi from "../../../../api/customerApi";
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { statusAction } from "../../../../store/slice/statusSlice";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -42,22 +45,35 @@ const useStyles = makeStyles((theme) =>
 );
 
 const AddCustomer = (props) => {
-  const { handleClose, open } = props;
-  // tam thoi
-  const statusState = "Success";
-
+  const { handleClose, open, onReload } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
-
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [paymentInfo, setPaymentInfo] = React.useState("");
+  const customerFormik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      paymentInfo:"",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên nhà cung cấp"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại").matches(/^\d+$/),
+      address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+    }),
+  })
 
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
 
+  const handleCloseAndReset =() =>{
+    onReload()
+    handleClose()
+    customerFormik.resetForm()
+  } 
+  const dispatch = useDispatch()
   return (
  
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -69,25 +85,6 @@ const AddCustomer = (props) => {
 
       <DialogContent>
         <div className={classes.root}>
-          {/* <Grid container direction="row">
-            <Avatar alt="Remy Sharp" className={classes.ava} />
-            <input
-              accept="image/*"
-              className={classes.input}
-              id="contained-button-file"
-              multiple
-              type="file"
-            />
-            <label htmlFor="contained-button-file">
-              <Button
-                variant="contained"
-                component="span"
-                style={{ height: 22, textTransform: "none", marginLeft: 20 }}
-              >
-                Chọn ảnh
-              </Button>
-            </label>
-          </Grid> */}
 
           <Grid
             container
@@ -98,21 +95,31 @@ const AddCustomer = (props) => {
             <Grid item xs={7}>
               <TextField
                 id="outlined-basic"
-                label="Tên khách hàng (*)"
+                label="Tên khách hàng"
                 variant="outlined"
                 fullWidth
                 size="small"
-                value={name}
-                onChange={(event)=>setName(event.target.value)}
+                required
+                name = "name"
+                onChange={customerFormik.handleChange}
+                value={customerFormik.values.name}
+                error={customerFormik.touched.name && customerFormik.errors.name}
+                helperText={customerFormik.touched.name ? customerFormik.errors.name : null}
+                onBlur={customerFormik.handleBlur}
               />
               <TextField
+                required
                 id="outlined-basic"
-                label="Số điện thoại (*)"
-                value={phone}
-                onChange={(event)=>setPhone(event.target.value)}
+                label="Số điện thoại"
                 variant="outlined"
                 fullWidth
                 size="small"
+                name="phone"
+                onChange={customerFormik.handleChange}
+                value={customerFormik.values.phone}
+                error={customerFormik.touched.phone && customerFormik.errors.phone}
+                helperText={customerFormik.touched.phone ? customerFormik.errors.phone : null}
+                onBlur={customerFormik.handleBlur}
               />
               <TextField
                 id="outlined-basic"
@@ -120,8 +127,13 @@ const AddCustomer = (props) => {
                 variant="outlined"
                 fullWidth
                 size="small"
-                value={address}
-                onChange={(event)=>setAddress(event.target.value)}
+                name= "address"
+                required
+                onChange={customerFormik.handleChange}
+                value={customerFormik.values.address}
+                error={customerFormik.touched.address && customerFormik.errors.address}
+                helperText={customerFormik.touched.address ? customerFormik.errors.address : null}
+                onBlur={customerFormik.handleBlur}
               />
             </Grid>
             <Grid item xs={5}>
@@ -131,8 +143,12 @@ const AddCustomer = (props) => {
                 variant="outlined"
                 size="small"
                 className={classes.textField}
-                value={paymentInfo}
-                onChange={(event) => setPaymentInfo(event.target.value)}
+                name = "paymentInfo"
+                onChange={customerFormik.handleChange}
+                value={customerFormik.values.paymentInfo}
+                error={customerFormik.touched.paymentInfo && customerFormik.errors.paymentInfo}
+                helperText={customerFormik.touched.paymentInfo ? customerFormik.errors.paymentInfo : null}
+                onBlur={customerFormik.handleBlur}
               />
               <TextField
                 id="outlined-basic"
@@ -140,8 +156,12 @@ const AddCustomer = (props) => {
                 variant="outlined"
                 fullWidth
                 size="small"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                name = "email"
+                onChange={customerFormik.handleChange}
+                value={customerFormik.values.email}
+                error={customerFormik.touched.email && customerFormik.errors.email}
+                helperText={customerFormik.touched.email ? customerFormik.errors.email : null}
+                onBlur={customerFormik.handleBlur}
               />
             </Grid>
           </Grid>
@@ -150,7 +170,7 @@ const AddCustomer = (props) => {
 
       <DialogActions>
         <Button
-          onClick={() => handleClose(null)}
+          onClick={handleCloseAndReset}
           variant="contained"
           size="small"
           color="secondary"
@@ -159,27 +179,27 @@ const AddCustomer = (props) => {
         </Button>
         <Button
           onClick={async () => {
+            handleCloseAndReset()
             let body = {
-              name: name,
-              email: email,
-              phone: phone,
-              address: address,
-              payment_info: paymentInfo,
+              name: customerFormik.values.name,
+              email: customerFormik.values.email,
+              phone: customerFormik.values.phone,
+              address: customerFormik.values.address,
+              payment_info: customerFormik.values.paymentInfo,
             };
 
             try {
               const response = await customerApi.createCustomer(store_uuid, body)
-              handleClose("Success")
-              console.log(response.status)
-
+              dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
             } catch (err) {
-              handleClose("Failed");
+              dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
             }
 
           }}
           variant="contained"
           size="small"
           color="primary"
+          disabled = {!(customerFormik.isValid && Object.keys(customerFormik.touched).length > 0)}
         >
           Thêm
         </Button>
