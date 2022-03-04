@@ -99,7 +99,7 @@ const Inventory = () => {
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit, branch_uuid]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, reload]);
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -198,11 +198,13 @@ const Inventory = () => {
 
       {/* Popup add */}
       <Category open={openCategory} handleClose={handleCloseCategory} />
-      <AddInventory
-        open={open}
-        handleClose={handleClose}
-        setReload={setReload}
-      />
+      {open && (
+        <AddInventory
+          open={open}
+          handleClose={handleClose}
+          setReload={() => setReload(!reload)}
+        />
+      )}
       {/* Noti */}
       <SnackBar
         openBar={openBar}
@@ -223,16 +225,16 @@ const Inventory = () => {
         importProductByJSON={importProductByJSON}
         excel_head={excel.header_product}
         excel_data={excel.excel_data_product}
-        excel_name={excel.excel_name_product} 
-        columnsToKeep = {[
-        {dbName:"product_code",displayName:"Mã sản phẩm"},
-        {dbName:"name",displayName:"Sản phẩm"},
-        {dbName:"bar_code",displayName:"Mã vạch"},
-        {dbName:"list_price",displayName:"Giá bán"},
-        {dbName:"standard_price",displayName:"Giá nhập"},
-        {dbName:"quantity_available",displayName:"Tồn kho"}, 
-        {dbName:"min_reorder_quantity",displayName:"Điểm đặt hàng lại"}
-      ]}
+        excel_name={excel.excel_name_product}
+        columnsToKeep={[
+          { dbName: "product_code", displayName: "Mã sản phẩm" },
+          { dbName: "name", displayName: "Sản phẩm" },
+          { dbName: "bar_code", displayName: "Mã vạch" },
+          { dbName: "list_price", displayName: "Giá bán" },
+          { dbName: "standard_price", displayName: "Giá nhập" },
+          { dbName: "quantity_available", displayName: "Tồn kho" },
+          { dbName: "min_reorder_quantity", displayName: "Điểm đặt hàng lại" },
+        ]}
       />
 
       {/* 3. TABLE */}
@@ -250,7 +252,7 @@ const Inventory = () => {
               <InventoryTableRow
                 key={row.uuid}
                 row={row}
-                setReload={setReload}
+                setReload={() => setReload(!reload)}
                 openRow={openRow}
                 handleOpenRow={handleOpenRow}
               />

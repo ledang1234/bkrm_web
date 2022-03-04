@@ -80,13 +80,13 @@ const UpdateInventory = (props) => {
     enableReinitialize: true,
     initialValues: {
       name: props.productInfo.name,
-      barcode: props.productInfo.bar_code,
-      importedPrice: props.productInfo.standard_price,
-      salesPrice: props.productInfo.list_price,
-      category: props.productInfo.category.uuid,
-      unit: props.productInfo.quantity_per_unit,
+      barcode: props.productInfo.bar_code ? props.productInfo.bar_code : '',
+      importedPrice: props.productInfo.standard_price || 0,
+      salesPrice: props.productInfo.list_price || 0,
+      category: props.productInfo.category.uuid || 0,
+      unit: props.productInfo.quantity_per_unit || '',
       re_order_point: props.productInfo.min_reorder_quantity || 0,
-      product_code: props.productInfo.product_code,
+      product_code: props.productInfo.product_code || '',
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
@@ -104,7 +104,6 @@ const UpdateInventory = (props) => {
     handleCloseAndReset();
     try {
       var bodyFormData = new FormData();
-      console.log(props.productInfo);
       bodyFormData.append("name", productFormik.values.name.toString());
       bodyFormData.append("list_price", productFormik.values.importedPrice.toString());
       bodyFormData.append("standard_price",productFormik.values.salesPrice.toString());
@@ -135,9 +134,9 @@ const UpdateInventory = (props) => {
         bodyFormData
       );
       dispatch(statusAction.successfulStatus("Sửa sản phẩm thành công"));
-      props.setReload(true);
+      props.setReload();
     } catch (error) {
-      console.log("here", error);
+      console.log(error)
       dispatch(statusAction.failedStatus("Sửa thất bại"));
     }
   };

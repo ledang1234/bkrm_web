@@ -76,7 +76,7 @@ const UploadImage = () => {
   );
 };
 const InventoryDetail = (props) => {
-  const { row, openRow } = props.parentProps;
+  const { row, openRow, setReload } = props.parentProps;
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -106,10 +106,10 @@ const InventoryDetail = (props) => {
     try {
       const response = await productApi.deleteProduct(store_uuid, row.uuid);
       dispatch(statusAction.successfulStatus("Xóa thành công"));
-      props.parentProps.setReload(true);
-      console.log(response);
+      setReload();
+      // console.log(response);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(statusAction.failedStatus("Xóa thất bại"));
     }
   };
@@ -135,7 +135,6 @@ const InventoryDetail = (props) => {
   const handleCloseUpdate = (status) => {
     setIsOpenUpdate(false);
   };
-  console.log(productDetail)
   return row.has_variance ? (<>
     {openRow === row.uuid &&
       productDetail.variations?.map(variance => (
@@ -196,18 +195,19 @@ const InventoryDetail = (props) => {
   </>)
     : (
       <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
-        <UpdateInventory
+        {isOpenUpdate && <UpdateInventory
           handleClose={handleCloseUpdate}
           open={isOpenUpdate}
           productInfo={productDetail}
           setReload = {() => {
-            props.parentProps.setReload();
+            setReload();
             setThisReload(!thisReload)
           }}
-        />
+        />}
         <ConfirmPopUp
           open={deleteConfirm}
           handleConfirm={handleConfirmDelete}
+          handleClose={handleCloseDelete}
           message={
             <Typography>
               Xóa vĩnh viễn sản phẩm <b>{productDetail.name} ?</b>
