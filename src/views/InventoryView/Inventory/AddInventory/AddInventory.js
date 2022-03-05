@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useTheme,makeStyles } from "@material-ui/core/styles";
+import { useTheme, makeStyles } from "@material-ui/core/styles";
 
 import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 //import library
@@ -22,7 +22,7 @@ import {
   Paper,
   Card,
   CardHeader,
-  Checkbox
+  Checkbox,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
@@ -41,11 +41,11 @@ import SearchIcon from "@material-ui/icons/Search";
 import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import clsx from "clsx"
-import TagsInput from "../../../../components/TextField/TagsInput"
-import AddAttribute from "./AddAttribute"
-import RelaltedItemList from "./RelaltedItemList"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import clsx from "clsx";
+import TagsInput from "../../../../components/TextField/TagsInput";
+import AddAttribute from "./AddAttribute";
+import RelaltedItemList from "./RelaltedItemList";
 const UploadImages = (img) => {
   return (
     <Box
@@ -78,7 +78,7 @@ const AddInventory = (props) => {
 
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
-  const [imageURL, setImageURL] = useState();
+  const [imageURL, setImageURL] = useState('');
   const addImageHandler = (e) => {
     console.log(e.target.files[0]);
     console.log(URL.createObjectURL(e.target.files[0]));
@@ -106,11 +106,18 @@ const AddInventory = (props) => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
-      importedPrice: Yup.number().required("Nhập giá vốn").moreThan(0, "Giá vốn phải lớn hơn không"),
-      salesPrice: Yup.number().required("Nhập giá bán").moreThan(0, "Giá bán phải lớn hơn không"),
-      re_order_point: Yup.number("Phải là một số").moreThan(-1, "Số lượng đặt hàng lại không được âm"),
+      importedPrice: Yup.number()
+        .required("Nhập giá vốn")
+        .moreThan(0, "Giá vốn phải lớn hơn không"),
+      salesPrice: Yup.number()
+        .required("Nhập giá bán")
+        .moreThan(0, "Giá bán phải lớn hơn không"),
+      re_order_point: Yup.number("Phải là một số").moreThan(
+        -1,
+        "Số lượng đặt hàng lại không được âm"
+      ),
     }),
-  })
+  });
 
   // redux
   const info = useSelector((state) => state.info);
@@ -123,14 +130,23 @@ const AddInventory = (props) => {
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", productFormik.values.name.toString());
-      bodyFormData.append("list_price", productFormik.values.salesPrice.toString());
+      bodyFormData.append(
+        "list_price",
+        productFormik.values.salesPrice.toString()
+      );
       bodyFormData.append(
         "standard_price",
         productFormik.values.importedPrice.toString()
       );
       bodyFormData.append("bar_code", productFormik.values.barcode.toString());
-      bodyFormData.append("product_code", productFormik.values.product_code.toString());
-      bodyFormData.append("quantity_per_unit", productFormik.values.unit.toString());
+      bodyFormData.append(
+        "product_code",
+        productFormik.values.product_code.toString()
+      );
+      bodyFormData.append(
+        "quantity_per_unit",
+        productFormik.values.unit.toString()
+      );
       bodyFormData.append(
         "min_reorder_quantity",
         productFormik.values.re_order_point.toString()
@@ -145,36 +161,36 @@ const AddInventory = (props) => {
 
       await productApi.createProduct(store_uuid, bodyFormData);
       dispatch(statusAction.successfulStatus("Tạo sản phẩm thành công"));
-      props.setReload(true);
+      props.setReload();
     } catch (error) {
       console.log(error);
       dispatch(statusAction.failedStatus("Tạo sản phẩm thất bại"));
     }
   };
 
-  const [reset,setReset] = useState(true)
-  const onReset = () =>{
-    setReset(reset => !reset)
-  }
+  const [reset, setReset] = useState(true);
+  const onReset = () => {
+    setReset((reset) => !reset);
+  };
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
         const response = await productApi.getAllCategory(store_uuid);
-        setCategoryList(response.data)
-        productFormik.setFieldValue("category",response.data[0].uuid)
+        setCategoryList(response.data);
+        productFormik.setFieldValue("category", response.data[0].uuid);
       } catch (error) {
         console.log(error);
         return [];
       }
     };
     fetchCategoryList();
-  }, [store_uuid,reset]);
+  }, [store_uuid, reset]);
 
   const selectSampleProductHandler = (product) => {
     if (product && product.name) {
       try {
-        productFormik.setFieldValue("name", product.name, true)
-        productFormik.setFieldValue("barcode", product.bar_code, true)
+        productFormik.setFieldValue("name", product.name, true);
+        productFormik.setFieldValue("barcode", product.bar_code, true);
         clearAllImages();
         setDisplay([{ link: product.img_url, isUrl: true }]);
         setImages([]);
@@ -190,7 +206,7 @@ const AddInventory = (props) => {
   };
   const handleCloseAndReset = () => {
     handleClose();
-    productFormik.resetForm()
+    productFormik.resetForm();
     clearAllImages();
   };
   const clearAllImages = () => {
@@ -225,18 +241,18 @@ const AddInventory = (props) => {
           ),
           endAdornment: (
             <InputAdornment position="end">
-                <Box
-                    component="img"
-                    sx={{ height: 23, width: 23,marginRight:-30}}
-                    src={barcodeIcon}
-                />
+              <Box
+                component="img"
+                sx={{ height: 23, width: 23, marginRight: -30 }}
+                src={barcodeIcon}
+              />
             </InputAdornment>
-        ),
+          ),
           onKeyDown: (e) => {
             if (e.key.toLowerCase() === "arrowdown") {
-              onFocus(salesPriceRef)
+              onFocus(salesPriceRef);
             }
-          }
+          },
         }}
       />
     );
@@ -256,48 +272,48 @@ const AddInventory = (props) => {
   };
   const getOptionLabel = (option) => {
     if (option.name) {
-      return option.name + " " + "(" + option.bar_code + ")"
+      return option.name + " " + "(" + option.bar_code + ")";
     }
-    return option
-  }
-  const salesPriceRef = useRef()
+    return option;
+  };
+  const salesPriceRef = useRef();
   const onFocus = (ref) => {
-    ref.current.focus()
-  }
+    ref.current.focus();
+  };
 
   //ATTRIBUTE
   // api get all attribute
   const attributeList = [
     {
-      id:"1",
-      name:'MÀU'
+      id: "1",
+      name: "MÀU",
     },
     {
-      id:"2",
-      name:'SIZE'
+      id: "2",
+      name: "SIZE",
     },
     {
-      id:"3",
-      name:'RAM'
+      id: "3",
+      name: "RAM",
     },
-  ]
+  ];
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  
+
   //Lô, HSD
-  const [outOfDate, setOutOfDate] = React.useState("false")
+  const [outOfDate, setOutOfDate] = React.useState("false");
 
   // Attr
-  const [datas, setDatas] = useState([ { key:  "unset",  items: []}]);
+  const [datas, setDatas] = useState([{ key: "unset", items: [] }]);
 
   // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}
-  const [relatedList, setRelatedList] =  useState([]);
+  const [relatedList, setRelatedList] = useState([]);
 
   // console.log("relatedList",relatedList)
-  
+
   const handleAddProductWithVariation = async () => {
     handleCloseAndReset();
     try {
@@ -329,34 +345,36 @@ const AddInventory = (props) => {
         "category_uuid",
         productFormik.values.category.toString()
       );
-      console.log(relatedList)
-      
-      for (var i = 0; i < relatedList.length; i++) {
-        const values = relatedList[i].split('-')
-        const attributeValues = attributeList.map((att,index) => ({
-          name: att.name,
-          value: values[index]
-        }))
-        bodyFormData.append("variations[]", JSON.stringify({...relatedList[i], attribute_value: attributeValues}));
-      }
+      console.log(relatedList);
 
+      for (var i = 0; i < relatedList.length; i++) {
+        const values = relatedList[i].split("-");
+        const attributeValues = attributeList.map((att, index) => ({
+          name: att.name,
+          value: values[index],
+        }));
+        bodyFormData.append(
+          "variations[]",
+          JSON.stringify({
+            ...relatedList[i],
+            attribute_value: attributeValues,
+          })
+        );
+      }
 
       bodyFormData.append("img_url", imageURL);
 
-     
       images.forEach((image) => bodyFormData.append("images[]", image));
-     
 
       await productApi.addProductWithVaration(store_uuid, bodyFormData);
       dispatch(statusAction.successfulStatus("Tạo sản phẩm thành công"));
+      handleClose();
       props.setReload(true);
     } catch (error) {
       console.log(error);
       dispatch(statusAction.failedStatus("Tạo sản phẩm thất bại"));
     }
   };
-  
-  
 
   return (
     <Dialog
@@ -630,7 +648,6 @@ const AddInventory = (props) => {
               setRelatedList={setRelatedList}
             />
           </Collapse>
-
         </Card>
         {/* GENERATE ATTR */}
         {relatedList.length > 0 ? (
@@ -646,7 +663,6 @@ const AddInventory = (props) => {
             />
           </Card>
         ) : null}
-
 
         {/* Button */}
         <Grid
@@ -678,7 +694,12 @@ const AddInventory = (props) => {
             variant="contained"
             size="small"
             color="primary"
-            disabled = {!(productFormik.isValid && Object.keys(productFormik.touched).length > 0) }
+            disabled={
+              !(
+                productFormik.isValid &&
+                Object.keys(productFormik.touched).length > 0
+              )
+            }
           >
             Thêm
           </Button>
