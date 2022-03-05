@@ -111,7 +111,10 @@ const InventoryOrder = () => {
         console.log(error);
       }
     };
-    loadData();
+    if (store_uuid && branch_uuid ) {
+      
+      loadData();
+    }
   }, [pagingState.page, pagingState.limit, branch_uuid]);
 
   const [snackStatus, setSnackStatus] = React.useState({

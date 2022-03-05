@@ -138,9 +138,9 @@ const EditEmployee = ({ handleClose, open, employee }) => {
         }
       }
 
-      formData.append("image", image);
-
-      console.log(formData);
+      if (image) {
+        formData.append("image", image);
+      }
 
       try {
         const response = await employeeApi.updateEmployee(
@@ -192,7 +192,6 @@ const EditEmployee = ({ handleClose, open, employee }) => {
               capture="environment"
               onChange={(event) => {
                 setImage(event.target.files[0]);
-
                 // read the selected file and display on the avata
                 var file = event.target.files[0];
                 var reader = new FileReader();

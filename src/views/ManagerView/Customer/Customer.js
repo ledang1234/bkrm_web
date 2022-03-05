@@ -129,7 +129,9 @@ const Customer = () => {
           console.log(error);
         }
       };
-      loadData();
+      if (store_uuid) {
+        loadData();
+      }
     }, [pagingState.page, pagingState.limit]);
     return (
 

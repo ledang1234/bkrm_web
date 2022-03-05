@@ -112,7 +112,9 @@ const Invoice = () => {
         console.log(error);
       }
     };
-    loadData();
+    if (store_uuid && branch_uuid) {
+      loadData();
+    }
   }, [pagingState.page, pagingState.limit, branch_uuid]);
 
   return (

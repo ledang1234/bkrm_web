@@ -26,13 +26,10 @@ const promotionCouponApi = {
       },
     });
   },
-  getAllPromotions: (storeUuid, page, limit) => {
+  getAllPromotions: (storeUuid,query) => {
     const url = `stores/${storeUuid}/getAllPromotions`;
     return axiosClient.get(url, {
-      params: {
-        page: page,
-        limit: limit,
-      },
+      params: query,
     });
   },
   getAllVouchers: (storeUuid, page, limit) => {
