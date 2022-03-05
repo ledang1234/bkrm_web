@@ -77,3 +77,23 @@ video{
   color: red;
   opacity: 1; /* Firefox */
 }
+
+.ql-editor{
+  min-height: 250px !important;
+  max-height: 600px;
+  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: scroll;
+
+}
+.ql-toolbar {
+  border-radius:10px 10px 0px 0px;
+}
+.ql-container  {
+  border-radius: 0px 0px 10px 10px;
+
+}
+.ql-editor:focus {
+  border: 1px solid #a2ddff !important;
+  box-shadow: 0 0 0 0.2rem rgba(169, 241, 252, 0.25) !important;
+}
