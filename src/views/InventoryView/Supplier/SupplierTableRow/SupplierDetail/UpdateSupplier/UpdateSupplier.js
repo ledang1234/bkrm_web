@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
-import supplierApi from "../../../../api/supplierApi";
+import supplierApi from "../../../../../../api/supplierApi";
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from "@material-ui/icons/Add";
 //import project
@@ -18,28 +18,13 @@ import {
   IconButton,
   Tooltip,
 } from "@material-ui/core";
-import SimpleModal from "../../../../components/Modal/ModalWrapper";
-import avaUpload from "../../../../assets/img/product/default-product.png";
+import SimpleModal from "../../../../../../components/Modal/ModalWrapper";
+import avaUpload from "../../../../../../assets/img/product/default-product.png";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import { statusAction } from "../../../../store/slice/statusSlice";
+import { statusAction } from "../../../../../../store/slice/statusSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const UploadImages = (img) => {
-  return (
-    <Box
-      component="img"
-      sx={{
-        height: 70,
-        width: 70,
-        marginLeft: 7,
-        marginRight: 7,
-        borderRadius: 2,
-      }}
-      src={avaUpload}
-    />
-  );
-};
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {},
@@ -52,31 +37,20 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const AddSupplier = (props) => {
-  const { handleClose, open } = props;
-  // tam thoi
-  const statusState = "Success";
+const UpdateSupplier = (props) => {
+  const { handleClose, open,supplierDetail } = props;
 
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const [image, setImage] = useState([]);
-  const [display, setDisplay] = useState([]);
-  const addImageHandler = (e) => {    
-    console.log(e.target.files[0]);
-    console.log(URL.createObjectURL(e.target.files[0]));
-    setImage(e.target.files[0]);
-    setDisplay(URL.createObjectURL(e.target.files[0]));
-  };
-
   const supplierFormik = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-      company:"",
-      paymentInfo:"",
+      name: supplierDetail?.name || "",
+      email: supplierDetail?.email || "",
+      phone: supplierDetail?.phone || "",
+      address:  supplierDetail?.address || "",
+      company: supplierDetail?.company || "",
+      paymentInfo: supplierDetail?.payment_info || "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên nhà cung cấp"),
@@ -85,16 +59,13 @@ const AddSupplier = (props) => {
         .required("Nhập số điện thoại").matches(/^\d+$/),
       address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
     }),
+    enableReinitialize:true
   })
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-  const clearImage = () => {
-    setDisplay([]);
-    setImage([]);
-  };
   const dispatch = useDispatch();
-  const handleAddSupplier = async () => {
+  const handleUpdateSupplier = async () => {
     handleCloseAndReset()
     try {
       var bodyFormData = new FormData();
@@ -104,12 +75,7 @@ const AddSupplier = (props) => {
       bodyFormData.append("payment_info", supplierFormik.values.paymentInfo.toString());
       bodyFormData.append("payment_info", supplierFormik.values.company.toString());
       bodyFormData.append("address", supplierFormik.values.address.toString());
-      bodyFormData.append("image", image);
-
-      await supplierApi.createSupplier(
-        store_uuid,
-        bodyFormData
-      );
+      await supplierApi.updateSupplier(store_uuid,supplierDetail.uuid,bodyFormData)
       dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
       props.onReload();
     } catch (err) {
@@ -119,8 +85,6 @@ const AddSupplier = (props) => {
   };
   const handleCloseAndReset =() =>{
     handleClose()
-    setImage([])
-    setDisplay([])
     supplierFormik.resetForm()
   } 
   return (
@@ -131,48 +95,8 @@ const AddSupplier = (props) => {
     >
       <Box style={{ width: 550, maxWidth: "100%" }}>
         <Typography className={classes.headerTitle} variant="h5" gutterBottom>
-          Thêm nhà cung cấp
+          Chỉnh sửa nhà cung cấp
         </Typography>
-        {/* <Box display="flex" flexDirection="row" alignItems="center">
-          {display.length ? (
-            <Tooltip title="Xóa hình ảnh">
-              <Button size="small" onClick={() => clearImage()}>
-                <Box
-                  component="img"
-                  sx={{
-                    height: 70,
-                    width: 70,
-                    marginLeft: 7,
-                    marginRight: 7,
-                    borderRadius: 2,
-                  }}
-                  src={display}
-                />
-              </Button>
-            </Tooltip>
-          ) : (
-            <UploadImages />
-          )}
-
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="icon-button-file"
-            type="file"
-            onChange={addImageHandler}
-          />
-          {display.length === 0 ? (
-            <label htmlFor="icon-button-file">
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="span"
-              >
-                <PhotoCamera />
-              </IconButton>
-            </label>
-          ) : null}
-        </Box> */}
         <Grid container spacing={2} style={{ marginTop: 10 }}>
           <Grid item xs={12}>
             <TextField
@@ -288,11 +212,11 @@ const AddSupplier = (props) => {
           </Button>
           <Button
             style={{ marginLeft: 10 }}
-            onClick={handleAddSupplier}
+            onClick={handleUpdateSupplier}
             variant="contained"
             size="small"
             color="primary"
-            disabled = {!(supplierFormik.isValid && Object.keys(supplierFormik.touched).length > 0)}
+            disabled = {!supplierFormik.isValid}
           >
             Thêm
           </Button>
@@ -302,4 +226,4 @@ const AddSupplier = (props) => {
   );
 };
 
-export default AddSupplier;
+export default UpdateSupplier;

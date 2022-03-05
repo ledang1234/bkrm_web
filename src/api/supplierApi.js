@@ -29,5 +29,9 @@ const supplierApi = {
     const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
     return axiosClient.put(url, { status: "active" });
   },
+  updateSupplier: (storeUuid, supplierUuid, body) => {
+    const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
+    return axiosClient.put(url, body);
+  },
 };
 export default supplierApi;

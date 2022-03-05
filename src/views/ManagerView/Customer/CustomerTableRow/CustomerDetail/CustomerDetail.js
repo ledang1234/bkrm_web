@@ -7,16 +7,17 @@ import {Box,Grid,Collapse,Typography,Button,ListItemIcon,ListItemText,IconButton
 //import icon
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
+import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
 
 //import image
 import avaUpload from '../../../../../assets/img/product/lyimg.jpeg';
 
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../../../components/Button/MenuButton'
-
-import customerApi from '../../../../../api/customerApi';
-import { useSelector } from 'react-redux';
-
+import customerApi from "../../../../../api/customerApi";
+import { statusAction } from "../../../../../store/slice/statusSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import UpdateCustomer from "../CustomerDetail/UpdateCustomer/UpdateCustomer"
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
@@ -55,11 +56,14 @@ const CustomerDetail = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
+    const [deleteConfirm, setDeleteConfirm] = React.useState(false);
+    const [editItem,setEditItem] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
+    const dispatch = useDispatch();
 
     const info = useSelector(state => state.info)
     const store_uuid = info.store.uuid
@@ -68,8 +72,35 @@ const CustomerDetail = (props) => {
       setAnchorEl(null);
     };
 
+
+    const handleDeleteCustomer = async () => {
+      console.log(store_uuid, row.uuid);
+      try {
+        const response = await customerApi.deleteCustomer(store_uuid, row.uuid);
+        dispatch(statusAction.successfulStatus("Xóa thành công"));
+        props.parentProps.onReload();
+      } catch (error) {
+        console.log(error);
+        dispatch(statusAction.failedStatus("Xóa thất bại"));
+      }
+    };
+
     return (
         <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
+              <ConfirmPopUp
+                open={deleteConfirm}
+                handleClose={() => {
+                  setDeleteConfirm(false);
+                }}
+                handleConfirm={handleDeleteCustomer}
+                message={
+                  <Typography>
+                    Xóa vĩnh viễn khách hàng <b>{row.name} ?</b>
+                  </Typography>
+                }
+              />
+
+             <UpdateCustomer customerDetail = {row} open={editItem} onReload={props.parentProps.onReload}  handleClose={()=>{setEditItem(false)}}/>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -155,8 +186,8 @@ const CustomerDetail = (props) => {
 
               {/* Button */}
               <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
-                          <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>
-                          <Button variant="contained" size="small" style={{marginLeft:15}}>Xoá</Button>
+                          <Button variant="contained" size="small" style={{marginLeft:15}} onClick={() => {setEditItem(true)}}>Sửa</Button>
+                          <Button variant="contained" size="small" style={{marginLeft:15}} onClick={() => {setDeleteConfirm(true)}}>Xoá</Button>
                           
                           <IconButton
                             aria-label="more"

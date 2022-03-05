@@ -15,11 +15,11 @@ import {
 } from "@material-ui/core";
 
 //import project
-import customerApi from "../../../../api/customerApi";
+import customerApi from "../../../../../../api/customerApi";
 import {useDispatch, useSelector} from 'react-redux'
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { statusAction } from "../../../../store/slice/statusSlice";
+import { statusAction } from "../../../../../../store/slice/statusSlice";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -44,17 +44,17 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const AddCustomer = (props) => {
+const UpdateCustomer = (props) => {
   const { handleClose, open, onReload } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
   const customerFormik = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-      paymentInfo:"",
+      name: props.customerDetail.name,
+      email: props.customerDetail.email,
+      phone: props.customerDetail.phone,
+      address: props.customerDetail.address,
+      paymentInfo: props.customerDetail.paymentInfo,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên nhà cung cấp"),
@@ -79,7 +79,7 @@ const AddCustomer = (props) => {
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">
         <Typography className={classes.headerTitle} variant="h5">
-          Thêm khách hàng
+          Chỉnh sửa khách hàng
         </Typography>
       </DialogTitle>
 
@@ -189,23 +189,23 @@ const AddCustomer = (props) => {
             };
 
             try {
-              const response = await customerApi.createCustomer(store_uuid, body)
-              dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
+              const response = await customerApi.deleteCustomer(store_uuid, props.customerDetail.uuid, body)
+              dispatch(statusAction.successfulStatus("Sửa thông tin khách hàng thành công"));
             } catch (err) {
-              dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thất bại"));
+              dispatch(statusAction.failedStatus("Sửa thông tin khách hàng thất bại"));
             }
 
           }}
           variant="contained"
           size="small"
           color="primary"
-          disabled = {!(customerFormik.isValid && Object.keys(customerFormik.touched).length > 0)}
+          disabled = {!(customerFormik.isValid )}
         >
-          Thêm
+          Lưu thay đổi
         </Button>
       </DialogActions>
       </Dialog>
   );
 };
 
-export default AddCustomer;
+export default UpdateCustomer;

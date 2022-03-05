@@ -26,6 +26,7 @@ import supplierApi from "../../../../../api/supplierApi";
 import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
 import { useDispatch, useSelector } from "react-redux";
 import { statusAction } from "../../../../../store/slice/statusSlice";
+import UpdateSupplier from "./UpdateSupplier/UpdateSupplier";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -53,6 +54,7 @@ const SupplierDetail = (props) => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [deleteConfirm, setDeleteConfirm] = React.useState(false);
+  const [editSupplier,setEditSupplier] = React.useState(false);
   const dispatch = useDispatch();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,7 +62,6 @@ const SupplierDetail = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const handleDeleteSupplier = async () => {
     console.log(store_uuid, row.uuid);
     try {
@@ -87,6 +88,7 @@ const SupplierDetail = (props) => {
           </Typography>
         }
       />
+      <UpdateSupplier supplierDetail={row} open={editSupplier} handleClose = {() => setEditSupplier(false)} onReload= {props.parentProps.setReload}/>
       <Box margin={1}>
         <Typography
           variant="h3"
@@ -195,7 +197,7 @@ const SupplierDetail = (props) => {
           justifyContent="flex-end"
           style={{ marginTop: 20 }}
         >
-          <Button variant="contained" size="small" style={{ marginLeft: 15 }}>
+          <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick = {() => setEditSupplier(true)}>
             Sửa
           </Button>
           <Button
