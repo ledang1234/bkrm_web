@@ -17,5 +17,9 @@ const customerApi = {
     const url = `/stores/${storeUuid}/customers/${customerUuid}`;
     return axiosClient.delete(url);
   },
+  deleteCustomer: (storeUuid, customerUuid,body) => {
+    const url = `/stores/${storeUuid}/customers/${customerUuid}`;
+    return axiosClient.put(url,body);
+  },
 };
 export default customerApi;

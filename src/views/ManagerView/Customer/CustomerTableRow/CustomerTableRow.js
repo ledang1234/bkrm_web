@@ -12,7 +12,7 @@ import CustomerDetail from './CustomerDetail/CustomerDetail'
 
 
 const CustomerTableRow = (props) => {
-    const { row, handleOpenRow,openRow} = props;
+    const { row, handleOpenRow,openRow ,onReload} = props;
     const classes = useRowStyles();
 
     return (

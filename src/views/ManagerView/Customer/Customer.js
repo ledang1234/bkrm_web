@@ -130,9 +130,10 @@ const Customer = () => {
         }
       };
       if (store_uuid) {
+
         loadData();
       }
-    }, [pagingState.page, pagingState.limit]);
+    }, [pagingState.page, pagingState.limit,reload]);
     return (
 
     <Card className={classes.root} >
@@ -187,7 +188,7 @@ const Customer = () => {
             <TableBody>
               {customerList?.map((row, index) => {
                   return (
-                    <CustomerTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
+                    <CustomerTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} onReload={onReload}/>
                   );
               })}
             </TableBody>

@@ -315,8 +315,8 @@ const reportModule = {
         { id: 19.1, title: "Cài đặt chung", url: "/home/manager/setting" },
         { id: 19.2, title: "Khuyến mãi", url: "/home/manager/setting-discount" },
         { id: 19.3, title: "Voucher", url: "/home/manager/setting-voucher" },
-        { id: 19.4, title: "Trang web", url: "/home/manager/setting-web" },
-        { id: 19.5, title: "Cửa hàng", url: "/home/manager/setting-store" },
+        { id: 19.4, title: "Mẫu email", url: "/home/manager/setting-email" },
+        { id: 19.5, title: "Trang web", url: "/home/manager/setting-web" },
       ],
     },
     {
