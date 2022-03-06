@@ -7,7 +7,7 @@ import { Typography, Box, IconButton } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import AddCategory from "../AddInventory/AddCategory";
 // import project
-import CategoryTree from "../../../../components/Test/CategoryTree";
+import CategoryTree from "../../../../components/Category/CategoryTree";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import Modal from "../../../../components/Modal/ModalWrapper";
 const useStyles = makeStyles((theme) =>
@@ -20,9 +20,6 @@ const useStyles = makeStyles((theme) =>
 
 const Category = (props) => {
   const { handleClose, open } = props;
-  // tam thoi
-  const statusState = "Success";
-
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -59,7 +56,7 @@ const Category = (props) => {
         </IconButton>
       </Box>
 
-      <CategoryTree style={{ width: 500, maxWith: "80%" }} reset={reset}/>
+      <CategoryTree style={{ width: 500, maxWith: "80%" }} reset={reset} onReset={onReset}/>
     </Modal>
   );
 };

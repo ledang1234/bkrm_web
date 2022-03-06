@@ -24,7 +24,7 @@ const productApi = {
 
   getProduct: (storeUuid, productUuid, query) => {
     const url = `stores/${storeUuid}/products/${productUuid}`;
-    return axiosClient.get(url, {params: query});
+    return axiosClient.get(url, { params: query });
   },
 
   createCategory: (storeUuid, params) => {
@@ -66,10 +66,6 @@ const productApi = {
     });
   },
 
-  addCategory: (storeUuid, body) => {
-    const url = `stores/${storeUuid}/categories`;
-    return axiosClient.post(url, body);
-  },
 
   getNestedCategory: (storeUuid) => {
     const url = `stores/${storeUuid}/categories/getNestedCategory`;
@@ -80,5 +76,19 @@ const productApi = {
     const url = `/searchDefaultProduct?searchKey=${searchKey}&page=${page}&limit=${15}`;
     return axiosClient.get(url);
   },
+
+  addCategory: (storeUuid, body) => {
+    const url = `stores/${storeUuid}/categories`;
+    return axiosClient.post(url, body);
+  },
+
+  editCategory: (storeUuid, categoryUuid, body) => {
+    const url = `stores/${storeUuid}/categories/${categoryUuid}`
+    return axiosClient.put(url, body)
+  },
+  deleteCategory: (storeUuid, categoryUuid) => {
+    const url = `stores/${storeUuid}/categories/${categoryUuid}`
+    return axiosClient.delete(url)
+  }
 };
 export default productApi;
