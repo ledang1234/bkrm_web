@@ -6,7 +6,7 @@ import { motion, useCycle } from 'framer-motion';
 
 // ===========================|| ANIMATION BUTTON ||=========================== //
 
-const AnimateButton = React.forwardRef(({ children, type, direction, offset, scale }, ref) => {
+ const AnimateButton = React.forwardRef(({ children, type, direction, offset, scale }, ref) => {
     let offset1;
     let offset2;
     switch (direction) {
@@ -89,3 +89,5 @@ AnimateButton.defaultProps = {
         tap: 0.9
     }
 };
+
+export default AnimateButton

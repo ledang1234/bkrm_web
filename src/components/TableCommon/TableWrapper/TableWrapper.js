@@ -20,7 +20,8 @@ const TableWrapper = (props) => {
     return (
     <>
         <StyledPaper style={{width: '100%', marginBottom: theme.spacing(2)}}>
-            <TableContainer style={{maxHeight: '58vh',}}>
+            {/* Chinh size tablw */}
+            <TableContainer style={{maxHeight: '90vh',}}>
                 <Table
                     aria-labelledby="tableTitle"
                     size={dense ? 'small' : 'medium'}
@@ -37,7 +38,7 @@ const TableWrapper = (props) => {
 
             {/* Add page navigation here...  */}
             {isCart ? null :
-                <div style={{display: 'flex', flexDirection: 'row-reverse', gap: 10}}>
+                <div style={{display: 'flex', flexDirection: 'row-reverse', gap: 10,marginTop:-20, marginRight:20, marginBottom:-10 }}>
                     <TablePagination
                         rowsPerPageOptions={[10, 25, 100]}
                         labelRowsPerPage={"Số dòng"}

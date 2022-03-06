@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-const drawerWidth = 245;
+const drawerWidth = 240;
 
 export default makeStyles((theme) => ({
   root: {
@@ -10,13 +10,15 @@ export default makeStyles((theme) => ({
   appBar: {
     background: theme.palette.background.paper,
     boxShadow: "none",
+
   },
   hide: {
     display: "none",
   },
   drawerPaper: {
     width: drawerWidth,
-    marginTop: 48 + 16 + 16,
+    // marginTop: 48 + 16 + 16,
+    marginTop: 48 + 16 ,
     borderColor: theme.palette.background.paper,
     paddingLeft: 20,
     paddingBottom:48 + 16 + 16,
@@ -58,14 +60,15 @@ export default makeStyles((theme) => ({
         ? theme.palette.primary.light
         : theme.customization.primaryColor[theme.customization.colorLevel],
     borderRadius: theme.customization.borderRadius,
-    // marginLeft: 20,
     marginRight: 20,
     padding: 20,
-    marginTop:40,
+    // marginTop:40,
+    marginTop:25,
   },
   toolBar: {
     background: theme.palette.background.paper,
-    padding:12,
+    // padding:12,
+    padding:5,
   },
   searchEngine: {
     paddingLeft: 20,
