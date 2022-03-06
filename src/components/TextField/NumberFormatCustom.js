@@ -76,6 +76,9 @@ export default function VNDInput(props) {
       name="numberformat"
       InputProps={{
         inputComponent: VNDFormatCustom,
+        inputProps: {
+          style: { textAlign: "right" },
+        }
       }}
       {...props}
     />
@@ -90,6 +93,10 @@ export function ThousandSeperatedInput(props) {
       value={value ? value : null}
       InputProps={{
         inputComponent: NumberFormatCustom,
+        inputProps: {
+          style: { textAlign: "right" },
+        }
+         
       }}
       {...props}
     />
