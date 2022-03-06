@@ -56,14 +56,14 @@ const useStyles = makeStyles((theme) =>
       borderRadius: theme.customization.borderRadius,
       height: 40,
       marginLeft: 10,
-      marginTop: 10,
+      marginTop: 0,
       //
       width: 260,
       backgroundColor:
         theme.customization.mode === "Light" ? grey[50] : grey[700],
     },
     actions: {
-      marginTop: 10,
+      marginTop: 0,
     },
   })
 );
@@ -171,6 +171,7 @@ const ToolBar = (props) => {
   const [jsonData, setJsonData] = useState([]);
   return (
     <CardHeader
+    style={{marginBottom:-15}}
       avatar={
         <TextField
           variant="outlined"
