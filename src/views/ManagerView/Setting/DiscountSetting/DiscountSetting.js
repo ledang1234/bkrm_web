@@ -25,16 +25,46 @@ import SnackBar from '../../../../components/SnackBar/SnackBar'
 import TableHeader  from '../../../../components/TableCommon/TableHeader/TableHeader'
 import ToolBar from '../../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../../components/TableCommon/TableWrapper/TableWrapper'
+import promotionCouponApi from '../../../../api/promotionCouponApi';
 
 
 const DiscountSetting = () => {
     const [discountList, setDiscountList] = useState([]);
+    const [newDiscountList, setNewDiscountList] = useState([]);
     const [reload, setReload] = useState(false);
 
     const onReload = () => setReload(!reload)
     
     const info = useSelector(state => state.info)
-    const store_uuid = info.store.uuid
+    const store_uuid = info.store.uuid;
+    const [pagingState, setPagingState] = useState({
+      page: 0,
+      limit: 10,
+      total_rows: 0,
+    });
+    useEffect(() => {
+      setPagingState({ ...pagingState, page: 0 });
+    }, [reload, store_uuid]);
+    useEffect(() => {
+      const loadData = async () => {
+        try {
+          const response = await promotionCouponApi.getAllPromotions(
+            store_uuid,
+            {
+              page: pagingState.page,
+              limit: pagingState.limit,
+            }
+          );
+          setPagingState({ ...pagingState, total_rows: response.total_rows });
+          setNewDiscountList(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      if (store_uuid) {
+        loadData();
+      }
+    }, [pagingState.page, pagingState.limit, reload]);
 
     useEffect(() => {
         customerApi.getCustomers(store_uuid)
@@ -42,7 +72,6 @@ const DiscountSetting = () => {
         .then(data => {
           setDiscountList(data)
         })
-
     }, [reload, store_uuid]);
 
     const theme = useTheme();

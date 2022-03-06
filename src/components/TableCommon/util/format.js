@@ -127,7 +127,6 @@ export const FormatedProductStatusReport = (props) => {
 };
 
 export const FormatedStatusOrder = (props) => {
-  console.log(props.status);
   switch (props.status) {
     case 0:
       return (

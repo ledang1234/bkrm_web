@@ -29,11 +29,11 @@ const employeeApi = {
   },
   inactiveEmployee: (storeUuid, employeeUuid) => {
     const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
-    return axiosClient.put(url, {status: 'inactive'});
+    return axiosClient.post(url, {status: 'inactive'});
   },
   activeEmployee: (storeUuid, employeeUuid) => {
     const url = `/stores/${storeUuid}/employees/${employeeUuid}`;
-    return axiosClient.put(url, {status: 'active'});
+    return axiosClient.post(url, {status: 'active'});
   },
 };
 export default employeeApi;

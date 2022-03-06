@@ -116,6 +116,8 @@ const HomePage = (props) => {
     dispatch(authActions.logOut());
     localStorage.removeItem("token");
     sessionStorage.removeItem("BKRMprev");
+    sessionStorage.removeItem("BKRMopening");
+
   };
   console.log("home")
   return (

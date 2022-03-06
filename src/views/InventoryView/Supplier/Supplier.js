@@ -132,7 +132,10 @@ const Supplier = () => {
       }
     };
     
-    loadData();
+    if (store_uuid) {
+
+      loadData();
+    }
     
   }, [reload,pagingState.page, pagingState.limit]);
 

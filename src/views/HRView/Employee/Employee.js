@@ -71,7 +71,7 @@ const Employee = () => {
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit]);
+  }, [pagingState.page, pagingState.limit, reload]);
 
 
   //// 1. Add pop up + noti
@@ -248,7 +248,6 @@ const ComponentToPrint = ({employeeList,classes}) =>{
                     <EmployeeTableRow
                       key={row.uuid}
                       row={row}
-                    
                     />
                   );
                 })}
