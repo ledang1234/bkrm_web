@@ -12,7 +12,11 @@ import {
   Box,
   Button,
   Typography,
-  Grid
+  MenuItem,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select
 } from "@material-ui/core";
 
 // import - icon
@@ -101,6 +105,9 @@ const ToolBar = (props) => {
     excel_data,
     excel_name,
     columnsToKeep,
+    searchKey, setSearchKey,
+    orderByOptions,orderBy, setOrderBy,
+    sort, setSort,
   } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -171,6 +178,7 @@ const ToolBar = (props) => {
   const [jsonData, setJsonData] = useState([]);
   
   return (
+
     <>
       <Grid container direction="row" justifyContent="space-between">
         <Grid item>
@@ -198,6 +206,7 @@ const ToolBar = (props) => {
             />
         </Grid>
         <Grid item>
+
         <Box className={classes.actions}>
           <Tooltip
             title="Nhập excel"

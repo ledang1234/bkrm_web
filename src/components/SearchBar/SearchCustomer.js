@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -16,8 +16,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import { grey } from "@material-ui/core/colors";
 import AddIcon from "@material-ui/icons/Add";
 
-import customerApi from "../../api/customerApi";
-import { useSelector } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const useStyles = makeStyles((theme) =>
@@ -116,7 +114,14 @@ const SearchCustomer = (props) => {
   return (
     <div style={{ width: "100%" }}>
       <Autocomplete
-        freeSolo
+        autoComplete={false}
+        freeSolo={false}
+        onKeyUp={(event) => {
+          if (event.key === "Enter") {
+            props.handleSearchCustomer(event.target.value) 
+          }
+        }}
+       
         value={props.selectedCustomer}
         options={props.customers}
         getOptionLabel={getOptionLabel}

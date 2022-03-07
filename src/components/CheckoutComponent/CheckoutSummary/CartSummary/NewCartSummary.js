@@ -62,7 +62,11 @@ const CartSummary = (props) => {
     handleUpdateDiscount,
     handleUpdatePaidAmount,
     handleUpdatePaymentMethod,
+
     handleCheckDelivery,
+
+    handleSearchCustomer,
+
     handleConfirm,
     selectedBranch,
     setSelectedBranch,
@@ -183,6 +187,7 @@ const CartSummary = (props) => {
         <div style={{ width: "100%" }}>
           <SearchCustomer
             handleClickOpen={handleClickOpen}
+            handleSearchCustomer={handleSearchCustomer}
             customers={customers}
             selectedCustomer={
               currentCustomer ? currentCustomer : { name: "", phone: "" }

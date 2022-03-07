@@ -141,9 +141,20 @@ const Cart = () => {
         console.log(err);
       }
     };
+    if (store_uuid) {
+      loadingCustomer();
+    }
+  }, [store_uuid]);
 
-    loadingCustomer();
-  }, []);
+  const handleSearchCustomer = async (searchKey) => {
+    try {
+      const response = await customerApi.getCustomers(store_uuid, {search_key: searchKey});
+          setCustomers(response.data);
+         
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const [reloadCustomers, setReloadCustomers] = useState(false);
   useEffect(() => {
@@ -155,8 +166,10 @@ const Cart = () => {
         console.log(err);
       }
     };
+    if (store_uuid) {
 
-    loadingCustomer();
+      loadingCustomer();
+    }
   }, [reloadCustomers]);
 
   const handleClick = (event) => {
@@ -598,6 +611,7 @@ const Cart = () => {
                 selectedBranch={selectedBranch}
                 cartData={cartList[selectedIndex]}
                 handleSelectCustomer={handleSelectCustomer}
+                handleSearchCustomer={handleSearchCustomer}
                 handleUpdateDiscount={handleUpdateDiscount}
                 handleUpdatePaidAmount={handleUpdatePaidAmount}
                 handleUpdatePaymentMethod={handleUpdatePaymentMethod}
