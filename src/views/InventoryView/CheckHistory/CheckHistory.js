@@ -56,8 +56,8 @@ const CheckHistory = () => {
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total_rows: 0,
   });
+  const [totalRows, setTotalRows] = useState(0)
 
   const [reload, setReload] = useState(false);
 
@@ -78,7 +78,8 @@ const CheckHistory = () => {
         );
 
         setInventoryChecks(response.data);
-        setPagingState({ ...pagingState, total_rows: response.total_rows });
+        // setPagingState({ ...pagingState, total_rows: response.total_rows });
+        setTotalRows(response.total_rows)
       } catch (error) {
         console.log(error);
       }
@@ -239,7 +240,7 @@ const CheckHistory = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      <TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}

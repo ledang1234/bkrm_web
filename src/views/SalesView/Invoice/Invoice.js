@@ -53,8 +53,8 @@ const Invoice = () => {
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total_rows: 0,
   });
+  const [totalRows, setTotalRows] = useState(0)
   // api
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
@@ -136,7 +136,8 @@ const Invoice = () => {
             ...query,
           }
         );
-        setPagingState({ ...pagingState, total_rows: response.total_rows });
+        // setPagingState({ ...pagingState, total_rows: response.total_rows });
+        setTotalRows(response.total_rows)
         setOrders(response.data);
       } catch (error) {
         console.log(error);
@@ -213,7 +214,7 @@ const Invoice = () => {
       />
 
       {/* 3. TABLE */}
-      {!xsScreen?<TableWrapper  pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper  pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}

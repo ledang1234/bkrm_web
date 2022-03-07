@@ -182,9 +182,15 @@ const ToolBar = (props) => {
     <>
       <Grid container direction="row" justifyContent="space-between">
         <Grid item>
-            <TextField
-            style={{marginTop:12, marginLeft:10}}
+          <Grid container direction="row">
+          <TextField
+              style={{marginTop:12, marginLeft:10}}
               variant="outlined"
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  setSearchKey(e.target.value)
+                }}
+              }
               placeholder={textSearch} /*placeholder='Tìm kiếm ...'*/
               InputProps={{
                 startAdornment: (
@@ -204,9 +210,46 @@ const ToolBar = (props) => {
                 className: classes.search,
               }}
             />
+            <div style={{ marginLeft: 30, display: 'flex', flexDirection: 'row', gap: 10 }}>
+              <FormControl>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Sắp xếp theo
+                </InputLabel>
+                <Select
+                  autoWidth={true}
+                  labelId="orderBy"
+                  value={orderBy}
+                  label="Sap xep theo"
+                  onChange={(e) => setOrderBy(e.target.value)}
+                >
+                  {orderByOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Thứ tự
+                </InputLabel>
+                <Select
+                  autoWidth={true}
+                  labelId="sort"
+                  value={sort}
+                  label="Sap xep theo"
+                  onChange={(e) => setSort(e.target.value)}
+                >
+                  <MenuItem value="asc">Tăng dần</MenuItem>
+                  <MenuItem value="desc">Giảm dần</MenuItem>
+                </Select>
+              </FormControl>
+              <Button onClick={handleRemoveFilter}>
+                Bỏ lọc
+              </Button>
+            </div>
+          </Grid>
         </Grid>
         <Grid item>
 
+       
+      
         <Box className={classes.actions}>
           <Tooltip
             title="Nhập excel"
