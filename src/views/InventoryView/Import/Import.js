@@ -3,8 +3,10 @@ import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { grey } from "@material-ui/core/colors";
+import {CartBottom} from "../../../components/Button/CartButton"
 
 import AddIcon from "@material-ui/icons/Add";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { useReactToPrint } from "react-to-print";
 import { ImportReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
@@ -59,6 +61,7 @@ const Import = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [selectedBranch, setSelectedBranch] = useState({});
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
   // redux
   const info = useSelector((state) => state.info);
@@ -435,8 +438,8 @@ const Import = () => {
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={8}>
         <Card className={classes.root}>
-          <Box style={{ padding: 30, minHeight: "80vh", paddingBottom: 0 }}>
-            <Box style={{ height: "70vh" }}>
+          <Box style={{ padding: xsScreen? 10:30, minHeight: "80vh", paddingBottom: 0 }}>
+            <Box style={{ height:  xsScreen?null:"70vh" }}>
               {/* 1.1 TITLE + BTN CHANGE CART +  SEARCH */}
               <Grid
                 container
@@ -564,6 +567,11 @@ const Import = () => {
           </Box>
         </Card>
       </Grid>
+
+      {xsScreen  ?
+         <CartBottom numberItem={2} />:null
+        }   
+
       {/* 2.SUMMARY CARD (right) */}
       <Grid item xs={12} sm={4} className={classes.root}>
         <Card className={classes.root}>

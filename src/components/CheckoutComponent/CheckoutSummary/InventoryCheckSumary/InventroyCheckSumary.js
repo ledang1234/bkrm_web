@@ -127,12 +127,12 @@ function InventoryCheckSummary({ data, handleConfirm, userName, branchName }) {
         >
           <Typography variant="h5">Số mặt hàng lệch</Typography>
           <Typography variant="body2">
-            {
+           <Input.ThousandFormat value={
               data.details.filter(
                 (item) =>
                   Number(item.branch_quantity) !== Number(item.real_quantity)
               ).length
-            }
+            } />
           </Typography>
         </Grid>
         <Grid
@@ -143,12 +143,12 @@ function InventoryCheckSummary({ data, handleConfirm, userName, branchName }) {
         >
           <Typography variant="h5">Tổng sản phẩm lệch</Typography>
           <Typography variant="body2">
-            {data.details
+          <Input.ThousandFormat value={data.details
               .map(
                 (item) =>
                   Number(item.real_quantity) - Number(item.branch_quantity)
               )
-              .reduce((a, b) => a + b, 0)}
+              .reduce((a, b) => a + b, 0)} />
           </Typography>
         </Grid>
 
@@ -159,7 +159,7 @@ function InventoryCheckSummary({ data, handleConfirm, userName, branchName }) {
           className={classes.marginRow}
         >
           <Typography variant="h5">Tổng giá trị lệch</Typography>
-          <Typography variant="body2">{data.total_amount}</Typography>
+          <Typography variant="body2"> <Input.VNDFormat value={data.total_amount} /></Typography>
         </Grid>
 
         <Button

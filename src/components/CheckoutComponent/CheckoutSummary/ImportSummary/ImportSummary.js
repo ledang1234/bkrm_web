@@ -109,6 +109,11 @@ const ImportSummary = (props) => {
     setOpenPopUp(false);
   };
 
+  function calculateTotalQuantity ( cartList ) {
+    var value= 0
+    cartList.map(item => value +=item.quantity )
+    return value
+  }
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -169,10 +174,11 @@ const ImportSummary = (props) => {
               justifyContent="space-between"
               className={classes.marginBox}
             >
-              <Typography variant="h5">Tổng số mặt hàng</Typography>
+              <Typography variant="h5">Tổng số mặt hàng ({cartData.cartItem.length}) </Typography>
               <Typography variant="body2">
                 <ThousandFormat
-                  value={cartData.cartItem.length}
+                  // value={cartData.cartItem.length}
+                  value={calculateTotalQuantity(cartData.cartItem)}
                 ></ThousandFormat>
               </Typography>
             </Grid>

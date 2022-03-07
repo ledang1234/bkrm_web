@@ -19,6 +19,7 @@ import ava from "../../../../assets/img/product/lyimg.jpeg";
 const EmployeeTableRow = (props) => {
   const { row, handleOpenRow, openRow, handleReload } = props;
   const classes = useRowStyles();
+  // console.log("row",row)
 
   return (
     <>
