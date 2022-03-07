@@ -35,6 +35,9 @@ import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 const Employee = () => {
   const [employeeList, setEmployeeList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -44,6 +47,8 @@ const Employee = () => {
   const store_uuid = info.store.uuid;
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   // paging
   const [pagingState, setPagingState] = useState({
@@ -197,7 +202,7 @@ const Employee = () => {
         handleToggleFilter={handleToggleFilter}
       />
       {/* 3. TABLE */}
-      <TableWrapper
+      {!xsScreen? <TableWrapper
         pagingState={pagingState}
         setPagingState={setPagingState}
       >
@@ -221,7 +226,17 @@ const Employee = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+          employeeList.map((row, index) => {
+            return (
+             
+              <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+              img={row.img_url}  id={row.employee_code} name={row.name} phone={row.phone} scrore={100}
+              typePartner={"Nhân viên"}  />
+            );
+          })}
+
+
       <div  style={{display:'none'}} >
         <div ref={componentRef}  >
         <ComponentToPrint  employeeList={employeeList} classes={classes}/>

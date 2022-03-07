@@ -36,6 +36,9 @@ import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 
 const Supplier = () => {
   const [supplerList, setSupplierList] = useState([]);
@@ -48,6 +51,8 @@ const Supplier = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   //// 1. Add pop up + noti
   //add
@@ -193,7 +198,7 @@ const Supplier = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper
+      {!xsScreen ?<TableWrapper
         pagingState={pagingState}
         setPagingState={setPagingState}
       >
@@ -217,7 +222,15 @@ const Supplier = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+      supplerList.map((row, index) => {
+        return (
+          <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+            id={row.supplier_code} name={row.name} phone={row.phone} 
+            typePartner={"Nhà cung cấp"}  />
+        );
+      })}
+
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint supplerList={supplerList} classes={classes} />

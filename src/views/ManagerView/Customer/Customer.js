@@ -27,6 +27,11 @@ import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
 
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import ava from '../../../assets/img/product/lyimg.jpeg';
+
+
 const Customer = () => {
     const [customerList, setCustomerList] = useState([]);
     const [reload, setReload] = useState(false);
@@ -38,6 +43,8 @@ const Customer = () => {
 
     const theme = useTheme();
     const classes = useStyles(theme);
+    const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
     //// 1. Add pop up + noti
     //add
@@ -174,7 +181,7 @@ const Customer = () => {
         handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
         <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
-        <TableWrapper
+        {!xsScreen? <TableWrapper
           pagingState={pagingState}
           setPagingState={setPagingState}
         >
@@ -192,7 +199,15 @@ const Customer = () => {
                   );
               })}
             </TableBody>
-        </TableWrapper>
+        </TableWrapper>:
+        customerList?.map((row, index) => {
+          return (
+            <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+            img={ava}  id={row.customer_code} name={row.name} phone={row.phone} score={10}
+            typePartner={"Khách hàng"}  />
+          );
+        })}
+
         <div  style={{display:'none'}} >
         <div ref={componentRef}  >
         <ComponentToPrint  customerList={customerList} classes={classes}/>

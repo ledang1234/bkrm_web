@@ -53,6 +53,7 @@ const UploadImage  = () => {
 }
 const CustomerDetail = (props) => {
     const {row,openRow }= props.parentProps;
+    const { isMini } = props;
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -88,7 +89,7 @@ const CustomerDetail = (props) => {
     };
 
     return (
-        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
+        <Collapse in={isMini?true: openRow === row.uuid } timeout="auto" unmountOnExit>
               <ConfirmPopUp
                 open={deleteConfirm}
                 handleClose={() => {
@@ -114,50 +115,50 @@ const CustomerDetail = (props) => {
                   </Grid>
                 <Grid item xs={12} sm={5}>
                       <Grid container direction="row" justifyContent="flex-start" > 
-                        <Grid item xs={3} sm={5} >
+                        <Grid item xs={7} sm={5} >
                           <Typography variant="h5" gutterBottom component="div">Mã khách hàng </Typography>    
                         </Grid>
-                        <Grid item xs={6} >
+                        <Grid item sm={6} >
                           <Typography variant="body1" gutterBottom component="div">{row.customer_code} </Typography>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={3} sm={5} >
+                        <Grid item xs={7} sm={5} >
                           <Typography variant="h5" gutterBottom component="div">Tên khách hàng </Typography>    
                         </Grid>
-                        <Grid item xs={6} >
+                        <Grid item sm={6} >
                           <Typography variant="body1" gutterBottom component="div">{row.name} </Typography>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={3}sm={5} >
+                          <Grid item xs={7}sm={5} >
                             <Typography variant="h5" gutterBottom component="div">Số điện thoại</Typography>    
                           </Grid>
-                          <Grid item xs={6} >
+                          <Grid item sm={6} >
                             <Typography variant="body1" gutterBottom component="div">{row.phone}</Typography>
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={3} sm={5} >
+                          <Grid item xs={7} sm={5} >
                             <Typography variant="h5" gutterBottom component="div">Thông tin thanh toán</Typography>    
                           </Grid>
-                          <Grid item xs={6} >
+                          <Grid item sm={6} >
                             <Typography variant="body1" gutterBottom component="div">{row.payment_info}</Typography>
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={3} sm={5} >
+                          <Grid item xs={7} sm={5} >
                             <Typography variant="h5" gutterBottom component="div">Địa chỉ</Typography>    
                           </Grid>
-                          <Grid item xs={6} >
+                          <Grid item sm={6} >
                             <Typography variant="body1" gutterBottom component="div">{row.address} </Typography>
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={3} sm={5} >
+                          <Grid item xs={7} sm={5} >
                             <Typography variant="h5" gutterBottom component="div">Email</Typography>    
                           </Grid>
-                          <Grid item xs={6} >
+                          <Grid item sm={6} >
                             <Typography variant="body1" gutterBottom component="div">{row.address} </Typography>
                           </Grid>
                       </Grid>
@@ -166,18 +167,18 @@ const CustomerDetail = (props) => {
 
                 <Grid item xs={12} sm={4}>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={3} sm={6} >
+                        <Grid item xs={7} sm={6} >
                           <Typography variant="h5" gutterBottom component="div">Tổng tiền mua</Typography>    
                         </Grid>
-                        <Grid item xs={6} >
+                        <Grid item sm={6} >
                           <Typography variant="body1" gutterBottom component="div">3.000.000</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={3} sm={6} >
+                        <Grid item xs={7} sm={6} >
                           <Typography variant="h5" gutterBottom component="div">Còn nợ</Typography>    
                         </Grid>
-                        <Grid item xs={6} >
+                        <Grid item sm={6} >
                           <Typography variant="body1" gutterBottom component="div">500.000</Typography>
                         </Grid>
                     </Grid>
@@ -187,7 +188,7 @@ const CustomerDetail = (props) => {
               </Grid>
 
               {/* Button */}
-              <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"} style={{marginTop:20}}> 
+              <Grid container direction="row" justifyContent={"flex-end"} style={{marginTop:20}}> 
                           <Button variant="contained" size="small" style={{marginLeft:15}} onClick={() => {setEditItem(true)}}>Sửa</Button>
                           <Button variant="contained" size="small" style={{marginLeft:15}} onClick={() => {setDeleteConfirm(true)}}>Xoá</Button>
                           
