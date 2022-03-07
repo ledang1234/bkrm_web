@@ -116,7 +116,7 @@ const CustomerDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Mã khách hàng </Typography>    
                         </Grid>
                         <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{row.uuid} </Typography>
+                          <Typography variant="body1" gutterBottom component="div">{row.customer_code} </Typography>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">

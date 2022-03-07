@@ -207,6 +207,7 @@ const CheckHistoryDetail = (props) => {
               <TableRow>
                 <TableCell>#</TableCell>
                 <TableCell>Sản phẩm</TableCell>
+                <TableCell>Mã vạch</TableCell>
                 <TableCell align="right">Tồn kho</TableCell>
                 <TableCell align="right">SL thực tế</TableCell>
                 <TableCell align="right">Lệch</TableCell>
@@ -217,9 +218,12 @@ const CheckHistoryDetail = (props) => {
               {row.details?.map((detail) => (
                 <TableRow key={detail.product_id}>
                   <TableCell component="th" scope="row">
-                    {detail.product_id}
+                    {detail.product_code}
                   </TableCell>
                   <TableCell>{detail.product_name}</TableCell>
+                  <TableCell component="th" scope="row">
+                    {detail.bar_code}
+                  </TableCell>
                   <TableCell align="right">{detail.branch_inventory}</TableCell>
                   <TableCell align="right">
                     {Number(detail.branch_inventory) + Number(detail.quantity)}

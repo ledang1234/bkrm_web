@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
-import CloseIcon from '@material-ui/icons/Close';
 
 //import project
 import {
@@ -107,6 +106,7 @@ const ToolBar = (props) => {
     columnsToKeep,
     searchKey, setSearchKey,
     orderByOptions,orderBy, setOrderBy,
+    handleRemoveFilter,
     sort, setSort,
   } = props;
   const theme = useTheme();
@@ -180,7 +180,7 @@ const ToolBar = (props) => {
     <CardHeader
     style={{marginBottom:-15}}
       avatar={
-        <>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
           <TextField
             variant="outlined"
             placeholder={textSearch} /*placeholder='Tìm kiếm ...'*/
@@ -207,39 +207,43 @@ const ToolBar = (props) => {
               className: classes.search,
             }}
           />
+          <div style={{ marginLeft: 30, display: 'flex', flexDirection: 'row', gap: 10 }}>
+            <FormControl>
+              <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                Sắp xếp theo
+              </InputLabel>
+              <Select
+                autoWidth={true}
+                labelId="orderBy"
+                value={orderBy}
+                label="Sap xep theo"
+                onChange={(e) => setOrderBy(e.target.value)}
+              >
+                {orderByOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
+              </Select>
+            </FormControl>
 
-          <FormControl>
-            <InputLabel variant="standard" htmlFor="uncontrolled-native">
-              Sắp xếp theo
-            </InputLabel>
-            <Select
-              autoWidth={true}
-              labelId="orderBy"
-              value={orderBy}
-              label="Sap xep theo"
-              onChange={(e) => setOrderBy(e.target.value)}
-            >
-              {orderByOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
-            </Select>
-          </FormControl>
-
-          <FormControl>
-            <InputLabel variant="standard" htmlFor="uncontrolled-native">
-              Thứ tự
-            </InputLabel>
-            <Select
-              autoWidth={true}
-              labelId="sort"
-              value={sort}
-              label="Sap xep theo"
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <MenuItem value="asc">Tăng dần</MenuItem>
-              <MenuItem value="desc">Giảm dần</MenuItem>
-            </Select>
-          </FormControl>
-
-        </>
+            <FormControl>
+              <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                Thứ tự
+              </InputLabel>
+              <Select
+                autoWidth={true}
+                labelId="sort"
+                value={sort}
+                label="Sap xep theo"
+                onChange={(e) => setSort(e.target.value)}
+              >
+                <MenuItem value="asc">Tăng dần</MenuItem>
+                <MenuItem value="desc">Giảm dần</MenuItem>
+              </Select>
+            </FormControl>
+            <Button onClick={handleRemoveFilter}>
+              Bỏ lọc
+            </Button>
+          </div>
+          
+        </div>
       }
       action={
         <Box className={classes.actions}>

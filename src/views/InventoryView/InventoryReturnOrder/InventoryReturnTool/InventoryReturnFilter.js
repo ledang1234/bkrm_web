@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 const InventoryReturnFilter = (props) => {
-    const {handleToggleFilter,openFilter, setPurchaseReturns} =props;
+    const {handleToggleFilter,openFilter, setPurchaseReturns, query, setQuery} =props;
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -37,19 +37,11 @@ const InventoryReturnFilter = (props) => {
     const branch_uuid = info.branch.uuid;
     
     const formik = useFormik({
-      initialValues: {
-        startDate: '',
-        endDate: '',
-        purchaseOrderCode: '',
-        minTotalAmount: 0,
-        maxTotalAmount: 0,
-        status: 'debt',
-        paymentMethod: '',
-      },
+      initialValues: query,
       onSubmit: async values => {
-        console.log(values)
-        const res = await purchaseReturnApi.searchPurchaseReturn(store_uuid, branch_uuid, values)
-        setPurchaseReturns(res.data)
+        // console.log(values)
+        // const res = await purchaseReturnApi.searchPurchaseReturn(store_uuid, branch_uuid, values)
+        setQuery(values)
       },
     });
 
@@ -63,17 +55,7 @@ const InventoryReturnFilter = (props) => {
         }}
         className={classes.drawer}
       >
-        <Typography variant="h5" className={classes.text} >Mã đơn nhập:</Typography>
-        <TextField 
-          id="purchaseOrderCode" label="Đơn nhập" type="text"
-          name="purchaseOrderCode"
-          defaultValue={formik.values.purchaseOrderCode} 
-          variant="outlined" size="small" fullWidth 
-          className={classes.textField} 
-          InputLabelProps={{ shrink: true }} 
-          value={formik.values.purchaseOrderCode} 
-          onChange={formik.handleChange}
-        />
+        
 
         {/* 1.Ngay from-to */}
         <Typography variant="h5" className={classes.text} >Ngày trả:</Typography>

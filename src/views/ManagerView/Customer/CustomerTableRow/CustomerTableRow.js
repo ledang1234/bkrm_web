@@ -23,6 +23,7 @@ const CustomerTableRow = (props) => {
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
+                <TableCell align="left">{row.customer_code}</TableCell>
                 <TableCell align="left">{row.id}</TableCell>
                 <TableCell align="left" style={{minWidth:200}} >
                     <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}>

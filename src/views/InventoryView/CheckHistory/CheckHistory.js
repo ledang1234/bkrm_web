@@ -84,7 +84,7 @@ const CheckHistory = () => {
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit, branch_uuid]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, reload]);
 
   const theme = useTheme();
   const classes = useStyles(theme);

@@ -261,6 +261,7 @@ const InventoryReturnDetail = (props) => {
               {/* thêm cột giá trả */}
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
+              <TableCell>Mã vạch</TableCell>
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Giá trả</TableCell>
               <TableCell align="right">Thành tiền</TableCell>
@@ -268,11 +269,12 @@ const InventoryReturnDetail = (props) => {
           </TableHead>
           <TableBody>
             {purchaseReturn.details.map((detail) => (
-              <TableRow key={detail.bar_code}>
+              <TableRow key={detail.product_code}>
                 <TableCell component="th" scope="row">
-                  {detail.bar_code}
+                  {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
+                <TableCell>{detail.bar_code}</TableCell>
                 <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />

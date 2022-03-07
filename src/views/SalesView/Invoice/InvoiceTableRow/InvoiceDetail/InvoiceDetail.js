@@ -334,6 +334,7 @@ function InvoiceDetail(props) {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
+              <TableCell>Mã vạch</TableCell>
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá bán</TableCell>
@@ -344,9 +345,10 @@ function InvoiceDetail(props) {
             {order.details.map((detail) => (
               <TableRow key={detail.product_id}>
                 <TableCell component="th" scope="row">
-                  {detail.bar_code}
+                  {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
+                <TableCell>{detail.bar_code}</TableCell>
                 <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">{detail.returned_quantity}</TableCell>
                 <TableCell align="right">

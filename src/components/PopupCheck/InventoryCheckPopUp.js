@@ -174,7 +174,8 @@ function InventoryCheckPopUp({
   };
 
   const handleProductSelect = (product) => {
-    console.log(product);
+    
+    console.log(inventoryCheck.details.find(d => d.id === product.id))
     const newDetails = [
       ...inventoryCheck.details,
       {
@@ -183,7 +184,6 @@ function InventoryCheckPopUp({
         real_quantity: Number(product.branch_quantity),
       },
     ];
-    console.log(newDetails);
     setInventoryCheck({ ...inventoryCheck, details: newDetails });
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };

@@ -208,6 +208,7 @@ function InvoiceReturnDetail(props) {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
+              <TableCell>Mã vạch</TableCell>
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Giá trả</TableCell>
               <TableCell align="right">Thành tiền</TableCell>
@@ -217,11 +218,15 @@ function InvoiceReturnDetail(props) {
           <TableBody>
 
             {refund.details.map((detail) => (
-              <TableRow key={detail.bar_code}>
+              <TableRow key={detail.product_code}>
                 <TableCell component="th" scope="row">
+                  {detail.product_code}
+                </TableCell>
+                
+                <TableCell>{detail.name}</TableCell>
+                <TableCell>
                   {detail.bar_code}
                 </TableCell>
-                <TableCell>{detail.name}</TableCell>
                 <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">
                   {detail.unit_price}

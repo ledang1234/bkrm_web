@@ -55,7 +55,7 @@ const InventoryOrder = () => {
     }
   };
 
-  const [query, setQuery] = useState({
+  const initialQuery = {
     startDate: '',
     endDate: '',
     minDiscount: 0,
@@ -67,7 +67,12 @@ const InventoryOrder = () => {
     orderBy: 'purchase_orders.creation_date',
     sort: 'desc',
     searchKey: '',
-  })
+  };
+
+  const handleRemoveFilter = () => {
+    setQuery(initialQuery)
+  }
+  const [query, setQuery] = useState(initialQuery)
 
   const [reload, setReload] = React.useState(false);
   const [pagingState, setPagingState] = useState({
@@ -134,6 +139,10 @@ const InventoryOrder = () => {
     message: "Kiểm kho thất bại",
   });
 
+  useEffect(() => {
+    console.log(query)
+  }, [query])
+
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -180,6 +189,7 @@ const InventoryOrder = () => {
         orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
         sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        handleRemoveFilter={handleRemoveFilter}
 
         columnsToKeep = {[
           {dbName:"purchase_order_code",displayName:"Mã đơn nhập"},

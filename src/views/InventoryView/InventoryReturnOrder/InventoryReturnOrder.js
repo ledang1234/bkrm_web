@@ -53,9 +53,25 @@ const InventoryReturnOrder = () => {
     total_rows: 0,
   });
 
+  const initialQuery = {
+    startDate: '',
+    endDate: '',
+    minTotalAmount: 0,
+    maxTotalAmount: 0,
+    status: '',
+    paymentMethod: '',
+    orderBy: 'purchase_returns.creation_date',
+    sort: 'desc',
+    searchKey: '',
+  };
+  const handleRemoveFilter = () => {
+    setQuery(initialQuery)
+  }
+  const [query, setQuery] = useState(initialQuery)
+
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
-  }, [reload, store_uuid, branch_uuid]);
+  }, [reload, store_uuid, branch_uuid, query]);
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -65,6 +81,7 @@ const InventoryReturnOrder = () => {
           {
             page: pagingState.page,
             limit: pagingState.limit,
+            ...query
           }
         );
         setPagingState({ ...pagingState, total_rows: response.total_rows });
@@ -77,7 +94,7 @@ const InventoryReturnOrder = () => {
 
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, branch_uuid]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, query]);
 
   const handleOpenRow = (row) => {
     if (row !== openRow) {
@@ -133,6 +150,16 @@ const InventoryReturnOrder = () => {
         textSearch={"#, #đn, NCC, Nguoi trả,..."}
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+
+        orderByOptions={[
+          {value: 'purchase_returns.creation_date', label: 'Ngày trả'},
+          {value: 'total_amount', label: 'Tổng tiền trả'},
+        ]}
+        orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
+        sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
+        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        handleRemoveFilter={handleRemoveFilter}
+
         columnsToKeep = {[
           {dbName:"purchase_return_code",displayName:"Mã trả hàng nhập"},
           {dbName:"purchase_order_code",displayName:"Mã đơn nhập"},
@@ -147,6 +174,8 @@ const InventoryReturnOrder = () => {
 
       <InventoryReturnFilter
         openFilter={openFilter}
+        setQuery={setQuery}
+        query={query}
         handleToggleFilter={handleToggleFilter}
         setPurchaseReturns={setPurchaseReturns}
       />

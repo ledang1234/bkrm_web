@@ -64,19 +64,19 @@ export const InventoryReturnOrderHeadCells = [
     disablePadding: false,
     label: "Hình thức trả",
   },
-  {
-    id: "total",
-    align: "right",
-    disablePadding: false,
-    label: "Tổng tiền trả",
-  },
-  { id: "import_id", align: "left", disablePadding: false, label: "#Đơn nhập" },
-  {
-    id: "employee",
-    align: "left",
-    disablePadding: false,
-    label: "Người thực hiện",
-  },
+  // {
+  //   id: "total",
+  //   align: "right",
+  //   disablePadding: false,
+  //   label: "Tổng tiền trả",
+  // },
+  // { id: "import_id", align: "left", disablePadding: false, label: "#Đơn nhập" },
+  // {
+  //   id: "employee",
+  //   align: "left",
+  //   disablePadding: false,
+  //   label: "Người thực hiện",
+  // },
 ];
 
 export const SupplierHeadCells = [
