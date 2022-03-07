@@ -246,7 +246,8 @@ const Invoice = () => {
               //   onReload={onReload}
               // />
               <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
-             totalCost={row.total_amount}  id={row.order_code} partnerName={row.customer_name} date={row.paid_date} />
+             totalCost={row.total_amount}  id={row.order_code} partnerName={row.customer_name} date={row.paid_date} 
+             typeBill={"Hoá đơn"}/>
             );
           })
         }

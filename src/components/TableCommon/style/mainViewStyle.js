@@ -91,6 +91,15 @@ cardRoot: {
 media: {
   height: 140,
 },
+appBar: {
+  position: 'relative',
+  backgroundColor:theme.customization.primaryColor[500],
+  height:60
+},
+title: {
+  marginLeft: theme.spacing(2),
+  flex: 1,
+},
 
 }));
 

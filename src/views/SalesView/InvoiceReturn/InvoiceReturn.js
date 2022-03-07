@@ -174,7 +174,8 @@ function InvoiceReturn() {
             //   handleOpenRow={handleOpenRow}
             // />
             <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} 
-          totalCost={row.total_amount}  id={row.refund_code} partnerName={row.customer_name} date={row.created_at} />
+          totalCost={row.total_amount}  id={row.refund_code} partnerName={row.customer_name} date={row.created_at} 
+          typeBill={"Đơn trả"}/>
 
           ))
           }

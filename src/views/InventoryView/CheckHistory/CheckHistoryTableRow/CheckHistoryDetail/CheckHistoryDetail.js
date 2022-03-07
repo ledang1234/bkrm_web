@@ -81,6 +81,10 @@ const CheckHistoryDetail = (props) => {
       setAnchorEl(null);
     };
 
+    //calculate
+    const moneyDif = row.details
+    ?.map((detail) => detail.quantity * detail.unit_price)
+    .reduce((total, ele) => total + ele, 0)
 
     return (
       // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
@@ -211,7 +215,7 @@ const CheckHistoryDetail = (props) => {
               <TableRow>
                 <TableCell>#</TableCell>
                 <TableCell>Sản phẩm</TableCell>
-                <TableCell>Mã vạch</TableCell>
+                {/* <TableCell>Mã vạch</TableCell> */}
                 <TableCell align="right">Tồn kho</TableCell>
                 <TableCell align="right">SL thực tế</TableCell>
                 <TableCell align="right">Lệch</TableCell>
@@ -264,15 +268,13 @@ const CheckHistoryDetail = (props) => {
               </Grid>
               <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
                 <Grid item xs={3} sm={2}>
-                  <Typography variant="h5" gutterBottom component="div">
+                  <Typography variant="h5" gutterBottom component="div" >
                     Tổng tiền lệch
                   </Typography>
                 </Grid>
                 <Grid item   sm={2}>
                   <Typography variant="body1" gutterBottom component="div">
-                    <VNDFormat value={row.details
-                      ?.map((detail) => detail.quantity * detail.unit_price)
-                      .reduce((total, ele) => total + ele, 0)} />
+                    <VNDFormat  style={{fontWeight:700,color:moneyDif >0 ?"green" :"red"}} value={moneyDif} />
                   </Typography>
                 </Grid>
               </Grid>

@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme) => createStyles({
 
 function InvoiceReturnDetail(props) {
   const { row, openRow } = props.parentProps;
+  const { isMini } = props;
+
   //  tam thoi
   const currentUser = 'Minh Tri';
 
@@ -99,7 +101,7 @@ function InvoiceReturnDetail(props) {
   });
 
   return (
-    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <Box margin={1}>
         <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
           {row.name}
@@ -213,7 +215,7 @@ function InvoiceReturnDetail(props) {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
-              <TableCell>Mã vạch</TableCell>
+              {/* <TableCell>Mã vạch</TableCell> */}
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Giá trả</TableCell>
               <TableCell align="right">Thành tiền</TableCell>
@@ -229,9 +231,9 @@ function InvoiceReturnDetail(props) {
                 </TableCell>
                 
                 <TableCell>{detail.name}</TableCell>
-                <TableCell>
+                {/* <TableCell>
                   {detail.bar_code}
-                </TableCell>
+                </TableCell> */}
                 <TableCell align="right"><ThousandFormat value={detail.quantity} /></TableCell>
                 <TableCell align="right">
                 <VNDFormat value={detail.unit_price} />
@@ -248,22 +250,22 @@ function InvoiceReturnDetail(props) {
         <Box className={classes.background} style={{ padding: 10, borderRadius: theme.customization.borderRadius, marginTop: 10 }}>
           <Grid container direction="column">
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={5} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">Tổng SL hàng ({refund.details?.length})</Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div"><ThousandFormat 
                   value={calculateTotalQuantity(refund.details)}
                 /></Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={5} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                 <VNDFormat value={row.total_amount} />
                   {' '}
@@ -288,11 +290,11 @@ function InvoiceReturnDetail(props) {
               </Grid>
             </Grid> */}
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={5} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">Đã trả khách</Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">{row.paid_amount}</Typography>
               </Grid>
             </Grid>
@@ -300,7 +302,7 @@ function InvoiceReturnDetail(props) {
           </Grid>
         </Box>
 
-        <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}style={{ marginTop: 20 }}>
+        <Grid container direction="row" justifyContent={"flex-end"}style={{ marginTop: 20 }}>
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
           {currentUser === row.employee
             ? (

@@ -64,6 +64,23 @@ export default makeStyles((theme) => ({
     padding: 20,
     // marginTop:40,
     marginTop:25,
+ 
+  },
+  backgroundMini: {
+    background:
+      theme.customization.mode === "Light"
+        ? theme.palette.primary.light
+        : theme.customization.primaryColor[theme.customization.colorLevel],
+    borderRadius: theme.customization.borderRadius,
+    marginRight: 5,
+    marginLeft:5,
+    padding: 10,
+    // marginTop:40,
+    marginTop:25,
+    
+  },
+  marginBackground:{
+    marginLeft: 20
   },
   toolBar: {
     background: theme.palette.background.paper,
@@ -76,7 +93,5 @@ export default makeStyles((theme) => ({
   scroll: {
     // maxHeight: 10,
   },
-  marginBackground:{
-    marginLeft: 20
-  }
+ 
 }));

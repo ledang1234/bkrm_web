@@ -219,7 +219,8 @@ const InventoryReturnOrder = () => {
           //   handleOpenRow={handleOpenRow}
           // />
           <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} 
-          totalCost={row.total_amount}  id={row.purchase_return_code} partnerName={row.supplier_name} date={row.creation_date} />
+          totalCost={row.total_amount}  id={row.purchase_return_code} partnerName={row.supplier_name} date={row.creation_date} 
+          typeBill={"Đơn trả hàng nhập"}/>
 
         );
       })
