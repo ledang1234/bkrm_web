@@ -6,7 +6,7 @@ import { grey } from "@material-ui/core/colors";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
 import { ReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
-
+import {CartBottom} from "../../../components/Button/CartButton"
 //import library
 import {
   Grid,
@@ -28,6 +28,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import SearchBarCode from "../../../components/SearchBar/SearchBarCode";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -93,6 +94,7 @@ const Cart = () => {
       paid_amount: "0",
       discount: "0",
       payment_method: "cash",
+      delivery:false
     },
   ]);
 
@@ -112,6 +114,9 @@ const Cart = () => {
     message: "Tạo hóa đơn thất bại",
   });
 
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
+
   useEffect(() => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
@@ -129,6 +134,7 @@ const Cart = () => {
             paid_amount: "0",
             discount: "0",
             payment_method: "cash",
+            delivery:false
           },
         ]);
       } catch (err) {
@@ -179,6 +185,7 @@ const Cart = () => {
         paid_amount: "0",
         payment_method: "cash",
         discount: "0",
+        delivery:false
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -196,6 +203,7 @@ const Cart = () => {
           paid_amount: "0",
           discount: "0",
           payment_method: "cash",
+          delivery:false
         },
       ]);
     } else {
@@ -319,7 +327,7 @@ const Cart = () => {
 
   const handleUpdatePaymentMethod = (method) => {
     let newCartList = update(cartList, {
-      [selectedIndex]: { payment_method: { $set: method } },
+      [selectedIndex]: { payment_method: { $set: method} },
     });
     setCartList(newCartList);
   };
@@ -327,6 +335,13 @@ const Cart = () => {
   const handleUpdateDiscount = (amount) => {
     let newCartList = update(cartList, {
       [selectedIndex]: { discount: { $set: amount } },
+    });
+    setCartList(newCartList);
+  };
+
+  const  handleCheckDelivery  = (delivery) => {
+    let newCartList = update(cartList, {
+      [selectedIndex]: { delivery: { $set: delivery} },
     });
     setCartList(newCartList);
   };
@@ -399,10 +414,12 @@ const Cart = () => {
         paid_date: orderTime,
         tax: "0",
         shipping: "0",
+        delivery:cart.delivery
       };
 
       try {
         let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
+        console.log("body",body)
         setSnackStatus({
           style: "success",
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
@@ -410,6 +427,7 @@ const Cart = () => {
         setOpenSnack(true);
         handlePrint();
         handleDelete(selectedIndex);
+        
       } catch (err) {
         setSnackStatus({
           style: "error",
@@ -451,8 +469,8 @@ const Cart = () => {
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={8}>
         <Card className={classes.root}>
-          <Box style={{ padding: 30, minHeight: "80vh", paddingBottom: 0 }}>
-            <Box style={{ height: "70vh" }}>
+          <Box style={{ padding: xsScreen?0:30, minHeight: "80vh", paddingBottom: 0 }}>
+            <Box style={{ height: xsScreen?null:"69vh" }}>
               {/* 1.1 TITLE + BTN CHANGE CART +  SEARCH */}
               <Grid
                 container
@@ -554,7 +572,7 @@ const Cart = () => {
               )}
             </Box>
             {/* 1.3 CHANGE MODE  */}
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Switch checked={mode} onChange={handleChangeMode} />}
               style={{
                 display: "flex",
@@ -562,11 +580,13 @@ const Cart = () => {
                 margin: -10,
                 marginTop: 10,
               }}
-            />
+            /> */}
           </Box>
         </Card>
       </Grid>
-
+      {xsScreen  ?
+         <CartBottom numberItem={2} />:null
+        }      
       {/* 2.SUMMARY CARD (right) */}
       <Grid item xs={12} sm={4} className={classes.root}>
         <Card className={classes.root}>
@@ -581,6 +601,7 @@ const Cart = () => {
                 handleUpdateDiscount={handleUpdateDiscount}
                 handleUpdatePaidAmount={handleUpdatePaidAmount}
                 handleUpdatePaymentMethod={handleUpdatePaymentMethod}
+                handleCheckDelivery={handleCheckDelivery}
                 handleConfirm={handleConfirm}
                 currentCustomer={cartList[selectedIndex].customer}
                 currentBranch={branch}

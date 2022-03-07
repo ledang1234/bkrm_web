@@ -15,6 +15,7 @@ import {
   Radio,
   ListItem
 } from "@material-ui/core";
+import {calculateTotalQuantity} from "../../../../components/TableCommon/util/sortUtil"
 
 import AddCustomer from "../../../../views/ManagerView/Customer/AddCustomer/AddCustomer";
 import giftBox from "../../../../assets/img/icon/giftbox.png";
@@ -61,6 +62,7 @@ const CartSummary = (props) => {
     handleUpdateDiscount,
     handleUpdatePaidAmount,
     handleUpdatePaymentMethod,
+    handleCheckDelivery,
     handleConfirm,
     selectedBranch,
     setSelectedBranch,
@@ -68,7 +70,8 @@ const CartSummary = (props) => {
     currentBranch,
     mode,
     reloadCustomers,
-    discountData
+    discountData,
+    
   } = props;
 
   const theme = useTheme();
@@ -144,6 +147,9 @@ const CartSummary = (props) => {
   }
   let haveDiscount = checkHaveDiscount();
   const [openDiscount, setOpenDiscount] = React.useState(false);
+  console.log("cartData",cartData)
+
+  
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -200,10 +206,10 @@ const CartSummary = (props) => {
               justifyContent="space-between"
               className={classes.marginBox}
             >
-              <Typography variant="h5">Tổng số mặt hàng</Typography>
+              <Typography variant="h5">Tổng số lượng hàng ({cartData.cartItem.length}) </Typography>
               <Typography variant="body2">
                 <ThousandFormat
-                  value={cartData.cartItem.length}
+                  value={calculateTotalQuantity(cartData.cartItem)}
                 ></ThousandFormat>
               </Typography>
             </Grid>
@@ -336,7 +342,7 @@ const CartSummary = (props) => {
                   aria-label="gender"
                   name="gender1"
                   value={cartData.payment_method}
-                  onChange={handleUpdatePaymentMethod}
+                  onChange={(e)=>handleUpdatePaymentMethod(e.target.value)}
                 >
                   <Grid container direction="row">
                     <FormControlLabel
@@ -365,7 +371,7 @@ const CartSummary = (props) => {
               <FormControlLabel
                 labelPlacement="start"
                 control={
-                  <Checkbox checked={deliver} onChange={handleChangeDeliver} />
+                  <Checkbox checked={cartData.delivery} onChange={(e)=>handleCheckDelivery(e.target.checked)} />
                 }
                 label="Giao hàng"
               />

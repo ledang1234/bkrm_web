@@ -23,7 +23,7 @@ export const ImportRow = (props) => {
   return (
     <TableRow hover key={props.row.uuid}>
       <TableCell align="left">{row.id + 1}</TableCell>
-      <TableCell align="left" style={{ width: 5 }}>{row.barcode}</TableCell>
+      <TableCell align="left" style={{ width: 5 }}>{row.product_code}</TableCell>
       <TableCell align="left" style={{ minWidth: 200 }}>
         <ListItem style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}>
           <Box component="img" sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }} src={row.img_url} />

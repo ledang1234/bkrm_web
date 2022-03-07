@@ -30,11 +30,12 @@ const InventoryTableRow = (props) => {
           classes.row,
           openRow === row.uuid ? classes.rowClicked : null
         )}
+        key={row.uuid}
       >
         <TableCell align="left">
           {row.product_code}
         </TableCell>
-        <TableCell align="left" style={{ minWidth: 200 }}>
+        <TableCell align="center" style={{ minWidth: 200 }}>
           <ListItem
             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
           >
@@ -46,7 +47,7 @@ const InventoryTableRow = (props) => {
             <Typography className={classes.fontName}>{row.name}</Typography>
           </ListItem>
         </TableCell>
-        <TableCell align="left">{row.bar_code}</TableCell>
+        {/* <TableCell align="left">{row.bar_code}</TableCell> */}
 
         <TableCell align="left">{row.category?.name}</TableCell>
         <TableCell align="right">
@@ -61,7 +62,7 @@ const InventoryTableRow = (props) => {
             lowStock={row.min_reorder_quantity}
           />
         </TableCell>
-        <TableCell align="right" className={classes.fontName}>
+        <TableCell align="center" className={classes.fontName}>
           {row.branch_quantity}
         </TableCell>
       </TableRow>

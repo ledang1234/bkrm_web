@@ -24,8 +24,9 @@ import AddIcon from "@material-ui/icons/Add";
 // import project
 import { grey } from "@material-ui/core/colors";
 import * as Input from "../../../TextField/NumberFormatCustom";
-
+import VNDInput from "../../../TextField/NumberFormatCustom";
 import ava from "../../../../assets/img/product/lyimg.jpeg";
+import {calculateTotalReturnQuantity} from "../../../TableCommon/util/sortUtil"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -132,10 +133,10 @@ function InvoiceReturnSummary({
         >
           <Typography variant="h5">
             {/* Số lượng sản phẩm trả */}
-            Tổng số mặt hàng trả
+            Tổng SL sản phẩm trả ({data.details.filter((item) => item.returnQuantity !== 0).length})
           </Typography>
           <Typography variant="body2">
-            {data.details.filter((item) => item.returnQuantity !== 0).length}
+          <Input.ThousandFormat value={calculateTotalReturnQuantity(data.details)} />
           </Typography>
         </Grid>
 
@@ -146,7 +147,7 @@ function InvoiceReturnSummary({
           className={classes.marginRow}
         >
           <Typography variant="h5">Tổng tiền gốc</Typography>
-          <Typography variant="body2">{data.order_total_amount}</Typography>
+          <Typography variant="body2"> <Input.VNDFormat value={data.order_total_amount} /></Typography>
         </Grid>
 
         <Grid
@@ -156,7 +157,7 @@ function InvoiceReturnSummary({
           className={classes.marginRow}
         >
           <Typography variant="h5">Tổng tiền trả</Typography>
-          <Typography variant="body2">{data.total_amount}</Typography>
+          <Typography variant="body2"><Input.VNDFormat value={data.total_amount} /></Typography>
         </Grid>
         {/*
                 <Grid container direction="row" justifyContent="space-between"className={classes.marginRow}>
@@ -183,14 +184,48 @@ function InvoiceReturnSummary({
           className={classes.marginRow}
         >
           <Typography variant="h5">Đã trả khách</Typography>
-          <Input.ThousandSeperatedInput
+          <VNDInput
             id="standard-basic"
             style={{ width: 90 }}
             size="small"
             inputProps={{ style: { textAlign: "right" } }}
+            defaultValue={data.total_amount}
             onChange={(e) => handlePaidAmountChange(e.target.value)}
           />
         </Grid>
+        <Grid
+          container
+          direction="row"
+          justifyContent="flex-end"
+          alignItems="center"
+          className={classes.marginRow}
+        >
+          <FormControl component="fieldset">
+            <RadioGroup
+              aria-label="gender"
+              name="gender1"
+              value={data.payment_method}
+              onChange={(e) => handlePaymentMethodChange(e.target.value)}
+            >
+              <Grid container direction="row">
+                <FormControlLabel
+                  labelPlacement="start"
+                  value="card"
+                  control={<Radio />}
+                  label="Thẻ"
+                />
+                <FormControlLabel
+                  labelPlacement="start"
+                  value="cash"
+                  control={<Radio />}
+                  label="Tiền mặt"
+                />
+              </Grid>
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+
+        
 
         <Button
           variant="contained"

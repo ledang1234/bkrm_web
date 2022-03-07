@@ -296,11 +296,11 @@ function ImportReturnTableRow({ detail, handleProductPriceChange, handleItemQuan
   return (
     <TableRow hover key={detail.id}>
       <TableCell align="left" style={{ width: 5 }}>
-        {detail.bar_code}
+        {detail.product_code}
       </TableCell>
       {/* <TableCell align="left">{row.id}</TableCell> */}
       <TableCell align="left">{detail.name}</TableCell>
-      <TableCell align="right">{detail.unit_price}</TableCell>
+      <TableCell align="right">  <Input.ThousandFormat value={detail.unit_price}  /></TableCell>
       <TableCell align="right">
         <Input.ThousandSeperatedInput
           id="standard-basic"
@@ -325,7 +325,7 @@ function ImportReturnTableRow({ detail, handleProductPriceChange, handleItemQuan
       </TableCell>
 
       <TableCell align="right" className={classes.boldText}>
-        {Number(detail.returnQuantity) * Number(detail.returnPrice)}
+      <Input.VNDFormat  value={Number(detail.returnQuantity) * Number(detail.returnPrice)} />
       </TableCell>
     </TableRow>
   );
