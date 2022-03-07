@@ -40,8 +40,8 @@ const DiscountSetting = () => {
     const [pagingState, setPagingState] = useState({
       page: 0,
       limit: 10,
-      total_rows: 0,
     });
+    const [totalRows, setTotalRows] = useState(0)
     useEffect(() => {
       setPagingState({ ...pagingState, page: 0 });
     }, [reload, store_uuid]);
@@ -56,8 +56,9 @@ const DiscountSetting = () => {
               limit: pagingState.limit,
             }
           );
-          setPagingState({ ...pagingState, total_rows: response.total_rows });
-          setNewDiscountList(response.data);
+          // setPagingState({ ...pagingState, total_rows: response.total_rows });
+          setTotalRows(response.total_rows)
+          setNewDiscountList(response.promotions);
         } catch (error) {
           console.log(error);
         }
@@ -75,12 +76,11 @@ const DiscountSetting = () => {
         })
     }, [reload, store_uuid]);
 
+    useEffect(() => {
+      console.log("newDiscountList", newDiscountList)
+    }, [newDiscountList])
     const theme = useTheme();
     const classes = useStyles(theme);
-
-    console.log("newDiscountList",newDiscountList)
-    console.log("discountList",discountList)
-
 
     //// 1. Add pop up + noti
     //add
@@ -184,7 +184,10 @@ const DiscountSetting = () => {
         handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
         <DiscountFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
-        <TableWrapper>
+        <TableWrapper
+        pagingState={{...pagingState, total_rows: totalRows}}
+        setPagingState={setPagingState}
+        >
             <TableHeader
               classes={classes}
               order={order}
