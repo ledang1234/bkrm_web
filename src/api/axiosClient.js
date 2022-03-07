@@ -28,7 +28,7 @@ axiosClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response.status == "401") {
+    if (error.response.status == "401" || error.response.status == "500" ) {
       if (!(document.URL.includes("/login") || document.URL.includes("/signup") )) {
         console.log(!document.URL.includes("/login"))
         store.dispatch(authActions.logOut())

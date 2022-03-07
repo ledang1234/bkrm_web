@@ -15,7 +15,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import CustomerPage from "./pages/CustomerPage/CustomerPage";
 import { Box, CssBaseline, makeStyles } from "@material-ui/core";
 import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
-import Test from "./components/Test/Test";
+import Test from "./components/Category/Test";
 import { customizeAction } from "./store/slice/customizeSlice";
 import { SwitchCamera } from "@material-ui/icons";
 function App() {

@@ -11,6 +11,7 @@ import {
 import { makeStyles } from "@material-ui/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import { grey } from "@material-ui/core/colors";
+import { Button} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,17 +29,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ModalWrapperWithClose(props) {
+  const {title,open,handleClose,handleSubmit,name} = props
   const classes = useStyles();
   return (
     <React.Fragment>
       <Modal
-        open={props.open}
-        onClose={props.handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        open={open}
+        onClose={handleClose}
         className={classes.modal}
-        maxWidth="md"
-        fullWidth={true}
 
       >
         <React.Fragment>
@@ -46,14 +44,14 @@ export default function ModalWrapperWithClose(props) {
             <Box className={classes.container}>
                 <Box>   
                   <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                      <Typography variant="h3" >{props.title}</Typography>
-                      <IconButton aria-label="close"   onClick={props.handleClose}>
+                      <Typography variant="h3" >{title}</Typography>
+                      <IconButton aria-label="close"   onClick={handleClose}>
                         <CloseIcon  fontSize="small" />
                       </IconButton>
                 </Grid>
                 </Box> 
               {props.children}
-
+      
             </Box>
           </Paper>
             

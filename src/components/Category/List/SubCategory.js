@@ -6,23 +6,24 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import SendIcon from "@material-ui/icons/Send";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import SubCategory from "./SubCategory";
+import StarBorder from "@material-ui/icons/StarBorder";
 import { useSelector } from "react-redux";
 import productApi from "../../../api/productApi";
+import { IconButton, Tooltip ,Button} from "@material-ui/core";
+import UpdateCategory from "./UpdateCategory";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
-  },
   nested: {
     paddingLeft: theme.spacing(4),
   },
 }));
 
-export default function RootCategory(props) {
+export default function SubCategory(props) {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const [subCategories, setSubCategories] = useState([]);
@@ -39,33 +40,49 @@ export default function RootCategory(props) {
       }
     };
     fetchCategoryList();
-  }, [store_uuid, props.category.uuid,props.reset]);
+  }, [store_uuid, props.category.uuid]);
+  useEffect(() => {
+    console.log(subCategories);
+  }, [subCategories]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-
+  console.log(subCategories);
   const handleClick = () => {
     setOpen(!open);
+    handleClose()
   };
+  const [update, setUpdate] = useState(false)
+  const handleOpenEdit = () => setUpdate(true)
+  const handleClose = () => setUpdate(false)
   return (
     <List
       component="nav"
       aria-labelledby="nested-list-subheader"
-      className={classes.root}
+      className={classes.nested}
     >
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon>
-          <CategoryIcon />
-        </ListItemIcon>
-        <ListItemText primary={props.category.name} />
+      <UpdateCategory onReset={props.onReset} open={update} handleClose={handleClose} category={props.category}/>
+      <ListItem >
+        <ListItemText
+          primary={
+            <Tooltip  title="Cập nhật">
+              <Button style={{display:"flex",flexDirection:"row",justifyContent:"flex-start", textDecoration:"none",textTransform:"none"}} fullWidth onClick={handleOpenEdit}>
+                <ListItemIcon>
+                  <CategoryIcon/>
+                </ListItemIcon>
+                {props.category.name}
+              </Button>
+            </Tooltip>
+          }
+        />
         {props.category.children.length === 0 ? null : open ? (
-          <ExpandLess />
+         <IconButton size="small" onClick={handleClick}> <ExpandLess /> </IconButton> 
         ) : (
-          <ExpandMore />
+          <IconButton size="small" onClick={handleClick}> <ExpandMore button /> </IconButton> 
         )}
       </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+      <Collapse in={open} timeout="auto" >
         {subCategories.map((category) => (
-          <SubCategory category={category} />
+          <SubCategory key={category.uuid} category={category} />
         ))}
       </Collapse>
     </List>

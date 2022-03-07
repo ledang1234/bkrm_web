@@ -56,6 +56,8 @@ const HomePage = (props) => {
     customization.isSidebarOpen === null
       ? !smallScreen
       : customization.isSidebarOpen;
+  
+  const roleUser = infoDetail.role === "owner" ? "Chủ cửa hàng" : "Nhân viên" 
 
   const permissions = useSelector((state) => state.info.user.permissions);
 
@@ -100,6 +102,7 @@ const HomePage = (props) => {
         <div
           style={{
             width: drawerWidth,
+            // height: 48,
             height: 48,
             marginTop: 30,
             marginLeft: -15,
@@ -116,8 +119,11 @@ const HomePage = (props) => {
     dispatch(authActions.logOut());
     localStorage.removeItem("token");
     sessionStorage.removeItem("BKRMprev");
+    sessionStorage.removeItem("BKRMopening");
+
   };
-  console.log("home")
+ 
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -153,13 +159,14 @@ const HomePage = (props) => {
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
-                style={{ maxWidth: 90, marginLeft: 10, marginRight: 5 }}
+                style={{ width: 200, marginLeft: 10, marginRight: 5 }}
               >
-                <Typography variant="h6">Store Owner</Typography>
+                <Typography variant="h6" style={{fontWeight:700, fontSize:13}}>{roleUser}</Typography>
                 <Typography variant="h6" noWrap>
                   {infoDetail.user.name}
                 </Typography>
               </Box>
+              
               <Button color="primary" onClick={() => logOutHandler()}>
                 Logout
               </Button>

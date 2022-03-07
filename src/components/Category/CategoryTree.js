@@ -8,9 +8,7 @@ const CategoryTree = (props) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const [parentCategories, setParentCategories] = useState([]);
-  console.log(props.reset,"out")
   useEffect(() => {
-    console.log(props.reset,"use")
     const fetchCategoryList = async () => {
       try {
         const categories = await productApi.getParentCategory(store_uuid);
@@ -24,7 +22,7 @@ const CategoryTree = (props) => {
   return (
     <Box {...props}>
       {parentCategories.map((category) => (
-        <RootCategory category={category} reset={props.reset}/>
+        <RootCategory key={category.uuid} category={category} reset={props.reset} onReset={props.onReset}/>
       ))}
     </Box>
   );

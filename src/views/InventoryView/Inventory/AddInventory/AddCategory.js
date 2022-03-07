@@ -40,7 +40,7 @@ const AddCategory = (props) => {
       
     } catch (error) {
       console.log(error);
-      dispatch(statusAction.successfulStatus("Tạo danh mục thất bại"));
+      dispatch(statusAction.failedStatus("Tạo danh mục thất bại"));
     }
   };
   const handleCloseAndReset = () => {
