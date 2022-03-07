@@ -108,10 +108,10 @@ function InvoiceReturnDetail(props) {
         <Grid container direction="row" justifyContent="flex-start">
           <Grid item xs={12} sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={5}>
+              <Grid item xs={5} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">Mã đơn trả </Typography>
               </Grid>
-              <Grid item  xs={3}sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.refund_code}
                   {' '}
@@ -119,18 +119,18 @@ function InvoiceReturnDetail(props) {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3}sm={5}>
+              <Grid item xs={5}sm={5}>
                 <Typography variant="h5" gutterBottom component="div">Mã hoá đơn</Typography>
               </Grid>
-              <Grid item xs={3}sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">{refund.order?.order_code}</Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={5}>
+              <Grid item xs={5} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">Ngày trả </Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.created_at}
                   {' '}
@@ -138,10 +138,10 @@ function InvoiceReturnDetail(props) {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3}sm={5}>
+              <Grid item xs={5}sm={5}>
                 <Typography variant="h5" gutterBottom component="div">Khách hàng</Typography>
               </Grid>
-              <Grid item xs={3}sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {refund.customer?.name}
                   {' '}
@@ -149,10 +149,10 @@ function InvoiceReturnDetail(props) {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={5}>
+              <Grid item xs={5} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">Người thực hiện</Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {refund.created_by_user?.name}
                   {' '}
@@ -163,26 +163,26 @@ function InvoiceReturnDetail(props) {
           </Grid>
           <Grid item xs={12}sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={6}>
+              <Grid item xs={5} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">Tình trạng</Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">{`Cần trả ${(row.total_amount - row.paid_amount).toString()}`}</Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={6}>
+              <Grid item xs={5} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
               </Grid>
-              <Grid item xs={3}sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div"><VNDFormat value={row.total_amount} /></Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={6}>
+              <Grid item xs={5} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">Chi nhánh thực hiện</Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {refund.branch?.name}
                   {' '}
@@ -190,10 +190,10 @@ function InvoiceReturnDetail(props) {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={6}>
+              <Grid item xs={5} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">Phương thức trả</Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.payment_method}
                   {' '}
@@ -249,10 +249,10 @@ function InvoiceReturnDetail(props) {
           <Grid container direction="column">
 
             <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-              <Grid item xs={3} sm={2}>
+              <Grid item xs={5} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">Tổng SL hàng ({refund.details?.length})</Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item sm={2}>
                 <Typography variant="body1" gutterBottom component="div"><ThousandFormat 
                   value={calculateTotalQuantity(refund.details)}
                 /></Typography>
@@ -260,10 +260,10 @@ function InvoiceReturnDetail(props) {
             </Grid>
 
             <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-              <Grid item xs={3} sm={2}>
+              <Grid item xs={5} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                 <VNDFormat value={row.total_amount} />
                   {' '}
@@ -289,10 +289,10 @@ function InvoiceReturnDetail(props) {
             </Grid> */}
 
             <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-              <Grid item xs={3} sm={2}>
+              <Grid item xs={5} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">Đã trả khách</Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item sm={2}>
                 <Typography variant="body1" gutterBottom component="div">{row.paid_amount}</Typography>
               </Grid>
             </Grid>

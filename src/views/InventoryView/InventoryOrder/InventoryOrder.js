@@ -34,6 +34,9 @@ import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 import purchaseOrderApi from "../../../api/purchaseOrderApi";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 const InventoryOrder = () => {
   // fetch data here
   const [purchaseOrders, setPurchaseOrders] = useState([]);
@@ -41,6 +44,8 @@ const InventoryOrder = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const dispatch = useDispatch();
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   //// 2. Table
   //collapse
@@ -211,7 +216,7 @@ const InventoryOrder = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           headerData={HeadCells.InventoryOrderHeadCells}
@@ -233,6 +238,18 @@ const InventoryOrder = () => {
           })}
         </TableBody>
       </TableWrapper>
+      :
+      purchaseOrders.map((row, index) => {
+        return (
+          <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+          totalCost={row.total_amount}  id={row.purchase_order_code} partnerName={row.supplier_name} date={row.creation_date} />
+
+        );
+      })
+       
+      
+      }
+
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint purchaseOrders={purchaseOrders} classes={classes} />

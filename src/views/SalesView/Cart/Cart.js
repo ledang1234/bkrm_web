@@ -55,6 +55,8 @@ import { useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import customerApi from "../../../api/customerApi";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
+import {calculateTotalQuantity} from "../../../components/TableCommon/util/sortUtil"
+import {MiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 
 const Cart = () => {
   const theme = useTheme();
@@ -550,37 +552,56 @@ const Cart = () => {
               </Grid>
 
               {/* 1.2 TABLE */}
-              {!mode ? (
-                <TableWrapper isCart={true}>
-                  <TableHeader
-                    classes={classes}
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                    headerData={HeadCells.CartHeadCells}
-                    isCart={true}
-                  />
-                  <TableBody>
-                    {
-                    stableSort(
-                      // cartList[selectedIndex].cartItem.reverse(),
-                      cartList[selectedIndex].cartItem,
-                      getComparator(order, orderBy)
-                    ).map((row, index) => {
-                   
-                      return (
-                        <CartRow
-                          row={row}
-                          handleDeleteItemCart={handleDeleteItemCart}
-                          handleChangeItemPrice={handleChangeItemPrice}
-                          handleChangeItemQuantity={handleChangeItemQuantity}
-                          discountData={discountData.filter(discount => discount.discountKey === "product")}
-                        />
-                      );
-                    })}
-                  </TableBody>
-                </TableWrapper>
-              ) : (
+              {!mode ? 
+                !xsScreen ? (
+                  (
+                    // May tinh
+                    <TableWrapper isCart={true}>
+                      <TableHeader
+                        classes={classes}
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        headerData={HeadCells.CartHeadCells}
+                        isCart={true}
+                      />
+                      <TableBody>
+                        {
+                        stableSort(
+                          // cartList[selectedIndex].cartItem.reverse(),
+                          cartList[selectedIndex].cartItem,
+                          getComparator(order, orderBy)
+                        ).map((row, index) => {
+                       
+                          return (
+                            <CartRow
+                              row={row}
+                              handleDeleteItemCart={handleDeleteItemCart}
+                              handleChangeItemPrice={handleChangeItemPrice}
+                              handleChangeItemQuantity={handleChangeItemQuantity}
+                              discountData={discountData.filter(discount => discount.discountKey === "product")}
+                            />
+                          );
+                        })}
+                      </TableBody>
+                    </TableWrapper>
+                  )
+                ):(
+                  // Dien thoai
+                  cartList[selectedIndex].cartItem.map((row, index) => {   
+                    return (
+                      <MiniTableRow
+                        row={row}
+                        handleDeleteItemCart={handleDeleteItemCart}
+                        handleChangeItemPrice={handleChangeItemPrice}
+                        handleChangeItemQuantity={handleChangeItemQuantity}
+                        discountData={discountData.filter(discount => discount.discountKey === "product")}
+                      />
+                    );
+                  })
+                )
+               : (
+                //  Mode nha hang
                 <MenuProduct />
               )}
             </Box>
@@ -598,7 +619,7 @@ const Cart = () => {
         </Card>
       </Grid>
       {xsScreen  ?
-         <CartBottom numberItem={2} />:null
+         <CartBottom numberItem={calculateTotalQuantity(cartList[selectedIndex].cartItem) ?  calculateTotalQuantity(cartList[selectedIndex].cartItem):"0"} />:null
         }      
       {/* 2.SUMMARY CARD (right) */}
       <Grid item xs={12} sm={4} className={classes.root}>

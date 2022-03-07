@@ -64,12 +64,14 @@ export const InventoryReturnOrderHeadCells = [
     disablePadding: false,
     label: "Hình thức trả",
   },
-  // {
-  //   id: "total",
-  //   align: "right",
-  //   disablePadding: false,
-  //   label: "Tổng tiền trả",
-  // },
+
+  {
+    id: "total",
+    align: "center",
+    disablePadding: false,
+    label: "Tổng tiền trả",
+  },
+
   // { id: "import_id", align: "left", disablePadding: false, label: "#Đơn nhập" },
   // {
   //   id: "employee",
@@ -122,20 +124,20 @@ export const InvoiceReturnHeadCells = [
   },
   {
     id: "total",
-    align: "right",
+    align: "center",
     disablePadding: false,
     label: "Tổng tiền trả",
   },
-  { id: "invoid_id", align: "left", disablePadding: false, label: "#Hoá đơn" },
-  {
-    id: "employee",
-    align: "left",
-    disablePadding: false,
-    label: "Người thực hiện",
-  },
+  // { id: "invoid_id", align: "left", disablePadding: false, label: "#Hoá đơn" },
+  // {
+  //   id: "employee",
+  //   align: "left",
+  //   disablePadding: false,
+  //   label: "Người thực hiện",
+  // },
 ];
 export const EmployeeHeadCells = [
-  // { id: "id", align: "left", disablePadding: true, label: "#" },
+  { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "name", align: "left", disablePadding: true, label: "Nhân viên" },
   { id: "phone", align: "left", disablePadding: true, label: "Số điện thoại" },
   { id: "email", align: "left", disablePadding: true, label: "Email" },

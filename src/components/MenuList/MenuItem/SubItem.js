@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles,useTheme } from '@material-ui/styles';
 
 import { Link } from "react-router-dom";
 import clsx from "clsx";
@@ -9,6 +9,7 @@ import { Box,ListItem,ListItemIcon, ListItemText ,Typography} from '@material-ui
 import { useDispatch,useSelector } from "react-redux";
 // import redux
 import { customizeAction } from "../../../store/slice/customizeSlice";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,14 +40,22 @@ const useStyles = makeStyles((theme) => ({
 
 const SubItem = (props) => {
     const {item} = props;
+    const theme = useTheme();
+
     const classes = useStyles();
     const dispatch = useDispatch();
     const customization = useSelector((state) => state.customize);
     
     const itemMenuOpen = customization.itemMenuOpen;
+    const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
   
     function handleOnClick(id){
-        dispatch(customizeAction.setItemMenuOpen(id));
+      if ( xsScreen) {
+        dispatch(customizeAction.setSidebarOpen(false));
+      }
+      
+      dispatch(customizeAction.setItemMenuOpen(id));
     }
     return (
       <ListItem   

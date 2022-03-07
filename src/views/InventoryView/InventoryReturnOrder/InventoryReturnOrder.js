@@ -35,6 +35,10 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 import JSONdata from "../../../assets/JsonData/inventoryReturn.json";
 import { useSelector } from "react-redux";
 import purchaseReturnApi from "../../../api/purchaseReturnApi";
+
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 const InventoryReturnOrder = () => {
   const [purchaseReturns, setPurchaseReturns] = useState([]);
   const [openRow, setRowOpen] = React.useState(null);
@@ -45,6 +49,9 @@ const InventoryReturnOrder = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
+
   const [reload, setReload] = useState(false);
 
   const [pagingState, setPagingState] = useState({
@@ -181,7 +188,7 @@ const InventoryReturnOrder = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen? <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
@@ -201,7 +208,21 @@ const InventoryReturnOrder = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+      purchaseReturns.map((row, index) => {
+        return (
+          // <InventoryReturnTableRow
+          //   key={row.uuid}
+          //   row={row}
+          //   openRow={openRow}
+          //   handleOpenRow={handleOpenRow}
+          // />
+          <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} 
+          totalCost={row.total_amount}  id={row.purchase_return_code} partnerName={row.supplier_name} date={row.creation_date} />
+
+        );
+      })
+      }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint
