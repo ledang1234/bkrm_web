@@ -24,6 +24,7 @@ import CustomerScoreSetting  from "./CustomerScoreSetting"
 import EmailSetting  from "./EmailSetting"
 import NotifyDebtSetting  from "./NotifyDebtSetting"
 import OrderLowStockSetting from "./OrderLowStockSetting"
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import {ReturnLimitSetting,DiscountSetting,VatSetting}  from "./OtherSetting"
 const useStyles = makeStyles((theme) =>
@@ -309,6 +310,7 @@ const SettingItem = (props) => {
   const {statusChecked,actionToggle, title, subTitle, name,detail,setOpen} = props
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
   const handlePopup = (name) => {
       setOpen((prevState) => {
@@ -320,8 +322,8 @@ const SettingItem = (props) => {
   };
   return (
     <>
-    <ListItem>
-        <ListItemIcon>
+    <ListItem style={{margin:xsScreen?0:null, padding:xsScreen?0:null}}>
+        <ListItemIcon >
             {props.children}
         </ListItemIcon>
         <ListItemText
@@ -332,7 +334,7 @@ const SettingItem = (props) => {
           onClick={()=>handlePopup(name)} > 
           Chi tiết 
         </Button>:null} 
-        <ListItemSecondaryAction>
+        <ListItemSecondaryAction >
             <IOSSwitch
                 edge="end"
                 name={name}
