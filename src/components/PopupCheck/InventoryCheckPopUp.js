@@ -24,7 +24,7 @@ import { useSelector } from "react-redux";
 import SearchBarCode from "../SearchBar/SearchBarCode"
 import moment from "moment";
 import { Input } from "@mui/material";
-
+import { VNDFormat,ThousandFormat } from "../TextField/NumberFormatCustom";
 import useStyles from "../TableCommon/style/mainViewStyle";
 
 import * as HeadCells from "../../assets/constant/tableHead";
@@ -343,11 +343,11 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDe
   return (
     <TableRow hover key={detail.is}>
       <TableCell align="left" style={{ width: 5 }}>
-        {detail.bar_code}
+        {detail.product_code}
       </TableCell>
       {/* <TableCell align="left">{row.id}</TableCell> */}
       <TableCell align="left">{detail.name}</TableCell>
-      <TableCell align="right">{detail.branch_quantity}</TableCell>
+      <TableCell align="right"> <ThousandFormat  value={detail.branch_quantity} /></TableCell>
       <TableCell align="center">
         {/* <Input
           id="standard-basic"
@@ -368,12 +368,12 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDe
       </TableCell>
 
       <TableCell align="center">
-        {Number(detail.real_quantity) - Number(detail.branch_quantity)}
+        <ThousandFormat  value={Number(detail.real_quantity) - Number(detail.branch_quantity)} />
       </TableCell>
 
       <TableCell align="center" className={classes.boldText}>
-        {(Number(detail.real_quantity) - Number(detail.branch_quantity)) *
-          detail.standard_price}
+        <VNDFormat value={(Number(detail.real_quantity) - Number(detail.branch_quantity)) *
+          detail.standard_price} />
       </TableCell>
       <TableCell align="right" className={classes.boldText}>
           <IconButton aria-label="expand row" size="small"style={{marginLeft:-25}} >

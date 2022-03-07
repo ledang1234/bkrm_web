@@ -42,3 +42,17 @@ export  function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
+
+
+export function calculateTotalQuantity ( cartList ) {
+    var value= 0
+    cartList.map(item => value +=item.quantity )
+    return value
+  }
+  export function calculateTotalReturnQuantity ( cartList ) {
+    var value= 0
+    cartList.map(item => value +=item.returnQuantity )
+    return value
+  }
+
+  

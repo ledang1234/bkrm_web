@@ -1,7 +1,7 @@
 import React from 'react'
 import useRowStyles from '../../../../components/TableCommon/style/rowStyle'
 import clsx from "clsx";
-
+import { VNDFormat,ThounsandFormat } from '../../../../components/TextField/NumberFormatCustom';
 import {TableCell,TableRow} from '@material-ui/core';
 
 import {FormatedStatusOrder} from '../../../../components/TableCommon/util/format'
@@ -23,7 +23,7 @@ const OrderProductListTableRow = (props) => {
                 <TableCell align="left"className={classes.fontName}>{row.date}</TableCell>
                 <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.supplier}</TableCell>
                 <TableCell align="left">{row.branch}</TableCell>
-                <TableCell align="right" className={classes.fontName}>{row.total}</TableCell>
+                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total} /></TableCell>
                 <TableCell align="center">
                     <FormatedStatusOrder status={row.status}/>
                 </TableCell>

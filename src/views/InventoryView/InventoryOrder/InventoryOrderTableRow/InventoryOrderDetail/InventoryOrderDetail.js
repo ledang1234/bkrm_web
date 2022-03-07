@@ -3,6 +3,8 @@ import React, {useRef, useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { useReactToPrint } from "react-to-print";
 import {ImportReceiptPrinter} from "../../../../../components/ReceiptPrinter/ReceiptPrinter"
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {calculateTotalQuantity} from "../../../../../components/TableCommon/util/sortUtil"
 
 
 //import library
@@ -100,6 +102,8 @@ const InventoryOrderDetail = (props) => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -207,45 +211,45 @@ const InventoryOrderDetail = (props) => {
         </Typography>
 
         <Grid container direction="row" justifyContent="flex-start">
-          <Grid item xs={5}>
+          <Grid item xs={12}sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã đơn nhập
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.purchase_order_code}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Ngày bán{" "}
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.creation_date}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Nhà cung cấp
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.supplier_name}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Người nhập
 
@@ -260,19 +264,19 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={12}sm={7}>
             <Grid
               container
               direction="row"
               justifyContent="flex-start"
               alignItems="center"
             >
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="h5" gutterBottom component="div">
                   Trạng thái
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={3} sm={3}>
                 <Box>
                   <Typography variant="body1" gutterBottom component="div">
                    {debtAmount >  0 ?"Còn nợ " :"Trả đủ"}
@@ -294,36 +298,36 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng tiền nhập
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount}></VNDFormat>{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="h5" gutterBottom component="div">
                   Chi nhánh thực hiện
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {purchaseOrder.branch ? purchaseOrder.branch.name : ""}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="h5" gutterBottom component="div">
                   Phương thức thanh toán
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3} sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.payment_method === "cash" ? "Tiền mặt" : "Thẻ"}{" "}
                 </Typography>
@@ -355,7 +359,7 @@ const InventoryOrderDetail = (props) => {
             {purchaseOrder.details.map((detail) => (
               <TableRow key={detail.product_id}>
                 <TableCell component="th" scope="row">
-                  {detail.bar_code}
+                  {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
                 <TableCell align="right">{detail.quantity}</TableCell>
@@ -392,21 +396,21 @@ const InventoryOrderDetail = (props) => {
                         </Grid>
                     </Grid> */}
 
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={2}>
+            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
-                  Tổng số mặt hàng
+                  Tổng SL sản phẩm ({purchaseOrder.details.length})
                 </Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {purchaseOrder.details.length}
+                {calculateTotalQuantity(purchaseOrder.details)}
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={2}>
+            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tiền hàng
                 </Typography>
@@ -418,8 +422,8 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={2}>
+            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Giảm giá
                 </Typography>
@@ -432,8 +436,8 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={2}>
+            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng tiền nhập
                 </Typography>
@@ -448,8 +452,8 @@ const InventoryOrderDetail = (props) => {
             </Grid>
 
 
-            <Grid container direction="row" justifyContent="flex-end">
-              <Grid item xs={2}>
+            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Đã trả NCC
                 </Typography>
@@ -467,7 +471,7 @@ const InventoryOrderDetail = (props) => {
         <Grid
           container
           direction="row"
-          justifyContent="flex-end"
+          justifyContent={xsScreen ?null: "flex-end"}
           style={{ marginTop: 20 }}
         >
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}

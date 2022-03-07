@@ -1,5 +1,6 @@
 import React from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
 import {Dialog,Card,DialogContent,Box,Grid,TableHead,TableBody,Typography,Table,TableCell,TableRow,Collapse,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
@@ -13,6 +14,8 @@ import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
 //import project 
 import {StyledMenu,StyledMenuItem} from '../../../../../components/Button/MenuButton'
 import InventoryReturnPopUp from '../../../../../components/PopUpReturn/InventoryReturnPopUp/InventoryReturnPopUp';
+import {ThousandFormat, VNDFormat} from "../../../../../components/TextField/NumberFormatCustom"
+
 
 import { grey} from '@material-ui/core/colors'
 
@@ -66,6 +69,7 @@ const CheckHistoryDetail = (props) => {
 
     const theme = useTheme();
     const classes = useStyles(theme);
+    const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -92,26 +96,26 @@ const CheckHistoryDetail = (props) => {
           </Typography>
 
           <Grid container direction="row" justifyContent="flex-start">
-            <Grid item xs={5}>
+            <Grid item  xs={12}sm={5}>
               <Grid container direction="row" justifyContent="flex-start">
-                <Grid item xs={5}>
+                <Grid item xs={3} sm={5}>
                   <Typography variant="h5" gutterBottom component="div">
                     Mã đơn kiểm
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3} sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.inventory_check_code}{" "}
                   </Typography>
                 </Grid>
               </Grid>
               <Grid container direction="row" justifyContent="flex-start">
-                <Grid item xs={5}>
+                <Grid item xs={3} sm={5}>
                   <Typography variant="h5" gutterBottom component="div">
                     Ngày kiểm{" "}
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item  xs={3}sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.created_at}{" "}
                   </Typography>
@@ -142,7 +146,7 @@ const CheckHistoryDetail = (props) => {
                 </Grid>
               </Grid> */}
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={12} sm={5}>
               {/* <Grid container direction="row" justifyContent="flex-start">
                 <Grid item xs={6}>
                   <Typography variant="h5" gutterBottom component="div">
@@ -168,24 +172,24 @@ const CheckHistoryDetail = (props) => {
                 </Grid>
               </Grid> */}
               <Grid container direction="row" justifyContent="flex-start">
-                <Grid item xs={6}>
+                <Grid item xs={3} sm={6}>
                   <Typography variant="h5" gutterBottom component="div">
                     Chi nhánh thực hiện
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3} sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.branch_name}
                   </Typography>
                 </Grid>
               </Grid>
               <Grid container direction="row" justifyContent="flex-start">
-                <Grid item xs={6}>
+                <Grid item xs={3} sm={6}>
                   <Typography variant="h5" gutterBottom component="div">
                     Người thực hiện
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3} sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.user_name}
                   </Typography>
@@ -217,18 +221,18 @@ const CheckHistoryDetail = (props) => {
               {row.details?.map((detail) => (
                 <TableRow key={detail.product_id}>
                   <TableCell component="th" scope="row">
-                    {detail.product_id}
+                    {detail.product_code}
                   </TableCell>
                   <TableCell>{detail.product_name}</TableCell>
-                  <TableCell align="right">{detail.branch_inventory}</TableCell>
+                  <TableCell align="right"><ThousandFormat value={detail.branch_inventory} /></TableCell>
                   <TableCell align="right">
-                    {Number(detail.branch_inventory) + Number(detail.quantity)}
+                  <ThousandFormat value={Number(detail.branch_inventory) + Number(detail.quantity)} />
                   </TableCell>
                   <TableCell align="right" style={{ fontWeight: 700 }}>
-                    {detail.quantity}
+                  <ThousandFormat value={detail.quantity} />
                   </TableCell>
                   <TableCell align="right" style={{ fontWeight: 700 }}>
-                    {detail.quantity * detail.unit_price}
+                  <VNDFormat value={detail.quantity * detail.unit_price} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -243,31 +247,31 @@ const CheckHistoryDetail = (props) => {
             }}
           >
             <Grid container direction="column">
-              <Grid container direction="row" justifyContent="flex-end">
-                <Grid item xs={2}>
+              <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+                <Grid item xs={3} sm={2}>
                   <Typography variant="h5" gutterBottom component="div">
-                    Tổng số lượng lệch
+                    Tổng SL lệch 
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item  sm={2}>
                   <Typography variant="body1" gutterBottom component="div">
-                    {row.details
+                    <ThousandFormat value={row.details
                       ?.map((detail) => detail.quantity )
-                      .reduce((total, ele) => total + ele, 0)}
+                      .reduce((total, ele) => total + ele, 0)} />
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container direction="row" justifyContent="flex-end">
-                <Grid item xs={2}>
+              <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+                <Grid item xs={3} sm={2}>
                   <Typography variant="h5" gutterBottom component="div">
-                    Tổng giá trị lệch
+                    Tổng tiền lệch
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item   sm={2}>
                   <Typography variant="body1" gutterBottom component="div">
-                    {row.details
+                    <VNDFormat value={row.details
                       ?.map((detail) => detail.quantity * detail.unit_price)
-                      .reduce((total, ele) => total + ele, 0)}
+                      .reduce((total, ele) => total + ele, 0)} />
                   </Typography>
                 </Grid>
               </Grid>
@@ -290,7 +294,7 @@ const CheckHistoryDetail = (props) => {
           <Grid
             container
             direction="row"
-            justifyContent="flex-end"
+            justifyContent={xsScreen ?null: "flex-end"}
             style={{ marginTop: 20 }}
           >
             <IconButton

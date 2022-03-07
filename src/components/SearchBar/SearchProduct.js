@@ -98,7 +98,7 @@ const SearchProduct = (props) => {
           <FormatedImage url={option.img_url} />
         </Grid>
         <Grid item xs={9} container direction="column">
-          <Typography variant="h5">{`#${option.bar_code}`}</Typography>
+          <Typography variant="h5">{`#${option.product_code}`}</Typography>
           <Typography variant="h5">{option.name}</Typography>
           <Grid container item direction="row" justifyContent="space-between">
             <Typography variant="body2">

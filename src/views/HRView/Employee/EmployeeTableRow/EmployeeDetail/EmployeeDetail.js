@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
 import {
@@ -80,6 +81,7 @@ const EmployeeDetail = (props) => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
   const [openEdit, setOpenEdit] = React.useState(false);
 
@@ -156,12 +158,12 @@ const EmployeeDetail = (props) => {
         </Typography>
 
         <Grid container direction="row" justifyContent="flex-start">
-          <Grid item xs={3}>
+          <Grid item xs={12} >
             <UploadImage src={employeeDetail.img_url}/>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={12} sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3}sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã nhân viên{" "}
                 </Typography>
@@ -173,7 +175,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tên nhân viên{" "}
                 </Typography>
@@ -185,7 +187,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Ngày sinh
                 </Typography>
@@ -197,7 +199,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3}  sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   CMND
                 </Typography>
@@ -209,7 +211,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Số điện thoại
                 </Typography>
@@ -221,7 +223,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Email
                 </Typography>
@@ -233,7 +235,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item  xs={3} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Địa chỉ
                 </Typography>
@@ -246,9 +248,9 @@ const EmployeeDetail = (props) => {
             </Grid>
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={4}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={3} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Chức năng
                 </Typography>
@@ -262,7 +264,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={3} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Chi nhánh
                 </Typography>
@@ -276,7 +278,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={3} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Loại lương
                 </Typography>
@@ -288,7 +290,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={3} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mức lương
                 </Typography>
@@ -306,7 +308,7 @@ const EmployeeDetail = (props) => {
         <Grid
           container
           direction="row"
-          justifyContent="flex-end"
+          justifyContent={xsScreen ?null: "flex-end"}
           style={{ marginTop: 20 }}
         >
           <Button
