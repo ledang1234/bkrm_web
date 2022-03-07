@@ -175,7 +175,9 @@ function InventoryCheckPopUp({
 
   const handleProductSelect = (product) => {
     
-    console.log(inventoryCheck.details.find(d => d.id === product.id))
+    if (inventoryCheck.details.find(d => d.id === product.id)) {
+      return;
+    }
     const newDetails = [
       ...inventoryCheck.details,
       {
