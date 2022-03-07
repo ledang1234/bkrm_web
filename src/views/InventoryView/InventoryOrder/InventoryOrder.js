@@ -242,7 +242,8 @@ const InventoryOrder = () => {
       purchaseOrders.map((row, index) => {
         return (
           <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
-          totalCost={row.total_amount}  id={row.purchase_order_code} partnerName={row.supplier_name} date={row.creation_date} />
+          totalCost={row.total_amount}  id={row.purchase_order_code} partnerName={row.supplier_name} date={row.creation_date} 
+          typeBill={"Đơn nhập hàng"} />
 
         );
       })

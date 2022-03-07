@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 const InventoryReturnDetail = (props) => {
-  const { row, openRow } = props.parentProps;
+  const { row, openRow ,} = props.parentProps;
   //  tam thoi
   const currentUser = "Minh Tri";
   const info = useSelector((state) => state.info);
@@ -118,9 +118,11 @@ const InventoryReturnDetail = (props) => {
       content: () => componentRef.current,
   });
 
+  
+
 
   return (
-    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse in={props.isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <Box margin={1}>
         <Typography
           variant="h3"
@@ -265,7 +267,6 @@ const InventoryReturnDetail = (props) => {
               {/* thêm cột giá trả */}
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
-              <TableCell>Mã vạch</TableCell>
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Giá trả</TableCell>
               <TableCell align="right">Thành tiền</TableCell>
@@ -278,7 +279,6 @@ const InventoryReturnDetail = (props) => {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                <TableCell>{detail.bar_code}</TableCell>
                 <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
@@ -308,13 +308,13 @@ const InventoryReturnDetail = (props) => {
               </Grid>
             </Grid> */}
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng SL sản phẩm ({purchaseReturn.details.length})
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   {calculateTotalQuantity(purchaseReturn.details)}
                 </Typography>
@@ -340,26 +340,26 @@ const InventoryReturnDetail = (props) => {
                 <Typography variant="body1" gutterBottom component="div">200</Typography>
               </Grid>
             </Grid> */}
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
 
               <Grid item xs={7} sm={2} >
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
 
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   NCC đã trả
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
@@ -371,7 +371,7 @@ const InventoryReturnDetail = (props) => {
         <Grid
           container
           direction="row"
-          justifyContent={xsScreen ?null: "flex-end"}
+          justifyContent={"flex-end"}
           style={{ marginTop: 20 }}
         >
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}

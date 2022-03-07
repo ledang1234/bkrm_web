@@ -11,6 +11,15 @@ const CheckHistoryTableRow = (props) => {
     const { row, handleOpenRow,openRow} = props;
     const classes = useRowStyles();
 
+    const quantityDifference = row.details
+      ?.map((detail) => detail.quantity)
+      .reduce((total, ele) => total + ele, 0)
+    
+    const moneyDifference = row.details
+      ?.map((detail) => Number(detail.quantity) * Number(detail.unit_price))
+      .reduce((total, num) => total + num, 0)
+
+
     return (
       <>
         {/* ROW */}
@@ -28,14 +37,10 @@ const CheckHistoryTableRow = (props) => {
           </TableCell>
           <TableCell align="left">{row.branch_name}</TableCell>
           <TableCell align="right" className={classes.fontName}>
-           <ThousandFormat value={row.details
-              ?.map((detail) => detail.quantity)
-              .reduce((total, ele) => total + ele, 0)} />
+           <ThousandFormat style={{fontWeight:700,color:quantityDifference >0 ?"green" :"red"}}value={quantityDifference} />
           </TableCell>
           <TableCell align="right" className={classes.fontName}>
-          <VNDFormat value={row.details
-              ?.map((detail) => Number(detail.quantity) * Number(detail.unit_price))
-              .reduce((total, num) => total + num, 0)} />
+          <VNDFormat style={{fontWeight:700,color:quantityDifference >0 ?"green" :"red"}} value={moneyDifference}/>
           </TableCell>
           {/* <TableCell align="center">
                     <FormatedStatusCheck status={row.tongSLthucte - row.tongtonkho}/>

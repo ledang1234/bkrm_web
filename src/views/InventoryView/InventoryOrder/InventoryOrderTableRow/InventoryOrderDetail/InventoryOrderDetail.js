@@ -94,6 +94,7 @@ const useStyles = makeStyles((theme) =>
 
 const InventoryOrderDetail = (props) => {
   const { row, openRow } = props.parentProps;
+  const { isMini} = props;
   //  tam thoi
 
   const currentUser = "Minh Tri";
@@ -182,7 +183,7 @@ const InventoryOrderDetail = (props) => {
   return (
 
 
-    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <PayRemaining
         reloadDetail={() => setReload(!reload)}
         onReload={props.parentProps.onReload}
@@ -349,7 +350,7 @@ const InventoryOrderDetail = (props) => {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
-              <TableCell>Mã vạch</TableCell>
+              {/* <TableCell>Mã vạch</TableCell> */}
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá nhập</TableCell>
@@ -363,7 +364,7 @@ const InventoryOrderDetail = (props) => {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                <TableCell>{detail.bar_code}</TableCell>
+                {/* <TableCell>{detail.bar_code}</TableCell> */}
                 <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">{detail.returned_quantity}</TableCell>
                 <TableCell align="right">
@@ -398,53 +399,53 @@ const InventoryOrderDetail = (props) => {
                         </Grid>
                     </Grid> */}
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng SL sản phẩm ({purchaseOrder.details.length})
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item  xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                 {calculateTotalQuantity(purchaseOrder.details)}
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tiền hàng
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item  xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.total_amount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Giảm giá
                 </Typography>
               </Grid>
 
-              <Grid item sm={2}>
+              <Grid item  xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.discount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng tiền nhập
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item  xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat
                     value={row.total_amount - row.discount }
@@ -454,13 +455,13 @@ const InventoryOrderDetail = (props) => {
             </Grid>
 
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Đã trả NCC
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
@@ -473,7 +474,7 @@ const InventoryOrderDetail = (props) => {
         <Grid
           container
           direction="row"
-          justifyContent={xsScreen ?null: "flex-end"}
+          justifyContent={ "flex-end"}
           style={{ marginTop: 20 }}
         >
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}

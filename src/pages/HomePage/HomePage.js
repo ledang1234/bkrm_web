@@ -50,6 +50,8 @@ const HomePage = (props) => {
   const container =
     window !== undefined ? () => window().document.body : undefined;
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
   const customization = useSelector((state) => state.customize);
   const infoDetail = useSelector((state) => state.info);
   const isSidebarOpen =
@@ -207,9 +209,13 @@ const HomePage = (props) => {
       >
         <div className={classes.drawerHeader} />
         <Box
-          className={clsx([classes.background], {
+          className={ !xsScreen? clsx([classes.background], {
             [classes.marginBackground]: !isSidebarOpen,
-          })}
+          }) :
+          clsx([classes.backgroundMini], {
+            [classes.marginBackground]: false,
+          }) 
+        }
         >
           <Switch>
             {permissions?.find((p) => p.name === "sales") && (

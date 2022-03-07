@@ -92,6 +92,9 @@ const useStyles = makeStyles((theme) =>
 
 function InvoiceDetail(props) {
   const { row, openRow, onReload } = props.parentProps;
+  const { isMini } = props;
+
+  
   //  tam thoi
   const currentUser = "Phuong Gia Le";
 
@@ -177,7 +180,7 @@ function InvoiceDetail(props) {
 
 
   return (
-    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <PayRemaining
         onReload={props.parentProps.onReload}
         reloadDetail={() => setReload(!reload)}
@@ -339,7 +342,7 @@ function InvoiceDetail(props) {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>Sản phẩm</TableCell>
-              <TableCell>Mã vạch</TableCell>
+              {/* <TableCell>Mã vạch</TableCell> */}
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá bán</TableCell>
@@ -353,7 +356,7 @@ function InvoiceDetail(props) {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                <TableCell>{detail.bar_code}</TableCell>
+                {/* <TableCell>{detail.bar_code}</TableCell> */}
                 <TableCell align="right">{detail.quantity}</TableCell>
                 <TableCell align="right">{detail.returned_quantity}</TableCell>
                 <TableCell align="right">
@@ -375,66 +378,66 @@ function InvoiceDetail(props) {
           }}
         >
           <Grid container direction="column">
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={7}sm={2}>
                 {/* <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography> */}
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng SL sản phẩm ({order.details.length})
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   {calculateTotalQuantity(order.details)}
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={7}sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tiền hàng
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Giảm giá
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.discount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7}sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng tiền hoá đơn
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount - row.discount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Khách đã trả
                 </Typography>
               </Grid>
-              <Grid item sm={2}>
+              <Grid item xs={2}  sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
@@ -447,7 +450,7 @@ function InvoiceDetail(props) {
           container
           direction="row"
           // justifyContent="flex-end"
-          justifyContent={xsScreen ?null: "flex-end"}
+          justifyContent={ "flex-end"}
           style={{ marginTop: 20 }}
         >
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
