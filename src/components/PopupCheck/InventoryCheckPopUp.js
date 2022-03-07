@@ -34,7 +34,7 @@ import TableWrapper from "../TableCommon/TableWrapper/TableWrapper";
 import inventoryCheckApi from "../../api/inventoryCheckApi";
 import SnackBarGeneral from "../SnackBar/SnackBarGeneral";
 import InventoryCheckSummary from "../CheckoutComponent/CheckoutSummary/InventoryCheckSumary/InventroyCheckSumary";
-import SimpleModal from "../Modal/ModalWrapper";
+import ModalWrapperWithClose from "../Modal/ModalWrapperWithClose";
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import ButtonQuantity from "../Button/ButtonQuantity";
 function InventoryCheckPopUp({
@@ -289,7 +289,7 @@ function InventoryCheckPopUp({
             </Card>
           </Grid>
 
-          <SimpleModal
+          <ModalWrapperWithClose
             title="Cân bằng kho"
             open={open}
             handleClose={handleClose}
@@ -302,7 +302,13 @@ function InventoryCheckPopUp({
               Bạn có chắc chắn muốn Cân bằng kho?
             </Typography>
 
-            <Button
+            <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
+                <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
+                <Button onClick={()=>handleConfirmBalance()} variant="contained" size="small" color="primary" >Xác nhận  </Button>
+            </Grid>
+    
+
+            {/* <Button
               onClick={() => handleClose()}
               variant="contained"
               size="small"
@@ -322,8 +328,8 @@ function InventoryCheckPopUp({
               }}
             >
               Xác nhận
-            </Button>
-          </SimpleModal>
+            </Button> */}
+          </ModalWrapperWithClose>
         </Grid>
       </DialogContent>
     </>

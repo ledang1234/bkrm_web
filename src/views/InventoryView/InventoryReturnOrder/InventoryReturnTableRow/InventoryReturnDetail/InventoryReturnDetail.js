@@ -75,7 +75,6 @@ const InventoryReturnDetail = (props) => {
 
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
-
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -135,24 +134,24 @@ const InventoryReturnDetail = (props) => {
         <Grid container direction="row" justifyContent="flex-start">
           <Grid item xs={12}sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã trả hàng nhập{" "}
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.purchase_return_code}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã đơn nhập
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {purchaseReturn.purchase_order
                     ? purchaseReturn.purchase_order.purchase_order_code
@@ -161,36 +160,36 @@ const InventoryReturnDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3}sm={5}>
+              <Grid item xs={7}sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Ngày trả{" "}
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.creation_date}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Nhà cung cấp
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {purchaseReturn.supplier ? purchaseReturn.supplier.name : ""}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Người trả
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {purchaseReturn.created_by_user
                     ? purchaseReturn.created_by_user.name
@@ -201,12 +200,12 @@ const InventoryReturnDetail = (props) => {
           </Grid>
           <Grid item xs={12}sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Trạng thái
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   Cần thu{" "}
                   <VNDFormat value={row.total_amount - row.paid_amount} />
@@ -215,35 +214,35 @@ const InventoryReturnDetail = (props) => {
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
 
-              <Grid item xs={3} sm={6} >
+              <Grid item xs={7} sm={6} >
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền trả </Typography>
 
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount} />
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Chi nhánh thực hiện
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {purchaseReturn.branch ? purchaseReturn.branch.name : ""}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} sm={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Phương thức trả
                 </Typography>
               </Grid>
-              <Grid item  xs={3} sm={4}>
+              <Grid item   sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.payment_method === "cash" ? "Tiền mặt" : "Thẻ"}
                 </Typography>
@@ -310,12 +309,12 @@ const InventoryReturnDetail = (props) => {
             </Grid> */}
 
             <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-              <Grid item xs={3} sm={2}>
+              <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng SL sản phẩm ({purchaseReturn.details.length})
                 </Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   {calculateTotalQuantity(purchaseReturn.details)}
                 </Typography>
@@ -343,11 +342,11 @@ const InventoryReturnDetail = (props) => {
             </Grid> */}
             <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
 
-              <Grid item xs={3} sm={2} >
+              <Grid item xs={7} sm={2} >
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
 
               </Grid>
-              <Grid item xs={2}>
+              <Grid item sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount} />
                 </Typography>
@@ -355,12 +354,12 @@ const InventoryReturnDetail = (props) => {
             </Grid>
 
             <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-              <Grid item xs={3} sm={2}>
+              <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   NCC đã trả
                 </Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>

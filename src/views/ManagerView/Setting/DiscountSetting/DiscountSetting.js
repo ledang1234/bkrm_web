@@ -45,6 +45,7 @@ const DiscountSetting = () => {
     useEffect(() => {
       setPagingState({ ...pagingState, page: 0 });
     }, [reload, store_uuid]);
+    
     useEffect(() => {
       const loadData = async () => {
         try {
@@ -76,6 +77,10 @@ const DiscountSetting = () => {
 
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    console.log("newDiscountList",newDiscountList)
+    console.log("discountList",discountList)
+
 
     //// 1. Add pop up + noti
     //add

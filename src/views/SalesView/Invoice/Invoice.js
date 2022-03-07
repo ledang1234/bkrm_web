@@ -38,11 +38,16 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 import JSONdata from "../../../assets/JsonData/invoice.json";
 import orderApi from "../../../api/orderApi";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 const Invoice = () => {
   // fetch data here
   const theme = useTheme();
   const classes = useStyles(theme);
   const dispatch = useDispatch();
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   const [orders, setOrders] = useState([]);
   const [pagingState, setPagingState] = useState({
@@ -111,6 +116,9 @@ const Invoice = () => {
     // const isAsc = orderBy === property && order === 'asc';
     // setOrder(isAsc ? 'desc' : 'asc');
     // setOrderBy(property);
+
+    
+
   };
 
   useEffect(() => {
@@ -205,7 +213,7 @@ const Invoice = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper  pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper  pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
@@ -226,7 +234,21 @@ const Invoice = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+          orders.map((row, index) => {
+            return (
+              // <InvoiceTableRow
+              //   key={row.uuid}
+              //   row={row}
+              //   openRow={openRow}
+              //   handleOpenRow={handleOpenRow}
+              //   onReload={onReload}
+              // />
+              <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+             totalCost={row.total_amount}  id={row.order_code} partnerName={row.customer_name} date={row.paid_date} />
+            );
+          })
+        }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint orders={orders} classes={classes} />

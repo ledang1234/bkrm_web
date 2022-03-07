@@ -14,6 +14,8 @@ import icon from '../../../../assets/img/product/tch.jpeg';
 
 export const CartRow = (props) =>{
     const classes = useStyles(); 
+
+
     const {row,discountData, handleDeleteItemCart, handleChangeItemQuantity, handleChangeItemPrice} = props
     const haveDiscount = true;
 
