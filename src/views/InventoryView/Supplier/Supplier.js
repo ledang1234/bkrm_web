@@ -201,7 +201,9 @@ const Supplier = () => {
       {/* 3. TABLE */}
 
       {!xsScreen ?<TableWrapper
+
         pagingState={{...pagingState, total_rows: totalRows}}
+
 
         setPagingState={setPagingState}
       >
