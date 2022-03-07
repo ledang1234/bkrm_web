@@ -12,7 +12,11 @@ import {
   Box,
   Button,
   Typography,
-  Grid
+  MenuItem,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select
 } from "@material-ui/core";
 
 // import - icon
@@ -101,6 +105,9 @@ const ToolBar = (props) => {
     excel_data,
     excel_name,
     columnsToKeep,
+    searchKey, setSearchKey,
+    orderByOptions,orderBy, setOrderBy,
+    sort, setSort,
   } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -172,27 +179,66 @@ const ToolBar = (props) => {
   return (
     <CardHeader
       avatar={
-        <TextField
-          variant="outlined"
-          placeholder={textSearch} /*placeholder='Tìm kiếm ...'*/
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchTwoToneIcon className={classes.icon} />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <Box
-                  component="img"
-                  sx={{ height: 23, width: 23 }}
-                  src={barcodeIcon}
-                />
-              </InputAdornment>
-            ),
-            className: classes.search,
-          }}
-        />
+        <>
+          <TextField
+            variant="outlined"
+            placeholder={textSearch} /*placeholder='Tìm kiếm ...'*/
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
+                setSearchKey(e.target.value)
+              }
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchTwoToneIcon className={classes.icon} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Box
+                    component="img"
+                    sx={{ height: 23, width: 23 }}
+                    src={barcodeIcon}
+                  />
+                </InputAdornment>
+              ),
+              className: classes.search,
+            }}
+          />
+
+          <FormControl>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              Sắp xếp theo
+            </InputLabel>
+            <Select
+              autoWidth={true}
+              labelId="orderBy"
+              value={orderBy}
+              label="Sap xep theo"
+              onChange={(e) => setOrderBy(e.target.value)}
+            >
+              {orderByOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
+            </Select>
+          </FormControl>
+
+          <FormControl>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              Thứ tự
+            </InputLabel>
+            <Select
+              autoWidth={true}
+              labelId="sort"
+              value={sort}
+              label="Sap xep theo"
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <MenuItem value="asc">Tăng dần</MenuItem>
+              <MenuItem value="desc">Giảm dần</MenuItem>
+            </Select>
+          </FormControl>
+
+        </>
       }
       action={
         <Box className={classes.actions}>
