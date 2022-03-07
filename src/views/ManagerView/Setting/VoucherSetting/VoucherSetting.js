@@ -25,24 +25,42 @@ import SnackBar from '../../../../components/SnackBar/SnackBar'
 import TableHeader  from '../../../../components/TableCommon/TableHeader/TableHeader'
 import ToolBar from '../../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../../components/TableCommon/TableWrapper/TableWrapper'
-
+import promotionCouponApi from '../../../../api/promotionCouponApi'
 
 const VoucherSetting = () => {
     const [voucherList, setVoucherList] = useState([]);
+    const [newVoucherList, setNewVoucherList] = useState([]);
     const [reload, setReload] = useState(false);
 
     const onReload = () => setReload(!reload)
     
     const info = useSelector(state => state.info)
     const store_uuid = info.store.uuid
+    const [pagingState, setPagingState] = useState({
+      page: 0,
+      limit: 10,
+    });
+    const [totalRows, setTotalRows] = useState(0)
+    useEffect(() => {
+      setPagingState({ ...pagingState, page: 0 });
+    }, [reload, store_uuid]);
 
     useEffect(() => {
-        customerApi.getCustomers(store_uuid)
-        .then(response => response.data, err => console.log(err))
-        .then(data => {
-          setVoucherList(data)
-        })
-
+      const loadData = async () => {
+        const response = await promotionCouponApi.getAllVouchers(
+          store_uuid,
+          {
+            page: pagingState.page,
+            limit: pagingState.limit,
+          }
+        );
+        console.log("vouchers", response.vouchers)
+        setNewVoucherList(response.vouchers)
+        setTotalRows(response.total_rows)
+      }
+      if (store_uuid) {
+        loadData();
+      }
     }, [reload, store_uuid]);
 
     const theme = useTheme();

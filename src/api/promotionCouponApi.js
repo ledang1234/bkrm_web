@@ -32,13 +32,10 @@ const promotionCouponApi = {
       params: query,
     });
   },
-  getAllVouchers: (storeUuid, page, limit) => {
+  getAllVouchers: (storeUuid,query) => {
     const url = `stores/${storeUuid}/getAllVouchers`;
     return axiosClient.get(url, {
-      params: {
-        page: page,
-        limit: limit,
-      },
+      params: query,
     });
   },
 };
