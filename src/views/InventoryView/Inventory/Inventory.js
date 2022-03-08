@@ -43,6 +43,9 @@ import * as excel from "../../../assets/constant/excel";
 import * as xlsx from "xlsx";
 import ProductImportPopper from "../../../components/Popper/ProductImportPopper";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {ProductMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);
@@ -106,6 +109,7 @@ const Inventory = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -241,7 +245,7 @@ const Inventory = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
@@ -262,7 +266,26 @@ const Inventory = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+      productList.map((row, index) => {
+        return (
+          // <ProductMiniTableRow
+          //   key={row.uuid}
+          //   row={row}
+          //   setReload={() => setReload(!reload)}
+          //   openRow={openRow}
+          //   handleOpenRow={handleOpenRow}
+          // />
+          // <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={() => setReload(!reload)} 
+          // totalCost={row.total_amount}  id={row.purchase_order_code} partnerName={row.supplier_name} date={row.creation_date} 
+          // typeBill={"Sản phẩm"} />
+          <ProductMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={() => setReload(!reload)} 
+            img={row.img_url}  id={row.product_code} name={row.name} list_price={row.list_price} standard_price={row.standard_price}  branch_quantity={row.branch_quantity} min_reorder_quantity={row.min_reorder_quantity}
+            typePartner={"Sản phẩm"}  />
+        );
+      })
+
+      }
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>

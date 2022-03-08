@@ -97,3 +97,11 @@ video{
   border: 1px solid #a2ddff !important;
   box-shadow: 0 0 0 0.2rem rgba(169, 241, 252, 0.25) !important;
 }
+::marker {
+  /* color: blue;
+  font-size: 1.2em; */
+  display: none;
+}
+li{
+  list-style:none;
+}

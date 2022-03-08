@@ -9,17 +9,24 @@ import clsx from "clsx";
 import WarningIcon from '@material-ui/icons/Warning';
 const ButtonQuantity = (props) =>{
     const classes = useStyles();
-    const {quantity,setQuantity, limit, isReturn,branch_quantity} = props;
+    const {quantity,setQuantity, limit, isReturn,branch_quantity,isMini} = props;
     const [show, setShow] = React.useState('none');
   
     const handleIncrement = () => {
-      if(limit) {
+      //them cai nay
+       if (Number(limit) === 0){
+        setQuantity(quantity)
+        return
+      }
+
+      else if(limit) {
         if(quantity >= Number(limit)) {
           console.log('true')
           setQuantity(quantity)
           return
-        }
+        } 
       } 
+     
       setQuantity(quantity+ 1);
     };
   
@@ -56,11 +63,20 @@ const ButtonQuantity = (props) =>{
    
     return(
     <ListItem onMouseOver={handleShow} onMouseOut={handleClose}  > 
-          <IconButton style={{ display: show ,color: error_quantity  ? "red":null,}} aria-label="delete" className={classes.margin} size="small" onClick={handleDecrement} >
+
+        {error_quantity && isMini?
+            <HtmlTooltip title={ <React.Fragment>
+                <Typography color="inherit"><b>Vượt tồn kho</b> </Typography>   <u>{"Tồn kho:"}</u> <b>{branch_quantity}</b> 
+                </React.Fragment> } >
+              <WarningIcon fontSize="small"  style={{fill: "red"}}/> 
+          </HtmlTooltip>:null}
+
+          
+          <IconButton style={{ display: isMini?true:show ,color: error_quantity  ? "red":null,margin:isMini?0:null, padding:isMini?0:null}} aria-label="delete" className={classes.margin} size="small" onClick={handleDecrement} >
             <RemoveIcon fontSize="inherit" />
-          </IconButton>
+          </IconButton> 
        
-           <TextField  id="standard-basic" style={{width:35 }} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: "right", color: error_quantity  ? "red":null, fontWeight:error_quantity ? 600:null,
+           <TextField  variant={isMini? "outlined" : "standard"} id="standard-basic" style={{width:35 }} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: "right", color: error_quantity  ? "red":null, fontWeight:error_quantity ? 600:null,
           backgroundColor:error_quantity ?"#ffe8e8":null
         }}} 
                 value={quantity} onChange={handleQuantity}/>
@@ -68,11 +84,14 @@ const ButtonQuantity = (props) =>{
            
           {isReturn ? `/${limit}`: null}
 
-          <IconButton style={{ display: show ,color: error_quantity  ? "red":null, }} aria-label="delete" className={classes.margin} size="small" onClick={handleIncrement}>
+          <IconButton style={{ display: isMini?true:show ,color: error_quantity  ? "red":null ,margin:isMini?0:null, padding:isMini?0:null}} aria-label="delete" className={classes.margin} size="small" onClick={handleIncrement}>
             <AddIcon fontSize="inherit" />
           </IconButton>
 
-          {error_quantity ?
+
+
+{/* Error  */}
+          {error_quantity && !isMini?
      
         <HtmlTooltip
         title={

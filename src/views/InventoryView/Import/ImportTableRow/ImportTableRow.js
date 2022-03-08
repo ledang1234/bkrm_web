@@ -32,7 +32,7 @@ export const ImportRow = (props) => {
       </TableCell>
       <TableCell align="right">
         <VNDInput
-          id="standard-basic" style={{ width: 70 }} size="small"
+          id="standard-basic" style={{ width: 72 }} size="small"
           inputProps={{ style: { textAlign: "right" } }}
           value={row.unit_price}
           onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}

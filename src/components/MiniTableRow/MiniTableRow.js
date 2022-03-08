@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box,TextField,Avatar,Slide,Divider,Dialog,AppBar,Toolbar,Button,ListItem,IconButton,TableRow,TableCell,Typography, Grid} from '@material-ui/core'
+import {Box,TextField,Avatar,Slide,Divider,ListItemSecondaryAction,Dialog,AppBar,Toolbar,Button,ListItem,IconButton,TableRow,TableCell,Typography, Grid} from '@material-ui/core'
 import { useTheme, makeStyles, styled } from "@material-ui/core/styles";
 
 import useStyles from "../TableCommon/style/mainViewStyle";
@@ -21,15 +21,65 @@ import CloseIcon from '@material-ui/icons/Close';
 import {ThousandFormat} from "../TextField/NumberFormatCustom"
 import ava from '../../assets/img/product/lyimg.jpeg';
 import PhoneIcon from '@material-ui/icons/Phone';
+import { useEffect, useState } from "react";
+
+import InventoryDetail from '../../views/InventoryView/Inventory/InventoryTableRow/InventoryDetail/InventoryDetail';
+import DiscountPopUp from "../../views/SalesView/Cart/DiscountPopup/DiscountPopup"
+import ButtonQuantity from "../../components/Button/ButtonQuantity";
+
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
 
-export const MiniTableRow = ({}) =>{
+export const CartMiniTableRow = (props) =>{
     const classes = useStyles(); 
+    const haveDiscount = true;
+
+    const {row,discountData, handleDeleteItemCart, handleChangeItemQuantity, handleChangeItemPrice} = props
+    const updateQuantity = (newQuantity) => {
+        handleChangeItemQuantity(row.uuid, newQuantity)
+      }
+
+    const [openDiscount, setOpenDiscount] = React.useState(false);
+    const handleOpenDiscount = () =>{
+      setOpenDiscount(!openDiscount)
+    }
     return (
-        <div></div>
+        <>
+         <ListItem  style={{ padding:10}}>   
+                <ListItem  style={{margin:0, padding:0}}>    
+                        <Box component="img" sx={{ height: 55, width: 55,  borderRadius:10,marginRight:20   }}src={row.img_url} />
+                        <div>
+                            <ListItem style={{margin:0,padding:0}} >    
+                                <Typography style={{fontSize:15, marginBottom:10}} >{row.name} </Typography>
+                                {haveDiscount ? 
+                                <img id="gift" src={require('../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} onClick={()=>setOpenDiscount(true)}/>
+                                :null}
+                                {openDiscount && <DiscountPopUp open={openDiscount} title={`Khuyến mãi trên ${row.product_code} - ${row.name}`} onClose={()=>{setOpenDiscount(false)}}/>}
+                            </ListItem  > 
+                            <ListItem style={{margin:0,padding:0}} >    
+                            <Input.ThousandSeperatedInput 
+                                id="standard-basic" style={{maxWidth:70 }} size="small" 
+                                inputProps={{style: { textAlign: "right" }}} 
+                                defaultPrice={row.unit_price} 
+                                value={row.unit_price} 
+
+                                onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}/>
+                                <Typography style={{marginLeft:10}}>x</Typography>
+                            </ListItem  > 
+                        </div>
+                    </ListItem  >  
+                    <ListItemSecondaryAction style={{marginTop:20, marginRight:-20}}>
+                        <ButtonQuantity quantity={row.quantity} setQuantity={updateQuantity}  branch_quantity={row.branch_quantity} isMini={true}/> 
+                    </ListItemSecondaryAction>
+                
+                </ListItem  >  
+         <Divider style={{marginTop:7}}/>
+        
+
+        </>
     )
 }
 export const BillMiniTableRow = (props) =>{
@@ -155,3 +205,184 @@ export const PartnerMiniTableRow = (props) =>{
         </div>
     )
 }
+
+
+export const ReturnCartMiniTableRow = ({ detail, handleProductPriceChange, handleItemQuantityChange }) =>{
+const classes = useStyles();
+  const theme = useTheme();
+  const [show, setShow] = React.useState('none');
+  useEffect(() => {}, [detail]);
+
+
+  const handleChangeQuantity = (newQuantity) => {
+    handleItemQuantityChange(detail.id, newQuantity);
+  };
+
+  const handleChangePrice = (newPrice) => {
+    handleProductPriceChange(detail.id, newPrice);
+  };
+    return (
+        <>
+        <Typography style={{fontSize:16}} >{detail.product_code} - {detail.name} </Typography>
+        <ListItem style={{margin:0,padding:0}} >  
+            <Typography style={{color:"#6b6b6b", marginRight:10}} >Giá bán: </Typography>
+            <Input.VNDFormat style={{ width: 70 ,color:"#6b6b6b"}} value={detail.unit_price}/>  
+        </ListItem  > 
+        <Typography style={{ marginBottom:-10, marginTop:10, color:"red"}} >Giá trả: </Typography>
+
+        <ListItem style={{margin:0,padding:0}} >  
+            <Input.ThousandSeperatedInput 
+                id="standard-basic" style={{maxWidth:70 }} size="small" 
+                inputProps={{style: { textAlign: "right" }}} 
+                defaultPrice={detail.returnPrice} 
+                onChange={e => handleChangePrice(e.target.value)}/>
+                
+                <ButtonQuantity quantity={detail.returnQuantity} limit={detail.quantity - detail.returned_quantity} setQuantity={handleChangeQuantity}  show={show} setShow={setShow} isReturn={true} isMini={true}/> 
+        </ListItem  > 
+         <Divider style={{marginTop:7}}/>
+        
+
+        </>
+    )
+}
+
+
+
+
+export const ProductMiniTableRow = (props) =>{
+    const classes = useStyles();
+    const theme = useTheme(); 
+    const haveDiscount = true;
+
+    const {row, handleOpenRow, openRow } = props
+    const {img, id,name ,list_price,standard_price,typePartner ,branch_quantity,min_reorder_quantity} = props
+    // const classes = useStyles(); 
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    function returnColor(current,min) {
+        if(current >= min) {return "green"}
+        else if (current <= 0) {return "red"}
+        else{return "orange"}
+    }
+    
+ 
+    return (
+  
+        <div style={{margin:15,}}>
+        <Grid  container direction="row" justifyContent="space-between" 
+          onClick={()=>{handleClickOpen();handleOpenRow(row.uuid)}} 
+          >
+            <Grid item xs={9}>
+                <ListItem  style={{marginLeft:2, padding:0}}>
+                 <Box
+                    component="img"
+                    sx={{ height: 45, width: 45, borderRadius: 10, marginRight: 15 }}
+                    src={row.img_url}
+                    />                   
+                     <Grid  container direction="column"justifyContent="space-between" >
+                    <Typography style={{marginTop:-7, marginBottom:10}}>{name}</Typography>
+                    <Typography style={{}}>Giá vốn: <ThousandFormat value={standard_price}/></Typography>
+                    </Grid>
+                </ListItem>  
+            </Grid>
+            <Grid item xs={3} container direction="column"justifyContent="space-between" alignItems="flex-end" >
+                <Typography style={{marginTop:-5, textAlign: 'right',color:returnColor(branch_quantity,min_reorder_quantity)}}>Tồn: <ThousandFormat value={branch_quantity}/></Typography>
+                <Typography style={{textAlign: 'right', }}>Giá bán: <ThousandFormat value={list_price}/></Typography>
+            </Grid>
+        </Grid> 
+
+
+        <Divider style={{marginTop:3}} />
+        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+            <AppBar className={classes.appBar}>
+            <Toolbar>
+                <Typography variant="h3" className={classes.title} style={{color:"white"}} >
+                    {typePartner} {"#"} {id}
+                </Typography>
+                <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                <CloseIcon />
+                </IconButton>
+            </Toolbar>
+            </AppBar>
+            <InventoryDetail parentProps={props}  openRow={openRow} isMini={true} />
+        </Dialog>
+        </div>
+    )
+}
+
+
+export const CheckMiniTableRow = ({ detail, handleItemRealQuantityChange, handleDeleteItem }) =>{
+    const classes = useStyles();
+    const [show, setShow] = React.useState("none");
+    useEffect(() => { }, [detail]);
+  
+    const onChangeRealQuantity = (newQuantity) => {
+      handleItemRealQuantityChange(detail.id, newQuantity);
+    };
+ 
+    return (
+        <>
+        <ListItem  >   
+                <ListItem  style={{margin:0, padding:0}}>    
+                        <Box component="img" sx={{ height: 55, width: 55,  borderRadius:10,marginRight:20   }}src={detail.img_url} />
+                        <div>
+                            <Typography style={{fontSize:15, marginBottom:10}} >detail.name</Typography>
+                           
+                            <Typography style={{marginLeft:10}}>detail.branch_quantity</Typography> 
+                            {/* <ThousandFormat  value={detail.branch_quantity} /> */}
+                        
+                        </div>
+                    </ListItem  >  
+                    <ListItemSecondaryAction style={{marginTop:20, marginRight:-20}}>
+                         <ButtonQuantity quantity={100} setQuantity={onChangeRealQuantity}  show={show} setShow={setShow} limit={detail.quantity} isReturn={false} isMini={true}/> 
+                        {/* <ButtonQuantity quantity={detail.real_quantity} setQuantity={onChangeRealQuantity}  show={show} setShow={setShow} limit={detail.quantity} isReturn={false} isMini={true}/>  */}
+                    </ListItemSecondaryAction>
+                
+                </ListItem  >  
+
+                {/* <ThousandFormat  value={Number(detail.real_quantity) - Number(detail.branch_quantity)} /> */}
+                {/* <VNDFormat value={(Number(detail.real_quantity) - Number(detail.branch_quantity)) *
+          detail.standard_price} /> */}
+         <Divider style={{marginTop:7}}/>
+        
+
+        </>
+    )
+}
+
+
+{/* <ListItem  style={{ padding:10}}>   
+<ListItem  style={{margin:0, padding:0}}>    
+        <Box component="img" sx={{ height: 55, width: 55,  borderRadius:10,marginRight:20   }}src={row.img_url} />
+        <div>
+            <ListItem style={{margin:0,padding:0}} >    
+                <Typography style={{fontSize:15, marginBottom:10}} >{row.name} </Typography>
+                {haveDiscount ? 
+                <img id="gift" src={require('../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} onClick={()=>setOpenDiscount(true)}/>
+                :null}
+                {openDiscount && <DiscountPopUp open={openDiscount} title={`Khuyến mãi trên ${row.product_code} - ${row.name}`} onClose={()=>{setOpenDiscount(false)}}/>}
+            </ListItem  > 
+            <ListItem style={{margin:0,padding:0}} >    
+            <Input.ThousandSeperatedInput 
+                id="standard-basic" style={{maxWidth:70 }} size="small" 
+                inputProps={{style: { textAlign: "right" }}} 
+                defaultPrice={row.unit_price} 
+                value={row.unit_price} 
+
+                onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}/>
+                <Typography style={{marginLeft:10}}>x</Typography>
+            </ListItem  > 
+        </div>
+    </ListItem  >  
+    <ListItemSecondaryAction style={{marginTop:20, marginRight:-20}}>
+        <ButtonQuantity quantity={row.quantity} setQuantity={updateQuantity}  branch_quantity={row.branch_quantity} isMini={true}/> 
+    </ListItemSecondaryAction>
+
+</ListItem  >  
+<Divider style={{marginTop:7}}/> */}

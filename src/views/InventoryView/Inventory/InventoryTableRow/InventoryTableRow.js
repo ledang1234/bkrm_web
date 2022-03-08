@@ -19,9 +19,14 @@ import { FormatedProductStatus } from "../../../../components/TableCommon/util/f
 import icon from "../../../../assets/img/product/img.jpeg";
 import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {ProductMiniTableRow} from "../../../../components/MiniTableRow/MiniTableRow"
+
 const InventoryTableRow = (props) => {
   const { row, handleOpenRow, openRow } = props;
   const classes = useRowStyles();
+ 
+
   return (
     <>
       <TableRow

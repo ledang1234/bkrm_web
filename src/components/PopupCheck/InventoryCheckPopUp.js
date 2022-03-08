@@ -37,6 +37,11 @@ import InventoryCheckSummary from "../CheckoutComponent/CheckoutSummary/Inventor
 import ModalWrapperWithClose from "../Modal/ModalWrapperWithClose";
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import ButtonQuantity from "../Button/ButtonQuantity";
+
+import {CheckMiniTableRow} from "../../components/MiniTableRow/MiniTableRow"
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
+
 function InventoryCheckPopUp({
   classes,
   setReload,
@@ -49,6 +54,9 @@ function InventoryCheckPopUp({
   const handleClose = () => {
     setOpen(false);
   };
+  const theme = useTheme();
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("stt");
@@ -256,7 +264,7 @@ function InventoryCheckPopUp({
                 {/* JSON data attribute phải giongso table head id */}
 
                 {/* <ListItem headCells={HeadCells.CartReturnHeadCells}  cartData={row.list} tableType={TableType.CART_RETURN} /> */}
-                <TableWrapper isCart>
+                {!xsScreen ?  <TableWrapper isCart>
                   <TableHeader
                     classes={classes}
                     order={order}
@@ -275,7 +283,15 @@ function InventoryCheckPopUp({
                       />
                     ))}
                   </TableBody>
-                </TableWrapper>
+                </TableWrapper>:
+                // inventoryCheck.details.map((detail, index) => (
+                  ["helo", "xin chao"].map((detail, index) => (
+                  <CheckMiniTableRow
+                    handleItemRealQuantityChange={handleItemRealQuantityChange}
+                    detail={detail}
+                    handleDeleteItem={handleDeleteItem}
+                  />
+                ))}
               </Box>
             </Card>
           </Grid>
@@ -349,7 +365,7 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDe
     handleItemRealQuantityChange(detail.id, newQuantity);
   };
   return (
-    <TableRow hover key={detail.is}>
+    <TableRow hover key={detail.id}>
       <TableCell align="left" style={{ width: 5 }}>
         {detail.product_code}
       </TableCell>
