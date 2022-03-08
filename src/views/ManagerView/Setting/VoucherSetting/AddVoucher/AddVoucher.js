@@ -142,7 +142,7 @@ const AddVoucher = (props) => {
           {/* 2. Thời gian áp dụng */}
           <Typography variant="h5" className={classes.text} style={{marginTop:15}}>Thời gian áp dụng:</Typography>
           <Grid  container  direction="row" justifyContent="space-around" alignItems="center"  spacing={3} >
-              <Grid item xs={6} >
+              <Grid item sm={6} >
                   <TextField id="startDate" label="Từ" 
                       type="date" 
                       name="startDate"
@@ -155,7 +155,7 @@ const AddVoucher = (props) => {
                     />
             </Grid>
             
-            <Grid item xs={6}>
+            <Grid item sm={6}>
               <TextField 
                   id="endDate" label="Đến" type="date" name="endDate"
                   // defaultValue={formik.values.endDate} 

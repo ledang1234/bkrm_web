@@ -16,6 +16,8 @@ import {
   ListItemText,
   IconButton,
 } from '@material-ui/core';
+import { useTheme } from "@material-ui/core/styles";
+
 import CloseIcon from '@material-ui/icons/Close';
 import update from 'immutability-helper';
 import { useSelector, useDispatch } from 'react-redux';
@@ -43,9 +45,14 @@ import purchaseReturnApi from '../../../api/purchaseReturnApi';
 import SnackBarGeneral from '../../SnackBar/SnackBarGeneral';
 
 import {statusAction} from '../../../store/slice/statusSlice';
+import {ReturnCartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 function InventoryReturnPopUp(props) {
   const { purchaseOrder, classes, handleCloseReturn, reload, reloadDetail } = props;
+  const theme = useTheme();
+
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
   // 2. Table sort
   const [order, setOrder] = React.useState('desc');
@@ -242,7 +249,7 @@ function InventoryReturnPopUp(props) {
                 {/* JSON data attribute phải giongso table head id */}
 
                 {/* <ListItem headCells={HeadCells.CartReturnHeadCells}  cartData={row.list} tableType={TableType.CART_RETURN} /> */}
-                <TableWrapper isCart>
+                {!xsScreen ? ( <TableWrapper isCart>
                   <TableHeader
                     classes={classes}
                     order={order}
@@ -257,10 +264,20 @@ function InventoryReturnPopUp(props) {
                         handleItemQuantityChange={handleItemQuantityChange}
                         detail={detail}
                       />
+                 
                     ))}
                   </TableBody>
-                </TableWrapper>
-              </Box>
+                </TableWrapper>):
+                purchaseReturn.details.map((detail, index) => (
+                  <ReturnCartMiniTableRow
+                      handleProductPriceChange={handleProductPriceChange}
+                      handleItemQuantityChange={handleItemQuantityChange}
+                      detail={detail}
+                  />
+
+                ))
+                }
+         </Box>
             </Card>
           </Grid>
 
@@ -289,7 +306,6 @@ function ImportReturnTableRow({ detail, handleProductPriceChange, handleItemQuan
   const handleChangeQuantity = (newQuantity) => {
     handleItemQuantityChange(detail.id, newQuantity);
   };
-
   const handleChangePrice = (newPrice) => {
     handleProductPriceChange(detail.id, newPrice);
   };

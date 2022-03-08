@@ -80,7 +80,7 @@ const UploadImage = () => {
 };
 const InventoryDetail = (props) => {
   const { row, openRow, setReload } = props.parentProps;
-
+  const { isMini } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
@@ -199,7 +199,7 @@ const InventoryDetail = (props) => {
         handleClose={() => setIsOpenVariaceDetailModal(false)} />)}
   </>)
     : (
-      <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+      <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
         {isOpenUpdate && <UpdateInventory
           handleClose={handleCloseUpdate}
           open={isOpenUpdate}
@@ -261,60 +261,60 @@ const InventoryDetail = (props) => {
               <Grid container direction="row">
                 <Grid item xs={12} sm={6}>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={2} sm={6}>
+                    <Grid item xs={4} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Tên sản phẩm
                       </Typography>
                     </Grid>
-                    <Grid item xs={3} sm={6}>
+                    <Grid item  sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.name}{" "}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={2} sm={6}>
+                    <Grid item xs={4} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Mã sản phẩm
                       </Typography>
                     </Grid>
-                    <Grid item xs={3} sm={6}>
+                    <Grid item  sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.product_code}{" "}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={2} sm={6}>
+                    <Grid item xs={4} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Mã vạch
                       </Typography>
                     </Grid>
-                    <Grid item xs={3} sm={6}>
+                    <Grid item sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.bar_code}{" "}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={2} sm={6}>
+                    <Grid item xs={4} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Danh mục
                       </Typography>
                     </Grid>
-                    <Grid item xs={3} sm={6}>
+                    <Grid item sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.category.name}{" "}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={2} sm={6}>
+                    <Grid item xs={4} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Đơn vị
                       </Typography>
                     </Grid>
-                    <Grid item xs={3} sm={6}>
+                    <Grid ListItemText sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.quantity_per_unit}
                       </Typography>
@@ -323,24 +323,24 @@ const InventoryDetail = (props) => {
                 </Grid>
                 <Grid item xs={12}sm={6}>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={2} sm={4}>
+                    <Grid item xs={4} sm={4}>
                       <Typography variant="h5" gutterBottom component="div">
                         Giá bán
                       </Typography>
                     </Grid>
-                    <Grid item xs={3} sm={6}>
+                    <Grid item  sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         <VNDFormat value={productDetail.list_price}></VNDFormat>
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={2} sm={4}>
+                    <Grid item xs={4} sm={4}>
                       <Typography variant="h5" gutterBottom component="div">
                         Giá vốn
                       </Typography>
                     </Grid>
-                    <Grid item xs={3} sm={6}>
+                    <Grid item  sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         <VNDFormat
                           value={productDetail.standard_price}
@@ -350,12 +350,12 @@ const InventoryDetail = (props) => {
                   </Grid>
 
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={2} sm={4}>
+                    <Grid item xs={4} sm={4}>
                       <Typography variant="h5" gutterBottom component="div">
                         Tồn kho
                       </Typography>
                     </Grid>
-                    <Grid item xs={3} sm={6}>
+                    <Grid item  sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {row.branch_quantity}{" "}
                       </Typography>
@@ -367,7 +367,7 @@ const InventoryDetail = (props) => {
               <Grid
                 container
                 direction="row"
-                justifyContent={xsScreen ?null: "flex-end"}
+                justifyContent={"flex-end"}
                 style={{ marginTop: 20 }}
               >
                 <Button

@@ -56,7 +56,7 @@ import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import customerApi from "../../../api/customerApi";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 import {calculateTotalQuantity} from "../../../components/TableCommon/util/sortUtil"
-import {MiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import {CartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 
 const Cart = () => {
   const theme = useTheme();
@@ -590,7 +590,7 @@ const Cart = () => {
                   // Dien thoai
                   cartList[selectedIndex].cartItem.map((row, index) => {   
                     return (
-                      <MiniTableRow
+                      <CartMiniTableRow
                         row={row}
                         handleDeleteItemCart={handleDeleteItemCart}
                         handleChangeItemPrice={handleChangeItemPrice}

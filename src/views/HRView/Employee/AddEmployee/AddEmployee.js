@@ -224,7 +224,7 @@ const AddEmployee = (props) => {
             justifyContent="space-around"
             spacing={2}
           >
-            <Grid item xs={6}>
+            <Grid item sm={6}>
               <TextField
                 id="outlined-basic"
                 label="Tên nhân viên"
@@ -347,7 +347,7 @@ const AddEmployee = (props) => {
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item sm={6}>
               {/* Select lưong */}
               <FormControl
                 className={classes.formControl}

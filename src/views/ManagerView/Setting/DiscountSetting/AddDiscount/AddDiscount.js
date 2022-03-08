@@ -480,7 +480,7 @@ const AddDiscount = (props) => {
           />
            <div style={{padding:10}}>
           <Grid  container  direction="row" justifyContent="space-around" alignItems="center"  spacing={3} >
-              <Grid item xs={6} >
+              <Grid item sm={6} >
                   <TextField id="startDate" label="Từ" 
                       type="date" 
                       name="startDate"
@@ -493,7 +493,7 @@ const AddDiscount = (props) => {
                     />
             </Grid>
             
-            <Grid item xs={6}>
+            <Grid item sm={6}>
               <TextField 
                   id="endDate" label="Đến" type="date" name="endDate"
                   defaultValue={new Date().toDateString()} 

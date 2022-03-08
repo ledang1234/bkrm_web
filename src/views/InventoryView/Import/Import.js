@@ -54,6 +54,7 @@ import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import moment from "moment";
 import AddInventory from "../Inventory/AddInventory/AddInventory";
 import supplierApi from "../../../api/supplierApi";
+import {CartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
@@ -524,7 +525,9 @@ const Import = () => {
               </Grid>
 
               {/* 1.2 TABLE */}
-              {!mode ? (
+              {!mode ? 
+               !xsScreen ? (
+                (
                 <TableWrapper isCart={true}>
                   <TableHeader
                     classes={classes}
@@ -550,12 +553,24 @@ const Import = () => {
                     })}
                   </TableBody>
                 </TableWrapper>
-              ) : (
+              )
+              ):(
+                cartList[selectedIndex].cartItem.map((row, index) => {   
+                  return (
+                    <CartMiniTableRow
+                      row={row}
+                      handleDeleteItemCart={handleDeleteItemCart}
+                      handleChangeItemPrice={handleChangeItemPrice}
+                      handleChangeItemQuantity={handleChangeItemQuantity}
+                    />
+                );
+              })
+            ) : (
                 <MenuProduct />
               )}
             </Box>
             {/* 1.3 CHANGE MODE  */}
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Switch checked={mode} onChange={handleChangeMode} />}
               style={{
                 display: "flex",
@@ -563,7 +578,7 @@ const Import = () => {
                 margin: -10,
                 marginTop: 10,
               }}
-            />
+            /> */}
           </Box>
         </Card>
       </Grid>

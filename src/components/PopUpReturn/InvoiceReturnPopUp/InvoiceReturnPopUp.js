@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import update from 'immutability-helper';
 import moment from 'moment';
 import useStyles from '../../TableCommon/style/mainViewStyle';
+import { useTheme } from "@material-ui/core/styles";
 
 // import library
 
@@ -23,10 +24,14 @@ import ButtonQuantity from '../../Button/ButtonQuantity';
 import refundApi from '../../../api/refundApi';
 import SnackBarGeneral from '../../SnackBar/SnackBarGeneral';
 import {statusAction} from '../../../store/slice/statusSlice';
+import {ReturnCartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 
 function InvoiceReturnPopUp(props) {
   const { order, classes, handleCloseReturn , reload, reloadDetail } = props;
+  const theme = useTheme();
+
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
@@ -176,6 +181,9 @@ function InvoiceReturnPopUp(props) {
     setOpenSnack(false);
   };
 
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
+
   return (
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -195,12 +203,13 @@ function InvoiceReturnPopUp(props) {
 
       <DialogContent style={{ marginTop: 25 }}>
         <Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+         
           <Grid item xs={12} sm={8}>
             <Card className={classes.card}>
               <Box style={{ padding: 30, minHeight: '75vh' }}>
                 {/* JSON data attribute phải giongso table head id */}
                 {/* <ListItem headCells={HeadCells.CartReturnHeadCells}  cartData={row.list} tableType={TableType.CART_RETURN} /> */}
-                <TableWrapper isCart>
+               {!xsScreen ? ( <TableWrapper isCart>
                   <TableHeader
                     classes={classes}
                                     // order={order}
@@ -223,13 +232,27 @@ function InvoiceReturnPopUp(props) {
                         handleItemQuantityChange={handleItemQuantityChange}
                         detail={detail}
                       />
+                    
                     ))}
                   </TableBody>
-                </TableWrapper>
+                </TableWrapper>):
+                refund.details.map((detail, index) => (
+                  // <CartReturnTableRow
+                  //   handleProductPriceChange={handleProductPriceChange}
+                  //   handleItemQuantityChange={handleItemQuantityChange}
+                  //   detail={detail}
+                  // />
+                  <ReturnCartMiniTableRow
+                    detail={detail}
+                    handleProductPriceChange={handleProductPriceChange}
+                    handleItemQuantityChange={handleItemQuantityChange}
+                  />
+
+                ))
+              }
               </Box>
             </Card>
           </Grid>
-
           <Grid item xs={12} sm={4} className={classes.card}>
             <Card className={classes.card}>
               <InvoiceReturnSummary
@@ -251,8 +274,12 @@ export default InvoiceReturnPopUp;
 
 function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuantityChange }) {
   const classes = useStyles();
+  const theme = useTheme();
+
+
 
   const [show, setShow] = React.useState('none');
+  useEffect(() => {}, [detail]);
 
   const handleChangeQuantity = (newQuantity) => {
     handleItemQuantityChange(detail.id, newQuantity);

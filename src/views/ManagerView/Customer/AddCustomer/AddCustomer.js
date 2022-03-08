@@ -92,7 +92,7 @@ const AddCustomer = (props) => {
             justifyContent="space-around"
             spacing={3}
           >
-            <Grid item xs={7}>
+            <Grid item sm={7}>
               <TextField
                 id="outlined-basic"
                 label="Tên khách hàng"
@@ -136,7 +136,7 @@ const AddCustomer = (props) => {
                 onBlur={customerFormik.handleBlur}
               />
             </Grid>
-            <Grid item xs={5}>
+            <Grid item sm={5}>
               <TextField
                 id="date"
                 label="Thông tin thanh toán"

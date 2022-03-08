@@ -14,10 +14,10 @@ import icon from '../../../../assets/img/product/tch.jpeg';
 
 export const CartRow = (props) =>{
     const classes = useStyles(); 
-
+    const haveDiscount = true;
 
     const {row,discountData, handleDeleteItemCart, handleChangeItemQuantity, handleChangeItemPrice} = props
-    const haveDiscount = true;
+    
 
     const updateQuantity = (newQuantity) => {
       handleChangeItemQuantity(row.uuid, newQuantity)
@@ -27,9 +27,6 @@ export const CartRow = (props) =>{
       setOpenDiscount(!openDiscount)
     }
 
-    console.log("row",row)
-    
-    
     return (
       <TableRow hover key={props.row.uuid} >
           <TableCell align="left">{row.id + 1}</TableCell>
@@ -48,9 +45,10 @@ export const CartRow = (props) =>{
             </TableCell>
           <TableCell align="right">
             <Input.ThousandSeperatedInput 
-              id="standard-basic" style={{width:70 }} size="small" 
+              id="standard-basic" style={{width:72 }} size="small" 
               inputProps={{style: { textAlign: "right" }}} 
               defaultPrice={row.unit_price} 
+              value={row.unit_price}
               onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}/>
           </TableCell>
   
