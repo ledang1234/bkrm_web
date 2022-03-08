@@ -133,46 +133,6 @@ const AddSupplier = (props) => {
         <Typography className={classes.headerTitle} variant="h5" gutterBottom>
           Thêm nhà cung cấp
         </Typography>
-        {/* <Box display="flex" flexDirection="row" alignItems="center">
-          {display.length ? (
-            <Tooltip title="Xóa hình ảnh">
-              <Button size="small" onClick={() => clearImage()}>
-                <Box
-                  component="img"
-                  sx={{
-                    height: 70,
-                    width: 70,
-                    marginLeft: 7,
-                    marginRight: 7,
-                    borderRadius: 2,
-                  }}
-                  src={display}
-                />
-              </Button>
-            </Tooltip>
-          ) : (
-            <UploadImages />
-          )}
-
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="icon-button-file"
-            type="file"
-            onChange={addImageHandler}
-          />
-          {display.length === 0 ? (
-            <label htmlFor="icon-button-file">
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="span"
-              >
-                <PhotoCamera />
-              </IconButton>
-            </label>
-          ) : null}
-        </Box> */}
         <Grid container spacing={2} style={{ marginTop: 10 }}>
           <Grid item xs={12}>
             <TextField
