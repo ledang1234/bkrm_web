@@ -76,10 +76,22 @@ const UploadImage  = () => {
 }
 const DiscountDetail = (props) => {
     const {row,openRow }= props.parentProps;
+    const {promotion_condition,type} = props;
+
+    const {rowsInvoice } = props.promotion_condition;
+
+    const discountKey= promotion_condition?.discountKey;// invoice, product
+    const discountType = promotion_condition?.discountType; //discountInvoice , sendGift, sendVoucher,priceByQuantity
+
+ 
+    console.log("===========")
+    console.log("rowsInvoice",rowsInvoice)
+    console.log("row",row)
+    console.log("discountKey",discountKey)
+    console.log("discountType",discountType)
 
     // CALL APII (đổi thanhd api)
-    const discountKey= "product";// invoice, product
-    const discountType = "sendGift"; //discountInvoice , sendGift, sendVoucher,priceByQuantity
+ 
     const discountData = 
       [
         {
@@ -134,104 +146,105 @@ const DiscountDetail = (props) => {
       setAnchorEl(null);
     };
 
+
     return (
-        <Collapse in={ openRow === row.uuid } timeout="auto" unmountOnExit>
+        <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
                </Typography>
 
               <Grid  container direction="row" justifyContent="flex-start">
-                  <Grid item>
+                  <Grid item xs={12} sm={3}>
                       <Grid container direction="row" justifyContent="flex-start" > 
-                        <Grid item xs={5} >
+                        <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Mã khuyến mãi </Typography>    
                         </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">{row.uuid} </Typography>
+                        <Grid item sm={4} >
+                          <Typography variant="body1" gutterBottom component="div">{row.promotion_code} </Typography>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={5} >
+                        <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Tên khuyến mãi </Typography>    
                         </Grid>
-                        <Grid item xs={6} >
+                        <Grid item sm={4} >
                           <Typography variant="body1" gutterBottom component="div">{row.name} </Typography>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
+                          <Grid item xs={3} sm={4} >
                             <Typography variant="h5" gutterBottom component="div">Hình thức</Typography>    
                           </Grid>
-                          <Grid item xs={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.phone}</Typography>
+                          <Grid item sm={4} >
+                            <Typography variant="body1" gutterBottom component="div">{type}</Typography>
                           </Grid>
                       </Grid>
                       
                   </Grid>
 
 
-                <Grid item xs={4}>
+                <Grid item xs={12} sm={5}>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
+                        <Grid item xs={3} sm={2} >
                           <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
                         </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">500.000</Typography>
+                        <Grid item sm={4} >
+                          <Typography variant="body1" gutterBottom component="div">{row.status}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
                       
-                        <Grid item xs={6} >
+                        <Grid item xs={3} sm={2} >
                           <Typography variant="h5" gutterBottom component="div">Thời gian</Typography>    
                         </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">3.000.000</Typography>
+                        <Grid item sm={4} >
+                          <Typography variant="body1" gutterBottom component="div">Từ {row.start_date} -  Đến {row.end_date}</Typography>
                         </Grid>
                     </Grid>
 
                     {/* Thay TRUE thành nếu list theo thứ ngày tháng,.. ko empty thì show */}
-                    {true?
+                    {row.byMonth?
                       <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
+                        <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo tháng</Typography>    
                         </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">500.000</Typography>
+                        <Grid item sm={4}>
+                          <Typography variant="body1" gutterBottom component="div">{row.byMonth?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }
-                    {true?
+                    {row.byDay?
                       <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
+                        <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo ngày</Typography>    
                         </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">500.000</Typography>
+                        <Grid item sm={4} >
+                          <Typography variant="body1" gutterBottom component="div">{row.byDay?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }
-                    {true?
+                    {row.byDate?
                       <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
+                        <Grid item xs={3} sm={4}>
                           <Typography variant="h5" gutterBottom component="div">Theo thứ</Typography>    
                         </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">500.000</Typography>
+                        <Grid item sm={4} >
+                          <Typography variant="body1" gutterBottom component="div">{row.byDate?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }
-                    {true?
+                    {row.byTime?
                       <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
+                        <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo giờ</Typography>    
                         </Grid>
-                        <Grid item xs={6} >
-                          <Typography variant="body1" gutterBottom component="div">500.000</Typography>
+                        <Grid item sm={4} >
+                          <Typography variant="body1" gutterBottom component="div">{row.byTime?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }
-                    {true?
+                    {row.customer_birth?
                       <Typography style={{fontWeight:500, color:"red"}}> * Áp dụng vào ngày sinh nhật của khách hàng *</Typography> : null
                     }
                     
@@ -283,7 +296,7 @@ const DiscountDetail = (props) => {
             </Grid>
           </div>
 
-          {discountData.map((discountRow, index) => {
+          {rowsInvoice?.map((discountRow, index) => {
               return (
                   <>
                   <div style={{paddingLeft:15, marginLeft:10, marginRight:10}}>

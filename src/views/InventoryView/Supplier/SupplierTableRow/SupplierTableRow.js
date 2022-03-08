@@ -25,7 +25,7 @@ const SupplierTableRow = (props) => {
                 <TableCell align="left">{row.phone}</TableCell>
                 <TableCell align="left">{row.email}</TableCell>
                 <TableCell align="left" style={{minWidth:100}}>{row.address}</TableCell>
-                <TableCell align="right" >{row.total_cost}</TableCell>
+                {/* <TableCell align="right" >{row.total_cost}</TableCell> */}
                 <TableCell align="center">
                     <FormatedStatus debt={row.debt}/>
                 </TableCell>

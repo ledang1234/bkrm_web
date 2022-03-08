@@ -14,21 +14,26 @@ import DiscountDetail from './DiscountDetail/DiscountDetail'
 const DiscountTableRow = (props) => {
     const { row, handleOpenRow,openRow} = props;
     const classes = useRowStyles();
-
+    const discountKey = row.promotion_condition.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
+    var promotion_condition ={}
+    if(row.promotion_condition.length !== 0) {promotion_condition = JSON.parse(row.promotion_condition) }
+    const discountType = getDiscountType(promotion_condition?.discountKey,promotion_condition?.discountType )  
+    const type = `${discountKey}  -  ${discountType}`  
+    
     return (
         <>
         {/* ROW */}
             <TableRow
-            onClick={() => handleOpenRow(row.uuid)}   
-            key={row.uuid}
-            className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
+            onClick={() =>{ handleOpenRow(row.id) ; }}   
+            key={row.id}
+            className={ clsx(classes.row,(openRow === row.id) ? classes.rowClicked : null)}
             >
-                <TableCell align="left">MÃ</TableCell>
-                <TableCell align="left">TÊN</TableCell>
-                <TableCell align="left">TỪ NGÀY</TableCell>
-                <TableCell align="left">ĐẾN NGÀY</TableCell>
-                <TableCell align="left">HÌNH THỨC</TableCell>
-                <TableCell align="left">TRẠNG THÁI</TableCell>
+                <TableCell align="left">{row.promotion_code}</TableCell>
+                <TableCell align="left">{row.name}</TableCell>
+                <TableCell align="left">{row.start_date}</TableCell>
+                <TableCell align="left">{row.end_date}</TableCell>
+                <TableCell align="left">{type}</TableCell>
+                <TableCell align="left">{row.status}</TableCell>
 
             </TableRow>
 
@@ -36,7 +41,7 @@ const DiscountTableRow = (props) => {
             <TableRow>
               {/* colspan  => số cột trong collapse */}
               <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>           
-                    <DiscountDetail parentProps={props}/>       
+                    <DiscountDetail parentProps={props} promotion_condition={promotion_condition} type={type} />       
               </TableCell>
        
             </TableRow>
@@ -45,3 +50,18 @@ const DiscountTableRow = (props) => {
 }
 
 export default DiscountTableRow
+
+
+
+function getDiscountType (discountKey, discountType){
+    console.log("discountKey",discountKey)
+    console.log("discountType",discountType)
+    if(discountKey === "invoice"){
+        if(discountType ==="sendGift"){return "Tặng hàng"}
+        else if (discountType ==="sendVoucher"){ return "Tặng voucher"}
+        else{ return "Giảm giá hoá đơn"}
+    }else{
+        if(discountType ==="sendGift"){return "Mua hàng tặng hàng"}
+        else{return "Giá bán theo số lượng mua"}
+    }
+}

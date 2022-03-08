@@ -19,6 +19,8 @@ import SubItem from './SubItem';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -63,6 +65,9 @@ const MenuItem = (props) => {
   const Icon = item.icon1;
   const Icon1 = item.icon2;
 
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
+
   function getMenuIcon(type) {
     switch (type) {
       case "1":
@@ -87,7 +92,7 @@ const MenuItem = (props) => {
 
   function handleOnClick(id) {
     sessionStorage.setItem("BKRMopening",id)
-    if (id === 1 || id === 4) {
+    if (id === 1 || id === 4 || xsScreen) {
       dispatch(customizeAction.setSidebarOpen(false));
     }
     dispatch(customizeAction.setItemMenuOpen(id));

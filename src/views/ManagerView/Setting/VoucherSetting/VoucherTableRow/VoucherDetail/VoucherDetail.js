@@ -1,5 +1,6 @@
 import React from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
 import {Box,Grid,Collapse,Typography,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
@@ -54,6 +55,8 @@ const VoucherDetail = (props) => {
 
     const theme = useTheme();
     const classes = useStyles(theme);
+    const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -77,9 +80,9 @@ const VoucherDetail = (props) => {
 
               <Grid  container direction="row" justifyContent="flex-start">
                   
-                <Grid item >
+                <Grid item xs={12} sm={4}>
                       <Grid container direction="row" justifyContent="flex-start" > 
-                        <Grid item xs={5} >
+                        <Grid item xs={3} sm={5} >
                           <Typography variant="h5" gutterBottom component="div">Mã voucher </Typography>    
                         </Grid>
                         <Grid item xs={6} >
@@ -87,7 +90,7 @@ const VoucherDetail = (props) => {
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={5} >
+                        <Grid item xs={3} sm={5} >
                           <Typography variant="h5" gutterBottom component="div">Tên voucher </Typography>    
                         </Grid>
                         <Grid item xs={6} >
@@ -95,7 +98,7 @@ const VoucherDetail = (props) => {
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
+                          <Grid item xs={3} sm={5} >
                             <Typography variant="h5" gutterBottom component="div">Mệnh giá</Typography>    
                           </Grid>
                           <Grid item xs={6} >
@@ -103,7 +106,7 @@ const VoucherDetail = (props) => {
                           </Grid>
                       </Grid>
                       <Grid container direction="row" justifyContent="flex-start">
-                          <Grid item xs={5} >
+                          <Grid item xs={3} sm={5} >
                             <Typography variant="h5" gutterBottom component="div">Số lượng</Typography>    
                           </Grid>
                           <Grid item xs={6} >
@@ -112,9 +115,9 @@ const VoucherDetail = (props) => {
                       </Grid>
                       
                   </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} sm={4}>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
+                        <Grid item xs={3} sm={6} >
                           <Typography variant="h5" gutterBottom component="div">Thời gian</Typography>    
                         </Grid>
                         <Grid item xs={6} >
@@ -122,7 +125,7 @@ const VoucherDetail = (props) => {
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={6} >
+                        <Grid item xs={3} sm={6} >
                           <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
                         </Grid>
                         <Grid item xs={6} >
@@ -135,7 +138,7 @@ const VoucherDetail = (props) => {
               </Grid>
 
               {/* Button */}
-              <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
+              <Grid container direction="row" justifyContent={"flex-end" } style={{marginTop:20}}> 
                           <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>
                           <Button variant="contained" size="small" style={{marginLeft:15}}>Xoá</Button>
                           

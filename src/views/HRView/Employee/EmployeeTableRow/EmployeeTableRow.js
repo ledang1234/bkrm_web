@@ -19,6 +19,7 @@ import ava from "../../../../assets/img/product/lyimg.jpeg";
 const EmployeeTableRow = (props) => {
   const { row, handleOpenRow, openRow, handleReload } = props;
   const classes = useRowStyles();
+  // console.log("row",row)
 
   return (
     <>
@@ -31,9 +32,10 @@ const EmployeeTableRow = (props) => {
           openRow === row.uuid ? classes.rowClicked : null
         )}
       >
+        <TableCell align="left">{row.employee_code}</TableCell>
         <TableCell align="left" style={{ minWidth: 200 }}>
           <ListItem
-            style={{ marginLeft: 30, marginTop: -10, marginBottom: -10 }}
+            style={{ margin:0,padding:0, marginTop: -10, marginBottom: -10 }}
           >
             <Avatar
               alt="Remy Sharp"

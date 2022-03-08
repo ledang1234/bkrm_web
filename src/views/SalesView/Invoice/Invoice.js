@@ -38,22 +38,48 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 import JSONdata from "../../../assets/JsonData/invoice.json";
 import orderApi from "../../../api/orderApi";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 const Invoice = () => {
   // fetch data here
   const theme = useTheme();
   const classes = useStyles(theme);
   const dispatch = useDispatch();
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   const [orders, setOrders] = useState([]);
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total_rows: 0,
   });
+  const [totalRows, setTotalRows] = useState(0)
   // api
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+
+
+  /// search sort
+  const initialQuery = {
+    startDate: '',
+    endDate: '',
+    minDiscount: 0,
+    maxDiscount: 0,
+    minTotalAmount: 0,
+    maxTotalAmount: 0,
+    status: '',
+    paymentMethod: '',
+    orderBy: 'orders.created_at',
+    sort: 'desc',
+    searchKey: '',
+  };
+
+  const handleRemoveFilter = () => {
+    setQuery(initialQuery)
+  }
+  const [query, setQuery] = useState(initialQuery)
 
   //// 2. Table
   //collapse
@@ -90,11 +116,14 @@ const Invoice = () => {
     // const isAsc = orderBy === property && order === 'asc';
     // setOrder(isAsc ? 'desc' : 'asc');
     // setOrderBy(property);
+
+    
+
   };
 
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
-  }, [reload, store_uuid, branch_uuid]);
+  }, [reload, store_uuid, branch_uuid, query]);
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -104,9 +133,11 @@ const Invoice = () => {
           {
             page: pagingState.page,
             limit: pagingState.limit,
+            ...query,
           }
         );
-        setPagingState({ ...pagingState, total_rows: response.total_rows });
+        // setPagingState({ ...pagingState, total_rows: response.total_rows });
+        setTotalRows(response.total_rows)
         setOrders(response.data);
       } catch (error) {
         console.log(error);
@@ -115,7 +146,7 @@ const Invoice = () => {
     if (store_uuid && branch_uuid) {
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, branch_uuid]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, query]);
 
   return (
     <Card className={classes.root}>
@@ -154,10 +185,20 @@ const Invoice = () => {
         textSearch={"#, Khách, Người bán,...  "} /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+        
+        orderByOptions={[
+          {value: 'orders.created_at', label: 'Ngày mua'},
+          {value: 'total_amount', label: 'Tổng tiền mua'},
+        ]}
+        orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
+        sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
+        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        handleRemoveFilter={handleRemoveFilter}
+
         columnsToKeep = {[
           {dbName:"order_code",displayName:"Mã hoá đơn"},
           {dbName:"customer_name",displayName:"Khách hàng"},
-          {dbName:"creation_date",displayName:"Ngày bán"},
+          {dbName:"created_at",displayName:"Ngày bán"},
           {dbName:"total_amount",displayName:"Tổng tiền hoá đơn"},
           {dbName:"paid_amount",displayName:"Tiền khách đã trả"},
           {dbName:"status",displayName:"Trạng thái"},
@@ -166,12 +207,14 @@ const Invoice = () => {
       />
       <InvoiceFilter
         openFilter={openFilter}
+        setQuery={setQuery}
+        query={query}
         handleToggleFilter={handleToggleFilter}
         setOrders={setOrders}
       />
 
       {/* 3. TABLE */}
-      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper  pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
@@ -192,7 +235,22 @@ const Invoice = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+          orders.map((row, index) => {
+            return (
+              // <InvoiceTableRow
+              //   key={row.uuid}
+              //   row={row}
+              //   openRow={openRow}
+              //   handleOpenRow={handleOpenRow}
+              //   onReload={onReload}
+              // />
+              <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+             totalCost={row.total_amount}  id={row.order_code} partnerName={row.customer_name} date={row.paid_date} 
+             typeBill={"Hoá đơn"}/>
+            );
+          })
+        }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint orders={orders} classes={classes} />

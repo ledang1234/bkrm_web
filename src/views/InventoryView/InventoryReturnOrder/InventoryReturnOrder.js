@@ -35,6 +35,10 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 import JSONdata from "../../../assets/JsonData/inventoryReturn.json";
 import { useSelector } from "react-redux";
 import purchaseReturnApi from "../../../api/purchaseReturnApi";
+
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 const InventoryReturnOrder = () => {
   const [purchaseReturns, setPurchaseReturns] = useState([]);
   const [openRow, setRowOpen] = React.useState(null);
@@ -45,17 +49,36 @@ const InventoryReturnOrder = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
+
   const [reload, setReload] = useState(false);
 
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total_rows: 0,
   });
+  const [totalRows, setTotalRows] = useState(0)
+
+  const initialQuery = {
+    startDate: '',
+    endDate: '',
+    minTotalAmount: 0,
+    maxTotalAmount: 0,
+    status: '',
+    paymentMethod: '',
+    orderBy: 'purchase_returns.creation_date',
+    sort: 'desc',
+    searchKey: '',
+  };
+  const handleRemoveFilter = () => {
+    setQuery(initialQuery)
+  }
+  const [query, setQuery] = useState(initialQuery)
 
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
-  }, [reload, store_uuid, branch_uuid]);
+  }, [reload, store_uuid, branch_uuid, query]);
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -65,9 +88,11 @@ const InventoryReturnOrder = () => {
           {
             page: pagingState.page,
             limit: pagingState.limit,
+            ...query
           }
         );
-        setPagingState({ ...pagingState, total_rows: response.total_rows });
+        // setPagingState({ ...pagingState, total_rows: response.total_rows });
+        setTotalRows(response.total_rows)
         setPurchaseReturns(response.data);
       } catch (error) {
         console.log(error);
@@ -77,7 +102,7 @@ const InventoryReturnOrder = () => {
 
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, branch_uuid]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, query]);
 
   const handleOpenRow = (row) => {
     if (row !== openRow) {
@@ -133,6 +158,16 @@ const InventoryReturnOrder = () => {
         textSearch={"#, #đn, NCC, Nguoi trả,..."}
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+
+        orderByOptions={[
+          {value: 'purchase_returns.creation_date', label: 'Ngày trả'},
+          {value: 'total_amount', label: 'Tổng tiền trả'},
+        ]}
+        orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
+        sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
+        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        handleRemoveFilter={handleRemoveFilter}
+
         columnsToKeep = {[
           {dbName:"purchase_return_code",displayName:"Mã trả hàng nhập"},
           {dbName:"purchase_order_code",displayName:"Mã đơn nhập"},
@@ -147,12 +182,14 @@ const InventoryReturnOrder = () => {
 
       <InventoryReturnFilter
         openFilter={openFilter}
+        setQuery={setQuery}
+        query={query}
         handleToggleFilter={handleToggleFilter}
         setPurchaseReturns={setPurchaseReturns}
       />
 
       {/* 3. TABLE */}
-      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen? <TableWrapper  pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
@@ -172,7 +209,22 @@ const InventoryReturnOrder = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+      purchaseReturns.map((row, index) => {
+        return (
+          // <InventoryReturnTableRow
+          //   key={row.uuid}
+          //   row={row}
+          //   openRow={openRow}
+          //   handleOpenRow={handleOpenRow}
+          // />
+          <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} 
+          totalCost={row.total_amount}  id={row.purchase_return_code} partnerName={row.supplier_name} date={row.creation_date} 
+          typeBill={"Đơn trả hàng nhập"}/>
+
+        );
+      })
+      }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint

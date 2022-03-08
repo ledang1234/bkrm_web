@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 //import library
 import {
   Box,
@@ -11,6 +13,7 @@ import {
   ListItemText,
   IconButton,
 } from "@material-ui/core";
+
 //import icon
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -80,6 +83,8 @@ const InventoryDetail = (props) => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [thisReload, setThisReload] = useState(false);
   const dispatch = useDispatch();
@@ -225,13 +230,16 @@ const InventoryDetail = (props) => {
           </Typography>
 
           <Grid container direction="row" justifyContent="flex-start">
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Box
                 sx={{
-                  height: 170,
-                  width: 170,
+                  // height: 170,
+                  // width: 170,
+                  height:xsScreen ?100: 170,
+                  width:xsScreen ?100: 170,
                   borderRadius: 2,
                   marginLeft: 15,
+                  marginBottom:xsScreen? 10:0
                 }}
               >
                 <Carousel showThumbs={false}>
@@ -239,98 +247,100 @@ const InventoryDetail = (props) => {
                     <img
                       key={image.url}
                       src={image.url}
-                      height="170"
-                      width="170"
+                      height={xsScreen ?"100": "170"}
+                      width={xsScreen ?"100": "170"}
+                      // height= "170"
+                      // width= "170"
                     />
                   ))}
                 </Carousel>
               </Box>
             </Grid>
 
-            <Grid container direction="column" item xs={8}>
+            <Grid container direction="column" item xs={12} sm={8}>
               <Grid container direction="row">
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={6}>
+                    <Grid item xs={2} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Tên sản phẩm
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3} sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.name}{" "}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={6}>
+                    <Grid item xs={2} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Mã sản phẩm
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3} sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.product_code}{" "}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={6}>
+                    <Grid item xs={2} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Mã vạch
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3} sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.bar_code}{" "}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={6}>
+                    <Grid item xs={2} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Danh mục
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3} sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.category.name}{" "}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={6}>
+                    <Grid item xs={2} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
                         Đơn vị
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3} sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {productDetail.quantity_per_unit}
                       </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}sm={6}>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={4}>
+                    <Grid item xs={2} sm={4}>
                       <Typography variant="h5" gutterBottom component="div">
                         Giá bán
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3} sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         <VNDFormat value={productDetail.list_price}></VNDFormat>
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={4}>
+                    <Grid item xs={2} sm={4}>
                       <Typography variant="h5" gutterBottom component="div">
                         Giá vốn
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3} sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         <VNDFormat
                           value={productDetail.standard_price}
@@ -340,12 +350,12 @@ const InventoryDetail = (props) => {
                   </Grid>
 
                   <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={4}>
+                    <Grid item xs={2} sm={4}>
                       <Typography variant="h5" gutterBottom component="div">
                         Tồn kho
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3} sm={6}>
                       <Typography variant="body1" gutterBottom component="div">
                         {row.branch_quantity}{" "}
                       </Typography>
@@ -357,7 +367,7 @@ const InventoryDetail = (props) => {
               <Grid
                 container
                 direction="row"
-                justifyContent="flex-end"
+                justifyContent={xsScreen ?null: "flex-end"}
                 style={{ marginTop: 20 }}
               >
                 <Button

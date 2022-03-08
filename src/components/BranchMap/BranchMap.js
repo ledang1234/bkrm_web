@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
-import { Button, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 import Map from "./Map/Map";
 import BranchList from "./BranchList/BranchList";
@@ -80,8 +80,6 @@ const Branch = (props) => {
         getLocation={getLocation}
         onReload={props.onReload}
       />
-
-      {/* </Card> */}
     </>
   );
 };

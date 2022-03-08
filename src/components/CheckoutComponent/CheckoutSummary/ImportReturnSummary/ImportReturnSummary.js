@@ -21,6 +21,8 @@ import {
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
+import VNDInput from "../../../TextField/NumberFormatCustom";
+import {calculateTotalReturnQuantity} from "../../../TableCommon/util/sortUtil"
 
 //import project
 import * as Input from "../../../TextField/NumberFormatCustom";
@@ -132,8 +134,8 @@ const ImportReturnSummary = ({
           justifyContent="space-between"
           className={classes.marginBox}
         >
-          <Typography variant="h5">Tổng số mặt hàng trả</Typography>
-          <Typography variant="body2">{data.details.length}</Typography>
+          <Typography variant="h5"> Tổng SL sản phẩm trả ({data.details.filter((item) => item.returnQuantity !== 0).length})</Typography>
+          <Typography variant="body2">{calculateTotalReturnQuantity(data.details)}</Typography>
         </Grid>
 
         <Grid
@@ -143,7 +145,7 @@ const ImportReturnSummary = ({
           className={classes.marginRow}
         >
           <Typography variant="h5">Tổng tiền gốc</Typography>
-          <Typography variant="body2">{data.total_amount}</Typography>
+          <Typography variant="body2"><Input.VNDFormat value={data.total_amount} /></Typography>
         </Grid>
 
         <Grid
@@ -153,7 +155,7 @@ const ImportReturnSummary = ({
           className={classes.marginRow}
         >
           <Typography variant="h5">Tổng tiền trả</Typography>
-          <Typography variant="body2">{data.total_amount}</Typography>
+          <Typography variant="body2"><Input.VNDFormat value={data.total_amount} /></Typography>
         </Grid>
 
         <Grid
@@ -164,12 +166,12 @@ const ImportReturnSummary = ({
           className={classes.marginRow}
         >
           <Typography variant="h5">NCC đã trả</Typography>
-          <Input.ThousandSeperatedInput
+          <VNDInput
             id="standard-basic"
             style={{ width: 90 }}
             size="small"
             inputProps={{ style: { textAlign: "right" } }}
-            defaultValue={data.paid_amount}
+            value={data.paid_amount}
             onChange={(e) => handlePaidAmountChange(e.target.value)}
           />
         </Grid>

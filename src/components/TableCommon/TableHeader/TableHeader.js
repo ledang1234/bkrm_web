@@ -26,7 +26,7 @@ function TableHeader(props) {
     
     return (
       <TableHead className={classes.headColor}>
-        <TableRow>
+        <TableRow >
             {headerData.map((headCell) => (
             <StyledTableCell
                 key={headCell.id}

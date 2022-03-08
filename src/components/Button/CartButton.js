@@ -22,6 +22,21 @@ const useStyles = makeStyles((theme) =>
       height: 60,
       width: 60,
     },
+
+    btnBottom: {
+      position: "fixed",
+      top: 100,
+      right: 0,
+      zIndex: 1050,
+      boxShadow: "0px 12px 14px 0px #ffe57f4d",
+      backgroundColor: "#ffe57f",
+      borderRadius: "10px 0px 0px 10px",
+      "&:hover": {
+        backgroundColor: "#ffcf10",
+      },
+      height: 60,
+      width: 60,
+    },
   })
 );
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -43,6 +58,25 @@ const CartButton = (props) => {
     >
       <ButtonBase size="large" style={{ margin: 10 }}>
         <StyledBadge color="error" badgeContent={3}>
+          <ShoppingCartTwoToneIcon />
+        </StyledBadge>
+      </ButtonBase>
+    </Fab>
+    /* </Tooltip> */
+  );
+};
+
+export const CartBottom = ({numberItem}) => {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+  return (
+    // <Tooltip title="Giỏ hàng">
+    <Fab
+      className={classes.btnBottom} 
+      onClick={()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:"smooth"})}
+    >
+      <ButtonBase size="large" style={{ margin: 10 }} >
+        <StyledBadge color="error" badgeContent={numberItem}>
           <ShoppingCartTwoToneIcon />
         </StyledBadge>
       </ButtonBase>

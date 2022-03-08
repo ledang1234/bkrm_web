@@ -36,6 +36,9 @@ import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 
 const Supplier = () => {
   const [supplerList, setSupplierList] = useState([]);
@@ -48,6 +51,8 @@ const Supplier = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   //// 1. Add pop up + noti
   //add
@@ -111,9 +116,9 @@ const Supplier = () => {
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total_rows: 0,
   });
-
+  const [totalRows, setTotalRows] = useState(0)
+ 
   useEffect(() => {
     setPagingState({...pagingState, page: 0})
   }, [reload, store_uuid])
@@ -126,7 +131,8 @@ const Supplier = () => {
         });
         
         setSupplierList(response.data);
-        setPagingState({...pagingState, total_rows: response.total_rows})
+        // setPagingState({...pagingState, total_rows: response.total_rows})
+        setTotalRows( response.total_rows)
       } catch (error) {
         console.log(error);
       }
@@ -193,8 +199,12 @@ const Supplier = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper
-        pagingState={pagingState}
+
+      {!xsScreen ?<TableWrapper
+
+        pagingState={{...pagingState, total_rows: totalRows}}
+
+
         setPagingState={setPagingState}
       >
         <TableHeader
@@ -217,7 +227,15 @@ const Supplier = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+      supplerList.map((row, index) => {
+        return (
+          <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+            id={row.supplier_code} name={row.name} phone={row.phone} 
+            typePartner={"Nhà cung cấp"}  />
+        );
+      })}
+
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint supplerList={supplerList} classes={classes} />

@@ -1,5 +1,6 @@
 import React from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
 import {
@@ -45,9 +46,12 @@ const useStyles = makeStyles((theme) =>
 
 const SupplierDetail = (props) => {
   const { row, openRow } = props.parentProps;
+  const { isMini } = props;
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
@@ -75,7 +79,7 @@ const SupplierDetail = (props) => {
     }
   };
   return (
-    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <ConfirmPopUp
         open={deleteConfirm}
         handleClose={() => {
@@ -100,62 +104,62 @@ const SupplierDetail = (props) => {
         </Typography>
 
         <Grid container direction="row" justifyContent="flex-start">
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item  xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã nhà cung cấp{" "}
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item  sm={3}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.uuid}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tên nhà cung cấp{" "}
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item  sm={3}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.name}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Số điện thoại
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item sm={3}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.phone}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Địa chỉ
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item  sm={3}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.address}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Email
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item  sm={3}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.email}{" "}
                 </Typography>
@@ -163,26 +167,26 @@ const SupplierDetail = (props) => {
             </Grid>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Thông tin thanh toán
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.payment_info}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Công ty
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.company}
                 </Typography>
@@ -194,7 +198,7 @@ const SupplierDetail = (props) => {
         <Grid
           container
           direction="row"
-          justifyContent="flex-end"
+          justifyContent={"flex-end"}
           style={{ marginTop: 20 }}
         >
           <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick = {() => setEditSupplier(true)}>

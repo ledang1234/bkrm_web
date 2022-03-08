@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import storeApi from "../../../api/storeApi";
 import { useSelector } from "react-redux";
 import { format, toDate,parseISO } from 'date-fns'
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import Timeline from '@material-ui/lab/Timeline';
 import TimelineItem from '@material-ui/lab/TimelineItem';
@@ -20,6 +21,7 @@ import {ListItem,Paper} from '@material-ui/core';
 import { makeStyles ,useTheme} from '@material-ui/core/styles';
 
 import {VNDFormat} from "../../../components/TextField/NumberFormatCustom"
+import { Grid } from "@mui/material";
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: '6px 16px',
@@ -58,6 +60,8 @@ const returnTextAction = (type) =>{
 export default function HistoryCard({data}) {
   const classes = useStyles();
   const theme = useTheme();
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
   
   return (
     // <Card sx={{ minWidth: 275, marginBottom: 5, borderRadius: 5 }}>
@@ -81,8 +85,8 @@ export default function HistoryCard({data}) {
     //     <Button size="small">{"Địa điểm: " + data?.branch_name}</Button>
     //   </CardActions>
     // </Card>
-    <TimelineItem >
-          <TimelineOppositeContent style={{ flex: 0.1 }}>
+    <TimelineItem style={{marginLeft:xsScreen ? -30:0}} >
+          <TimelineOppositeContent style={{ flex: 0.1 }} >
               <Typography variant="body2" color="textSecondary">{format(parseISO(data?.created_at), 'hh:mm a')}</Typography>  
           </TimelineOppositeContent>
 
@@ -100,13 +104,22 @@ export default function HistoryCard({data}) {
                 <Typography style={{fontWeight:600, fontSize:13}} >
                   {data?.user_name}
                 </Typography>
-                <ListItem style={{marginTop:-5, marginLeft:-16}}>
+                <Grid container direction="row"alignItems="center" > 
+                    <Grid item > {returnTextAction(data?.type)}</Grid>
+                    <Grid item style={{marginLeft:3,  }}>  đơn</Grid>
+                    <Grid item style={{marginLeft:3, marginRight:3,fontWeight:600,}}> {data?.code} </Grid>
+                    <Grid item> với giá trị </Grid>
+                    <Grid item> <Typography style={{marginLeft:3, fontWeight:600,color:theme.customization.secondaryColor[500] }}> <VNDFormat value={data?.total_amount}/> </Typography></Grid>
+
+                </Grid>
+                
+                {/* <ListItem style={{marginTop:-5, marginLeft:-16}}>
                 {returnTextAction(data?.type)}
                 <Typography style={{marginLeft:3,  }}>đơn </Typography>
                 <Typography style={{marginLeft:3, marginRight:3,fontWeight:600,}}>  {data?.code}  </Typography>
                 <Typography>với giá trị </Typography>
                 <Typography style={{marginLeft:3, fontWeight:600,color:theme.customization.secondaryColor[500] }}> <VNDFormat value={data?.total_amount}/> </Typography>
-                </ListItem>
+                </ListItem> */}
             </Paper>
 
           </TimelineContent>

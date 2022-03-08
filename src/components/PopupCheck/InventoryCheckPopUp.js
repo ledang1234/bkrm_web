@@ -24,7 +24,7 @@ import { useSelector } from "react-redux";
 import SearchBarCode from "../SearchBar/SearchBarCode"
 import moment from "moment";
 import { Input } from "@mui/material";
-
+import { VNDFormat,ThousandFormat } from "../TextField/NumberFormatCustom";
 import useStyles from "../TableCommon/style/mainViewStyle";
 
 import * as HeadCells from "../../assets/constant/tableHead";
@@ -34,7 +34,7 @@ import TableWrapper from "../TableCommon/TableWrapper/TableWrapper";
 import inventoryCheckApi from "../../api/inventoryCheckApi";
 import SnackBarGeneral from "../SnackBar/SnackBarGeneral";
 import InventoryCheckSummary from "../CheckoutComponent/CheckoutSummary/InventoryCheckSumary/InventroyCheckSumary";
-import SimpleModal from "../Modal/ModalWrapper";
+import ModalWrapperWithClose from "../Modal/ModalWrapperWithClose";
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import ButtonQuantity from "../Button/ButtonQuantity";
 function InventoryCheckPopUp({
@@ -174,7 +174,10 @@ function InventoryCheckPopUp({
   };
 
   const handleProductSelect = (product) => {
-    console.log(product);
+    
+    if (inventoryCheck.details.find(d => d.id === product.id)) {
+      return;
+    }
     const newDetails = [
       ...inventoryCheck.details,
       {
@@ -183,7 +186,6 @@ function InventoryCheckPopUp({
         real_quantity: Number(product.branch_quantity),
       },
     ];
-    console.log(newDetails);
     setInventoryCheck({ ...inventoryCheck, details: newDetails });
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
@@ -289,7 +291,7 @@ function InventoryCheckPopUp({
             </Card>
           </Grid>
 
-          <SimpleModal
+          <ModalWrapperWithClose
             title="Cân bằng kho"
             open={open}
             handleClose={handleClose}
@@ -302,7 +304,13 @@ function InventoryCheckPopUp({
               Bạn có chắc chắn muốn Cân bằng kho?
             </Typography>
 
-            <Button
+            <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
+                <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
+                <Button onClick={()=>handleConfirmBalance()} variant="contained" size="small" color="primary" >Xác nhận  </Button>
+            </Grid>
+    
+
+            {/* <Button
               onClick={() => handleClose()}
               variant="contained"
               size="small"
@@ -322,8 +330,8 @@ function InventoryCheckPopUp({
               }}
             >
               Xác nhận
-            </Button>
-          </SimpleModal>
+            </Button> */}
+          </ModalWrapperWithClose>
         </Grid>
       </DialogContent>
     </>
@@ -343,11 +351,11 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDe
   return (
     <TableRow hover key={detail.is}>
       <TableCell align="left" style={{ width: 5 }}>
-        {detail.bar_code}
+        {detail.product_code}
       </TableCell>
       {/* <TableCell align="left">{row.id}</TableCell> */}
       <TableCell align="left">{detail.name}</TableCell>
-      <TableCell align="right">{detail.branch_quantity}</TableCell>
+      <TableCell align="right"> <ThousandFormat  value={detail.branch_quantity} /></TableCell>
       <TableCell align="center">
         {/* <Input
           id="standard-basic"
@@ -368,12 +376,12 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDe
       </TableCell>
 
       <TableCell align="center">
-        {Number(detail.real_quantity) - Number(detail.branch_quantity)}
+        <ThousandFormat  value={Number(detail.real_quantity) - Number(detail.branch_quantity)} />
       </TableCell>
 
       <TableCell align="center" className={classes.boldText}>
-        {(Number(detail.real_quantity) - Number(detail.branch_quantity)) *
-          detail.standard_price}
+        <VNDFormat value={(Number(detail.real_quantity) - Number(detail.branch_quantity)) *
+          detail.standard_price} />
       </TableCell>
       <TableCell align="right" className={classes.boldText}>
           <IconButton aria-label="expand row" size="small"style={{marginLeft:-25}} >

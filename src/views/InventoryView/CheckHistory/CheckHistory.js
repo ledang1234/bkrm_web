@@ -43,6 +43,10 @@ import InventoryCheckPopUp from "../../../components/PopupCheck/InventoryCheckPo
 import inventoryCheckApi from "../../../api/inventoryCheckApi";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
+
 const CheckHistory = () => {
   // fetch data here
   const checkHistoryList = JSONdata;
@@ -51,13 +55,14 @@ const CheckHistory = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
+
   const [inventoryChecks, setInventoryChecks] = useState([]);
 
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total_rows: 0,
   });
+  const [totalRows, setTotalRows] = useState(0)
 
   const [reload, setReload] = useState(false);
 
@@ -78,17 +83,20 @@ const CheckHistory = () => {
         );
 
         setInventoryChecks(response.data);
-        setPagingState({ ...pagingState, total_rows: response.total_rows });
+        // setPagingState({ ...pagingState, total_rows: response.total_rows });
+        setTotalRows(response.total_rows)
       } catch (error) {
         console.log(error);
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit, branch_uuid]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, reload]);
 
   const theme = useTheme();
   const classes = useStyles(theme);
   const dispatch = useDispatch();
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   const [addOpen, setAddOpen] = useState(false);
 
@@ -239,7 +247,7 @@ const CheckHistory = () => {
       />
 
       {/* 3. TABLE */}
-      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}
@@ -259,7 +267,19 @@ const CheckHistory = () => {
             );
           })}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+      inventoryChecks.map((row, index) => {
+        return (
+          <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} 
+          // onReload={onReload} 
+          totalCost={row.details
+            ?.map((detail) => Number(detail.quantity) * Number(detail.unit_price))
+            .reduce((total, num) => total + num, 0)}  
+          id={row.inventory_check_code} partnerName={row.user_name} date={row.created_at} 
+          typeBill={"Đơn kiểm kho"} />
+
+        );
+      })}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint

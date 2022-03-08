@@ -5,6 +5,7 @@ import { TableCell, TableRow } from '@material-ui/core';
 import useRowStyles from '../../../../components/TableCommon/style/rowStyle';
 
 import InvoiceReturnDetail from './InvoiceReturnDetail/InvoiceReturnDetail';
+import { VNDFormat } from '../../../../components/TextField/NumberFormatCustom';
 
 function InvoiceReturnTableRow(props) {
   const { row, handleOpenRow, openRow } = props;
@@ -23,7 +24,7 @@ function InvoiceReturnTableRow(props) {
         <TableCell align="left" style={{ minWidth: 100 }} className={classes.fontName}>{row.customer_name}</TableCell>
         <TableCell align="left">{row.branch_name}</TableCell>
         <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
-        <TableCell align="right" className={classes.fontName}>{row.total_amount}</TableCell>
+        <TableCell align="center" className={classes.fontName}><VNDFormat value={row.total_amount}/></TableCell>
         {/* <TableCell align="right" ></TableCell>
         <TableCell align="right" ></TableCell> */}
         

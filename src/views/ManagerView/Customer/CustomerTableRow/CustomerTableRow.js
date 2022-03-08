@@ -7,9 +7,9 @@ import {TableCell,TableRow,Avatar,ListItem,Typography} from '@material-ui/core';
 
 
 import {FormatedStatus} from '../../../../components/TableCommon/util/format'
-import ava from '../../../../assets/img/product/lyimg.jpeg';
 import CustomerDetail from './CustomerDetail/CustomerDetail'
 
+import ava from '../../../../assets/img/product/lyimg.jpeg';
 
 const CustomerTableRow = (props) => {
     const { row, handleOpenRow,openRow ,onReload} = props;
@@ -23,7 +23,8 @@ const CustomerTableRow = (props) => {
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
-                <TableCell align="left">{row.id}</TableCell>
+                <TableCell align="left">{row.customer_code}</TableCell>
+                {/* <TableCell align="left">{row.id}</TableCell> */}
                 <TableCell align="left" style={{minWidth:200}} >
                     <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}>
                         <Avatar alt="Remy Sharp" src={ava} style={{marginRight:20}} className={classes.ava} />

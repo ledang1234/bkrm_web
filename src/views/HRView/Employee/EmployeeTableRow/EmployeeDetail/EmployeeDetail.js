@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
 import {
@@ -76,10 +77,13 @@ const salaryTypeMapping = {
 
 const EmployeeDetail = (props) => {
   const { row, openRow, handleReload } = props.parentProps;
+  const { isMini } = props;
+
   const dispatch = useDispatch();
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
   const [openEdit, setOpenEdit] = React.useState(false);
 
@@ -136,7 +140,7 @@ const EmployeeDetail = (props) => {
   }, [openRow]);
 
   return (
-    <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       {openEdit && (<EditEmployee
         handleClose={() => {
           setOpenEdit(false);
@@ -156,89 +160,89 @@ const EmployeeDetail = (props) => {
         </Typography>
 
         <Grid container direction="row" justifyContent="flex-start">
-          <Grid item xs={3}>
+          <Grid item xs={12} >
             <UploadImage src={employeeDetail.img_url}/>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={12} sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={7}sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã nhân viên{" "}
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {employeeDetail.uuid}{" "}
+                  {employeeDetail.employee_code}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tên nhân viên{" "}
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.name}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Ngày sinh
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.date_of_birth}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={7}  sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   CMND
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.id_card_num}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Số điện thoại
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.phone}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Email
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.email}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={5}>
+              <Grid item  xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Địa chỉ
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.address}{" "}
                 </Typography>
@@ -246,14 +250,14 @@ const EmployeeDetail = (props) => {
             </Grid>
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={4}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Chức năng
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.permissions.map((permission) => (
                     <Chip label={permission.description} />
@@ -262,12 +266,12 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Chi nhánh
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.branches?.map((branch) => (
                     <Chip label={branch.name} />
@@ -276,24 +280,24 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Loại lương
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {salaryTypeMapping[employeeDetail.salary_type]}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={6}>
+              <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mức lương
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.salary}
                 </Typography>
@@ -306,7 +310,7 @@ const EmployeeDetail = (props) => {
         <Grid
           container
           direction="row"
-          justifyContent="flex-end"
+          justifyContent={ "flex-end"}
           style={{ marginTop: 20 }}
         >
           <Button

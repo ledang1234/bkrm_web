@@ -33,6 +33,9 @@ import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 import refundApi from "../../../api/refundApi";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
 function InvoiceReturn() {
   // fetch data here
   const invoiceReturnList = [];
@@ -44,6 +47,8 @@ function InvoiceReturn() {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
   /// / 2. Table
 
@@ -88,8 +93,8 @@ function InvoiceReturn() {
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total_rows: 0,
   });
+  const [totalRows, setTotalRows] = useState(0)
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid]);
@@ -104,7 +109,8 @@ function InvoiceReturn() {
             limit: pagingState.limit,
           }
         );
-        setPagingState({ ...pagingState, total_rows: response.total_rows });
+        // setPagingState({ ...pagingState, total_rows: response.total_rows });
+        setTotalRows(response.total_rows)
         setRefunds(response.data);
       } catch (error) {
         console.log(error);
@@ -141,7 +147,7 @@ function InvoiceReturn() {
         setRefunds={setRefunds}
       />
       {/* 3. TABLE */}
-      <TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           // order={order}
@@ -159,7 +165,20 @@ function InvoiceReturn() {
             />
           ))}
         </TableBody>
-      </TableWrapper>
+      </TableWrapper>:
+          refunds.map((row, index) => (
+            // <InvoiceReturnTableRow
+            //   key={row.uuid}
+            //   row={row}
+            //   openRow={openRow}
+            //   handleOpenRow={handleOpenRow}
+            // />
+            <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} 
+          totalCost={row.total_amount}  id={row.refund_code} partnerName={row.customer_name} date={row.created_at} 
+          typeBill={"Đơn trả"}/>
+
+          ))
+          }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint refunds={refunds} classes={classes} />

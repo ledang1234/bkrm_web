@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 const InventoryOrderFilter = (props) => {
-    const {handleToggleFilter,openFilter, setPurchaseOrders} = props;
+    const {handleToggleFilter,openFilter, setPurchaseOrders, query, setQuery} = props;
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -36,20 +36,12 @@ const InventoryOrderFilter = (props) => {
     const branch_uuid = info.branch.uuid;
     
     const formik = useFormik({
-      initialValues: {
-        startDate: '',
-        endDate: '',
-        minDiscount: 0,
-        maxDiscount: 0,
-        minTotalAmount: 0,
-        maxTotalAmount: 0,
-        status: 'debt',
-        paymentMethod: '',
-      },
+      initialValues: query,
       onSubmit: async values => {
-        console.log(values)
-        const res = await purchaseOrderApi.searchPurchaseOrder(store_uuid, branch_uuid, values)
-        setPurchaseOrders(res.data)
+        // console.log(values)
+        // const res = await purchaseOrderApi.searchPurchaseOrder(store_uuid, branch_uuid, values)
+        // setPurchaseOrders(res.data)
+        setQuery(values)
       },
     });
 
@@ -98,7 +90,6 @@ const InventoryOrderFilter = (props) => {
           name="minTotalAmount"
           value={formik.values.minTotalAmount}
           onChange={formik.handleChange}
-          value={formik.values.minTotalAmount}
         // onChange={(e) =>
         //   setProductInfo({
         //     ...productInfo,

@@ -50,12 +50,16 @@ const HomePage = (props) => {
   const container =
     window !== undefined ? () => window().document.body : undefined;
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
   const customization = useSelector((state) => state.customize);
   const infoDetail = useSelector((state) => state.info);
   const isSidebarOpen =
     customization.isSidebarOpen === null
       ? !smallScreen
       : customization.isSidebarOpen;
+  
+  const roleUser = infoDetail.role === "owner" ? "Chủ cửa hàng" : "Nhân viên" 
 
   const permissions = useSelector((state) => state.info.user.permissions);
 
@@ -100,6 +104,7 @@ const HomePage = (props) => {
         <div
           style={{
             width: drawerWidth,
+            // height: 48,
             height: 48,
             marginTop: 30,
             marginLeft: -15,
@@ -119,7 +124,8 @@ const HomePage = (props) => {
     sessionStorage.removeItem("BKRMopening");
 
   };
-  console.log("home")
+ 
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -155,13 +161,14 @@ const HomePage = (props) => {
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
-                style={{ maxWidth: 90, marginLeft: 10, marginRight: 5 }}
+                style={{ width: 200, marginLeft: 10, marginRight: 5 }}
               >
-                <Typography variant="h6">Store Owner</Typography>
+                <Typography variant="h6" style={{fontWeight:700, fontSize:13}}>{roleUser}</Typography>
                 <Typography variant="h6" noWrap>
                   {infoDetail.user.name}
                 </Typography>
               </Box>
+              
               <Button color="primary" onClick={() => logOutHandler()}>
                 Logout
               </Button>
@@ -202,9 +209,13 @@ const HomePage = (props) => {
       >
         <div className={classes.drawerHeader} />
         <Box
-          className={clsx([classes.background], {
+          className={ !xsScreen? clsx([classes.background], {
             [classes.marginBackground]: !isSidebarOpen,
-          })}
+          }) :
+          clsx([classes.backgroundMini], {
+            [classes.marginBackground]: false,
+          }) 
+        }
         >
           <Switch>
             {permissions?.find((p) => p.name === "sales") && (

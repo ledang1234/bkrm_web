@@ -11,6 +11,8 @@ export default  makeStyles((theme) =>({
   
     headerTitle:{
       padding: '24px',
+      marginTop:-5,
+      marginBottom:-10,
       fontSize: '1.125rem'
     },
 
@@ -38,7 +40,7 @@ export default  makeStyles((theme) =>({
     },
     btngroup1:{
       marginRight:20,
-      marginTop:20
+      marginTop:10
     },
 
     visuallyHidden: {
@@ -88,6 +90,15 @@ cardRoot: {
 },
 media: {
   height: 140,
+},
+appBar: {
+  position: 'relative',
+  backgroundColor:theme.customization.primaryColor[500],
+  height:60
+},
+title: {
+  marginLeft: theme.spacing(2),
+  flex: 1,
 },
 
 }));
