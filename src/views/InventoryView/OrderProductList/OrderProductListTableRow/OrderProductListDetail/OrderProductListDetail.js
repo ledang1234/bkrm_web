@@ -63,6 +63,9 @@ createStyles({
 
 const OrderProductListDetail = (props) => {
     const {row,openRow }= props.parentProps;
+    const {isMini}= props.parentProps;
+
+    
   //  tam thoi
     const currentUser = "Minh Tri";
 
@@ -93,7 +96,7 @@ const OrderProductListDetail = (props) => {
 
     return (
         // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
-        <Collapse in={ true } timeout="auto" unmountOnExit>
+        <Collapse in={ isMini? true: true } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
@@ -102,34 +105,34 @@ const OrderProductListDetail = (props) => {
              <Grid  container direction="row" justifyContent="flex-start">
                 <Grid item xs={12} sm={5}>
                   <Grid container direction="row" justifyContent="flex-start" > 
-                      <Grid item xs={3} sm={5} >
+                      <Grid item xs={6} sm={5} >
                         <Typography variant="h5" gutterBottom component="div">Mã đơn đặt</Typography>    
                       </Grid>
-                      <Grid item xs={3} sm={4} >
+                      <Grid item  sm={4} >
                         <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                      <Grid item xs={3} sm={5} >
+                      <Grid item xs={6} sm={5} >
                         <Typography variant="h5" gutterBottom component="div">Ngày đặt </Typography>    
                       </Grid>
-                      <Grid item xs={3} sm={4} >
+                      <Grid item  sm={4} >
                         <Typography variant="body1" gutterBottom component="div">{row.date} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                      <Grid item  xs={3} sm={5} >
+                      <Grid item  xs={6} sm={5} >
                         <Typography variant="h5" gutterBottom component="div">Nhà cung cấp</Typography>    
                       </Grid>
-                      <Grid item xs={3} sm={4} >
+                      <Grid item  sm={4} >
                         <Typography variant="body1" gutterBottom component="div">{row.customer} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
-                      <Grid item xs={3} sm={5} >
+                      <Grid item xs={6} sm={5} >
                         <Typography variant="h5"gutterBottom component="div">Người đặt</Typography>    
                       </Grid>
-                      <Grid item xs={3} sm={4} >
+                      <Grid item  sm={4} >
                         <Typography variant="body1" gutterBottom component="div">{row.employee} </Typography>
                       </Grid>
                   </Grid>
@@ -137,26 +140,26 @@ const OrderProductListDetail = (props) => {
                   </Grid>
                     <Grid item xs={12} sm={5}>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={3} sm={6} >
+                        <Grid item xs={6} sm={6} >
                             <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
                         </Grid>
-                        <Grid item xs={3} sm={4} >
+                        <Grid item sm={4} >
                             <Typography variant="body1" gutterBottom component="div">{row.status}</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={3} sm={6} >
+                        <Grid item xs={6} sm={6} >
                             <Typography variant="h5" gutterBottom component="div">Khoảng tiền </Typography>    
                         </Grid>
-                        <Grid item xs={3} sm={4} >
+                        <Grid item  sm={4} >
                             <Typography variant="body1" gutterBottom component="div"><VNDFormat value={row.total} /></Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
-                        <Grid item xs={3} sm={6} >
+                        <Grid item xs={6} sm={6} >
                             <Typography variant="h5" gutterBottom component="div">Chi nhánh thực hiện</Typography>    
                         </Grid>
-                        <Grid item xs={3} sm={4} >
+                        <Grid item  sm={4} >
                             <Typography variant="body1" gutterBottom component="div">{row.branch} </Typography>
                         </Grid>
                     </Grid>
@@ -209,16 +212,16 @@ const OrderProductListDetail = (props) => {
                </Table> 
                <Box  className={classes.background}style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
                <Grid container direction="column" >
-                    <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-                        <Grid item xs={3}sm={2} >
+                    <Grid container direction="row" justifyContent={ "flex-end"}>
+                        <Grid item xs={6}sm={2} >
                             <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
                             <Typography variant="body1" gutterBottom component="div"><ThousandFormat value={4} /> </Typography>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-                        <Grid item xs={3} sm={2} >
+                    <Grid container direction="row" justifyContent={ "flex-end"}>
+                        <Grid item xs={6} sm={2} >
                             <Typography variant="h5" gutterBottom component="div">Tổng số mặt hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
@@ -226,16 +229,16 @@ const OrderProductListDetail = (props) => {
                         </Grid>
                     </Grid>
 
-                    <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-                        <Grid item xs={3} sm={2} >
+                    <Grid container direction="row" justifyContent={ "flex-end"}>
+                        <Grid item xs={6} sm={2} >
                             <Typography variant="h5" gutterBottom component="div">Khoảng tiền hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
                             <Typography variant="body1" gutterBottom component="div"><VNDFormat value={row.total} /> </Typography>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-                        <Grid item xs={3}sm={2} >
+                    <Grid container direction="row" justifyContent={ "flex-end"}>
+                        <Grid item xs={6}sm={2} >
                             <Typography variant="h5" gutterBottom component="div">Số mặt hàng đã nhập đủ</Typography>    
                         </Grid>
                         <Grid item xs={2} >
@@ -258,7 +261,7 @@ const OrderProductListDetail = (props) => {
               </Grid>
               </Box>
 
-              <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"} style={{marginTop:20}}> 
+              <Grid container direction="row" justifyContent={ "flex-end"} style={{marginTop:20}}> 
                     {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
                     {currentUser === row.employee ? 
                       <> <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>

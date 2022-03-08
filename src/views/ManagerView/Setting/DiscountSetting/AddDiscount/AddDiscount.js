@@ -546,8 +546,15 @@ const AddDiscount = (props) => {
                 discountKey: discountKey,
                 discountType: discountType,
                 rowsInvoice: rowsInvoice,
+              
               }),
               customer_birth: checkedBirthday,
+              // Thêm cái này nữa Hải ơi
+              byDay:byDay,
+              byMonth:byMonth,
+              byDate:byDate,
+              byTime:byTime
+
             };
 
             try {
@@ -589,4 +596,4 @@ const month = [
 ];
 const day = ['Ngày 1','Ngày 2','Ngày 3','Ngày 4','Ngày 5','Ngày 6','Ngày 7','Ngày 8','Ngày 9','Ngày 10','Ngày 11','Ngày 12','Ngày 13','Ngày 14','Ngày 15','Ngày 16','Ngày 17','Ngày 18','Ngày 19','Ngày 20','Ngày 21','Ngày 22','Ngày 23','Ngày 24','Ngày 25','Ngày 26','Ngày 27','Ngày 28','Ngày 29','Ngày 30','Ngày 31'];
 const date=['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ nhật']
-const time = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']
+const time = ['0am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am','12am','13pm','14pm','15pm','16pm','17pm','18pm','19pm','20pm', "21pm","22pm",'23pm']

@@ -181,8 +181,6 @@ const InventoryOrderDetail = (props) => {
   });
   
   return (
-
-
     <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <PayRemaining
         reloadDetail={() => setReload(!reload)}
