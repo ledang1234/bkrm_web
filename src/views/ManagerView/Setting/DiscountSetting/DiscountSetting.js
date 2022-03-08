@@ -27,9 +27,11 @@ import ToolBar from '../../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../../components/TableCommon/TableWrapper/TableWrapper'
 import promotionCouponApi from '../../../../api/promotionCouponApi';
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../../components/MiniTableRow/MiniTableRow"
 
 const DiscountSetting = () => {
-    const [discountList, setDiscountList] = useState([]);
+    // const [discountList, setDiscountList] = useState([]);
     const [newDiscountList, setNewDiscountList] = useState([]);
     const [reload, setReload] = useState(false);
 
@@ -68,19 +70,21 @@ const DiscountSetting = () => {
       }
     }, [pagingState.page, pagingState.limit, reload]);
 
-    useEffect(() => {
-        customerApi.getCustomers(store_uuid)
-        .then(response => response.data, err => console.log(err))
-        .then(data => {
-          setDiscountList(data)
-        })
-    }, [reload, store_uuid]);
+    // useEffect(() => {
+    //     customerApi.getCustomers(store_uuid)
+    //     .then(response => response.data, err => console.log(err))
+    //     .then(data => {
+    //       setDiscountList(data)
+    //     })
+    // }, [reload, store_uuid]);
 
     useEffect(() => {
       console.log("newDiscountList", newDiscountList)
     }, [newDiscountList])
     const theme = useTheme();
     const classes = useStyles(theme);
+    const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
     //// 1. Add pop up + noti
     //add
@@ -147,6 +151,8 @@ const DiscountSetting = () => {
     //3.3. loc cot
 
 
+
+
     return (
 
     <Card className={classes.root} >
@@ -180,11 +186,11 @@ const DiscountSetting = () => {
         
         {/* 2. SEARCH - FILTER - EXPORT*/}
         {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-        <ToolBar  dataTable={discountList} tableType={TableType.CUSTOMER} textSearch={'Mã, tên khuyến mãi  '} /*handlePrint={handlePrint}*/ 
+        <ToolBar  dataTable={newDiscountList} tableType={TableType.CUSTOMER} textSearch={'Mã, tên khuyến mãi  '} /*handlePrint={handlePrint}*/ 
         handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
         <DiscountFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
-        <TableWrapper
+        {!xsScreen?<TableWrapper
         pagingState={{...pagingState, total_rows: totalRows}}
         setPagingState={setPagingState}
         >
@@ -196,16 +202,31 @@ const DiscountSetting = () => {
               headerData={HeadCells.DiscountHeadCells}
             />
             <TableBody>
-              {discountList?.map((row, index) => {
+              {newDiscountList?.map((row, index) => {
+                // json
                   return (
                     <DiscountTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
                   );
               })}
             </TableBody>
-        </TableWrapper>
+        </TableWrapper>:
+            newDiscountList?.map((row, index) => {
+           
+              if(row.promotion_condition.length !== 0) {var promotion_condition = JSON.parse(row.promotion_condition) }
+              const discountKey = row.promotion_condition.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
+              const discountType = getDiscountType(promotion_condition?.discountKey,promotion_condition?.discountType )  
+              const type = `${discountKey}  -  ${discountType}`  
+
+                return (
+                <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+                  totalCost={row.promotion_code}id={row.name} partnerName={type} date={row.end_date} 
+                  promotion_condition={promotion_condition} type={type}
+                  typeBill={"Khuyến mãi"} />         
+             );})}
+        
         <div  style={{display:'none'}} >
         <div ref={componentRef}  >
-        <ComponentToPrint  discountList={discountList} classes={classes}/>
+        <ComponentToPrint  discountList={newDiscountList} classes={classes}/>
         </div>
         
       </div>
@@ -238,4 +259,16 @@ const ComponentToPrint = ({discountList,classes}) =>{
         </div>
   </div>
   )
+}
+function getDiscountType (discountKey, discountType){
+  console.log("discountKey",discountKey)
+  console.log("discountType",discountType)
+  if(discountKey === "invoice"){
+      if(discountType ==="sendGift"){return "Tặng hàng"}
+      else if (discountType ==="sendVoucher"){ return "Tặng voucher"}
+      else{ return "Giảm giá hoá đơn"}
+  }else{
+      if(discountType ==="sendGift"){return "Mua hàng tặng hàng"}
+      else{return "Giá bán theo số lượng mua"}
+  }
 }

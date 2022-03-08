@@ -64,6 +64,8 @@ createStyles({
 
 const CheckHistoryDetail = (props) => {
     const {row, openRow }= props.parentProps;
+    const {isMini}= props;
+    
   //  tam thoi
     const currentUser = "Minh Tri";
 
@@ -88,7 +90,7 @@ const CheckHistoryDetail = (props) => {
 
     return (
       // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
-      <Collapse in={openRow === row.uuid} timeout="auto" unmountOnExit>
+      <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
         <Box margin={1}>
           <Typography
             variant="h3"
@@ -102,24 +104,24 @@ const CheckHistoryDetail = (props) => {
           <Grid container direction="row" justifyContent="flex-start">
             <Grid item  xs={12}sm={5}>
               <Grid container direction="row" justifyContent="flex-start">
-                <Grid item xs={3} sm={5}>
+                <Grid item xs={5} sm={5}>
                   <Typography variant="h5" gutterBottom component="div">
                     Mã đơn kiểm
                   </Typography>
                 </Grid>
-                <Grid item xs={3} sm={4}>
+                <Grid item  sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.inventory_check_code}{" "}
                   </Typography>
                 </Grid>
               </Grid>
               <Grid container direction="row" justifyContent="flex-start">
-                <Grid item xs={3} sm={5}>
+                <Grid item xs={5} sm={5}>
                   <Typography variant="h5" gutterBottom component="div">
                     Ngày kiểm{" "}
                   </Typography>
                 </Grid>
-                <Grid item  xs={3}sm={4}>
+                <Grid item  sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.created_at}{" "}
                   </Typography>
@@ -176,24 +178,24 @@ const CheckHistoryDetail = (props) => {
                 </Grid>
               </Grid> */}
               <Grid container direction="row" justifyContent="flex-start">
-                <Grid item xs={3} sm={6}>
+                <Grid item xs={5} sm={6}>
                   <Typography variant="h5" gutterBottom component="div">
                     Chi nhánh thực hiện
                   </Typography>
                 </Grid>
-                <Grid item xs={3} sm={4}>
+                <Grid item  sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.branch_name}
                   </Typography>
                 </Grid>
               </Grid>
               <Grid container direction="row" justifyContent="flex-start">
-                <Grid item xs={3} sm={6}>
+                <Grid item xs={5} sm={6}>
                   <Typography variant="h5" gutterBottom component="div">
                     Người thực hiện
                   </Typography>
                 </Grid>
-                <Grid item xs={3} sm={4}>
+                <Grid item  sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.user_name}
                   </Typography>
@@ -252,13 +254,13 @@ const CheckHistoryDetail = (props) => {
             }}
           >
             <Grid container direction="column">
-              <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-                <Grid item xs={3} sm={2}>
+              <Grid container direction="row" justifyContent={ "flex-end"}>
+                <Grid item xs={5} sm={2}>
                   <Typography variant="h5" gutterBottom component="div">
                     Tổng SL lệch 
                   </Typography>
                 </Grid>
-                <Grid item  sm={2}>
+                <Grid item xs={3} sm={2}>
                   <Typography variant="body1" gutterBottom component="div">
                     <ThousandFormat value={row.details
                       ?.map((detail) => detail.quantity )
@@ -266,13 +268,13 @@ const CheckHistoryDetail = (props) => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container direction="row" justifyContent={xsScreen ?null: "flex-end"}>
-                <Grid item xs={3} sm={2}>
+              <Grid container direction="row" justifyContent={ "flex-end"}>
+                <Grid item xs={5} sm={2}>
                   <Typography variant="h5" gutterBottom component="div" >
                     Tổng tiền lệch
                   </Typography>
                 </Grid>
-                <Grid item   sm={2}>
+                <Grid item  xs={3} sm={2}>
                   <Typography variant="body1" gutterBottom component="div">
                     <VNDFormat  style={{fontWeight:700,color:moneyDif >0 ?"green" :"red"}} value={moneyDif} />
                   </Typography>
@@ -297,7 +299,7 @@ const CheckHistoryDetail = (props) => {
           <Grid
             container
             direction="row"
-            justifyContent={xsScreen ?null: "flex-end"}
+            justifyContent={"flex-end"}
             style={{ marginTop: 20 }}
           >
             <IconButton

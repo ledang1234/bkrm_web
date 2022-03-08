@@ -27,6 +27,9 @@ import ToolBar from '../../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../../components/TableCommon/TableWrapper/TableWrapper'
 import promotionCouponApi from '../../../../api/promotionCouponApi'
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../../components/MiniTableRow/MiniTableRow"
+
 const VoucherSetting = () => {
     const [voucherList, setVoucherList] = useState([]);
     const [newVoucherList, setNewVoucherList] = useState([]);
@@ -65,6 +68,8 @@ const VoucherSetting = () => {
 
     const theme = useTheme();
     const classes = useStyles(theme);
+    const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
     //// 1. Add pop up + noti
     //add
@@ -164,7 +169,7 @@ const VoucherSetting = () => {
         handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
         <VoucherFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
-        <TableWrapper>
+        {!xsScreen?<TableWrapper>
             <TableHeader
               classes={classes}
               order={order}
@@ -179,7 +184,17 @@ const VoucherSetting = () => {
                   );
               })}
             </TableBody>
-        </TableWrapper>
+        </TableWrapper>:
+        //voucherList
+          [{name:"heeloo",key:"xin chai"}]?.map((row, index) => {
+            return (
+              <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
+              totalCost={100}  id={"TEN VOUCHER"} partnerName={"SL:".concat(100)} date={"22/12/2009"} 
+              typeBill={"Voucher"} />           
+               );
+          })}
+          
+          
         <div  style={{display:'none'}} >
         <div ref={componentRef}  >
         <ComponentToPrint  voucherList={voucherList} classes={classes}/>

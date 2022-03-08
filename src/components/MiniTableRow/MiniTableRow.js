@@ -10,12 +10,13 @@ import InvoiceReturnDetail from "../../views/SalesView/InvoiceReturn/InvoiceRetu
 import InvoiceDetail from "../../views/SalesView/Invoice/InvoiceTableRow/InvoiceDetail/InvoiceDetail";
 import InventoryOrderDetail from "../../views/InventoryView/InventoryOrder/InventoryOrderTableRow/InventoryOrderDetail/InventoryOrderDetail";
 import InventoryReturnDetail from "../../views/InventoryView/InventoryReturnOrder/InventoryReturnTableRow/InventoryReturnDetail/InventoryReturnDetail";
-
+import OrderProductListDetail from "../../views/InventoryView/OrderProductList/OrderProductListTableRow/OrderProductListDetail/OrderProductListDetail";
+import CheckHistoryDetail from "../../views/InventoryView/CheckHistory/CheckHistoryTableRow/CheckHistoryDetail/CheckHistoryDetail"
 import CustomerDetail from "../../views/ManagerView/Customer/CustomerTableRow/CustomerDetail/CustomerDetail"
 import SupplierDetail from "../../views/InventoryView/Supplier/SupplierTableRow/SupplierDetail/SupplierDetail"
 import EmployeeDetail from "../../views/HRView/Employee/EmployeeTableRow/EmployeeDetail/EmployeeDetail"
-
-
+import DiscountDetail from '../../views/ManagerView/Setting/DiscountSetting/DiscountTableRow/DiscountDetail/DiscountDetail';
+import VoucherDetail from '../../views/ManagerView/Setting/VoucherSetting/VoucherTableRow/VoucherDetail/VoucherDetail';
 import CloseIcon from '@material-ui/icons/Close';
 import {ThousandFormat} from "../TextField/NumberFormatCustom"
 import ava from '../../assets/img/product/lyimg.jpeg';
@@ -34,7 +35,8 @@ export const MiniTableRow = ({}) =>{
 export const BillMiniTableRow = (props) =>{
     const { row, handleOpenRow, openRow, onReload } = props;
 
-    const {totalCost, id,partnerName ,date, typeBill } = props
+    const {totalCost, id,partnerName ,date, typeBill } = props;
+    const{promotion_condition, type} = props;
     const classes = useStyles(); 
     const theme = useTheme();
 
@@ -46,26 +48,32 @@ export const BillMiniTableRow = (props) =>{
         setOpen(false);
     };
     return (
-  
         <div style={{margin:10}}>
         <Grid  container direction="row" justifyContent="space-between" 
-          onClick={()=>{handleClickOpen();handleOpenRow(row.uuid)}} 
-          >
+          onClick={()=>{handleClickOpen();handleOpenRow(typeBill === "Khuyến mãi"?row.id:row.uuid)}}  >
             <Grid item>
                 <Typography style={{ fontWeight:500,marginTop:-5,fontSize:15, marginBottom:3}}>{id}</Typography>
                 <Typography style={{ fontSize:14}}>{partnerName}</Typography>  
             </Grid>
             <Grid item justifyContent="flex-end" >
-            <Typography style={{color:"#6b6b6b", fontSize:10, marginTop:-8, marginBottom:5}}>{date.substring(0, 16)}</Typography>
-            <Typography style={{fontWeight:500, fontSize:17, color:typeBill in["Hoá đơn", "Đơn nhập hàng"] ?theme.customization.primaryColor[500]:theme.customization.secondaryColor[500],textAlign: 'right'}}><ThousandFormat value={totalCost}/></Typography>
+                
+          {typeBill ==="Voucher"?<Typography style={{ fontSize:11, marginTop:-15, marginBottom:7}}> Ngày hết hạn:</Typography>:null}
+
+           <Typography style={{color:"#6b6b6b", fontSize:10, marginTop:-8, marginBottom:5,textAlign: 'right'}}>{date.substring(0, 16)}</Typography>
+            
+            {typeBill === "Khuyến mãi"  ?<Typography style={{marginTop:10}} >{totalCost}  </Typography>:null}
+            {typeBill === "Đơn đặt hàng"  || typeBill === "Voucher"?<Typography style={{fontWeight:500, fontSize:17, color:"orange",textAlign: 'right'}}><ThousandFormat value={totalCost}/></Typography> :null}
+            {typeBill === "Đơn kiểm kho"?<Typography style={{fontWeight:500, fontSize:17, color:totalCost >=0?"green":"red",textAlign: 'right'}}><ThousandFormat value={totalCost}/></Typography> :null}
+            {typeBill !== "Đơn đặt hàng" &&typeBill !== "Đơn kiểm kho" &&typeBill !== "Voucher" && typeBill !== "Khuyến mãi"? <Typography style={{fontWeight:500, fontSize:17, color:typeBill  === "Hoá đơn" || typeBill === "Đơn nhập hàng"?theme.customization.primaryColor[500]:theme.customization.secondaryColor[500],textAlign: 'right'}}><ThousandFormat value={totalCost}/></Typography> :null}
+            
+            
             </Grid>
         </Grid> 
-
         <Divider style={{marginTop:2}} />
+
         <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
             <AppBar className={classes.appBar}>
             <Toolbar>
-                
                 <Typography variant="h3" className={classes.title} style={{color:"white"}} >
                     {typeBill} {"#"} {id}
                 </Typography>
@@ -79,13 +87,18 @@ export const BillMiniTableRow = (props) =>{
             {typeBill === "Đơn trả"? <InvoiceReturnDetail parentProps={props}  isMini={true}/>:null}
             {typeBill === "Đơn nhập hàng"? <InventoryOrderDetail parentProps={props}  isMini={true}/>:null}
             {typeBill === "Đơn trả hàng nhập"? <InventoryReturnDetail parentProps={props}  isMini={true}/>:null}
+            {typeBill === "Đơn đặt hàng nhập"? <OrderProductListDetail parentProps={props}  isMini={true}/>:null}
+            {typeBill === "Đơn kiểm kho"? <CheckHistoryDetail parentProps={props}  isMini={true}/>:null}
+            {/* {typeBill === "Khuyến mãi"? <DiscountDetail parentProps={props}  isMini={true} promotion_condition={promotion_condition} type={type}/>:null} */}
+            {typeBill === "Voucher"? <VoucherDetail parentProps={props}  isMini={true}/>:null}
+            {typeBill === "Khuyến mãi"?  <DiscountDetail parentProps={props} promotion_condition={promotion_condition} type={type} />       :null}
+
         </Dialog>
         </div>
     )
 }
 
 export const PartnerMiniTableRow = (props) =>{
-
     const { row, handleOpenRow, openRow, onReload } = props;
 
     const {img, id,name ,phone, score,typePartner } = props

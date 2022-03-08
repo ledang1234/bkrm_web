@@ -30,16 +30,20 @@ import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrap
 
 import JSONdata from '../../../assets/JsonData/inventoryOrder.json'
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 
 
 const OrderProductList = () => {
    // fetch data here
    const orderProductList = JSONdata;
-
+  
 
    const theme = useTheme();
    const classes = useStyles(theme);
    const dispatch = useDispatch();
+   const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+
 
 
    //// 2. Table
@@ -87,7 +91,7 @@ const OrderProductList = () => {
           > 
               {/* 1. ADD POP UP */}
                 <Typography className={classes.headerTitle} variant="h5">
-                    Đơn đặt hàng
+                    Đơn đặt hàng nhập
                 </Typography>
 
                 <Grid className={classes.btngroup1} >
@@ -119,7 +123,7 @@ const OrderProductList = () => {
 
 
           {/* 3. TABLE */}
-          <TableWrapper>
+          {!xsScreen?<TableWrapper>
               <TableHeader
                 classes={classes}
                 order={order}
@@ -135,7 +139,15 @@ const OrderProductList = () => {
                     );
                 })}
               </TableBody>
-          </TableWrapper>
+          </TableWrapper>:
+          orderProductList.map((row, index) => {
+            return (
+              <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  
+              //onReload={onReload} 
+              totalCost={10000}  id={"OR00001"} partnerName={"THAY THẾ"} date={"22/12/2008"} 
+              typeBill={"Đơn đặt hàng nhập"} />
+            );
+          })}
           <div  style={{display:'none'}} >
             <div ref={componentRef}  >
             <ComponentToPrint  orderProductList={orderProductList} classes={classes}/>
