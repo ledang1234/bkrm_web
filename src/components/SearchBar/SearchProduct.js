@@ -156,7 +156,7 @@ const SearchProduct = (props) => {
       <Autocomplete
      
         options={options}
-        // freeSolo={true}
+        freeSolo={true}
         // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
         // inputValue={inputValue}
 

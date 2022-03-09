@@ -124,15 +124,24 @@ const AddSupplier = (props) => {
     supplierFormik.resetForm()
   } 
   return (
-    <SimpleModal
-      open={open}
-      handleClose={handleCloseAndReset}
-      aria-labelledby="form-dialog-title"
-    >
-      <Box style={{ width: 550, maxWidth: "100%" }}>
-        <Typography className={classes.headerTitle} variant="h5" gutterBottom>
-          Thêm nhà cung cấp
+    // <SimpleModal
+    //   open={open}
+    //   handleClose={handleCloseAndReset}
+    //   aria-labelledby="form-dialog-title"
+    // >
+    //   <Box style={{ width: 550, maxWidth: "100%" }}>
+    //     <Typography className={classes.headerTitle} variant="h5" gutterBottom>
+    //       Thêm nhà cung cấp
+    //     </Typography>
+    <Dialog open={open} onClose={handleCloseAndReset} >
+      <DialogTitle id="form-dialog-title">
+        <Typography className={classes.headerTitle} variant="h5">
+          Thêm khách hàng
         </Typography>
+      </DialogTitle>
+
+      <DialogContent>
+        <div className={classes.root}>
         {/* <Box display="flex" flexDirection="row" alignItems="center">
           {display.length ? (
             <Tooltip title="Xóa hình ảnh">
@@ -206,7 +215,7 @@ const AddSupplier = (props) => {
               onBlur={supplierFormik.handleBlur}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={4}>
             <TextField
               id="outlined-basic"
               label="Số điện thoại"
@@ -222,7 +231,7 @@ const AddSupplier = (props) => {
               onBlur={supplierFormik.handleBlur}
             />
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={12} sm={8}>
             <TextField
               id="outlined-basic"
               label="Email"
@@ -268,7 +277,10 @@ const AddSupplier = (props) => {
             />
           </Grid>
         </Grid>
-        <Grid
+        </div>
+      </DialogContent>
+        <DialogActions>
+        {/* <Grid
           item
           xs={12}
           style={{
@@ -277,7 +289,7 @@ const AddSupplier = (props) => {
             justifyContent: "flex-end",
             marginTop: 20,
           }}
-        >
+        > */}
           <Button
             onClick={handleCloseAndReset}
             variant="contained"
@@ -296,9 +308,11 @@ const AddSupplier = (props) => {
           >
             Thêm
           </Button>
-        </Grid>
-      </Box>
-    </SimpleModal>
+        {/* </Grid> */}
+      {/* </Box>
+    </SimpleModal> */}
+    </DialogActions>
+      </Dialog>
   );
 };
 

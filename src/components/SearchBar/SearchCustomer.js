@@ -115,7 +115,7 @@ const SearchCustomer = (props) => {
     <div style={{ width: "100%" }}>
       <Autocomplete
         autoComplete={false}
-        freeSolo={false}
+        freeSolo
         onKeyUp={(event) => {
           if (event.key === "Enter") {
             props.handleSearchCustomer(event.target.value) 
