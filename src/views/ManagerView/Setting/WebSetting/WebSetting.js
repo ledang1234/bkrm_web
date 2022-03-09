@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme,withStyles, makeStyles, createStyles } from "@material-ui/core/styles";
-import { Typography,InputAdornment,FormControlLabel,FormLabel,CardHeader,IconButton,Collapse,FormControl,RadioGroup,TextField, ListItem,Card, Radio,Grid, ButtonBase, Tooltip } from "@material-ui/core";
+import { Button,Typography,InputAdornment,FormControlLabel,FormLabel,CardHeader,IconButton,Collapse,FormControl,RadioGroup,TextField, ListItem,Card, Radio,Grid, ButtonBase, Tooltip } from "@material-ui/core";
 import LanguageIcon from '@material-ui/icons/Language';
 import LinkIcon from '@material-ui/icons/Link';
 import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWithClose"
@@ -12,6 +12,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import NavBarSetting from "./NavBarSetting"
 import ProductSetting from "./ProductSetting"
 import {useStyles} from "./style"
+import { useSelector } from "react-redux";
+import storeApi from "../../../../api/storeApi";
 const WebSetting = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -49,6 +51,22 @@ const WebSetting = () => {
   const [displayColorPicker, setDisplayColorPicker] = React.useState(false);
   const [displayColorPicker1, setDisplayColorPicker1] = React.useState(false);
   const [openLinkWarningPopup, seOpenLinkWarningPopup] = React.useState(false);
+
+  // redux
+  const info = useSelector(state => state.info)
+  const store_uuid = info.store.uuid;
+  useEffect(() => {
+    const loadData = async () => {
+      const response = await storeApi.getStoreInfo(store_uuid)
+      if (response.data.web_configuration) {
+        setWeb(JSON.parse(response.data.web_configuration))
+      }
+    }
+
+    if (store_uuid) {
+      loadData()
+    }
+  }, [store_uuid]);
 
   // 1.
 
@@ -212,7 +230,14 @@ const WebSetting = () => {
           Hello
       </SettingCollapse>
 
-     
+     <Button onClick={async () => {
+       try {
+         const response = storeApi.updateStoreInfo(store_uuid, {web_configuration: JSON.stringify(web)})
+         
+       } catch(err) { 
+         console.log(err)
+       }
+     }}>Lưu thay đổi</Button>
 
     </Card>
   );

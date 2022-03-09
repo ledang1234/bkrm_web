@@ -10,8 +10,11 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
+  Box,
+  Tooltip,
+  IconButton,
 } from "@material-ui/core";
-
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import userApi from "../../../../api/userApi";
 import getGeoCode from "../../../../components/BranchMap/Geocode";
 
@@ -22,10 +25,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import SimpleModal from "../../../../components/Modal/ModalWrapper";
 import { statusAction } from "../../../../store/slice/statusSlice";
+import avaUpload from "../../../../assets/img/product/default-product.png";
 import * as Yup from "yup";
 
 const useStyles = makeStyles((theme) => createStyles({}));
-
+const UploadImages = (img) => {
+  return (
+    <Box
+      component="img"
+      sx={{
+        height: 70,
+        width: 70,
+        marginLeft: 7,
+        marginRight: 7,
+        borderRadius: 2,
+      }}
+      src={avaUpload}
+    />
+  );
+};
 const AddBranch = (props) => {
   const { handleClose, open, onReload } = props;
 
@@ -36,6 +54,17 @@ const AddBranch = (props) => {
   const [cityList, setCityList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
+  const [image, setImage] = useState([]);
+  const [display, setDisplay] = useState([]);
+  const clearImage = () => {
+    setDisplay([]);
+    setImage([]);
+  };
+  const addImageHandler = (e) => {
+    setImage(e.target.files[0]);
+    setDisplay(URL.createObjectURL(e.target.files[0]));
+  };
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -109,22 +138,39 @@ const AddBranch = (props) => {
     const district = districtList.find(
       (district) => district.id === formik.values.district
     ).name;
-    const { lat, lng } = await getGeoCode(
-      formik.values.address + " " + ward + " " + district + " " + province
-    );
-    const body = {
-      name: formik.values.name,
-      address: formik.values.address,
-      ward: ward,
-      province: province,
-      district: district,
-      phone: formik.values.phone,
-      status: "active",
-      lng: lng,
-      lat: lat
-    };
+    let lat, lng;
     try {
-      const response = await branchApi.createBranch(store_uuid, body);
+      ({lat, lng}  = await getGeoCode(
+        formik.values.address + " " + ward + " " + district + " " + province
+      ));
+    } catch (error) {
+      console.log(error)
+    }
+    try {
+      const body = {
+        name: formik.values.name,
+        address: formik.values.address,
+        ward: ward,
+        province: province,
+        district: district,
+        phone: formik.values.phone,
+        status: "active",
+        lng: lng,
+        lat: lat
+      };
+
+      var bodyFormData = new FormData();
+      bodyFormData.append("name", formik.values.name.toString());
+      bodyFormData.append("address", formik.values.address.toString());
+      bodyFormData.append("ward", formik.values.ward);
+      bodyFormData.append("province", formik.values.province);
+      bodyFormData.append("district", formik.values.district);
+      bodyFormData.append("phone", formik.values.phone.toString());
+      bodyFormData.append("status", "active");
+      bodyFormData.append("lng", lng? lng.toString() : "");
+      bodyFormData.append("lat", lat? lat.toString() : "");
+      bodyFormData.append("image", image);
+      const response = await branchApi.createBranch(store_uuid, bodyFormData);
       onReload();
       dispatch(statusAction.successfulStatus("Create branch successfully"));
     } catch (error) {
@@ -137,6 +183,46 @@ const AddBranch = (props) => {
       <Typography variant="h4" gutterBottom>
         Thêm chi nhánh mới
       </Typography>
+      <Box display="flex" flexDirection="row" alignItems="center">
+        {display.length ? (
+          <Tooltip title="Xóa hình ảnh">
+            <Button size="small" onClick={clearImage}>
+              <Box
+                component="img"
+                sx={{
+                  height: 70,
+                  width: 70,
+                  marginLeft: 7,
+                  marginRight: 7,
+                  borderRadius: 2,
+                }}
+                src={display}
+              />
+            </Button>
+          </Tooltip>
+        ) : (
+          <UploadImages />
+        )}
+
+        <input
+          accept="image/*"
+          style={{ display: "none" }}
+          id="icon-button-file"
+          type="file"
+          onChange={addImageHandler}
+        />
+        {display.length === 0 ? (
+          <label htmlFor="icon-button-file">
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera />
+            </IconButton>
+          </label>
+        ) : null}
+      </Box>
       <Grid container spacing={2} style={{ maxWidth: 600, marginTop: 10 }}>
         <Grid item xs={12}>
           <TextField

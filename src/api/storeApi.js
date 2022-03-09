@@ -1,10 +1,15 @@
 import axios from "axios";
 import axiosClient from "./axiosClient";
 const storeApi = {
-  // getReport: (storeUuid, period) => {
-  //   const url = `stores/${storeUuid}/report`;
-  //   return axiosClient.get(url, { params: { period: period } });
-  // },
+  getStoreInfo: (storeUuid) => {
+    const url = `stores/${storeUuid}`;
+    return axiosClient.get(url, {}); 
+  },
+  updateStoreInfo: (storeUuid, body) => {
+    const url = `stores/${storeUuid}`;
+    return axiosClient.put(url, body); 
+  },
+  
   getActivities: (storeUuid, period) => {
     const url = `stores/${storeUuid}/activities`;
     return axiosClient.get(url, { params: { period: period } });
