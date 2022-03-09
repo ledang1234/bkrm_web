@@ -138,6 +138,7 @@ const AddSupplier = (props) => {
         <Typography className={classes.headerTitle} variant="h5">
           Thêm khách hàng
         </Typography>
+
       </DialogTitle>
 
       <DialogContent>
@@ -182,6 +183,7 @@ const AddSupplier = (props) => {
             </label>
           ) : null}
         </Box> */}
+
         <Grid container spacing={2} style={{ marginTop: 10 }}>
           <Grid item xs={12}>
             <TextField

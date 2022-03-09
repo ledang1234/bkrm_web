@@ -25,7 +25,7 @@ const branchApi = {
 
   updateBranch: (storeUuid, branchUuid, body) => {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;
-    return axiosClient.put(url, body);
+    return axiosClient.post(url, body);
   },
   inactiveBranch: (storeUuid, branchUuid) => {
     const url = `/stores/${storeUuid}/branches/${branchUuid}`;

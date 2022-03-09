@@ -5,10 +5,12 @@ import {
   FormControl,
   FormHelperText,
   Grid,
+  IconButton,
   InputLabel,
   makeStyles,
   Select,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { useFormik } from "formik";
@@ -21,6 +23,8 @@ import { statusAction } from "../../../store/slice/statusSlice";
 import SimpleModal from "../../Modal/ModalWrapper";
 import getGeoCode from "../Geocode";
 import ConfirmPopUp from "../../ConfirmPopUp/ConfirmPopUp";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import avaUpload from "../../../assets/img/product/default-product.png";
 import * as Yup from "yup";
 
 const useStyles = makeStyles((theme) =>
@@ -30,7 +34,21 @@ const useStyles = makeStyles((theme) =>
     },
   })
 );
-
+const UploadImages = (img) => {
+  return (
+    <Box
+      component="img"
+      sx={{
+        height: 70,
+        width: 70,
+        marginLeft: 7,
+        marginRight: 7,
+        borderRadius: 2,
+      }}
+      src={avaUpload}
+    />
+  );
+};
 const EditBranch = (props) => {
   const { handleClose, open, branch } = props;
   const classes = useStyles();
@@ -41,6 +59,19 @@ const EditBranch = (props) => {
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [isDelete, setIsDelete] = useState(false);
+  const [image, setImage] = useState([]);
+  const [display, setDisplay] = useState([]);
+  const clearImage = () => {
+    setDisplay([]);
+    setImage([]);
+  };
+  const addImageHandler = (e) => {
+    setImage(e.target.files[0]);
+    setDisplay(URL.createObjectURL(e.target.files[0]));
+  };
+  useEffect(() => {
+    setImage(branch?.image)
+  }, [branch])
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -100,6 +131,7 @@ const EditBranch = (props) => {
 
   const dispatch = useDispatch();
   const handleEditBranch = async () => {
+    closeModalAndResetData();
     const ward = wardList.find((ward) => ward.id === formik.values.ward).name;
     const province = cityList.find(
       (city) => city.id === formik.values.city
@@ -107,10 +139,14 @@ const EditBranch = (props) => {
     const district = districtList.find(
       (district) => district.id === formik.values.district
     ).name;
-    const { lat, lng } = await getGeoCode(
-      formik.values.address + " " + ward + " " + district + " " + province
-    );
-    handleClose();
+    let lat, lng
+    try {
+      ({ lat, lng } = await getGeoCode(
+        formik.values.address + " " + ward + " " + district + " " + province
+      ));
+    } catch (error) {
+      console.log(error)
+    }
     try {
       const body = {
         name: formik.values.name,
@@ -123,10 +159,21 @@ const EditBranch = (props) => {
         lng: lng,
         lat: lat,
       };
+      var bodyFormData = new FormData();
+      bodyFormData.append("name", formik.values.name.toString());
+      bodyFormData.append("address", formik.values.address.toString());
+      bodyFormData.append("ward", formik.values.ward.toString());
+      bodyFormData.append("province", formik.values.province.toString());
+      bodyFormData.append("district", formik.values.district.toString());
+      bodyFormData.append("phone", formik.values.phone.toString());
+      bodyFormData.append("status", "active");
+      bodyFormData.append("lng", lng.toString());
+      bodyFormData.append("lat", lat.toString());
+      bodyFormData.append("image", image);
       const response = await branchApi.updateBranch(
         store_uuid,
         branch.uuid,
-        body
+        bodyFormData
       );
       dispatch(statusAction.successfulStatus("Edit branch successfully"));
       props.onReload();
@@ -146,6 +193,11 @@ const EditBranch = (props) => {
       console.log(error);
       dispatch(statusAction.failedStatus("Delete branch failed"));
     }
+  };
+  const closeModalAndResetData = () => {
+    handleClose();
+    formik.resetForm();
+    setImage(branch?.image)
   };
   return (
     <SimpleModal open={open} handleClose={handleClose}>
@@ -177,6 +229,46 @@ const EditBranch = (props) => {
         >
           Xóa chi nhánh
         </Button>
+      </Box>
+      <Box display="flex" flexDirection="row" alignItems="center">
+        {display.length ? (
+          <Tooltip title="Xóa hình ảnh">
+            <Button size="small" onClick={clearImage}>
+              <Box
+                component="img"
+                sx={{
+                  height: 70,
+                  width: 70,
+                  marginLeft: 7,
+                  marginRight: 7,
+                  borderRadius: 2,
+                }}
+                src={display}
+              />
+            </Button>
+          </Tooltip>
+        ) : (
+          <UploadImages />
+        )}
+
+        <input
+          accept="image/*"
+          style={{ display: "none" }}
+          id="icon-button-file"
+          type="file"
+          onChange={addImageHandler}
+        />
+        {display.length === 0 ? (
+          <label htmlFor="icon-button-file">
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera />
+            </IconButton>
+          </label>
+        ) : null}
       </Box>
       <Grid container spacing={2} style={{ maxWidth: 600, marginTop: 10 }}>
         <Grid item xs={12}>
@@ -309,7 +401,7 @@ const EditBranch = (props) => {
           color="primary"
           onClick={handleEditBranch}
           style={{ marginRight: 20 }}
-          disabled= {!(formik.isValid && Object.keys(formik.touched).length > 0)}
+          disabled={!(formik.isValid && Object.keys(formik.touched).length > 0)}
         >
           Sửa
         </Button>
