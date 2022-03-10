@@ -91,6 +91,7 @@ const EmployeeDetail = (props) => {
   const [employeeDetail, setEmployeeDetail] = React.useState({
     uuid: "",
     name: "",
+    user_name: "",
     date_of_birth: "",
     id_card_num: "",
     phone: "",
@@ -122,6 +123,7 @@ const EmployeeDetail = (props) => {
         setEmployeeDetail({
           uuid: "",
           name: "",
+          user_name: "",
           date_of_birth: "",
           id_card_num: "",
           phone: "",
@@ -142,7 +144,12 @@ const EmployeeDetail = (props) => {
   return (
     <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       {openEdit && (<EditEmployee
-        handleClose={() => {
+        handleClose={(status) => {
+          if (status === "Success") {
+            dispatch(statusAction.successfulStatus("Chỉnh sửa thành công"))
+          } else if (status==="Failed") {
+            dispatch(statusAction.failedStatus("Chỉnh sửa thất bại"))
+          }
           setOpenEdit(false);
           handleReload();
         }}
@@ -185,6 +192,18 @@ const EmployeeDetail = (props) => {
               <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
                   {employeeDetail.name}{" "}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={7} sm={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Tên đăng nhập{" "}
+                </Typography>
+              </Grid>
+              <Grid item sm={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {employeeDetail.user_name}{" "}
                 </Typography>
               </Grid>
             </Grid>

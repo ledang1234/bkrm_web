@@ -62,11 +62,8 @@ const CartSummary = (props) => {
     handleUpdateDiscount,
     handleUpdatePaidAmount,
     handleUpdatePaymentMethod,
-
     handleCheckDelivery,
-
     handleSearchCustomer,
-
     handleConfirm,
     selectedBranch,
     setSelectedBranch,
@@ -75,7 +72,6 @@ const CartSummary = (props) => {
     mode,
     reloadCustomers,
     discountData,
-    
   } = props;
 
   const theme = useTheme();

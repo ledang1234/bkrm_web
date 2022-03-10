@@ -121,7 +121,7 @@ const Import = () => {
       setSuppliers(response.data);
       setCartList([
         {
-          supplier: response.data.length ? response.data[0] : null,
+          supplier: null,
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -164,7 +164,7 @@ const Import = () => {
     setCartList([
       ...cartList,
       {
-        supplier: suppliers.length ? suppliers[0] : null,
+        supplier:  null,
         cartItem: [],
         total_amount: 0,
         paid_amount: 0,
@@ -181,7 +181,7 @@ const Import = () => {
     if (cartList.length === 0) {
       setCartList([
         {
-          supplier: suppliers.length ? suppliers[0] : null,
+          supplier: null,
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -364,7 +364,7 @@ const Import = () => {
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
       let body = {
-        supplier_uuid: cart.supplier?.uuid,
+        supplier_uuid: cart.supplier ? cart.suplier.uuid : '',
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
         paid_amount: cart.paid_amount,

@@ -130,7 +130,7 @@ const Cart = () => {
         setCustomers(response.data);
         setCartList([
           {
-            customer: response.data.length ? response.data[0] : null,
+            customer:null,
             cartItem: [],
             total_amount: "0",
             paid_amount: "0",
@@ -194,7 +194,7 @@ const Cart = () => {
     setCartList([
       ...cartList,
       {
-        customer: customers.length ? customers[0] : null,
+        customer:  null,
         cartItem: [],
         total_amount: "0",
         paid_amount: "0",
@@ -212,7 +212,7 @@ const Cart = () => {
     if (cartList.length === 0) {
       setCartList([
         {
-          customer: customers.length ? customers[0] : null,
+          customer: null,
           cartItem: [],
           total_amount: "0",
           paid_amount: "0",
@@ -415,7 +415,7 @@ const Cart = () => {
       let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
       console.log(cart.paid_amount, cart.total_amount, cart.discount);
       let body = {
-        customer_uuid: cart.customer.uuid,
+        customer_uuid: cart.customer ?  cart.customer.uuid : '',
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
         paid_amount: cart.paid_amount,

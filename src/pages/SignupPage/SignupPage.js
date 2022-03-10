@@ -37,6 +37,7 @@ export default function SignUp() {
     initialValues: {
       name: "",
       email: "",
+      user_name: '',
       password: "",
       passwordConfirm: "",
       phone: "",
@@ -44,13 +45,14 @@ export default function SignUp() {
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên chủ cửa hàng"),
+      user_name: Yup.string().required("Nhập tên đăng nhập"),
       phone: Yup.string()
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại")
         .matches(/^\d+$/, "Số điển thoại không chính xác"),
       password: Yup.string().required("Nhập mật khẩu").min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
       passwordConfirm: Yup.string().required("Nhập lại mật khẩu").oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp'),
-      email: Yup.string().required("Nhập địa chỉ email").email("Email không chính xác")
+      email: Yup.string().email("Email không chính xác")
     })
   })
   const store_formik = useFormik({
@@ -89,6 +91,7 @@ export default function SignUp() {
     const body = {
       name: user_formik.values.name,
       email: user_formik.values.email,
+      user_name: user_formik.values.user_name,
       password: user_formik.values.password,
       password_confirmation: user_formik.values.passwordConfirm,
       phone: user_formik.values.phone,
@@ -109,6 +112,10 @@ export default function SignUp() {
       dispatch(statusAction.successfulStatus("Tạo cửa hàng thành công"))
       if (response.message === "User successfully registered") {
         dispatch(logInHandler(user_formik.values.phone, user_formik.values.password));
+      }
+      if (response.message === "Tên đăng nhập đã được sử dụng") {
+        dispatch(statusAction.failedStatus("Tên đăng nhập đã được sử dụng"))
+        // dispatch(logInHandler(user_formik.values.phone, user_formik.values.password));
       }
     } catch (error) {
       console.log(error)
@@ -160,7 +167,7 @@ export default function SignUp() {
       <Paper className={classes.container}>
         <div className={classes.paper}>
           <Typography component="h1" variant="h3" gutterBottom>
-            Sign up
+            Đăng kí
           </Typography>
           <Stepper
             activeStep={activeStep}
