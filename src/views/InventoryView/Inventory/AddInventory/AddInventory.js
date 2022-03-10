@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
-
-import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
+import { useTheme } from "@material-ui/core/styles";
 //import library
 import {
   Button,
@@ -78,7 +76,7 @@ const AddInventory = (props) => {
 
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
-  const [imageURL, setImageURL] = useState('');
+  const [imageURL, setImageURL] = useState("");
   const addImageHandler = (e) => {
     console.log(e.target.files[0]);
     console.log(URL.createObjectURL(e.target.files[0]));
@@ -294,7 +292,7 @@ const AddInventory = (props) => {
     },
     {
       id: "3",
-      name: "RAM",
+      name: "Chất liệu",
     },
   ];
   const [expanded, setExpanded] = React.useState(false);
@@ -348,16 +346,20 @@ const AddInventory = (props) => {
       console.log(relatedList);
 
       for (var i = 0; i < relatedList.length; i++) {
-        const values = relatedList[i].split("-");
-        const attributeValues = attributeList.map((att, index) => ({
-          name: att.name,
-          value: values[index],
-        }));
+        const values = relatedList[i].name.split("-");
+        const attributeValues = [];
+        attributeList.forEach((att, index) => {
+          if (values[index])
+            attributeValues.push({
+              name: att.name,
+              value: values[index],
+            });
+        });
         bodyFormData.append(
           "variations[]",
           JSON.stringify({
             ...relatedList[i],
-            attribute_value: attributeValues,
+            attribute_value: JSON.stringify(attributeValues),
           })
         );
       }

@@ -233,7 +233,7 @@ const HomePage = (props) => {
             )}
             <Route path={`${path}/`} >
               {/* only redirect whenever permissions is successfully loaded => length at least = 1 */}
-              {permissions.length > 0 ? 
+              {permissions?.length > 0 ? 
               (<Redirect to={permissions?.find((p) => p.name === "sales") ? `${path}/sales` : permissions?.find((p) => p.name === "inventory") ? `${path}/inventory` : permissions?.find((p) => p.name === "employee") ? `${path}/hr` : `${path}/manager`} />) :null }
             </Route>
             <Route path={`${path}/*`} component={PageNotFound} />
