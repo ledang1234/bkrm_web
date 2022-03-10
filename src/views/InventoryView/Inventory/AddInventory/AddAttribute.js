@@ -43,7 +43,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
                 var _set = [];
                 for (let j = 0; j < mySet.length ; j++ ){
                     for (let k = 0; k < newArr[i].items.length ; k++ ){
-                        _set.push(mySet[j].concat( ' - ',newArr[i].items[k]))
+                        _set.push(mySet[j].concat( '-',newArr[i].items[k]))
                         // _set.push({name:mySet[j].concat( ' - ',newArr[i].items[k]), attList:[]})
 
                     }

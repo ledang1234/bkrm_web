@@ -23,7 +23,7 @@ const RelaltedItemList = ({relatedList, setRelatedList}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
-      // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0, attribute_values}
+    // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0, attribute_values}
 
 
     const handleDelete = (index)=> {
