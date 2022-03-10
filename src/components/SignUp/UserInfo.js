@@ -50,7 +50,6 @@ const UserInfo = (props) => {
         <Grid item xs={12}>
           <TextField
             variant="outlined"
-            required
             fullWidth
             label="Địa chỉ email"
             name="email"
@@ -58,6 +57,20 @@ const UserInfo = (props) => {
             value={user_formik.values.email}
             error={user_formik.touched.email && user_formik.errors.email}
             helperText={user_formik.touched.email ? user_formik.errors.email : null}
+            onBlur={user_formik.handleBlur}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="Tên đăng nhập"
+            name="user_name"
+            onChange={user_formik.handleChange}
+            value={user_formik.values.user_name}
+            error={user_formik.touched.user_name && user_formik.errors.user_name}
+            helperText={user_formik.touched.user_name ? user_formik.errors.user_name : null}
             onBlur={user_formik.handleBlur}
           />
         </Grid>

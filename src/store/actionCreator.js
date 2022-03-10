@@ -51,7 +51,7 @@ export const logInHandler = (userName, password) => {
     dispatch(loadingActions.startLoad());
     const logIn = async () => {
       const response = await userApi.signIn({
-        phone: userName,
+        user_name: userName,
         password: password,
         role: "owner",
       });
@@ -92,7 +92,7 @@ export const empLogInHandler = (userName, password) => {
     dispatch(loadingActions.startLoad());
     const logIn = async () => {
       const response = await userApi.signIn({
-        phone: userName,
+        user_name: userName,
         password: password,
         role: "employee",
       });

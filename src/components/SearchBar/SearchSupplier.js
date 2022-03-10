@@ -123,7 +123,7 @@ const SearchSupplier = (props) => {
   return (
     <div style={{ width: "100%" }}>
       <Autocomplete
-        freeSolo
+        freeSolo 
         value={props.selectedSupplier}
         options={props.suppliers}
         getOptionLabel={getOptionLabel}

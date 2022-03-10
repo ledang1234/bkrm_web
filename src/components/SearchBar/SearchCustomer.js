@@ -42,14 +42,9 @@ const SearchCustomer = (props) => {
   // const [selectedOption, setSelectedOption] = useState(props.selected)
   // const [options, setOptions] = React.useState([]);
 
-  useEffect(() => {}, [props.selectedCustomer]);
+  useEffect(() => {
 
-  // const loadingData = async () => {
-  //   const response = await customerApi.getCustomers(store_uuid);
-  //   setOptions(response.data)
-  //   setSelectedOption(response.data[0]);
-  //   props.handleSearchBarSelect(response.data[0])
-  // };
+  }, [props.selectedCustomer]);
 
   const renderOption = (option) => {
     //display value in Popper elements

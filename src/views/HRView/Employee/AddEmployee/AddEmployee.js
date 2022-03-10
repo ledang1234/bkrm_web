@@ -90,6 +90,7 @@ const AddEmployee = (props) => {
     initialValues: {
       uuid: "",
       name: "",
+      user_name: "",
       phone: "",
       permissions: [],
       password: "",
@@ -104,7 +105,7 @@ const AddEmployee = (props) => {
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Bắt buộc!"),
-      phone: Yup.string().required("Bắt buộc!"),
+      user_name: Yup.string().required("Bắt buộc!"),
       password: Yup.string().required("Bắt buộc!"),
       branches: Yup.array().min(1, "Ít nhất một chi nhánh"),
       permissions: Yup.array().min(1, "Ít nhất một chức năng"),
@@ -192,7 +193,7 @@ const AddEmployee = (props) => {
               id="contained-button-file"
               multiple
               type="file"
-              accept="image/*" 
+              // accept="image/*" 
               capture="environment"
               onChange={(event) => {
                 setImage(event.target.files[0])
@@ -244,7 +245,6 @@ const AddEmployee = (props) => {
               <TextField
                 id="outlined-basic"
                 label="Số điện thoại"
-                required
                 value={formik.values.phone}
                 variant="outlined"
                 name="phone"
@@ -255,6 +255,22 @@ const AddEmployee = (props) => {
 
               {formik.errors.phone && formik.touched.phone && (
                 <FormHelperText error>{formik.errors.phone}</FormHelperText>
+              )}
+
+              <TextField
+                id="outlined-basic"
+                label="Tên đăng nhập"
+                required
+                value={formik.values.user_name}
+                variant="outlined"
+                name="user_name"
+                fullWidth
+                size="small"
+                onChange={formik.handleChange}
+              />
+
+              {formik.errors.user_name && formik.touched.user_name && (
+                <FormHelperText error>{formik.errors.user_name}</FormHelperText>
               )}
 
               <TextField

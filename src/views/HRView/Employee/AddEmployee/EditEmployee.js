@@ -25,7 +25,7 @@ import NumberFormatCustom from "../../../../components/TextField/NumberFormatCus
 import MultipleSelect from "../../../../components/MultipleSelect/MultipleSelect";
 import { EmailRounded, YouTube } from "@material-ui/icons";
 import branchApi from "../../../../api/branchApi";
-
+import VNDInput from "../../../../components/TextField/NumberFormatCustom";
 import * as Yup from "yup";
 // api
 import { useSelector } from "react-redux";
@@ -103,6 +103,7 @@ const EditEmployee = ({ handleClose, open, employee }) => {
     initialValues: {
       uuid: employee.uuid,
       name: employee.name,
+      user_name: employee.user_name,
       phone: employee.phone,
       permissions: employee.permissions.map((p) => p.id),
       email: employee.email,
@@ -116,7 +117,7 @@ const EditEmployee = ({ handleClose, open, employee }) => {
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Bắt buộc!"),
-      phone: Yup.string().required("Bắt buộc!"),
+      user_name: Yup.string().required("Bắt buộc!"),
       branches: Yup.array().min(1, "Ít nhất một chi nhánh"),
       permissions: Yup.array().min(1, "Ít nhất một chức năng"),
     }),
@@ -134,7 +135,9 @@ const EditEmployee = ({ handleClose, open, employee }) => {
             formData.append("branches[]", values["branches"][i]);
           }
         } else {
-          formData.append(value, values[value]);
+          if (values[value]) {
+            formData.append(value, values[value]);
+          }
         }
       }
 
@@ -188,7 +191,6 @@ const EditEmployee = ({ handleClose, open, employee }) => {
               id="contained-button-file"
               multiple
               type="file"
-              accept="image/*"
               capture="environment"
               onChange={(event) => {
                 setImage(event.target.files[0]);
@@ -222,6 +224,7 @@ const EditEmployee = ({ handleClose, open, employee }) => {
             <Grid item xs={6}>
               <TextField
                 id="name"
+                name="name"
                 label="Tên nhân viên"
                 value={formik.values.name}
                 variant="outlined"
@@ -233,6 +236,22 @@ const EditEmployee = ({ handleClose, open, employee }) => {
 
               {formik.errors.name && formik.touched.name && (
                 <FormHelperText error>{formik.errors.name}</FormHelperText>
+              )}
+
+              <TextField
+                id="name"
+                name="user_name"
+                label="Tên đăng nhập"
+                value={formik.values.user_name}
+                variant="outlined"
+                fullWidth
+                size="small"
+                // name="name"
+                onChange={formik.handleChange}
+              />
+
+              {formik.errors.user_name && formik.touched.user_name && (
+                <FormHelperText error>{formik.errors.user_name}</FormHelperText>
               )}
 
               <TextField
@@ -350,22 +369,21 @@ const EditEmployee = ({ handleClose, open, employee }) => {
                 </Select>
               </FormControl>
 
-              <TextField
+              <VNDInput
                 label="Mức lương"
                 variant="outlined"
                 fullWidth
                 size="small"
-                name="salary"
                 value={formik.values.salary}
+                name="salary"
                 // value={values.numberformat}
                 // onChange={handleChange}
                 onChange={formik.handleChange}
-                name="numberformat"
-                id="formatted-numberformat-input"
-                InputProps={{
-                  inputComponent: NumberFormatCustom,
-                }}
+                // InputProps={{
+                //   inputComponent: NumberFormatCustom,
+                // }}
               />
+
               {/* <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/> */}
 
               <FormControl

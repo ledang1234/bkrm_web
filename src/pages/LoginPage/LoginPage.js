@@ -23,10 +23,8 @@ export default function SignIn() {
       password: ""
     },
     validationSchema : Yup.object({
-      phone: Yup.string()
-        .length(10, "Số điện thoại không chính xác")
-        .required("Nhập số điện thoại")
-        .matches(/^\d+$/, "Số điển thoại không chính xác"),
+      user_name: Yup.string()
+        .required("Nhập tên đăng nhập"),
       password: Yup.string().required("Nhập mật khẩu"),
     })
   }
@@ -55,13 +53,13 @@ export default function SignIn() {
                 margin="normal"
                 required
                 fullWidth
-                label="Số điện thoại"
-                name="phone"
+                label="Tên đăng nhập"
+                name="user_name"
                 autoFocus
-                value = {loginFormik.values.phone}
+                value = {loginFormik.values.user_name}
                 onChange= {loginFormik.handleChange}
-                error={loginFormik.touched.phone && loginFormik.errors.phone}
-                helperText={loginFormik.touched.phone ? loginFormik.errors.phone : null}
+                error={loginFormik.touched.user_name && loginFormik.errors.user_name}
+                helperText={loginFormik.touched.user_name ? loginFormik.errors.user_name : null}
                 onBlur={loginFormik.handleBlur}
               />
               <TextField
@@ -81,9 +79,9 @@ export default function SignIn() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    value="remember"
+                    value={isOwner}
                     color="primary"
-                    onChange={() => setIsOwner(true)}
+                    onChange={(e, checked) => setIsOwner(checked)}
                   />
                 }
                 label="Chủ cửa hàng"
@@ -97,9 +95,9 @@ export default function SignIn() {
                 disabled = {!(loginFormik.isValid && Object.keys(loginFormik.touched).length > 0)}
                 onClick={() => {
                   if (isOwner) {
-                    dispatch(logInHandler(loginFormik.values.phone, loginFormik.values.password));
+                    dispatch(logInHandler(loginFormik.values.user_name, loginFormik.values.password));
                   } else {
-                    dispatch(empLogInHandler(loginFormik.values.phone, loginFormik.values.password));
+                    dispatch(empLogInHandler(loginFormik.values.user_name, loginFormik.values.password));
                   }
                 }}
               >

@@ -75,8 +75,11 @@ const Employee = () => {
         console.log(error);
       }
     };
-    loadData();
-  }, [pagingState.page, pagingState.limit, reload]);
+    if (store_uuid) {
+
+      loadData();
+    }
+  }, [pagingState.page, pagingState.limit, reload, store_uuid]);
 
 
   //// 1. Add pop up + noti
