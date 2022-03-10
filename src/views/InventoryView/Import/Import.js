@@ -3,7 +3,7 @@ import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { grey } from "@material-ui/core/colors";
-import {CartBottom} from "../../../components/Button/CartButton"
+import { CartBottom } from "../../../components/Button/CartButton";
 
 import AddIcon from "@material-ui/icons/Add";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -54,7 +54,7 @@ import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import moment from "moment";
 import AddInventory from "../Inventory/AddInventory/AddInventory";
 import supplierApi from "../../../api/supplierApi";
-import {CartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
@@ -62,12 +62,13 @@ const Import = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [selectedBranch, setSelectedBranch] = useState({});
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch = info.branch;
+  const user_uuid = useSelector((state) => state.info.user.uuid);
 
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
@@ -87,16 +88,35 @@ const Import = () => {
   // chú ý cartList id from 1 to ... dùng để edit + delete
   // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
 
-  const [cartList, setCartList] = React.useState([
-    {
-      supplier: null,
-      cartItem: [],
-      total_amount: 0,
-      paid_amount: 0,
-      discount: 0,
-      payment_method: "cash",
-    },
-  ]);
+  // local storage
+  const loadLocalStorage = () => {
+    if (window.localStorage.getItem("importListData")) {
+      const data = JSON.parse(window.localStorage.getItem("importListData"));
+      if (data.user_uuid === user_uuid) {
+        return data.cartList;
+      }
+    }
+
+    return [
+      {
+        supplier: null,
+        cartItem: [],
+        total_amount: 0,
+        paid_amount: 0,
+        discount: 0,
+        payment_method: "cash",
+      },
+    ];
+  };
+  const [cartList, setCartList] = React.useState(loadLocalStorage());
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "importListData",
+      JSON.stringify({ user_uuid: user_uuid, cartList: cartList })
+    );
+  }, [cartList]);
+
   //// ----------II. FUNCTION
   // 1.Cart
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -119,16 +139,6 @@ const Import = () => {
     const fetchSupplier = async () => {
       const response = await supplierApi.getSuppliers(store_uuid);
       setSuppliers(response.data);
-      setCartList([
-        {
-          supplier: null,
-          cartItem: [],
-          total_amount: "0",
-          paid_amount: "0",
-          discount: "0",
-          payment_method: "cash",
-        },
-      ]);
     };
 
     fetchSupplier();
@@ -164,7 +174,7 @@ const Import = () => {
     setCartList([
       ...cartList,
       {
-        supplier:  null,
+        supplier: null,
         cartItem: [],
         total_amount: 0,
         paid_amount: 0,
@@ -364,7 +374,7 @@ const Import = () => {
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
       let body = {
-        supplier_uuid: cart.supplier ? cart.suplier.uuid : '',
+        supplier_uuid: cart.supplier ? cart.suplier.uuid : "",
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
         paid_amount: cart.paid_amount,
@@ -439,8 +449,14 @@ const Import = () => {
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={8}>
         <Card className={classes.root}>
-          <Box style={{ padding: xsScreen? 10:30, minHeight: "80vh", paddingBottom: 0 }}>
-            <Box style={{ height:  xsScreen?null:"70vh" }}>
+          <Box
+            style={{
+              padding: xsScreen ? 10 : 30,
+              minHeight: "80vh",
+              paddingBottom: 0,
+            }}
+          >
+            <Box style={{ height: xsScreen ? null : "70vh" }}>
               {/* 1.1 TITLE + BTN CHANGE CART +  SEARCH */}
               <Grid
                 container
@@ -525,47 +541,46 @@ const Import = () => {
               </Grid>
 
               {/* 1.2 TABLE */}
-              {!mode ? 
-               !xsScreen ? (
-                (
-                <TableWrapper isCart={true}>
-                  <TableHeader
-                    classes={classes}
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                    headerData={HeadCells.ImportHeadCells}
-                    isCart={true}
-                  />
-                  <TableBody>
-                    {stableSort(
-                      cartList[selectedIndex].cartItem,
-                      getComparator(order, orderBy)
-                    ).map((row, index) => {
-                      return (
-                        <ImportRow
-                          row={row}
-                          handleDeleteItemCart={handleDeleteItemCart}
-                          handleChangeItemPrice={handleChangeItemPrice}
-                          handleChangeItemQuantity={handleChangeItemQuantity}
-                        />
-                      );
-                    })}
-                  </TableBody>
-                </TableWrapper>
-              )
-              ):(
-                cartList[selectedIndex].cartItem.map((row, index) => {   
-                  return (
-                    <CartMiniTableRow
-                      row={row}
-                      handleDeleteItemCart={handleDeleteItemCart}
-                      handleChangeItemPrice={handleChangeItemPrice}
-                      handleChangeItemQuantity={handleChangeItemQuantity}
+              {!mode ? (
+                !xsScreen ? (
+                  <TableWrapper isCart={true}>
+                    <TableHeader
+                      classes={classes}
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                      headerData={HeadCells.ImportHeadCells}
+                      isCart={true}
                     />
-                );
-              })
-            ) : (
+                    <TableBody>
+                      {stableSort(
+                        cartList[selectedIndex].cartItem,
+                        getComparator(order, orderBy)
+                      ).map((row, index) => {
+                        return (
+                          <ImportRow
+                            row={row}
+                            handleDeleteItemCart={handleDeleteItemCart}
+                            handleChangeItemPrice={handleChangeItemPrice}
+                            handleChangeItemQuantity={handleChangeItemQuantity}
+                          />
+                        );
+                      })}
+                    </TableBody>
+                  </TableWrapper>
+                ) : (
+                  cartList[selectedIndex].cartItem.map((row, index) => {
+                    return (
+                      <CartMiniTableRow
+                        row={row}
+                        handleDeleteItemCart={handleDeleteItemCart}
+                        handleChangeItemPrice={handleChangeItemPrice}
+                        handleChangeItemQuantity={handleChangeItemQuantity}
+                      />
+                    );
+                  })
+                )
+              ) : (
                 <MenuProduct />
               )}
             </Box>
@@ -582,11 +597,7 @@ const Import = () => {
           </Box>
         </Card>
       </Grid>
-
-      {xsScreen  ?
-         <CartBottom numberItem={2} />:null
-        }   
-
+      {xsScreen ? <CartBottom numberItem={2} /> : null}
       {/* 2.SUMMARY CARD (right) */}
       <Grid item xs={12} sm={4} className={classes.root}>
         <Card className={classes.root}>

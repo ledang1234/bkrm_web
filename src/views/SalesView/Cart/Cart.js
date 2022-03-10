@@ -6,7 +6,7 @@ import { grey } from "@material-ui/core/colors";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
 import { ReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
-import {CartBottom} from "../../../components/Button/CartButton"
+import { CartBottom } from "../../../components/Button/CartButton";
 //import library
 import {
   Grid,
@@ -55,8 +55,8 @@ import { useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import customerApi from "../../../api/customerApi";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
-import {calculateTotalQuantity} from "../../../components/TableCommon/util/sortUtil"
-import {CartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import { calculateTotalQuantity } from "../../../components/TableCommon/util/sortUtil";
+import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 
 const Cart = () => {
   const theme = useTheme();
@@ -87,22 +87,36 @@ const Cart = () => {
   // ];
   // chú ý cartList id from 1 to ... dùng để edit + delete
   // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
+  const user_uuid = useSelector((state) => state.info.user.uuid);
+  const loadLocalStorage = () => {
+    if (window.localStorage.getItem("cartListData")) {
+      const data = JSON.parse(window.localStorage.getItem("cartListData"));
+      if (data.user_uuid === user_uuid) {
+        return data.cartList;
+      }
+    }
 
-  const [cartList, setCartList] = React.useState([
-    {
-      customer: customers.length ? customers[0] : null,
-      cartItem: [],
-      total_amount: "0",
-      paid_amount: "0",
-      discount: "0",
-      payment_method: "cash",
-      delivery:false
-    },
-  ]);
+    return [
+      {
+        customer: null,
+        cartItem: [],
+        total_amount: "0",
+        paid_amount: "0",
+        discount: "0",
+        payment_method: "cash",
+        delivery: false,
+      },
+    ];
+  };
+  const [cartList, setCartList] = React.useState(loadLocalStorage());
 
   useEffect(() => {
-    console.log(cartList);
+    window.localStorage.setItem(
+      "cartListData",
+      JSON.stringify({ user_uuid: user_uuid, cartList: cartList })
+    );
   }, [cartList]);
+
   //// ----------II. FUNCTION
   // 1.Cart
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -116,8 +130,7 @@ const Cart = () => {
     message: "Tạo hóa đơn thất bại",
   });
 
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
-
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   useEffect(() => {
     updateTotalAmount();
@@ -128,17 +141,6 @@ const Cart = () => {
       try {
         const response = await customerApi.getCustomers(store_uuid);
         setCustomers(response.data);
-        setCartList([
-          {
-            customer:null,
-            cartItem: [],
-            total_amount: "0",
-            paid_amount: "0",
-            discount: "0",
-            payment_method: "cash",
-            delivery:false
-          },
-        ]);
       } catch (err) {
         console.log(err);
       }
@@ -150,13 +152,14 @@ const Cart = () => {
 
   const handleSearchCustomer = async (searchKey) => {
     try {
-      const response = await customerApi.getCustomers(store_uuid, {search_key: searchKey});
-          setCustomers(response.data);
-         
+      const response = await customerApi.getCustomers(store_uuid, {
+        search_key: searchKey,
+      });
+      setCustomers(response.data);
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const [reloadCustomers, setReloadCustomers] = useState(false);
   useEffect(() => {
@@ -169,7 +172,6 @@ const Cart = () => {
       }
     };
     if (store_uuid) {
-
       loadingCustomer();
     }
   }, [reloadCustomers]);
@@ -194,13 +196,13 @@ const Cart = () => {
     setCartList([
       ...cartList,
       {
-        customer:  null,
+        customer: null,
         cartItem: [],
         total_amount: "0",
         paid_amount: "0",
         payment_method: "cash",
         discount: "0",
-        delivery:false
+        delivery: false,
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -218,7 +220,7 @@ const Cart = () => {
           paid_amount: "0",
           discount: "0",
           payment_method: "cash",
-          delivery:false
+          delivery: false,
         },
       ]);
     } else {
@@ -342,7 +344,7 @@ const Cart = () => {
 
   const handleUpdatePaymentMethod = (method) => {
     let newCartList = update(cartList, {
-      [selectedIndex]: { payment_method: { $set: method} },
+      [selectedIndex]: { payment_method: { $set: method } },
     });
     setCartList(newCartList);
   };
@@ -354,9 +356,9 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
-  const  handleCheckDelivery  = (delivery) => {
+  const handleCheckDelivery = (delivery) => {
     let newCartList = update(cartList, {
-      [selectedIndex]: { delivery: { $set: delivery} },
+      [selectedIndex]: { delivery: { $set: delivery } },
     });
     setCartList(newCartList);
   };
@@ -379,7 +381,6 @@ const Cart = () => {
 
     setCartList(newCartList);
   };
-
 
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
@@ -415,7 +416,7 @@ const Cart = () => {
       let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
       console.log(cart.paid_amount, cart.total_amount, cart.discount);
       let body = {
-        customer_uuid: cart.customer ?  cart.customer.uuid : '',
+        customer_uuid: cart.customer ? cart.customer.uuid : "",
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
         paid_amount: cart.paid_amount,
@@ -429,12 +430,12 @@ const Cart = () => {
         paid_date: orderTime,
         tax: "0",
         shipping: "0",
-        delivery:cart.delivery
+        delivery: cart.delivery,
       };
 
       try {
         let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
-        console.log("body",body)
+        console.log("body", body);
         setSnackStatus({
           style: "success",
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
@@ -442,7 +443,6 @@ const Cart = () => {
         setOpenSnack(true);
         handlePrint();
         handleDelete(selectedIndex);
-        
       } catch (err) {
         setSnackStatus({
           style: "error",
@@ -484,8 +484,14 @@ const Cart = () => {
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={8}>
         <Card className={classes.root}>
-          <Box style={{ padding: xsScreen?0:30, minHeight: "80vh", paddingBottom: 0 }}>
-            <Box style={{ height: xsScreen?null:"69vh" }}>
+          <Box
+            style={{
+              padding: xsScreen ? 0 : 30,
+              minHeight: "80vh",
+              paddingBottom: 0,
+            }}
+          >
+            <Box style={{ height: xsScreen ? null : "69vh" }}>
               {/* 1.1 TITLE + BTN CHANGE CART +  SEARCH */}
               <Grid
                 container
@@ -552,55 +558,55 @@ const Cart = () => {
               </Grid>
 
               {/* 1.2 TABLE */}
-              {!mode ? 
+              {!mode ? (
                 !xsScreen ? (
-                  (
-                    // May tinh
-                    <TableWrapper isCart={true}>
-                      <TableHeader
-                        classes={classes}
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                        headerData={HeadCells.CartHeadCells}
-                        isCart={true}
-                      />
-                      <TableBody>
-                        {
-                        stableSort(
-                          // cartList[selectedIndex].cartItem.reverse(),
-                          cartList[selectedIndex].cartItem,
-                          getComparator(order, orderBy)
-                        ).map((row, index) => {
-                       
-                          return (
-                            <CartRow
-                              row={row}
-                              handleDeleteItemCart={handleDeleteItemCart}
-                              handleChangeItemPrice={handleChangeItemPrice}
-                              handleChangeItemQuantity={handleChangeItemQuantity}
-                              discountData={discountData.filter(discount => discount.discountKey === "product")}
-                            />
-                          );
-                        })}
-                      </TableBody>
-                    </TableWrapper>
-                  )
-                ):(
+                  // May tinh
+                  <TableWrapper isCart={true}>
+                    <TableHeader
+                      classes={classes}
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                      headerData={HeadCells.CartHeadCells}
+                      isCart={true}
+                    />
+                    <TableBody>
+                      {stableSort(
+                        // cartList[selectedIndex].cartItem.reverse(),
+                        cartList[selectedIndex].cartItem,
+                        getComparator(order, orderBy)
+                      ).map((row, index) => {
+                        return (
+                          <CartRow
+                            row={row}
+                            handleDeleteItemCart={handleDeleteItemCart}
+                            handleChangeItemPrice={handleChangeItemPrice}
+                            handleChangeItemQuantity={handleChangeItemQuantity}
+                            discountData={discountData.filter(
+                              (discount) => discount.discountKey === "product"
+                            )}
+                          />
+                        );
+                      })}
+                    </TableBody>
+                  </TableWrapper>
+                ) : (
                   // Dien thoai
-                  cartList[selectedIndex].cartItem.map((row, index) => {   
+                  cartList[selectedIndex].cartItem.map((row, index) => {
                     return (
                       <CartMiniTableRow
                         row={row}
                         handleDeleteItemCart={handleDeleteItemCart}
                         handleChangeItemPrice={handleChangeItemPrice}
                         handleChangeItemQuantity={handleChangeItemQuantity}
-                        discountData={discountData.filter(discount => discount.discountKey === "product")}
+                        discountData={discountData.filter(
+                          (discount) => discount.discountKey === "product"
+                        )}
                       />
                     );
                   })
                 )
-               : (
+              ) : (
                 //  Mode nha hang
                 <MenuProduct />
               )}
@@ -618,9 +624,15 @@ const Cart = () => {
           </Box>
         </Card>
       </Grid>
-      {xsScreen  ?
-         <CartBottom numberItem={calculateTotalQuantity(cartList[selectedIndex].cartItem) ?  calculateTotalQuantity(cartList[selectedIndex].cartItem):"0"} />:null
-        }      
+      {xsScreen ? (
+        <CartBottom
+          numberItem={
+            calculateTotalQuantity(cartList[selectedIndex].cartItem)
+              ? calculateTotalQuantity(cartList[selectedIndex].cartItem)
+              : "0"
+          }
+        />
+      ) : null}
       {/* 2.SUMMARY CARD (right) */}
       <Grid item xs={12} sm={4} className={classes.root}>
         <Card className={classes.root}>
@@ -644,7 +656,9 @@ const Cart = () => {
                 customers={customers}
                 reloadCustomers={() => setReloadCustomers(!reloadCustomers)}
                 //discount
-                discountData={discountData.filter(discount => discount.discountKey === "invoice")}
+                discountData={discountData.filter(
+                  (discount) => discount.discountKey === "invoice"
+                )}
               />
             ) : (
               <CartSummary
@@ -684,83 +698,128 @@ const Cart = () => {
 
 export default Cart;
 
-
 const discountData = [
   {
-    name:'Discount Invoice',
-    discountKey:'invoice',
-    discountType:'discountInvoice',//discountInvoice , sendGift, sendVoucher,priceByQuantity
-    detail:[
+    name: "Discount Invoice",
+    discountKey: "invoice",
+    discountType: "discountInvoice", //discountInvoice , sendGift, sendVoucher,priceByQuantity
+    detail: [
       {
-        key:"1", //  ID dung để delete row , ko liên quan database
-        totalCost:1000, 
-        type:"VND" ,// "%"
-        discountValue:20000,
-  
-        numberGiftItem:1,
-        listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        key: "1", //  ID dung để delete row , ko liên quan database
+        totalCost: 1000,
+        type: "VND", // "%"
+        discountValue: 20000,
 
-        numberBuyItem:1,
-        listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        typeDiscountItem:"percent",
-        listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        numberGiftItem: 1,
+        listGiftItem: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+
+        numberBuyItem: 1,
+        listBuyItem: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+        typeDiscountItem: "percent",
+        listGiftCategory: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+        listBuyCategory: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
       },
       {
-        key:"2", //  ID dung để delete row , ko liên quan database
-        totalCost:1000, 
-        type:"VND" ,// "%"
-        discountValue:20000,
-  
-        numberGiftItem:1,
-        listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        key: "2", //  ID dung để delete row , ko liên quan database
+        totalCost: 1000,
+        type: "VND", // "%"
+        discountValue: 20000,
 
-        numberBuyItem:1,
-        listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        typeDiscountItem:"percent",
-        listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-      }
-    ]
+        numberGiftItem: 1,
+        listGiftItem: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
 
+        numberBuyItem: 1,
+        listBuyItem: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+        typeDiscountItem: "percent",
+        listGiftCategory: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+        listBuyCategory: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+      },
+    ],
   },
   //2
   {
-    name:'Product Send Gift',
-    discountKey:'product',
-    discountType:'sendGift',//discountInvoice , sendGift, sendVoucher,priceByQuantity
-    detail:[
+    name: "Product Send Gift",
+    discountKey: "product",
+    discountType: "sendGift", //discountInvoice , sendGift, sendVoucher,priceByQuantity
+    detail: [
       {
-        key:"3", //  ID dung để delete row , ko liên quan database
-        totalCost:1000, 
-        type:"VND" ,// "%"
-        discountValue:20000,
-  
-        numberGiftItem:1,
-        listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        key: "3", //  ID dung để delete row , ko liên quan database
+        totalCost: 1000,
+        type: "VND", // "%"
+        discountValue: 20000,
 
-        numberBuyItem:1,
-        listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        typeDiscountItem:"percent",
-        listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        numberGiftItem: 1,
+        listGiftItem: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+
+        numberBuyItem: 1,
+        listBuyItem: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+        typeDiscountItem: "percent",
+        listGiftCategory: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+        listBuyCategory: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
       },
       {
-        key:"4", //  ID dung để delete row , ko liên quan database
-        totalCost:1000, 
-        type:"VND" ,// "%"
-        discountValue:20000,
-  
-        numberGiftItem:1,
-        listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
+        key: "4", //  ID dung để delete row , ko liên quan database
+        totalCost: 1000,
+        type: "VND", // "%"
+        discountValue: 20000,
 
-        numberBuyItem:1,
-        listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        typeDiscountItem:"percent",
-        listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-      }
-    ]
+        numberGiftItem: 1,
+        listGiftItem: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
 
-  }
-]
+        numberBuyItem: 1,
+        listBuyItem: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+        typeDiscountItem: "percent",
+        listGiftCategory: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+        listBuyCategory: [
+          { product_code: "SP10002", name: "Áo dài" },
+          { product_code: "SP10005", name: "Quần dài" },
+        ],
+      },
+    ],
+  },
+];
