@@ -31,6 +31,82 @@ const EmailSetting = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  const [checked, setChecked] = React.useState({
+    createAccountCustomer:{
+      status:true,
+      content:''
+    },
+    notifyDebtCustomer:{
+      status:true,
+      content:''
+    },
+    sendVoucherCustomer:{
+      status:true,
+      content:''
+    },
+    buyOnlineCustomer:{
+      status:true,
+      content:''
+    },
+    completeBuyOnlineCustomer:{
+      status:true,
+      content:''
+    },
+    //
+    notifyCustomerNotBuyTooLong:{
+      status:true,
+      content:'voucher'
+    },
+    notifyDiscount:{
+      status:true,
+      content:''
+    },
+    sendDiscountVIPCustomer:{
+
+    },
+    //
+    createAccountEmployee:{
+      status:true,
+      content:''
+    },
+    
+  });
+
+  const handleToggle = (event) => {
+    const {name,checked} = event.target;
+    setChecked((prevState) => {
+      return {
+        ...prevState,
+        [name]:{
+          ...prevState[name],
+          status:checked
+        },
+      };
+    });
+    //CALL API: Mỗi lần toggle là đẩy lên backend
+  };
+
+  const handleSubmit = (name,customerScore) =>{   
+    // close pop up && set switch
+  
+    setChecked((prevState) => {
+      return {
+        ...prevState,
+        [name]:{
+          ...customerScore,
+          status:true
+        },
+      };
+    });
+
+    // CALL API ĐẨY LÊN BACK END HERE....
+
+
+    // snackbar noti submit thành công
+
+  }
+
+
   const [value, setValue] = useState('');
 
   return (

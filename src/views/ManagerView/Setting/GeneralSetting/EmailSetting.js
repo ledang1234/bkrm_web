@@ -27,11 +27,11 @@ const EmailSetting = ({checked,handleClose,handleSubmit,name}) => {
       <>
       <ListItem>
           <Typography style={{fontWeight:500, color:"#000", marginRight:20}}>Email gửi</Typography>
-          <TextField  name="emailAddress" value={email.emailAddress} onChange={handleChangeValue} />
+          <TextField  name="emailAddress" value={email.emailAddress} onChange={handleChangeValue} style={{width:250}} />
       </ListItem>
       <ListItem>
           <Typography style={{fontWeight:500, color:"#000", marginRight:20}}>Mật khẩu</Typography>
-          <TextField  name="password" value={email.password} onChange={handleChangeValue} />
+          <TextField  name="password" value={email.password} onChange={handleChangeValue} style={{width:250}} />
       </ListItem>
 
       <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >

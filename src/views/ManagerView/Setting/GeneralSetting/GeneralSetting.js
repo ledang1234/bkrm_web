@@ -25,8 +25,12 @@ import EmailSetting  from "./EmailSetting"
 import NotifyDebtSetting  from "./NotifyDebtSetting"
 import OrderLowStockSetting from "./OrderLowStockSetting"
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import MoneyOffIcon from '@material-ui/icons/MoneyOff';
+import PrintIcon from '@material-ui/icons/Print';
+import {ReturnLimitSetting,DiscountSetting,CanFixPriceSellSetting,PrintReceiptWhenSellSetting,VatSetting}  from "./OtherSetting"
 
-import {ReturnLimitSetting,DiscountSetting,VatSetting}  from "./OtherSetting"
+
+import SettingItem  from "./SettingItem";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -87,11 +91,27 @@ const GeneralSetting = () => {
       status: false,
       day:7
     },
+    canFixPriceSell:{
+      status:false,
+      cart:false,
+      import:true,
+      returnCart:true,
+      returnImport:true,
+    },
+    printReceiptWhenSell:{
+      status:true,
+      cart:true,
+      import:false,
+      returnCart:false,
+      returnImport:false,
+      order:false,
+      checkInventroy:false
+
+    },
     discount:{
       status:true,
       applyMultiple:false,
       applyOnline:true
-
     },
     voucher:{status:true},
     delivery:{status:true},
@@ -132,11 +152,12 @@ const GeneralSetting = () => {
     customerScore: false,
     email:false,
     notifyDebt:false,
-
     returnLimit:false,
     discount:false,
     vat:false,
-    orderLowStock:false
+    orderLowStock:false,
+    canFixPriceSell:false,
+    printReceiptWhenSell:false,
 
   })
 
@@ -234,6 +255,14 @@ const GeneralSetting = () => {
                 <UpdateIcon style={{ fill: checked.returnLimit.status ?  theme.customization.secondaryColor[500]:null }}/>
             </SettingItem>
 
+            <SettingItem name="canFixPriceSell" detail={true} setOpen={setOpen}  statusChecked={checked.canFixPriceSell.status} actionToggle={(e)=>{handleTogglePopup(e, "canFixPriceSell")}} title="Có thể sửa giá khi thực hiện giao dịch" subTitle="Cho phép sửa giá bán, giá nhập, giá trả khi thực hiện giao dịch" >
+                <MoneyOffIcon style={{ fill: checked.canFixPriceSell.status ?  theme.customization.secondaryColor[500]:null }}/>
+            </SettingItem>
+
+            <SettingItem name="printReceiptWhenSell" detail={true} setOpen={setOpen}  statusChecked={checked.printReceiptWhenSell.status} actionToggle={(e)=>{handleTogglePopup(e, "printReceiptWhenSell")}} title="In hoá đơn ngay sau khi thực hiện giao dịch" subTitle="In hoá đơn ngay sau khi hoàn thành giao dịch (bán hàng, nhập hàng, trả hàng, đặt hàng, kiểm kho,...)" >
+                <PrintIcon style={{ fill: checked.printReceiptWhenSell.status ?  theme.customization.secondaryColor[500]:null }}/>
+            </SettingItem>
+
             <SettingItem name="discount" detail={true} setOpen={setOpen}  statusChecked={checked.discount.status} actionToggle={(e)=>{handleTogglePopup(e, "discount")}} title="Khuyến mãi" subTitle="Áp dụng chương trinh khuyến mãi cho sản phẩm hoặc hoá đơn" >
                 <CardGiftcardIcon style={{ fill: checked.discount.status ?  theme.customization.secondaryColor[500]:null }}/>
             </SettingItem>
@@ -286,6 +315,16 @@ const GeneralSetting = () => {
             <ReturnLimitSetting  checked={checked.returnLimit}  handleSubmit={handleSubmit} name="returnLimit" handleClose={handleClosePopup}/>
         </ModalWrapperWithClose>
         :null}
+        {open.canFixPriceSell ?
+        <ModalWrapperWithClose title="Thiết lập chức năng sửa giá" open={open.canFixPriceSell} handleClose={handleClosePopup}  > 
+            <CanFixPriceSellSetting  checked={checked.canFixPriceSell}  handleSubmit={handleSubmit} name="canFixPriceSell" handleClose={handleClosePopup}/>
+        </ModalWrapperWithClose>
+        :null}
+        {open.printReceiptWhenSell ?
+        <ModalWrapperWithClose title="Thiết lập in hoá đơn sau giao dịch" open={open.printReceiptWhenSell} handleClose={handleClosePopup}  > 
+            <PrintReceiptWhenSellSetting  checked={checked.printReceiptWhenSell}  handleSubmit={handleSubmit} name="printReceiptWhenSell" handleClose={handleClosePopup}/>
+        </ModalWrapperWithClose>
+        :null}
          {open.discount ?
         <ModalWrapperWithClose title="Thiết lập khuyến mãi" open={open.discount} handleClose={handleClosePopup}  > 
             <DiscountSetting  checked={checked.discount}  handleSubmit={handleSubmit} name="discount" handleClose={handleClosePopup}/>
@@ -306,102 +345,102 @@ const GeneralSetting = () => {
   );
 };
 
-const SettingItem = (props) => {
-  const {statusChecked,actionToggle, title, subTitle, name,detail,setOpen} = props
-  const theme = useTheme();
-  const classes = useStyles(theme);
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+// const SettingItem = (props) => {
+//   const {statusChecked,actionToggle, title, subTitle, name,detail,setOpen} = props
+//   const theme = useTheme();
+//   const classes = useStyles(theme);
+//   const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
-  const handlePopup = (name) => {
-      setOpen((prevState) => {
-        return {
-          ...prevState,
-          [name]: true ,
-        };
-      });
-  };
-  return (
-    <>
-    <ListItem style={{margin:xsScreen?0:null, padding:xsScreen?0:null}}>
-        <ListItemIcon >
-            {props.children}
-        </ListItemIcon>
-        <ListItemText
-        primary={<Typography style={{ fontSize:16,fontWeight:500 }}>{title}</Typography>} 
-        secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>{subTitle}</Typography>} />
-        {detail && statusChecked ?
-        <Button variant="outlined"   size="small"style={{marginRight:50, textTransform:'none', fontWeight:700}} color="primary" 
-          onClick={()=>handlePopup(name)} > 
-          Chi tiết 
-        </Button>:null} 
-        <ListItemSecondaryAction >
-            <IOSSwitch
-                edge="end"
-                name={name}
-                onChange={actionToggle}
-                checked={statusChecked}
-            />
-        </ListItemSecondaryAction>
-    </ListItem>
-    <Divider />
-    </>
-  )
-}
+//   const handlePopup = (name) => {
+//       setOpen((prevState) => {
+//         return {
+//           ...prevState,
+//           [name]: true ,
+//         };
+//       });
+//   };
+//   return (
+//     <>
+//     <ListItem style={{margin:xsScreen?0:null, padding:xsScreen?0:null}}>
+//         <ListItemIcon >
+//             {props.children}
+//         </ListItemIcon>
+//         <ListItemText
+//         primary={<Typography style={{ fontSize:16,fontWeight:500 }}>{title}</Typography>} 
+//         secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>{subTitle}</Typography>} />
+//         {detail && statusChecked ?
+//         <Button variant="outlined"   size="small"style={{marginRight:50, textTransform:'none', fontWeight:700}} color="primary" 
+//           onClick={()=>handlePopup(name)} > 
+//           Chi tiết 
+//         </Button>:null} 
+//         <ListItemSecondaryAction >
+//             <IOSSwitch
+//                 edge="end"
+//                 name={name}
+//                 onChange={actionToggle}
+//                 checked={statusChecked}
+//             />
+//         </ListItemSecondaryAction>
+//     </ListItem>
+//     <Divider />
+//     </>
+//   )
+// }
 
-const IOSSwitch = withStyles((theme) => ({
-    root: {
-      width: 42,
-      height: 26,
-      padding: 0,
-      margin: theme.spacing(1),
-    },
-    switchBase: {
-      padding: 1,
-      '&$checked': {
-        transform: 'translateX(16px)',
-        color: theme.palette.common.white,
-        '& + $track': {
-        //   backgroundColor: '#52d869',
-            backgroundColor: theme.customization.secondaryColor[500],
-          opacity: 1,
-          border: 'none',
-        },
-      },
-      '&$focusVisible $thumb': {
-        // color: '#52d869',
-        color:  theme.customization.secondaryColor[500],
-        border: '6px solid #fff',
-      },
-    },
-    thumb: {
-      width: 24,
-      height: 24,
-    },
-    track: {
-      borderRadius: 26 / 2,
-      border: `1px solid ${theme.palette.grey[400]}`,
-      backgroundColor: theme.palette.grey[50],
-      opacity: 1,
-      transition: theme.transitions.create(['background-color', 'border']),
-    },
-    checked: {},
-    focusVisible: {},
-  }))(({ classes, ...props }) => {
-    return (
-      <Switch
-        focusVisibleClassName={classes.focusVisible}
-        disableRipple
-        classes={{
-          root: classes.root,
-          switchBase: classes.switchBase,
-          thumb: classes.thumb,
-          track: classes.track,
-          checked: classes.checked,
-        }}
-        {...props}
-      />
-    );
-  });
+// const IOSSwitch = withStyles((theme) => ({
+//     root: {
+//       width: 42,
+//       height: 26,
+//       padding: 0,
+//       margin: theme.spacing(1),
+//     },
+//     switchBase: {
+//       padding: 1,
+//       '&$checked': {
+//         transform: 'translateX(16px)',
+//         color: theme.palette.common.white,
+//         '& + $track': {
+//         //   backgroundColor: '#52d869',
+//             backgroundColor: theme.customization.secondaryColor[500],
+//           opacity: 1,
+//           border: 'none',
+//         },
+//       },
+//       '&$focusVisible $thumb': {
+//         // color: '#52d869',
+//         color:  theme.customization.secondaryColor[500],
+//         border: '6px solid #fff',
+//       },
+//     },
+//     thumb: {
+//       width: 24,
+//       height: 24,
+//     },
+//     track: {
+//       borderRadius: 26 / 2,
+//       border: `1px solid ${theme.palette.grey[400]}`,
+//       backgroundColor: theme.palette.grey[50],
+//       opacity: 1,
+//       transition: theme.transitions.create(['background-color', 'border']),
+//     },
+//     checked: {},
+//     focusVisible: {},
+//   }))(({ classes, ...props }) => {
+//     return (
+//       <Switch
+//         focusVisibleClassName={classes.focusVisible}
+//         disableRipple
+//         classes={{
+//           root: classes.root,
+//           switchBase: classes.switchBase,
+//           thumb: classes.thumb,
+//           track: classes.track,
+//           checked: classes.checked,
+//         }}
+//         {...props}
+//       />
+//     );
+//   });
 
 
 export default GeneralSetting;

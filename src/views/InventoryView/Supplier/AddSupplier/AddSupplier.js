@@ -124,15 +124,66 @@ const AddSupplier = (props) => {
     supplierFormik.resetForm()
   } 
   return (
-    <SimpleModal
-      open={open}
-      handleClose={handleCloseAndReset}
-      aria-labelledby="form-dialog-title"
-    >
-      <Box style={{ width: 550, maxWidth: "100%" }}>
-        <Typography className={classes.headerTitle} variant="h5" gutterBottom>
-          Thêm nhà cung cấp
+    // <SimpleModal
+    //   open={open}
+    //   handleClose={handleCloseAndReset}
+    //   aria-labelledby="form-dialog-title"
+    // >
+    //   <Box style={{ width: 550, maxWidth: "100%" }}>
+    //     <Typography className={classes.headerTitle} variant="h5" gutterBottom>
+    //       Thêm nhà cung cấp
+    //     </Typography>
+    <Dialog open={open} onClose={handleCloseAndReset} >
+      <DialogTitle id="form-dialog-title">
+        <Typography className={classes.headerTitle} variant="h5">
+          Thêm khách hàng
         </Typography>
+
+      </DialogTitle>
+
+      <DialogContent>
+        <div className={classes.root}>
+        {/* <Box display="flex" flexDirection="row" alignItems="center">
+          {display.length ? (
+            <Tooltip title="Xóa hình ảnh">
+              <Button size="small" onClick={() => clearImage()}>
+                <Box
+                  component="img"
+                  sx={{
+                    height: 70,
+                    width: 70,
+                    marginLeft: 7,
+                    marginRight: 7,
+                    borderRadius: 2,
+                  }}
+                  src={display}
+                />
+              </Button>
+            </Tooltip>
+          ) : (
+            <UploadImages />
+          )}
+
+          <input
+            accept="image/*"
+            className={classes.input}
+            id="icon-button-file"
+            type="file"
+            onChange={addImageHandler}
+          />
+          {display.length === 0 ? (
+            <label htmlFor="icon-button-file">
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="span"
+              >
+                <PhotoCamera />
+              </IconButton>
+            </label>
+          ) : null}
+        </Box> */}
+
         <Grid container spacing={2} style={{ marginTop: 10 }}>
           <Grid item xs={12}>
             <TextField
@@ -166,7 +217,7 @@ const AddSupplier = (props) => {
               onBlur={supplierFormik.handleBlur}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={4}>
             <TextField
               id="outlined-basic"
               label="Số điện thoại"
@@ -182,7 +233,7 @@ const AddSupplier = (props) => {
               onBlur={supplierFormik.handleBlur}
             />
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={12} sm={8}>
             <TextField
               id="outlined-basic"
               label="Email"
@@ -228,7 +279,10 @@ const AddSupplier = (props) => {
             />
           </Grid>
         </Grid>
-        <Grid
+        </div>
+      </DialogContent>
+        <DialogActions>
+        {/* <Grid
           item
           xs={12}
           style={{
@@ -237,7 +291,7 @@ const AddSupplier = (props) => {
             justifyContent: "flex-end",
             marginTop: 20,
           }}
-        >
+        > */}
           <Button
             onClick={handleCloseAndReset}
             variant="contained"
@@ -256,9 +310,11 @@ const AddSupplier = (props) => {
           >
             Thêm
           </Button>
-        </Grid>
-      </Box>
-    </SimpleModal>
+        {/* </Grid> */}
+      {/* </Box>
+    </SimpleModal> */}
+    </DialogActions>
+      </Dialog>
   );
 };
 

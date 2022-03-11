@@ -52,6 +52,63 @@ export const DiscountSetting = ({checked,handleClose,handleSubmit,name}) => {
 
   )
 }
+
+export const CanFixPriceSellSetting = ({checked,handleClose,handleSubmit,name}) => {
+    const theme = useTheme();
+    const [discount, setDiscount] = React.useState(checked)
+    const handleCheckbox= (event) => {
+        setDiscount((prevState)=>{
+            return {
+                ...prevState,
+                [event.target.name]:event.target.checked
+            }
+        })
+    };
+    return (
+        <>
+        <FormControlLabel control={<Checkbox  color="primary" name="cart"  checked={discount.cart}  onChange={handleCheckbox} />} label="Giá bán có thể sửa" />
+        <FormControlLabel control={<Checkbox  color="primary" name="import"  checked={discount.import}  onChange={handleCheckbox} />} label="Giá nhập có thể sửa" />
+        <FormControlLabel control={<Checkbox  color="primary" name="returnCart"  checked={discount.returnCart}  onChange={handleCheckbox} />} label="Giá trả hàng bán có thể sửa" />
+        <FormControlLabel control={<Checkbox  color="primary" name="returnImport"  checked={discount.returnImport}  onChange={handleCheckbox} />} label="Giá trả hàng nhập có thể sửa" />
+
+        <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
+          <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
+          <Button onClick={()=>handleSubmit(name,discount)} variant="contained" size="small" color="primary" >OK  </Button>
+        </Grid>
+        </>
+
+  )
+}
+
+export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,name}) => {
+    const theme = useTheme();
+    const [discount, setDiscount] = React.useState(checked)
+    const handleCheckbox= (event) => {
+        setDiscount((prevState)=>{
+            return {
+                ...prevState,
+                [event.target.name]:event.target.checked
+            }
+        })
+    };
+    return (
+        <>
+        <FormControlLabel control={<Checkbox  color="primary" name="cart"  checked={discount.cart}  onChange={handleCheckbox} />} label="In hoá đơn sau khi bán hàng" />
+        <FormControlLabel control={<Checkbox  color="primary" name="import"  checked={discount.import}  onChange={handleCheckbox} />} label="In đơn sau khi nhập hàng" />
+        <FormControlLabel control={<Checkbox  color="primary" name="returnCart"  checked={discount.returnCart}  onChange={handleCheckbox} />} label="In hoá đơn sau khi trả hàng" />
+        <FormControlLabel control={<Checkbox  color="primary" name="returnImport"  checked={discount.returnImport}  onChange={handleCheckbox} />} label="In đơn sau khi trả hàng nhập" />
+        <FormControlLabel control={<Checkbox  color="primary" name="order"  checked={discount.order}  onChange={handleCheckbox} />} label="In đơn sau khi đặt hàng nhập" />
+        <FormControlLabel control={<Checkbox  color="primary" name="checkInventroy"  checked={discount.checkInventroy}  onChange={handleCheckbox} />} label="In đơn sau khi kiểm kho" />
+
+
+        <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
+          <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
+          <Button onClick={()=>handleSubmit(name,discount)} variant="contained" size="small" color="primary" >OK  </Button>
+        </Grid>
+        </>
+
+  )
+}
   
 export const VatSetting = ({checked,handleClose,handleSubmit,name}) => {
 
