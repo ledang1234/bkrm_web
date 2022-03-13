@@ -33,7 +33,6 @@ const BranchList = (props) => {
   });
   const theme = useTheme();
   const classes = useStyles(theme);
-
   return (
     <Grid container spacing={2}>
       <EditBranch
@@ -52,8 +51,8 @@ const BranchList = (props) => {
                   <Box
                     component="img"
                     sx={{ height: "100%", width: "100%", borderRadius: 10 }}
-                    src={store}
-                  />
+                    src={branch.img_url ? branch.img_url:store}
+                  /> 
                 </Grid>
                 <Grid item xs={8} style={{ minHeight: 140 }}>
                   <Typography
