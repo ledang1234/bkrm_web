@@ -15,6 +15,7 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  Tooltip,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -81,7 +82,6 @@ const SearchProduct = (props) => {
   const branch_uuid = info.branch.uuid;
 
   const loadingData = async (searchKey) => {
-    console.log("load");
     try {
       const response = await productApi.searchBranchProduct(
         store_uuid,
@@ -193,32 +193,36 @@ const SearchProduct = (props) => {
   const filterOptions = (options, state) => options;
   return (
     <div style={{ width: 320, paddingLeft: 20 }}>
-      <Autocomplete
-        options={selectedOption.name ? [selectedOption] : options}
-        freeSolo={true}
-        // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
-        // inputValue={inputValue}
+      <Tooltip
+        title={`Space: tìm kiếm, Tab để chọn lựa chọn đầu tiên và tăng số lượng, Delete để xóa lựa chọn hiện tại`}
+      >
+        <Autocomplete
+          options={selectedOption.name ? [selectedOption] : options}
+          freeSolo={true}
+          // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
+          // inputValue={inputValue}
 
-        // BỎ CÁI NÀY TỰ EMPTY
-        autoComplete={false}
-        getOptionLabel={getOptionLabel}
-        onChange={(event, value) => {
-          if (value) {
-            setSelectedOption(value);
-          }
-        }}
-        renderInput={renderInput}
-        renderOption={renderOption}
-        filterOptions={filterOptions}
-        value={selectedOption}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.stopPropagation();
-            e.preventDefault();
-          }
-        }}
-        blurOnSelect={false}
-      />
+          // BỎ CÁI NÀY TỰ EMPTY
+          autoComplete={false}
+          getOptionLabel={getOptionLabel}
+          onChange={(event, value) => {
+            if (value) {
+              setSelectedOption(value);
+            }
+          }}
+          renderInput={renderInput}
+          renderOption={renderOption}
+          filterOptions={filterOptions}
+          value={selectedOption}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+          }}
+          blurOnSelect={false}
+        />
+      </Tooltip>
     </div>
   );
 };
