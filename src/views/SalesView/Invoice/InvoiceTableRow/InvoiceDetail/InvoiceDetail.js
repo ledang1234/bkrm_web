@@ -1,17 +1,17 @@
-
-
-import React, { useRef,useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { useReactToPrint } from "react-to-print";
-import {ReceiptPrinter} from "../../../../../components/ReceiptPrinter/ReceiptPrinter"
+import { ReceiptPrinter } from "../../../../../components/ReceiptPrinter/ReceiptPrinter";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import {calculateTotalQuantity} from "../../../../../components/TableCommon/util/sortUtil"
+import { calculateTotalQuantity } from "../../../../../components/TableCommon/util/sortUtil";
 // import library
 import {
   Dialog,
   Card,
   DialogContent,
   Box,
+  Tooltip,
+  Chip,
   Grid,
   TableHead,
   TableBody,
@@ -94,16 +94,14 @@ function InvoiceDetail(props) {
   const { row, openRow, onReload } = props.parentProps;
   const { isMini } = props;
 
-  
   //  tam thoi
   const currentUser = "Phuong Gia Le";
 
-
   const theme = useTheme();
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const classes = useStyles(theme);
-  const [reload, setReload] = React.useState(false)
+  const [reload, setReload] = React.useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -150,11 +148,9 @@ function InvoiceDetail(props) {
         });
       }
 
-    // },
-  //   [props.parentProps.openRow],
-  // );
-
-
+      // },
+      //   [props.parentProps.openRow],
+      // );
     };
     if (openRow === row.uuid) {
       loadData();
@@ -175,12 +171,15 @@ function InvoiceDetail(props) {
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
+    content: () => componentRef.current,
   });
 
-
   return (
-    <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse
+      in={isMini ? true : openRow === row.uuid}
+      timeout="auto"
+      unmountOnExit
+    >
       <PayRemaining
         onReload={props.parentProps.onReload}
         reloadDetail={() => setReload(!reload)}
@@ -210,19 +209,19 @@ function InvoiceDetail(props) {
         <Grid container direction="row" justifyContent="flex-start">
           <Grid item xs={12} sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={7}sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã hoá đơn
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.order_code}{" "}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={7}sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Ngày bán{" "}
                 </Typography>
@@ -234,7 +233,7 @@ function InvoiceDetail(props) {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={7}sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Khách hàng
                 </Typography>
@@ -246,7 +245,7 @@ function InvoiceDetail(props) {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={7}sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Người bán
                 </Typography>
@@ -273,8 +272,8 @@ function InvoiceDetail(props) {
               <Grid item xs={3} sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {/* Cần thu <VNDFormat value={debtAmount} /> */}
-                  {debtAmount >  0 ?"Cần thu thêm " :"Trả đủ"}
-                    {debtAmount >  0 ?<VNDFormat value={debtAmount} />  :null } 
+                  {debtAmount > 0 ? "Cần thu thêm " : "Trả đủ"}
+                  {debtAmount > 0 ? <VNDFormat value={debtAmount} /> : null}
                 </Typography>
               </Grid>
               <Grid item xs={2}>
@@ -296,7 +295,7 @@ function InvoiceDetail(props) {
                   Tổng tiền hoá đơn
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={order.total_amount} />
                 </Typography>
@@ -308,7 +307,7 @@ function InvoiceDetail(props) {
                   Chi nhánh thực hiện
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {order.branch ? order.branch.name : ""}{" "}
                 </Typography>
@@ -340,9 +339,9 @@ function InvoiceDetail(props) {
         <Table size="small" aria-label="purchases">
           <TableHead>
             <TableRow>
-              <TableCell>#</TableCell>
+              <TableCell>Mã SP</TableCell>
               <TableCell>Sản phẩm</TableCell>
-              {/* <TableCell>Mã vạch</TableCell> */}
+              <TableCell>Mã vạch</TableCell>
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá bán</TableCell>
@@ -356,8 +355,29 @@ function InvoiceDetail(props) {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                {/* <TableCell>{detail.bar_code}</TableCell> */}
-                <TableCell align="right">{detail.quantity}</TableCell>
+                <TableCell>{detail.bar_code}</TableCell>
+                <TableCell align="right">
+                  <div>
+                    {detail.quantity}
+                    <div>
+                      {detail.batches
+                        ? JSON.parse(detail.batches).map((batch) => (
+                            <Chip
+                              size="small"
+                              label={`${
+                                batch?.batch_code ? batch?.batch_code : "Mới"
+                              } - ${
+                                batch?.expiry_date ? batch?.expiry_date : ""
+                              } - ${batch.additional_quantity}`}
+                              key={batch.id}
+                              color={batch.is_new ? "primary" : "secondary"}
+                              variant="outlined"
+                            />
+                          ))
+                        : null}
+                    </div>
+                  </div>
+                </TableCell>
                 <TableCell align="right">{detail.returned_quantity}</TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
@@ -378,34 +398,34 @@ function InvoiceDetail(props) {
           }}
         >
           <Grid container direction="column">
-            <Grid container direction="row" justifyContent={ "flex-end"}>
-              <Grid item xs={7}sm={2}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
+              <Grid item xs={7} sm={2}>
                 {/* <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography> */}
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng SL sản phẩm ({order.details.length})
                 </Typography>
               </Grid>
-              <Grid item xs={2}sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   {calculateTotalQuantity(order.details)}
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={ "flex-end"}>
-              <Grid item xs={7}sm={2}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
+              <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tiền hàng
                 </Typography>
               </Grid>
-              <Grid item xs={2}sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={ "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Giảm giá
@@ -419,7 +439,7 @@ function InvoiceDetail(props) {
             </Grid>
 
             <Grid container direction="row" justifyContent={"flex-end"}>
-              <Grid item xs={7}sm={2}>
+              <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng tiền hoá đơn
                 </Typography>
@@ -437,7 +457,7 @@ function InvoiceDetail(props) {
                   Khách đã trả
                 </Typography>
               </Grid>
-              <Grid item xs={2}  sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
@@ -450,7 +470,7 @@ function InvoiceDetail(props) {
           container
           direction="row"
           // justifyContent="flex-end"
-          justifyContent={ "flex-end"}
+          justifyContent={"flex-end"}
           style={{ marginTop: 20 }}
         >
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
@@ -501,9 +521,9 @@ function InvoiceDetail(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem onClick={()=> handlePrint()}>
-              <ListItemIcon style={{ marginRight: -15 }}  >
-                <PrintTwoToneIcon fontSize="small"/>
+            <StyledMenuItem onClick={() => handlePrint()}>
+              <ListItemIcon style={{ marginRight: -15 }}>
+                <PrintTwoToneIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="In hoá đơn" />
             </StyledMenuItem>
@@ -517,7 +537,7 @@ function InvoiceDetail(props) {
           </StyledMenu>
         </Grid>
       </Box>
-{/* 
+      {/* 
       <Dialog fullWidth maxWidth="lg" open={open} onClose={handleCloseReturn} aria-labelledby="form-dialog-title">
         <InvoiceReturnPopUp handleCloseReturn={handleCloseReturn} order={order} classes={classes} /> */}
 
@@ -544,7 +564,6 @@ function InvoiceDetail(props) {
           reloadDetail={() => setReload(!reload)}
           reload={onReload}
         />
-
       </Dialog>
     </Collapse>
   );

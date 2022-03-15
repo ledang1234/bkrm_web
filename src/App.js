@@ -1,6 +1,12 @@
 import themes from "./theme";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Route, Switch, Redirect, HashRouter } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  Redirect,
+  HashRouter,
+} from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
@@ -18,15 +24,16 @@ import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
 import Test from "./components/Category/Test";
 import { customizeAction } from "./store/slice/customizeSlice";
 import { SwitchCamera } from "@material-ui/icons";
+import "./index.css";
 function App() {
   const customization = useSelector((state) => state.customize);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
-  const [path,setPath] = useState("/home")
+  const [path, setPath] = useState("/home");
   useEffect(() => {
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
-    setPath(sessionStorage.getItem("BKRMprev"))
+    setPath(sessionStorage.getItem("BKRMprev"));
   }, [dispatch]);
   return (
     <ThemeProvider theme={themes(customization)}>
@@ -44,7 +51,7 @@ function App() {
               <HomePage />
             </PrivateRoute>
             <Route path="/login" exact>
-              {isLoggedIn ?  <Redirect to={path}/>: <LoginPage />}
+              {isLoggedIn ? <Redirect to={path} /> : <LoginPage />}
             </Route>
             <Route path="/signup" exact>
               {isLoggedIn ? <Redirect to={path} /> : <SignupPage />}

@@ -236,29 +236,38 @@ const Import = () => {
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === selectedOption.uuid
     );
+    let item = cartList[selectedIndex].cartItem.find(
+      (item) => item.uuid === selectedOption.uuid
+    );
 
-    if (itemIndex !== -1) {
+    if (!item) {
+      let newCartItem = {
+        id: cartList[selectedIndex].cartItem.length,
+        uuid: selectedOption.uuid,
+        quantity: selectedOption.has_batches ? 0 : 1,
+        bar_code: selectedOption.bar_code,
+        product_code: selectedOption.product_code,
+        unit_price: selectedOption.standard_price,
+        img_url: selectedOption.img_url,
+        name: selectedOption.name,
+        has_batches: selectedOption.has_batches,
+        batches: selectedOption.batches,
+      };
+
+      let newCartList = update(cartList, {
+        [selectedIndex]: { cartItem: { $push: [newCartItem] } },
+      });
+      setCartList(newCartList);
+      setIsUpdateTotalAmount(!isUpdateTotalAmount);
+      return;
+    }
+
+    if (!item.has_batches) {
       handleChangeItemQuantity(
         selectedOption.uuid,
         cartList[selectedIndex].cartItem[itemIndex].quantity + 1
       );
-      return;
     }
-    let newCartItem = {
-      id: cartList[selectedIndex].cartItem.length,
-      uuid: selectedOption.uuid,
-      quantity: 1,
-      barcode: selectedOption.bar_code,
-      unit_price: selectedOption.list_price,
-      img_url: selectedOption.img_url,
-      name: selectedOption.name,
-    };
-
-    let newCartList = update(cartList, {
-      [selectedIndex]: { cartItem: { $push: [newCartItem] } },
-    });
-    setCartList(newCartList);
-    setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
 
   const handleDeleteItemCart = (itemUuid) => {
@@ -273,18 +282,19 @@ const Import = () => {
   };
 
   const handleChangeItemQuantity = (itemUuid, newQuantity) => {
-    if (newQuantity === 0) {
-      handleDeleteItemCart(itemUuid);
-      return;
-    }
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === itemUuid
     );
-    let newCartList = update(cartList, {
-      [selectedIndex]: {
-        cartItem: { [itemIndex]: { quantity: { $set: newQuantity } } },
-      },
-    });
+    let item = cartList[selectedIndex].cartItem.find(
+      (item) => item.uuid === itemUuid
+    );
+    if (newQuantity === 0 && !item.has_batches) {
+      handleDeleteItemCart(itemUuid);
+      return;
+    }
+
+    let newCartList = [...cartList];
+    newCartList[selectedIndex].cartItem[itemIndex].quantity = newQuantity;
     setCartList(newCartList);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
@@ -313,6 +323,19 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { paid_amount: { $set: amount } },
     });
+
+    setCartList(newCartList);
+  };
+
+  const handleUpdateBatches = (itemUuid, selectedBatches) => {
+    let itemIndex = cartList[selectedIndex].cartItem.findIndex(
+      (item) => item.uuid === itemUuid
+    );
+
+    if (itemIndex === -1) return;
+    const newCartList = [...cartList];
+    newCartList[selectedIndex].cartItem[itemIndex].selectedBatches =
+      selectedBatches;
 
     setCartList(newCartList);
   };
@@ -357,7 +380,7 @@ const Import = () => {
     // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
     //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
-    var emptyCart = cart.cartItem.length === 0;
+    var emptyCart = cart.cartItem.filter((item) => item.quantity).length === 0;
     if (emptyCart) {
       setOpenSnack(true);
       setSnackStatus({
@@ -384,11 +407,15 @@ const Import = () => {
           Number(cart.paid_amount)
             ? "debt"
             : "closed",
-        details: cart.cartItem,
+        details: cart.cartItem.map((item) => ({
+          ...item,
+          selectedBatches: item.selectedBatches.map((batch) => ({
+            ...batch,
+            returned_quantity: 0,
+          })),
+        })),
         import_date: importTime,
       };
-      // console.log(importTime);
-
       try {
         let res = await purchaseOrderApi.addInventory(
           store_uuid,
@@ -559,10 +586,12 @@ const Import = () => {
                       ).map((row, index) => {
                         return (
                           <ImportRow
+                            key={`${row.uuid}_index`}
                             row={row}
                             handleDeleteItemCart={handleDeleteItemCart}
                             handleChangeItemPrice={handleChangeItemPrice}
                             handleChangeItemQuantity={handleChangeItemQuantity}
+                            handleUpdateBatches={handleUpdateBatches}
                           />
                         );
                       })}

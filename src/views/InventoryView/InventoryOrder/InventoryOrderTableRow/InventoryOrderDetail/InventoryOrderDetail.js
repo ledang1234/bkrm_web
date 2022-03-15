@@ -1,15 +1,15 @@
-
-import React, {useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { useReactToPrint } from "react-to-print";
-import {ImportReceiptPrinter} from "../../../../../components/ReceiptPrinter/ReceiptPrinter"
+import { ImportReceiptPrinter } from "../../../../../components/ReceiptPrinter/ReceiptPrinter";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import {calculateTotalQuantity} from "../../../../../components/TableCommon/util/sortUtil"
-
+import { calculateTotalQuantity } from "../../../../../components/TableCommon/util/sortUtil";
 
 //import library
 import {
   Dialog,
+  Tooltip,
+  Chip,
   Card,
   DialogContent,
   Box,
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) =>
 
 const InventoryOrderDetail = (props) => {
   const { row, openRow } = props.parentProps;
-  const { isMini} = props;
+  const { isMini } = props;
   //  tam thoi
 
   const currentUser = "Minh Tri";
@@ -103,8 +103,7 @@ const InventoryOrderDetail = (props) => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
-
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -131,7 +130,7 @@ const InventoryOrderDetail = (props) => {
     details: [],
   });
 
-  const [reload, setReload] = useState(false)
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -148,7 +147,6 @@ const InventoryOrderDetail = (props) => {
           details: [],
         });
       }
-
     };
     if (openRow === row.uuid) {
       loadData();
@@ -177,11 +175,15 @@ const InventoryOrderDetail = (props) => {
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
+    content: () => componentRef.current,
   });
-  
+
   return (
-    <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse
+      in={isMini ? true : openRow === row.uuid}
+      timeout="auto"
+      unmountOnExit
+    >
       <PayRemaining
         reloadDetail={() => setReload(!reload)}
         onReload={props.parentProps.onReload}
@@ -193,7 +195,6 @@ const InventoryOrderDetail = (props) => {
             Trả nợ đơn nhập hàng <i>{row.purchase_order_code}</i>
           </Typography>
         }
-
         open={openPayRemaining}
         handleClose={() => setOpenPayRemaining(false)}
         editApiCall={editInventoryOrderApiCall}
@@ -210,14 +211,14 @@ const InventoryOrderDetail = (props) => {
         </Typography>
 
         <Grid container direction="row" justifyContent="flex-start">
-          <Grid item xs={12}sm={5}>
+          <Grid item xs={12} sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã đơn nhập
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.purchase_order_code}{" "}
                 </Typography>
@@ -229,7 +230,7 @@ const InventoryOrderDetail = (props) => {
                   Ngày bán{" "}
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.creation_date}{" "}
                 </Typography>
@@ -241,7 +242,7 @@ const InventoryOrderDetail = (props) => {
                   Nhà cung cấp
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.supplier_name}{" "}
                 </Typography>
@@ -251,7 +252,6 @@ const InventoryOrderDetail = (props) => {
               <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Người nhập
-
                 </Typography>
               </Grid>
               <Grid item sm={4}>
@@ -263,7 +263,7 @@ const InventoryOrderDetail = (props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}sm={7}>
+          <Grid item xs={12} sm={7}>
             <Grid
               container
               direction="row"
@@ -278,8 +278,8 @@ const InventoryOrderDetail = (props) => {
               <Grid item xs={3} sm={3}>
                 <Box>
                   <Typography variant="body1" gutterBottom component="div">
-                   {debtAmount >  0 ?"Còn nợ " :"Trả đủ"}
-                    {debtAmount >  0 ?<VNDFormat value={debtAmount} />  :null } 
+                    {debtAmount > 0 ? "Còn nợ " : "Trả đủ"}
+                    {debtAmount > 0 ? <VNDFormat value={debtAmount} /> : null}
                   </Typography>
                 </Box>
               </Grid>
@@ -302,7 +302,7 @@ const InventoryOrderDetail = (props) => {
                   Tổng tiền nhập
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount}></VNDFormat>{" "}
                 </Typography>
@@ -346,9 +346,9 @@ const InventoryOrderDetail = (props) => {
         <Table size="small" aria-label="purchases">
           <TableHead>
             <TableRow>
-              <TableCell>#</TableCell>
+              <TableCell>Mã SP</TableCell>
               <TableCell>Sản phẩm</TableCell>
-              {/* <TableCell>Mã vạch</TableCell> */}
+              <TableCell>Mã vạch</TableCell>
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá nhập</TableCell>
@@ -362,8 +362,30 @@ const InventoryOrderDetail = (props) => {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                {/* <TableCell>{detail.bar_code}</TableCell> */}
-                <TableCell align="right">{detail.quantity}</TableCell>
+                <TableCell>{detail.bar_code}</TableCell>
+                <TableCell align="right">
+                  <div>
+                    {detail.quantity}
+                    <div>
+                      {detail.batches
+                        ? JSON.parse(detail.batches).map((batch) => (
+                            <Chip
+                              size="small"
+                              label={`${
+                                batch?.batch_code ? batch?.batch_code : "Mới"
+                              } - ${
+                                batch?.expiry_date ? batch?.expiry_date : ""
+                              } - ${batch.additional_quantity}`}
+                              key={batch.id}
+                              color={batch.is_new ? "primary" : "secondary"}
+                              variant="outlined"
+                            />
+                          ))
+                        : null}
+                    </div>
+                  </div>
+                </TableCell>
+
                 <TableCell align="right">{detail.returned_quantity}</TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
@@ -397,26 +419,26 @@ const InventoryOrderDetail = (props) => {
                         </Grid>
                     </Grid> */}
 
-            <Grid container direction="row" justifyContent={ "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng SL sản phẩm ({purchaseOrder.details.length})
                 </Typography>
               </Grid>
-              <Grid item  xs={2} sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
-                {calculateTotalQuantity(purchaseOrder.details)}
+                  {calculateTotalQuantity(purchaseOrder.details)}
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={ "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tiền hàng
                 </Typography>
               </Grid>
-              <Grid item  xs={2} sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.total_amount} />
                 </Typography>
@@ -430,41 +452,37 @@ const InventoryOrderDetail = (props) => {
                 </Typography>
               </Grid>
 
-              <Grid item  xs={2} sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.discount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={ "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Tổng tiền nhập
                 </Typography>
               </Grid>
-              <Grid item  xs={2}sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
-                  <VNDFormat
-                    value={row.total_amount - row.discount }
-                  />
+                  <VNDFormat value={row.total_amount - row.discount} />
                 </Typography>
               </Grid>
             </Grid>
 
-
-            <Grid container direction="row" justifyContent={ "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   Đã trả NCC
                 </Typography>
               </Grid>
-              <Grid item xs={2}sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
               </Grid>
-
             </Grid>
           </Grid>
         </Box>
@@ -472,7 +490,7 @@ const InventoryOrderDetail = (props) => {
         <Grid
           container
           direction="row"
-          justifyContent={ "flex-end"}
+          justifyContent={"flex-end"}
           style={{ marginTop: 20 }}
         >
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
@@ -523,8 +541,7 @@ const InventoryOrderDetail = (props) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem onClick={()=> handlePrint()}>
-
+            <StyledMenuItem onClick={() => handlePrint()}>
               <ListItemIcon style={{ marginRight: -15 }}>
                 <PrintTwoToneIcon fontSize="small" />
               </ListItemIcon>
@@ -540,15 +557,17 @@ const InventoryOrderDetail = (props) => {
           </StyledMenu>
         </Grid>
 
-
-      {/* 3. Receipt */}
-      <div style={{ display: "none" }}>
-        <div ref={componentRef}>
-          <ImportReceiptPrinter cart={purchaseOrder}  date={row.creation_date}/>
+        {/* 3. Receipt */}
+        <div style={{ display: "none" }}>
+          <div ref={componentRef}>
+            <ImportReceiptPrinter
+              cart={purchaseOrder}
+              date={row.creation_date}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Tra hang */}
+        {/* Tra hang */}
 
         <Dialog
           fullWidth={true}
@@ -571,7 +590,6 @@ const InventoryOrderDetail = (props) => {
 };
 
 export default InventoryOrderDetail;
-
 
 const headCells = [
   { id: "stt", numeric: false, disablePadding: true, label: "Stt" },
