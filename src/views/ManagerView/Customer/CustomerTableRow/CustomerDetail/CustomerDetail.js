@@ -159,7 +159,7 @@ const CustomerDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Email</Typography>    
                           </Grid>
                           <Grid item sm={6} >
-                            <Typography variant="body1" gutterBottom component="div">{row.address} </Typography>
+                            <Typography variant="body1" gutterBottom component="div">{row.email} </Typography>
                           </Grid>
                       </Grid>
                   </Grid>

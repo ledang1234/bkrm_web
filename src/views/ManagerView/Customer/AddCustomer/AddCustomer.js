@@ -57,11 +57,11 @@ const AddCustomer = (props) => {
       paymentInfo:"",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Nhập tên nhà cung cấp"),
+      name: Yup.string().required("Nhập tên khách hàng"),
       phone: Yup.string()
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại").matches(/^\d+$/),
-      address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+      // address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
     }),
   })
 

@@ -28,7 +28,7 @@ import CartPage from "./CartPage/CartPage";
 import customerPageApi from "../../api/customerPageApi";
 import StoreContext from "./StoreContext";
 import { useParams } from "react-router-dom";
-
+import webSetting from "../../assets/constant/webInfo"
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
@@ -37,65 +37,6 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomerPage = () => {
   let { path } = useRouteMatch();
-
-
-  // 1. Customer setting
-  //1.1 NavBar
-  // // -----recomendation 1
-  // const navColor = 0 //0:white, 1- maincolor
-  // const textNav = [3,1,1]  //0-left 1-right //color: black-white-grey-maincolor, size: small - large(16):,  bold:no() -yes (600)
-  // // -----recomendation 2
-  // const navColor = 0 //0:white, 1- maincolor
-  // const textNav = [2,0,0]
-  // -----recomendation 3
-  const navColor = 1; //0:white, 1- maincolor
-  const textNav = [1, 1, 1];
-
-  //1.2 Box show
-
-//   const webInfo = {
-//     webAddress :'lyquochai',
-//     status:'inactive',
-//     mainColor: {  r: '250', g: '140', b: '22',  a: '1', hex:'#fa8c16'} ,//{  r: '241', g: '112', b: '19',  a: '1', },
-//     // mainColor: {  r: '242', g: '165', b: '174',  a: '1', hex:'#f2a5ae'},
-//     priceStyle :[0, 0, 0], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
-//     nameStyle: [0,0,0,0],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
-//     btnStyle:[1, 1],  //0-left 1-right //haveBtn: no-yes, style:circle - box
-//     isBox:false,
-//     isMargin:true,
-//     border:true,
-//     alignCenter:false,
-//     marginContainer:10,
-//     boxDistance:0.75,
-// }
-  const webInfo = {
-      webAddress :'lyquochai',
-      status:'inactive',
-      // mainColor: {  r: '250', g: '140', b: '22',  a: '1', hex:'#fa8c16'} ,
-      mainColor: {  r: '242', g: '165', b: '174',  a: '1', hex:'#f2a5ae'},  
-      bgColor:{r: '255', g: '255', b: '255',  a: '1',hex:'#ffffff'},
-      navBar:{
-        buttonLogin: "1" ,  // 0: nut, 1:icon
-        buttonCart:"0" , //0: special, 1: normal
-        navColor : "1", //0:white, 1- maincolor
-        textNav : ["1",17, 600],  //0-left 1-right //color: black-white-grey-maincolor, size: small - large(16):,  bold:no() -yes (600)
-      },
-      listProduct:{
-        priceStyle :[0, 0, 0],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
-        nameStyle: [0, 1, 0, 0],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
-        btnStyle:[1, 0], //0-left 1-right //haveBtn: no-yes, style:circle - box
-        isBox:false,
-        isMargin:true,
-        border:true,
-        alignCenter:false,
-        marginContainer:0,
-        boxDistance:1,
-        // marginContainer:10,
-        // boxDistance:2,
-      }   
-  }
-  var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
-
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -104,8 +45,12 @@ const CustomerPage = () => {
     setClickItem(item);
   }
 
+  //0.Store Info 
+  var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
   //1.  API GET ALL CATEGORY HERE
   //....
+ //2.  GET SETTING
+  const  webInfo =  webSetting;
 
   const renderTree = (items) => {
     return (
@@ -180,7 +125,7 @@ const CustomerPage = () => {
             </Route> */}
 
             <Route exact path={`${path}/cart`}>
-              <CartPage />
+              <CartPage webInfo={webInfo}  />
             </Route>
 
             {/* Path product */}

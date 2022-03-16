@@ -179,6 +179,7 @@ const Customer = () => {
         {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
         <ToolBar  dataTable={customerList} tableType={TableType.CUSTOMER} textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
         handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
+        
         <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
         {!xsScreen? <TableWrapper

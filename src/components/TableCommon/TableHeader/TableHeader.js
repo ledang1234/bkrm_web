@@ -19,13 +19,13 @@ const StyledTableCell = withStyles((theme) => ({
   
 function TableHeader(props) {
     const theme = useTheme();
-    const { classes, order, orderBy, onRequestSort,headerData,isCart } = props;
+    const { classes, order, orderBy, onRequestSort,headerData,isCart,isCustomer } = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
     
     return (
-      <TableHead className={classes.headColor}>
+      <TableHead className={classes.headColor} >
         <TableRow >
             {headerData.map((headCell) => (
             <StyledTableCell
@@ -37,7 +37,7 @@ function TableHeader(props) {
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
-                style={{color:theme.themeText}}
+                style={{color:isCustomer?"#000":theme.themeText, fontSize:isCustomer?16:null}}
                 >
                 {headCell.label}
                 {orderBy === headCell.id  ? (
