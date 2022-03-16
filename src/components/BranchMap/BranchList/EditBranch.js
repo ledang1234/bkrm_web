@@ -70,7 +70,10 @@ const EditBranch = (props) => {
     setDisplay(URL.createObjectURL(e.target.files[0]));
   };
   useEffect(() => {
-    setImage(branch?.image)
+    if(branch.img_url){
+      setDisplay(branch.img_url);
+      setImage(branch.img_url);
+    }
   }, [branch])
   const formik = useFormik({
     enableReinitialize: true,
@@ -89,6 +92,8 @@ const EditBranch = (props) => {
         .required("Nhập số điện thoại").matches(/^\d+$/),
       address: Yup.string().required("Nhập địa chỉ"),
       city: Yup.string().required("Chọn tỉnh/ thành phố"),
+      ward: Yup.string().required("Chọn phường/ xã"),
+      district: Yup.string().required("Chọn quận/ huyện"),
     }),
   });
   useEffect(() => {
@@ -139,47 +144,36 @@ const EditBranch = (props) => {
     const district = districtList.find(
       (district) => district.id === formik.values.district
     ).name;
-    let lat, lng
+    let lat, lng;
     try {
-      ({ lat, lng } = await getGeoCode(
+      ({lat, lng}  = await getGeoCode(
         formik.values.address + " " + ward + " " + district + " " + province
       ));
     } catch (error) {
       console.log(error)
     }
     try {
-      const body = {
-        name: formik.values.name,
-        address: formik.values.address,
-        ward: ward,
-        province: province,
-        district: district,
-        phone: formik.values.phone,
-        status: "active",
-        lng: lng,
-        lat: lat,
-      };
       var bodyFormData = new FormData();
       bodyFormData.append("name", formik.values.name.toString());
       bodyFormData.append("address", formik.values.address.toString());
-      bodyFormData.append("ward", formik.values.ward.toString());
-      bodyFormData.append("province", formik.values.province.toString());
-      bodyFormData.append("district", formik.values.district.toString());
+      bodyFormData.append("ward", ward);
+      bodyFormData.append("province", province);
+      bodyFormData.append("district", district);
       bodyFormData.append("phone", formik.values.phone.toString());
       bodyFormData.append("status", "active");
-      bodyFormData.append("lng", lng.toString());
-      bodyFormData.append("lat", lat.toString());
+      bodyFormData.append("lng", lng? lng.toString() : "");
+      bodyFormData.append("lat", lat? lat.toString() : "");
       bodyFormData.append("image", image);
       const response = await branchApi.updateBranch(
         store_uuid,
         branch.uuid,
         bodyFormData
       );
-      dispatch(statusAction.successfulStatus("Edit branch successfully"));
+      dispatch(statusAction.successfulStatus("Chỉnh sửa chi nhánh thành công"));
       props.onReload();
     } catch (error) {
       console.log(error);
-      dispatch(statusAction.failedStatus("Failed to edit branch"));
+      dispatch(statusAction.failedStatus("Chỉnh sửa chi nhánh thất bại"));
     }
   };
   const handleDeleteBranch = async () => {
@@ -188,16 +182,16 @@ const EditBranch = (props) => {
     try {
       await branchApi.deleteBranch(store_uuid, branch.uuid);
       props.onReload();
-      dispatch(statusAction.successfulStatus("Delete branch successfully"));
+      dispatch(statusAction.successfulStatus("Xóa chi nhánh thành công"));
     } catch (error) {
       console.log(error);
-      dispatch(statusAction.failedStatus("Delete branch failed"));
+      dispatch(statusAction.failedStatus("xóa chi nhánh thất bại"));
     }
   };
   const closeModalAndResetData = () => {
     handleClose();
     formik.resetForm();
-    setImage(branch?.image)
+    clearImage()
   };
   return (
     <SimpleModal open={open} handleClose={handleClose}>

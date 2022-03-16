@@ -147,24 +147,12 @@ const AddBranch = (props) => {
       console.log(error)
     }
     try {
-      const body = {
-        name: formik.values.name,
-        address: formik.values.address,
-        ward: ward,
-        province: province,
-        district: district,
-        phone: formik.values.phone,
-        status: "active",
-        lng: lng,
-        lat: lat
-      };
-
       var bodyFormData = new FormData();
       bodyFormData.append("name", formik.values.name.toString());
       bodyFormData.append("address", formik.values.address.toString());
-      bodyFormData.append("ward", formik.values.ward);
-      bodyFormData.append("province", formik.values.province);
-      bodyFormData.append("district", formik.values.district);
+      bodyFormData.append("ward", ward);
+      bodyFormData.append("province", province);
+      bodyFormData.append("district", district);
       bodyFormData.append("phone", formik.values.phone.toString());
       bodyFormData.append("status", "active");
       bodyFormData.append("lng", lng? lng.toString() : "");

@@ -190,9 +190,9 @@ const AddCustomer = (props) => {
 
             try {
               const response = await customerApi.createCustomer(store_uuid, body)
-              dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
+              dispatch(statusAction.successfulStatus("Tạo khách hàng thành công"));
             } catch (err) {
-              dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thất bại"));
+              dispatch(statusAction.successfulStatus("Tạo khách hàng thất bại"));
             }
 
           }}

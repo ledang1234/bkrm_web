@@ -139,7 +139,7 @@ const CartSummary = (props) => {
 
                 </div>
 
-                <AddCustomer open={open} handleClose={handleClose} />
+                <AddCustomer open={open} handleClose={handleClose} onReload = {()=>{}}/>
 
 
                 {/* when change mode to menu product */}

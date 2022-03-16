@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTheme, withStyles,makeStyles, createStyles } from "@material-ui/core/styles";
-import { Typography,Button,Divider, List,Card,ListItem,ListSubheader,TextField,ListItemSecondaryAction,Switch,ListItemIcon, ListItemAvatar,Avatar,ListItemText,Grid, ButtonBase, Tooltip } from "@material-ui/core";
+import { Typography,Button,Divider, List,Card,ListItem,ListSubheader,TextField,ListItemSecondaryAction,Switch,ListItemIcon, ListItemAvatar,Avatar,ListItemText,Grid, ButtonBase, Tooltip, Box, IconButton } from "@material-ui/core";
 import ImageIcon from '@material-ui/icons/Image';
 import WifiIcon from '@material-ui/icons/Wifi';
 import StarsIcon from '@material-ui/icons/Stars';
@@ -28,8 +28,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import PrintIcon from '@material-ui/icons/Print';
 import {ReturnLimitSetting,DiscountSetting,CanFixPriceSellSetting,PrintReceiptWhenSellSetting,VatSetting}  from "./OtherSetting"
-
-
+import SettingsIcon from '@material-ui/icons/Settings';
+import StoreSetting from "../StoreSetting/StoreSetting";
 import SettingItem  from "./SettingItem";
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -205,16 +205,22 @@ const GeneralSetting = () => {
 
 
     // snackbar noti submit thành công
-
   }
-
-
+  const [openStore,setOpenStore] = useState(false)
 
   return (
     <Card className={classes.root}>
-       <Typography className={classes.headerTitle} variant="h3">
-          Cài đặt chung
-        </Typography>
+      <StoreSetting open={openStore} handleClose={()=>setOpenStore(false)}/>
+        <Box display="flex" alignItems="center" justifyContent="space-between" style={{paddingRight:"3vw"}}>
+          <Typography className={classes.headerTitle} variant="h3">
+            Cài đặt chung 
+          </Typography>
+          <Tooltip title="Cài đặt chung">
+            <IconButton aria-label="setting" onClick= {()=>setOpenStore(true)}>
+              <SettingsIcon color="secondary"/>
+            </IconButton>
+          </Tooltip>
+        </Box>
         {/* 1 */}
         <List subheader={<ListSubheader>Hàng hoá</ListSubheader>} className={classes.root}>
             <SettingItem name="inventory" statusChecked={checked.inventory.status} actionToggle={handleToggle} title="Quản lý tồn kho" subTitle="Quản lý sản phẩm theo số lượng tồn kho" >
