@@ -107,10 +107,10 @@ const SearchProduct = (props) => {
             : "rgba(0,0,0,0)",
         }}
       >
-        <Grid item xs={3}>
+        {/* <Grid item xs={3}>
           <FormatedImage url={option.img_url} />
-        </Grid>
-        <Grid item xs={9} container direction="column">
+        </Grid> */}
+        <Grid item xs={12} container direction="column">
           <Typography variant="h5">{`#${option.product_code}`}</Typography>
           <Typography variant="h5">{option.name}</Typography>
           <Grid container item direction="row" justifyContent="space-between">

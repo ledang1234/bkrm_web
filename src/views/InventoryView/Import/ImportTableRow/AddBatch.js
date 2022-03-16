@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -17,36 +17,27 @@ import {
 } from "../../../../components/StatusPopup/StatusPopup";
 
 export default function AddBatch({ handleSubmit, handleClose, row }) {
-  const { store, branch } = useSelector((state) => state.info);
-  const formik = useFormik({
-    initialValues: {
-      batch_code: "",
-      additional_quantity: 0,
-      expiry_date: null,
-    },
-    validationSchema: Yup.object({
-      additional_quantity: Yup.number()
-        .required("Nhập số lượng")
-        .moreThan(0, "Số lượng phải lớn hơn không"),
-    }),
-    onSubmit: (values, actions) => {
-      handleSubmit(values);
-      handleClose();
-    },
+  const [batch, setBatch] = useState({
+    batch_code: "",
+    additional_quantity: 0,
+    expiry_date: null,
+    position: "",
   });
   return (
     <Dialog open={true} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Thêm lô mới</DialogTitle>
       <DialogContent>
-        <TextField
+        {/* <TextField
           autoFocus
           margin="dense"
           name="batch_code"
           label="Mã lô (tự động)"
           fullWidth
-          error={formik.touched.name && formik.errors.name}
-          helperText={formik.touched.name ? formik.errors.name : null}
-        />
+          value={batch.batch_code}
+          onChange={e => setBatch({...batch, batch_code: e.target.value})}
+          // error={formik.touched.name && formik.errors.name}
+          // helperText={formik.touched.name ? formik.errors.name : null}
+        /> */}
         <TextField
           autoFocus
           margin="dense"
@@ -55,7 +46,10 @@ export default function AddBatch({ handleSubmit, handleClose, row }) {
           defaultValue={new Date().toISOString().substring(0, 10)}
           type="date"
           label="Ngày hết hạn"
-          onChange={formik.handleChange}
+          value={batch.expiry_date}
+          onChange={(e) => {
+            setBatch({ ...batch, expiry_date: e.target.value });
+          }}
         />
         <TextField
           autoFocus
@@ -64,16 +58,25 @@ export default function AddBatch({ handleSubmit, handleClose, row }) {
           name="additional_quantity"
           label="Số lượng nhập"
           fullWidth
-          error={
-            formik.touched.additional_quantity &&
-            formik.errors.additional_quantity
-          }
-          helperText={
-            formik.touched.additional_quantity
-              ? formik.errors.additional_quantity
-              : null
-          }
-          onChange={formik.handleChange}
+          value={batch.additional_quantity}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            if (value < 0) {
+              return;
+            } else {
+              setBatch({ ...batch, additional_quantity: value });
+            }
+          }}
+        />
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Vị trí"
+          fullWidth
+          value={batch.position}
+          onChange={(e) => setBatch({ ...batch, position: e.target.value })}
+          // error={formik.touched.name && formik.errors.name}
+          // helperText={formik.touched.name ? formik.errors.name : null}
         />
       </DialogContent>
       <DialogActions>
@@ -81,9 +84,12 @@ export default function AddBatch({ handleSubmit, handleClose, row }) {
           Hủy
         </Button>
         <Button
-          disable={!(formik.isValid && Object.keys(formik.touched).length > 0)}
+          disable={!batch.additional_quantity}
           color="primary"
-          onClick={formik.handleSubmit}
+          onClick={() => {
+            handleSubmit(batch);
+            handleClose();
+          }}
         >
           Thêm
         </Button>
