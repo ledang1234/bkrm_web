@@ -164,14 +164,14 @@ function InvoiceReturnDetail(props) {
 
           </Grid>
           <Grid item xs={12}sm={5}>
-            <Grid container direction="row" justifyContent="flex-start">
+            {/* <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={5} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">Tình trạng</Typography>
               </Grid>
               <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">{`Cần trả ${(row.total_amount - row.paid_amount).toString()}`}</Typography>
               </Grid>
-            </Grid>
+            </Grid> */}
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={5} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
@@ -193,7 +193,7 @@ function InvoiceReturnDetail(props) {
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={5} sm={6}>
-                <Typography variant="h5" gutterBottom component="div">Phương thức trả</Typography>
+                <Typography variant="h5" gutterBottom component="div">Phương thức thanh toán</Typography>
               </Grid>
               <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
@@ -252,7 +252,7 @@ function InvoiceReturnDetail(props) {
 
             <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={5} sm={2}>
-                <Typography variant="h5" gutterBottom component="div">Tổng SL hàng ({refund.details?.length})</Typography>
+                <Typography variant="h5" gutterBottom component="div">Tổng SL sản phẩm ({refund.details?.length})</Typography>
               </Grid>
               <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div"><ThousandFormat 
@@ -290,14 +290,14 @@ function InvoiceReturnDetail(props) {
               </Grid>
             </Grid> */}
 
-            <Grid container direction="row" justifyContent={ "flex-end"}>
+            {/* <Grid container direction="row" justifyContent={ "flex-end"}>
               <Grid item xs={5} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">Đã trả khách</Typography>
               </Grid>
               <Grid item xs={2}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">{row.paid_amount}</Typography>
               </Grid>
-            </Grid>
+            </Grid> */}
 
           </Grid>
         </Box>

@@ -62,7 +62,7 @@ const InventoryOrderFilter = (props) => {
   
   
         {/* 1.Ngay from-to */}
-        <Typography variant="h5" className={classes.text} >Ngày bán:</Typography>
+        <Typography variant="h5" className={classes.text} >Ngày nhập:</Typography>
         <TextField id="startDate" label="Từ" 
           type="date" 
           name="startDate"
@@ -85,7 +85,7 @@ const InventoryOrderFilter = (props) => {
        
   
         {/* 2.Tien from-to*/}
-        <Typography variant="h5" className={classes.text} >Tiền hoá đơn:</Typography>
+        <Typography variant="h5" className={classes.text} >Tiền nhập:</Typography>
         <VNDInput required label="Từ" variant="outlined" fullWidth size="small" className={classes.textField}
           name="minTotalAmount"
           value={formik.values.minTotalAmount}
@@ -189,7 +189,7 @@ const InventoryOrderFilter = (props) => {
   
   
         {/* 5.Pttt */}
-        <Typography variant="h5" className={classes.text} >Hình thức trả:</Typography>
+        <Typography variant="h5" className={classes.text} >Phương thức thanh toán:</Typography>
         <FormControl
           className={classes.formControl}
           fullWidth
