@@ -98,6 +98,11 @@ const storeApi = {
     return axiosClient.post(url, {
       "json_data": json
     });
-  }
+  },
+
+  updateStoreConfig: (storeUuid,body) =>{
+    const url = `stores/${storeUuid}/updateStoreConfiguration`;
+    return axiosClient.post(url,body)
+  },
 };
 export default storeApi;

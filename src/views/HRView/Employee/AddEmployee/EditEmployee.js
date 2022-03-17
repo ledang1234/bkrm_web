@@ -60,7 +60,7 @@ let permissionChoices = [
   { id: 5, name: "report", description: "Báo cáo" },
 ];
 
-const EditEmployee = ({ handleClose, open, employee }) => {
+const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const info = useSelector((state) => state.info);
@@ -341,7 +341,7 @@ const EditEmployee = ({ handleClose, open, employee }) => {
               />
             </Grid>
 
-            <Grid item xs={6}>
+            {!fromAvatar && <Grid item xs={6}>
               {/* Select lưong */}
               <FormControl
                 className={classes.formControl}
@@ -461,6 +461,7 @@ const EditEmployee = ({ handleClose, open, employee }) => {
               )}
               </FormControl>
             </Grid>
+            } 
           </Grid>
         </div>
       </DialogContent>

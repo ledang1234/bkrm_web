@@ -26,7 +26,11 @@ const userAPi = {
   },
   getWard: (cityId, districtId) => {
     const url = "/address/provinces";
-      return axiosClient.get(`${url}/${cityId}/districts/${districtId}/wards`);
+    return axiosClient.get(`${url}/${cityId}/districts/${districtId}/wards`);
   },
+  owenerChangePassword: (store_uuid, employee_uuid, body) => {
+    const url = `/stores/${store_uuid}/employees/${employee_uuid}/updateEmployeePassword`
+    return axiosClient.post(url, body)
+  }
 };
 export default userAPi;

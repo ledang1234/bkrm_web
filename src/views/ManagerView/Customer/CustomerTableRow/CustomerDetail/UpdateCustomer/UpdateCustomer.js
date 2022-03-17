@@ -189,7 +189,7 @@ const UpdateCustomer = (props) => {
             };
 
             try {
-              const response = await customerApi.deleteCustomer(store_uuid, props.customerDetail.uuid, body)
+              const response = await customerApi.updateCustomer(store_uuid, props.customerDetail.uuid, body)
               dispatch(statusAction.successfulStatus("Sửa thông tin khách hàng thành công"));
             } catch (err) {
               dispatch(statusAction.failedStatus("Sửa thông tin khách hàng thất bại"));

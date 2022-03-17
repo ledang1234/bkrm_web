@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import LockIcon from '@material-ui/icons/Lock';
 
 //import library
 import {
@@ -21,7 +22,7 @@ import HighlightOffTwoToneIcon from "@material-ui/icons/HighlightOffTwoTone";
 
 //import image
 import avaUpload from "../../../../../assets/img/product/lyimg.jpeg";
-import {statusAction} from "../../../../../store/slice/statusSlice"
+import { statusAction } from "../../../../../store/slice/statusSlice"
 
 //import project
 import {
@@ -31,6 +32,7 @@ import {
 import employeeApi from "../../../../../api/employeeApi";
 import { useSelector, useDispatch } from "react-redux";
 import EditEmployee from "../../AddEmployee/EditEmployee";
+import ChangeEmployeePwd from "./ChangeEmployeePwd/ChangeEmployeePwd";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -48,7 +50,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const UploadImage = ({src}) => {
+const UploadImage = ({ src }) => {
   return (
     <Box
       component="img"
@@ -83,7 +85,7 @@ const EmployeeDetail = (props) => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [openEdit, setOpenEdit] = React.useState(false);
 
@@ -140,14 +142,14 @@ const EmployeeDetail = (props) => {
       fetchEmp();
     }
   }, [openRow]);
-
+  const [changePwd, setChangePwd] = useState(false)
   return (
-    <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse in={isMini ? true : openRow === row.uuid} timeout="auto" unmountOnExit>
       {openEdit && (<EditEmployee
         handleClose={(status) => {
           if (status === "Success") {
             dispatch(statusAction.successfulStatus("Chỉnh sửa thành công"))
-          } else if (status==="Failed") {
+          } else if (status === "Failed") {
             dispatch(statusAction.failedStatus("Chỉnh sửa thất bại"))
           }
           setOpenEdit(false);
@@ -156,6 +158,7 @@ const EmployeeDetail = (props) => {
         open={openEdit}
         employee={employeeDetail}
       />)}
+      <ChangeEmployeePwd open={changePwd} handleClose={() => setChangePwd(false)} employeeDetail={employeeDetail} />
       <Box margin={1}>
         <Typography
           variant="h3"
@@ -168,11 +171,11 @@ const EmployeeDetail = (props) => {
 
         <Grid container direction="row" justifyContent="flex-start">
           <Grid item xs={12} >
-            <UploadImage src={employeeDetail.img_url}/>
+            <UploadImage src={employeeDetail.img_url} />
           </Grid>
           <Grid item xs={12} sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={7}sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã nhân viên{" "}
                 </Typography>
@@ -220,7 +223,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={7}  sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   CMND
                 </Typography>
@@ -256,7 +259,7 @@ const EmployeeDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item  xs={7} sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Địa chỉ
                 </Typography>
@@ -329,7 +332,7 @@ const EmployeeDetail = (props) => {
         <Grid
           container
           direction="row"
-          justifyContent={ "flex-end"}
+          justifyContent={"flex-end"}
           style={{ marginTop: 20 }}
         >
           <Button
@@ -359,7 +362,7 @@ const EmployeeDetail = (props) => {
                 dispatch(statusAction.failedStatus("Ngưng hoạt động thất bại"))
               }
             }
-            
+
           }}>
             {employeeDetail.status === "inactive" ? "Kích hoạt" : "Ngưng hoạt động"}
           </Button>
@@ -382,21 +385,29 @@ const EmployeeDetail = (props) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem  onClick={async () => {
-                console.log('here')
-                try {
-                  const response = await employeeApi.deleteEmployee(store_uuid, employeeDetail.uuid)
-                  dispatch(statusAction.successfulStatus("Xoá nhân viên thành công"))
-                  handleReload()
-                } catch (err) {
-                  dispatch(statusAction.failedStatus("Xoá nhân viên thất bại"))
-                }
-              }} >
+            <StyledMenuItem onClick={async () => {
+              try {
+                const response = await employeeApi.deleteEmployee(store_uuid, employeeDetail.uuid)
+                dispatch(statusAction.successfulStatus("Xoá nhân viên thành công"))
+                handleReload()
+              } catch (err) {
+                dispatch(statusAction.failedStatus("Xoá nhân viên thất bại"))
+              }
+            }} >
               <ListItemIcon style={{ marginRight: -15 }}>
                 <HighlightOffTwoToneIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Xoá"/>
+              <ListItemText primary="Xoá" />
             </StyledMenuItem>
+
+            {info.role === "owner" &&
+              <StyledMenuItem onClick={() => setChangePwd(true)} >
+                <ListItemIcon style={{ marginRight: -15 }}>
+                  <LockIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Mật khẩu" />
+              </StyledMenuItem>}
+
           </StyledMenu>
         </Grid>
       </Box>

@@ -27,6 +27,7 @@ import SimpleModal from "../../../../components/Modal/ModalWrapper";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import avaUpload from "../../../../assets/img/product/default-product.png";
 import * as Yup from "yup";
+import storeApi from "../../../../api/storeApi";
 
 const useStyles = makeStyles((theme) => createStyles({}));
 const UploadImages = (img) => {
@@ -45,14 +46,32 @@ const UploadImages = (img) => {
   );
 };
 const StoreSetting = (props) => {
-  const { handleClose, open} = props;
+  const { handleClose, open } = props;
 
   const theme = useTheme();
-
-  const info = useSelector((state) => state.info);
-  const store_uuid = info.store.uuid;
   const [image, setImage] = useState([]);
   const [display, setDisplay] = useState([]);
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+  useEffect(() => {
+    const loadData = async () => {
+      const response = await storeApi.getStoreInfo(store_uuid);
+      if (response.data.store_configuration) {
+        const js = JSON.parse(response.data.store_configuration)
+        if (js.img_url) {
+          setImage(js.img_url)
+          setDisplay(js.img_url)
+        }
+        formik.setFieldValue("facebook", js.facebook)
+        formik.setFieldValue("instagram", js.instagram)
+        formik.setFieldValue("custom_web", js.custom_web)
+      }
+    };
+    if (store_uuid) {
+      loadData();
+    }
+  }, [store_uuid]);
+
   const clearImage = () => {
     setDisplay([]);
     setImage([]);
@@ -64,36 +83,30 @@ const StoreSetting = (props) => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
       facebook: "",
       instagram: "",
-      web: "",
-      phone: "",
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required("Nhập tên cửa hàng nhánh"),
-      phone: Yup.string()
-        .length(10, "Số điện thoại không chính xác")
-        .required("Nhập số điện thoại")
-        .matches(/^\d+$/, "Số điển thoại không chính xác"),
-    }),
+      custom_web: "",
+    }
   });
   const dispatch = useDispatch();
   const closeModalAndResetData = () => {
     handleClose();
     formik.resetForm();
+    clearImage();
   };
   const handleUpdateStore = async () => {
     closeModalAndResetData();
     try {
       var bodyFormData = new FormData();
-      bodyFormData.append("name", formik.values.name.toString());
+      bodyFormData.append("facebook", formik.values.facebook.toString());
+      bodyFormData.append("instagram", formik.values.instagram.toString());
+      bodyFormData.append("custom_web", formik.values.custom_web.toString());
       bodyFormData.append("image", image);
-      //   const response = await branchApi.createBranch(store_uuid, bodyFormData);
+      const response = await storeApi.updateStoreConfig(store_uuid, bodyFormData);
       dispatch(statusAction.successfulStatus("Lưu thay đổi"));
     } catch (error) {
       console.log(error);
-      dispatch(statusAction.successfulStatus("Lưu thất bại"));
+      dispatch(statusAction.failedStatus("Lưu thất bại"));
     }
   };
   return (
@@ -102,7 +115,7 @@ const StoreSetting = (props) => {
         Cài đặt chung cửa hàng
       </Typography>
       <Box display="flex" flexDirection="row" alignItems="center">
-        {display.length ? (
+        {display?.length ? (
           <Tooltip title="Xóa hình ảnh">
             <Button size="small" onClick={clearImage}>
               <Box
@@ -129,7 +142,7 @@ const StoreSetting = (props) => {
           type="file"
           onChange={addImageHandler}
         />
-        {display.length === 0 ? (
+        {display?.length === 0 ? (
           <label htmlFor="icon-button-file">
             <IconButton
               color="primary"
@@ -145,21 +158,6 @@ const StoreSetting = (props) => {
         <Grid item xs={12}>
           <TextField
             variant="outlined"
-            required
-            fullWidth
-            label="Tên cửa hàng"
-            name="name"
-            onChange={formik.handleChange}
-            value={formik.values.name}
-            error={formik.touched.name && formik.errors.name}
-            helperText={formik.touched.name ? formik.errors.name : null}
-            onBlur={formik.handleBlur}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
             fullWidth
             label="Link facebook"
             name="facebook"
@@ -173,7 +171,6 @@ const StoreSetting = (props) => {
         <Grid item xs={12}>
           <TextField
             variant="outlined"
-            required
             fullWidth
             label="Link instagram"
             name="instagram"
@@ -187,28 +184,13 @@ const StoreSetting = (props) => {
         <Grid item xs={12}>
           <TextField
             variant="outlined"
-            required
             fullWidth
             label="Link web"
-            name="web"
+            name="custom_web"
             onChange={formik.handleChange}
-            value={formik.values.web}
-            error={formik.touched.web && formik.errors.web}
-            helperText={formik.touched.web ? formik.errors.web : null}
-            onBlur={formik.handleBlur}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            label="Số điện thoại"
-            name="phone"
-            onChange={formik.handleChange}
-            value={formik.values.phone}
-            error={formik.touched.phone && formik.errors.phone}
-            helperText={formik.touched.phone ? formik.errors.phone : null}
+            value={formik.values.custom_web}
+            error={formik.touched.custom_web && formik.errors.custom_web}
+            helperText={formik.touched.custom_web ? formik.errors.custom_web : null}
             onBlur={formik.handleBlur}
           />
         </Grid>

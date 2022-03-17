@@ -251,7 +251,7 @@ const GeneralSetting = () => {
 
   return (
     <Card className={classes.root}>
-      <StoreSetting open={openStore} handleClose={() => setOpenStore(false)} />
+      {openStore && <StoreSetting open={openStore} handleClose={() => setOpenStore(false)} />}
       <Box
         display="flex"
         alignItems="center"

@@ -35,12 +35,14 @@ const BranchList = (props) => {
   const classes = useStyles(theme);
   return (
     <Grid container spacing={2}>
-      <EditBranch
-        branch={branchToEdit}
-        onReload={onReload}
-        open={isEditBranch}
-        handleClose={() => setIsEditBranch(false)}
-      />
+      {isEditBranch &&
+        <EditBranch
+          branch={branchToEdit}
+          onReload={onReload}
+          open={isEditBranch}
+          handleClose={() => setIsEditBranch(false)}
+        />
+      }
       {branchList.map((branch) => {
         return (
           <Grid item xs={12} sm={6}>
@@ -51,8 +53,8 @@ const BranchList = (props) => {
                   <Box
                     component="img"
                     sx={{ height: "100%", width: "100%", borderRadius: 10 }}
-                    src={branch.img_url ? branch.img_url:store}
-                  /> 
+                    src={branch.img_url ? branch.img_url : store}
+                  />
                 </Grid>
                 <Grid item xs={8} style={{ minHeight: 140 }}>
                   <Typography
@@ -73,8 +75,8 @@ const BranchList = (props) => {
                   <Grid container direction="row" justifyContent="flex-end">
                     <Typography
                       onClick={() => {
-//                         setChosenBranch({ lat: branch.lat, lng: branch.lng });
-                           setChosenBranch({ lat: parseFloat(branch.lat), lng: parseFloat(branch.lng) });
+                        //                         setChosenBranch({ lat: branch.lat, lng: branch.lng });
+                        setChosenBranch({ lat: parseFloat(branch.lat), lng: parseFloat(branch.lng) });
                         window.scrollTo(0, 0);
                       }}
                       variant="h5"

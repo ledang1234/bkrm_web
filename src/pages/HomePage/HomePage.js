@@ -33,6 +33,7 @@ import ManagerView from "../../views/ManagerView/ManagerView";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import useStyles from "./styles";
 import { authActions } from "../../store/slice/authSlice";
+import EditEmployee from "../../views/HRView/Employee/AddEmployee/EditEmployee"
 
 import { customizeAction } from "../../store/slice/customizeSlice";
 
@@ -125,9 +126,10 @@ const HomePage = (props) => {
 
   };
  
-
+  const [openUserInfo,setOpenUserInfo] = useState(false)
   return (
     <div className={classes.root}>
+      {/* <EditEmployee open={openUserInfo} handleClose = {() =>setOpenUserInfo(false)}/> */}
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolBar}>
           {divLogo()}
@@ -154,7 +156,7 @@ const HomePage = (props) => {
 
             <Box display="flex" flexDirection="row" alignItems="center">
               <BranchSelectAppBar store_uuid={infoDetail.store.uuid} />
-              <IconButton color="primary" size="small">
+              <IconButton color="primary" size="small" onClick={()=>setOpenUserInfo(true)} >
                 <PersonIcon fontSize="large" />
               </IconButton>
               <Box
