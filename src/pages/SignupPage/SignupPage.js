@@ -25,14 +25,6 @@ export default function SignUp() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-  const [userInfo, setUserInfo] = useState({
-    name: "",
-    email: "",
-    password: "",
-    passwordConfirm: "",
-    phone: "",
-    dateOfBirth: "1991-01-01",
-  });
   const user_formik = useFormik({
     initialValues: {
       name: "",

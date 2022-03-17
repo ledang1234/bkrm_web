@@ -194,7 +194,7 @@ const EditBranch = (props) => {
     clearImage()
   };
   return (
-    <SimpleModal open={open} handleClose={handleClose}>
+    <SimpleModal open={open} handleClose={closeModalAndResetData}>
       <ConfirmPopUp
         open={isDelete}
         handleConfirm={handleDeleteBranch}
@@ -385,7 +385,7 @@ const EditBranch = (props) => {
           variant="contained"
           size="small"
           style={{ marginRight: 20 }}
-          onClick={handleClose}
+          onClick={closeModalAndResetData}
         >
           Hủy
         </Button>
