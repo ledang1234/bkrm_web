@@ -101,6 +101,7 @@ const AddInventory = (props) => {
       unit: "",
       re_order_point: 0,
       product_code: "",
+      has_batches: false,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
@@ -152,6 +153,10 @@ const AddInventory = (props) => {
       bodyFormData.append(
         "category_uuid",
         productFormik.values.category.toString()
+      );
+      bodyFormData.append(
+        "has_batches",
+        Number(productFormik.values.has_batches)
       );
       bodyFormData.append("img_url", imageURL);
 
@@ -342,6 +347,10 @@ const AddInventory = (props) => {
       bodyFormData.append(
         "category_uuid",
         productFormik.values.category.toString()
+      );
+      bodyFormData.append(
+        "has_batches",
+        Number(productFormik.values.has_batches)
       );
       console.log(relatedList);
 
@@ -616,8 +625,11 @@ const AddInventory = (props) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={outOfDate}
-                onChange={(event) => setOutOfDate(event.target.checked)}
+                //checked={outOfDate}
+                name="has_batches"
+                checked={productFormik.values.has_batches}
+                onChange={productFormik.handleChange}
+                //onChange={(event) => setOutOfDate(event.target.checked)}
               />
             }
             label="Lô, hạn sử dụng"

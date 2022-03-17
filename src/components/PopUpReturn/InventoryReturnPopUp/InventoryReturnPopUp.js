@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Card,
   ListItem,
@@ -9,57 +9,59 @@ import {
   Typography,
   Table,
   TableCell,
+  Chip,
+  Tooltip,
   TableRow,
   Collapse,
   Button,
   ListItemIcon,
   ListItemText,
   IconButton,
-} from '@material-ui/core';
+  TextField,
+} from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
+import * as _ from "lodash";
 
-import CloseIcon from '@material-ui/icons/Close';
-import update from 'immutability-helper';
-import { useSelector, useDispatch } from 'react-redux';
-import moment from 'moment';
-import ImportReturnSummary from '../../CheckoutComponent/CheckoutSummary/ImportReturnSummary/ImportReturnSummary';
+import CloseIcon from "@material-ui/icons/Close";
+import update from "immutability-helper";
+import { useSelector, useDispatch } from "react-redux";
+import moment from "moment";
+import ImportReturnSummary from "../../CheckoutComponent/CheckoutSummary/ImportReturnSummary/ImportReturnSummary";
 
-import useStyles from '../../TableCommon/style/mainViewStyle';
+import useStyles from "../../TableCommon/style/mainViewStyle";
 
 // import library
 
-import InvoiceReturnSummary from '../../CheckoutComponent/CheckoutSummary/InvoiceReturnSummary/InvoiceReturnSummary';
+import InvoiceReturnSummary from "../../CheckoutComponent/CheckoutSummary/InvoiceReturnSummary/InvoiceReturnSummary";
 
-import * as HeadCells from '../../../assets/constant/tableHead';
-import * as TableType from '../../../assets/constant/tableType';
-import SearchProduct from '../../SearchBar/SearchProduct';
-import TableHeader from '../../TableCommon/TableHeader/TableHeader';
-import TableWrapper from '../../TableCommon/TableWrapper/TableWrapper';
-import {
-  getComparator,
-  stableSort,
-} from '../../TableCommon/util/sortUtil';
-import * as Input from '../../TextField/NumberFormatCustom';
-import ButtonQuantity from '../../Button/ButtonQuantity';
-import purchaseReturnApi from '../../../api/purchaseReturnApi';
-import SnackBarGeneral from '../../SnackBar/SnackBarGeneral';
+import * as HeadCells from "../../../assets/constant/tableHead";
+import * as TableType from "../../../assets/constant/tableType";
+import SearchProduct from "../../SearchBar/SearchProduct";
+import TableHeader from "../../TableCommon/TableHeader/TableHeader";
+import TableWrapper from "../../TableCommon/TableWrapper/TableWrapper";
+import { getComparator, stableSort } from "../../TableCommon/util/sortUtil";
+import * as Input from "../../TextField/NumberFormatCustom";
+import ButtonQuantity from "../../Button/ButtonQuantity";
+import purchaseReturnApi from "../../../api/purchaseReturnApi";
+import SnackBarGeneral from "../../SnackBar/SnackBarGeneral";
 
-import {statusAction} from '../../../store/slice/statusSlice';
-import {ReturnCartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import { statusAction } from "../../../store/slice/statusSlice";
+import { ReturnCartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 function InventoryReturnPopUp(props) {
-  const { purchaseOrder, classes, handleCloseReturn, reload, reloadDetail } = props;
+  const { purchaseOrder, classes, handleCloseReturn, reload, reloadDetail } =
+    props;
   const theme = useTheme();
 
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   // 2. Table sort
-  const [order, setOrder] = React.useState('desc');
-  const [orderBy, setOrderBy] = React.useState('stt');
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState("stt");
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
   // redux
@@ -77,17 +79,40 @@ function InventoryReturnPopUp(props) {
     details: purchaseOrder.details.map((detail) => ({
       ...detail,
       // returnQuantity: detail.quantity,
-      returnQuantity:0,
+      returnQuantity: 0,
       returnPrice: detail.unit_price,
+      selectedBatches: JSON.parse(detail.batches)?.map((batch) => ({
+        ...batch,
+        max_return_quantity:
+          batch.additional_quantity - batch.returned_quantity,
+        returned_quantity: 0,
+      })),
+      purchase_order_batches: JSON.parse(detail.batches),
     })),
-    payment_method: 'cash',
-    paid_amount: '0',
+    payment_method: "cash",
+    paid_amount: "0",
   });
 
+  const handleChangeBatches = (itemId, newBatches) => {
+    const itemIndex = purchaseReturn.details.findIndex(
+      (item) => item.id === itemId
+    );
+    const newPurchaseReturn = _.cloneDeep(purchaseReturn);
+
+    console.log(newBatches);
+    newPurchaseReturn.details[itemIndex].selectedBatches = newBatches;
+    newPurchaseReturn.details[itemIndex].returnQuantity = _.sumBy(
+      newBatches,
+      "returned_quantity"
+    );
+    console.log(newPurchaseReturn);
+    setPurchaseReturn(newPurchaseReturn);
+    setIsUpdateTotalAmount(!isUpdateTotalAmount);
+  };
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
-    style: 'error',
-    message: 'Trả hàng thất bại',
+    style: "error",
+    message: "Trả hàng thất bại",
   });
 
   useEffect(() => {
@@ -108,7 +133,7 @@ function InventoryReturnPopUp(props) {
 
   const handleDeleteItem = (itemId) => {
     const itemIndex = purchaseReturn.details.findIndex(
-      (item) => item.id === itemId,
+      (item) => item.id === itemId
     );
     const newPurchaseReturn = update(purchaseReturn, {
       details: { $splice: [[itemIndex, 1]] },
@@ -123,7 +148,7 @@ function InventoryReturnPopUp(props) {
       return;
     }
     const itemIndex = purchaseReturn.details.findIndex(
-      (item) => item.id === itemId,
+      (item) => item.id === itemId
     );
     const newPurchaseReturn = update(purchaseReturn, {
       details: {
@@ -138,7 +163,7 @@ function InventoryReturnPopUp(props) {
 
   const handleProductPriceChange = (itemId, newPrice) => {
     const itemIndex = purchaseReturn.details.findIndex(
-      (item) => item.id === itemId,
+      (item) => item.id === itemId
     );
     const newPurchaseReturn = update(purchaseReturn, {
       details: {
@@ -152,21 +177,27 @@ function InventoryReturnPopUp(props) {
   };
 
   const handlePaidAmountChange = (paidAmount) => {
-    const newPurchaseReturn = update(purchaseReturn, { paid_amount: { $set: paidAmount } });
+    const newPurchaseReturn = update(purchaseReturn, {
+      paid_amount: { $set: paidAmount },
+    });
     setPurchaseReturn(newPurchaseReturn);
   };
 
   const handlePaymentMethodChange = (paymentMethod) => {
-    const newPurchaseReturn = update(purchaseReturn, { payment_method: { $set: paymentMethod } });
+    const newPurchaseReturn = update(purchaseReturn, {
+      payment_method: { $set: paymentMethod },
+    });
     setPurchaseReturn(newPurchaseReturn);
   };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleConfirm = async () => {
     const d = moment.now() / 1000;
 
-    const export_date = moment.unix(d).format('YYYY-MM-DD HH:mm:ss', { trim: false });
+    const export_date = moment
+      .unix(d)
+      .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
     const body = {
       purchase_order_uuid: purchaseOrder.uuid,
@@ -176,13 +207,27 @@ function InventoryReturnPopUp(props) {
       paid_amount: purchaseReturn.paid_amount,
       status:
         purchaseReturn.paid_amount >= purchaseReturn.total_amount
-          ? 'closed'
-          : 'debt',
+          ? "closed"
+          : "debt",
       details: purchaseReturn.details.map((detail) => ({
         product_id: detail.product_id,
         quantity: detail.returnQuantity,
         unit_price: detail.returnPrice,
         purchase_order_detail_id: detail.id,
+        selectedBatches: detail.selectedBatches.map((batch) =>
+          _.omit(batch, ["additional_quantity", "max_return_quantity"])
+        ),
+        purchase_order_batches: detail.purchase_order_batches.map((batch) => {
+          const newBatch = {
+            ...batch,
+            returned_quantity:
+              batch.returned_quantity +
+              detail.selectedBatches.find(
+                (selectedBatch) => selectedBatch.id === batch.id
+              ).returned_quantity,
+          };
+          return newBatch;
+        }),
       })),
       export_date,
     };
@@ -191,14 +236,18 @@ function InventoryReturnPopUp(props) {
       const res = await purchaseReturnApi.removeInventory(
         store_uuid,
         purchaseOrder.branch.uuid,
-        body,
+        body
       );
-      dispatch(statusAction.successfulStatus(`Trả hàng thành công: ${res.data.purchase_return_code}`))
+      dispatch(
+        statusAction.successfulStatus(
+          `Trả hàng thành công: ${res.data.purchase_return_code}`
+        )
+      );
       reload();
       reloadDetail();
-      handleCloseReturn()
+      handleCloseReturn();
     } catch (err) {
-      dispatch(statusAction.failedStatus('Trả hàng thất bại!'))
+      dispatch(statusAction.failedStatus("Trả hàng thất bại!"));
       setOpenSnack(true);
       console.log(err);
     }
@@ -215,8 +264,6 @@ function InventoryReturnPopUp(props) {
         justifyContent="space-between"
         alignItems="center"
       >
-        
-
         <ListItem style={{ paddingTop: 20, marginBottom: -20, marginLeft: 25 }}>
           <Typography variant="h3" style={{ marginRight: 20 }}>
             Trả hàng nhập
@@ -245,39 +292,40 @@ function InventoryReturnPopUp(props) {
         >
           <Grid item xs={12} sm={8}>
             <Card className={classes.card}>
-              <Box style={{ padding: 30, minHeight: '75vh' }}>
+              <Box style={{ padding: 30, minHeight: "75vh" }}>
                 {/* JSON data attribute phải giongso table head id */}
 
                 {/* <ListItem headCells={HeadCells.CartReturnHeadCells}  cartData={row.list} tableType={TableType.CART_RETURN} /> */}
-                {!xsScreen ? ( <TableWrapper isCart>
-                  <TableHeader
-                    classes={classes}
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                    headerData={HeadCells.ImportReturnHeadCells}
-                  />
-                  <TableBody>
-                    {purchaseReturn.details.map((detail, index) => (
-                      <ImportReturnTableRow
-                        handleProductPriceChange={handleProductPriceChange}
-                        handleItemQuantityChange={handleItemQuantityChange}
-                        detail={detail}
-                      />
-                 
-                    ))}
-                  </TableBody>
-                </TableWrapper>):
-                purchaseReturn.details.map((detail, index) => (
-                  <ReturnCartMiniTableRow
+                {!xsScreen ? (
+                  <TableWrapper isCart>
+                    <TableHeader
+                      classes={classes}
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                      headerData={HeadCells.ImportReturnHeadCells}
+                    />
+                    <TableBody>
+                      {purchaseReturn.details.map((detail, index) => (
+                        <ImportReturnTableRow
+                          handleProductPriceChange={handleProductPriceChange}
+                          handleItemQuantityChange={handleItemQuantityChange}
+                          handleChangeBatches={handleChangeBatches}
+                          detail={detail}
+                        />
+                      ))}
+                    </TableBody>
+                  </TableWrapper>
+                ) : (
+                  purchaseReturn.details.map((detail, index) => (
+                    <ReturnCartMiniTableRow
                       handleProductPriceChange={handleProductPriceChange}
                       handleItemQuantityChange={handleItemQuantityChange}
                       detail={detail}
-                  />
-
-                ))
-                }
-         </Box>
+                    />
+                  ))
+                )}
+              </Box>
             </Card>
           </Grid>
 
@@ -298,11 +346,16 @@ function InventoryReturnPopUp(props) {
 }
 
 export default InventoryReturnPopUp;
-function ImportReturnTableRow({ detail, handleProductPriceChange, handleItemQuantityChange }) {
+function ImportReturnTableRow({
+  detail,
+  handleProductPriceChange,
+  handleItemQuantityChange,
+  handleChangeBatches,
+}) {
   const classes = useStyles();
-  const [show, setShow] = React.useState('none');
+  const [show, setShow] = React.useState("none");
   useEffect(() => {}, [detail]);
-
+  console.log(detail);
   const handleChangeQuantity = (newQuantity) => {
     handleItemQuantityChange(detail.id, newQuantity);
   };
@@ -316,32 +369,82 @@ function ImportReturnTableRow({ detail, handleProductPriceChange, handleItemQuan
       </TableCell>
       {/* <TableCell align="left">{row.id}</TableCell> */}
       <TableCell align="left">{detail.name}</TableCell>
-      <TableCell align="right">  <Input.ThousandFormat value={detail.unit_price}  /></TableCell>
+      {/* <TableCell align="left">{detail.bar_code}</TableCell> */}
+      <TableCell align="right">
+        {" "}
+        <Input.ThousandFormat value={detail.unit_price} />
+      </TableCell>
       <TableCell align="right">
         <Input.ThousandSeperatedInput
           id="standard-basic"
           style={{ width: 70 }}
           size="small"
-          inputProps={{ style: { textAlign: 'right' } }}
+          inputProps={{ style: { textAlign: "right" } }}
           defaultPrice={detail.returnPrice}
           onChange={(e) => handleChangePrice(e.target.value)}
         />
       </TableCell>
 
       <TableCell align="left" padding="none">
-        <ButtonQuantity
-          quantity={detail.returnQuantity}
-          setQuantity={handleChangeQuantity}
-          show={show}
-          setShow={setShow}
-          limit={detail.quantity - detail.returned_quantity}
-          isReturn={true}
-          
-        />
+        {detail.selectedBatches.length ? (
+          detail.selectedBatches.map((batch, index) => (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 5,
+                marginBottom: 5,
+                alignItems: "center",
+                border: "1px solid #eee",
+                justifyContent: "space-around",
+              }}
+            >
+              <div>
+                {`${batch.batch_code} ${
+                  batch?.expiry_date
+                    ? "-" + batch?.expiry_date.substring(0, 10)
+                    : ""
+                }: `}
+              </div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <TextField
+                  type="number"
+                  size="small"
+                  style={{ width: 30 }}
+                  value={batch.returned_quantity}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+
+                    if (value > batch.max_return_quantity || value < 0) {
+                      return;
+                    } else {
+                      console.log(value);
+                      const newSelectedBatches = [...detail.selectedBatches];
+                      newSelectedBatches[index].returned_quantity = value;
+                      handleChangeBatches(detail.id, newSelectedBatches);
+                    }
+                  }}
+                ></TextField>
+                <div>{`/${batch.max_return_quantity}`}</div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <ButtonQuantity
+            quantity={detail.returnQuantity}
+            setQuantity={handleChangeQuantity}
+            show={show}
+            setShow={setShow}
+            limit={detail.quantity - detail.returned_quantity}
+            isReturn={true}
+          />
+        )}
       </TableCell>
 
       <TableCell align="right" className={classes.boldText}>
-      <Input.VNDFormat  value={Number(detail.returnQuantity) * Number(detail.returnPrice)} />
+        <Input.VNDFormat
+          value={Number(detail.returnQuantity) * Number(detail.returnPrice)}
+        />
       </TableCell>
     </TableRow>
   );

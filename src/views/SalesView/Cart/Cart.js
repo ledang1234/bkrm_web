@@ -256,35 +256,56 @@ const Cart = () => {
 
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
-    console.log(selectedOption);
-    let itemIndex = cartList[selectedIndex].cartItem.findIndex((item) => {
-      return item.uuid === selectedOption.uuid;
-    });
+    let itemIndex = cartList[selectedIndex].cartItem.findIndex(
+      (item) => item.uuid === selectedOption.uuid
+    );
+    let item = cartList[selectedIndex].cartItem.find(
+      (item) => item.uuid === selectedOption.uuid
+    );
+    if (!item) {
+      let newCartItem = {
+        id: cartList[selectedIndex].cartItem.length,
+        uuid: selectedOption.uuid,
+        quantity: selectedOption.has_batches ? 0 : 1,
+        product_code: selectedOption.product_code,
+        bar_code: selectedOption.bar_code,
+        unit_price: selectedOption.list_price,
+        img_url: selectedOption.img_url,
+        name: selectedOption.name,
+        branch_quantity: Number(selectedOption.branch_quantity),
+        has_batches: selectedOption.has_batches,
+        batches: selectedOption.batches,
+      };
 
-    if (itemIndex !== -1) {
+      let newCartList = update(cartList, {
+        [selectedIndex]: { cartItem: { $push: [newCartItem] } },
+      });
+      setCartList(newCartList);
+      setIsUpdateTotalAmount(!isUpdateTotalAmount);
+      return;
+    }
+
+    if (!item.has_batches) {
       handleChangeItemQuantity(
         selectedOption.uuid,
         cartList[selectedIndex].cartItem[itemIndex].quantity + 1
       );
-      return;
+    } else {
+      if (
+        cartList[selectedIndex].cartItem[itemIndex].selectedBatches?.length ===
+        1
+      ) {
+        handleChangeItemQuantity(
+          selectedOption.uuid,
+          cartList[selectedIndex].cartItem[itemIndex].quantity + 1
+        );
+        const newCartList = [...cartList];
+        newCartList[selectedIndex].cartItem[
+          itemIndex
+        ].selectedBatches[0].additional_quantity += 1;
+        setCartList(newCartList);
+      }
     }
-    let newCartItem = {
-      id: cartList[selectedIndex].cartItem.length,
-      uuid: selectedOption.uuid,
-      quantity: 1,
-      barcode: selectedOption.bar_code,
-      unit_price: selectedOption.list_price,
-      img_url: selectedOption.img_url,
-      name: selectedOption.name,
-      branch_quantity: Number(selectedOption.branch_quantity),
-    };
-
-    let newCartList = update(cartList, {
-      [selectedIndex]: { cartItem: { $push: [newCartItem] } },
-    });
-    console.log(newCartList);
-    setCartList(newCartList);
-    setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
 
   const handleDeleteItemCart = (itemUuid) => {
@@ -299,20 +320,33 @@ const Cart = () => {
   };
 
   const handleChangeItemQuantity = (itemUuid, newQuantity) => {
-    if (newQuantity === 0) {
-      handleDeleteItemCart(itemUuid);
-      return;
-    }
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === itemUuid
     );
-    let newCartList = update(cartList, {
-      [selectedIndex]: {
-        cartItem: { [itemIndex]: { quantity: { $set: newQuantity } } },
-      },
-    });
+    let item = cartList[selectedIndex].cartItem.find(
+      (item) => item.uuid === itemUuid
+    );
+    if (newQuantity === 0 && !item.has_batches) {
+      handleDeleteItemCart(itemUuid);
+      return;
+    }
+    let newCartList = [...cartList];
+    newCartList[selectedIndex].cartItem[itemIndex].quantity = newQuantity;
     setCartList(newCartList);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
+  };
+
+  const handleUpdateBatches = (itemUuid, selectedBatches) => {
+    let itemIndex = cartList[selectedIndex].cartItem.findIndex(
+      (item) => item.uuid === itemUuid
+    );
+
+    if (itemIndex === -1) return;
+    const newCartList = [...cartList];
+    newCartList[selectedIndex].cartItem[itemIndex].selectedBatches =
+      selectedBatches;
+
+    setCartList(newCartList);
   };
 
   const handleChangeItemPrice = (itemUuid, newPrice) => {
@@ -579,6 +613,7 @@ const Cart = () => {
                         return (
                           <CartRow
                             row={row}
+                            handleUpdateBatches={handleUpdateBatches}
                             handleDeleteItemCart={handleDeleteItemCart}
                             handleChangeItemPrice={handleChangeItemPrice}
                             handleChangeItemQuantity={handleChangeItemQuantity}

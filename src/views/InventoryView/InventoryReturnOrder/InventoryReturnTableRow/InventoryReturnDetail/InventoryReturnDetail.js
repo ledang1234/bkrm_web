@@ -1,10 +1,9 @@
-import React, { useRef,useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { useReactToPrint } from "react-to-print";
-import {ReceiptPrinter} from "../../../../../components/ReceiptPrinter/ReceiptPrinter"
+import { ReceiptPrinter } from "../../../../../components/ReceiptPrinter/ReceiptPrinter";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import {calculateTotalQuantity} from "../../../../../components/TableCommon/util/sortUtil"
-
+import { calculateTotalQuantity } from "../../../../../components/TableCommon/util/sortUtil";
 
 //import library
 import {
@@ -16,6 +15,7 @@ import {
   Table,
   TableCell,
   TableRow,
+  Chip,
   Collapse,
   Button,
   ListItemIcon,
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 const InventoryReturnDetail = (props) => {
-  const { row, openRow ,} = props.parentProps;
+  const { row, openRow } = props.parentProps;
   //  tam thoi
   const currentUser = "Minh Tri";
   const info = useSelector((state) => state.info);
@@ -73,7 +73,7 @@ const InventoryReturnDetail = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -97,7 +97,7 @@ const InventoryReturnDetail = (props) => {
           store_uuid,
           row.uuid
         );
-        // console.log(res.data)
+        console.log("purchase return detail", res.data);
         setPurchaseReturn(res.data);
       } catch (error) {
         setPurchaseReturn({
@@ -115,14 +115,15 @@ const InventoryReturnDetail = (props) => {
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
-      content: () => componentRef.current,
+    content: () => componentRef.current,
   });
 
-  
-
-
   return (
-    <Collapse in={props.isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
+    <Collapse
+      in={props.isMini ? true : openRow === row.uuid}
+      timeout="auto"
+      unmountOnExit
+    >
       <Box margin={1}>
         <Typography
           variant="h3"
@@ -134,14 +135,14 @@ const InventoryReturnDetail = (props) => {
         </Typography>
 
         <Grid container direction="row" justifyContent="flex-start">
-          <Grid item xs={12}sm={5}>
+          <Grid item xs={12} sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Mã trả hàng nhập{" "}
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.purchase_return_code}{" "}
                 </Typography>
@@ -153,7 +154,7 @@ const InventoryReturnDetail = (props) => {
                   Mã đơn nhập
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {purchaseReturn.purchase_order
                     ? purchaseReturn.purchase_order.purchase_order_code
@@ -162,12 +163,12 @@ const InventoryReturnDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={7}sm={5}>
+              <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
                   Ngày trả{" "}
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.creation_date}{" "}
                 </Typography>
@@ -191,23 +192,23 @@ const InventoryReturnDetail = (props) => {
                   Người trả
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {purchaseReturn.created_by_user
                     ? purchaseReturn.created_by_user.name
-                    : "" }
+                    : ""}
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}sm={5}>
+          <Grid item xs={12} sm={5}>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={7} sm={6}>
                 <Typography variant="h5" gutterBottom component="div">
                   Trạng thái
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   Cần thu{" "}
                   <VNDFormat value={row.total_amount - row.paid_amount} />
@@ -215,10 +216,10 @@ const InventoryReturnDetail = (props) => {
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
-
-              <Grid item xs={7} sm={6} >
-                <Typography variant="h5" gutterBottom component="div">Tổng tiền trả </Typography>
-
+              <Grid item xs={7} sm={6}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Tổng tiền trả{" "}
+                </Typography>
               </Grid>
               <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
@@ -232,7 +233,7 @@ const InventoryReturnDetail = (props) => {
                   Chi nhánh thực hiện
                 </Typography>
               </Grid>
-              <Grid item  sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {purchaseReturn.branch ? purchaseReturn.branch.name : ""}
                 </Typography>
@@ -244,7 +245,7 @@ const InventoryReturnDetail = (props) => {
                   Phương thức trả
                 </Typography>
               </Grid>
-              <Grid item   sm={4}>
+              <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {row.payment_method === "cash" ? "Tiền mặt" : "Thẻ"}
                 </Typography>
@@ -279,7 +280,30 @@ const InventoryReturnDetail = (props) => {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                <TableCell align="right">{detail.quantity}</TableCell>
+                <TableCell align="right">
+                  <div>
+                    {detail.quantity}
+                    <div>
+                      {detail.batches
+                        ? JSON.parse(detail.batches).map((batch) => (
+                            <Chip
+                              size="small"
+                              label={`${
+                                batch?.batch_code ? batch?.batch_code : "Mới"
+                              }(${
+                                batch?.expiry_date
+                                  ? batch?.expiry_date.substring(0, 10)
+                                  : ""
+                              })-${batch.returned_quantity}`}
+                              key={batch.id}
+                              color={batch.is_new ? "primary" : "secondary"}
+                              variant="outlined"
+                            />
+                          ))
+                        : null}
+                    </div>
+                  </div>
+                </TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
                 </TableCell>
@@ -314,7 +338,7 @@ const InventoryReturnDetail = (props) => {
                   Tổng SL sản phẩm ({purchaseReturn.details.length})
                 </Typography>
               </Grid>
-              <Grid item xs={2}sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   {calculateTotalQuantity(purchaseReturn.details)}
                 </Typography>
@@ -340,26 +364,26 @@ const InventoryReturnDetail = (props) => {
                 <Typography variant="body1" gutterBottom component="div">200</Typography>
               </Grid>
             </Grid> */}
-            <Grid container direction="row" justifyContent={ "flex-end"}>
-
-              <Grid item xs={7} sm={2} >
-                <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
-
+            <Grid container direction="row" justifyContent={"flex-end"}>
+              <Grid item xs={7} sm={2}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Tổng tiền trả
+                </Typography>
               </Grid>
-              <Grid item xs={2}sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount} />
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent={ "flex-end"}>
+            <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
                   NCC đã trả
                 </Typography>
               </Grid>
-              <Grid item xs={2}sm={2}>
+              <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
@@ -413,7 +437,7 @@ const InventoryReturnDetail = (props) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem onClick={()=> handlePrint()}>
+            <StyledMenuItem onClick={() => handlePrint()}>
               <ListItemIcon style={{ marginRight: -15 }}>
                 <PrintTwoToneIcon fontSize="small" />
               </ListItemIcon>
@@ -430,14 +454,12 @@ const InventoryReturnDetail = (props) => {
         </Grid>
       </Box>
 
-       {/* 3. Receipt */}
-       <div style={{ display: "none" }}>
+      {/* 3. Receipt */}
+      <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ReceiptPrinter cart={purchaseReturn} date={row.creation_date} />
         </div>
       </div>
-
-
     </Collapse>
   );
 };

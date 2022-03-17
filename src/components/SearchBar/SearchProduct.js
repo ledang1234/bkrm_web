@@ -15,6 +15,7 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  Tooltip,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -70,10 +71,9 @@ export const FormatedImage = (props) => {
 };
 
 const SearchProduct = (props) => {
-
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [selectedOption, setSelectedOption] = useState(props.selected);
+  const [selectedOption, setSelectedOption] = useState({});
   const [options, setOptions] = React.useState([]);
 
   // redux
@@ -81,23 +81,36 @@ const SearchProduct = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-  const loadingData = async (e, searchKey, reason) => {
-    const response = await productApi.searchBranchProduct(
-      store_uuid,
-      branch_uuid,
-      searchKey
-    );
-    setOptions(response.data);
+  const loadingData = async (searchKey) => {
+    try {
+      const response = await productApi.searchBranchProduct(
+        store_uuid,
+        branch_uuid,
+        searchKey
+      );
+      setOptions(response.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const renderOption = (option) => {
     //display value in Popper elements
     return (
-      <Grid fullWidth container direction="row">
-        <Grid item xs={3}>
+      <Grid
+        fullWidth
+        container
+        direction="row"
+        style={{
+          backgroundColor: selectedOption.name
+            ? "rgba(164,247,247,0.3)"
+            : "rgba(0,0,0,0)",
+        }}
+      >
+        {/* <Grid item xs={3}>
           <FormatedImage url={option.img_url} />
-        </Grid>
-        <Grid item xs={9} container direction="column">
+        </Grid> */}
+        <Grid item xs={12} container direction="column">
           <Typography variant="h5">{`#${option.product_code}`}</Typography>
           <Typography variant="h5">{option.name}</Typography>
           <Grid container item direction="row" justifyContent="space-between">
@@ -107,6 +120,9 @@ const SearchProduct = (props) => {
             <Typography variant="body2">
               Giá bán: <VNDFormat value={option.list_price}></VNDFormat>
             </Typography>
+            <Typography variant="body2">
+              Giá nhập: <VNDFormat value={option.standard_price}></VNDFormat>
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -115,14 +131,12 @@ const SearchProduct = (props) => {
 
   const renderInput = (params) => (
     <CustomTextField
-    
       {...params}
       id="autoValue"
       fullWidth
       placeholder="Tìm sản phẩm (mã sp, tên)"
       variant="outlined"
       size="small"
-     
       InputProps={{
         ...params.InputProps,
         startAdornment: (
@@ -139,10 +153,36 @@ const SearchProduct = (props) => {
             />
           </InputAdornment>
         ),
-        
+
         style: {
           padding: " 10px",
         },
+      }}
+      onKeyDown={(e) => {
+        if (e.key === " ") {
+          // call search api and selected the first option
+          if (e.target.value) {
+            loadingData(e.target.value);
+          }
+        } else if (e.key === "Tab") {
+          e.preventDefault();
+          e.stopPropagation();
+          // increase if selected
+          console.log(selectedOption);
+          if (selectedOption.name) {
+            props.handleSearchBarSelect(selectedOption);
+          } else {
+            setSelectedOption(options.length ? options[0] : {});
+          }
+        } else if (e.key === "Backspace") {
+          if (selectedOption?.name) {
+            // console.log("reset");
+            e.preventDefault();
+            e.stopPropagation();
+            setSelectedOption({});
+            setOptions([]);
+          }
+        }
       }}
     />
   );
@@ -153,31 +193,38 @@ const SearchProduct = (props) => {
   const filterOptions = (options, state) => options;
   return (
     <div style={{ width: 320, paddingLeft: 20 }}>
-      <Autocomplete
-     
-        options={options}
-        freeSolo={true}
-        // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
-        // inputValue={inputValue}
+      <Tooltip
+        title={`Space: tìm kiếm, Tab để chọn lựa chọn đầu tiên và tăng số lượng, Delete để xóa lựa chọn hiện tại`}
+      >
+        <Autocomplete
+          options={selectedOption.name ? [selectedOption] : options}
+          freeSolo={true}
+          // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
+          // inputValue={inputValue}
 
-        // BỎ CÁI NÀY TỰ EMPTY
-        getOptionLabel={getOptionLabel}
-        onChange={(event, value) => {
-          if (value) {
-            // setSelectedOption(value);
-            props.handleSearchBarSelect(value);
-          }
-  
-        }}
-        onInputChange={loadingData}
-        renderInput={renderInput}
-        renderOption={renderOption}
-        filterOptions={filterOptions}
-      />
-
+          // BỎ CÁI NÀY TỰ EMPTY
+          autoComplete={false}
+          getOptionLabel={getOptionLabel}
+          onChange={(event, value) => {
+            if (value) {
+              setSelectedOption(value);
+            }
+          }}
+          renderInput={renderInput}
+          renderOption={renderOption}
+          filterOptions={filterOptions}
+          value={selectedOption}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+          }}
+          blurOnSelect={false}
+        />
+      </Tooltip>
     </div>
   );
 };
-
 
 export default SearchProduct;
