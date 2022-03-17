@@ -66,7 +66,6 @@ const productApi = {
     });
   },
 
-
   getNestedCategory: (storeUuid) => {
     const url = `stores/${storeUuid}/categories/getNestedCategory`;
     return axiosClient.get(url);
@@ -83,12 +82,17 @@ const productApi = {
   },
 
   editCategory: (storeUuid, categoryUuid, body) => {
-    const url = `stores/${storeUuid}/categories/${categoryUuid}`
-    return axiosClient.put(url, body)
+    const url = `stores/${storeUuid}/categories/${categoryUuid}`;
+    return axiosClient.put(url, body);
   },
   deleteCategory: (storeUuid, categoryUuid) => {
-    const url = `stores/${storeUuid}/categories/${categoryUuid}`
-    return axiosClient.delete(url)
-  }
+    const url = `stores/${storeUuid}/categories/${categoryUuid}`;
+    return axiosClient.delete(url);
+  },
+
+  createBatch: (storeUuid, branchUuid, body) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/createBatch`;
+    return axiosClient.post(url, body);
+  },
 };
 export default productApi;

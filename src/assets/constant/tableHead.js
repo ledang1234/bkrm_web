@@ -155,8 +155,9 @@ export const CustomerHeadCells = [
 
 export const CartHeadCells = [
   { id: "stt", align: "left", disablePadding: true, label: "Stt" },
-  { id: "id", align: "left", disablePadding: true, label: "Mã SP" },
+  { id: "product_code", align: "left", disablePadding: true, label: "Mã SP" },
   { id: "name", align: "left", disablePadding: true, label: "Tên" },
+  { id: "bar_code", align: "left", disablePadding: true, label: "Mã vạch" },
   { id: "price", align: "right", disablePadding: true, label: "Đơn giá" },
   { id: "quantity", align: "center", disablePadding: true, label: "Số lượng" },
   { id: "protein1", align: "right", disablePadding: true, label: "Thành tiền" },
@@ -164,8 +165,9 @@ export const CartHeadCells = [
 
 export const ImportHeadCells = [
   { id: "stt", align: "left", disablePadding: true, label: "Stt" },
-  { id: "barcode", align: "left", disablePadding: true, label: "Mã SP" },
+  { id: "product_code", align: "left", disablePadding: true, label: "Mã SP" },
   { id: "name", align: "left", disablePadding: true, label: "Tên" },
+  { id: "bar_code", align: "left", disablePadding: true, label: "Mã vạch" },
   { id: "price", align: "right", disablePadding: true, label: "Giá nhập" },
   { id: "quantity", align: "center", disablePadding: true, label: "Số lượng" },
   { id: "protein1", align: "right", disablePadding: true, label: "Thành tiền" },
@@ -222,7 +224,6 @@ export const CheckHeadCells = [
   { id: "balance", align: "right", disablePadding: true, label: "Lệch" },
 ];
 
-
 export const OrderListHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "date", align: "left", disablePadding: false, label: "Ngày đặt" },
@@ -267,7 +268,6 @@ export const CheckHistoryHeadCells = [
   },
 ];
 
-
 export const DeliveryHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "date", align: "left", disablePadding: false, label: "Ngày đặt" },
@@ -310,8 +310,6 @@ export const InventoryCheckHeadCells = [
   { id: "total", align: "right", disablePadding: false, label: "Giá trị lệch" },
 ];
 
-
-
 export const VoucherHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "name", align: "left", disablePadding: true, label: "Tên voucher" },
@@ -324,7 +322,12 @@ export const VoucherHeadCells = [
 
 export const DiscountHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
-  { id: "name", align: "left", disablePadding: true, label: "Tên chương trình" },
+  {
+    id: "name",
+    align: "left",
+    disablePadding: true,
+    label: "Tên chương trình",
+  },
   { id: "fromDate", align: "left", disablePadding: true, label: "Từ ngày" },
   { id: "toDate", align: "left", disablePadding: true, label: "Đến ngày" },
   { id: "type", align: "left", disablePadding: true, label: "Hình thức" },
