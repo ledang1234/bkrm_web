@@ -81,7 +81,7 @@ const InventoryReturnFilter = (props) => {
        
   
         {/* 2.Tien from-to*/}
-        <Typography variant="h5" className={classes.text} >Tiền đơn đặt hàng:</Typography>
+        <Typography variant="h5" className={classes.text} >Tiền trả:</Typography>
         <VNDInput required label="Từ" variant="outlined" fullWidth size="small" className={classes.textField}
           name="minTotalAmount"
           value={formik.values.minTotalAmount}
@@ -118,7 +118,7 @@ const InventoryReturnFilter = (props) => {
         </FormControl>
   
         {/* 5.Pttt */}
-        <Typography variant="h5" className={classes.text}>Hình thức trả:</Typography>
+        <Typography variant="h5" className={classes.text}>Phương thức thanh toán:</Typography>
         <FormControl
           className={classes.formControl}
           fullWidth

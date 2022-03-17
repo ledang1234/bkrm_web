@@ -9,7 +9,7 @@ import clsx from "clsx";
 import WarningIcon from '@material-ui/icons/Warning';
 const ButtonQuantity = (props) =>{
     const classes = useStyles();
-    const {quantity,setQuantity, limit, isReturn,branch_quantity,isMini} = props;
+    const {quantity,setQuantity, limit, isReturn,branch_quantity,isMini,isCustomer} = props;
     const [show, setShow] = React.useState('none');
   
     const handleIncrement = () => {
@@ -61,6 +61,7 @@ const ButtonQuantity = (props) =>{
       } 
     }
    
+
     return(
     <ListItem onMouseOver={handleShow} onMouseOut={handleClose}  > 
 
@@ -71,20 +72,19 @@ const ButtonQuantity = (props) =>{
               <WarningIcon fontSize="small"  style={{fill: "red"}}/> 
           </HtmlTooltip>:null}
 
-          
+          {/* margin:isMini?0:null, padding:isMini?0:null */}
           <IconButton style={{ display: isMini?true:show ,color: error_quantity  ? "red":null,margin:isMini?0:null, padding:isMini?0:null}} aria-label="delete" className={classes.margin} size="small" onClick={handleDecrement} >
             <RemoveIcon fontSize="inherit" />
           </IconButton> 
        
-           <TextField  variant={isMini? "outlined" : "standard"} id="standard-basic" style={{width:35 }} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: "right", color: error_quantity  ? "red":null, fontWeight:error_quantity ? 600:null,
+           <TextField  variant={isMini? "outlined" : "standard"} id="standard-basic" style={{width:isMini?45:35 ,padding:0, marginLeft:isCustomer?20:null,marginRight:isCustomer?20:null}} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: isMini?"center": "right", color: error_quantity  ? "red":null, fontWeight:error_quantity ? 600:null,
           backgroundColor:error_quantity ?"#ffe8e8":null
         }}} 
                 value={quantity} onChange={handleQuantity}/>
            
            
           {isReturn ? `/${limit}`: null}
-
-          <IconButton style={{ display: isMini?true:show ,color: error_quantity  ? "red":null ,margin:isMini?0:null, padding:isMini?0:null}} aria-label="delete" className={classes.margin} size="small" onClick={handleIncrement}>
+          <IconButton style={{ display: isMini?true:show ,color: error_quantity  ? "red":null ,margin:isMini?0:null, padding:isMini?0:null,} } aria-label="delete" className={classes.margin} size="small" onClick={handleIncrement}>
             <AddIcon fontSize="inherit" />
           </IconButton>
 

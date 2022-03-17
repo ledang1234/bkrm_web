@@ -304,7 +304,7 @@ const InventoryOrderDetail = (props) => {
               </Grid>
               <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  <VNDFormat value={row.total_amount}></VNDFormat>{" "}
+                  <VNDFormat value={row.total_amount  -row.discount}></VNDFormat>{" "}
                 </Typography>
               </Grid>
             </Grid>
@@ -450,7 +450,7 @@ const InventoryOrderDetail = (props) => {
                   Tổng SL sản phẩm ({purchaseOrder.details.length})
                 </Typography>
               </Grid>
-              <Grid item xs={2} sm={2}>
+              <Grid item  xs={3} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   {calculateTotalQuantity(purchaseOrder.details)}
                 </Typography>
@@ -463,7 +463,7 @@ const InventoryOrderDetail = (props) => {
                   Tiền hàng
                 </Typography>
               </Grid>
-              <Grid item xs={2} sm={2}>
+              <Grid item  xs={3} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.total_amount} />
                 </Typography>
@@ -477,7 +477,7 @@ const InventoryOrderDetail = (props) => {
                 </Typography>
               </Grid>
 
-              <Grid item xs={2} sm={2}>
+              <Grid item  xs={3} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.discount} />
                 </Typography>
@@ -490,7 +490,7 @@ const InventoryOrderDetail = (props) => {
                   Tổng tiền nhập
                 </Typography>
               </Grid>
-              <Grid item xs={2} sm={2}>
+              <Grid item  xs={3}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.total_amount - row.discount} />
                 </Typography>
@@ -503,7 +503,7 @@ const InventoryOrderDetail = (props) => {
                   Đã trả NCC
                 </Typography>
               </Grid>
-              <Grid item xs={2} sm={2}>
+              <Grid item xs={3}sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
@@ -518,8 +518,7 @@ const InventoryOrderDetail = (props) => {
           justifyContent={"flex-end"}
           style={{ marginTop: 20 }}
         >
-          {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
-          {currentUser === row.employee ? (
+          {/* {currentUser === row.employee ? (
             <>
               {" "}
               <Button
@@ -537,7 +536,7 @@ const InventoryOrderDetail = (props) => {
                 Xoá
               </Button>{" "}
             </>
-          ) : null}
+          ) : null} */}
 
           <Button
             variant="contained"
