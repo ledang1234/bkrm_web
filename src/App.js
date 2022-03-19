@@ -34,7 +34,11 @@ function App() {
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
     setPath(sessionStorage.getItem("BKRMprev"));
+    
   }, [dispatch]);
+  useEffect(() => {
+    console.log("reload")
+  })
   return (
     <ThemeProvider theme={themes(customization)}>
       <Box>

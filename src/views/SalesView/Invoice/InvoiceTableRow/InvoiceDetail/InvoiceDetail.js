@@ -366,9 +366,11 @@ function InvoiceDetail(props) {
                               size="small"
                               label={`${
                                 batch?.batch_code ? batch?.batch_code : "Mới"
-                              } - ${
-                                batch?.expiry_date ? batch?.expiry_date : ""
-                              } - ${batch.additional_quantity}`}
+                              }(${
+                                batch?.expiry_date
+                                  ? batch?.expiry_date.substring(0, 10)
+                                  : ""
+                              }) - ${batch.additional_quantity}`}
                               key={batch.id}
                               color={batch.is_new ? "primary" : "secondary"}
                               variant="outlined"
@@ -378,7 +380,31 @@ function InvoiceDetail(props) {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell align="right">{detail.returned_quantity}</TableCell>
+                {/* <TableCell align="right">{detail.returned_quantity}</TableCell> */}
+                <TableCell align="right">
+                  <div>
+                    {detail.returned_quantity}
+                    <div>
+                      {detail.batches
+                        ? JSON.parse(detail.batches).map((batch) => (
+                            <Chip
+                              size="small"
+                              label={`${
+                                batch?.batch_code ? batch?.batch_code : "Mới"
+                              }(${
+                                batch?.expiry_date
+                                  ? batch?.expiry_date.substring(0, 10)
+                                  : ""
+                              })-${batch.returned_quantity}`}
+                              key={batch.id}
+                              color={batch.is_new ? "primary" : "secondary"}
+                              variant="outlined"
+                            />
+                          ))
+                        : null}
+                    </div>
+                  </div>
+                </TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
                 </TableCell>

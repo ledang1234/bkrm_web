@@ -340,7 +340,7 @@ const Import = () => {
     setCartList(newCartList);
   };
 
-  const handleUpdatePaymentMethod = (method) => {
+  const handleUpdatePaymentMethod = ( method) => {
     let newCartList = update(cartList, {
       [selectedIndex]: { payment_method: { $set: method } },
     });
@@ -363,7 +363,6 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { total_amount: { $set: total } },
     });
-
     newCartList = update(newCartList, {
       [selectedIndex]: {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
@@ -397,7 +396,7 @@ const Import = () => {
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
       let body = {
-        supplier_uuid: cart.supplier ? cart.suplier.uuid : "",
+        supplier_uuid: cart.supplier ? cart.supplier.uuid : "",
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
         paid_amount: cart.paid_amount,

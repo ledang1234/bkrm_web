@@ -11,14 +11,19 @@ import {
   TableCell,
   TableRow,
   Collapse,
+  Chip,
+  TextField,
   Button,
   ListItemIcon,
   ListItemText,
+  Tooltip,
   IconButton,
   Switch,
   FormControlLabel
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import SelectBatch from "../SelectBatch/SelectBatch";
+import { DeleteOutline } from "@material-ui/icons";
 import update from "immutability-helper";
 import { useSelector } from "react-redux";
 import SearchBarCode from "../SearchBar/SearchBarCode"
@@ -361,49 +366,108 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDe
   const [show, setShow] = React.useState("none");
   useEffect(() => { }, [detail]);
 
+  const [checkedBatches, setCheckedBatches] = useState([])
   const onChangeRealQuantity = (newQuantity) => {
     handleItemRealQuantityChange(detail.id, newQuantity);
   };
+  const [selectBatchOpen, setSelectBatchOpen] = useState(false);
+  const [selectedBatches, setSelectedBatches] = useState([]);
   return (
-    <TableRow hover key={detail.id}>
-      <TableCell align="left" style={{ width: 5 }}>
-        {detail.product_code}
-      </TableCell>
-      {/* <TableCell align="left">{row.id}</TableCell> */}
-      <TableCell align="left">{detail.name}</TableCell>
-      <TableCell align="right"> <ThousandFormat  value={detail.branch_quantity} /></TableCell>
-      <TableCell align="center">
-        {/* <Input
-          id="standard-basic"
-          style={{ width: 70 }}
-          size="small"
-          inputProps={{ style: { textAlign: "right" } }}
-          defaultValue={detail.branch_quantity}
-          onChange={(e) => onChangeRealQuantity(e.target.value)}
-        /> */}
-        <ButtonQuantity
-          quantity={detail.real_quantity}
-          setQuantity={onChangeRealQuantity}
-          show={show}
-          setShow={setShow}
-          limit={detail.quantity}
-          isReturn={false}
-        />
-      </TableCell>
+    <>
+      <TableRow hover key={detail.id}>
+        <TableCell align="left" style={{ width: 5 }}>
+          {detail.product_code}
+        </TableCell>
+        {/* <TableCell align="left">{row.id}</TableCell> */}
+        <TableCell align="left">{detail.name}</TableCell>
+        <TableCell align="right">
+          {" "}
+          <ThousandFormat value={detail.branch_quantity} />
+        </TableCell>
 
-      <TableCell align="center">
-        <ThousandFormat  value={Number(detail.real_quantity) - Number(detail.branch_quantity)} />
-      </TableCell>
+        <TableCell align="left" padding="none">
+          <ButtonQuantity
+            quantity={detail.real_quantity}
+            setQuantity={onChangeRealQuantity}
+            show={show}
+            setShow={setShow}
+            limit={detail.quantity}
+            isReturn={false}
+          />
+        </TableCell>
 
-      <TableCell align="center" className={classes.boldText}>
-        <VNDFormat value={(Number(detail.real_quantity) - Number(detail.branch_quantity)) *
-          detail.standard_price} />
-      </TableCell>
-      <TableCell align="right" className={classes.boldText}>
-          <IconButton aria-label="expand row" size="small"style={{marginLeft:-25}} >
-            <DeleteForeverOutlinedIcon onClick={() => handleDeleteItem(detail.id)}/>
+        <TableCell align="center">
+          <ThousandFormat
+            value={
+              Number(detail.real_quantity) - Number(detail.branch_quantity)
+            }
+          />
+        </TableCell>
+
+        <TableCell align="center" className={classes.boldText}>
+          <VNDFormat
+            value={
+              (Number(detail.real_quantity) - Number(detail.branch_quantity)) *
+              detail.standard_price
+            }
+          />
+        </TableCell>
+        <TableCell align="right" className={classes.boldText}>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            style={{ marginLeft: -25 }}
+          >
+            <DeleteForeverOutlinedIcon
+              onClick={() => handleDeleteItem(detail.id)}
+            />
           </IconButton>
-      </TableCell>
-    </TableRow>
+        </TableCell>
+      </TableRow>
+      {detail.has_batches ? (
+        <TableRow>
+          <TableCell colSpan={1}></TableCell>
+          <TableCell colSpan={10}>
+            <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => setSelectBatchOpen(true)}
+              >
+                Chọn lô
+              </Button>
+              {checkedBatches.map((batch) => (
+                <Tooltip title={`Tồn kho - ${batch.quantity}`}>
+                  <Chip
+                    label={`${
+                      batch?.batch_code ? batch?.batch_code : "Mới"
+                    } - ${batch?.expiry_date ? batch?.expiry_date : ""} - ${
+                      batch.additional_quantity
+                    }`}
+                    key={batch.id}
+                    onDelete={() => {
+                      const newBatches = checkedBatches.filter(
+                        (selectedBatch) => selectedBatch.id !== batch.id
+                      );
+                      setCheckedBatches(newBatches);
+                    }}
+                    color={batch.is_new ? "primary" : "secondary"}
+                    deleteIcon={<DeleteOutline />}
+                    variant="outlined"
+                  />
+                </Tooltip>
+              ))}
+              {selectBatchOpen && (
+                <SelectBatch
+                  // handleSubmit={handleSelectBatches}
+                  row={detail}
+                  handleClose={() => setSelectBatchOpen(false)}
+                />
+              )}
+            </div>
+          </TableCell>
+        </TableRow>
+      ) : null}
+    </>
   );
 }
