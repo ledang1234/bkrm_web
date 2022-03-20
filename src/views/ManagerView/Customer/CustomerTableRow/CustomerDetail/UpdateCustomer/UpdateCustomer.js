@@ -57,11 +57,12 @@ const UpdateCustomer = (props) => {
       paymentInfo: props.customerDetail.paymentInfo,
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Nhập tên nhà cung cấp"),
+      name: Yup.string().required("Nhập tên khách hàng"),
       phone: Yup.string()
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại").matches(/^\d+$/),
-      address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+      // address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+      email: Yup.string().email("Email không chính xác")
     }),
   })
 
@@ -69,8 +70,8 @@ const UpdateCustomer = (props) => {
   const store_uuid = info.store.uuid
 
   const handleCloseAndReset =() =>{
-    onReload()
     handleClose()
+    onReload()
     customerFormik.resetForm()
   } 
   const dispatch = useDispatch()
@@ -128,7 +129,7 @@ const UpdateCustomer = (props) => {
                 fullWidth
                 size="small"
                 name= "address"
-                required
+                // required
                 onChange={customerFormik.handleChange}
                 value={customerFormik.values.address}
                 error={customerFormik.touched.address && customerFormik.errors.address}
@@ -179,7 +180,7 @@ const UpdateCustomer = (props) => {
         </Button>
         <Button
           onClick={async () => {
-            handleCloseAndReset()
+           
             let body = {
               name: customerFormik.values.name,
               email: customerFormik.values.email,
@@ -190,7 +191,9 @@ const UpdateCustomer = (props) => {
 
             try {
               const response = await customerApi.updateCustomer(store_uuid, props.customerDetail.uuid, body)
+              handleCloseAndReset()
               dispatch(statusAction.successfulStatus("Sửa thông tin khách hàng thành công"));
+              
             } catch (err) {
               dispatch(statusAction.failedStatus("Sửa thông tin khách hàng thất bại"));
             }

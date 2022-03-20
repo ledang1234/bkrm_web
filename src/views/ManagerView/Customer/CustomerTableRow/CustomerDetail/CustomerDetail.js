@@ -54,6 +54,7 @@ const UploadImage = () => {
 const CustomerDetail = (props) => {
 
   const { row, openRow } = props.parentProps;
+
   const { isMini } = props;
 
   const theme = useTheme();
@@ -63,6 +64,7 @@ const CustomerDetail = (props) => {
   const [deleteConfirm, setDeleteConfirm] = React.useState(false);
   const [editItem, setEditItem] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -89,6 +91,7 @@ const CustomerDetail = (props) => {
     }
   };
 
+  console.log("Row", row)
   return (
     <Collapse in={isMini ? true : openRow === row.uuid} timeout="auto" unmountOnExit>
       <ConfirmPopUp
@@ -159,19 +162,35 @@ const CustomerDetail = (props) => {
                 <Typography variant="h5" gutterBottom component="div">Email</Typography>
               </Grid>
               <Grid item sm={6} >
-                <Typography variant="body1" gutterBottom component="div">{row.address} </Typography>
+                <Typography variant="body1" gutterBottom component="div">{row.email} </Typography>
               </Grid>
             </Grid>
           </Grid>
 
 
           <Grid item xs={12} sm={4}>
+          <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={7} sm={6} >
+                <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>
+              </Grid>
+              <Grid item sm={6} >
+                <Typography variant="body1" gutterBottom component="div">{row.status === "active" ? "Kích hoạt" : "Ngưng hoạt động"}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={7} sm={6} >
+                <Typography variant="h5" gutterBottom component="div">Tích điểm</Typography>
+              </Grid>
+              <Grid item sm={6} >
+                <Typography variant="body1" gutterBottom component="div">{row.point}</Typography>
+              </Grid>
+            </Grid>
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={7} sm={6} >
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền mua</Typography>
               </Grid>
               <Grid item sm={6} >
-                <Typography variant="body1" gutterBottom component="div">3.000.000</Typography>
+                <Typography variant="body1" gutterBottom component="div">{row.total_payment}</Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
@@ -211,13 +230,36 @@ const CustomerDetail = (props) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
 
+            onClick={async () => {
+              if (row.status === "inactive") {
+                try {
+                  
+                  const response = await customerApi.updateCustomer(store_uuid, row.uuid ,{...row, status:'active'} )
+                  dispatch(statusAction.successfulStatus("Kích hoạt thành công"))
+                } catch (err) {
+                  console.log(err)
+                  dispatch(statusAction.failedStatus("Kích hoạt thất bại"))
+                }
+              } else if (row.status === "active") {
+                try {
+                  const response = await customerApi.updateCustomer(store_uuid, row.uuid,{...row, status:'inactive'})
+                  dispatch(statusAction.successfulStatus("Ngưng hoạt động thành công"))
+                } catch (err) {
+                  dispatch(statusAction.failedStatus("Ngưng hoạt động thất bại"))
+                }
+              }
+              
+              handleClose()
+              props.parentProps.onReload();
+  
+            }}
 
           >
             <StyledMenuItem>
-              <ListItemIcon style={{ marginRight: -15 }}>
+              <ListItemIcon style={{ marginRight: -15 }} >
                 <HighlightOffTwoToneIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Ngừng hoạt động" />
+              <ListItemText primary={row.status === "inactive" ? "Kích hoạt" : "Ngưng hoạt động"} />
             </StyledMenuItem>
 
           </StyledMenu>

@@ -102,7 +102,6 @@ export default function SignUp() {
       province: province,
       store_phone: store_formik.values.phone,
       default_branch: true,
-
       lat: lat ? lat.toString() : "",
       lng: lng ? lng.toString() : "",
     }
