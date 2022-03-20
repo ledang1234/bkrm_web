@@ -31,7 +31,7 @@ const supplierApi = {
   },
   updateSupplier: (storeUuid, supplierUuid, body) => {
     const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
-    return axiosClient.put(url, body);
+    return axiosClient.post(url, body);
   },
 };
 export default supplierApi;

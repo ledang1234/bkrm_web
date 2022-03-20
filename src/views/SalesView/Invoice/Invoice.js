@@ -187,8 +187,8 @@ const Invoice = () => {
         handlePrint={handlePrint}
         
         orderByOptions={[
-          {value: 'orders.created_at', label: 'Ngày mua'},
-          {value: 'total_amount', label: 'Tổng tiền mua'},
+          {value: 'orders.created_at', label: 'Ngày bán'},
+          {value: 'total_amount', label: 'Tổng tiền bán'},
         ]}
         orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
         sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}

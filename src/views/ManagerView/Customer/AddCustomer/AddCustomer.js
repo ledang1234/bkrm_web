@@ -61,6 +61,8 @@ const AddCustomer = (props) => {
       phone: Yup.string()
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại").matches(/^\d+$/),
+      
+      email: Yup.string().email("Email không chính xác")
       // address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
     }),
   })
@@ -128,7 +130,7 @@ const AddCustomer = (props) => {
                 fullWidth
                 size="small"
                 name= "address"
-                required
+                // required
                 onChange={customerFormik.handleChange}
                 value={customerFormik.values.address}
                 error={customerFormik.touched.address && customerFormik.errors.address}
@@ -137,19 +139,7 @@ const AddCustomer = (props) => {
               />
             </Grid>
             <Grid item sm={5}>
-              <TextField
-                id="date"
-                label="Thông tin thanh toán"
-                variant="outlined"
-                size="small"
-                className={classes.textField}
-                name = "paymentInfo"
-                onChange={customerFormik.handleChange}
-                value={customerFormik.values.paymentInfo}
-                error={customerFormik.touched.paymentInfo && customerFormik.errors.paymentInfo}
-                helperText={customerFormik.touched.paymentInfo ? customerFormik.errors.paymentInfo : null}
-                onBlur={customerFormik.handleBlur}
-              />
+              
               <TextField
                 id="outlined-basic"
                 label="Email"
@@ -161,6 +151,19 @@ const AddCustomer = (props) => {
                 value={customerFormik.values.email}
                 error={customerFormik.touched.email && customerFormik.errors.email}
                 helperText={customerFormik.touched.email ? customerFormik.errors.email : null}
+                onBlur={customerFormik.handleBlur}
+              />
+              <TextField
+                id="date"
+                label="Thông tin thanh toán"
+                variant="outlined"
+                size="small"
+                className={classes.textField}
+                name = "paymentInfo"
+                onChange={customerFormik.handleChange}
+                value={customerFormik.values.paymentInfo}
+                error={customerFormik.touched.paymentInfo && customerFormik.errors.paymentInfo}
+                helperText={customerFormik.touched.paymentInfo ? customerFormik.errors.paymentInfo : null}
                 onBlur={customerFormik.handleBlur}
               />
             </Grid>
@@ -178,8 +181,7 @@ const AddCustomer = (props) => {
           Huỷ
         </Button>
         <Button
-          onClick={async () => {
-            handleCloseAndReset()
+          onClick={async () => {     
             let body = {
               name: customerFormik.values.name,
               email: customerFormik.values.email,
@@ -191,6 +193,7 @@ const AddCustomer = (props) => {
             try {
               const response = await customerApi.createCustomer(store_uuid, body)
               dispatch(statusAction.successfulStatus("Tạo khách hàng thành công"));
+              handleCloseAndReset()
             } catch (err) {
               dispatch(statusAction.successfulStatus("Tạo khách hàng thất bại"));
             }

@@ -18,9 +18,12 @@ import {
 
 export default function AddBatch({ handleSubmit, handleClose, row }) {
   const [batch, setBatch] = useState({
+    id: new Date().toString(),
     batch_code: "",
-    additional_quantity: 0,
-    expiry_date: null,
+    // additional_quantity: 0,
+    // expiry_date: null,
+    additional_quantity: 1,
+    expiry_date: new Date().toISOString().substring(0, 10),
     position: "",
   });
   return (
@@ -43,7 +46,7 @@ export default function AddBatch({ handleSubmit, handleClose, row }) {
           margin="dense"
           name="expiry_date"
           fullWidth
-          defaultValue={new Date().toISOString().substring(0, 10)}
+          // defaultValue={new Date().toISOString().substring(0, 10)}
           type="date"
           label="Ngày hết hạn"
           value={batch.expiry_date}
@@ -59,9 +62,10 @@ export default function AddBatch({ handleSubmit, handleClose, row }) {
           label="Số lượng nhập"
           fullWidth
           value={batch.additional_quantity}
+          InputProps={{ inputProps: { min: 1 } }}
           onChange={(e) => {
             const value = Number(e.target.value);
-            if (value < 0) {
+            if (value <= 0) {
               return;
             } else {
               setBatch({ ...batch, additional_quantity: value });

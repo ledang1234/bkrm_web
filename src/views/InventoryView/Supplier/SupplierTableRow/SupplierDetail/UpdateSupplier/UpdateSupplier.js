@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 const UpdateSupplier = (props) => {
-  const { handleClose, open,supplierDetail } = props;
+  const { handleClose, open, supplierDetail } = props;
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -48,7 +48,7 @@ const UpdateSupplier = (props) => {
       name: supplierDetail?.name || "",
       email: supplierDetail?.email || "",
       phone: supplierDetail?.phone || "",
-      address:  supplierDetail?.address || "",
+      address: supplierDetail?.address || "",
       company: supplierDetail?.company || "",
       paymentInfo: supplierDetail?.payment_info || "",
     },
@@ -58,15 +58,16 @@ const UpdateSupplier = (props) => {
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại").matches(/^\d+$/),
       address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+      email: Yup.string().email("Email không chính xác")
     }),
-    enableReinitialize:true
+    enableReinitialize: true
   })
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const dispatch = useDispatch();
   const handleUpdateSupplier = async () => {
-    handleCloseAndReset()
+   
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", supplierFormik.values.name.toString());
@@ -75,18 +76,18 @@ const UpdateSupplier = (props) => {
       bodyFormData.append("payment_info", supplierFormik.values.paymentInfo.toString());
       bodyFormData.append("payment_info", supplierFormik.values.company.toString());
       bodyFormData.append("address", supplierFormik.values.address.toString());
-      await supplierApi.updateSupplier(store_uuid,supplierDetail.uuid,bodyFormData)
-      dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
+      await supplierApi.updateSupplier(store_uuid, supplierDetail.uuid, bodyFormData)
+      dispatch(statusAction.successfulStatus("Sửa nhà cung cấp thành công"));
       props.onReload();
     } catch (err) {
-      dispatch(statusAction.failedStatus("Tạo nhà cung cấp thất bại"));
+      dispatch(statusAction.failedStatus("Sửa nhà cung cấp thất bại"));
       console.log(err);
     }
   };
-  const handleCloseAndReset =() =>{
+  const handleCloseAndReset = () => {
     handleClose()
     supplierFormik.resetForm()
-  } 
+  }
   return (
     <SimpleModal
       open={open}
@@ -106,7 +107,7 @@ const UpdateSupplier = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              name = "name"
+              name="name"
               onChange={supplierFormik.handleChange}
               value={supplierFormik.values.name}
               error={supplierFormik.touched.name && supplierFormik.errors.name}
@@ -122,7 +123,7 @@ const UpdateSupplier = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              name= "address"
+              name="address"
               onChange={supplierFormik.handleChange}
               value={supplierFormik.values.address}
               error={supplierFormik.touched.address && supplierFormik.errors.address}
@@ -153,7 +154,7 @@ const UpdateSupplier = (props) => {
               variant="outlined"
               size="small"
               fullWidth
-              name = "email"
+              name="email"
               onChange={supplierFormik.handleChange}
               value={supplierFormik.values.email}
               error={supplierFormik.touched.email && supplierFormik.errors.email}
@@ -168,7 +169,7 @@ const UpdateSupplier = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              name = "company"
+              name="company"
               onChange={supplierFormik.handleChange}
               value={supplierFormik.values.company}
               error={supplierFormik.touched.company && supplierFormik.errors.company}
@@ -183,7 +184,7 @@ const UpdateSupplier = (props) => {
               variant="outlined"
               fullWidth
               size="small"
-              name = "paymentInfo"
+              name="paymentInfo"
               onChange={supplierFormik.handleChange}
               value={supplierFormik.values.paymentInfo}
               error={supplierFormik.touched.paymentInfo && supplierFormik.errors.paymentInfo}
@@ -216,9 +217,9 @@ const UpdateSupplier = (props) => {
             variant="contained"
             size="small"
             color="primary"
-            disabled = {!supplierFormik.isValid}
+            disabled={!supplierFormik.isValid}
           >
-            Thêm
+            Lưu thay đổi
           </Button>
         </Grid>
       </Box>

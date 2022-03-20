@@ -118,7 +118,7 @@ const SearchCustomer = (props) => {
         }}
        
         value={props.selectedCustomer}
-        options={props.customers}
+        options={props.customers.filter(item => item.status ==='active')}
         getOptionLabel={getOptionLabel}
         onChange={(event, value) => {
           if (value) {

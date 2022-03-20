@@ -233,6 +233,7 @@ const Import = () => {
 
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
+    console.log("selectedOption.batches",selectedOption.batches)
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === selectedOption.uuid
     );
@@ -416,6 +417,7 @@ const Import = () => {
         import_date: importTime,
       };
       try {
+        console.log(body)
         let res = await purchaseOrderApi.addInventory(
           store_uuid,
           branch.uuid,

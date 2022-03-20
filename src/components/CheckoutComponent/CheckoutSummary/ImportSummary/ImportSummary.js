@@ -174,7 +174,7 @@ const ImportSummary = (props) => {
               justifyContent="space-between"
               className={classes.marginBox}
             >
-              <Typography variant="h5">Tổng số mặt hàng ({cartData.cartItem.length}) </Typography>
+              <Typography variant="h5">Tổng SL sản phẩm ({cartData.cartItem.length}) </Typography>
               <Typography variant="body2">
                 <ThousandFormat
                   // value={cartData.cartItem.length}
@@ -234,7 +234,7 @@ const ImportSummary = (props) => {
               alignItems="center"
               className={classes.marginRow}
             >
-              <Typography variant="h5">Trả trước</Typography>
+              <Typography variant="h5">Trả NCC</Typography>
               <VNDInput
                 id="standard-basic"
                 style={{ width: 90 }}
@@ -246,7 +246,9 @@ const ImportSummary = (props) => {
                 onChange={(e) => handleUpdatePaidAmount(e.target.value)}
               />
             </Grid>
-            <Grid
+            { cartData.total_amount -
+                  cartData.discount -
+                  cartData.paid_amount > 0?<Grid
               container
               direction="row"
               justifyContent="space-between"
@@ -255,10 +257,10 @@ const ImportSummary = (props) => {
             >
               <Typography variant="h5">Còn lại</Typography>
               {/* <VNDInput
-                                    id="standard-basic" style={{ width: 90 }}
-                                    size="small" inputProps={{ style: { textAlign: "right" } }}
-                                    value={cartData.total_amount - cartData.discount - cartData.paid_amount}
-                                /> */}
+                    id="standard-basic" style={{ width: 90 }}
+                    size="small" inputProps={{ style: { textAlign: "right" } }}
+                    value={cartData.total_amount - cartData.discount - cartData.paid_amount}
+                /> */}
               <VNDFormat
                 // id="standard-basic" style={{ width: 90 }}
                 // size="small" inputProps={{ style: { textAlign: "right" } }}
@@ -268,7 +270,7 @@ const ImportSummary = (props) => {
                   cartData.paid_amount
                 }
               />
-            </Grid>
+            </Grid>:null}
 
             <Grid
               container

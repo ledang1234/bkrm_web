@@ -66,8 +66,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
-  const [branches, setBranches] = React.useState([]);
-
   // đổi thành state sau (price format)
   const [values, setValues] = React.useState({
     numberformat: "",
@@ -82,38 +80,23 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
   // employee info
   // const [typeSalary, setTypeSalary] = React.useState("");
 
-  useEffect(() => {}, [employee]);
-
-  React.useEffect(() => {
-    const loadBranches = async () => {
-      try {
-        const response = await branchApi.getAllBranches(store_uuid);
-        console.log(response.data);
-        setBranches(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    loadBranches();
-  }, [store_uuid]);
-
   const [imageToShow, setImageToShow] = React.useState(employee.img_url);
   const [image, setImage] = React.useState(null);
   const formik = useFormik({
     initialValues: {
-      uuid: employee.uuid,
-      name: employee.name,
-      user_name: employee.user_name,
+      uuid: employee.uuid || "",
+      name: employee.name || "",
+      user_name: employee.user_name || "",
       phone: employee.phone,
-      permissions: employee.permissions.map((p) => p.id),
-      email: employee.email,
-      salary: employee.salary,
-      salary_type: employee.salary_type,
-      id_card_num: employee.id_card_num,
-      gender: employee.gender,
-      date_of_birth: employee.date_of_birth,
-      address: employee.address,
-      branches: employee.branches.map((b) => b.id),
+      permissions: employee.permissions?.map((p) => p.id) || "",
+      email: employee.email || "",
+      salary: employee.salary || "",
+      salary_type: employee.salary_type || "",
+      id_card_num: employee.id_card_num || "",
+      gender: employee.gender || "",
+      date_of_birth: employee.date_of_birth || "",
+      address: employee.address || "",
+      branches: employee.branches?.map((b) => b.id) || "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Bắt buộc!"),
@@ -124,22 +107,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
 
     onSubmit: async (values, actions) => {
       let formData = new FormData();
-
-      for (let value in values) {
-        if (value === "permissions") {
-          for (var i = 0; i < values["permissions"].length; i++) {
-            formData.append("permissions[]", values["permissions"][i]);
-          }
-        } else if (value === "branches") {
-          for (var i = 0; i < values["branches"].length; i++) {
-            formData.append("branches[]", values["branches"][i]);
-          }
-        } else {
-          if (values[value]) {
-            formData.append(value, values[value]);
-          }
-        }
-      }
 
       if (image) {
         formData.append("image", image);
@@ -173,7 +140,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
     >
       <DialogTitle id="form-dialog-title">
         <Typography className={classes.headerTitle} variant="h5">
-          Sửa thông tin nhân viên
+         {fromAvatar?"Thông tin cá nhân":"Sửa thông tin nhân viên" } 
         </Typography>
       </DialogTitle>
 
@@ -340,8 +307,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 name="address"
               />
             </Grid>
-
-            {!fromAvatar && <Grid item xs={6}>
+            <Grid item xs={6}>
               {/* Select lưong */}
               <FormControl
                 className={classes.formControl}
@@ -349,6 +315,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 size="small"
                 variant="outlined"
                 style={{ marginTop: 8 }}
+                disabled ={fromAvatar}
               >
                 <InputLabel id="demo-simple-select-outlined-label">
                   Lương{" "}
@@ -375,6 +342,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 fullWidth
                 size="small"
                 value={formik.values.salary}
+                disabled ={fromAvatar}
                 name="salary"
                 // value={values.numberformat}
                 // onChange={handleChange}
@@ -392,6 +360,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 size="small"
                 variant="outlined"
                 style={{ marginTop: 8 }}
+                disabled ={fromAvatar}
               >
                 <InputLabel id="branchSelect">Chức năng</InputLabel>
                 <Select
@@ -422,46 +391,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
               {formik.errors.permissions && formik.touched.permissions && (
                 <FormHelperText error>{formik.errors.permissions}</FormHelperText>
               )}
-              <FormControl
-                className={classes.formControl}
-                fullWidth
-                size="small"
-                variant="outlined"
-                style={{ marginTop: 8 }}
-              >
-                <InputLabel id="branchSelect">Chi nhánh </InputLabel>
-                <Select
-                  multiple
-                  variant="outlined"
-                  fullWidth
-                  id="branches"
-                  name="branches"
-                  onChange={formik.handleChange}
-                  size="small"
-                  value={formik.values.branches}
-                  renderValue={(selected) =>
-                    selected
-                      .map((empWorkBranch) => {
-                        return branches.find(
-                          (branch) => branch.id === empWorkBranch
-                        )?.name;
-                      })
-                      .join(", ")
-                  }
-                >
-                  {branches.map((branch) => (
-                    <MenuItem key={branch.name} value={branch.id}>
-                      {branch.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-
-                {formik.errors.branches && formik.touched.branches && (
-                <FormHelperText error>{formik.errors.branches}</FormHelperText>
-              )}
-              </FormControl>
             </Grid>
-            } 
           </Grid>
         </div>
       </DialogContent>

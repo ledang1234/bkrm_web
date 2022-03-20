@@ -51,7 +51,7 @@ const HomePage = (props) => {
   const container =
     window !== undefined ? () => window().document.body : undefined;
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const customization = useSelector((state) => state.customize);
   const infoDetail = useSelector((state) => state.info);
@@ -59,8 +59,8 @@ const HomePage = (props) => {
     customization.isSidebarOpen === null
       ? !smallScreen
       : customization.isSidebarOpen;
-  
-  const roleUser = infoDetail.role === "owner" ? "Chủ cửa hàng" : "Nhân viên" 
+
+  const roleUser = infoDetail.role === "owner" ? "Chủ cửa hàng" : "Nhân viên"
 
   const permissions = useSelector((state) => state.info.user.permissions);
 
@@ -71,6 +71,7 @@ const HomePage = (props) => {
   const handleToggleSidebar = (open) => {
     dispatch(customizeAction.setSidebarOpen(open));
   };
+
 
   const divLogo = () => {
     if (!smallScreen)
@@ -125,11 +126,11 @@ const HomePage = (props) => {
     sessionStorage.removeItem("BKRMopening");
 
   };
- 
-  const [openUserInfo,setOpenUserInfo] = useState(false)
+
+  const [openUserInfo, setOpenUserInfo] = useState(false)
   return (
     <div className={classes.root}>
-      {/* <EditEmployee open={openUserInfo} handleClose = {() =>setOpenUserInfo(false)}/> */}
+      {openUserInfo && <EditEmployee open={openUserInfo} handleClose = {() =>setOpenUserInfo(false)} employee ={infoDetail.user} fromAvatar={true}/>}
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolBar}>
           {divLogo()}
@@ -156,7 +157,7 @@ const HomePage = (props) => {
 
             <Box display="flex" flexDirection="row" alignItems="center">
               <BranchSelectAppBar store_uuid={infoDetail.store.uuid} />
-              <IconButton color="primary" size="small" onClick={()=>setOpenUserInfo(true)} >
+              <IconButton color="primary" size="small" onClick={() => { setOpenUserInfo(true); console.log(infoDetail) }} >
                 <PersonIcon fontSize="large" />
               </IconButton>
               <Box
@@ -165,12 +166,12 @@ const HomePage = (props) => {
                 justifyContent="center"
                 style={{ width: 200, marginLeft: 10, marginRight: 5 }}
               >
-                <Typography variant="h6" style={{fontWeight:700, fontSize:13}}>{roleUser}</Typography>
+                <Typography variant="h6" style={{ fontWeight: 700, fontSize: 13 }}>{roleUser}</Typography>
                 <Typography variant="h6" noWrap>
                   {infoDetail.user.name}
                 </Typography>
               </Box>
-              
+
               <Button color="primary" onClick={() => logOutHandler()}>
                 Logout
               </Button>
@@ -211,13 +212,13 @@ const HomePage = (props) => {
       >
         <div className={classes.drawerHeader} />
         <Box
-          className={ !xsScreen? clsx([classes.background], {
+          className={!xsScreen ? clsx([classes.background], {
             [classes.marginBackground]: !isSidebarOpen,
           }) :
-          clsx([classes.backgroundMini], {
-            [classes.marginBackground]: false,
-          }) 
-        }
+            clsx([classes.backgroundMini], {
+              [classes.marginBackground]: false,
+            })
+          }
         >
           <Switch>
             {permissions?.find((p) => p.name === "sales") && (
@@ -235,8 +236,8 @@ const HomePage = (props) => {
             )}
             <Route path={`${path}/`} >
               {/* only redirect whenever permissions is successfully loaded => length at least = 1 */}
-              {permissions?.length > 0 ? 
-              (<Redirect to={permissions?.find((p) => p.name === "sales") ? `${path}/sales` : permissions?.find((p) => p.name === "inventory") ? `${path}/inventory` : permissions?.find((p) => p.name === "employee") ? `${path}/hr` : `${path}/manager`} />) :null }
+              {permissions?.length > 0 ?
+                (<Redirect to={permissions?.find((p) => p.name === "sales") ? `${path}/sales` : permissions?.find((p) => p.name === "inventory") ? `${path}/inventory` : permissions?.find((p) => p.name === "employee") ? `${path}/hr` : `${path}/manager`} />) : null}
             </Route>
             <Route path={`${path}/*`} component={PageNotFound} />
           </Switch>

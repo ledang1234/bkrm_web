@@ -37,7 +37,6 @@ const UserInfo = (props) => {
         <Grid item xs={6}>
           <TextField
             variant="outlined"
-            required
             fullWidth
             name="dateOfBirth"
             type="date"
@@ -45,19 +44,6 @@ const UserInfo = (props) => {
             label="Ngày sinh"
             onChange={user_formik.handleChange}
             value={user_formik.values.dateOfBirth}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            fullWidth
-            label="Địa chỉ email"
-            name="email"
-            onChange={user_formik.handleChange}
-            value={user_formik.values.email}
-            error={user_formik.touched.email && user_formik.errors.email}
-            helperText={user_formik.touched.email ? user_formik.errors.email : null}
-            onBlur={user_formik.handleBlur}
           />
         </Grid>
         <Grid item xs={12}>

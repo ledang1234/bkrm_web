@@ -188,7 +188,7 @@ function InvoiceDetail(props) {
         paid={Number(row.paid_amount)}
         title={
           <Typography variant="h4">
-            Thu thêm hóa đơn <i>{row.purchase_order_code}</i>
+            Thu thêm hóa đơn <i>{row.order_code}</i>
           </Typography>
         }
         open={openPayRemaining}
