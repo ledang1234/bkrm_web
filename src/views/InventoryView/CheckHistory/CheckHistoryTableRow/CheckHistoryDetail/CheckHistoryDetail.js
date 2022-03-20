@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
-import {Dialog,Card,DialogContent,Box,Grid,TableHead,TableBody,Typography,Table,TableCell,TableRow,Collapse,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
+import {Tooltip, Chip, Dialog,Card,DialogContent,Box,Grid,TableHead,TableBody,Typography,Table,TableCell,TableRow,Collapse,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
 
 //import icon
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -88,9 +88,17 @@ const CheckHistoryDetail = (props) => {
     ?.map((detail) => detail.quantity * detail.unit_price)
     .reduce((total, ele) => total + ele, 0)
 
+    useEffect(() => {
+      console.log(row)
+    }, [])
+
     return (
       // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
-      <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
+      <Collapse
+        in={isMini ? true : openRow === row.uuid}
+        timeout="auto"
+        unmountOnExit
+      >
         <Box margin={1}>
           <Typography
             variant="h3"
@@ -102,14 +110,14 @@ const CheckHistoryDetail = (props) => {
           </Typography>
 
           <Grid container direction="row" justifyContent="flex-start">
-            <Grid item  xs={12}sm={5}>
+            <Grid item xs={12} sm={5}>
               <Grid container direction="row" justifyContent="flex-start">
                 <Grid item xs={5} sm={5}>
                   <Typography variant="h5" gutterBottom component="div">
                     Mã đơn kiểm
                   </Typography>
                 </Grid>
-                <Grid item  sm={4}>
+                <Grid item sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.inventory_check_code}{" "}
                   </Typography>
@@ -121,7 +129,7 @@ const CheckHistoryDetail = (props) => {
                     Ngày kiểm{" "}
                   </Typography>
                 </Grid>
-                <Grid item  sm={4}>
+                <Grid item sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.created_at}{" "}
                   </Typography>
@@ -183,7 +191,7 @@ const CheckHistoryDetail = (props) => {
                     Chi nhánh thực hiện
                   </Typography>
                 </Grid>
-                <Grid item  sm={4}>
+                <Grid item sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.branch_name}
                   </Typography>
@@ -195,7 +203,7 @@ const CheckHistoryDetail = (props) => {
                     Người thực hiện
                   </Typography>
                 </Grid>
-                <Grid item  sm={4}>
+                <Grid item sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     {row.user_name}
                   </Typography>
@@ -231,15 +239,65 @@ const CheckHistoryDetail = (props) => {
                     {detail.product_code}
                   </TableCell>
                   <TableCell>{detail.product_name}</TableCell>
-                  <TableCell align="right"><ThousandFormat value={detail.branch_inventory} /></TableCell>
                   <TableCell align="right">
-                  <ThousandFormat value={Number(detail.branch_inventory) + Number(detail.quantity)} />
+                    <ThousandFormat value={detail.branch_inventory} />
+
+                    <div>
+                      {JSON.parse(detail.batches)?.filter((batch) => batch.is_checked)
+                        .map((checked_batch) => (
+                          <div>
+                          <Tooltip
+                            title={`${
+                              checked_batch.position ? checked_batch.position : ""
+                            }-${
+                              checked_batch.expiry_date
+                                ? checked_batch.expiry_date
+                                : ""
+                            }`}
+                          >
+                            <Chip
+                              label={`${checked_batch.batch_code}-${checked_batch.quantity}`}
+                              size="small"
+                            ></Chip>
+                          </Tooltip>
+                        </div>
+                        ))}
+                    </div>
+                  </TableCell>
+                  <TableCell align="right">
+                    <ThousandFormat
+                      value={
+                        Number(detail.branch_inventory) +
+                        Number(detail.quantity)
+                      }
+                    />
+                    <div>
+                      {JSON.parse(detail.batches)?.filter((batch) => batch.is_checked)
+                        .map((checked_batch) => (
+                          <div>
+                          <Tooltip
+                            title={`${
+                              checked_batch.position ? checked_batch.position : ""
+                            }-${
+                              checked_batch.expiry_date
+                                ? checked_batch.expiry_date
+                                : ""
+                            }`}
+                          >
+                            <Chip
+                              size="small"
+                              label={`${checked_batch.batch_code}-${checked_batch.checked_quantity}`}
+                            ></Chip>
+                          </Tooltip>
+                        </div>
+                        ))}
+                    </div>
                   </TableCell>
                   <TableCell align="right" style={{ fontWeight: 700 }}>
-                  <ThousandFormat value={detail.quantity} />
+                    <ThousandFormat value={detail.quantity} />
                   </TableCell>
                   <TableCell align="right" style={{ fontWeight: 700 }}>
-                  <VNDFormat value={detail.quantity * detail.unit_price} />
+                    <VNDFormat value={detail.quantity * detail.unit_price} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -254,29 +312,37 @@ const CheckHistoryDetail = (props) => {
             }}
           >
             <Grid container direction="column">
-              <Grid container direction="row" justifyContent={ "flex-end"}>
+              <Grid container direction="row" justifyContent={"flex-end"}>
                 <Grid item xs={5} sm={2}>
                   <Typography variant="h5" gutterBottom component="div">
-                    Tổng SL lệch 
+                    Tổng SL lệch
                   </Typography>
                 </Grid>
                 <Grid item xs={3} sm={2}>
                   <Typography variant="body1" gutterBottom component="div">
-                    <ThousandFormat value={row.details
-                      ?.map((detail) => detail.quantity )
-                      .reduce((total, ele) => total + ele, 0)} />
+                    <ThousandFormat
+                      value={row.details
+                        ?.map((detail) => detail.quantity)
+                        .reduce((total, ele) => total + ele, 0)}
+                    />
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container direction="row" justifyContent={ "flex-end"}>
+              <Grid container direction="row" justifyContent={"flex-end"}>
                 <Grid item xs={5} sm={2}>
-                  <Typography variant="h5" gutterBottom component="div" >
+                  <Typography variant="h5" gutterBottom component="div">
                     Tổng tiền lệch
                   </Typography>
                 </Grid>
-                <Grid item  xs={3} sm={2}>
+                <Grid item xs={3} sm={2}>
                   <Typography variant="body1" gutterBottom component="div">
-                    <VNDFormat  style={{fontWeight:700,color:moneyDif >0 ?"green" :"red"}} value={moneyDif} />
+                    <VNDFormat
+                      style={{
+                        fontWeight: 700,
+                        color: moneyDif > 0 ? "green" : "red",
+                      }}
+                      value={moneyDif}
+                    />
                   </Typography>
                 </Grid>
               </Grid>

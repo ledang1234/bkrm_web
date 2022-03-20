@@ -26,7 +26,7 @@ import SnackBarGeneral from '../../SnackBar/SnackBarGeneral';
 import {statusAction} from '../../../store/slice/statusSlice';
 import {ReturnCartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-
+import _ from 'lodash';
 
 function InvoiceReturnPopUp(props) {
   const { order, classes, handleCloseReturn , reload, reloadDetail } = props;
@@ -60,6 +60,13 @@ function InvoiceReturnPopUp(props) {
       // returnQuantity: detail.quantity,
       returnQuantity: 0,
       returnPrice: detail.unit_price,
+      selectedBatches: JSON.parse(detail.batches)?.map((batch) => ({
+        ...batch,
+        max_return_quantity:
+          batch.additional_quantity - batch.returned_quantity,
+        returned_quantity: 0,
+      })),
+      order_batches: JSON.parse(detail.batches),
     })),
     payment_method: 'cash',
     paid_amount: '0',
@@ -69,6 +76,23 @@ function InvoiceReturnPopUp(props) {
     style: 'error',
     message: 'Trả hàng thất bại',
   });
+
+  const handleChangeBatches = (itemId, newBatches) => {
+    const itemIndex = refund.details.findIndex(
+      (item) => item.id === itemId
+    );
+    const newRefund = _.cloneDeep(refund);
+
+    // console.log(newBatches);
+    newRefund.details[itemIndex].selectedBatches = newBatches;
+    newRefund.details[itemIndex].returnQuantity = _.sumBy(
+      newBatches,
+      "returned_quantity"
+    );
+    // console.log(newRefund);
+    setRefund(newRefund);
+    setIsUpdateTotalAmount(!isUpdateTotalAmount);
+  };
 
   useEffect(() => {
     updateTotalAmount();
@@ -156,7 +180,21 @@ function InvoiceReturnPopUp(props) {
         product_id: detail.product_id,
         quantity: detail.returnQuantity,
         unit_price: detail.returnPrice,
-        order_detail_id: detail.id
+        order_detail_id: detail.id,
+        selectedBatches: detail.selectedBatches.map((batch) =>
+          _.omit(batch, ["additional_quantity", "max_return_quantity"])
+        ),
+        order_batches: detail.order_batches.map((batch) => {
+          const newBatch = {
+            ...batch,
+            returned_quantity:
+              batch.returned_quantity +
+              detail.selectedBatches.find(
+                (selectedBatch) => selectedBatch.id === batch.id
+              ).returned_quantity,
+          };
+          return newBatch;
+        }),
       })),
       import_date,
     };
@@ -231,6 +269,7 @@ function InvoiceReturnPopUp(props) {
                         handleProductPriceChange={handleProductPriceChange}
                         handleItemQuantityChange={handleItemQuantityChange}
                         detail={detail}
+                        handleChangeBatches={handleChangeBatches}
                       />
                     
                     ))}
@@ -272,7 +311,7 @@ function InvoiceReturnPopUp(props) {
 
 export default InvoiceReturnPopUp;
 
-function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuantityChange }) {
+function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuantityChange, handleChangeBatches }) {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -299,7 +338,7 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
         <Input.ThousandSeperatedInput id="standard-basic" style={{ width: 70 }} size="small" inputProps={{ style: { textAlign: 'right' } }} defaultPrice={detail.returnPrice} onChange={(e) => handleChangePrice(e.target.value)} />
       </TableCell>
 
-      <TableCell align="left" padding="none">
+      {/* <TableCell align="left" padding="none">
         <ButtonQuantity
           quantity={detail.returnQuantity}
           limit={detail.quantity - detail.returned_quantity}
@@ -308,7 +347,63 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
           setShow={setShow}
           isReturn={true}
         />
+      </TableCell> */}
+            <TableCell align="left" padding="none">
+        {detail.selectedBatches.length ? (
+          detail.selectedBatches.map((batch, index) => (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 5,
+                marginBottom: 5,
+                alignItems: "center",
+                border: "1px solid #eee",
+                justifyContent: "space-around",
+              }}
+            >
+              <div>
+                {`${batch.batch_code} ${
+                  batch?.expiry_date
+                    ? "-" + batch?.expiry_date.substring(0, 10)
+                    : ""
+                }: `}
+              </div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <TextField
+                  type="number"
+                  size="small"
+                  style={{ width: 30 }}
+                  value={batch.returned_quantity}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+
+                    if (value > batch.max_return_quantity || value < 0) {
+                      return;
+                    } else {
+                      console.log(value);
+                      const newSelectedBatches = [...detail.selectedBatches];
+                      newSelectedBatches[index].returned_quantity = value;
+                      handleChangeBatches(detail.id, newSelectedBatches);
+                    }
+                  }}
+                ></TextField>
+                <div>{`/${batch.max_return_quantity}`}</div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <ButtonQuantity
+            quantity={detail.returnQuantity}
+            setQuantity={handleChangeQuantity}
+            show={show}
+            setShow={setShow}
+            limit={detail.quantity - detail.returned_quantity}
+            isReturn={true}
+          />
+        )}
       </TableCell>
+
 
       <TableCell align="right" className={classes.boldText}>
      < Input.VNDFormat value={Number(detail.returnQuantity) * Number(detail.returnPrice)} />

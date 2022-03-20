@@ -162,12 +162,7 @@ const SearchProduct = (props) => {
         },
       }}
       onKeyDown={(e) => {
-        if (e.key === " ") {
-          // call search api and selected the first option
-          if (e.target.value) {
-            loadingData(e.target.value);
-          }
-        } else if (e.key === "Tab") {
+        if (e.key === "Tab") {
           e.preventDefault();
           e.stopPropagation();
           // increase if selected
@@ -183,8 +178,14 @@ const SearchProduct = (props) => {
             e.preventDefault();
             e.stopPropagation();
             setSelectedOption({});
-            setOptions([]);
           }
+        } else {
+          const timer = setTimeout(() => {
+            if (e.target.value) {
+              loadingData(e.target.value);
+            }
+          }, 1);
+          return () => clearTimeout(timer);
         }
       }}
     />

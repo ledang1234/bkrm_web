@@ -10,7 +10,6 @@ import { VNDFormat } from '../../../../components/TextField/NumberFormatCustom';
 function InvoiceReturnTableRow(props) {
   const { row, handleOpenRow, openRow } = props;
   const classes = useRowStyles();
-  console.log(row);
   return (
     <>
       {/* ROW */}
