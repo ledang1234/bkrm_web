@@ -102,6 +102,8 @@ const AddInventory = (props) => {
       re_order_point: 0,
       product_code: "",
       has_batches: false,
+      quantity:0,
+      max_order:null
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
@@ -149,6 +151,16 @@ const AddInventory = (props) => {
       bodyFormData.append(
         "min_reorder_quantity",
         productFormik.values.re_order_point.toString()
+      );
+
+      bodyFormData.append(
+        "max_order",
+        productFormik.max_order.toString()
+      );
+
+      bodyFormData.append(
+        "quantity",
+        productFormik.values.quantity.toString()
       );
       bodyFormData.append(
         "category_uuid",
@@ -342,6 +354,19 @@ const AddInventory = (props) => {
       bodyFormData.append(
         "min_reorder_quantity",
         productFormik.values.re_order_point.toString()
+      );
+      bodyFormData.append(
+        "quantity_per_unit",
+        productFormik.values.unit.toString()
+      );
+      bodyFormData.append(
+        "min_reorder_quantity",
+        productFormik.values.re_order_point.toString()
+      );
+
+      bodyFormData.append(
+        "max_order",
+        productFormik.max_order.toString()
       );
 
       bodyFormData.append(
@@ -561,6 +586,27 @@ const AddInventory = (props) => {
               onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
+             <TextField
+              label="Tồn kho ban đầu"
+              variant="outlined"
+              fullWidth
+              size="small"
+              className={classes.margin}
+              name="quantity"
+              value={productFormik.values.quantity}
+              onChange={productFormik.handleChange}
+              error={
+                productFormik.touched.quantity &&
+                productFormik.errors.quantity
+              }
+              helperText={
+                productFormik.touched.quantity
+                  ? productFormik.errors.quantity
+                  : null
+              }
+              onBlur={productFormik.handleBlur}
+            />
+
             <TextField
               label="Số lượng đặt hàng lại"
               variant="outlined"
@@ -581,6 +627,27 @@ const AddInventory = (props) => {
               }
               onBlur={productFormik.handleBlur}
             />
+             <TextField
+              label="Số lượng nhập hàng tối đa"
+              variant="outlined"
+              fullWidth
+              size="small"
+              className={classes.margin}
+              name="max_order"
+              value={productFormik.values.max_order}
+              onChange={productFormik.handleChange}
+              error={
+                productFormik.touched.max_order &&
+                productFormik.errors.max_order
+              }
+              helperText={
+                productFormik.touched.max_order
+                  ? productFormik.errors.max_order
+                  : null
+              }
+              onBlur={productFormik.handleBlur}
+            />
+       
           </Grid>
         </Grid>
         <Grid container spacing={2}>
