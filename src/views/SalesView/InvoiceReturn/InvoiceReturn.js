@@ -141,7 +141,7 @@ function InvoiceReturn() {
     if (store_uuid && branch_uuid) {
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, branch_uuid, query]);
+  }, [pagingState.page, pagingState.limit, store_uuid, branch_uuid, query]);
 
   return (
     <Card className={classes.root}>
@@ -169,7 +169,7 @@ function InvoiceReturn() {
         orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
         sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
-        
+        handleRemoveFilter={handleRemoveFilter}
       />
       <InvoiceReturnFilter
         openFilter={openFilter}

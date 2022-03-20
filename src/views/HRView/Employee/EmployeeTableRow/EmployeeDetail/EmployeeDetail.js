@@ -115,7 +115,7 @@ const EmployeeDetail = (props) => {
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-
+  const [reload, setReload] = useState(false)
   useEffect(() => {
     const fetchEmp = async () => {
       try {
@@ -138,10 +138,10 @@ const EmployeeDetail = (props) => {
         });
       }
     };
-    if (openRow === row.uuid) {
+    if (openRow === row.uuid && store_uuid) {
       fetchEmp();
     }
-  }, [openRow]);
+  }, [openRow,reload]);
   const [changePwd, setChangePwd] = useState(false)
   return (
     <Collapse in={isMini ? true : openRow === row.uuid} timeout="auto" unmountOnExit>
@@ -149,6 +149,7 @@ const EmployeeDetail = (props) => {
         handleClose={(status) => {
           if (status === "Success") {
             dispatch(statusAction.successfulStatus("Chỉnh sửa thành công"))
+            setReload(!reload)
           } else if (status === "Failed") {
             dispatch(statusAction.failedStatus("Chỉnh sửa thất bại"))
           }

@@ -134,7 +134,6 @@ const AddEmployee = (props) => {
       formData.append("image", image);
       formData.append("status", "active");
 
-      console.log(formData);
 
       try {
         const response = await employeeApi.createEmployee(
