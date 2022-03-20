@@ -78,10 +78,14 @@ export default function SignUp() {
       (district) => district.id === store_formik.values.district
     ).name;
 
-    // const { lat, lng } = await getGeoCode(
-    //   store_formik.values.address + " " + ward + " " + district + " " + province
-    // );
-
+    let lat, lng;
+    try {
+      ({ lat, lng } = await getGeoCode(
+        store_formik.values.address + " " + ward + " " + district + " " + province
+      ));
+    } catch (error) {
+      console.log(error)
+    }
     const body = {
       name: user_formik.values.name,
       email: user_formik.values.email,
@@ -98,24 +102,17 @@ export default function SignUp() {
       province: province,
       store_phone: store_formik.values.phone,
       default_branch: true,
-      // lat: lat,
-      // lng: lng
-      lat:"",
-      lng:""
+
+      lat: lat ? lat.toString() : "",
+      lng: lng ? lng.toString() : "",
     }
     try {
       const response = await userApi.ownerRegister(body);
       dispatch(statusAction.successfulStatus("Tạo cửa hàng thành công"))
-      if (response.message === "User successfully registered") {
-        dispatch(logInHandler(user_formik.values.phone, user_formik.values.password));
-      }
-      if (response.message === "Tên đăng nhập đã được sử dụng") {
-        dispatch(statusAction.failedStatus("Tên đăng nhập đã được sử dụng"))
-        // dispatch(logInHandler(user_formik.values.phone, user_formik.values.password));
-      }
+      dispatch(logInHandler(user_formik.values.user_name, user_formik.values.password));
     } catch (error) {
       console.log(error)
-      dispatch(statusAction.failedStatus("Số điện thoại hoặc email đã được sử dụng)"))
+      dispatch(statusAction.failedStatus("Số điện thoại hoặc tên đăng nhập đã được sử dụng)"))
     }
   };
   const [cityList, setCityList] = useState([]);
