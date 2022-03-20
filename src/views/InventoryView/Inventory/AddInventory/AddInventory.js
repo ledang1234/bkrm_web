@@ -103,7 +103,7 @@ const AddInventory = (props) => {
       product_code: "",
       has_batches: false,
       quantity:0,
-      max_order:null
+      max_order:0
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
@@ -123,6 +123,7 @@ const AddInventory = (props) => {
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
   const dispatch = useDispatch();
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -155,7 +156,7 @@ const AddInventory = (props) => {
 
       bodyFormData.append(
         "max_order",
-        productFormik.max_order.toString()
+        productFormik.values.max_order.toString()
       );
 
       bodyFormData.append(
@@ -169,6 +170,11 @@ const AddInventory = (props) => {
       bodyFormData.append(
         "has_batches",
         Number(productFormik.values.has_batches)
+      );
+
+      bodyFormData.append(
+        "branch_uuid",
+        branch_uuid
       );
       bodyFormData.append("img_url", imageURL);
 
@@ -355,18 +361,10 @@ const AddInventory = (props) => {
         "min_reorder_quantity",
         productFormik.values.re_order_point.toString()
       );
-      bodyFormData.append(
-        "quantity_per_unit",
-        productFormik.values.unit.toString()
-      );
-      bodyFormData.append(
-        "min_reorder_quantity",
-        productFormik.values.re_order_point.toString()
-      );
 
       bodyFormData.append(
         "max_order",
-        productFormik.max_order.toString()
+        productFormik.values.max_order.toString()
       );
 
       bodyFormData.append(
