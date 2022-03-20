@@ -58,6 +58,7 @@ const UpdateSupplier = (props) => {
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại").matches(/^\d+$/),
       address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+      email: Yup.string().email("Email không chính xác")
     }),
     enableReinitialize: true
   })
@@ -66,7 +67,7 @@ const UpdateSupplier = (props) => {
   const store_uuid = info.store.uuid;
   const dispatch = useDispatch();
   const handleUpdateSupplier = async () => {
-    handleCloseAndReset()
+   
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", supplierFormik.values.name.toString());
@@ -75,8 +76,7 @@ const UpdateSupplier = (props) => {
       bodyFormData.append("payment_info", supplierFormik.values.paymentInfo.toString());
       bodyFormData.append("payment_info", supplierFormik.values.company.toString());
       bodyFormData.append("address", supplierFormik.values.address.toString());
-      const rs = await supplierApi.updateSupplier(store_uuid, supplierDetail.uuid, bodyFormData)
-      console.log(rs)
+      await supplierApi.updateSupplier(store_uuid, supplierDetail.uuid, bodyFormData)
       dispatch(statusAction.successfulStatus("Sửa nhà cung cấp thành công"));
       props.onReload();
     } catch (err) {

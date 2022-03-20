@@ -125,7 +125,7 @@ const SearchSupplier = (props) => {
       <Autocomplete
         freeSolo 
         value={props.selectedSupplier}
-        options={props.suppliers}
+        options={props.suppliers.filter(item => item.status ==='active')}
         getOptionLabel={getOptionLabel}
         onChange={(event, value) => {
           if (value) {
