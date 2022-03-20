@@ -137,13 +137,13 @@ const EditBranch = (props) => {
   const dispatch = useDispatch();
   const handleEditBranch = async () => {
     closeModalAndResetData();
-    const ward = wardList.find((ward) => ward.id === formik.values.ward).name;
+    const ward = wardList.find((ward) => ward.id === formik.values.ward)?.name || "";
     const province = cityList.find(
       (city) => city.id === formik.values.city
-    ).name;
+    )?.name || "";
     const district = districtList.find(
       (district) => district.id === formik.values.district
-    ).name;
+    )?.name || "";
     let lat, lng;
     try {
       ({lat, lng}  = await getGeoCode(
@@ -163,7 +163,9 @@ const EditBranch = (props) => {
       bodyFormData.append("status", "active");
       bodyFormData.append("lng", lng? lng.toString() : "");
       bodyFormData.append("lat", lat? lat.toString() : "");
-      bodyFormData.append("image", image);
+      if (image) {
+        bodyFormData.append("image", image);
+      }
       const response = await branchApi.updateBranch(
         store_uuid,
         branch.uuid,
@@ -193,6 +195,7 @@ const EditBranch = (props) => {
     formik.resetForm();
     clearImage()
   };
+  console.log(formik.errors)
   return (
     <SimpleModal open={open} handleClose={closeModalAndResetData}>
       <ConfirmPopUp
@@ -299,6 +302,7 @@ const EditBranch = (props) => {
             fullWidth
             variant="outlined"
             error={formik.touched.city && formik.errors.city}
+            helperText={formik.touched.city ? formik.errors.city : null}
           >
             <InputLabel>Tỉnh</InputLabel>
             <Select
@@ -340,10 +344,16 @@ const EditBranch = (props) => {
                 <option value={district.id}>{district.name}</option>
               ))}
             </Select>
+            {formik.touched.district ? (
+              <FormHelperText>{formik.errors.district}</FormHelperText>
+            ) : null}
           </FormControl>
         </Grid>
         <Grid item xs={6}>
-          <FormControl required fullWidth variant="outlined">
+          <FormControl required fullWidth variant="outlined" 
+            error={formik.touched.ward && formik.errors.ward}
+            onBlur={formik.handleBlur}
+            >
             <InputLabel htmlFor="ward">Phường</InputLabel>
             <Select
               native
@@ -351,12 +361,16 @@ const EditBranch = (props) => {
               name="ward"
               value={formik.values.ward}
               onChange={formik.handleChange}
+              helperText={formik.touched.ward ? formik.errors.ward : null}
             >
               <option aria-label="None" value="" />
               {wardList.map((ward) => (
                 <option value={ward.id}>{ward.name}</option>
               ))}
             </Select>
+            {formik.touched.ward ? (
+              <FormHelperText>{formik.errors.ward}</FormHelperText>
+            ) : null}
           </FormControl>
         </Grid>
         <Grid item xs={12}>

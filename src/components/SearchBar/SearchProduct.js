@@ -162,7 +162,7 @@ const SearchProduct = (props) => {
         },
       }}
       onKeyDown={(e) => {
-        if (e.key === "Tab") {
+        if (e.key === "Enter") {
           e.preventDefault();
           e.stopPropagation();
           // increase if selected
@@ -218,12 +218,12 @@ const SearchProduct = (props) => {
           renderOption={renderOption}
           filterOptions={filterOptions}
           value={selectedOption}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.stopPropagation();
-              e.preventDefault();
-            }
-          }}
+          // onKeyDown={(e) => {
+          //   if (e.key === "Enter") {
+          //     e.stopPropagation();
+          //     e.preventDefault();
+          //   }
+          // }}
           blurOnSelect={false}
         />
       </Tooltip>

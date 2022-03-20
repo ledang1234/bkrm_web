@@ -84,7 +84,6 @@ const AddSupplier = (props) => {
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại").matches(/^\d+$/),
       address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
-      email: Yup.string().email("Email không chính xác")
     }),
   })
 
@@ -96,14 +95,14 @@ const AddSupplier = (props) => {
   };
   const dispatch = useDispatch();
   const handleAddSupplier = async () => {
-    
+    handleCloseAndReset()
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", supplierFormik.values.name.toString());
       bodyFormData.append("email", supplierFormik.values.email.toString());
       bodyFormData.append("phone", supplierFormik.values.phone.toString());
       bodyFormData.append("payment_info", supplierFormik.values.paymentInfo.toString());
-      bodyFormData.append("company", supplierFormik.values.company.toString());
+      bodyFormData.append("payment_info", supplierFormik.values.company.toString());
       bodyFormData.append("address", supplierFormik.values.address.toString());
       bodyFormData.append("image", image);
 
