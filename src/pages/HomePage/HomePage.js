@@ -130,7 +130,7 @@ const HomePage = (props) => {
   const [openUserInfo, setOpenUserInfo] = useState(false)
   return (
     <div className={classes.root}>
-      {openUserInfo && <EditEmployee open={openUserInfo} handleClose = {() =>setOpenUserInfo(false)} employee ={infoDetail.user}/>}
+      {openUserInfo && <EditEmployee open={openUserInfo} handleClose = {() =>setOpenUserInfo(false)} employee ={infoDetail.user} fromAvatar={true}/>}
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolBar}>
           {divLogo()}

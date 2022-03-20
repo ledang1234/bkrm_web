@@ -140,7 +140,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
     >
       <DialogTitle id="form-dialog-title">
         <Typography className={classes.headerTitle} variant="h5">
-          Sửa thông tin nhân viên
+         {fromAvatar?"Thông tin cá nhân":"Sửa thông tin nhân viên" } 
         </Typography>
       </DialogTitle>
 
@@ -307,7 +307,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 name="address"
               />
             </Grid>
-
             <Grid item xs={6}>
               {/* Select lưong */}
               <FormControl
@@ -316,6 +315,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 size="small"
                 variant="outlined"
                 style={{ marginTop: 8 }}
+                disabled ={fromAvatar}
               >
                 <InputLabel id="demo-simple-select-outlined-label">
                   Lương{" "}
@@ -342,6 +342,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 fullWidth
                 size="small"
                 value={formik.values.salary}
+                disabled ={fromAvatar}
                 name="salary"
                 // value={values.numberformat}
                 // onChange={handleChange}
@@ -359,6 +360,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 size="small"
                 variant="outlined"
                 style={{ marginTop: 8 }}
+                disabled ={fromAvatar}
               >
                 <InputLabel id="branchSelect">Chức năng</InputLabel>
                 <Select
