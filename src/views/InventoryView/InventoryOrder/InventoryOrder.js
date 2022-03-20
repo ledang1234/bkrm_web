@@ -194,6 +194,7 @@ const InventoryOrder = () => {
         orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
         sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        
         handleRemoveFilter={handleRemoveFilter}
 
         columnsToKeep = {[

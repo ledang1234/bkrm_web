@@ -52,6 +52,7 @@ const UploadImage = () => {
   )
 }
 const CustomerDetail = (props) => {
+
   const { row, openRow } = props.parentProps;
   const { isMini } = props;
 
@@ -227,6 +228,7 @@ const CustomerDetail = (props) => {
       </Box>
     </Collapse>
   )
+
 }
 
 export default CustomerDetail

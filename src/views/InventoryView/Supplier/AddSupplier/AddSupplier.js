@@ -136,7 +136,7 @@ const AddSupplier = (props) => {
     <Dialog open={open} onClose={handleCloseAndReset} >
       <DialogTitle id="form-dialog-title">
         <Typography className={classes.headerTitle} variant="h5">
-          Thêm khách hàng
+          Thêm nhà cung cấp
         </Typography>
 
       </DialogTitle>
