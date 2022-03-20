@@ -114,7 +114,12 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Bắt buộc!"),
       user_name: Yup.string().required("Bắt buộc!"),
+      phone: Yup.string()
+      .length(10, "Số điện thoại không chính xác")
+      .required("Nhập số điện thoại")
+      .matches(/^\d+$/, "Số điển thoại không chính xác"),
       branches: Yup.array().min(1, "Ít nhất một chi nhánh"),
+      email: Yup.string().email("Email không chính xác"),
       permissions: Yup.array().min(1, "Ít nhất một chức năng"),
     }),
 
