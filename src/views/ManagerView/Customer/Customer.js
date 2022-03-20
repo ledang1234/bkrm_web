@@ -174,7 +174,7 @@ const Customer = () => {
         </Grid>
 
         {/* Popup add */}
-        <AddCustomer open={open} handleClose={handleClose} onReload={onReload} />
+       {open && <AddCustomer open={open} handleClose={handleClose} onReload={onReload} />}
         {/* Noti */}
         <SnackBar openBar={openBar} handleCloseBar={handleCloseBar} addStatus={addStatus}/>
 

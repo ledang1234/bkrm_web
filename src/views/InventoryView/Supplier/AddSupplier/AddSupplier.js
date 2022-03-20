@@ -112,12 +112,12 @@ const AddSupplier = (props) => {
         bodyFormData
       );
       dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
-      handleCloseAndReset()
       props.onReload();
     } catch (err) {
       dispatch(statusAction.failedStatus("Tạo nhà cung cấp thất bại"));
       console.log(err);
     }
+    handleCloseAndReset()
   };
   const handleCloseAndReset =() =>{
     handleClose()

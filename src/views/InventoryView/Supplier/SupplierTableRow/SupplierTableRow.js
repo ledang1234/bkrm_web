@@ -20,7 +20,7 @@ const SupplierTableRow = (props) => {
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
-                <TableCell align="left">{row.id}</TableCell>
+                <TableCell align="left">{row.supplier_code}</TableCell>
                 <TableCell align="left" className={classes.fontName} style={{minWidth:150}}>{row.name}</TableCell>
                 <TableCell align="left">{row.phone}</TableCell>
                 <TableCell align="left">{row.email}</TableCell>

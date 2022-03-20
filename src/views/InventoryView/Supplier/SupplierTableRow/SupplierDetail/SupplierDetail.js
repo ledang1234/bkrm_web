@@ -28,6 +28,9 @@ import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
 import { useDispatch, useSelector } from "react-redux";
 import { statusAction } from "../../../../../store/slice/statusSlice";
 import UpdateSupplier from "./UpdateSupplier/UpdateSupplier";
+import { VNDFormat, ThousandFormat } from '../../../../../components/TextField/NumberFormatCustom';
+
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -67,6 +70,7 @@ const SupplierDetail = (props) => {
     setAnchorEl(null);
   };
   const handleDeleteSupplier = async () => {
+    setDeleteConfirm(false)
     console.log(store_uuid, row.uuid);
     try {
       const response = await supplierApi.deleteSupplier(store_uuid, row.uuid);
@@ -92,7 +96,7 @@ const SupplierDetail = (props) => {
           </Typography>
         }
       />
-      <UpdateSupplier supplierDetail={row} open={editSupplier} handleClose = {() => setEditSupplier(false)} onReload= {props.parentProps.setReload}/>
+      {editSupplier &&<UpdateSupplier supplierDetail={row} open={editSupplier} handleClose = {() => setEditSupplier(false)} onReload= {props.parentProps.setReload}/>}
       <Box margin={1}>
         <Typography
           variant="h3"
@@ -113,7 +117,7 @@ const SupplierDetail = (props) => {
               </Grid>
               <Grid item  sm={3}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.uuid}{" "}
+                  {row.supplier_code}{" "}
                 </Typography>
               </Grid>
             </Grid>
@@ -168,6 +172,46 @@ const SupplierDetail = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={6}>
+              
+          <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={7} sm={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Trạng thái
+                </Typography>
+              </Grid>
+              <Grid item  sm={4}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {row.status === "active" ? "Kích hoạt" : "Ngưng hoạt động"}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={7} sm={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Tổng tiền đã nhập
+                </Typography>
+              </Grid>
+              <Grid item  sm={4}>
+                <Typography variant="body1" gutterBottom component="div">
+                  <VNDFormat  value={row.total_payment} />
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={7} sm={5}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Còn nợ
+                </Typography>
+              </Grid>
+              <Grid item  sm={4}>
+                <Typography variant="body1" gutterBottom component="div">
+                <VNDFormat  value={row.debt} /> 
+                </Typography>
+              </Grid>
+            </Grid>
+
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
@@ -230,12 +274,37 @@ const SupplierDetail = (props) => {
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
+           
           >
-            <StyledMenuItem>
+            <StyledMenuItem
+             onClick={async () => {
+              handleClose()
+              if (row.status === "inactive") {
+                try {     
+                  const response = await supplierApi.updateSupplier(store_uuid, row.uuid ,{...row, status:'active'} )
+                  dispatch(statusAction.successfulStatus("Kích hoạt thành công"))
+                } catch (err) {
+                  console.log(err)
+                  dispatch(statusAction.failedStatus("Kích hoạt thất bại"))
+                }
+              } else if (row.status === "active") {
+                try {
+                  const response = await supplierApi.updateSupplier(store_uuid, row.uuid,{...row, status:'inactive'})
+                  dispatch(statusAction.successfulStatus("Ngưng hoạt động thành công"))
+                } catch (err) {
+                  dispatch(statusAction.failedStatus("Ngưng hoạt động thất bại"))
+                }
+              }
+              props.parentProps.setReload();
+  
+            }}
+
+            
+            >
               <ListItemIcon style={{ marginRight: -15 }}>
                 <HighlightOffTwoToneIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Ngừng hoạt động" />
+              <ListItemText primary={row.status === "inactive" ? "Kích hoạt" : "Ngưng hoạt động"} />
             </StyledMenuItem>
           </StyledMenu>
         </Grid>
