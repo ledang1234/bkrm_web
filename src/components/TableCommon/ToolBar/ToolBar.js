@@ -108,6 +108,7 @@ const ToolBar = (props) => {
     orderByOptions,orderBy, setOrderBy,
     handleRemoveFilter,
     sort, setSort,
+    isOnlySearch,
   } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -211,6 +212,8 @@ const ToolBar = (props) => {
                 className: classes.search,
               }}
             />
+            {!isOnlySearch && 
+            
             <div style={{ marginLeft: 30, display: 'flex', flexDirection: 'row', gap: 10 }}>
               <FormControl>
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -245,6 +248,7 @@ const ToolBar = (props) => {
                 Bỏ lọc
               </Button>
             </div>
+            }
           </Grid>
         </Grid>
         <Grid item>
@@ -290,12 +294,13 @@ const ToolBar = (props) => {
               <ViewColumnTwoToneIcon className={classes.icon} />
             </IconButton>
           </Tooltip>
-
+          {!isOnlySearch && 
           <Tooltip title="Lọc">
             <IconButton aria-label="filter list" onClick={handleToggleFilter}>
               <FilterListTwoToneIcon className={classes.icon} />
             </IconButton>
           </Tooltip>
+          }
 
           
         </Box>

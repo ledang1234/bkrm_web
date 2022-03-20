@@ -341,7 +341,7 @@ const Import = () => {
     setCartList(newCartList);
   };
 
-  const handleUpdatePaymentMethod = (method) => {
+  const handleUpdatePaymentMethod = ( method) => {
     let newCartList = update(cartList, {
       [selectedIndex]: { payment_method: { $set: method } },
     });
@@ -364,7 +364,6 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { total_amount: { $set: total } },
     });
-
     newCartList = update(newCartList, {
       [selectedIndex]: {
         paid_amount: { $set: total - cartList[selectedIndex].discount },

@@ -110,37 +110,43 @@ const Customer = () => {
 
     //3.3. loc cot
 
-
+    const initialQuery = {
+      orderBy: 'customers.created_at',
+      sort: 'desc',
+      searchKey: '',
+    };
+    const handleRemoveFilter = (initialQuery) => {
+      setQuery(initialQuery)
+    }
+    const [query, setQuery] = useState(initialQuery)
     const [pagingState, setPagingState] = useState({
       page: 0,
       limit: 10,
-      total_rows: 0,
     });
   
-  
+    const [totalRows, setTotalRows] = useState(0)
     useEffect(() => {
       setPagingState({...pagingState, page: 0})
-    }, [reload, store_uuid])
+    }, [reload, store_uuid, query])
   
     useEffect(() => {
       const loadData = async () => {
         try {
           const response = await customerApi.getCustomers(store_uuid, {
             page: pagingState.page,
-            limit: pagingState.limit
+            limit: pagingState.limit,
+            ...query
           });
-          
-          setPagingState({...pagingState, total_rows: response.total_rows})
+          setTotalRows(response.total_rows)
           setCustomerList(response.data);
         } catch (error) {
           console.log(error);
         }
       };
       if (store_uuid) {
-
         loadData();
       }
-    }, [pagingState.page, pagingState.limit,reload]);
+    }, [pagingState.page, pagingState.limit,reload,query]);
     return (
 
     <Card className={classes.root} >
@@ -177,13 +183,21 @@ const Customer = () => {
         
         {/* 2. SEARCH - FILTER - EXPORT*/}
         {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
-        <ToolBar  dataTable={customerList} tableType={TableType.CUSTOMER} textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
-        handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/>
+        <ToolBar  
+          dataTable={customerList} 
+          tableType={TableType.CUSTOMER} 
+          textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
+          handleToggleFilter={handleToggleFilter}  
+          handlePrint={handlePrint}
+          isOnlySearch={true}
+          handleRemoveFilter={handleRemoveFilter}
+          searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        />
         
         <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
         {/* 3. TABLE */}
         {!xsScreen? <TableWrapper
-          pagingState={pagingState}
+          pagingState={{...pagingState, total_rows: totalRows}}
           setPagingState={setPagingState}
         >
             <TableHeader
@@ -192,6 +206,8 @@ const Customer = () => {
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
               headerData={HeadCells.CustomerHeadCells}
+
+             
             />
             <TableBody>
               {customerList?.map((row, index) => {

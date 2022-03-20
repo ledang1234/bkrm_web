@@ -45,6 +45,7 @@ import ProductImportPopper from "../../../components/Popper/ProductImportPopper"
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {ProductMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import InventoryFilter from "./InventoryTool/InventoryFilter";
 
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
@@ -53,12 +54,10 @@ const Inventory = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
-  const [pagingState, setPagingState] = useState({
-    page: 0,
-    limit: 10,
-    total_rows: 0,
-  });
-
+  const [openFilter, setOpenFilter] = React.useState(false);
+  const handleToggleFilter = () => {
+    setOpenFilter(!openFilter);
+  };
   const importProductByJSON = async (jsonData) => {
     try {
       setOpenProductImportPopper(true);
@@ -84,6 +83,34 @@ const Inventory = () => {
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid]);
+
+  const initialQuery = {
+    orderBy: 'products.created_at',
+    sort: 'desc',
+    searchKey: '',
+    minStandardPrice: "",
+    maxStandardPrice: "",
+    minListPrice: "",
+    maxListPrice: "",
+    minInventory: "",
+    maxInventory: "",
+    status: "",
+    categoryId: "",
+  };
+  const handleRemoveFilter = () => {
+    setQuery(initialQuery)
+  }
+  const [query, setQuery] = useState(initialQuery)
+  const [pagingState, setPagingState] = useState({
+    page: 0,
+    limit: 10,
+  });
+
+  const [totalRows, setTotalRows] = useState(0)
+  useEffect(() => {
+    setPagingState({...pagingState, page: 0})
+  }, [reload, store_uuid, query])
+
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -93,9 +120,10 @@ const Inventory = () => {
           {
             page: pagingState.page,
             limit: pagingState.limit,
+            ...query
           }
         );
-        setPagingState({ ...pagingState, total_rows: response.total_rows });
+        setTotalRows(response.total_rows)
         setProductList(response.data);
       } catch (error) {
         console.log(error);
@@ -105,7 +133,7 @@ const Inventory = () => {
       loadData();
     }
     
-  }, [pagingState.page, pagingState.limit, branch_uuid, reload]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, reload, query]);
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -228,6 +256,7 @@ const Inventory = () => {
         tableType={TableType.INVENTORY}
         handlePrint={handlePrint}
         handleSearchValueChange={setSearchValue}
+        handleToggleFilter={handleToggleFilter}
         hasImport={true}
         importProductByJSON={importProductByJSON}
         excel_head={excel.header_product}
@@ -242,10 +271,32 @@ const Inventory = () => {
           { dbName: "quantity_available", displayName: "Tồn kho" },
           { dbName: "min_reorder_quantity", displayName: "Điểm đặt hàng lại" },
         ]}
+
+
+        orderByOptions={[
+          {value: 'products.created_at', label: 'Ngày nhập'},
+          {value: 'products.list_price', label: 'Gia ban'},
+          {value: 'products.standard_price', label: 'Gia von'},
+          {value: 'products.quantity_available', label: 'Ton kho'},
+        ]}
+        orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
+        sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
+        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        
+        handleRemoveFilter={handleRemoveFilter}
       />
 
+      <InventoryFilter 
+         openFilter={openFilter}
+         setQuery={setQuery}
+         query={query}
+         setProductList={setProductList}
+         handleToggleFilter={handleToggleFilter}
+      />
+
+
       {/* 3. TABLE */}
-      {!xsScreen?<TableWrapper pagingState={pagingState} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
         <TableHeader
           classes={classes}
           order={order}

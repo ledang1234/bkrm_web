@@ -7,15 +7,8 @@ import {
   Grid,
   TableBody,
   Typography,
-  Table,
   TableCell,
-  Chip,
-  Tooltip,
   TableRow,
-  Collapse,
-  Button,
-  ListItemIcon,
-  ListItemText,
   IconButton,
   TextField,
 } from "@material-ui/core";
@@ -31,19 +24,14 @@ import ImportReturnSummary from "../../CheckoutComponent/CheckoutSummary/ImportR
 import useStyles from "../../TableCommon/style/mainViewStyle";
 
 // import library
-
-import InvoiceReturnSummary from "../../CheckoutComponent/CheckoutSummary/InvoiceReturnSummary/InvoiceReturnSummary";
-
 import * as HeadCells from "../../../assets/constant/tableHead";
 import * as TableType from "../../../assets/constant/tableType";
 import SearchProduct from "../../SearchBar/SearchProduct";
 import TableHeader from "../../TableCommon/TableHeader/TableHeader";
 import TableWrapper from "../../TableCommon/TableWrapper/TableWrapper";
-import { getComparator, stableSort } from "../../TableCommon/util/sortUtil";
 import * as Input from "../../TextField/NumberFormatCustom";
 import ButtonQuantity from "../../Button/ButtonQuantity";
 import purchaseReturnApi from "../../../api/purchaseReturnApi";
-import SnackBarGeneral from "../../SnackBar/SnackBarGeneral";
 
 import { statusAction } from "../../../store/slice/statusSlice";
 import { ReturnCartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";

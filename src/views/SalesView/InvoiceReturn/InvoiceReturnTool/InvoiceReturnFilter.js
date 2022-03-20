@@ -108,7 +108,7 @@ const InvoiceReturnFilter = (props) => {
         name="minTotalAmount"
         value={formik.values.minTotalAmount}
         onChange={formik.handleChange}
-        value={formik.values.minTotalAmount}
+        // value={formik.values.minTotalAmount}
       // onChange={(e) =>
       //   setProductInfo({
       //     ...productInfo,

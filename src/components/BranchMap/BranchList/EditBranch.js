@@ -137,13 +137,13 @@ const EditBranch = (props) => {
   const dispatch = useDispatch();
   const handleEditBranch = async () => {
     closeModalAndResetData();
-    const ward = wardList.find((ward) => ward.id === formik.values.ward).name;
+    const ward = wardList.find((ward) => ward.id === formik.values.ward)?.name || "";
     const province = cityList.find(
       (city) => city.id === formik.values.city
-    ).name;
+    )?.name || "";
     const district = districtList.find(
       (district) => district.id === formik.values.district
-    ).name;
+    )?.name || "";
     let lat, lng;
     try {
       ({lat, lng}  = await getGeoCode(
@@ -163,7 +163,9 @@ const EditBranch = (props) => {
       bodyFormData.append("status", "active");
       bodyFormData.append("lng", lng? lng.toString() : "");
       bodyFormData.append("lat", lat? lat.toString() : "");
-      bodyFormData.append("image", image ? image : "");
+      if (image) {
+        bodyFormData.append("image", image);
+      }
       const response = await branchApi.updateBranch(
         store_uuid,
         branch.uuid,

@@ -11,7 +11,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Typography } from "@material-ui/core";
 import * as _ from "lodash";
 
-export default function SelectBatch({ handleSubmit, handleClose, row }) {
+export default function SelectBatch({ handleSubmit, handleClose, row, isInventoryCheck }) {
   const [selectedBatches, setSelectedBatches] = useState([]);
   return (
     <Dialog open={true}>
@@ -97,11 +97,14 @@ export default function SelectBatch({ handleSubmit, handleClose, row }) {
         <Button
           color="primary"
           onClick={() => {
-            const nonZeroBatch = selectedBatches.filter(
-              (batch) => batch.additional_quantity
-            );
-            console.log(nonZeroBatch);
-            handleSubmit(nonZeroBatch);
+            if (!isInventoryCheck) {
+              const nonZeroBatch = selectedBatches.filter(
+                (batch) => batch.additional_quantity
+              );
+              handleSubmit(nonZeroBatch);
+            } else {
+              handleSubmit(selectedBatches);
+            }
             handleClose();
           }}
         >

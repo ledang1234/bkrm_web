@@ -66,6 +66,25 @@ function InvoiceReturn() {
   // const [order, setOrder] = React.useState('asc');
   // const [orderBy, setOrderBy] = React.useState('id');
 
+  const initialQuery = {
+    startDate: '',
+    endDate: '',
+    minDiscount: 0,
+    maxDiscount: 0,
+    minTotalAmount: 0,
+    maxTotalAmount: 0,
+    status: '',
+    paymentMethod: '',
+    orderBy: 'refunds.created_at',
+    sort: 'desc',
+    searchKey: '',
+  };
+
+  const handleRemoveFilter = () => {
+    setQuery(initialQuery)
+  }
+  
+
   const handleRequestSort = (event, property) => {
     /// / (gửi order vs orderBy lên api) -> fetch lại data để sort
     // const isAsc = orderBy === property && order === 'asc';
@@ -90,6 +109,8 @@ function InvoiceReturn() {
   // 3.3. loc cot
 
   const [reload, setReload] = useState(false);
+
+  const [query, setQuery] = useState(initialQuery)
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
@@ -97,7 +118,7 @@ function InvoiceReturn() {
   const [totalRows, setTotalRows] = useState(0)
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
-  }, [reload, store_uuid, branch_uuid]);
+  }, [reload, store_uuid, branch_uuid, query]);
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -107,6 +128,7 @@ function InvoiceReturn() {
           {
             page: pagingState.page,
             limit: pagingState.limit,
+            ...query
           }
         );
         // setPagingState({ ...pagingState, total_rows: response.total_rows });
@@ -117,10 +139,9 @@ function InvoiceReturn() {
       }
     };
     if (store_uuid && branch_uuid) {
-
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, branch_uuid]);
+  }, [pagingState.page, pagingState.limit, store_uuid, branch_uuid, query]);
 
   return (
     <Card className={classes.root}>
@@ -140,6 +161,15 @@ function InvoiceReturn() {
         textSearch="#,#hđ, Khách, Người trả,...  " /* handlePrint={handlePrint} */
         handlePrint={handlePrint}
         handleToggleFilter={handleToggleFilter}
+
+        orderByOptions={[
+          {value: 'refunds.created_at', label: 'Ngày nhập'},
+          {value: 'refunds.total_amount', label: 'Tổng tiền tra'},
+        ]}
+        orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
+        sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
+        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        handleRemoveFilter={handleRemoveFilter}
       />
       <InvoiceReturnFilter
         openFilter={openFilter}
