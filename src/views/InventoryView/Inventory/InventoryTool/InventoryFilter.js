@@ -140,8 +140,8 @@ const InventoryFilter = (props) => {
         value={formik.values.status}
         onChange={formik.handleChange}
       >
-        <MenuItem value="active">Hoat dong</MenuItem>
-        <MenuItem value="inactive">Ngung hoat dong</MenuItem>
+        <MenuItem value="active">Hoạt động</MenuItem>
+        <MenuItem value="inactive">Ngưng hoạt động</MenuItem>
       </Select>
       </FormControl>
 

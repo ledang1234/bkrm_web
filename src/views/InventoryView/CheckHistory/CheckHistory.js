@@ -55,22 +55,18 @@ const CheckHistory = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-  const [query, setQuery] = useState(initialQuery)
+  
   const [inventoryChecks, setInventoryChecks] = useState([]);
   const initialQuery = {
     startDate: '',
     endDate: '',
-    minDiscount: 0,
-    maxDiscount: 0,
-    minTotalAmount: 0,
-    maxTotalAmount: 0,
-    status: '',
-    paymentMethod: '',
-    orderBy: 'refunds.created_at',
+    minTotalAmount:'',
+    maxTotalAmount: '',
+    orderBy: 'inventory_checks.created_at',
     sort: 'desc',
     searchKey: '',
   };
-
+  const [query, setQuery] = useState(initialQuery)
   const handleRemoveFilter = () => {
     setQuery(initialQuery)
   }
@@ -108,7 +104,7 @@ const CheckHistory = () => {
       }
     };
     loadData();
-  }, [pagingState.page, pagingState.limit, branch_uuid, reload]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, store_uuid, reload, query]);
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -257,10 +253,23 @@ const CheckHistory = () => {
           {dbName:"total_amount",displayName:"Tổng giá trị lệch"},
           {dbName:"branch_name",displayName:"Tên chi nhánh"},
         ]}
+
+
+        orderByOptions={[
+          {value: 'inventory_checks.created_at', label: 'Ngày kiểm'},
+          {value: 'inventory_checks.total_amount', label: 'Tổng tiền lệch'},
+        ]}
+        orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
+        sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
+        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        handleRemoveFilter={handleRemoveFilter}
       />
 
       <CheckHistoryFilter
+        query={query}
+        setQuery={setQuery}
         openFilter={openFilter}
+        setInventoryChecks={setInventoryChecks}
         handleToggleFilter={handleToggleFilter}
       />
 
