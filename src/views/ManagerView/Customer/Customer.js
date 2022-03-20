@@ -186,7 +186,7 @@ const Customer = () => {
         <ToolBar  
           dataTable={customerList} 
           tableType={TableType.CUSTOMER} 
-          textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
+          textSearch={'#, Tên, sđt, email,...  '} /*handlePrint={handlePrint}*/ 
           handleToggleFilter={handleToggleFilter}  
           handlePrint={handlePrint}
           isOnlySearch={true}
