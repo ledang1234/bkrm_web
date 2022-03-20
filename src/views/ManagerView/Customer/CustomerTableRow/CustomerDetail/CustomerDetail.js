@@ -19,6 +19,8 @@ import customerApi from "../../../../../api/customerApi";
 import { statusAction } from "../../../../../store/slice/statusSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import UpdateCustomer from "../CustomerDetail/UpdateCustomer/UpdateCustomer"
+import { VNDFormat, ThousandFormat } from '../../../../../components/TextField/NumberFormatCustom';
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -106,7 +108,7 @@ const CustomerDetail = (props) => {
           </Typography>
         }
       />
-      <UpdateCustomer customerDetail={row} open={editItem} onReload={props.parentProps.onReload} handleClose={() => { setEditItem(false) }} />
+      {editItem &&<UpdateCustomer customerDetail={row} open={editItem} onReload={props.parentProps.onReload} handleClose={() => { setEditItem(false) }} />}
       <Box margin={1}>
         <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
           {row.name}
@@ -182,7 +184,7 @@ const CustomerDetail = (props) => {
                 <Typography variant="h5" gutterBottom component="div">Tích điểm</Typography>
               </Grid>
               <Grid item sm={6} >
-                <Typography variant="body1" gutterBottom component="div">{row.point}</Typography>
+                <Typography variant="body1" gutterBottom component="div"><ThousandFormat value={row.points} /></Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
@@ -190,7 +192,7 @@ const CustomerDetail = (props) => {
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền mua</Typography>
               </Grid>
               <Grid item sm={6} >
-                <Typography variant="body1" gutterBottom component="div">{row.total_payment}</Typography>
+                <Typography variant="body1" gutterBottom component="div"><VNDFormat  value={row.total_payment} /></Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="flex-start">
@@ -198,7 +200,7 @@ const CustomerDetail = (props) => {
                 <Typography variant="h5" gutterBottom component="div">Còn nợ</Typography>
               </Grid>
               <Grid item sm={6} >
-                <Typography variant="body1" gutterBottom component="div">500.000</Typography>
+                <Typography variant="body1" gutterBottom component="div"><VNDFormat  value={row.debt} /> </Typography>
               </Grid>
             </Grid>
 
@@ -229,11 +231,13 @@ const CustomerDetail = (props) => {
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
-
-            onClick={async () => {
+           
+          >
+            <StyledMenuItem
+             onClick={async () => {
+              handleClose()
               if (row.status === "inactive") {
-                try {
-                  
+                try {   
                   const response = await customerApi.updateCustomer(store_uuid, row.uuid ,{...row, status:'active'} )
                   dispatch(statusAction.successfulStatus("Kích hoạt thành công"))
                 } catch (err) {
@@ -249,13 +253,11 @@ const CustomerDetail = (props) => {
                 }
               }
               
-              handleClose()
               props.parentProps.onReload();
   
             }}
-
-          >
-            <StyledMenuItem>
+            
+            >
               <ListItemIcon style={{ marginRight: -15 }} >
                 <HighlightOffTwoToneIcon fontSize="small" />
               </ListItemIcon>

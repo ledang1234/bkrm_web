@@ -101,7 +101,7 @@ const Employee = () => {
     setOpen(true);
   };
   const handleClose = (status) => {
-    setOpen(false);
+    // setOpen(false);
     setAddStatus(status);
     if (status === "Success") {
       onReload();
@@ -181,7 +181,7 @@ const Employee = () => {
       </Grid>
 
       {/* Popup add */}
-      {open && <AddEmployee open={open} handleClose={handleClose} />}
+      {open && <AddEmployee open={open} handleClose={handleClose} setOpen={setOpen} />}
       {/* Noti */}
       <SnackBar
         openBar={openBar}
@@ -197,7 +197,7 @@ const Employee = () => {
         dataTable={employeeList}
         tableType={TableType.EMPLOYEE}
         textSearch={
-          "#, Tên, sđt, email, địa chỉ, ...  "
+          "#, Tên, sđt, email, ...  "
         } /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}

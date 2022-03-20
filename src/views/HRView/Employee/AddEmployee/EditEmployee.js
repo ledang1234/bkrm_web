@@ -121,6 +121,11 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
       branches: Yup.array().min(1, "Ít nhất một chi nhánh"),
       email: Yup.string().email("Email không chính xác"),
       permissions: Yup.array().min(1, "Ít nhất một chức năng"),
+      email: Yup.string().email("Email không chính xác"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại").matches(/^\d+$/)
+      
     }),
 
     onSubmit: async (values, actions) => {
@@ -157,6 +162,22 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
       }
     },
   });
+
+
+  // const [branches, setBranches] = React.useState([]);
+  
+  React.useEffect(() => {
+    const loadBranches = async () => {
+      try {
+        const response = await branchApi.getAllBranches(store_uuid);
+        console.log(response.data);
+        setBranches(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loadBranches();
+  }, [store_uuid]);
 
   // redux
 
@@ -238,7 +259,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 <FormHelperText error>{formik.errors.name}</FormHelperText>
               )}
 
-              <TextField
+              {/* <TextField
                 id="name"
                 name="user_name"
                 label="Tên đăng nhập"
@@ -252,7 +273,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
 
               {formik.errors.user_name && formik.touched.user_name && (
                 <FormHelperText error>{formik.errors.user_name}</FormHelperText>
-              )}
+              )} */}
 
               <TextField
                 id="date"
@@ -419,14 +440,15 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+             
               {formik.errors.permissions && formik.touched.permissions && (
                 <FormHelperText error>
                   {formik.errors.permissions}
                 </FormHelperText>
               )}
+            </FormControl>
 
-              <FormControl
+            <FormControl
                 className={classes.formControl}
                 fullWidth
                 size="small"
@@ -461,10 +483,8 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 </Select>
 
                 {formik.errors.branches && formik.touched.branches && (
-                  <FormHelperText error>
-                    {formik.errors.branches}
-                  </FormHelperText>
-                )}
+                <FormHelperText error>{formik.errors.branches}</FormHelperText>
+              )}
               </FormControl>
             </Grid>
           </Grid>

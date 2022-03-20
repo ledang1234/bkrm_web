@@ -93,7 +93,7 @@ export const SupplierHeadCells = [
   //   disablePadding: false,
   //   label: "Tổng tiền nhập",
   // },
-  { id: "debt", align: "center", disablePadding: false, label: "Trạng thái" },
+  { id: "debt", align: "center", disablePadding: false, label: "Công nợ" },
 ];
 
 export const InvoiceHeadCells = [
@@ -150,7 +150,7 @@ export const CustomerHeadCells = [
   { id: "name", align: "left", disablePadding: true, label: "Khách hàng" },
   { id: "phone", align: "left", disablePadding: true, label: "Số điện thoại" },
   { id: "score", align: "right", disablePadding: true, label: "Tích điểm" },
-  { id: "debt", align: "center", disablePadding: true, label: "Trạng thái" },
+  { id: "debt", align: "center", disablePadding: true, label: "Công nợ" },
 ];
 
 export const CartHeadCells = [

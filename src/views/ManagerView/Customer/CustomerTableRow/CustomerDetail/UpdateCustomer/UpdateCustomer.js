@@ -48,13 +48,14 @@ const UpdateCustomer = (props) => {
   const { handleClose, open, onReload } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
+  console.log('paymentImfo',props.customerDetail)
   const customerFormik = useFormik({
     initialValues: {
-      name: props.customerDetail.name,
-      email: props.customerDetail.email,
-      phone: props.customerDetail.phone,
-      address: props.customerDetail.address,
-      paymentInfo: props.customerDetail.paymentInfo,
+      name: props.customerDetail?.name || "",
+      email: props.customerDetail?.email || "",
+      phone: props.customerDetail?.phone || "",
+      address: props.customerDetail?.address || "",
+      paymentInfo: props.customerDetail?.payment_info || "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên khách hàng"),
@@ -70,7 +71,7 @@ const UpdateCustomer = (props) => {
   const store_uuid = info.store.uuid
 
   const handleCloseAndReset =() =>{
-    handleClose()
+    // handleClose()
     onReload()
     customerFormik.resetForm()
   } 
@@ -171,7 +172,7 @@ const UpdateCustomer = (props) => {
 
       <DialogActions>
         <Button
-          onClick={handleCloseAndReset}
+          onClick={handleClose}
           variant="contained"
           size="small"
           color="secondary"
@@ -180,7 +181,7 @@ const UpdateCustomer = (props) => {
         </Button>
         <Button
           onClick={async () => {
-           
+            handleClose()
             let body = {
               name: customerFormik.values.name,
               email: customerFormik.values.email,
