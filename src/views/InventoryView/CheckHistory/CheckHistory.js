@@ -55,8 +55,25 @@ const CheckHistory = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-
+  const [query, setQuery] = useState(initialQuery)
   const [inventoryChecks, setInventoryChecks] = useState([]);
+  const initialQuery = {
+    startDate: '',
+    endDate: '',
+    minDiscount: 0,
+    maxDiscount: 0,
+    minTotalAmount: 0,
+    maxTotalAmount: 0,
+    status: '',
+    paymentMethod: '',
+    orderBy: 'refunds.created_at',
+    sort: 'desc',
+    searchKey: '',
+  };
+
+  const handleRemoveFilter = () => {
+    setQuery(initialQuery)
+  }
 
   const [pagingState, setPagingState] = useState({
     page: 0,
@@ -68,7 +85,7 @@ const CheckHistory = () => {
 
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
-  }, [branch_uuid, store_uuid, reload]);
+  }, [branch_uuid, store_uuid, reload, query]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -79,6 +96,7 @@ const CheckHistory = () => {
           {
             page: pagingState.page,
             limit: pagingState.limit,
+            ...query
           }
         );
 
