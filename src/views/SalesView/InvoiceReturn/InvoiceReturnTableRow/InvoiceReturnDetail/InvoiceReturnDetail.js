@@ -8,7 +8,7 @@ import {calculateTotalQuantity} from "../../../../../components/TableCommon/util
 
 // import library
 import {
-  Box, Grid, TableHead, TableBody, Typography, Table, TableCell, TableRow, Collapse, Button, ListItemIcon, ListItemText, IconButton,
+  Box, Grid, TableHead, TableBody, Typography, Table, TableCell, TableRow, Collapse, Button, ListItemIcon, ListItemText, IconButton,Chip
 } from '@material-ui/core';
 
 // import icon
@@ -76,7 +76,7 @@ function InvoiceReturnDetail(props) {
     const loadData = async () => {
       try {
         const res = await refundApi.getRefund(store_uuid, row.uuid);
-        // console.log(res.data)
+        console.log("invoice return", res.data)
         setRefund(res.data);
       } catch (error) {
         setRefund({
@@ -213,7 +213,7 @@ function InvoiceReturnDetail(props) {
         <Table size="small" aria-label="purchases">
           <TableHead>
             <TableRow>
-              <TableCell>#</TableCell>
+              <TableCell>Ma SP</TableCell>
               <TableCell>Sản phẩm</TableCell>
               {/* <TableCell>Mã vạch</TableCell> */}
               <TableCell align="right">Số lượng</TableCell>
@@ -234,7 +234,28 @@ function InvoiceReturnDetail(props) {
                 {/* <TableCell>
                   {detail.bar_code}
                 </TableCell> */}
-                <TableCell align="right"><ThousandFormat value={detail.quantity} /></TableCell>
+                <TableCell align="right">
+                  <ThousandFormat value={detail.quantity} />
+                  <div>
+                      {detail.batches
+                        ? JSON.parse(detail.batches).map((batch) => (
+                            <Chip
+                              size="small"
+                              label={`${
+                                batch?.batch_code ? batch?.batch_code : "Mới"
+                              }(${
+                                batch?.expiry_date
+                                  ? batch?.expiry_date.substring(0, 10)
+                                  : ""
+                              }) - ${batch.returned_quantity}`}
+                              key={batch.id}
+                              color={batch.is_new ? "primary" : "secondary"}
+                              variant="outlined"
+                            />
+                          ))
+                        : null}
+                    </div>
+                </TableCell>
                 <TableCell align="right">
                 <VNDFormat value={detail.unit_price} />
                 </TableCell>

@@ -7,7 +7,11 @@ import {
   Grid,
   TableBody,
   Typography,
+  FormControl,
+  Select,
+  InputLabel,
   Table,
+  MenuItem,
   TableCell,
   TableRow,
   Collapse,
@@ -19,17 +23,17 @@ import {
   Tooltip,
   IconButton,
   Switch,
-  FormControlLabel
+  FormControlLabel,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import SelectBatch from "../SelectBatch/SelectBatch";
 import { DeleteOutline } from "@material-ui/icons";
 import update from "immutability-helper";
 import { useSelector } from "react-redux";
-import SearchBarCode from "../SearchBar/SearchBarCode"
+import SearchBarCode from "../SearchBar/SearchBarCode";
 import moment from "moment";
 import { Input } from "@mui/material";
-import { VNDFormat,ThousandFormat } from "../TextField/NumberFormatCustom";
+import { VNDFormat, ThousandFormat } from "../TextField/NumberFormatCustom";
 import useStyles from "../TableCommon/style/mainViewStyle";
 
 import * as HeadCells from "../../assets/constant/tableHead";
@@ -40,10 +44,10 @@ import inventoryCheckApi from "../../api/inventoryCheckApi";
 import SnackBarGeneral from "../SnackBar/SnackBarGeneral";
 import InventoryCheckSummary from "../CheckoutComponent/CheckoutSummary/InventoryCheckSumary/InventroyCheckSumary";
 import ModalWrapperWithClose from "../Modal/ModalWrapperWithClose";
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 import ButtonQuantity from "../Button/ButtonQuantity";
 
-import {CheckMiniTableRow} from "../../components/MiniTableRow/MiniTableRow"
+import { CheckMiniTableRow } from "../../components/MiniTableRow/MiniTableRow";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
@@ -60,8 +64,7 @@ function InventoryCheckPopUp({
     setOpen(false);
   };
   const theme = useTheme();
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
-
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("stt");
@@ -122,8 +125,9 @@ function InventoryCheckPopUp({
     const itemIndex = inventoryCheck.details.findIndex(
       (item) => item.id === itemId
     );
+    
 
-    if (newQuantity === itemIndex.real_quantity) {
+    if (newQuantity === inventoryCheck.details[itemIndex].real_quantity && !inventoryCheck.details[itemIndex].has_batches) {
       handleDeleteItem(itemId);
       return;
     }
@@ -167,11 +171,10 @@ function InventoryCheckPopUp({
         unit_price: detail.standard_price,
         uuid: detail.uuid,
         branch_inventory: detail.branch_quantity,
+        batches: detail.batches.length ? detail.batches : ""
       })),
       note: inventoryCheck.note,
     };
-
-    console.log(body);
 
     try {
       const res = await inventoryCheckApi.create(store_uuid, branch_uuid, body);
@@ -187,8 +190,7 @@ function InventoryCheckPopUp({
   };
 
   const handleProductSelect = (product) => {
-    
-    if (inventoryCheck.details.find(d => d.id === product.id)) {
+    if (inventoryCheck.details.find((d) => d.id === product.id)) {
       return;
     }
     const newDetails = [
@@ -202,9 +204,18 @@ function InventoryCheckPopUp({
     setInventoryCheck({ ...inventoryCheck, details: newDetails });
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
-  const [barcodeChecked, setBarcodeChecked] = useState(true)
+  const [barcodeChecked, setBarcodeChecked] = useState(true);
   const handleSwitchChange = () => {
-    setBarcodeChecked(!barcodeChecked)
+    setBarcodeChecked(!barcodeChecked);
+  };
+  
+  const handleChangeDetailBatches = (itemId, batches) => {
+    const itemIndex = inventoryCheck.details.findIndex(
+      (item) => item.id === itemId
+    );
+    
+    const newInventoryCheck = {...inventoryCheck};
+    newInventoryCheck.details[itemIndex].batches = batches;
   }
   return (
     <>
@@ -222,23 +233,26 @@ function InventoryCheckPopUp({
               <Grid item>
                 <Typography variant="h3" style={{ marginRight: 20 }}>
                   Kiểm kho
-                </Typography></Grid>
+                </Typography>
+              </Grid>
               <Grid item>
                 <FormControlLabel
-                  control={<Switch
-                    checked={barcodeChecked} onChange={handleSwitchChange}
-                    color="primary" />}
+                  control={
+                    <Switch
+                      checked={barcodeChecked}
+                      onChange={handleSwitchChange}
+                      color="primary"
+                    />
+                  }
                   label={"Dùng mã vạch"}
                 />
               </Grid>
               <Grid item>
-                {
-                  barcodeChecked ?
-                    <SearchBarCode handleSearchBarSelect={handleProductSelect} /> :
-                    <SearchProduct
-                      handleSearchBarSelect={handleProductSelect}
-                    />
-                }
+                {barcodeChecked ? (
+                  <SearchBarCode handleSearchBarSelect={handleProductSelect} />
+                ) : (
+                  <SearchProduct handleSearchBarSelect={handleProductSelect} />
+                )}
               </Grid>
             </Grid>
           </ListItem>
@@ -269,34 +283,40 @@ function InventoryCheckPopUp({
                 {/* JSON data attribute phải giongso table head id */}
 
                 {/* <ListItem headCells={HeadCells.CartReturnHeadCells}  cartData={row.list} tableType={TableType.CART_RETURN} /> */}
-                {!xsScreen ?  <TableWrapper isCart>
-                  <TableHeader
-                    classes={classes}
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                    headerData={HeadCells.InventoryCheckHeadCells}
-                  />
-                  <TableBody>
-                    {inventoryCheck.details.map((detail, index) => (
-                      <InventoryCheckTableRow
-                        handleItemRealQuantityChange={
-                          handleItemRealQuantityChange
-                        }
-                        detail={detail}
-                        handleDeleteItem={handleDeleteItem}
-                      />
-                    ))}
-                  </TableBody>
-                </TableWrapper>:
-                // inventoryCheck.details.map((detail, index) => (
+                {!xsScreen ? (
+                  <TableWrapper isCart>
+                    <TableHeader
+                      classes={classes}
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                      headerData={HeadCells.InventoryCheckHeadCells}
+                    />
+                    <TableBody>
+                      {inventoryCheck.details.map((detail, index) => (
+                        <InventoryCheckTableRow
+                          handleItemRealQuantityChange={
+                            handleItemRealQuantityChange
+                          }
+                          detail={detail}
+                          handleDeleteItem={handleDeleteItem}
+                          handleChangeDetailBatches={handleChangeDetailBatches}
+                        />
+                      ))}
+                    </TableBody>
+                  </TableWrapper>
+                ) : (
+                  // inventoryCheck.details.map((detail, index) => (
                   ["helo", "xin chao"].map((detail, index) => (
-                  <CheckMiniTableRow
-                    handleItemRealQuantityChange={handleItemRealQuantityChange}
-                    detail={detail}
-                    handleDeleteItem={handleDeleteItem}
-                  />
-                ))}
+                    <CheckMiniTableRow
+                      handleItemRealQuantityChange={
+                        handleItemRealQuantityChange
+                      }
+                      detail={detail}
+                      handleDeleteItem={handleDeleteItem}
+                    />
+                  ))
+                )}
               </Box>
             </Card>
           </Grid>
@@ -325,11 +345,35 @@ function InventoryCheckPopUp({
               Bạn có chắc chắn muốn Cân bằng kho?
             </Typography>
 
-            <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
-                <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
-                <Button onClick={()=>handleConfirmBalance()} variant="contained" size="small" color="primary" >Xác nhận  </Button>
+            <Grid
+              item
+              xs={12}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                paddingTop: 20,
+              }}
+            >
+              <Button
+                onClick={handleClose}
+                variant="contained"
+                size="small"
+                style={{ marginRight: 20 }}
+                color="secondary"
+              >
+                {" "}
+                Huỷ{" "}
+              </Button>
+              <Button
+                onClick={() => handleConfirmBalance()}
+                variant="contained"
+                size="small"
+                color="primary"
+              >
+                Xác nhận{" "}
+              </Button>
             </Grid>
-    
 
             {/* <Button
               onClick={() => handleClose()}
@@ -361,17 +405,63 @@ function InventoryCheckPopUp({
 
 export default InventoryCheckPopUp;
 
-function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDeleteItem }) {
+function InventoryCheckTableRow({
+  detail,
+  handleItemRealQuantityChange,
+  handleDeleteItem,
+  handleChangeDetailBatches,
+}) {
   const classes = useStyles();
   const [show, setShow] = React.useState("none");
-  useEffect(() => { }, [detail]);
+  
 
-  const [checkedBatches, setCheckedBatches] = useState([])
+  const [batches, setBatches] = useState([]);
   const onChangeRealQuantity = (newQuantity) => {
     handleItemRealQuantityChange(detail.id, newQuantity);
   };
   const [selectBatchOpen, setSelectBatchOpen] = useState(false);
-  const [selectedBatches, setSelectedBatches] = useState([]);
+
+
+  useEffect(() => {
+    if (detail.has_batches) {
+      setBatches(detail.batches.map(batch => ({...batch, is_checked: false, checked_quantity: batch.quantity })));
+    }
+  }, [])
+  const handleSelectBatch = (index) => {
+    console.log(index)
+    const newBatches = [...batches];
+    newBatches[index].is_checked = true;
+    setBatches(newBatches)
+  }
+  const handleChangeBatchQuantity = (e, checkedBatch) => {
+    const value = Number(e.target.value)
+    if (value < 0) {
+      return;
+    }
+    const newBatches = [...batches];
+    const indexOfBatch = newBatches.findIndex(batch => batch.batch_code === checkedBatch.batch_code)
+    if (indexOfBatch >= 0 ) {
+      newBatches[indexOfBatch].checked_quantity = value
+    }
+    setBatches(newBatches)
+  }
+  const handleDeleteBatch = (checkedBatch ) => {
+    const newBatches = [...batches];
+    const indexOfBatch = newBatches.findIndex(batch => batch.batch_code === checkedBatch.batch_code)
+    if (indexOfBatch >= 0 ) {
+      newBatches[indexOfBatch].is_checked = false;
+      newBatches[indexOfBatch].checked_quantity = newBatches[indexOfBatch].quantity;
+      setBatches(newBatches)
+    }
+  }
+
+  useEffect(() => {
+    let total = 0;
+    batches.forEach(batch => total += Number(batch.checked_quantity));
+    onChangeRealQuantity(total);
+    handleChangeDetailBatches(detail.id, batches)
+  }, [batches])
+
   return (
     <>
       <TableRow hover key={detail.id}>
@@ -383,17 +473,69 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDe
         <TableCell align="right">
           {" "}
           <ThousandFormat value={detail.branch_quantity} />
+          {detail.has_batches && (
+            <>
+              <div>
+                {batches
+                  .filter((batch) => batch.is_checked)
+                  .map((checked_batch) => (
+                    <div>
+                      <Tooltip
+                        title={`${
+                          checked_batch.position ? checked_batch.position : ""
+                        }-${
+                          checked_batch.expiry_date
+                            ? checked_batch.expiry_date
+                            : ""
+                        }`}
+                      >
+                        <Chip
+                          label={`${checked_batch.batch_code}-${checked_batch.quantity}`}
+                        ></Chip>
+                      </Tooltip>
+                    </div>
+                  ))}
+              </div>
+            </>
+          )}
         </TableCell>
 
         <TableCell align="left" padding="none">
-          <ButtonQuantity
-            quantity={detail.real_quantity}
-            setQuantity={onChangeRealQuantity}
-            show={show}
-            setShow={setShow}
-            limit={detail.quantity}
-            isReturn={false}
-          />
+          {detail.has_batches ? (
+            <>
+              <div>{detail.real_quantity}</div>
+              <div>
+                {batches
+                  .filter((batch) => batch.is_checked)
+                  .map((checkedBatch) => (
+                    <div>
+                      <Chip
+                        label={
+                          <TextField
+                            type="number"
+                            style={{ width: 100 }}
+                            value={checkedBatch.checked_quantity}
+                            onChange={(e) =>handleChangeBatchQuantity(e, checkedBatch)}
+                          />
+                        }
+                        variant="outlined"
+                        deleteIcon={<DeleteOutline/>}
+                        onDelete={(e) => handleDeleteBatch(checkedBatch)}
+                      ></Chip>
+                    </div>
+                  ))}
+              </div>
+            </>
+          ) : (
+            <ButtonQuantity
+              quantity={detail.real_quantity}
+              setQuantity={onChangeRealQuantity}
+              show={show}
+              setShow={setShow}
+              limit={detail.quantity}
+              isReturn={false}
+            />
+          )}
         </TableCell>
 
         <TableCell align="center">
@@ -428,43 +570,23 @@ function InventoryCheckTableRow({ detail, handleItemRealQuantityChange, handleDe
         <TableRow>
           <TableCell colSpan={1}></TableCell>
           <TableCell colSpan={10}>
-            <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => setSelectBatchOpen(true)}
-              >
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel id="demo-simple-select-standard-label">
                 Chọn lô
-              </Button>
-              {checkedBatches.map((batch) => (
-                <Tooltip title={`Tồn kho - ${batch.quantity}`}>
-                  <Chip
-                    label={`${
-                      batch?.batch_code ? batch?.batch_code : "Mới"
-                    } - ${batch?.expiry_date ? batch?.expiry_date : ""} - ${
-                      batch.additional_quantity
-                    }`}
-                    key={batch.id}
-                    onDelete={() => {
-                      const newBatches = checkedBatches.filter(
-                        (selectedBatch) => selectedBatch.id !== batch.id
-                      );
-                      setCheckedBatches(newBatches);
-                    }}
-                    color={batch.is_new ? "primary" : "secondary"}
-                    deleteIcon={<DeleteOutline />}
-                    variant="outlined"
-                  />
-                </Tooltip>
-              ))}
-              {selectBatchOpen && (
-                <SelectBatch
-                  // handleSubmit={handleSelectBatches}
-                  row={detail}
-                  handleClose={() => setSelectBatchOpen(false)}
-                />
-              )}
-            </div>
+              </InputLabel>
+              <Select
+                onChange={(e) => handleSelectBatch(e.target.value)}
+                style={{ width: 200 }}
+              >
+                {batches.map((batch, index) => (
+                  <MenuItem value={index}>{`${batch.batch_code}(${
+                    batch.expiry_date ? batch.expiry_date.substring(0, 10) : ""
+                  }${batch.position ? "-" + batch.position : ""}): ${
+                    batch.quantity
+                  }`}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </TableCell>
         </TableRow>
       ) : null}
