@@ -112,22 +112,31 @@ const Supplier = () => {
   };
 
   //3.3. loc cot
-
+  const initialQuery = {
+    orderBy: 'suppliers.created_at',
+    sort: 'desc',
+    searchKey: '',
+  };
+  const handleRemoveFilter = (initialQuery) => {
+    setQuery(initialQuery)
+  }
+  const [query, setQuery] = useState(initialQuery)
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
   });
+
   const [totalRows, setTotalRows] = useState(0)
- 
   useEffect(() => {
     setPagingState({...pagingState, page: 0})
-  }, [reload, store_uuid])
+  }, [reload, store_uuid, query])
   useEffect(() => {
     const loadData = async () => {
       try {
         const response = await supplierApi.getSuppliers(store_uuid, {
           page: pagingState.page,
-          limit: pagingState.limit
+          limit: pagingState.limit,
+          ...query
         });
         
         setSupplierList(response.data);
@@ -143,7 +152,7 @@ const Supplier = () => {
       loadData();
     }
     
-  }, [reload,pagingState.page, pagingState.limit]);
+  }, [reload,pagingState.page, store_uuid, pagingState.limit, query]);
 
 
   return (
@@ -192,6 +201,9 @@ const Supplier = () => {
           {dbName:"company",displayName:"Công ty"},
           {dbName:"payment_info",displayName:"Thông tin thanh toán"},
         ]}
+        isOnlySearch={true}
+        handleRemoveFilter={handleRemoveFilter}
+        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
       />
       <SupplierFilter
         openFilter={openFilter}

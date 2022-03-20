@@ -83,7 +83,7 @@ function InvoiceReturn() {
   const handleRemoveFilter = () => {
     setQuery(initialQuery)
   }
-  const [query, setQuery] = useState(initialQuery)
+  
 
   const handleRequestSort = (event, property) => {
     /// / (gửi order vs orderBy lên api) -> fetch lại data để sort
@@ -109,6 +109,8 @@ function InvoiceReturn() {
   // 3.3. loc cot
 
   const [reload, setReload] = useState(false);
+
+  const [query, setQuery] = useState(initialQuery)
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
@@ -137,7 +139,6 @@ function InvoiceReturn() {
       }
     };
     if (store_uuid && branch_uuid) {
-
       loadData();
     }
   }, [pagingState.page, pagingState.limit, branch_uuid, query]);

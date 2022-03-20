@@ -50,27 +50,39 @@ const Employee = () => {
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
 
 
+
   // paging
+  const initialQuery = {
+    orderBy: 'employees.created_at',
+    sort: 'desc',
+    searchKey: '',
+  };
+  const handleRemoveFilter = (initialQuery) => {
+    setQuery(initialQuery)
+  }
+  const [query, setQuery] = useState(initialQuery)
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
-    total_rows: 0,
   });
 
+  const [totalRows, setTotalRows] = useState(0)
   useEffect(() => {
     setPagingState({...pagingState, page: 0})
-  }, [reload, store_uuid])
+  }, [reload, store_uuid, query])
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const response = await employeeApi.getEmployees(store_uuid, {
           page: pagingState.page,
-          limit: pagingState.limit
+          limit: pagingState.limit,
+          ...query
         });
         
-        setPagingState({...pagingState, total_rows: response.total_rows})
+       
         setEmployeeList(response.data);
+        setTotalRows( response.total_rows)
       } catch (error) {
         console.log(error);
       }
@@ -79,7 +91,7 @@ const Employee = () => {
 
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, reload, store_uuid]);
+  }, [pagingState.page, pagingState.limit, reload, store_uuid, query]);
 
 
   //// 1. Add pop up + noti
@@ -198,6 +210,10 @@ const Employee = () => {
           {dbName:"salary_type",displayName:"Loại lương"},
           {dbName:"salary",displayName:"Mức lương"},
         ]}
+
+        isOnlySearch={true}
+        handleRemoveFilter={handleRemoveFilter}
+        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
       />
 
       <EmployeeFilter
@@ -206,7 +222,7 @@ const Employee = () => {
       />
       {/* 3. TABLE */}
       {!xsScreen? <TableWrapper
-        pagingState={pagingState}
+        pagingState={{...pagingState, total_rows: totalRows}}
         setPagingState={setPagingState}
       >
         <TableHeader
