@@ -77,14 +77,11 @@ export default function SignUp() {
     const district = districtList.find(
       (district) => district.id === store_formik.values.district
     ).name;
-    let lat, lng;
-    try {
-      ({lat, lng}  = await getGeoCode(
-        store_formik.values.address + " " + ward + " " + district + " " + province
-      ));
-    } catch (error) {
-      console.log(error)
-    }
+
+    // const { lat, lng } = await getGeoCode(
+    //   store_formik.values.address + " " + ward + " " + district + " " + province
+    // );
+
     const body = {
       name: user_formik.values.name,
       email: user_formik.values.email,
@@ -101,8 +98,10 @@ export default function SignUp() {
       province: province,
       store_phone: store_formik.values.phone,
       default_branch: true,
-      lat: lat,
-      lng: lng
+      // lat: lat,
+      // lng: lng
+      lat:"",
+      lng:""
     }
     try {
       const response = await userApi.ownerRegister(body);

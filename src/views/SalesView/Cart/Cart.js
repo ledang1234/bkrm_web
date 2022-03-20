@@ -466,6 +466,7 @@ const Cart = () => {
         shipping: "0",
         delivery: cart.delivery,
       };
+      console.log("bpdy", body)
 
       try {
         let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
@@ -584,6 +585,7 @@ const Cart = () => {
                       ) : (
                         <SearchProduct
                           handleSearchBarSelect={handleSearchBarSelect}
+                          isCart={true}
                         />
                       )}
                     </Grid>

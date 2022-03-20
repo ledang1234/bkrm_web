@@ -153,7 +153,7 @@ const CartSummary = (props) => {
               {/* 2.1 Mode 1 */}
                 <Grid container direction="row" justifyContent="space-between" className={classes.marginBox}>
                     <Typography variant="h5">
-                        Số lượng sản phẩm
+                        Tổng SL sản phẩm
                     </Typography>
                     <Typography variant="body2">
                             5

@@ -207,7 +207,7 @@ const CartSummary = (props) => {
               justifyContent="space-between"
               className={classes.marginBox}
             >
-              <Typography variant="h5">Tổng số lượng hàng ({cartData.cartItem.length}) </Typography>
+              <Typography variant="h5">Tổng SL sản phẩm ({cartData.cartItem.length}) </Typography>
               <Typography variant="body2">
                 <ThousandFormat
                   value={calculateTotalQuantity(cartData.cartItem)}
