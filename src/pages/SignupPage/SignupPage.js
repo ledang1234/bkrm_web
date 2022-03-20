@@ -76,6 +76,7 @@ export default function SignUp() {
     const district = districtList.find(
       (district) => district.id === store_formik.values.district
     ).name;
+
     let lat, lng;
     try {
       ({ lat, lng } = await getGeoCode(
@@ -100,6 +101,7 @@ export default function SignUp() {
       province: province,
       store_phone: store_formik.values.phone,
       default_branch: true,
+
       lat: lat ? lat.toString() : "",
       lng: lng ? lng.toString() : "",
     }

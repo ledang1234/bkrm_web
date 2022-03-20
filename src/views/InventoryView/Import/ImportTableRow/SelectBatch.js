@@ -19,9 +19,10 @@ export default function SelectBatch({ handleSubmit, handleClose, row }) {
   const [selectedBatches, setSelectedBatches] = useState([]);
   return (
     <Dialog open={true}>
-      <DialogTitle
-        style={{ fontSize: 20 }}
-      >{`Chọn lô của ${row.product_code} - ${row.name}`}</DialogTitle>
+      <Typography
+        style={{ marginTop:15, marginLeft:15 }}
+        variant='h3'
+      >{`Chọn lô của ${row.product_code} - ${row.name}`}</Typography>
       <DialogContent>
         <Autocomplete
           options={row.batches}

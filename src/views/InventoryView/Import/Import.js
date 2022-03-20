@@ -233,6 +233,7 @@ const Import = () => {
 
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
+    console.log("selectedOption.batches",selectedOption.batches)
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === selectedOption.uuid
     );
@@ -397,7 +398,7 @@ const Import = () => {
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
       let body = {
-        supplier_uuid: cart.supplier ? cart.suplier.uuid : "",
+        supplier_uuid: cart.supplier ? cart.supplier.uuid : "",
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
         paid_amount: cart.paid_amount,
@@ -417,6 +418,7 @@ const Import = () => {
         import_date: importTime,
       };
       try {
+        console.log(body)
         let res = await purchaseOrderApi.addInventory(
           store_uuid,
           branch.uuid,
