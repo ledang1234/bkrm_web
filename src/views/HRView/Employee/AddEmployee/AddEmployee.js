@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 //import library
@@ -33,6 +33,8 @@ import { statusAction } from "../../../../store/slice/statusSlice";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import VNDInput from "../../../../components/TextField/NumberFormatCustom";
+import openNotification from "../../../../components/StatusPopup/StatusPopup";
+import { error } from "../../../../components/StatusModal/StatusModal";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -63,11 +65,12 @@ let permissionChoices = [
 ];
 
 const AddEmployee = (props) => {
-  const { handleClose, open } = props;
+  const { handleClose, open,setOpen} = props;
 
   // tam thoi
   const statusState = "Success";
 
+  const [userNameError, setUserNameError] = React.useState(false);
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -114,6 +117,10 @@ const AddEmployee = (props) => {
       password: Yup.string().required("Bắt buộc!"),
       branches: Yup.array().min(1, "Ít nhất một chi nhánh"),
       permissions: Yup.array().min(1, "Ít nhất một chức năng"),
+      email: Yup.string().email("Email không chính xác"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại").matches(/^\d+$/)
     }),
 
     onSubmit: async (values, actions) => {
@@ -141,13 +148,16 @@ const AddEmployee = (props) => {
 
 
       try {
+        setOpen(false)
         const response = await employeeApi.createEmployee(
           store_uuid,
           formData
         );
         handleClose("Success");
-      } catch (error) {
-        handleClose("Failed");
+      } catch (err) {
+        // error("Lỗi", "Tên đăng nhập đã tồn tại")
+        setUserNameError(true)
+       
       }
     },
   });
@@ -171,12 +181,15 @@ const AddEmployee = (props) => {
     loadBranches();
   }, [store_uuid]);
 
+    useEffect(() =>{
+      if(userNameError) {setUserNameError(false)}
+    },[formik.values.user_name])
 
-
+   
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={()=> setOpen(false)}
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
@@ -272,11 +285,14 @@ const AddEmployee = (props) => {
                 name="user_name"
                 fullWidth
                 size="small"
-                onChange={formik.handleChange}
+                onChange={formik.handleChange }
               />
 
               {formik.errors.user_name && formik.touched.user_name && (
                 <FormHelperText error>{formik.errors.user_name}</FormHelperText>
+              )}
+              { userNameError && (
+                <FormHelperText error>Tên đăng nhập đã tồn tại</FormHelperText>
               )}
 
               <TextField
@@ -286,6 +302,7 @@ const AddEmployee = (props) => {
                 variant="outlined"
                 fullWidth
                 name="password"
+                type={"password"}
                 size="small"
                 value={formik.values.password}
                 onChange={formik.handleChange}
@@ -294,6 +311,7 @@ const AddEmployee = (props) => {
               {formik.errors.password && formik.touched.password && (
                 <FormHelperText error>{formik.errors.password}</FormHelperText>
               )}
+             
 
               <TextField
                 id="date"
@@ -515,7 +533,7 @@ const AddEmployee = (props) => {
 
       <DialogActions>
         <Button
-          onClick={() => handleClose(null)}
+          onClick={()=> setOpen(false)}
           variant="contained"
           size="small"
           color="secondary"

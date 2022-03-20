@@ -33,6 +33,7 @@ import employeeApi from "../../../../../api/employeeApi";
 import { useSelector, useDispatch } from "react-redux";
 import EditEmployee from "../../AddEmployee/EditEmployee";
 import ChangeEmployeePwd from "./ChangeEmployeePwd/ChangeEmployeePwd";
+import { VNDFormat } from "../../../../../components/TextField/NumberFormatCustom";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -322,11 +323,25 @@ const EmployeeDetail = (props) => {
               </Grid>
               <Grid item sm={6}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {employeeDetail.salary}
+                  <VNDFormat value={employeeDetail.salary}/>
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={7} sm={6}>
+                <Typography variant="h5" gutterBottom component="div">
+                  Trạng thái
+                </Typography>
+              </Grid>
+              <Grid item sm={6}>
+                <Typography variant="body1" gutterBottom component="div">
+                  {row.status === 'active' ? "Kích hoạt" :"Ngưng hoạt động"}{" "}
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
+
         </Grid>
 
         {/* Button */}
@@ -347,25 +362,27 @@ const EmployeeDetail = (props) => {
             Sửa
           </Button>
           <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick={async () => {
-            if (employeeDetail.status === "inactive") {
+            if (row.status === "inactive") {
               try {
                 const response = await employeeApi.activeEmployee(store_uuid, employeeDetail.uuid)
                 dispatch(statusAction.successfulStatus("Kích hoạt thành công"))
+                handleReload()
               } catch (err) {
                 console.log(err)
                 dispatch(statusAction.failedStatus("Kích hoạt thất bại"))
               }
-            } else if (employeeDetail.status === "active") {
+            } else if (row.status === "active") {
               try {
                 const response = await employeeApi.inactiveEmployee(store_uuid, employeeDetail.uuid)
                 dispatch(statusAction.successfulStatus("Ngưng hoạt động thành công"))
+                handleReload()
               } catch (err) {
                 dispatch(statusAction.failedStatus("Ngưng hoạt động thất bại"))
               }
             }
 
           }}>
-            {employeeDetail.status === "inactive" ? "Kích hoạt" : "Ngưng hoạt động"}
+            {row.status === "inactive" ? "Kích hoạt" : "Ngưng hoạt động"}
           </Button>
 
           <IconButton

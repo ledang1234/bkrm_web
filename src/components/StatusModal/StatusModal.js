@@ -21,8 +21,9 @@ export function success(message) {
 
 export function error(title, content) {
   Modal.error({
-    title: "This is an error message",
-    content: "some messages...some messages...",
+    title: title,
+    content:content,
+    style:{zIndex:10000}
   });
 }
 

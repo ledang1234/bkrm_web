@@ -253,8 +253,6 @@ const ToolBar = (props) => {
         </Grid>
         <Grid item>
 
-       
-      
         <Box className={classes.actions}>
           <Tooltip
             title="Nhập excel"
@@ -289,11 +287,11 @@ const ToolBar = (props) => {
               <PrintTwoToneIcon className={classes.icon} />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Chọn cột">
+          {/* <Tooltip title="Chọn cột">
             <IconButton aria-label="filter list">
               <ViewColumnTwoToneIcon className={classes.icon} />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           {!isOnlySearch && 
           <Tooltip title="Lọc">
             <IconButton aria-label="filter list" onClick={handleToggleFilter}>

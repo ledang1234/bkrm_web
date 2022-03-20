@@ -190,7 +190,7 @@ const Supplier = () => {
       <ToolBar
         dataTable={supplerList}
         tableType={TableType.SUPPLIER}
-        textSearch={"#, Tên, sđt, email, địa chỉ, ...  "}
+        textSearch={"#, Tên, sđt, email, ...  "}
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
         columnsToKeep = {[

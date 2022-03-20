@@ -72,7 +72,7 @@ const AddCustomer = (props) => {
 
   const handleCloseAndReset =() =>{
     onReload()
-    handleClose()
+    // handleClose()
     customerFormik.resetForm()
   } 
   const dispatch = useDispatch()
@@ -173,7 +173,7 @@ const AddCustomer = (props) => {
 
       <DialogActions>
         <Button
-          onClick={handleCloseAndReset}
+          onClick={ handleClose}
           variant="contained"
           size="small"
           color="secondary"
@@ -181,7 +181,8 @@ const AddCustomer = (props) => {
           Huỷ
         </Button>
         <Button
-          onClick={async () => {     
+          onClick={async () => {   
+            handleClose()  
             let body = {
               name: customerFormik.values.name,
               email: customerFormik.values.email,

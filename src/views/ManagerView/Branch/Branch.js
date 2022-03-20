@@ -64,7 +64,7 @@ const Branch = () => {
           </Tooltip>
         </ButtonBase>
 
-        <AddBranch onReload={onReload} open={open} handleClose={handleClose} />
+       {open&& <AddBranch onReload={onReload} open={open} handleClose={handleClose} />}
       </Grid>
       <BranchMap reload={reload} onReload={onReload} />
     </Card>

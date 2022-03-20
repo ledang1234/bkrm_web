@@ -49,14 +49,14 @@ const EmployeeTableRow = (props) => {
 
         <TableCell align="left">{row.phone}</TableCell>
         <TableCell align="left">{row.email}</TableCell>
-        <TableCell align="left">{row.status === 'active' ? 'Hoạt động' : 'Ngưng hoạt động'}</TableCell>
+        <TableCell align="left">{row.status === 'active' ? 'Kích hoạt' : 'Ngưng hoạt động'}</TableCell>
       </TableRow>
 
       {/* DETAIL */}
       <TableRow>
         {/* colspan  => số cột trong collapse */}
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          <EmployeeDetail parentProps={props} />
+          <EmployeeDetail parentProps={props}  handleReload={handleReload}/>
         </TableCell>
       </TableRow>
     </>

@@ -174,7 +174,7 @@ const Customer = () => {
         </Grid>
 
         {/* Popup add */}
-        <AddCustomer open={open} handleClose={handleClose} onReload={onReload} />
+       {open && <AddCustomer open={open} handleClose={handleClose} onReload={onReload} />}
         {/* Noti */}
         <SnackBar openBar={openBar} handleCloseBar={handleCloseBar} addStatus={addStatus}/>
 
@@ -186,7 +186,7 @@ const Customer = () => {
         <ToolBar  
           dataTable={customerList} 
           tableType={TableType.CUSTOMER} 
-          textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
+          textSearch={'#, Tên, sđt, email,...  '} /*handlePrint={handlePrint}*/ 
           handleToggleFilter={handleToggleFilter}  
           handlePrint={handlePrint}
           isOnlySearch={true}
