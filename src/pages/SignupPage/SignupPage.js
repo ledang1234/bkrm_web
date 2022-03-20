@@ -77,9 +77,14 @@ export default function SignUp() {
     const district = districtList.find(
       (district) => district.id === store_formik.values.district
     ).name;
-    const { lat, lng } = await getGeoCode(
-      store_formik.values.address + " " + ward + " " + district + " " + province
-    );
+    let lat, lng;
+    try {
+      ({lat, lng}  = await getGeoCode(
+        store_formik.values.address + " " + ward + " " + district + " " + province
+      ));
+    } catch (error) {
+      console.log(error)
+    }
     const body = {
       name: user_formik.values.name,
       email: user_formik.values.email,
