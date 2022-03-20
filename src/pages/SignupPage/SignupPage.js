@@ -44,7 +44,6 @@ export default function SignUp() {
         .matches(/^\d+$/, "Số điển thoại không chính xác"),
       password: Yup.string().required("Nhập mật khẩu").min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
       passwordConfirm: Yup.string().required("Nhập lại mật khẩu").oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp'),
-      email: Yup.string().email("Email không chính xác")
     })
   })
   const store_formik = useFormik({
@@ -106,11 +105,14 @@ export default function SignUp() {
     }
     try {
       const response = await userApi.ownerRegister(body);
-      dispatch(statusAction.successfulStatus("Tạo cửa hàng thành công"))
-      dispatch(logInHandler(user_formik.values.user_name, user_formik.values.password));
+      if(response.message ==="error"){
+        dispatch(statusAction.failedStatus("Tên tài khoản đã được sử dụng"))
+      }else{
+        dispatch(statusAction.successfulStatus("Tạo cửa hàng thành công"))
+        dispatch(logInHandler(user_formik.values.user_name, user_formik.values.password));
+      }
     } catch (error) {
-      console.log(error)
-      dispatch(statusAction.failedStatus("Số điện thoại hoặc tên đăng nhập đã được sử dụng)"))
+      dispatch(statusAction.failedStatus("Tạo tài khoản thất bại"))
     }
   };
   const [cityList, setCityList] = useState([]);
