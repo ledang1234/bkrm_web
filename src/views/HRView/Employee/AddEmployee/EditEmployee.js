@@ -328,6 +328,10 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 onChange={formik.handleChange}
               />
 
+{formik.errors.email && formik.touched.email && (
+                <FormHelperText error>{formik.errors.email}</FormHelperText>
+              )}
+
               <TextField
                 id="outlined-basic"
                 label="Địa chỉ"

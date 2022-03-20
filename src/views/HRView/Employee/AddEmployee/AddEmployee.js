@@ -188,26 +188,28 @@ const AddEmployee = (props) => {
       <DialogContent>
         <div className={classes.root}>
           <Grid container direction="row">
-
-
-            <Avatar alt="Remy Sharp" className={classes.ava} src={imageToShow}/>
+            <Avatar
+              alt="Remy Sharp"
+              className={classes.ava}
+              src={imageToShow}
+            />
             <input
               accept="image/*"
               className={classes.input}
               id="contained-button-file"
               multiple
               type="file"
-              // accept="image/*" 
+              // accept="image/*"
               capture="environment"
               onChange={(event) => {
-                setImage(event.target.files[0])
+                setImage(event.target.files[0]);
 
                 // read the selected file and display on the avata
                 var file = event.target.files[0];
                 var reader = new FileReader();
-                reader.onloadend = function() {
+                reader.onloadend = function () {
                   setImageToShow(reader.result);
-                }
+                };
 
                 reader.readAsDataURL(file);
               }}
@@ -342,8 +344,6 @@ const AddEmployee = (props) => {
                 </Select>
               </FormControl>
 
-              
-
               <TextField
                 id="outlined-basic"
                 label="Email"
@@ -354,6 +354,10 @@ const AddEmployee = (props) => {
                 size="small"
                 onChange={formik.handleChange}
               />
+
+              {formik.errors.email && formik.touched.email && (
+                <FormHelperText error>{formik.errors.email}</FormHelperText>
+              )}
 
               <TextField
                 id="outlined-basic"
@@ -423,7 +427,6 @@ const AddEmployee = (props) => {
                 // }}
               />
 
-          
               {/* <TextField id="outlined-basic" label="Quyền" variant="outlined" fullWidth size="small"/> */}
 
               <FormControl
@@ -458,10 +461,11 @@ const AddEmployee = (props) => {
                     </MenuItem>
                   ))}
                 </Select>
-
               </FormControl>
               {formik.errors.permissions && formik.touched.permissions && (
-                <FormHelperText error>{formik.errors.permissions}</FormHelperText>
+                <FormHelperText error>
+                  {formik.errors.permissions}
+                </FormHelperText>
               )}
 
               <FormControl
@@ -499,10 +503,11 @@ const AddEmployee = (props) => {
                 </Select>
 
                 {formik.errors.branches && formik.touched.branches && (
-                <FormHelperText error>{formik.errors.branches}</FormHelperText>
-              )}
+                  <FormHelperText error>
+                    {formik.errors.branches}
+                  </FormHelperText>
+                )}
               </FormControl>
-              
             </Grid>
           </Grid>
         </div>
