@@ -34,7 +34,7 @@ const Category = (props) => {
   }
   return (
     <Modal open={open} handleClose={handleClose}>
-      <AddCategory onReset={onReset} open={openAddCategory} handleClose={handleCloseCategory} />
+      <AddCategory onReset={onReset} open={openAddCategory} handleClose={handleCloseCategory}  reset={reset}/>
       <Box
         flexDirection="row"
         display="flex"

@@ -29,7 +29,10 @@ const AddCategory = (props) => {
       } catch (error) { }
     };
     fetchAllCategory();
-  }, []);
+  }, [props.reset]);
+
+
+
   const dispatch = useDispatch();
   const handleAddCategory = async () => {
     handleCloseAndReset()
@@ -37,6 +40,7 @@ const AddCategory = (props) => {
       const response = await productApi.addCategory(store_uuid, categoryInfo);
       props.onReset()
       dispatch(statusAction.successfulStatus("Tạo danh mục thành công"));
+
       
     } catch (error) {
       console.log(error);
