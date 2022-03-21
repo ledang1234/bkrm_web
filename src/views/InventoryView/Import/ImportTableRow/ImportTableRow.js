@@ -106,7 +106,7 @@ export const ImportRow = (props) => {
             {row.name}
           </ListItem>
         </TableCell>
-        <TableCell align="left">{row.bar_code}</TableCell>
+        {/* <TableCell align="left">{row.bar_code}</TableCell> */}
         <TableCell align="right">
           <VNDInput
             id="standard-basic"
