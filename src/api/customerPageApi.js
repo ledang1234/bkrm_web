@@ -12,6 +12,9 @@ const customerPageApi = {
     const url = `/storeInfo/${store_uuid}/getNestedCategories`;
     return axiosClient.get(url);
   },
-  
+  addOrder: (store_uuid, body) => {
+    const url = `/storeInfo/${store_uuid}/addOrder`;
+    return axiosClient.post(url, body);
+  },
 };
 export default customerPageApi;
