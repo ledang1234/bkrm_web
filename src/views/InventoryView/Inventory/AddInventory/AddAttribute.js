@@ -10,7 +10,7 @@ import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWith
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 import AddIcon from '@material-ui/icons/Add';
 import {Button,TextField, Grid, FormControl, Select,MenuItem,Typography, ListItem} from "@material-ui/core";
-
+import RemoveIcon from '@material-ui/icons/Remove';
 const useStyles = makeStyles((theme) => ({
     formControl: {
         marginRight: 10,
@@ -29,6 +29,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_pri
 
     const theme = useTheme();
     const classes = useStyles(theme);
+
 
     function generateList   ()  {
         let newArr = [...datas];
@@ -56,7 +57,6 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_pri
         return mySet
       }
 
-      const  [newDataAfterDelete, setNewDataAfterDelete] = useState([])
       useEffect (() =>{
         var list = []
         // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
@@ -125,6 +125,9 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
     const theme = useTheme();
     const classes = useStyles(theme);
 
+    const [inputAttr, setInputAttr] =  useState(false)
+
+
     //  popup
   const [openPopupAddAttr, setOpenPopupAddAttr] = useState(false);
   const [isEditPopUp, setIsEditPopUp] = useState(false);
@@ -156,7 +159,7 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
     return (
         <Grid container className={classes.row} alignItems="center">
             <Grid container item xs={11} alignItems="center" >
-                <FormControl className={classes.formControl}>
+               {!inputAttr? <FormControl className={classes.formControl}>
                     <Select value={data.key} onChange={handleChangeAttr}  >
                         <MenuItem value="unset" selected disabled hidden>Chọn thuộc tính...</MenuItem>
                         {attributeList.map((attr) => {
@@ -168,8 +171,18 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
                         </MenuItem> */}
                     </Select>
 
-                </FormControl>
-                <EditTwoToneIcon style={{ marginRight: 60 }}  onClick={()=>{setOpenPopupAddAttr(true); setIsEditPopUp(true)}}/>
+                </FormControl>:
+                <TextField
+                style={{width:230}}
+                        value={data.key}
+                        onChange={handleChangeAttr}
+                />
+                                /* <EditTwoToneIcon style={{ marginRight: 60 }}  onClick={()=>{setOpenPopupAddAttr(true); setIsEditPopUp(true)}}/> */
+                    }
+                {inputAttr === false ?
+                <AddIcon style={{ marginRight: 60 }}  onClick={()=>{setInputAttr(true); updateFieldChanged(index, '')    }} />:    
+                <RemoveIcon style={{ marginRight: 60 }}  onClick={()=>{setInputAttr(false);updateFieldChanged(index, '')  }} />
+                }
                 <TagsInput style={{ minWidth: 270 }} selectedTags={handleSelecetedTags} selectedItem={selectedItem} setSelectedItem={setSelectedItem} placeholder="Nhấn giá trị và enter"
                 />
             </Grid>
