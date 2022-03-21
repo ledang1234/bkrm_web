@@ -24,7 +24,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
-import VNDInput from "../../../../components/TextField/NumberFormatCustom";
+import VNDInput, { ThousandSeperatedInput } from "../../../../components/TextField/NumberFormatCustom";
 // import img
 import avaUpload from "../../../../assets/img/product/default-product.png";
 import barcodeIcon from "../../../../assets/img/icon/barcode1.png";
@@ -44,6 +44,8 @@ import clsx from "clsx";
 import TagsInput from "../../../../components/TextField/TagsInput";
 import AddAttribute from "./AddAttribute";
 import RelaltedItemList from "./RelaltedItemList";
+import SnackBarGeneral from "../../../../components/SnackBar/SnackBarGeneral";
+
 const UploadImages = (img) => {
   return (
     <Box
@@ -103,21 +105,38 @@ const AddInventory = (props) => {
       product_code: "",
       has_batches: false,
       quantity:0,
-      max_order:0
+      max_order:999999999
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
       importedPrice: Yup.number()
         .required("Nhập giá vốn")
-        .moreThan(0, "Giá vốn phải lớn hơn không"),
+        // .moreThan(0, "Giá vốn phải lớn hơn không"),
+        .moreThan(-1, "Giá vốn không được âm"),
+
       salesPrice: Yup.number()
         .required("Nhập giá bán")
         .moreThan(0, "Giá bán phải lớn hơn không"),
+
       re_order_point: Yup.number("Phải là một số").moreThan(
         -1,
         "Số lượng đặt hàng lại không được âm"
       ),
+
+      quantity: Yup.number()
+        .moreThan(-1, "Tồn kho ban đầu không được âm"),
+      
+      max_order: Yup.number()
+        .moreThan(-1, "Số lượng nhập hàng tối đa"),
+        
+
     }),
+  });
+
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [snackStatus, setSnackStatus] = React.useState({
+    style: "error",
+    message: "Tên thuộc tính trống",
   });
 
   // redux
@@ -304,19 +323,13 @@ const AddInventory = (props) => {
 
   //ATTRIBUTE
   // api get all attribute
-  const attributeList = [
-    {
-      id: "1",
-      name: "MÀU",
-    },
-    {
-      id: "2",
-      name: "SIZE",
-    },
-    {
-      id: "3",
-      name: "Chất liệu",
-    },
+  const attributeList = [ 
+    {  id: "1", name: "MÀU",  },
+    { id: "2", name: "KÍCH THƯỚC", },
+    {  id: "3", name: "CHẤT LIỆU",  },
+    {   id: "4", name: "VỊ",},
+    {   id: "5", name: "BỘ NHỚ",},
+ 
   ];
   const [expanded, setExpanded] = React.useState(false);
 
@@ -332,10 +345,22 @@ const AddInventory = (props) => {
 
   // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0}
   const [relatedList, setRelatedList] = useState([]);
+  // const [attrOfProduct, setAttrOfProduct] = useState([]);
+
 
   // console.log("relatedList",relatedList)
 
   const handleAddProductWithVariation = async () => {
+    if(relatedList.length !== 0){
+        // var isValid = datas.map(item => item.key === 'unset'?  false  )
+       for (let i = 0; i < datas.length; i++){
+         if (datas[i].key ==='unset' ){
+          setOpenSnack(true);
+          setSnackStatus({ style: "error",  message: "Tên thuộc tính trống",});
+           return 
+         }
+       }
+    }
     handleCloseAndReset();
     try {
       var bodyFormData = new FormData();
@@ -380,10 +405,12 @@ const AddInventory = (props) => {
       for (var i = 0; i < relatedList.length; i++) {
         const values = relatedList[i].name.split("-");
         const attributeValues = [];
-        attributeList.forEach((att, index) => {
+        const attrOfProduct = datas.map((item) => item.key)
+        attrOfProduct.forEach((att, index) => {
           if (values[index])
             attributeValues.push({
-              name: att.name,
+              // name: att.name,
+              name: att,
               value: values[index],
             });
         });
@@ -410,6 +437,7 @@ const AddInventory = (props) => {
     }
   };
 
+
   return (
     <Dialog
       open={open}
@@ -423,6 +451,11 @@ const AddInventory = (props) => {
           handleClose={handleCloseCategory}
           onReset={onReset}
         />
+         <SnackBarGeneral
+            handleClose={()=>  setOpenSnack(false)}
+            open={openSnack}
+            status={snackStatus}
+          />
         <Box
           display="flex"
           flexDirection="row"
@@ -551,7 +584,16 @@ const AddInventory = (props) => {
               name="salesPrice"
               inputRef={salesPriceRef}
               value={productFormik.values.salesPrice}
-              onChange={productFormik.handleChange}
+              // onChange={productFormik.handleChange}
+              onChange={(e)=>{
+                // productFormik.handleChange
+                productFormik.setFieldValue("salesPrice", e.target.value)
+                if (relatedList.length !== 0){
+                  var list = [...relatedList]
+                  list = relatedList.map(i =>i.list_price = e.target.value)
+                  // list = relatedList.map(e =>({name:e,product_code:"", bar_code: "",standard_price:productFormik.values.importedPrice, list_price :value}))
+                  // setRelatedList(list)
+                }}}
               error={
                 productFormik.touched.salesPrice &&
                 productFormik.errors.salesPrice
@@ -571,7 +613,16 @@ const AddInventory = (props) => {
               size="small"
               name="importedPrice"
               value={productFormik.values.importedPrice}
-              onChange={productFormik.handleChange}
+              // onChange={productFormik.handleChange}
+              onChange={(e)=>{
+                // productFormik.handleChange
+                productFormik.setFieldValue("importedPrice", e.target.value)
+                if (relatedList.length !== 0){
+                  var list = [...relatedList]
+                  list = relatedList.map(i =>i.standard_price = e.target.value)
+                  // list = relatedList.map(e =>({name:e,product_code:"", bar_code: "",standard_price:productFormik.values.importedPrice, list_price :value}))
+                  // setRelatedList(list)
+                }}}
               error={
                 productFormik.touched.importedPrice &&
                 productFormik.errors.importedPrice
@@ -584,7 +635,8 @@ const AddInventory = (props) => {
               onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
-             <TextField
+            {Number(productFormik.values.importedPrice) > Number(productFormik.values.salesPrice) ?<Typography variant='h6' style={{color:'red'}}> Giá vốn đang lớn hơn giá bán !!</Typography>:null}
+             <ThousandSeperatedInput
               label="Tồn kho ban đầu"
               variant="outlined"
               fullWidth
@@ -605,7 +657,7 @@ const AddInventory = (props) => {
               onBlur={productFormik.handleBlur}
             />
 
-            <TextField
+            <ThousandSeperatedInput
               label="Số lượng đặt hàng lại"
               variant="outlined"
               fullWidth
@@ -625,7 +677,7 @@ const AddInventory = (props) => {
               }
               onBlur={productFormik.handleBlur}
             />
-             <TextField
+             <ThousandSeperatedInput
               label="Số lượng nhập hàng tối đa"
               variant="outlined"
               fullWidth
@@ -725,6 +777,11 @@ const AddInventory = (props) => {
               datas={datas}
               setDatas={setDatas}
               setRelatedList={setRelatedList}
+
+              list_price={productFormik.values.salesPrice}
+              standard_price={productFormik.values.importedPrice}
+              // attrOfProduct={attrOfProduct}
+              // setAttrOfProduct={setAttrOfProduct}
             />
           </Collapse>
         </Card>
@@ -739,6 +796,9 @@ const AddInventory = (props) => {
             <RelaltedItemList
               relatedList={relatedList}
               setRelatedList={setRelatedList}
+
+
+
             />
           </Card>
         ) : null}
@@ -777,7 +837,8 @@ const AddInventory = (props) => {
               !(
                 productFormik.isValid &&
                 Object.keys(productFormik.touched).length > 0
-              )
+              ) ||
+             ( Number(productFormik.values.importedPrice) > Number(productFormik.values.salesPrice))
             }
           >
             Thêm

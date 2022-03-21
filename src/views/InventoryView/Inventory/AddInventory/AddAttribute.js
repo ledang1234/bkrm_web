@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
+const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_price, standard_price }) => {
     // console.log("init", datas)
 
     const theme = useTheme();
@@ -43,7 +43,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
                 var _set = [];
                 for (let j = 0; j < mySet.length ; j++ ){
                     for (let k = 0; k < newArr[i].items.length ; k++ ){
-                        _set.push(mySet[j].concat( '-',newArr[i].items[k]))
+                        _set.push(mySet[j].concat( ' - ',newArr[i].items[k]))
                         // _set.push({name:mySet[j].concat( ' - ',newArr[i].items[k]), attList:[]})
 
                     }
@@ -56,6 +56,15 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
         return mySet
       }
 
+      const  [newDataAfterDelete, setNewDataAfterDelete] = useState([])
+      useEffect (() =>{
+        var list = []
+        // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
+        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:standard_price?standard_price:0, list_price :list_price?list_price:0}))
+        setRelatedList(list)
+    
+
+      },[datas])
 
     const updateFieldChanged = (index, attr) => {
         let newArr = [...datas];
@@ -67,35 +76,28 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
         let newArr = [...datas];
         newArr[index].items = value;
         setDatas(newArr);
-        var list = []
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
-        setRelatedList(list)
+        // var list = []
+        // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
+        // setRelatedList(list)
     }
 
     const deleteAttr = (key) => {
-        var newArr = [...datas];
-        newArr = newArr.filter(row => row.key !== key)
+        let newArr = [...datas];
+        // newArr = newArr.filter(row => row.key !== key)
+        newArr = newArr.filter(row => row.id !== key)
         setDatas(newArr);
-        var list = []
-        generateList().map((e) =>
-          list.push({
-            name: e,
-            product_code: "",
-            bar_code: "",
-            standard_price: 0,
-            list_price: 0,
-          })
-        );
-        setRelatedList(list)
+        // var list = []
+        // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
+        // setRelatedList(list)
     }
 
     const addAttrRow = () => {
         let newArr = [...datas];
-        newArr.push({ key: "unset", items: []})
+        newArr.push({ id:new Date(), key: "unset", items: []})
         setDatas(newArr);
-        var list = []
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
-        setRelatedList(list)
+    //     var list = []
+    //     generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
+    //     setRelatedList(list)
     }
 
     return (
@@ -160,10 +162,10 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
                         {attributeList.map((attr) => {
                             return (<MenuItem value={attr.name}>{attr.name}</MenuItem>)
                         })}
-                        <MenuItem   hidden>
+                        {/* <MenuItem   hidden>
                             <AddIcon fontSize="small"style={{marginRight:5, marginLeft:-5}}/>
                             <Typography style={{color:"#000", fontSize:12}} onClick={()=>{setOpenPopupAddAttr(true); setIsEditPopUp(false)}}>Tạo thuộc tính mới</Typography>
-                        </MenuItem>
+                        </MenuItem> */}
                     </Select>
 
                 </FormControl>
@@ -173,7 +175,8 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
             </Grid>
 
             <Grid container item xs={1} >
-                <DeleteForeverTwoToneIcon onClick={() => { deleteAttr(data.key) }} />
+                {/* <DeleteForeverTwoToneIcon onClick={() => { deleteAttr(data.key) }} /> */}
+                <DeleteForeverTwoToneIcon onClick={() => { deleteAttr(data.id) }} />
             </Grid>
 
             <ModalWrapperWithClose     

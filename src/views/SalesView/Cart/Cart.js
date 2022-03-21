@@ -88,6 +88,8 @@ const Cart = () => {
   // chú ý cartList id from 1 to ... dùng để edit + delete
   // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
   const user_uuid = useSelector((state) => state.info.user.uuid);
+
+  
   const loadLocalStorage = () => {
     if (window.localStorage.getItem("cartListData")) {
       const data = JSON.parse(window.localStorage.getItem("cartListData"));
@@ -95,7 +97,6 @@ const Cart = () => {
         return data.cartList;
       }
     }
-
     return [
       {
         customer: null,
@@ -108,8 +109,8 @@ const Cart = () => {
       },
     ];
   };
-  const [cartList, setCartList] = React.useState(loadLocalStorage());
 
+  const [cartList, setCartList] = React.useState(loadLocalStorage());
   useEffect(() => {
     window.localStorage.setItem(
       "cartListData",
