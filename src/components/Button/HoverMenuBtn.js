@@ -136,21 +136,21 @@ const HoverMenuBtn = (props) => {
            return(
             <CascadingSubmenu 
          
-            popupId={nodes.title} 
+            popupId={nodes.uuid} 
             id={nodes.id}
-            title={nodes.title} 
+            title={nodes.name} 
             handleClickItem={handleClickItem}
             
          >
            {
-            Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : 
+           nodes.children.length ? nodes.children.map((node) => renderTree(node)) : 
                 <CascadingMenuItem 
                
                 id={nodes.id}
-                title={nodes.title} 
+                title={nodes.name} 
                 handleClickItem={handleClickItem}
                 >
-                    {nodes.title}
+                    {nodes.name}
                 </CascadingMenuItem>
            }
         </CascadingSubmenu>

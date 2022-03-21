@@ -28,7 +28,9 @@ import CartPage from "./CartPage/CartPage";
 import customerPageApi from "../../api/customerPageApi";
 import StoreContext from "./StoreContext";
 import { useParams } from "react-router-dom";
-import webSetting from "../../assets/constant/webInfo"
+import webSetting from "../../assets/constant/webInfo";
+import {useDispatch, useSelector} from 'react-redux';
+import {customerPageActions} from '../../store/slice/customerPageSlice'
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
@@ -44,6 +46,8 @@ const CustomerPage = () => {
   function handleClickItem(item) {
     setClickItem(item);
   }
+
+  const {categories, products} = useSelector(state => state.customerPage)
 
   //0.Store Info 
   var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
@@ -75,8 +79,7 @@ const CustomerPage = () => {
     return routeItems;
   };
 
-  const [storeInfo, setStoreInfo] = React.useState();
-
+  const dispatch = useDispatch()
   let { storeWebPage } = useParams();
   useEffect(() => {
     if (!storeWebPage) {
@@ -85,32 +88,39 @@ const CustomerPage = () => {
     const fetchStore = async () => {
       const res = await customerPageApi.storeInfo(storeWebPage);
       console.log(res.data);
-      setStoreInfo(res.data);
+      
+      dispatch(customerPageActions.setStoreInfo(res.data))
+      const data = await Promise.all([customerPageApi.storeCategroies(res.data.uuid), 
+        customerPageApi.storeProducts(res.data.uuid)]
+      )
+
+      dispatch(customerPageActions.setCategories(data[0].data ? data[0].data : []));
+      dispatch(customerPageActions.setProducts(data[1].data ? data[1].data : []));
+      // console.log(data)
     };
     fetchStore();
   }, []);
 
   return (
-    <StoreContext.Provider value={storeInfo}>
       <div className={classes.root}>
         <NavBar
-          storeInfo={storeInfo}
+          // storeInfo={storeInfo}
           handleClickItem={handleClickItem}
-          category={category}
+          category={categories ? categories : []}
 
           logo={logoStore}
           webInfo={webInfo}
         />
-        {parseInt(webInfo.navBar.buttonCart) === 0 ?
+        {/* {parseInt(webInfo.navBar.buttonCart) === 0 ?
          <CartButton storeInfo={storeInfo} />:null
-        }
+        } */}
         
 
         <Box style={{ marginTop: 73 }}>
           <Switch>
             <Route exact path={`${path}`}>
               <MainPage
-                storeInfo={storeInfo}
+               
                 webInfo={webInfo}
               />
             </Route>
@@ -135,7 +145,9 @@ const CustomerPage = () => {
               />
             </Route>
             {/* Tại sao define route detail trong ProductPage 
-              hoặc define route detial sau route product ko đc  */}
+              hoặc define route detial sau route product ko đc  
+              --> Làm sao tui biet đc tại sao ^^
+            */}
 
             {/* Path detail */}
 
@@ -153,7 +165,7 @@ const CustomerPage = () => {
 
         {/* <Footer/> */}
       </div>
-    </StoreContext.Provider>
+  
   );
 };
 

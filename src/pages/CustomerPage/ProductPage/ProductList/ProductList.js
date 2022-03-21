@@ -59,7 +59,6 @@ const ProductList = (props) => {
             <Grid container direction="row" spacing={2} justifyContent="center" >
              {/* Đổi list đúng với category */}
              {InventoryList?.map(item=>{
-                 console.log("item",item)
                  return( 
                      <>
                      {isBox?
