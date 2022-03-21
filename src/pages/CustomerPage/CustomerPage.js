@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerPage = () => {
-  let { path } = useRouteMatch();
+  let { url } = useRouteMatch();
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -46,20 +46,21 @@ const CustomerPage = () => {
   function handleClickItem(item) {
     setClickItem(item);
   }
+  let { storeWebPage } = useParams();
 
-  const {categories, products} = useSelector(state => state.customerPage)
+  const {categories, products, storeInfo} = useSelector(state => state.customerPage)
 
   //0.Store Info 
   var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
   //1.  API GET ALL CATEGORY HERE
   //....
  //2.  GET SETTING
-  const  webInfo =  webSetting;
+ 
 
   const renderTree = (items) => {
     return (
       <>
-        <Route exact path={`${path}/products/${items.id}`}>
+        <Route exact path={`/store/${storeWebPage}/products/${items.id}`}>
           <ProductPage
             clickItem={clickItem}
             webInfo={webInfo}
@@ -80,7 +81,8 @@ const CustomerPage = () => {
   };
 
   const dispatch = useDispatch()
-  let { storeWebPage } = useParams();
+  const [webInfo, setWebInfo] = useState(webSetting)
+  
   useEffect(() => {
     if (!storeWebPage) {
       return;
@@ -88,7 +90,8 @@ const CustomerPage = () => {
     const fetchStore = async () => {
       const res = await customerPageApi.storeInfo(storeWebPage);
       console.log(res.data);
-      
+      setWebInfo(JSON.parse(res.data.web_configuration))
+      console.log(webInfo)
       dispatch(customerPageActions.setStoreInfo(res.data))
       const data = await Promise.all([customerPageApi.storeCategroies(res.data.uuid), 
         customerPageApi.storeProducts(res.data.uuid)]
@@ -101,72 +104,78 @@ const CustomerPage = () => {
     fetchStore();
   }, []);
 
-  return (
-      <div className={classes.root}>
-        <NavBar
-          // storeInfo={storeInfo}
-          handleClickItem={handleClickItem}
-          category={categories ? categories : []}
 
-          logo={logoStore}
-          webInfo={webInfo}
-        />
-        {/* {parseInt(webInfo.navBar.buttonCart) === 0 ?
-         <CartButton storeInfo={storeInfo} />:null
-        } */}
-        
+  if (storeWebPage) {
 
-        <Box style={{ marginTop: 73 }}>
-          <Switch>
-            <Route exact path={`${path}`}>
-              <MainPage
-               
-                webInfo={webInfo}
-              />
-            </Route>
-            <Route exact path={`${path}/promotion`}>
-              <PromotionPage />
-            </Route>
-            <Route exact path={`${path}/storeInfo`}>
-              <StorePage />
-            </Route>
-            {/* <Route exact path={`${path}/aboutUs`}>
-              <AboutUsPage />
-            </Route> */}
+  return (<div className={classes.root}>
+    <NavBar
+      // storeInfo={storeInfo}
+      handleClickItem={handleClickItem}
+      category={categories ? categories : []}
 
-            <Route exact path={`${path}/cart`}>
-              <CartPage webInfo={webInfo}  />
-            </Route>
+      logo={logoStore}
+      webInfo={webInfo}
+    />
+    {parseInt(webInfo.navBar.buttonCart) === 0 ?
+     <CartButton storeInfo={storeInfo} />:null
+    }
+    
 
-            {/* Path product */}
-            <Route exact path={`${path}/products/all`}>
-              <ProductPage
-                webInfo={webInfo}
-              />
-            </Route>
-            {/* Tại sao define route detail trong ProductPage 
-              hoặc define route detial sau route product ko đc  
-              --> Làm sao tui biet đc tại sao ^^
-            */}
+    <Box style={{ marginTop: 73 }}>
+      <Switch>
+        <Route exact path={`${url}`}>
+          <MainPage
+           
+            webInfo={webInfo}
+          />
+        </Route>
+        <Route exact path={`${url}/promotion`}>
+          <PromotionPage />
+        </Route>
+        <Route exact path={`${url}/storeInfo`}>
+          <StorePage />
+        </Route>
+        {/* <Route exact path={`${path}/aboutUs`}>
+          <AboutUsPage />
+        </Route> */}
 
-            {/* Path detail */}
+        <Route exact path={`${url}/cart`}>
+          <CartPage webInfo={webInfo}  />
+        </Route>
 
-            {/* tạm thời - fix lại sau */}
-            <Route exact path={`${path}/products/all/1`}>
-              <DetailPage />
-            </Route>
+        {/* Path product */}
+        <Route exact path={`${url}/category/:categoryId`}>
+          <ProductPage
+            webInfo={webInfo}
+          />
+        </Route>
+        <Route exact path={`${url}/category/:categoryId/products/:productCode`}>
+          <DetailPage />
+        </Route>
+        {/* Tại sao define route detail trong ProductPage 
+          hoặc define route detial sau route product ko đc  
+        */}
 
-            {/* Path product */}
-            <RouteList />
+        {/* Path detail */}
 
-            <Route path={`${path}/*`} component={PageNotFound} />
-          </Switch>
-        </Box>
+        {/* tạm thời - fix lại sau
+        <Route exact path={`${url}/products/all/`}>
+          <DetailPage />
+        </Route> */}
 
-        {/* <Footer/> */}
-      </div>
+        {/* Path product */}
+        <RouteList />
+
+        <Route path={`${url}/*`} component={PageNotFound} />
+      </Switch>
+    </Box>
+
+    {/* <Footer/> */}
+  </div>) 
+  } else {
+    return <div>Error</div>
+  }
   
-  );
 };
 
 export default CustomerPage;

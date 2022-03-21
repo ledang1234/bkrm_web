@@ -64,7 +64,7 @@ function CascadingMenuItem({ onClick,title, id ,...props }) {
 }
 
 function CascadingSubmenu({ onClick,title,id, popupId, ...props }) {
-  let { path } = useRouteMatch();
+  let { url } = useRouteMatch();
   const classes = useCascadingMenuStyles()
   const { parentPopupState } = React.useContext(CascadingContext)
   const popupState = usePopupState({
@@ -88,8 +88,8 @@ function CascadingSubmenu({ onClick,title,id, popupId, ...props }) {
   return (
     <React.Fragment>
       <MenuItem {...bindHover(popupState)} {...bindFocus(popupState)} className={classes.title} onClick={handleClick} 
-      /* SỬA PATH NÈEEEEEE */
-      component={Link} to={`${path}/products/${id}`}
+        /* SỬA PATH NÈEEEEEE */
+        component={Link} to={`${url}/category/${id}`}
       >
         <span className={classes.title}>{title}</span>
         <ChevronRight className={classes.moreArrow} fontSize="small" />
@@ -125,7 +125,7 @@ function CascadingMenu({ popupState, ...props }) {
 }
 const HoverMenuBtn = (props) => {
   const {handleClickItem,category,textColor,textSize,textBold} = props;
-  let { path } = useRouteMatch();
+  let { url } = useRouteMatch();
   const classes = useCascadingMenuStyles();
   const popupState = usePopupState({
     popupId: 'demoMenu',
@@ -140,7 +140,6 @@ const HoverMenuBtn = (props) => {
             id={nodes.id}
             title={nodes.name} 
             handleClickItem={handleClickItem}
-            
          >
            {
            nodes.children.length ? nodes.children.map((node) => renderTree(node)) : 
@@ -175,7 +174,7 @@ const HoverMenuBtn = (props) => {
         {...bindFocus(popupState)}
         className={classes.btnNav} 
         style={{color:textColor, fontWeight:textBold, fontSize:textSize}}
-        component={Link} to={`${path}/products/all`}
+        component={Link} to={`${url}/products/all`}
       >
         Sản phẩm
       </Button>

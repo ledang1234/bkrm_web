@@ -8,6 +8,7 @@ import {
   Grid,
   ButtonBase,
   Avatar,
+  TextField,
   Tooltip,
   TableBody,
 } from "@material-ui/core";
@@ -17,7 +18,10 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 import InvoiceReturnSummary from "../../../components/CheckoutComponent/CheckoutSummary/InvoiceReturnSummary/InvoiceReturnSummary";
 import CartTableRow from "./CartTableRow/CartTableRow"
 import { Divider } from "@mui/material";
+import _ from 'lodash'
 // import {useTheme, makeStyles,styled,withStyles,createStyles,lighten} from "@material-ui/core/styles";
+import {useDispatch, useSelector} from "react-redux"
+import { customerPageActions } from '../../../store/slice/customerPageSlice';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -48,8 +52,10 @@ const CartPage = (props) => {
   const classes = useStyles(theme);
 
   const {mainColor} = props.webInfo
-  console.log("mainColor",mainColor)
+  
 
+  const {order } = useSelector(state => state.customerPage)
+  const dispatch = useDispatch()
   const [cartList, setCartList] = React.useState([
     {
       uuid:"123423",
@@ -58,83 +64,156 @@ const CartPage = (props) => {
       quantity: 2,
       unit_price: 200,
     },
-    {   uuid:"dđ123423",id: 12, name: "Quan", quantity: 1, unit_price: 220 },
+    { uuid:"dđ123423",id: 12, name: "Quan", quantity: 1, unit_price: 220 },
     { uuid:"dđ1dgrr23423",id: 134, name: "Bánh", quantity: 3, unit_price: 240 },
   ]);
 
-  const handleChangeItemQuantity = (index, newQuantity) =>{
-    let newCartList = [...cartList]
-    newCartList[index].quantity = newQuantity
-    setCartList(newCartList)
+  const handleChangeItemQuantity = (index, newQuantity) => {
+    let newOrder = _.cloneDeep(order)
+
+    newOrder.cartItem[index].quantity = newQuantity
+    dispatch(customerPageActions.setOrder(newOrder))
   }
 
 
   const handleDeleteItemCart = (uuid) =>{
-    let newCartList = [...cartList]
-    newCartList = newCartList.filter(row => row.uuid === uuid)
-    setCartList(newCartList)
+    let newOrder = _.cloneDeep(order)
+    newOrder.cartItem = newOrder.cartItem.filter(row => row.uuid !== uuid)
+    
+    dispatch(customerPageActions.setOrder(newOrder))
   }
 
+  const handleChangeOrder = (field, value) => {
+    let newOrder = _.cloneDeep(order)
+    newOrder[field] = value
+    
+    dispatch(customerPageActions.setOrder(newOrder))
+  }
 
-
-
+  const calculateTotal = () => {
+    let total = 0;
+    order.cartItem.forEach(item => total += item.list_price * item.quantity)
+    return total
+  }
 
   return (
-    <div style={{backgroundColor:"#fff",  }}>
-    <Box style={{ marginTop: 100, marginLeft: 50, marginRight: 50,}}>
-      <Typography style={{ flexGrow: 1, textAlign: "center",}} variant="h2">
-        Giỏ hàng 
-      </Typography>
-      <Typography className={classes.textTitle} variant="body2" style={{marginBottom:20}}>
-        ( 5 sản phẩm )
-      </Typography>
-      {/* <div style={{ flexGrow: 1, textAlign: "center"}} > */}
+    <div style={{ backgroundColor: "#fff" }}>
+      <Box style={{ marginTop: 100, marginLeft: 50, marginRight: 50 }}>
+        <Typography style={{ flexGrow: 1, textAlign: "center" }} variant="h2">
+          Giỏ hàng
+        </Typography>
+        {/* <Typography
+          className={classes.textTitle}
+          variant="body2"
+          style={{ marginBottom: 20 }}
+        >
+          {order.cartItem.length}
+        </Typography> */}
+        {/* <div style={{ flexGrow: 1, textAlign: "center"}} > */}
         {/* hello */}
         {/* <div style={{flexGrow: 1, textAlign: "center"}}> */}
-      <Grid container justifyContent="center">
-      <Divider  sx={{ borderBottomWidth: 5 }} variant="middle" style={{width:50, marginBottom:20,background: 'black'}}  />
-      </Grid>
-    
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        // alignItems="center"
-        spacing={2}
-      >
-        <Grid item sm={12} md={8}>
-          <Card style={{boxShadow:'0px 5px 10px rgba(0,0,0,0.1)',}}>
-            <Box style={{ padding: 30,  }}>
-              <TableWrapper isCart={true}>
-                <TableHeader
-                  classes={classes}
-                  isCustomer={true}
-                  headerData={CartHeadCells}
-                />
-                <TableBody>
-                  {cartList.map((row, index) => {
-                    return (
-                      <CartTableRow row={row} handleDeleteItemCart={handleDeleteItemCart} handleChangeItemQuantity={handleChangeItemQuantity} index={index}/>
-                    );
-                  })}
-                </TableBody>
-              </TableWrapper>
-            </Box>
-          </Card>
+        <Grid container justifyContent="center">
+          <Divider
+            sx={{ borderBottomWidth: 5 }}
+            variant="middle"
+            style={{ width: 50, marginBottom: 20, background: "black" }}
+          />
         </Grid>
 
-        <Grid item sm={12} md={4} className={classes.card} >
-          <Card className={classes.card} style={{padding:20, }} >
-            <Grid container  direction="row" justifyContent="space-between" alignItems="center" spacing={2} >
-                <Typography style={{fontSize:19, fontWeight:500, color:"#000"}} >Tổng tiền  (1):</Typography>  
-                <Typography  style={{fontSize:22, fontWeight:700, color:"red"}}>500.000</Typography>  
-              </Grid>   
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-between"
+          // alignItems="center"
+          spacing={2}
+        >
+          <Grid item sm={12} md={8}>
+            <Card style={{ boxShadow: "0px 5px 10px rgba(0,0,0,0.1)" }}>
+              <Box style={{ padding: 30 }}>
+                <TableWrapper isCart={true}>
+                  <TableHeader
+                    classes={classes}
+                    isCustomer={true}
+                    headerData={CartHeadCells}
+                  />
+                  <TableBody>
+                    {order.cartItem.map((row, index) => {
+                      return (
+                        <CartTableRow
+                          row={row}
+                          handleDeleteItemCart={handleDeleteItemCart}
+                          handleChangeItemQuantity={handleChangeItemQuantity}
+                          index={index}
+                        />
+                      );
+                    })}
+                  </TableBody>
+                </TableWrapper>
+              </Box>
+            </Card>
+          </Grid>
+
+          <Grid item sm={12} md={4} className={classes.card}>
+            <Card className={classes.card} style={{ padding: 20 }}>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Box
+                  component="form"
+                  sx={{
+                    "& .MuiTextField-root": { m: 1, width: "100%" },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    error={!order.name}
+                    value={order.name}
+                    label="Họ và tên"
+                    helperText="Họ và tên không được trống."
+                    onChange={(e) => handleChangeOrder("name", e.target.value)}
+                  />
+                  <TextField
+                    error={!order.phone}
+                    label="Số điện thoại"
+                    value={order.phone}
+                    onChange={(e) => handleChangeOrder("phone", e.target.value)}
+                    helperText="Số điện thoại không được trống."
+                  />
+                  <TextField value={order.address} label="Địa chỉ" onChange={(e) => handleChangeOrder("address", e.target.value)} />
+                </Box>
+
+                <Typography
+                  style={{ fontSize: 19, fontWeight: 500, color: "#000" }}
+                >
+                  Tổng tiền ({order.cartItem.length}):
+                </Typography>
+                <Typography
+                  style={{ fontSize: 22, fontWeight: 700, color: "red" }}
+                >
+                  {calculateTotal()}
+                </Typography>
+              </Grid>
               {/* <Button style={{marginTop:30}}variant="contained" fullWidth style={{color:mainColor}}>Đặt hàng</Button> */}
-              <ColorButton  mainColor={mainColor} color="primary"  style={{marginTop:30}}variant="contained" fullWidth> Đặt hàng </ColorButton>
-          </Card>
+              <ColorButton
+                mainColor={mainColor}
+                color="primary"
+                style={{ marginTop: 30 }}
+                variant="contained"
+                fullWidth
+                disabled={!order.name || !order.phone || !calculateTotal()}
+              >
+                {" "}
+                Đặt hàng{" "}
+              </ColorButton>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
     </div>
   );
 };

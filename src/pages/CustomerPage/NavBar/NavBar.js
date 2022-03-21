@@ -23,7 +23,7 @@ import {
 //import icons
 import MenuIcon from "@material-ui/icons/Menu";
 import HoverMenuBtn from "../../../components/Button/HoverMenuBtn";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import AccountCircleTwoToneIcon from '@material-ui/icons/AccountCircleTwoTone';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
@@ -53,6 +53,7 @@ const NavBar = (props) => {
     const mainColor=`rgba(${ props.webInfo.mainColor.r }, ${ props.webInfo.mainColor.g }, ${ props.webInfo.mainColor.b }, ${ props.webInfo.mainColor.a })`
 
     // 
+    let { url } = useRouteMatch();
     const theme = useTheme();
     const classes = useStyles(theme);
     const matchDownSm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -133,7 +134,7 @@ const NavBar = (props) => {
           >
             <Grid item sm={2} 
             component={Link}
-            to={`/store/${props.storeInfo?.web_page}/`}
+            to={`${url}`}
             >
               <img src={logo} style={{height:45,marginTop:-5,marginBottom:-5}}/>
             </Grid>
@@ -161,7 +162,7 @@ const NavBar = (props) => {
                   <Button
                     className={classes.btnNav}
                     component={Link}
-                    to={`/store/${props.storeInfo?.web_page}/`}
+                    to={`${url}`}
                     style={{
                       color: textColor,
                       fontWeight: textBold,
@@ -183,7 +184,7 @@ const NavBar = (props) => {
                   <Button
                     className={classes.btnNav}
                     component={Link}
-                    to={`/store/${props.storeInfo?.web_page}/promotion`}
+                    to={`${url}/promotion`}
                     style={{
                       color: textColor,
                       fontWeight: textBold,
@@ -195,7 +196,7 @@ const NavBar = (props) => {
                   <Button
                     className={classes.btnNav}
                     component={Link}
-                    to={`/store/${props.storeInfo?.web_page}/storeInfo`}
+                    to={`${url}/storeInfo`}
                     style={{
                       color: textColor,
                       fontWeight: textBold,
@@ -259,7 +260,7 @@ const NavBar = (props) => {
                   {parseInt(buttonCart) === 1 ? 
                     <div style={{backgroundColor:parseInt(navColor) === 0? mainColor:'#fff',width:37, height:37,marginTop:2,paddingTop:7, paddingLeft:7,borderRadius:40,marginLeft:15}}
                     component={Link}
-                    to={`/store/${props.storeInfo?.web_page}/cart`}
+                    to={`${url}/cart`}
                     >
                       <Tooltip title="Giỏ hàng">
                         <StyledBadge color="error" badgeContent={3}>

@@ -10,6 +10,7 @@ import clsx from "clsx";
 import InventoryList from '../../../assets/JsonData/inventory.json'
 import StoreContext from '../StoreContext';
 import customerPageApi from '../../../api/customerPageApi';
+import {useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     arrow: {
@@ -40,19 +41,7 @@ const MainPage = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    const [inventoryList, setInventoryList] = useState([])
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const res = await customerPageApi.storeProducts(storeInfo.uuid)
-                setInventoryList(res.data)
-                console.log(res.data)
-            } catch(err) {
-                console.log(err)
-            }
-        }
-        fetchProducts();
-    }, [storeInfo])
+    const {products} = useSelector(state => state.customerPage);
     return (
 <>
     {/* // 1. CAROUSE */}
@@ -77,7 +66,7 @@ const MainPage = (props) => {
     <Box>
         <Typography variant="h2" style={{flexGrow: 1,textAlign: "center", marginBottom:30,marginTop:50}}>Bán chạy</Typography>
         {/* <ProductList InventoryList={inventoryList} mainColor={`rgba(${mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${ mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={10} boxDistance={2}/> */}
-        <ProductList InventoryList={inventoryList} mainColor={`rgba(${mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${ mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/>
+        <ProductList InventoryList={products} mainColor={`rgba(${mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${ mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/>
 
     </Box>
 
