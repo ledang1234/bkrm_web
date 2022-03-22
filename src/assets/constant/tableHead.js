@@ -93,7 +93,7 @@ export const SupplierHeadCells = [
   //   disablePadding: false,
   //   label: "Tổng tiền nhập",
   // },
-  { id: "debt", align: "center", disablePadding: false, label: "Trạng thái" },
+  { id: "debt", align: "center", disablePadding: false, label: "Công nợ" },
 ];
 
 export const InvoiceHeadCells = [
@@ -150,14 +150,14 @@ export const CustomerHeadCells = [
   { id: "name", align: "left", disablePadding: true, label: "Khách hàng" },
   { id: "phone", align: "left", disablePadding: true, label: "Số điện thoại" },
   { id: "score", align: "right", disablePadding: true, label: "Tích điểm" },
-  { id: "debt", align: "center", disablePadding: true, label: "Trạng thái" },
+  { id: "debt", align: "center", disablePadding: true, label: "Công nợ" },
 ];
 
 export const CartHeadCells = [
   { id: "stt", align: "left", disablePadding: true, label: "Stt" },
   { id: "product_code", align: "left", disablePadding: true, label: "Mã SP" },
   { id: "name", align: "left", disablePadding: true, label: "Tên" },
-  { id: "bar_code", align: "left", disablePadding: true, label: "Mã vạch" },
+  // { id: "bar_code", align: "left", disablePadding: true, label: "Mã vạch" },
   { id: "price", align: "right", disablePadding: true, label: "Đơn giá" },
   { id: "quantity", align: "center", disablePadding: true, label: "Số lượng" },
   { id: "protein1", align: "right", disablePadding: true, label: "Thành tiền" },
@@ -167,7 +167,7 @@ export const ImportHeadCells = [
   { id: "stt", align: "left", disablePadding: true, label: "Stt" },
   { id: "product_code", align: "left", disablePadding: true, label: "Mã SP" },
   { id: "name", align: "left", disablePadding: true, label: "Tên" },
-  { id: "bar_code", align: "left", disablePadding: true, label: "Mã vạch" },
+  // { id: "bar_code", align: "left", disablePadding: true, label: "Mã vạch" },
   { id: "price", align: "right", disablePadding: true, label: "Giá nhập" },
   { id: "quantity", align: "center", disablePadding: true, label: "Số lượng" },
   { id: "protein1", align: "right", disablePadding: true, label: "Thành tiền" },
@@ -231,17 +231,17 @@ export const OrderListHeadCells = [
     id: "supplier",
     align: "left",
     disablePadding: false,
-    label: "Nhà cung cấp",
+    label: "Khách hàng",
   },
-  { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  { id: "phone", align: "left", disablePadding: false, label: "Số điện thoại" },
   { id: "total", align: "right", disablePadding: false, label: "Khoảng tiền" },
   { id: "status", align: "center", disablePadding: false, label: "Trạng thái" },
-  {
-    id: "employee",
-    align: "left",
-    disablePadding: false,
-    label: "Người thực hiện",
-  },
+  // {
+  //   id: "employee",
+  //   align: "left",
+  //   disablePadding: false,
+  //   label: "Người thực hiện",
+  // },
 ];
 export const CheckHistoryHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },

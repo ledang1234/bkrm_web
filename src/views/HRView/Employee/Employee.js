@@ -37,6 +37,8 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+
 
 const Employee = () => {
   const [employeeList, setEmployeeList] = useState([]);
@@ -101,7 +103,7 @@ const Employee = () => {
     setOpen(true);
   };
   const handleClose = (status) => {
-    setOpen(false);
+    // setOpen(false);
     setAddStatus(status);
     if (status === "Success") {
       onReload();
@@ -181,7 +183,7 @@ const Employee = () => {
       </Grid>
 
       {/* Popup add */}
-      {open && <AddEmployee open={open} handleClose={handleClose} />}
+      {open && <AddEmployee open={open} handleClose={handleClose} setOpen={setOpen} />}
       {/* Noti */}
       <SnackBar
         openBar={openBar}
@@ -197,7 +199,7 @@ const Employee = () => {
         dataTable={employeeList}
         tableType={TableType.EMPLOYEE}
         textSearch={
-          "#, Tên, sđt, email, địa chỉ, ...  "
+          "#, Tên, sđt, email, ...  "
         } /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
@@ -246,7 +248,7 @@ const Employee = () => {
           })}
         </TableBody>
       </TableWrapper>:
-          employeeList.map((row, index) => {
+          <>{employeeList.map((row, index) => {
             return (
              
               <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
@@ -254,6 +256,9 @@ const Employee = () => {
               typePartner={"Nhân viên"}  />
             );
           })}
+          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+    
+          </>}
 
 
       <div  style={{display:'none'}} >

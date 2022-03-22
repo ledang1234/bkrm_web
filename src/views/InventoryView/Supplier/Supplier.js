@@ -38,6 +38,7 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 
 const Supplier = () => {
@@ -190,7 +191,7 @@ const Supplier = () => {
       <ToolBar
         dataTable={supplerList}
         tableType={TableType.SUPPLIER}
-        textSearch={"#, Tên, sđt, email, địa chỉ, ...  "}
+        textSearch={"#, Tên, sđt, email, ...  "}
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
         columnsToKeep = {[
@@ -240,13 +241,17 @@ const Supplier = () => {
           })}
         </TableBody>
       </TableWrapper>:
-      supplerList.map((row, index) => {
+      <>
+      {supplerList.map((row, index) => {
         return (
           <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
             id={row.supplier_code} name={row.name} phone={row.phone} 
             typePartner={"Nhà cung cấp"}  />
         );
       })}
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+
+      </>}
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>

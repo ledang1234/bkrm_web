@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useTheme, makeStyles, styled } from "@material-ui/core/styles";
 
 import {Button, Grid, TextField,FormControl,TableRow,TableCell,Divider,TableBody, Select,MenuItem, Typography} from "@material-ui/core";
@@ -19,11 +19,14 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const RelaltedItemList = ({relatedList, setRelatedList}) => {
+const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_price}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
     // {name:e,product_code:"", bar_code: "",standard_price:0, unit_price :0, attribute_values}
+
+
+
 
 
     const handleDelete = (index)=> {

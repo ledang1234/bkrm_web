@@ -287,13 +287,13 @@ export const ProductMiniTableRow = (props) =>{
                     />                   
                      <Grid  container direction="column"justifyContent="space-between" >
                     <Typography style={{marginTop:-7, marginBottom:10}}>{name}</Typography>
-                    <Typography style={{}}>Giá vốn: <ThousandFormat value={standard_price}/></Typography>
+                    <Typography style={{}}>Vốn: <ThousandFormat value={standard_price}/></Typography>
                     </Grid>
                 </ListItem>  
             </Grid>
             <Grid item xs={3} container direction="column"justifyContent="space-between" alignItems="flex-end" >
                 <Typography style={{marginTop:-5, textAlign: 'right',color:returnColor(branch_quantity,min_reorder_quantity)}}>Tồn: <ThousandFormat value={branch_quantity}/></Typography>
-                <Typography style={{textAlign: 'right', }}>Giá bán: <ThousandFormat value={list_price}/></Typography>
+                <Typography style={{textAlign: 'right', }}>Bán: <ThousandFormat value={list_price}/></Typography>
             </Grid>
         </Grid> 
 
@@ -357,6 +357,58 @@ export const CheckMiniTableRow = ({ detail, handleItemRealQuantityChange, handle
 }
 
 
+
+
+
+
+export const VarianceProductMiniTableRow = (props) =>{
+    const classes = useStyles();
+    const theme = useTheme(); 
+   
+
+    const {variance,onClick} = props
+
+
+    function returnColor(current,min) {
+        if(current >= min) {return "green"}
+        else if (current <= 0) {return "red"}
+        else{return "orange"}
+    }
+    
+    return (
+  
+        <div style={{margin:15,}}>
+        <Grid  container direction="row" justifyContent="space-between" 
+          
+          >
+            <Grid item xs={8}>
+                <ListItem  style={{marginLeft:2, padding:0}}>
+                 <Box
+                    component="img"
+                    sx={{ height: 45, width: 45, borderRadius: 10, marginRight: 15 }}
+                    src={variance.img_url}
+                    />                   
+                     <Grid  container direction="column"justifyContent="space-between" >
+                    <Typography style={{marginTop:-7, marginBottom:10}}>{variance.name}</Typography>
+                    <Typography style={{}}>Giá vốn: <ThousandFormat value={variance.standard_price}/></Typography>
+                    </Grid>
+                </ListItem>  
+            </Grid>
+            <Grid item xs={4} container direction="column"justifyContent="space-between" alignItems="flex-end" >
+                <Typography style={{marginTop:-5, textAlign: 'right',color:returnColor(variance.branch_quantity,variance.min_reorder_quantity)}}>Tồn: <ThousandFormat value={variance.branch_quantity}/></Typography>
+                <Typography style={{textAlign: 'right', }}>Giá bán: <ThousandFormat value={variance.list_price}/></Typography>
+            </Grid>
+        </Grid> 
+        <Box style={{display:'flex',justifyContent:'right'}}>
+        <Button style={{marginTop:10, }} size="small" color="primary" variant="outlined"
+        onClick={onClick}>Chi tiết</Button>
+        </Box>
+
+        <Divider style={{marginTop:3}} />
+       
+        </div>
+    )
+}
 {/* <ListItem  style={{ padding:10}}>   
 <ListItem  style={{margin:0, padding:0}}>    
         <Box component="img" sx={{ height: 55, width: 55,  borderRadius:10,marginRight:20   }}src={row.img_url} />

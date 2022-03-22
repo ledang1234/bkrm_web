@@ -10,7 +10,7 @@ import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWith
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 import AddIcon from '@material-ui/icons/Add';
 import {Button,TextField, Grid, FormControl, Select,MenuItem,Typography, ListItem} from "@material-ui/core";
-
+import RemoveIcon from '@material-ui/icons/Remove';
 const useStyles = makeStyles((theme) => ({
     formControl: {
         marginRight: 10,
@@ -24,11 +24,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
+const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_price, standard_price }) => {
     // console.log("init", datas)
 
     const theme = useTheme();
     const classes = useStyles(theme);
+
 
     function generateList   ()  {
         let newArr = [...datas];
@@ -43,7 +44,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
                 var _set = [];
                 for (let j = 0; j < mySet.length ; j++ ){
                     for (let k = 0; k < newArr[i].items.length ; k++ ){
-                        _set.push(mySet[j].concat( '-',newArr[i].items[k]))
+                        _set.push(mySet[j].concat( ' - ',newArr[i].items[k]))
                         // _set.push({name:mySet[j].concat( ' - ',newArr[i].items[k]), attList:[]})
 
                     }
@@ -56,6 +57,14 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
         return mySet
       }
 
+      useEffect (() =>{
+        var list = []
+        // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
+        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:standard_price?standard_price:0, list_price :list_price?list_price:0}))
+        setRelatedList(list)
+    
+
+      },[datas])
 
     const updateFieldChanged = (index, attr) => {
         let newArr = [...datas];
@@ -67,35 +76,28 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList }) => {
         let newArr = [...datas];
         newArr[index].items = value;
         setDatas(newArr);
-        var list = []
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
-        setRelatedList(list)
+        // var list = []
+        // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
+        // setRelatedList(list)
     }
 
     const deleteAttr = (key) => {
-        var newArr = [...datas];
-        newArr = newArr.filter(row => row.key !== key)
+        let newArr = [...datas];
+        // newArr = newArr.filter(row => row.key !== key)
+        newArr = newArr.filter(row => row.id !== key)
         setDatas(newArr);
-        var list = []
-        generateList().map((e) =>
-          list.push({
-            name: e,
-            product_code: "",
-            bar_code: "",
-            standard_price: 0,
-            list_price: 0,
-          })
-        );
-        setRelatedList(list)
+        // var list = []
+        // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
+        // setRelatedList(list)
     }
 
     const addAttrRow = () => {
         let newArr = [...datas];
-        newArr.push({ key: "unset", items: []})
+        newArr.push({ id:new Date(), key: "unset", items: []})
         setDatas(newArr);
-        var list = []
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
-        setRelatedList(list)
+    //     var list = []
+    //     generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
+    //     setRelatedList(list)
     }
 
     return (
@@ -122,6 +124,9 @@ export default AddAttribute
 const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, deleteAttr, setDatas ,updateValueChanged}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    const [inputAttr, setInputAttr] =  useState(false)
+
 
     //  popup
   const [openPopupAddAttr, setOpenPopupAddAttr] = useState(false);
@@ -154,26 +159,37 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
     return (
         <Grid container className={classes.row} alignItems="center">
             <Grid container item xs={11} alignItems="center" >
-                <FormControl className={classes.formControl}>
+               {!inputAttr? <FormControl className={classes.formControl}>
                     <Select value={data.key} onChange={handleChangeAttr}  >
                         <MenuItem value="unset" selected disabled hidden>Chọn thuộc tính...</MenuItem>
                         {attributeList.map((attr) => {
                             return (<MenuItem value={attr.name}>{attr.name}</MenuItem>)
                         })}
-                        <MenuItem   hidden>
+                        {/* <MenuItem   hidden>
                             <AddIcon fontSize="small"style={{marginRight:5, marginLeft:-5}}/>
                             <Typography style={{color:"#000", fontSize:12}} onClick={()=>{setOpenPopupAddAttr(true); setIsEditPopUp(false)}}>Tạo thuộc tính mới</Typography>
-                        </MenuItem>
+                        </MenuItem> */}
                     </Select>
 
-                </FormControl>
-                <EditTwoToneIcon style={{ marginRight: 60 }}  onClick={()=>{setOpenPopupAddAttr(true); setIsEditPopUp(true)}}/>
+                </FormControl>:
+                <TextField
+                style={{width:230}}
+                        value={data.key}
+                        onChange={handleChangeAttr}
+                />
+                                /* <EditTwoToneIcon style={{ marginRight: 60 }}  onClick={()=>{setOpenPopupAddAttr(true); setIsEditPopUp(true)}}/> */
+                    }
+                {inputAttr === false ?
+                <AddIcon style={{ marginRight: 60 }}  onClick={()=>{setInputAttr(true); updateFieldChanged(index, '')    }} />:    
+                <RemoveIcon style={{ marginRight: 60 }}  onClick={()=>{setInputAttr(false);updateFieldChanged(index, '')  }} />
+                }
                 <TagsInput style={{ minWidth: 270 }} selectedTags={handleSelecetedTags} selectedItem={selectedItem} setSelectedItem={setSelectedItem} placeholder="Nhấn giá trị và enter"
                 />
             </Grid>
 
             <Grid container item xs={1} >
-                <DeleteForeverTwoToneIcon onClick={() => { deleteAttr(data.key) }} />
+                {/* <DeleteForeverTwoToneIcon onClick={() => { deleteAttr(data.key) }} /> */}
+                <DeleteForeverTwoToneIcon onClick={() => { deleteAttr(data.id) }} />
             </Grid>
 
             <ModalWrapperWithClose     

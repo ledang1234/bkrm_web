@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
-import VNDInput from "../../../../../../components/TextField/NumberFormatCustom";
+import VNDInput , { ThousandSeperatedInput }from "../../../../../../components/TextField/NumberFormatCustom";
 // import img
 import avaUpload from "../../../../../../assets/img/product/default-product.png";
 import barcodeIcon from "../../../../../../assets/img/icon/barcode1.png";
@@ -87,12 +87,14 @@ const UpdateInventory = (props) => {
       unit: props.productInfo.quantity_per_unit || '',
       re_order_point: props.productInfo.min_reorder_quantity || 0,
       product_code: props.productInfo.product_code || '',
+      max_order:props.productInfo.max_order || '',
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
-      importedPrice: Yup.number().required("Nhập giá vốn").moreThan(0, "Giá vốn phải lớn hơn không"),
+      importedPrice: Yup.number().required("Nhập giá vốn").moreThan(-1, "Giá vốn không được âm"),
       salesPrice: Yup.number().required("Nhập giá bán").moreThan(0, "Giá bán phải lớn hơn không"),
       re_order_point: Yup.number("Phải là một số").moreThan(-1, "Số lượng đặt hàng lại không được âm"),
+      max_order: Yup.number().moreThan(-1, "Số lượng nhập hàng tối đa không được âm"),
     }),
   })
   const info = useSelector((state) => state.info);
@@ -207,7 +209,7 @@ const UpdateInventory = (props) => {
               onBlur={productFormik.handleBlur}
               type="text"
             />
-            <TextField
+            {/* <TextField
               label="Mã sản phẩm (tự động)"
               variant="outlined"
               fullWidth
@@ -216,7 +218,7 @@ const UpdateInventory = (props) => {
               name="product_code"
               onChange={productFormik.handleChange}
               value={productFormik.values.product_code}
-            />
+            /> */}
             <TextField
               label="Mã vạch"
               variant="outlined"
@@ -322,7 +324,9 @@ const UpdateInventory = (props) => {
               onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
-            <TextField
+            {Number(productFormik.values.importedPrice) > Number(productFormik.values.salesPrice) ?<Typography variant='h6' style={{color:'red'}}> Giá vốn đang lớn hơn giá bán !!</Typography>:null}
+
+            <ThousandSeperatedInput
               label="Số lượng đặt hàng lại"
               variant="outlined"
               fullWidth
@@ -338,6 +342,26 @@ const UpdateInventory = (props) => {
               helperText={
                 productFormik.touched.re_order_point
                   ? productFormik.errors.re_order_point
+                  : null
+              }
+              onBlur={productFormik.handleBlur}
+            />
+             <ThousandSeperatedInput
+              label="Số lượng nhập hàng tối đa"
+              variant="outlined"
+              fullWidth
+              size="small"
+              className={classes.margin}
+              name="max_order"
+              value={productFormik.values.max_order}
+              onChange={productFormik.handleChange}
+              error={
+                productFormik.touched.max_order &&
+                productFormik.errors.max_order
+              }
+              helperText={
+                productFormik.touched.max_order
+                  ? productFormik.errors.max_order
                   : null
               }
               onBlur={productFormik.handleBlur}

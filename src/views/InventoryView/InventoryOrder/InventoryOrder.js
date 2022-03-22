@@ -36,7 +36,7 @@ import purchaseOrderApi from "../../../api/purchaseOrderApi";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
-
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 const InventoryOrder = () => {
   // fetch data here
   const [purchaseOrders, setPurchaseOrders] = useState([]);
@@ -240,14 +240,20 @@ const InventoryOrder = () => {
         </TableBody>
       </TableWrapper>
       :
-      purchaseOrders.map((row, index) => {
+      <>
+      {purchaseOrders.map((row, index) => {
         return (
+      
           <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
           totalCost={row.total_amount}  id={row.purchase_order_code} partnerName={row.supplier_name} date={row.creation_date} 
           typeBill={"Đơn nhập hàng"} />
+      
 
         );
-      })
+      })}
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+
+      </>
        
       
       }

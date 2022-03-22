@@ -67,7 +67,7 @@ const UpdateSupplier = (props) => {
   const store_uuid = info.store.uuid;
   const dispatch = useDispatch();
   const handleUpdateSupplier = async () => {
-   
+    handleClose()
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", supplierFormik.values.name.toString());
@@ -84,14 +84,14 @@ const UpdateSupplier = (props) => {
       console.log(err);
     }
   };
-  const handleCloseAndReset = () => {
-    handleClose()
+  const handleCloseAndReset =() =>{
+
     supplierFormik.resetForm()
   }
   return (
     <SimpleModal
       open={open}
-      handleClose={handleCloseAndReset}
+      handleClose={()=>{handleClose();handleCloseAndReset();}}
       aria-labelledby="form-dialog-title"
     >
       <Box style={{ width: 550, maxWidth: "100%" }}>
@@ -204,7 +204,7 @@ const UpdateSupplier = (props) => {
           }}
         >
           <Button
-            onClick={handleCloseAndReset}
+           onClick={()=>{handleClose();handleCloseAndReset();}}
             variant="contained"
             size="small"
             color="secondary"

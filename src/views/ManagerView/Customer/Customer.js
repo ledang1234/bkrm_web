@@ -30,6 +30,7 @@ import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrap
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import ava from '../../../assets/img/product/lyimg.jpeg';
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 
 const Customer = () => {
@@ -174,7 +175,7 @@ const Customer = () => {
         </Grid>
 
         {/* Popup add */}
-        <AddCustomer open={open} handleClose={handleClose} onReload={onReload} />
+       {open && <AddCustomer open={open} handleClose={handleClose} onReload={onReload} />}
         {/* Noti */}
         <SnackBar openBar={openBar} handleCloseBar={handleCloseBar} addStatus={addStatus}/>
 
@@ -186,7 +187,7 @@ const Customer = () => {
         <ToolBar  
           dataTable={customerList} 
           tableType={TableType.CUSTOMER} 
-          textSearch={'#, Tên, sđt, ...  '} /*handlePrint={handlePrint}*/ 
+          textSearch={'#, Tên, sđt, email,...  '} /*handlePrint={handlePrint}*/ 
           handleToggleFilter={handleToggleFilter}  
           handlePrint={handlePrint}
           isOnlySearch={true}
@@ -217,13 +218,17 @@ const Customer = () => {
               })}
             </TableBody>
         </TableWrapper>:
-        customerList?.map((row, index) => {
+        <>
+        {customerList?.map((row, index) => {
           return (
             <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
             img={ava}  id={row.customer_code} name={row.name} phone={row.phone} score={10}
             typePartner={"Khách hàng"}  />
           );
         })}
+        <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+  
+        </>}
 
         <div  style={{display:'none'}} >
         <div ref={componentRef}  >

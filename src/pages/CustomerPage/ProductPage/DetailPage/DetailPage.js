@@ -1,8 +1,9 @@
 import React from 'react'
-import {Button,Grid,Paper,Card,Box,CardActions,Tabs,Tab,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Switch,Menu,MenuItem,ListItem,IconButton,TableBody,Typography} from '@material-ui/core'
+import {Button,Grid,Paper,Card,Box,CardActions,Tabs,Tab,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Menu,MenuItem,ListItem,IconButton,TableBody,Typography} from '@material-ui/core'
 import { useTheme, makeStyles, styled ,lighten} from "@material-ui/core/styles";
 import { Carousel } from "react-responsive-carousel";
-
+import { Route, Switch, useRouteMatch, useParams } from "react-router-dom";
+import {useSelector} from 'react-redux'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import clsx from "clsx";
@@ -45,7 +46,9 @@ const detailProduct={
 const DetailPage = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
-
+    const {productCode} = useParams();
+    const {products } = useSelector(state => state.customerPage)
+    const detailProduct = products.find(prod => prod.product_code === productCode);
     return (
     <div className={classes.root}>
       <Grid container  direction="row" justifyContent="space-between" alignItems="flex-start" spacing={8}>
@@ -60,14 +63,15 @@ const DetailPage = () => {
                 dynamicHeight={false} 
                 showThumbs={true} 
             >
-                {images.map((img)=><img  src={img}style={{borderRadius:10}} />)}
+                {detailProduct?.img_urls?.map((img)=><img  src={img.url}style={{borderRadius:10}} />)}
             </Carousel>
            
         </Grid>
 
         <Grid item xs={12} md={6}>
           <Box>
-              <Typography variant="h1">{detailProduct.name}</Typography>
+              <Typography variant="h1">{detailProduct?.name}</Typography>
+              <Typography variant="h2">{detailProduct?.list_price}</Typography>
           </Box>
         </Grid>
       </Grid>

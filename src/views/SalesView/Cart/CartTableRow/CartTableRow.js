@@ -127,7 +127,7 @@ export const CartRow = (props) => {
             />
           )}
         </TableCell>
-        <TableCell align="left">{row.bar_code}</TableCell>
+        {/* <TableCell align="left">{row.bar_code}</TableCell> */}
         <TableCell align="right">
           <Input.ThousandSeperatedInput
             id="standard-basic"

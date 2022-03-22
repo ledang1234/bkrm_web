@@ -109,7 +109,7 @@ const OrderProductListDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Mã đơn đặt</Typography>    
                       </Grid>
                       <Grid item  sm={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.id} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.customer_order_code} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
@@ -117,23 +117,23 @@ const OrderProductListDetail = (props) => {
                         <Typography variant="h5" gutterBottom component="div">Ngày đặt </Typography>    
                       </Grid>
                       <Grid item  sm={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.date} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.created_at} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
                       <Grid item  xs={6} sm={5} >
-                        <Typography variant="h5" gutterBottom component="div">Nhà cung cấp</Typography>    
+                        <Typography variant="h5" gutterBottom component="div">Tên khách</Typography>    
                       </Grid>
                       <Grid item  sm={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.customer} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.name} </Typography>
                       </Grid>
                   </Grid>
                   <Grid container direction="row" justifyContent="flex-start">
                       <Grid item xs={6} sm={5} >
-                        <Typography variant="h5"gutterBottom component="div">Người đặt</Typography>    
+                        <Typography variant="h5"gutterBottom component="div">Số điện thoại</Typography>    
                       </Grid>
                       <Grid item  sm={4} >
-                        <Typography variant="body1" gutterBottom component="div">{row.employee} </Typography>
+                        <Typography variant="body1" gutterBottom component="div">{row.phone} </Typography>
                       </Grid>
                   </Grid>
                      
@@ -152,17 +152,17 @@ const OrderProductListDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Khoảng tiền </Typography>    
                         </Grid>
                         <Grid item  sm={4} >
-                            <Typography variant="body1" gutterBottom component="div"><VNDFormat value={row.total} /></Typography>
+                            <Typography variant="body1" gutterBottom component="div"><VNDFormat value={row.total_amount} /></Typography>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" justifyContent="flex-start">
+                    {/* <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={6} sm={6} >
                             <Typography variant="h5" gutterBottom component="div">Chi nhánh thực hiện</Typography>    
                         </Grid>
                         <Grid item  sm={4} >
                             <Typography variant="body1" gutterBottom component="div">{row.branch} </Typography>
                         </Grid>
-                    </Grid>
+                    </Grid> */}
              
                   </Grid>
 
@@ -182,29 +182,29 @@ const OrderProductListDetail = (props) => {
                      <TableCell>#</TableCell>
                      <TableCell>Sản phẩm</TableCell>
                      <TableCell align="right">Số lượng</TableCell>
-                     <TableCell align="right">Khoảng tiền</TableCell>
+                     <TableCell align="right">Giá bán</TableCell>
                      <TableCell align="right">Thành tiền</TableCell>
-                     <TableCell align="right">Đã nhập</TableCell>
-                     <TableCell align="right">Trạng thái</TableCell>
+                     {/* <TableCell align="right">Đã nhập</TableCell>
+                     <TableCell align="right">Trạng thái</TableCell> */}
                    </TableRow>
                  </TableHead>
                  <TableBody>
     
-                    {row.list.map((historyRow) => (
+                    {JSON.parse(row.details ? row.details : '[]').map((historyRow) => (
                      <TableRow key={historyRow.product_id}>
                        <TableCell component="th" scope="row">
-                         {historyRow.product_id}
+                         {historyRow.product_code}
                        </TableCell>
                        <TableCell>{historyRow.name}</TableCell>
                        <TableCell align="right"><ThousandFormat value={historyRow.quantity} /></TableCell>
                        <TableCell align="right">
-                       <VNDFormat value={historyRow.price} />
+                       <VNDFormat value={historyRow.list_price} />
                        </TableCell>
                        <TableCell align="right" style={{fontWeight:700}}>
-                          <VNDFormat value={historyRow.quantity * historyRow.price} />
+                          <VNDFormat value={historyRow.quantity * historyRow.list_price} />
                        </TableCell>
-                       <TableCell align="right"><ThousandFormat value={0} /></TableCell>
-                       <TableCell align="right">Đã nhập đủ</TableCell>
+                       {/* <TableCell align="right"><ThousandFormat value={0} /></TableCell>
+                       <TableCell align="right">Đã nhập đủ</TableCell> */}
                        
                      </TableRow>
                    ))}
@@ -212,20 +212,20 @@ const OrderProductListDetail = (props) => {
                </Table> 
                <Box  className={classes.background}style={{padding:10, borderRadius:theme.customization.borderRadius, marginTop:10}}>
                <Grid container direction="column" >
-                    <Grid container direction="row" justifyContent={ "flex-end"}>
+                    {/* <Grid container direction="row" justifyContent={ "flex-end"}>
                         <Grid item xs={6}sm={2} >
                             <Typography variant="h5" gutterBottom component="div">Tổng số lượng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div"><ThousandFormat value={4} /> </Typography>
+                            <Typography variant="body1" gutterBottom component="div"><ThousandFormat value={JSON.parse(row.details).} /> </Typography>
                         </Grid>
-                    </Grid>
+                    </Grid> */}
                     <Grid container direction="row" justifyContent={ "flex-end"}>
                         <Grid item xs={6} sm={2} >
                             <Typography variant="h5" gutterBottom component="div">Tổng số mặt hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div"><ThousandFormat value={4} /></Typography>
+                            <Typography variant="body1" gutterBottom component="div"><ThousandFormat value={JSON.parse(row.details ? row.details : '[]').length} /></Typography>
                         </Grid>
                     </Grid>
 
@@ -234,17 +234,17 @@ const OrderProductListDetail = (props) => {
                             <Typography variant="h5" gutterBottom component="div">Khoảng tiền hàng</Typography>    
                         </Grid>
                         <Grid item xs={2} >
-                            <Typography variant="body1" gutterBottom component="div"><VNDFormat value={row.total} /> </Typography>
+                            <Typography variant="body1" gutterBottom component="div"><VNDFormat value={row.total_amount} /> </Typography>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" justifyContent={ "flex-end"}>
+                    {/* <Grid container direction="row" justifyContent={ "flex-end"}>
                         <Grid item xs={6}sm={2} >
                             <Typography variant="h5" gutterBottom component="div">Số mặt hàng đã nhập đủ</Typography>    
                         </Grid>
                         <Grid item xs={2} >
                             <Typography variant="body1" gutterBottom component="div">2/4 </Typography>
                         </Grid>
-                    </Grid>
+                    </Grid> */}
 
                    
 

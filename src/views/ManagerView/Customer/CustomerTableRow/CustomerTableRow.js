@@ -10,6 +10,7 @@ import {FormatedStatus} from '../../../../components/TableCommon/util/format'
 import CustomerDetail from './CustomerDetail/CustomerDetail'
 
 import ava from '../../../../assets/img/product/lyimg.jpeg';
+import { VNDFormat, ThousandFormat } from '../../../../components/TextField/NumberFormatCustom';
 
 const CustomerTableRow = (props) => {
     const { row, handleOpenRow,openRow ,onReload} = props;
@@ -33,9 +34,9 @@ const CustomerTableRow = (props) => {
                 </TableCell>
 
                 <TableCell align="left">{row.phone}</TableCell>
-                <TableCell align="right" >{row.points}</TableCell> 
+                <TableCell align="right" ><ThousandFormat value={row.points} /></TableCell> 
                 <TableCell align="center" >
-                    <FormatedStatus debt={row.total_payment} />     
+                    <FormatedStatus debt={row.debt} />     
                 </TableCell>
             </TableRow>
 

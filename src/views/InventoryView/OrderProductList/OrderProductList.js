@@ -33,6 +33,11 @@ import JSONdata from '../../../assets/JsonData/inventoryOrder.json'
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+
+import orderApi from '../../../api/orderApi';
+
+
 
 const OrderProductList = () => {
    // fetch data here
@@ -43,7 +48,7 @@ const OrderProductList = () => {
    const classes = useStyles(theme);
    const dispatch = useDispatch();
    const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
-
+  
 
 
    //// 2. Table
@@ -82,6 +87,67 @@ const OrderProductList = () => {
 
     //3.3. loc cot
 
+
+
+
+    // fileter
+    const [customerOrders, setCustomerOrders] = useState([])
+    const initialQuery = {
+      startDate: '',
+      endDate: '',
+      minTotalAmount: 0,
+      maxTotalAmount: 0,
+      status: '',
+      orderBy: 'customer_orders.created_at',
+      sort: 'desc',
+      searchKey: '',
+    };
+    const handleRemoveFilter = () => {
+      setQuery(initialQuery)
+    }
+    const [query, setQuery] = useState(initialQuery)
+    const [reload, setReload] = React.useState(false);
+    const [pagingState, setPagingState] = useState({
+      page: 0,
+      limit: 10,
+    });
+    const [totalRows, setTotalRows] = useState(0)
+    const onReload = () => {
+      setReload(!reload);
+    };
+    const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
+
+  useEffect(() => {
+    setPagingState({ ...pagingState, page: 0 });
+  }, [reload, store_uuid, branch_uuid, query]);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await orderApi.searchCustomerOrder(
+          store_uuid,
+          branch_uuid,
+          {
+            page: pagingState.page,
+            limit: pagingState.limit,
+            ...query
+          }
+        );
+        // setPagingState({ ...pagingState, total_rows: response.total_rows });
+        setTotalRows(response.total_rows);
+        setCustomerOrders(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (store_uuid && branch_uuid ) {
+      
+      loadData();
+    }
+  }, [pagingState.page, pagingState.limit, branch_uuid, query]);
+
+
   return (
     <Card className={classes.root} >
           <Grid 
@@ -116,14 +182,38 @@ const OrderProductList = () => {
           {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
           {/* <ToolBar  dataTable={inventoryOrderList} tableType={TableType.INVENTORY_ORDER} /*handlePrint={handlePrint}*/ }
           <ToolBar  dataTable={orderProductList} tableType={TableType.ORDER_LIST}  textSearch={'#, NCC, Nguoi đặt,...'}
-           handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}/> 
+           handleToggleFilter={handleToggleFilter}  handlePrint={handlePrint}
 
-          <OrderProductListFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>
+           orderByOptions={[
+            {value: 'customer_orders.created_at', label: 'Ngày tạo'},
+            {value: 'total_amount', label: 'Tổng tiền'},
+          ]}
+          orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
+          sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
+          searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+          
+          handleRemoveFilter={handleRemoveFilter}
+  
+          columnsToKeep = {[
+            {dbName:"purchase_order_code",displayName:"Mã đơn nhập"},
+            {dbName:"payment_date",displayName:"Ngày nhập"},
+            {dbName:"supplier_name",displayName:"Nhà cung cấp"},
+            {dbName:"total_amount",displayName:"Tổng tiền nhập"}, 
+            {dbName:"paid_amount",displayName:"Tiền đã trả"}, 
+            {dbName:"branch_name",displayName:"Chi nhánh thực hiện"},
+            {dbName:"payment_method",displayName:"Phương thức thanh toán"}
+          ]}
+           
+           /> 
+
+          {/* <OrderProductListFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter}/> */}
 
 
 
           {/* 3. TABLE */}
-          {!xsScreen?<TableWrapper>
+          {!xsScreen?<TableWrapper
+           pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+          >
               <TableHeader
                 classes={classes}
                 order={order}
@@ -132,15 +222,16 @@ const OrderProductList = () => {
                 headerData={HeadCells.OrderListHeadCells}
               />
               <TableBody>
-                {orderProductList.map((row, index) => {
+                {customerOrders.map((row, index) => {
                     return (
-                      <OrderProductListTableRow key={row.uuid} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
+                      <OrderProductListTableRow key={row.id} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
          
                     );
                 })}
               </TableBody>
           </TableWrapper>:
-          orderProductList.map((row, index) => {
+         <>
+         { orderProductList.map((row, index) => {
             return (
               <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  
               //onReload={onReload} 
@@ -148,6 +239,9 @@ const OrderProductList = () => {
               typeBill={"Đơn đặt hàng nhập"} />
             );
           })}
+          {/* <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/> */}
+    
+          </>}
           <div  style={{display:'none'}} >
             <div ref={componentRef}  >
             <ComponentToPrint  orderProductList={orderProductList} classes={classes}/>

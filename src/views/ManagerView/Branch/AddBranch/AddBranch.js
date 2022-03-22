@@ -160,11 +160,14 @@ const AddBranch = (props) => {
       bodyFormData.append("image", image);
       const response = await branchApi.createBranch(store_uuid, bodyFormData);
       onReload();
-      dispatch(statusAction.successfulStatus("Create branch successfully"));
+      // dispatch(statusAction.successfulStatus("Create branch successfully"));
+      dispatch(statusAction.successfulStatus("Tạo chi nhánh thành công"));
     } catch (error) {
       console.log(error);
-      dispatch(statusAction.failedStatus("Failed to createBranch"));
+      // dispatch(statusAction.failedStatus("Failed to createBranch"));
+      dispatch(statusAction.failedStatus("Tạo chi nhánh thất bại"));
     }
+    
   };
   return (
     <SimpleModal open={open} handleClose={closeModalAndResetData}>

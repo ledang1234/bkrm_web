@@ -116,6 +116,7 @@ const AddSupplier = (props) => {
       dispatch(statusAction.failedStatus("Tạo nhà cung cấp thất bại"));
       console.log(err);
     }
+    handleCloseAndReset()
   };
   const handleCloseAndReset =() =>{
     handleClose()

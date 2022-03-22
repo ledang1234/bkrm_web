@@ -21,5 +21,6 @@ const customerApi = {
     const url = `/stores/${storeUuid}/customers/${customerUuid}`;
     return axiosClient.put(url,body);
   },
+  
 };
 export default customerApi;
