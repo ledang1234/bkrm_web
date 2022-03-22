@@ -98,9 +98,9 @@ const StoreSetting = (props) => {
     closeModalAndResetData();
     try {
       var bodyFormData = new FormData();
-      bodyFormData.append("facebook", formik.values.facebook.toString());
-      bodyFormData.append("instagram", formik.values.instagram.toString());
-      bodyFormData.append("custom_web", formik.values.custom_web.toString());
+      bodyFormData.append("facebook", formik.values.facebook);
+      bodyFormData.append("instagram", formik.values.instagram);
+      bodyFormData.append("custom_web", formik.values.custom_web);
       bodyFormData.append("image", image);
       const response = await storeApi.updateStoreConfig(store_uuid, bodyFormData);
       dispatch(statusAction.successfulStatus("Lưu thay đổi"));
