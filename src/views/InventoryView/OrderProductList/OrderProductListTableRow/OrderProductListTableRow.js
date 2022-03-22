@@ -15,19 +15,19 @@ const OrderProductListTableRow = (props) => {
         <>
         {/* ROW */}
             <TableRow
-            onClick={() => handleOpenRow(row.uuid)}   
-            key={row.uuid}
-            className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
+            onClick={() => handleOpenRow(row.id)}   
+            key={row.id}
+            className={ clsx(classes.row,(openRow === row.id) ? classes.rowClicked : null)}
             >
-                <TableCell align="left" >{row.id}</TableCell>
-                <TableCell align="left"className={classes.fontName}>{row.date}</TableCell>
-                <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.supplier}</TableCell>
-                <TableCell align="left">{row.branch}</TableCell>
-                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total} /></TableCell>
+                <TableCell align="left" >{row.customer_order_code}</TableCell>
+                <TableCell align="left"className={classes.fontName}>{row.created_at}</TableCell>
+                <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.name}</TableCell>
+                <TableCell align="left">{row.phone}</TableCell>
+                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_amount} /></TableCell>
                 <TableCell align="center">
                     <FormatedStatusOrder status={row.status}/>
                 </TableCell>
-                <TableCell align="left">{row.employee}</TableCell>
+                <TableCell align="left">{row.address}</TableCell>
             </TableRow>
 
         {/* DETAIL */}

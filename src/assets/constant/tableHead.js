@@ -231,17 +231,17 @@ export const OrderListHeadCells = [
     id: "supplier",
     align: "left",
     disablePadding: false,
-    label: "Nhà cung cấp",
+    label: "Khách hàng",
   },
-  { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  { id: "phone", align: "left", disablePadding: false, label: "Số điện thoại" },
   { id: "total", align: "right", disablePadding: false, label: "Khoảng tiền" },
   { id: "status", align: "center", disablePadding: false, label: "Trạng thái" },
-  {
-    id: "employee",
-    align: "left",
-    disablePadding: false,
-    label: "Người thực hiện",
-  },
+  // {
+  //   id: "employee",
+  //   align: "left",
+  //   disablePadding: false,
+  //   label: "Người thực hiện",
+  // },
 ];
 export const CheckHistoryHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },

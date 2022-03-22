@@ -180,7 +180,7 @@ const AddInventory = (props) => {
 
       bodyFormData.append(
         "quantity",
-        productFormik.values.quantity.toString()
+        productFormik.values.quantity ? productFormik.values.quantity.toString() : 0
       );
       bodyFormData.append(
         "category_uuid",
