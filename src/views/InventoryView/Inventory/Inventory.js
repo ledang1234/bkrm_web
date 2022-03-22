@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
-import Pagination from "@material-ui/lab/Pagination";
+// import Pagination from "@material-ui/lab/Pagination";
 
 //import api
 import productApi from "../../../api/productApi";
@@ -46,6 +46,7 @@ import ProductImportPopper from "../../../components/Popper/ProductImportPopper"
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {ProductMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import InventoryFilter from "./InventoryTool/InventoryFilter";
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
@@ -318,7 +319,8 @@ const Inventory = () => {
           })}
         </TableBody>
       </TableWrapper>:
-      productList.map((row, index) => {
+     <>
+      {productList.map((row, index) => {
         return (
           // <ProductMiniTableRow
           //   key={row.uuid}
@@ -334,7 +336,10 @@ const Inventory = () => {
             img={row.img_url}  id={row.product_code} name={row.name} list_price={row.list_price} standard_price={row.standard_price}  branch_quantity={row.branch_quantity} min_reorder_quantity={row.min_reorder_quantity}
             typePartner={"Sản phẩm"}  />
         );
-      })
+      })}
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+
+      </>
 
       }
 

@@ -40,6 +40,7 @@ import orderApi from "../../../api/orderApi";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 const Invoice = () => {
   // fetch data here
@@ -236,7 +237,8 @@ const Invoice = () => {
           })}
         </TableBody>
       </TableWrapper>:
-          orders.map((row, index) => {
+      <>
+          {orders.map((row, index) => {
             return (
               // <InvoiceTableRow
               //   key={row.uuid}
@@ -249,7 +251,10 @@ const Invoice = () => {
              totalCost={row.total_amount}  id={row.order_code} partnerName={row.customer_name} date={row.paid_date} 
              typeBill={"Hoá đơn"}/>
             );
-          })
+          })}
+          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+    
+          </>
         }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>

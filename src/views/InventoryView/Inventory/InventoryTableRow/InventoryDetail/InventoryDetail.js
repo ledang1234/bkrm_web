@@ -47,7 +47,7 @@ import clsx from "clsx";
 
 import { FormatedProductStatus } from "../../../../../components/TableCommon/util/format";
 import VarianceModal from "./VarianceModal";
-
+import {VarianceProductMiniTableRow} from "../../../../../components/MiniTableRow/MiniTableRow"
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -140,11 +140,13 @@ const InventoryDetail = (props) => {
   const handleCloseUpdate = (status) => {
     setIsOpenUpdate(false);
   };
+
+  
   return row.has_variance ? (<>
     {openRow === row.uuid &&
       productDetail.variations?.map(variance => (
         <>
-          <TableRow>
+          {/* <TableRow>
             <TableCell align="left">
               {"               "}
             </TableCell>
@@ -163,7 +165,6 @@ const InventoryDetail = (props) => {
                 <Typography className={classes.fontName}>{variance.name}</Typography>
               </ListItem>
             </TableCell>
-            <TableCell align="left">{variance.bar_code}</TableCell>
 
             <TableCell align="left">{variance.category?.name}</TableCell>
             <TableCell align="right">
@@ -185,7 +186,11 @@ const InventoryDetail = (props) => {
               setIsOpenVariaceDetailModal(true)
               setSelectedVariance(variance)
             }}><Button size="small" color="primary" variant="outlined">Chi tiết</Button></TableCell>
-          </TableRow>
+          </TableRow> */}
+          <VarianceProductMiniTableRow key={row.uuid} variance={variance}  onClick={() => {
+              setIsOpenVariaceDetailModal(true)
+              setSelectedVariance(variance)
+            }} />
 
         </>
       ))
@@ -361,6 +366,34 @@ const InventoryDetail = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
+
+                  <Grid container direction="row" justifyContent="flex-start">
+                    <Grid item xs={4} sm={6}>
+                      <Typography variant="h5" gutterBottom component="div">
+                       Số lượng đặt hàng lại
+                      </Typography>
+                    </Grid>
+                    <Grid item  sm={6}>
+                      <Typography variant="body1" gutterBottom component="div">
+                        {row.min_reorder_quantity}{" "}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+                  <Grid container direction="row" justifyContent="flex-start">
+                    <Grid item xs={4} sm={7}>
+                      <Typography variant="h5" gutterBottom component="div">
+                       Số lượng nhập hàng tối đa
+                      </Typography>
+                    </Grid>
+                    <Grid item  sm={5}>
+                      <Typography variant="body1" gutterBottom component="div">
+                        {row.max_order}{" "}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+
                 </Grid>
               </Grid>
 

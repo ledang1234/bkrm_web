@@ -32,7 +32,11 @@ import JSONdata from '../../../assets/JsonData/inventoryOrder.json'
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+
 import orderApi from '../../../api/orderApi';
+
 
 
 const OrderProductList = () => {
@@ -226,7 +230,8 @@ const OrderProductList = () => {
                 })}
               </TableBody>
           </TableWrapper>:
-          orderProductList.map((row, index) => {
+         <>
+         { orderProductList.map((row, index) => {
             return (
               <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  
               //onReload={onReload} 
@@ -234,6 +239,9 @@ const OrderProductList = () => {
               typeBill={"Đơn đặt hàng nhập"} />
             );
           })}
+          {/* <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/> */}
+    
+          </>}
           <div  style={{display:'none'}} >
             <div ref={componentRef}  >
             <ComponentToPrint  orderProductList={orderProductList} classes={classes}/>

@@ -45,6 +45,7 @@ import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 
 const CheckHistory = () => {
@@ -295,7 +296,8 @@ const CheckHistory = () => {
           })}
         </TableBody>
       </TableWrapper>:
-      inventoryChecks.map((row, index) => {
+      <>
+      {inventoryChecks.map((row, index) => {
         return (
           <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} 
           // onReload={onReload} 
@@ -307,6 +309,10 @@ const CheckHistory = () => {
 
         );
       })}
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+
+      </>
+      }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint

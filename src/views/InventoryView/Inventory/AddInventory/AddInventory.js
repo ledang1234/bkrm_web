@@ -501,7 +501,7 @@ const AddInventory = (props) => {
               onBlur={productFormik.handleBlur}
               type="text"
             />
-            <TextField
+            {/* <TextField
               label="Mã sản phẩm (tự động)"
               variant="outlined"
               fullWidth
@@ -510,7 +510,7 @@ const AddInventory = (props) => {
               name="product_code"
               onChange={productFormik.handleChange}
               value={productFormik.values.product_code}
-            />
+            /> */}
             <TextField
               label="Mã vạch"
               variant="outlined"
