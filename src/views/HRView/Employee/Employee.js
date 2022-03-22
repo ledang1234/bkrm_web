@@ -37,6 +37,8 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+
 
 const Employee = () => {
   const [employeeList, setEmployeeList] = useState([]);
@@ -246,7 +248,7 @@ const Employee = () => {
           })}
         </TableBody>
       </TableWrapper>:
-          employeeList.map((row, index) => {
+          <>{employeeList.map((row, index) => {
             return (
              
               <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
@@ -254,6 +256,9 @@ const Employee = () => {
               typePartner={"Nhân viên"}  />
             );
           })}
+          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+    
+          </>}
 
 
       <div  style={{display:'none'}} >

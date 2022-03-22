@@ -38,6 +38,7 @@ import purchaseReturnApi from "../../../api/purchaseReturnApi";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 const InventoryReturnOrder = () => {
   const [purchaseReturns, setPurchaseReturns] = useState([]);
@@ -210,7 +211,8 @@ const InventoryReturnOrder = () => {
           })}
         </TableBody>
       </TableWrapper>:
-      purchaseReturns.map((row, index) => {
+      <>
+      {purchaseReturns.map((row, index) => {
         return (
           // <InventoryReturnTableRow
           //   key={row.uuid}
@@ -223,7 +225,10 @@ const InventoryReturnOrder = () => {
           typeBill={"Đơn trả hàng nhập"}/>
 
         );
-      })
+      })}
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+
+      </>
       }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>

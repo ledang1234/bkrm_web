@@ -35,6 +35,7 @@ import refundApi from "../../../api/refundApi";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 function InvoiceReturn() {
   // fetch data here
@@ -196,7 +197,8 @@ function InvoiceReturn() {
           ))}
         </TableBody>
       </TableWrapper>:
-          refunds.map((row, index) => (
+          <>
+          {refunds.map((row, index) => (
             // <InvoiceReturnTableRow
             //   key={row.uuid}
             //   row={row}
@@ -207,7 +209,10 @@ function InvoiceReturn() {
           totalCost={row.total_amount}  id={row.refund_code} partnerName={row.customer_name} date={row.created_at} 
           typeBill={"Đơn trả"}/>
 
-          ))
+          ))}
+          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+    
+          </>
           }
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
