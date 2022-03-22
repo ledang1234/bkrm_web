@@ -24,6 +24,8 @@ import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 import icon from "../../../../assets/img/product/tch.jpeg";
 import AddBatch from "./AddBatch";
 import SelectBatch from "./SelectBatch";
+import { useDispatch, useSelector } from "react-redux";
+
 
 export const ImportRow = (props) => {
   const classes = useStyles();
@@ -34,6 +36,7 @@ export const ImportRow = (props) => {
     handleChangeItemPrice,
     handleUpdateBatches,
   } = props;
+  const info = useSelector((state) => state.info);
 
   const updateQuantity = (newQuantity) => {
     handleChangeItemQuantity(row.uuid, newQuantity);
@@ -87,6 +90,7 @@ export const ImportRow = (props) => {
     handleUpdateBatches(row.uuid, selectedBatches);
   }, [selectedBatches]);
 
+  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
   return (
     <>
       <TableRow hover key={props.row.uuid}>
@@ -108,7 +112,8 @@ export const ImportRow = (props) => {
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
         <TableCell align="right">
-          <VNDInput
+        {canFixPriceSell.status && canFixPriceSell.import?
+          <Input.ThousandSeperatedInput
             id="standard-basic"
             style={{ width: 72 }}
             size="small"
@@ -118,6 +123,9 @@ export const ImportRow = (props) => {
               handleChangeItemPrice(props.row.uuid, e.target.value)
             }
           />
+          :
+           <Input.ThousandFormat  value={row.unit_price} > </Input.ThousandFormat>
+          }
         </TableCell>
 
         {row.has_batches ? (

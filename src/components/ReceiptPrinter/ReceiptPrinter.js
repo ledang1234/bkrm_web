@@ -94,9 +94,11 @@ var QRCode = require('qrcode.react');
 
 export const ReceiptPrinter = ({cart, date}) => {
     const info = useSelector((state) => state.info);
-    var link = "https://www.facebook.com/GiaLePhuongg/";
-    var logo ="https://newstatic2.clingme.vn/resized/images/default/cms-images/place/0/0/17/1550914926_557320_w600.jpg"
-    
+    // var link = "https://www.facebook.com/GiaLePhuongg/";
+    // var logo ="https://newstatic2.clingme.vn/resized/images/default/cms-images/place/0/0/17/1550914926_557320_w600.jpg"
+    var link = JSON.parse(info.store.store_configuration).custom_web;
+    var logo  = JSON.parse(info.store.store_configuration).img_url ;
+    //  console.log("info.store",JSON.parse(info.store.store_configuration).img_url)
     const theme = useTheme();
     const classes = useStyles(theme);
 

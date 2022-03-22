@@ -23,9 +23,12 @@ import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 import DiscountPopUp from "../DiscountPopup/DiscountPopup";
 import icon from "../../../../assets/img/product/tch.jpeg";
 import SelectBatch from "../../../../components/SelectBatch/SelectBatch";
+import { useDispatch, useSelector } from "react-redux";
+
 export const CartRow = (props) => {
   const classes = useStyles();
   const haveDiscount = true;
+  const info = useSelector((state) => state.info);
 
   const {
     row,
@@ -90,6 +93,9 @@ export const CartRow = (props) => {
     console.log(newBatches);
     setSelectedBatches(newBatches);
   };
+
+  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+
   return (
     <>
       <TableRow hover key={props.row.uuid}>
@@ -129,6 +135,7 @@ export const CartRow = (props) => {
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
         <TableCell align="right">
+          {canFixPriceSell.status && canFixPriceSell.cart ?
           <Input.ThousandSeperatedInput
             id="standard-basic"
             style={{ width: 72 }}
@@ -140,6 +147,9 @@ export const CartRow = (props) => {
               handleChangeItemPrice(props.row.uuid, e.target.value)
             }
           />
+          :
+          <Input.ThousandFormat  value={row.unit_price} > </Input.ThousandFormat>
+        }
         </TableCell>
         {row.has_batches ? (
           <TableCell align="center" padding="none">

@@ -85,6 +85,8 @@ const Inventory = () => {
     setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid]);
 
+  console.log("store",JSON.parse(info.store.general_configuration))
+
   const initialQuery = {
     orderBy: 'products.created_at',
     sort: 'desc',
