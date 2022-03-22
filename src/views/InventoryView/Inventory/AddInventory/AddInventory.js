@@ -31,10 +31,12 @@ import barcodeIcon from "../../../../assets/img/icon/barcode1.png";
 import AddCategory from "./AddCategory";
 import useStyles from "./styles";
 import productApi from "../../../../api/productApi";
+
 import { useDispatch, useSelector } from "react-redux";
 import SearchWithAutoComplete from "../../../../components/SearchBar/SearchWithAutoComplete";
 import { urltoFile } from "../../../../api/helper";
 import { statusAction } from "../../../../store/slice/statusSlice";
+import {infoActions} from "../../../../store/slice/infoSlice";
 import SearchIcon from "@material-ui/icons/Search";
 import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
 import { useFormik } from "formik";
@@ -144,6 +146,8 @@ const AddInventory = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
   const dispatch = useDispatch();
+  // dispatch(infoActions.setStore({...info.store, general_configuration: "{\"inventory\":{\"status\":true},\"recommendedProduct\":{\"status\":true},\"variation\":{\"status\":true},\"expiryDate\":{\"status\":true},\"customerScore\":{\"status\":false,\"value\":10000,\"exceptDiscountProduct\":false,\"exceptDiscountInvoice\":false,\"exceptVoucher\":false},\"email\":{\"status\":false,\"emailAddress\":\"\",\"password\":\"\"},\"notifyDebt\":{\"status\":true,\"checkDebtAmount\":true,\"debtAmount\":\"500000\",\"checkNumberOfDay\":false,\"numberOfDay\":\"15\",\"typeDebtDay\":\"firstDebt\",\"canNotContinueBuy\":false,\"canNotContinueDebt\":false},\"returnLimit\":{\"status\":false,\"day\":7},\"canFixPriceSell\":{\"status\":false,\"cart\":false,\"import\":true,\"returnCart\":true,\"returnImport\":true},\"printReceiptWhenSell\":{\"status\":true,\"cart\":true,\"import\":false,\"returnCart\":false,\"returnImport\":false,\"order\":false,\"checkInventroy\":false},\"discount\":{\"status\":true,\"applyMultiple\":false,\"applyOnline\":true},\"voucher\":{\"status\":true},\"delivery\":{\"status\":true},\"vat\":{\"status\":false,\"listCost\":[{\"key\":\"1\",\"costName\":\"\",\"value\":0,\"type\":\"%\"}]},\"orderLowStock\":{\"status\":true,\"choiceQuantity\":\"select\",\"selectQuantity\":\"latest\",\"inputQuantity\":10,\"selectSuplier\":\"latest\"},\"autoApplyDiscount\":{\"status\":true}}"}));
+
   const theme = useTheme();
   const classes = useStyles(theme);
   const addProductHandler = async () => {
@@ -207,6 +211,7 @@ const AddInventory = (props) => {
       dispatch(statusAction.failedStatus("Tạo sản phẩm thất bại"));
     }
   };
+
 
   const [reset, setReset] = useState(true);
   const onReset = () => {
@@ -467,6 +472,7 @@ const AddInventory = (props) => {
             Thêm sản phẩm
           </Typography>
           <Box style={{ width: "70%" }}>
+            {JSON.parse(info.store.general_configuration).recommendedProduct.status ?
             <SearchWithAutoComplete
               handleDefaultSelect={selectSampleProductHandler}
               onSelect={selectSampleProductHandler}
@@ -475,7 +481,7 @@ const AddInventory = (props) => {
               getOptionLabel={getOptionLabel}
               renderOption={renderOptionTest}
               filterOptions={(options, state) => options}
-            />
+            />:null}
           </Box>
         </Box>
         <Grid
@@ -738,6 +744,7 @@ const AddInventory = (props) => {
             </Box>
           </Grid>
         </Grid>
+        {JSON.parse(info.store.general_configuration).expiryDate.status?
         <div style={{ flexGrow: 1, textAlign: "right" }}>
           <FormControlLabel
             control={
@@ -752,7 +759,10 @@ const AddInventory = (props) => {
             label="Lô, hạn sử dụng"
           />
         </div>
+        :null}
 
+       {JSON.parse(info.store.general_configuration).variation.status?
+       <>
         <Card className={classes.attrCard}>
           <CardHeader
             onClick={handleExpandClick}
@@ -785,7 +795,7 @@ const AddInventory = (props) => {
             />
           </Collapse>
         </Card>
-        {/* GENERATE ATTR */}
+   {/* GENERATE LIST */}
         {relatedList.length > 0 ? (
           <Card className={classes.attrCard}>
             <CardHeader
@@ -802,6 +812,8 @@ const AddInventory = (props) => {
             />
           </Card>
         ) : null}
+        </>
+        :null}
 
         {/* Button */}
         <Grid

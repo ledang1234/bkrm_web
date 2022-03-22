@@ -417,11 +417,12 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
+  
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
 
     var emptyCart = cart.cartItem.length === 0;
-
+    const printReceiptWhenSell=JSON.parse(info.store.general_configuration).printReceiptWhenSell
     var correctQuantity = cart.cartItem.every(function (element, index) {
       console.log(element);
       if (element.quantity > element.branch_quantity) return false;
@@ -477,12 +478,14 @@ const Cart = () => {
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
         });
         setOpenSnack(true);
-        handlePrint();
+        if(printReceiptWhenSell.status && printReceiptWhenSell.cart){
+          handlePrint()    
+        }
         handleDelete(selectedIndex);
       } catch (err) {
         setSnackStatus({
           style: "error",
-          message: "Tạo hóa đơn thất bại! ",
+          message: "Tạo hóa đơn thất bại!",
         });
         setOpenSnack(true);
         console.log(err);

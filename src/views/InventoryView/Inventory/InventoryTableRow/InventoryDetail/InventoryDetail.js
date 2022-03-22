@@ -144,9 +144,11 @@ const InventoryDetail = (props) => {
   
   return row.has_variance ? (<>
     {openRow === row.uuid &&
-      productDetail.variations?.map(variance => (
-        <>
-          {/* <TableRow>
+      productDetail.variations?.map(variance => {
+        return(
+         !xsScreen?
+          <>
+          <TableRow>
             <TableCell align="left">
               {"               "}
             </TableCell>
@@ -186,14 +188,16 @@ const InventoryDetail = (props) => {
               setIsOpenVariaceDetailModal(true)
               setSelectedVariance(variance)
             }}><Button size="small" color="primary" variant="outlined">Chi tiết</Button></TableCell>
-          </TableRow> */}
-          <VarianceProductMiniTableRow key={row.uuid} variance={variance}  onClick={() => {
+          </TableRow>
+         </>
+            :
+            <VarianceProductMiniTableRow key={row.uuid} variance={variance}  onClick={() => {
               setIsOpenVariaceDetailModal(true)
               setSelectedVariance(variance)
             }} />
 
-        </>
-      ))
+        
+      )})
 
     }
     {isOpenVarianceDetailModal && (

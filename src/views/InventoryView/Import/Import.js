@@ -380,6 +380,7 @@ const Import = () => {
     // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
     //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
+    const printReceiptWhenSell= JSON.parse(info.store.general_configuration).printReceiptWhenSell
     var emptyCart = cart.cartItem.filter((item) => item.quantity).length === 0;
     if (emptyCart) {
       setOpenSnack(true);
@@ -428,8 +429,10 @@ const Import = () => {
           message: "Nhập hàng thành công: " + res.data.purchase_order_code,
         });
         setOpenSnack(true);
-
-        handlePrint();
+        if(printReceiptWhenSell.status && printReceiptWhenSell.import){
+          handlePrint()    
+        }
+        // handlePrint();
         handleDelete(selectedIndex);
       } catch (err) {
         setSnackStatus({

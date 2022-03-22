@@ -350,6 +350,8 @@ function ImportReturnTableRow({
   const handleChangePrice = (newPrice) => {
     handleProductPriceChange(detail.id, newPrice);
   };
+  const info = useSelector((state) => state.info);
+  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
   return (
     <TableRow hover key={detail.id}>
       <TableCell align="left" style={{ width: 5 }}>
@@ -363,6 +365,7 @@ function ImportReturnTableRow({
         <Input.ThousandFormat value={detail.unit_price} />
       </TableCell>
       <TableCell align="right">
+      {canFixPriceSell.status && canFixPriceSell.returnCart?
         <Input.ThousandSeperatedInput
           id="standard-basic"
           style={{ width: 70 }}
@@ -370,7 +373,8 @@ function ImportReturnTableRow({
           inputProps={{ style: { textAlign: "right" } }}
           defaultPrice={detail.returnPrice}
           onChange={(e) => handleChangePrice(e.target.value)}
-        />
+        />:
+        <Input.ThousandFormat  value={detail.returnPrice} > </Input.ThousandFormat>}
       </TableCell>
 
       <TableCell align="left" padding="none">
