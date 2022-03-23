@@ -2,7 +2,7 @@
 [
     {
         "id": 1,
-        "name": "Quần dài Viet Nam ",
+        "name": "Sản phẩm 1",
         "price":200,
         "import_price": 100,
         "barcode": 23443355545,
@@ -14,7 +14,7 @@
     },
     {
         "id": 2,
-        "name": "Quần đùi",
+        "name": "Sản phẩm 2",
         "price":340,
         "import_price": 200,
         "barcode": 23443355545,
@@ -26,7 +26,7 @@
     },
     {
         "id": 3,
-        "name": "Áo dài",
+        "name": "Sản phẩm 3",
         "price":250,
         "import_price": 120,
         "barcode": 23443355545,
@@ -38,7 +38,7 @@
     },
     {
         "id": 4,
-        "name": "Bánh",
+        "name": "Sản phẩm 4",
         "price":200,
         "import_price": 100,
         "barcode": 23443355545,
@@ -47,21 +47,7 @@
         "image_url":"/src/assets/img/product/9830.jpg",
         "quantity":10,
         "category":"Quan ao"
-    },
-    {
-        "id": 5,
-        "name": "Kẹo",
-        "price":220,
-        "import_price": 100,
-        "barcode": 23443355545,
-        "category_id":"2",
-        "status":"active",
-        "image_url":"/src/assets/img/product/199.jpg",
-        "quantity":30,
-        "category":"Quan ao"
-
     }
-    
 
 
 ]

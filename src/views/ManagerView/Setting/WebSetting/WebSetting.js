@@ -58,21 +58,23 @@ const WebSetting = () => {
       textNav: ["1", 17, 600], //0-left 1-right //color: black-white-grey-maincolor, size: small - large(16):,  bold:no() -yes (600)
     },
     listProduct: {
-      priceStyle: [0, 0, 0], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
-      nameStyle: [0, 1, 0, 0], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
-      btnStyle: [1, 0], //0-left 1-right //haveBtn: no-yes, style:circle - box
-      isBox: true,
-      isMargin: true,
-      border: true,
-      alignCenter: false,
-      marginContainer: 0,
+      priceStyle: ["0", 18, 300], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
+      nameStyle: ["0", 19, 600], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
+      btnStyle: ["1", "0"], //0-left 1-right //haveBtn: no-yes, style:circle - box
+      isBox: "1",
+      isMargin: "0",
+      border: "1",
+      alignCenter:"0",
+      marginContainer: 1,
       boxDistance: 1,
       // marginContainer:10,
       // boxDistance:2,
     },
   };
 
+
   const [web, setWeb] = React.useState(webInfo);
+  console.log("web", web)
   const [displayColorPicker, setDisplayColorPicker] = React.useState(false);
   const [displayColorPicker1, setDisplayColorPicker1] = React.useState(false);
   const [openLinkWarningPopup, seOpenLinkWarningPopup] = React.useState(false);
