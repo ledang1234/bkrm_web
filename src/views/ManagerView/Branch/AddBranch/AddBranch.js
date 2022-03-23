@@ -79,7 +79,7 @@ const AddBranch = (props) => {
       phone: Yup.string()
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại")
-        .matches(/^\d+$/, "Số điển thoại không chính xác"),
+        .matches(/^\d+$/, "Số điện thoại không chính xác"),
       address: Yup.string().required("Nhập địa chỉ"),
       city: Yup.string().required("Chọn tỉnh/thành phố"),
       district: Yup.string().required("Chọn quận/huyện"),

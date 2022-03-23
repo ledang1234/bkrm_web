@@ -100,18 +100,18 @@ const GeneralSetting = () => {
   const [checked, setChecked] = React.useState(JSON.parse(info.store.general_configuration))
   const [change, setChange] = useState(false)
 
-  // useEffect(() => {
-  //   const loadData = async () => {
-  //     const response = await storeApi.getStoreInfo(store_uuid);
-  //     if (response.data.general_configuration) {
-  //       setChecked(JSON.parse(response.data.general_configuration));
-  //     }
-  //   };
+  useEffect(() => {
+    const loadData = async () => {
+      const response = await storeApi.getStoreInfo(store_uuid);
+      if (response.data.general_configuration) {
+        setChecked(JSON.parse(response.data.general_configuration));
+      }
+    };
 
-  //   if (store_uuid) {
-  //     loadData();
-  //   }
-  // }, [store_uuid]);
+    if (store_uuid) {
+      loadData();
+    }
+  }, [store_uuid]);
 
   // const [checked, setChecked] = React.useState({
   //   //
