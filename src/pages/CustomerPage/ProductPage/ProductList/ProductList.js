@@ -22,10 +22,12 @@ import { success } from '../../../../components/StatusModal/StatusModal';
 import _ from 'lodash'
 const ProductList = (props) => {
     let { categoryId } = useParams();
-    const {mainColor, priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,marginContainer,boxDistance, InventoryList} = props;
+    const {mainColor, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance, InventoryList} = props;
+    const {isMargin,} =Number(props.isMargin)
     const theme = useTheme();
     const classes = useStyles(theme);
-    
+    // const mainColor=`rgba(${ web.mainColor.r }, ${ web.mainColor.g }, ${ web.mainColor.b }, ${ web.mainColor.a })`
+
     let {url} = useRouteMatch();
     const {order} = useSelector(state => state.customerPage)
 
@@ -43,18 +45,31 @@ const ProductList = (props) => {
     else {numOfItemInRow=6}
     let widthSize = `${((100-marginContainer*2)/numOfItemInRow)-boxDistance*2}vw`
     function handleColor (type) {
-        if(type===0){return theme.heading}
-        else if (type===1){return theme.darkTextPrimary }
+        if(type==="0"){return '#000'}
+        else if (type==="1"){return mainColor }
         else{return mainColor}
     }
  
+    // const nameColor = handleColor(nameStyle[0])
+    // const nameSize = nameStyle[1]?"h4":"h5";
+    // const nameBold = nameStyle[2]? 600:500;
+    // const nameLineClass = nameStyle[3]?classes.multiLineEllipsis:classes.oneLineEllipsis
+    // const priceColor = handleColor(priceStyle[0])
+    // const priceSize =priceStyle[1]?16:14
+    // const priceBold = priceStyle[2]?600:400
+
     const nameColor = handleColor(nameStyle[0])
-    const nameSize = nameStyle[1]?"h4":"h5";
-    const nameBold = nameStyle[2]? 600:500;
-    const nameLineClass = nameStyle[3]?classes.multiLineEllipsis:classes.oneLineEllipsis
+    const nameSize = nameStyle[1];
+    const nameBold = nameStyle[2];
+    // const nameLineClass = nameStyle[3]?classes.multiLineEllipsis:classes.oneLineEllipsis
+    const nameLineClass = classes.multiLineEllipsis
+
     const priceColor = handleColor(priceStyle[0])
-    const priceSize =priceStyle[1]?16:14
-    const priceBold = priceStyle[2]?600:400
+    const priceSize =priceStyle[1]
+    const priceBold = priceStyle[2]
+    const alignCenter = Number(props.alignCenter)
+
+    console.log("nameColor",nameColor)
     
     const dispatch = useDispatch()
     const openPopUp = (product) =>{
@@ -84,7 +99,7 @@ const ProductList = (props) => {
              {InventoryList?.map(item=>{
                  return( 
                      <>
-                     {isBox?
+                     {Number(isBox)?
                      <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{margin:`${boxDistance}%`, width:widthSize, borderRadius:border?7:0}} >
                         <CardActionArea 
                             // component={Link} to={`${url}/products/${item.product_code}`} 
@@ -136,19 +151,19 @@ export const InfoComponent = (props)=>{
 
     return (
         <>
-        <Typography gutterBottom variant={nameSize}className={clsx( nameLineClass, classes.name, alignCenter && classes.alignCenter)} style={{color:nameColor, fontWeight:nameBold}}>
+        <Typography gutterBottom className={clsx( nameLineClass, classes.name, alignCenter && classes.alignCenter)} style={{color:nameColor, fontWeight:nameBold, fontSize:Number(nameSize)}}>
         {item.name}
         </Typography>
         {
-            !alignCenter && !btnStyle[1]? 
+            !alignCenter && !Number(btnStyle[1])? 
             <Grid container direction="row" alignItems="center" justifyContent="space-between" style={{marginBottom:-9}}>
                 <Grid item>
-                    <Typography variant="body2" style={{color:priceColor, fontWeight:priceBold, fontSize:priceSize}}  >
+                    <Typography variant="body2" style={{color:priceColor, fontWeight:priceBold, fontSize:Number(priceSize)}}  >
                         {item.list_price}
                     </Typography>
                 
                 </Grid>
-                {btnStyle[0]?
+                {Number(btnStyle[0])?
                     <Grid item>
                         <IconButton size="small"  style={{color:'#fff', background:mainColor}} 
                             // Stop Ripple Effect
@@ -167,17 +182,18 @@ export const InfoComponent = (props)=>{
             </Grid>
             :
             <>
-            <Typography   className={alignCenter &&classes.alignCenter} style={{color:priceColor, fontWeight:priceBold, fontSize:priceSize}} >
+            <Typography   className={alignCenter &&classes.alignCenter} style={{color:priceColor, fontWeight:priceBold, fontSize:Number(priceSize)}} >
                 {item.price}.000đ
             </Typography>
 
-            {btnStyle[0]?
+            {Number(btnStyle[0])?
             <ColorOutlineButtonCart variant="outlined" fullWidth mainColor={mainColor} 
                 onClick={(event) => {
                     // Prevent CardActionArea Click
                     event.preventDefault()
                     openPopUp(item);
                 }}
+                style={{marginBottom:-12,marginTop:10 }}
                 >
                 Giỏ hàng
             </ColorOutlineButtonCart>   

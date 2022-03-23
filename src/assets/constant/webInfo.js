@@ -11,9 +11,9 @@ const webInfo = {
       textNav : ["1",17, 600],  //0-left 1-right //color: black-white-grey-maincolor, size: small - large(16):,  bold:no() -yes (600)
     },
     listProduct:{
-      priceStyle :[0, 0, 0],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
-      nameStyle: [0, 1, 0, 0],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
-      btnStyle:[1, 0], //0-left 1-right //haveBtn: no-yes, style:circle - box
+      priceStyle :["0", 18, 600],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
+      nameStyle: ["0", 19, 300],//0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
+      btnStyle:["0", "0"], //0-left 1-right //haveBtn: yes-no, style:circle - box
       isBox:false,
       isMargin:true,
       border:true,

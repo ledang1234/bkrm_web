@@ -22,8 +22,8 @@ export const useStyles = makeStyles((theme,) => ({
         display: "-webkit-box",
         "-webkit-line-clamp": 2,
         "-webkit-box-orient": "vertical",
-        height:37, 
-        marginBottom:12,
+        // height:37, 
+        // marginBottom:12,
     },
     oneLineEllipsis: {    
         overflow: "hidden",
@@ -31,7 +31,7 @@ export const useStyles = makeStyles((theme,) => ({
         display: "-webkit-box",
         "-webkit-line-clamp": 1,
         "-webkit-box-orient": "vertical",
-        marginBottom:8,
+        // marginBottom:8,
        
     },
     name:{
