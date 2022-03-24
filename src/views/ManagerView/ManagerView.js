@@ -10,6 +10,7 @@ import EmailSetting from "./Setting/EmailSetting/EmailSetting"
 import Customer from "./Customer/Customer";
 import Report from "./Report/Report";
 import { useSelector } from "react-redux";
+import AbousUsSetting from "./Setting/WebSetting/AbousUsSetting";
 
 const ManagerView = (props) => {
   
@@ -32,6 +33,7 @@ const ManagerView = (props) => {
       <Route path={`${path}/setting-voucher`} component={VoucherSetting} />
       <Route path={`${path}/setting-web`} component={WebSetting} />
       <Route path={`${path}/setting-email`} component={EmailSetting} />
+      <Route path={`${path}/aboutus-setting`} component={AbousUsSetting} />
       
     </Switch>
   );

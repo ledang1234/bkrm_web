@@ -17,12 +17,15 @@ import {
   FormControl,
   RadioGroup,
   TextField,
-  ListItem,
+
   Card,
   Radio,
   Grid,
   ButtonBase,
   Tooltip,
+  Box,
+  Switch,
+  ListItem,
 } from "@material-ui/core";
 import LanguageIcon from "@material-ui/icons/Language";
 import LinkIcon from "@material-ui/icons/Link";
@@ -35,17 +38,21 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import NavBarSetting from "./NavBarSetting";
 import ProductSetting from "./ProductSetting";
 import { useStyles } from "./style";
-import { useSelector } from "react-redux";
+import { useSelector ,useDispatch} from "react-redux";
 import storeApi from "../../../../api/storeApi";
 import openNotification from "../../../../components/StatusPopup/StatusPopup";
+import CartSetting from "./CartSetting"
+import AbousUsSetting from "./AbousUsSetting";
+import { Link } from "react-router-dom";
+import { customizeAction } from "../../../../store/slice/customizeSlice";
+
 const WebSetting = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const domainName = "http://localhost:3000/#/store/";
 
   // api
-  var logoStore =
-    "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
+  var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
   const webInfo = {
     webAddress: "lyquochai",
     status: "inactive",
@@ -65,11 +72,22 @@ const WebSetting = () => {
       isMargin: "0",
       border: "1",
       alignCenter:"0",
-      marginContainer: 1,
+      marginContainer: 4,
       boxDistance: 1,
-      // marginContainer:10,
-      // boxDistance:2,
     },
+    cart:{
+      summaryPosition:'right',
+      header:"show"
+    },
+    other:{
+      status:false,
+      detail:{
+        id:"f9yq8g",
+        rows:[],
+        version:1
+
+      },
+    }
   };
 
 
@@ -78,22 +96,23 @@ const WebSetting = () => {
   const [displayColorPicker, setDisplayColorPicker] = React.useState(false);
   const [displayColorPicker1, setDisplayColorPicker1] = React.useState(false);
   const [openLinkWarningPopup, seOpenLinkWarningPopup] = React.useState(false);
+  const dispatch = useDispatch();
 
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-  useEffect(() => {
-    const loadData = async () => {
-      const response = await storeApi.getStoreInfo(store_uuid);
-      if (response.data.web_configuration) {
-        setWeb(JSON.parse(response.data.web_configuration));
-      }
-    };
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     const response = await storeApi.getStoreInfo(store_uuid);
+  //     if (response.data.web_configuration) {
+  //       setWeb(JSON.parse(response.data.web_configuration));
+  //     }
+  //   };
 
-    if (store_uuid) {
-      loadData();
-    }
-  }, [store_uuid]);
+  //   if (store_uuid) {
+  //     loadData();
+  //   }
+  // }, [store_uuid]);
 
   // 1.
 
@@ -135,10 +154,10 @@ const WebSetting = () => {
   // 3.
   const [expandedNavBar, setExpandedNavBar] = React.useState(false);
   const [expandedListProduct, setExpandedListProduct] = React.useState(false);
-  const [expandedDetailProduct, setExpandedDetailProduct] =
-    React.useState(false);
+  const [expandedDetailProduct, setExpandedDetailProduct] =  React.useState(false);
   const [expandedCart, setExpandedCart] = React.useState(false);
   const [expandedMainPage, setExpandedMainPage] = React.useState(false);
+  const [expandedOther, setExpandedOther] = React.useState(false);
 
   const handleChangeNavBar = (event) => {
     const { name, value } = event.target;
@@ -161,6 +180,18 @@ const WebSetting = () => {
         ...prevState,
         listProduct: {
           ...prevState["listProduct"],
+          [name]: value,
+        },
+      };
+    });
+  };
+  const handleChangeCart = (event) => {
+    const { name, value } = event.target;
+    setWeb((prevState) => {
+      return {
+        ...prevState,
+        cart: {
+          ...prevState["cart"],
           [name]: value,
         },
       };
@@ -334,6 +365,16 @@ const WebSetting = () => {
         />
       </SettingCollapse>
 
+       {/*7. Trang chính */}
+       <SettingCollapse
+        title="Trang chủ"
+        expand={expandedMainPage}
+        setExpanded={setExpandedMainPage}
+      >
+        Hello
+      </SettingCollapse>
+
+
       {/*4. Danh sách sản phẩm */}
       <SettingCollapse
         title="Danh sách sản phẩm"
@@ -354,25 +395,56 @@ const WebSetting = () => {
       >
         Hello
       </SettingCollapse>
+
       {/*6. Giỏ hàng */}
       <SettingCollapse
         title="Giỏ hàng"
         expand={expandedCart}
         setExpanded={setExpandedCart}
       >
-        Hello
+       <CartSetting 
+       web={web}
+       setWeb={setWeb}
+       handleChangeCart={handleChangeCart}
+       />
       </SettingCollapse>
 
-      {/*7. Trang chính */}
+      {/*6. Giỏ hàng */}
       <SettingCollapse
-        title="Trang chủ"
-        expand={expandedMainPage}
-        setExpanded={setExpandedMainPage}
+        title="Khác"
+        expand={expandedOther}
+        setExpanded={setExpandedOther}
       >
-        Hello
+       {/* <CartSetting 
+       web={web}
+       setWeb={setWeb}
+       /> */}
+       
+       <ListItem style={{margin:0, padding:0, marginBottom:10}}>
+        <Typography style={{fontWeight:500, marginRight:20, color:"#000",fontSize:15}}>Trang "Giới thiệu": </Typography>
+        <Switch checked={web.other.status} onChange={()=>{
+                let newWeb = {...web}
+                newWeb.other.status = !newWeb.other.status
+                setWeb(newWeb)
+            }}
+        />
+    </ListItem>  
+    <Button variant='contained' color='primary'  component={Link} to={'/home/manager/aboutus-setting'} onClick={()=> {dispatch(customizeAction.setSidebarOpen(false));}}>Tạo giao diện</Button>
+
+
+      
+      {/* <AbousUsSetting   web={web}  setWeb={setWeb} 
+      /> */}
+      
       </SettingCollapse>
 
+     
+
+      <Box  style={{flexGrow:1, textAlign:'right'}}>
       <Button
+        variant='contained'
+        color='primary'
+       
         onClick={async () => {
           try {
             const response = storeApi.updateStoreInfo(store_uuid, {
@@ -387,6 +459,7 @@ const WebSetting = () => {
       >
         Lưu thay đổi
       </Button>
+      </Box>
     </Card>
   );
 };

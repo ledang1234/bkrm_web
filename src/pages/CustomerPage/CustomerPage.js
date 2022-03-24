@@ -129,15 +129,15 @@ const CustomerPage = () => {
             webInfo={webInfo}
           />
         </Route>
-        <Route exact path={`${url}/promotion`}>
+        {/* <Route exact path={`${url}/promotion`}>
           <PromotionPage />
-        </Route>
+        </Route> */}
         <Route exact path={`${url}/storeInfo`}>
           <StorePage />
         </Route>
-        {/* <Route exact path={`${path}/aboutUs`}>
-          <AboutUsPage />
-        </Route> */}
+        <Route exact path={`${url}/aboutUs`}>
+          <AboutUsPage webInfo={webInfo}/>
+        </Route>
 
         <Route exact path={`${url}/cart`}>
           <CartPage webInfo={webInfo}  />

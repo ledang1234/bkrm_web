@@ -23,44 +23,15 @@ import {
   import { useFormik } from "formik";
 import * as Yup from "yup";
 import userApi from "../../../../api/userApi";
+import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
+
 const CartSummary = (props) => {
-    const {formik, order,calculateTotal,calculateQuantity ,handleSubmit,mainColor} = props;
+    const {formik, order,calculateTotal,calculateQuantity ,handleSubmit,mainColor,isPopUp,handleClose} = props;
     const [cityList, setCityList] = useState([]);
     const [districtList, setDistrictList] = useState([]);
     const [wardList, setWardList] = useState([]);
     const dispatch = useDispatch()
 
-  
-    // const formik = useFormik({
-    //   initialValues: {
-    //     name: order.name? order.name: "",
-    //     email: order.email? order.email: "",
-    //     phone: order.phone? order.phone: "",
-    //     address:  order.address? order.address: "",
-    //     ward:order.ward? order.ward: "",
-    //     district: order.district? order.district: "",
-    //     city: order.city? order.city: "",
-    
-    //   },
-    //   validationSchema: Yup.object({
-    //     name: Yup.string().required("Nhập họ và tên"),
-    //     phone: Yup.string()
-    //       .length(10, "Số điện thoại không chính xác")
-    //       .required("Nhập số điện thoại")
-    //       .matches(/^\d+$/,"Số điện thoại không chính xác"),
-    //     email: Yup.string().email("Email không chính xác"),
-    //     address: Yup.string().required("Nhập địa chỉ"),
-    //     city: Yup.string().required("Chọn tỉnh/thành phố"),
-    //     district: Yup.string().required("Chọn quận/huyện"),
-    //     ward: Yup.string().required("Chọn phường/xã"),
-    //   }),
-    // })
-  
-    // useEffect (()=>{
-    //     let newOrder = _.cloneDeep(order)
-    //     newOrder[field] = value
-    //     dispatch(customerPageActions.setOrder(newOrder))
-    // },[formik.values])
     const handleChangeOrder = (field, value) => {
         let newOrder = _.cloneDeep(order)
         newOrder[field] = value
@@ -118,6 +89,7 @@ const CartSummary = (props) => {
     justifyContent="space-between"
     alignItems="center"
     spacing={5}
+    style={{marginTop:5}}
   >
     <Typography
         style={{ fontSize: 19, fontWeight: 500, color: "#000", }}
@@ -127,7 +99,7 @@ const CartSummary = (props) => {
       <Typography
         style={{ fontSize: 22, fontWeight: 700, color: "red" , marginBottom:30}}
       >
-        {calculateTotal()}
+       <VNDFormat value={calculateTotal()}/>
    </Typography>
        
 </Grid >
@@ -271,11 +243,14 @@ const CartSummary = (props) => {
       <ColorButton
         mainColor={mainColor}
         color="primary"
-        style={{ marginTop: 50, }}
+        style={{ marginTop: 50,marginBottom:10 }}
         variant="contained"
         fullWidth
         disabled={!(formik.isValid)|| !calculateTotal()}
-        onClick={handleSubmit}
+        onClick={()=>{
+          if(isPopUp){ handleClose() ;handleSubmit()   }
+          else{  handleSubmit()}
+        }}
       >
         {" "}
     Đặt hàng{" "}
