@@ -181,7 +181,7 @@ const NavBar = (props) => {
                     textBold={textBold}
                   >
                   </HoverMenuBtn>
-                  <Button
+                  {/* <Button
                     className={classes.btnNav}
                     component={Link}
                     to={`${url}/promotion`}
@@ -192,7 +192,7 @@ const NavBar = (props) => {
                     }}
                   >
                     Khuyến mãi
-                  </Button>
+                  </Button> */}
                   <Button
                     className={classes.btnNav}
                     component={Link}
@@ -205,10 +205,10 @@ const NavBar = (props) => {
                   >
                     Cửa hàng
                   </Button>
-                  {/* <Button
+                  <Button
                     className={classes.btnNav}
                     component={Link}
-                    to={`/store/${props.storeInfo?.web_page}/aboutUs`}
+                    to={`${url}/aboutUs`}
                     style={{
                       color: textColor,
                       fontWeight: textBold,
@@ -216,7 +216,7 @@ const NavBar = (props) => {
                     }}
                   >
                     Giới thiệu
-                  </Button> */}
+                  </Button>
                 </Grid>
 
                 {/* Nút đặng nhập */}

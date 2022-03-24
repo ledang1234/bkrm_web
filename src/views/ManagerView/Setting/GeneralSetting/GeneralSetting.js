@@ -107,7 +107,6 @@ const GeneralSetting = () => {
         setChecked(JSON.parse(response.data.general_configuration));
       }
     };
-
     if (store_uuid) {
       loadData();
     }
