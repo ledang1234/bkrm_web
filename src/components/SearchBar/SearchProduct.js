@@ -36,7 +36,7 @@ import productApi from "../../api/productApi";
 import { useSelector } from "react-redux";
 import { render } from "sass";
 import { VNDFormat } from "../TextField/NumberFormatCustom";
-
+import defaultProduct from "../../assets/img/product/default-product.png"
 const useStyles = makeStyles((theme) =>
   createStyles({
     input: {
@@ -108,7 +108,7 @@ const SearchProduct = (props) => {
         }}
       >
         <Grid item xs={3}>
-          <FormatedImage url={option.img_url} />
+          <FormatedImage url={JSON.parse(option.img_urls ? option.img_urls : "[]").at(0) || defaultProduct} />
         </Grid>
         <Grid item xs={9} container direction="column">
           <Typography variant="h5">{`#${option.product_code}`}</Typography>

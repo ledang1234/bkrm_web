@@ -44,9 +44,11 @@ import * as xlsx from "xlsx";
 import ProductImportPopper from "../../../components/Popper/ProductImportPopper";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import {ProductMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
+import { ProductMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import InventoryFilter from "./InventoryTool/InventoryFilter";
-import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination";
+
+import defaultProduct from "../../../assets/img/product/default-product.png";
 
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
@@ -85,12 +87,12 @@ const Inventory = () => {
     setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid]);
 
-  console.log("store",JSON.parse(info.store.general_configuration))
+  console.log("store", JSON.parse(info.store.general_configuration));
 
   const initialQuery = {
-    orderBy: 'products.created_at',
-    sort: 'desc',
-    searchKey: '',
+    orderBy: "products.created_at",
+    sort: "desc",
+    searchKey: "",
     minStandardPrice: "",
     maxStandardPrice: "",
     minListPrice: "",
@@ -101,18 +103,18 @@ const Inventory = () => {
     categoryId: "",
   };
   const handleRemoveFilter = () => {
-    setQuery(initialQuery)
-  }
-  const [query, setQuery] = useState(initialQuery)
+    setQuery(initialQuery);
+  };
+  const [query, setQuery] = useState(initialQuery);
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
   });
 
-  const [totalRows, setTotalRows] = useState(0)
+  const [totalRows, setTotalRows] = useState(0);
   useEffect(() => {
-    setPagingState({...pagingState, page: 0})
-  }, [reload, store_uuid, query])
+    setPagingState({ ...pagingState, page: 0 });
+  }, [reload, store_uuid, query]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -123,10 +125,10 @@ const Inventory = () => {
           {
             page: pagingState.page,
             limit: pagingState.limit,
-            ...query
+            ...query,
           }
         );
-        setTotalRows(response.total_rows)
+        setTotalRows(response.total_rows);
         setProductList(response.data);
       } catch (error) {
         console.log(error);
@@ -135,12 +137,11 @@ const Inventory = () => {
     if (store_uuid && branch_uuid) {
       loadData();
     }
-    
   }, [pagingState.page, pagingState.limit, branch_uuid, reload, query]);
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -274,76 +275,93 @@ const Inventory = () => {
           { dbName: "quantity_available", displayName: "Tồn kho" },
           { dbName: "min_reorder_quantity", displayName: "Điểm đặt hàng lại" },
         ]}
-
-
         orderByOptions={[
-          {value: 'products.created_at', label: 'Ngày nhập'},
-          {value: 'products.list_price', label: 'Gia ban'},
-          {value: 'products.standard_price', label: 'Gia von'},
-          {value: 'products.quantity_available', label: 'Ton kho'},
+          { value: "products.created_at", label: "Ngày nhập" },
+          { value: "products.list_price", label: "Gia ban" },
+          { value: "products.standard_price", label: "Gia von" },
+          { value: "products.quantity_available", label: "Ton kho" },
         ]}
-        orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
-        sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
-        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
-        
+        orderBy={query.orderBy}
+        setOrderBy={(value) => setQuery({ ...query, orderBy: value })}
+        sort={query.sort}
+        setSort={(value) => setQuery({ ...query, sort: value })}
+        searchKey={query.searchKey}
+        setSearchKey={(value) => setQuery({ ...query, searchKey: value })}
         handleRemoveFilter={handleRemoveFilter}
       />
 
-      <InventoryFilter 
-         openFilter={openFilter}
-         setQuery={setQuery}
-         query={query}
-         setProductList={setProductList}
-         handleToggleFilter={handleToggleFilter}
+      <InventoryFilter
+        openFilter={openFilter}
+        setQuery={setQuery}
+        query={query}
+        setProductList={setProductList}
+        handleToggleFilter={handleToggleFilter}
       />
 
-
       {/* 3. TABLE */}
-      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
-        <TableHeader
-          classes={classes}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          headerData={HeadCells.InventoryHeadCells}
-        />
-        <TableBody>
+      {!xsScreen ? (
+        <TableWrapper
+          pagingState={{ ...pagingState, total_rows: totalRows }}
+          setPagingState={setPagingState}
+        >
+          <TableHeader
+            classes={classes}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            headerData={HeadCells.InventoryHeadCells}
+          />
+          <TableBody>
+            {productList.map((row, index) => {
+              return (
+                <InventoryTableRow
+                  key={row.uuid}
+                  row={row}
+                  setReload={() => setReload(!reload)}
+                  openRow={openRow}
+                  handleOpenRow={handleOpenRow}
+                />
+              );
+            })}
+          </TableBody>
+        </TableWrapper>
+      ) : (
+        <>
           {productList.map((row, index) => {
             return (
-              <InventoryTableRow
+              // <ProductMiniTableRow
+              //   key={row.uuid}
+              //   row={row}
+              //   setReload={() => setReload(!reload)}
+              //   openRow={openRow}
+              //   handleOpenRow={handleOpenRow}
+              // />
+              // <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={() => setReload(!reload)}
+              // totalCost={row.total_amount}  id={row.purchase_order_code} partnerName={row.supplier_name} date={row.creation_date}
+              // typeBill={"Sản phẩm"} />
+              <ProductMiniTableRow
                 key={row.uuid}
                 row={row}
-                setReload={() => setReload(!reload)}
                 openRow={openRow}
                 handleOpenRow={handleOpenRow}
+                onReload={() => setReload(!reload)}
+                img={JSON.parse(row.img_urls ? row.img_urls : '[]')?.at(0) || defaultProduct}
+                id={row.product_code}
+                name={row.name}
+                list_price={row.list_price}
+                standard_price={row.standard_price}
+                branch_quantity={row.branch_quantity}
+                min_reorder_quantity={row.min_reorder_quantity}
+                typePartner={"Sản phẩm"}
               />
             );
           })}
-        </TableBody>
-      </TableWrapper>:
-     <>
-      {productList.map((row, index) => {
-        return (
-          // <ProductMiniTableRow
-          //   key={row.uuid}
-          //   row={row}
-          //   setReload={() => setReload(!reload)}
-          //   openRow={openRow}
-          //   handleOpenRow={handleOpenRow}
-          // />
-          // <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={() => setReload(!reload)} 
-          // totalCost={row.total_amount}  id={row.purchase_order_code} partnerName={row.supplier_name} date={row.creation_date} 
-          // typeBill={"Sản phẩm"} />
-          <ProductMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={() => setReload(!reload)} 
-            img={row.img_url}  id={row.product_code} name={row.name} list_price={row.list_price} standard_price={row.standard_price}  branch_quantity={row.branch_quantity} min_reorder_quantity={row.min_reorder_quantity}
-            typePartner={"Sản phẩm"}  />
-        );
-      })}
-      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
-
-      </>
-
-      }
+          <Pagination
+            pagingState={{ ...pagingState, total_rows: totalRows }}
+            setPagingState={setPagingState}
+          />
+        </>
+      )}
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>

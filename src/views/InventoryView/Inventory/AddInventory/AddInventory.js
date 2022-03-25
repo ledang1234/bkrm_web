@@ -24,7 +24,9 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
-import VNDInput, { ThousandSeperatedInput } from "../../../../components/TextField/NumberFormatCustom";
+import VNDInput, {
+  ThousandSeperatedInput,
+} from "../../../../components/TextField/NumberFormatCustom";
 // import img
 import avaUpload from "../../../../assets/img/product/default-product.png";
 import barcodeIcon from "../../../../assets/img/icon/barcode1.png";
@@ -36,7 +38,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SearchWithAutoComplete from "../../../../components/SearchBar/SearchWithAutoComplete";
 import { urltoFile } from "../../../../api/helper";
 import { statusAction } from "../../../../store/slice/statusSlice";
-import {infoActions} from "../../../../store/slice/infoSlice";
+import { infoActions } from "../../../../store/slice/infoSlice";
 import SearchIcon from "@material-ui/icons/Search";
 import { FormatedImage } from "../../../../components/SearchBar/SearchProduct";
 import { useFormik } from "formik";
@@ -106,8 +108,8 @@ const AddInventory = (props) => {
       re_order_point: 0,
       product_code: "",
       has_batches: false,
-      quantity:0,
-      max_order:999999999
+      quantity: 0,
+      max_order: 999999999,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
@@ -125,13 +127,9 @@ const AddInventory = (props) => {
         "Số lượng đặt hàng lại không được âm"
       ),
 
-      quantity: Yup.number()
-        .moreThan(-1, "Tồn kho ban đầu không được âm"),
-      
-      max_order: Yup.number()
-        .moreThan(-1, "Số lượng nhập hàng tối đa"),
-        
+      quantity: Yup.number().moreThan(-1, "Tồn kho ban đầu không được âm"),
 
+      max_order: Yup.number().moreThan(-1, "Số lượng nhập hàng tối đa"),
     }),
   });
 
@@ -184,7 +182,9 @@ const AddInventory = (props) => {
 
       bodyFormData.append(
         "quantity",
-        productFormik.values.quantity ? productFormik.values.quantity.toString() : 0
+        productFormik.values.quantity
+          ? productFormik.values.quantity.toString()
+          : 0
       );
       bodyFormData.append(
         "category_uuid",
@@ -195,10 +195,7 @@ const AddInventory = (props) => {
         Number(productFormik.values.has_batches)
       );
 
-      bodyFormData.append(
-        "branch_uuid",
-        branch_uuid
-      );
+      bodyFormData.append("branch_uuid", branch_uuid);
       bodyFormData.append("img_url", imageURL);
 
       images.forEach((image) => bodyFormData.append("images[]", image));
@@ -211,7 +208,6 @@ const AddInventory = (props) => {
       dispatch(statusAction.failedStatus("Tạo sản phẩm thất bại"));
     }
   };
-
 
   const [reset, setReset] = useState(true);
   const onReset = () => {
@@ -328,13 +324,12 @@ const AddInventory = (props) => {
 
   //ATTRIBUTE
   // api get all attribute
-  const attributeList = [ 
-    {  id: "1", name: "MÀU",  },
-    { id: "2", name: "KÍCH THƯỚC", },
-    {  id: "3", name: "CHẤT LIỆU",  },
-    {   id: "4", name: "VỊ",},
-    {   id: "5", name: "BỘ NHỚ",},
- 
+  const attributeList = [
+    { id: "1", name: "MÀU" },
+    { id: "2", name: "KÍCH THƯỚC" },
+    { id: "3", name: "CHẤT LIỆU" },
+    { id: "4", name: "VỊ" },
+    { id: "5", name: "BỘ NHỚ" },
   ];
   const [expanded, setExpanded] = React.useState(false);
 
@@ -352,19 +347,21 @@ const AddInventory = (props) => {
   const [relatedList, setRelatedList] = useState([]);
   // const [attrOfProduct, setAttrOfProduct] = useState([]);
 
-
   // console.log("relatedList",relatedList)
 
+  useEffect(() => {
+    console.log(datas);
+  }, [datas]);
   const handleAddProductWithVariation = async () => {
-    if(relatedList.length !== 0){
-        // var isValid = datas.map(item => item.key === 'unset'?  false  )
-       for (let i = 0; i < datas.length; i++){
-         if (datas[i].key ==='unset' ){
+    if (relatedList.length !== 0) {
+      // var isValid = datas.map(item => item.key === 'unset'?  false  )
+      for (let i = 0; i < datas.length; i++) {
+        if (datas[i].key === "unset") {
           setOpenSnack(true);
-          setSnackStatus({ style: "error",  message: "Tên thuộc tính trống",});
-           return 
-         }
-       }
+          setSnackStatus({ style: "error", message: "Tên thuộc tính trống" });
+          return;
+        }
+      }
     }
     handleCloseAndReset();
     try {
@@ -410,7 +407,7 @@ const AddInventory = (props) => {
       for (var i = 0; i < relatedList.length; i++) {
         const values = relatedList[i].name.split("-");
         const attributeValues = [];
-        const attrOfProduct = datas.map((item) => item.key)
+        const attrOfProduct = datas.map((item) => item.key);
         attrOfProduct.forEach((att, index) => {
           if (values[index])
             attributeValues.push({
@@ -442,7 +439,6 @@ const AddInventory = (props) => {
     }
   };
 
-
   return (
     <Dialog
       open={open}
@@ -456,11 +452,11 @@ const AddInventory = (props) => {
           handleClose={handleCloseCategory}
           onReset={onReset}
         />
-         <SnackBarGeneral
-            handleClose={()=>  setOpenSnack(false)}
-            open={openSnack}
-            status={snackStatus}
-          />
+        <SnackBarGeneral
+          handleClose={() => setOpenSnack(false)}
+          open={openSnack}
+          status={snackStatus}
+        />
         <Box
           display="flex"
           flexDirection="row"
@@ -472,16 +468,18 @@ const AddInventory = (props) => {
             Thêm sản phẩm
           </Typography>
           <Box style={{ width: "70%" }}>
-            {JSON.parse(info.store.general_configuration).recommendedProduct.status ?
-            <SearchWithAutoComplete
-              handleDefaultSelect={selectSampleProductHandler}
-              onSelect={selectSampleProductHandler}
-              searchApiCall={searchSampleProductHandler}
-              renderInput={renderNameInput}
-              getOptionLabel={getOptionLabel}
-              renderOption={renderOptionTest}
-              filterOptions={(options, state) => options}
-            />:null}
+            {JSON.parse(info.store.general_configuration).recommendedProduct
+              .status ? (
+              <SearchWithAutoComplete
+                handleDefaultSelect={selectSampleProductHandler}
+                onSelect={selectSampleProductHandler}
+                searchApiCall={searchSampleProductHandler}
+                renderInput={renderNameInput}
+                getOptionLabel={getOptionLabel}
+                renderOption={renderOptionTest}
+                filterOptions={(options, state) => options}
+              />
+            ) : null}
           </Box>
         </Box>
         <Grid
@@ -591,15 +589,18 @@ const AddInventory = (props) => {
               inputRef={salesPriceRef}
               value={productFormik.values.salesPrice}
               // onChange={productFormik.handleChange}
-              onChange={(e)=>{
+              onChange={(e) => {
                 // productFormik.handleChange
-                productFormik.setFieldValue("salesPrice", e.target.value)
-                if (relatedList.length !== 0){
-                  var list = [...relatedList]
-                  list = relatedList.map(i =>i.list_price = e.target.value)
+                productFormik.setFieldValue("salesPrice", e.target.value);
+                if (relatedList.length !== 0) {
+                  var list = [...relatedList];
+                  list = relatedList.map(
+                    (i) => (i.list_price = e.target.value)
+                  );
                   // list = relatedList.map(e =>({name:e,product_code:"", bar_code: "",standard_price:productFormik.values.importedPrice, list_price :value}))
                   // setRelatedList(list)
-                }}}
+                }
+              }}
               error={
                 productFormik.touched.salesPrice &&
                 productFormik.errors.salesPrice
@@ -620,15 +621,18 @@ const AddInventory = (props) => {
               name="importedPrice"
               value={productFormik.values.importedPrice}
               // onChange={productFormik.handleChange}
-              onChange={(e)=>{
+              onChange={(e) => {
                 // productFormik.handleChange
-                productFormik.setFieldValue("importedPrice", e.target.value)
-                if (relatedList.length !== 0){
-                  var list = [...relatedList]
-                  list = relatedList.map(i =>i.standard_price = e.target.value)
+                productFormik.setFieldValue("importedPrice", e.target.value);
+                if (relatedList.length !== 0) {
+                  var list = [...relatedList];
+                  list = relatedList.map(
+                    (i) => (i.standard_price = e.target.value)
+                  );
                   // list = relatedList.map(e =>({name:e,product_code:"", bar_code: "",standard_price:productFormik.values.importedPrice, list_price :value}))
                   // setRelatedList(list)
-                }}}
+                }
+              }}
               error={
                 productFormik.touched.importedPrice &&
                 productFormik.errors.importedPrice
@@ -641,8 +645,14 @@ const AddInventory = (props) => {
               onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
-            {Number(productFormik.values.importedPrice) > Number(productFormik.values.salesPrice) ?<Typography variant='h6' style={{color:'red'}}> Giá vốn đang lớn hơn giá bán !!</Typography>:null}
-             <ThousandSeperatedInput
+            {Number(productFormik.values.importedPrice) >
+            Number(productFormik.values.salesPrice) ? (
+              <Typography variant="h6" style={{ color: "red" }}>
+                {" "}
+                Giá vốn đang lớn hơn giá bán !!
+              </Typography>
+            ) : null}
+            <ThousandSeperatedInput
               label="Tồn kho ban đầu"
               variant="outlined"
               fullWidth
@@ -652,8 +662,7 @@ const AddInventory = (props) => {
               value={productFormik.values.quantity}
               onChange={productFormik.handleChange}
               error={
-                productFormik.touched.quantity &&
-                productFormik.errors.quantity
+                productFormik.touched.quantity && productFormik.errors.quantity
               }
               helperText={
                 productFormik.touched.quantity
@@ -683,7 +692,7 @@ const AddInventory = (props) => {
               }
               onBlur={productFormik.handleBlur}
             />
-             <ThousandSeperatedInput
+            <ThousandSeperatedInput
               label="Số lượng nhập hàng tối đa"
               variant="outlined"
               fullWidth
@@ -703,7 +712,6 @@ const AddInventory = (props) => {
               }
               onBlur={productFormik.handleBlur}
             />
-       
           </Grid>
         </Grid>
         <Grid container spacing={2}>
@@ -744,76 +752,72 @@ const AddInventory = (props) => {
             </Box>
           </Grid>
         </Grid>
-        {JSON.parse(info.store.general_configuration).expiryDate.status?
-        <div style={{ flexGrow: 1, textAlign: "right" }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                //checked={outOfDate}
-                name="has_batches"
-                checked={productFormik.values.has_batches}
-                onChange={productFormik.handleChange}
-                //onChange={(event) => setOutOfDate(event.target.checked)}
-              />
-            }
-            label="Lô, hạn sử dụng"
-          />
-        </div>
-        :null}
-
-       {JSON.parse(info.store.general_configuration).variation.status?
-       <>
-        <Card className={classes.attrCard}>
-          <CardHeader
-            onClick={handleExpandClick}
-            action={
-              <IconButton
-                size="small"
-                className={clsx(classes.expand, {
-                  [classes.expandOpen]: expanded,
-                })}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            }
-            title="Thuộc tính"
-            className={classes.attrHead}
-          />
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <AddAttribute
-              attributeList={attributeList}
-              datas={datas}
-              setDatas={setDatas}
-              setRelatedList={setRelatedList}
-
-              list_price={productFormik.values.salesPrice}
-              standard_price={productFormik.values.importedPrice}
-              // attrOfProduct={attrOfProduct}
-              // setAttrOfProduct={setAttrOfProduct}
+        {JSON.parse(info.store.general_configuration).expiryDate.status ? (
+          <div style={{ flexGrow: 1, textAlign: "right" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  //checked={outOfDate}
+                  name="has_batches"
+                  checked={productFormik.values.has_batches}
+                  onChange={productFormik.handleChange}
+                  //onChange={(event) => setOutOfDate(event.target.checked)}
+                />
+              }
+              label="Lô, hạn sử dụng"
             />
-          </Collapse>
-        </Card>
-   {/* GENERATE LIST */}
-        {relatedList.length > 0 ? (
-          <Card className={classes.attrCard}>
-            <CardHeader
-              title="Danh sách hàng cùng loại"
-              className={classes.attrHead}
-            />
-            {/*  !!!! Handle value phần này */}
-            <RelaltedItemList
-              relatedList={relatedList}
-              setRelatedList={setRelatedList}
-
-
-
-            />
-          </Card>
+          </div>
         ) : null}
-        </>
-        :null}
+
+        {JSON.parse(info.store.general_configuration).variation.status ? (
+          <>
+            <Card className={classes.attrCard}>
+              <CardHeader
+                onClick={handleExpandClick}
+                action={
+                  <IconButton
+                    size="small"
+                    className={clsx(classes.expand, {
+                      [classes.expandOpen]: expanded,
+                    })}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                }
+                title="Thuộc tính"
+                className={classes.attrHead}
+              />
+              <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <AddAttribute
+                  attributeList={attributeList}
+                  datas={datas}
+                  setDatas={setDatas}
+                  setRelatedList={setRelatedList}
+                  list_price={productFormik.values.salesPrice}
+                  standard_price={productFormik.values.importedPrice}
+                  // attrOfProduct={attrOfProduct}
+                  // setAttrOfProduct={setAttrOfProduct}
+                />
+              </Collapse>
+            </Card>
+            {/* GENERATE LIST */}
+            {relatedList.length > 0 ? (
+              <Card className={classes.attrCard}>
+                <CardHeader
+                  title="Danh sách hàng cùng loại"
+                  className={classes.attrHead}
+                />
+                {/*  !!!! Handle value phần này */}
+                <RelaltedItemList
+                  relatedList={relatedList}
+                  setRelatedList={setRelatedList}
+                />
+              </Card>
+            ) : null}
+          </>
+        ) : null}
 
         {/* Button */}
         <Grid
@@ -850,7 +854,8 @@ const AddInventory = (props) => {
                 productFormik.isValid &&
                 Object.keys(productFormik.touched).length > 0
               ) ||
-             ( Number(productFormik.values.importedPrice) > Number(productFormik.values.salesPrice))
+              Number(productFormik.values.importedPrice) >
+                Number(productFormik.values.salesPrice)
             }
           >
             Thêm
