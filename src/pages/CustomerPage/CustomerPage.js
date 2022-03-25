@@ -50,8 +50,12 @@ const CustomerPage = () => {
 
   const {categories, products, storeInfo} = useSelector(state => state.customerPage)
 
+  const storeSetting = storeInfo.store_configuration ? JSON.parse(storeInfo.store_configuration) : null
   //0.Store Info 
-  var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
+  // var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
+  var logoStore = storeSetting?.img_url ?  storeSetting.img_url : "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
+
+  
   //1.  API GET ALL CATEGORY HERE
   //....
  //2.  GET SETTING
@@ -135,9 +139,10 @@ const CustomerPage = () => {
         <Route exact path={`${url}/storeInfo`}>
           <StorePage />
         </Route>
-        <Route exact path={`${url}/aboutUs`}>
+      {webInfo.other.status?
+       <Route exact path={`${url}/aboutUs`}>
           <AboutUsPage webInfo={webInfo}/>
-        </Route>
+        </Route>:null}
 
         <Route exact path={`${url}/cart`}>
           <CartPage webInfo={webInfo}  />
@@ -150,7 +155,11 @@ const CustomerPage = () => {
           />
         </Route>
         <Route exact path={`${url}/category/:categoryId/products/:productCode`}>
-          <DetailPage />
+          <DetailPage webInfo={webInfo} />
+        </Route>
+
+        <Route exact path={`${url}/products/:productCode`}>
+          <DetailPage webInfo={webInfo} />
         </Route>
         {/* Tại sao define route detail trong ProductPage 
           hoặc define route detial sau route product ko đc  

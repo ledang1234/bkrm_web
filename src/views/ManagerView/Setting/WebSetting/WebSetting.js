@@ -37,6 +37,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 // import NavBar from "../../../../pages/CustomerPage/NavBar/"
 import NavBarSetting from "./NavBarSetting";
 import ProductSetting from "./ProductSetting";
+import MainPageSetting from "./MainPageSetting"
 import { useStyles } from "./style";
 import { useSelector ,useDispatch} from "react-redux";
 import storeApi from "../../../../api/storeApi";
@@ -52,7 +53,9 @@ const WebSetting = () => {
   const domainName = "http://localhost:3000/#/store/";
 
   // api
-  var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
+  // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
+
+  
   const webInfo = {
     webAddress: "lyquochai",
     status: "inactive",
@@ -85,20 +88,30 @@ const WebSetting = () => {
         id:"f9yq8g",
         rows:[],
         version:1
-
       },
+    },
+    mainPage:{
+
     }
   };
 
 
   const [web, setWeb] = React.useState(webInfo);
+  const [images, setImages] = useState([]);
+  const [display, setDisplay] = useState([]);
+  const [imageURL, setImageURL] = useState("");
+
+
   console.log("web", web)
   const [displayColorPicker, setDisplayColorPicker] = React.useState(false);
   const [displayColorPicker1, setDisplayColorPicker1] = React.useState(false);
   const [openLinkWarningPopup, seOpenLinkWarningPopup] = React.useState(false);
   const dispatch = useDispatch();
 
-  // redux
+  // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
+
+  const [logoStore,setLogoStore] = useState(null)
+  // redux 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   // useEffect(() => {
@@ -106,6 +119,7 @@ const WebSetting = () => {
   //     const response = await storeApi.getStoreInfo(store_uuid);
   //     if (response.data.web_configuration) {
   //       setWeb(JSON.parse(response.data.web_configuration));
+  //       setLogoStore(JSON.parse(response.data.store_configuration).img_url)
   //     }
   //   };
 
@@ -197,6 +211,20 @@ const WebSetting = () => {
       };
     });
   };
+
+  const handleChangeMainPage = (event) => {
+    const { name, value } = event.target;
+    setWeb((prevState) => {
+      return {
+        ...prevState,
+        mainPage: {
+          ...prevState["mainPage"],
+          [name]: value,
+        },
+      };
+    });
+  };
+  
 
   return (
     <Card className={classes.root}>
@@ -371,7 +399,13 @@ const WebSetting = () => {
         expand={expandedMainPage}
         setExpanded={setExpandedMainPage}
       >
-        Hello
+        <MainPageSetting
+          web={web}
+          handleChangeNavBar={handleChangeMainPage}
+          setWeb={setWeb}
+          images={images} setImages={setImages} display={display} setDisplay={setDisplay} imageURL={imageURL} setImageURL={setImageURL}
+
+        />
       </SettingCollapse>
 
 
@@ -409,7 +443,7 @@ const WebSetting = () => {
        />
       </SettingCollapse>
 
-      {/*6. Giỏ hàng */}
+      {/*6. Khác */}
       <SettingCollapse
         title="Khác"
         expand={expandedOther}

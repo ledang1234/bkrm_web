@@ -1,5 +1,5 @@
 import {useTheme, makeStyles,styled,withStyles,createStyles,lighten} from "@material-ui/core/styles";
-import {Typography,Divider,Grid,Paper,Box,Button,ListItem,ListItemIcon,ListItemText} from '@material-ui/core';
+import {Typography,Divider,Grid,Paper,Box,Button,ButtonGroup,ListItem,ListItemIcon,ListItemText} from '@material-ui/core';
 
 export const ColorButtonPink = withStyles((theme) => ({
     root: {
@@ -53,4 +53,21 @@ export const ColorButtonPink = withStyles((theme) => ({
     },
     textTransform: "none",
     marginTop:20
+  }));
+
+
+
+  export const CustomButton = styled(Button)(({ theme, mainColor, textColor='#fff' }) => ({
+    // color: theme.palette.getContrastText(mainColor),
+    color: textColor,
+    backgroundColor: mainColor ,
+    // width: 100,
+    borderWidth:1, borderColor:'#b6b6b6',
+    fontWeight:700,
+    height:40,
+    borderRadius:5,
+    "&:hover": {
+      backgroundColor:lighten(mainColor, 0.3),
+      
+    },
   }));

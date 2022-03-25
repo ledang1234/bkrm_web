@@ -132,7 +132,7 @@ const CartSummary = (props) => {
     </Grid>
     <Grid item xs={8}> 
     <TextField
-        required
+        // required
         fullWidth
         label="Email"
         name="email"

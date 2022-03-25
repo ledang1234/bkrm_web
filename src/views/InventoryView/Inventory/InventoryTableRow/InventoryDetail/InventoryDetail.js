@@ -140,6 +140,7 @@ const InventoryDetail = (props) => {
     setIsOpenUpdate(false);
   };
 
+
   return row.has_variance ? (
     <>
       {openRow === row.uuid &&
@@ -172,6 +173,7 @@ const InventoryDetail = (props) => {
                     </Typography>
                   </ListItem>
                 </TableCell>
+
 
                 <TableCell align="left">{variance.category?.name}</TableCell>
                 <TableCell align="right">

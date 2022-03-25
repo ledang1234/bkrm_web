@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ReactQuill from 'react-quill';
+import ReactQuill , {Quill}from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import { useTheme, withStyles,makeStyles, createStyles } from "@material-ui/core/styles";
@@ -8,6 +8,9 @@ import ImageIcon from '@material-ui/icons/Image';
 import WifiIcon from '@material-ui/icons/Wifi';
 
 import { grey } from "@material-ui/core/colors";
+import ImageResize from 'quill-image-resize-module-react';
+Quill.register('modules/imageResize', ImageResize);
+
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -137,7 +140,12 @@ const modules = {
   clipboard: {
     // toggle to add extra line breaks when pasting HTML:
     matchVisual: false,
-  }
+  },
+  imageResize: {
+    parchment: Quill.import('parchment'),
+    modules: ['Resize', 'DisplaySize','Toolbar']
+ }
+
 }
 const formats = [
   'header', 'font', 'size',

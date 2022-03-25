@@ -10,13 +10,14 @@ import "@react-page/plugins-slate/lib/index.css";
 
 const AboutUsPage = ({webInfo}) => {
     console.log("webInfoooo",webInfo.other.detail)
+
     return (
         <div>
            <Editor
             cellPlugins={cellPlugins}
             value={webInfo.other.detail}
             readOnly={true}
-        />
+            />
         </div>
     )
 }
