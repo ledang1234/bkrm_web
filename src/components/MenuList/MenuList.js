@@ -27,7 +27,7 @@ import customerIcon from "../../assets/img/icon/customer.png";
 import statisticIcon from "../../assets/img/icon/statistics.png";
 
 import webIcon from "../../assets/img/icon/www.png";
-import settingIcon from "../../assets/img/icon/setting.png"
+import settingIcon from "../../assets/img/icon/setting.png";
 import deliveryIcon from "../../assets/img/icon/history3.png";
 
 //ICON
@@ -178,6 +178,14 @@ const salesModule = {
       icon1: icons.RestorePageOutlinedIcon,
       icon2: icons1.RestorePageTwoToneIcon,
     },
+    {
+      id: 4,
+      title: "Đặt Hàng",
+      url: "/home/sales/order-list",
+      icon: orderListIcon,
+      icon1: icons.AddIcCallOutlinedIcon,
+      icon2: icons1.AddIcCallTwoToneIcon,
+    },
   ],
 };
 
@@ -294,7 +302,7 @@ const reportModule = {
       icon: branchIcon,
       icon1: icons.StorefrontOutlinedIcon,
       icon2: icons1.StorefrontTwoToneIcon,
-    }, 
+    },
     {
       id: 18,
       title: "Khách Hàng",
@@ -313,7 +321,11 @@ const reportModule = {
       icon2: icons1.LanguageTwoToneIcon,
       children: [
         { id: 19.1, title: "Cài đặt chung", url: "/home/manager/setting" },
-        { id: 19.2, title: "Khuyến mãi", url: "/home/manager/setting-discount" },
+        {
+          id: 19.2,
+          title: "Khuyến mãi",
+          url: "/home/manager/setting-discount",
+        },
         { id: 19.3, title: "Voucher", url: "/home/manager/setting-voucher" },
         { id: 19.4, title: "Mẫu email", url: "/home/manager/setting-email" },
         { id: 19.5, title: "Trang web", url: "/home/manager/setting-web" },

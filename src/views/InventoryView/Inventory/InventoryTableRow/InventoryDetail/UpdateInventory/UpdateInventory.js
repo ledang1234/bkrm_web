@@ -60,7 +60,7 @@ const UpdateInventory = (props) => {
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
   useEffect(()=>{
-    const displayList = props.productInfo.images.map((img) => ({link:img.url,isUrl: true}))
+    const displayList = JSON.parse(props.productInfo.img_urls ? props.productInfo.img_urls : "[]").map((img) => ({link:img,isUrl: true}))
     setDisplay(displayList)
   },[props.productInfo.images])
   const addImageHandler = (e) => {

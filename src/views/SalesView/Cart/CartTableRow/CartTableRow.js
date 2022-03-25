@@ -24,9 +24,13 @@ import DiscountPopUp from "../DiscountPopup/DiscountPopup";
 import icon from "../../../../assets/img/product/tch.jpeg";
 import SelectBatch from "../../../../components/SelectBatch/SelectBatch";
 import { useDispatch, useSelector } from "react-redux";
+
 import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { List } from "@mui/material";
+
+import defaultProduct from '../../../../assets/img/product/default-product.png'
+
 export const CartRow = (props) => {
   const classes = useStyles();
   const haveDiscount = true;
@@ -121,9 +125,9 @@ const [showInfo, setShowInfo] = React.useState(false);
             <Box
               component="img"
               sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
-              src={row.img_url}
-            
-              
+
+              src={JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) || defaultProduct}
+
             />
             <Typography  style={{marginRight:5}} 
              >{row.name}</Typography>
