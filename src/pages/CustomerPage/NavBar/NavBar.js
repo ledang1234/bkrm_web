@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
 const NavBar = (props) => {
     const {storeInfo,logo, handleClickItem,category} = props;
     const {buttonLogin,buttonCart,navColor,textNav} = props.webInfo.navBar;
+    console.log("props.webInfo",props.webInfo.other)
+    const  hasAboutUs = props.webInfo.other.status
     const mainColor=`rgba(${ props.webInfo.mainColor.r }, ${ props.webInfo.mainColor.g }, ${ props.webInfo.mainColor.b }, ${ props.webInfo.mainColor.a })`
 
     // 
@@ -136,7 +138,9 @@ const NavBar = (props) => {
             component={Link}
             to={`${url}`}
             >
-              <img src={logo} style={{height:45,marginTop:-5,marginBottom:-5}}/>
+             {logo? <img src={logo} style={{height:45,marginTop:-5,marginBottom:-5}}/> : 
+              <Typography variant="h3" >  BKRM </Typography>
+            }
             </Grid>
             {/* Small screen */}
             {matchDownSm ? (
@@ -205,7 +209,7 @@ const NavBar = (props) => {
                   >
                     Cửa hàng
                   </Button>
-                  <Button
+                 {hasAboutUs? <Button
                     className={classes.btnNav}
                     component={Link}
                     to={`${url}/aboutUs`}
@@ -216,7 +220,7 @@ const NavBar = (props) => {
                     }}
                   >
                     Giới thiệu
-                  </Button>
+                  </Button>:null}
                 </Grid>
 
                 {/* Nút đặng nhập */}

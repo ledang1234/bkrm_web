@@ -95,6 +95,7 @@ const SearchProduct = (props) => {
   };
 
   const renderOption = (option) => {
+    // console.log("option",option)
     //display value in Popper elements
     return (
       <Grid

@@ -22,8 +22,7 @@ import { success } from '../../../../components/StatusModal/StatusModal';
 import _ from 'lodash'
 const ProductList = (props) => {
     let { categoryId } = useParams();
-    const {mainColor, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance, InventoryList} = props;
-    const {isMargin,} =Number(props.isMargin)
+    const {mainColor,isMargin, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance, InventoryList} = props;
     const theme = useTheme();
     const classes = useStyles(theme);
     // const mainColor=`rgba(${ web.mainColor.r }, ${ web.mainColor.g }, ${ web.mainColor.b }, ${ web.mainColor.a })`
@@ -49,19 +48,9 @@ const ProductList = (props) => {
         else if (type==="1"){return mainColor }
         else{return mainColor}
     }
- 
-    // const nameColor = handleColor(nameStyle[0])
-    // const nameSize = nameStyle[1]?"h4":"h5";
-    // const nameBold = nameStyle[2]? 600:500;
-    // const nameLineClass = nameStyle[3]?classes.multiLineEllipsis:classes.oneLineEllipsis
-    // const priceColor = handleColor(priceStyle[0])
-    // const priceSize =priceStyle[1]?16:14
-    // const priceBold = priceStyle[2]?600:400
-
     const nameColor = handleColor(nameStyle[0])
     const nameSize = nameStyle[1];
     const nameBold = nameStyle[2];
-    // const nameLineClass = nameStyle[3]?classes.multiLineEllipsis:classes.oneLineEllipsis
     const nameLineClass = classes.multiLineEllipsis
 
     const priceColor = handleColor(priceStyle[0])
@@ -102,7 +91,7 @@ const ProductList = (props) => {
                      {Number(isBox)?
                      <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{margin:`${boxDistance}%`, width:widthSize, borderRadius:border?7:0}} >
                         <CardActionArea 
-                            // component={Link} to={`${url}/products/${item.product_code}`} 
+                            component={Link} to={`${url}/products/${item.product_code}`} 
                         >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border&& isMargin ?7:0}}
@@ -117,7 +106,7 @@ const ProductList = (props) => {
                     </Card> :
                     <Box  className={clsx(/*classes.hoverCard,*/classes.item)} style={{margin:`${boxDistance}%`,width:widthSize, borderRadius:border?7:0}} >
                         <CardActionArea 
-                            // component={Link} to={`${url}/products/${item.product_code}`}
+                            component={Link} to={`${url}/products/${item.product_code}`}
                         >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border?7:0}}

@@ -134,7 +134,7 @@ const CartPage = (props) => {
         .length(10, "Số điện thoại không chính xác")
         .required("Nhập số điện thoại")
         .matches(/^\d+$/,"Số điện thoại không chính xác"),
-      email: Yup.string().email("Email không chính xác"),
+      // email: Yup.string().email("Email không chính xác"),
       address: Yup.string().required("Nhập địa chỉ"),
       city: Yup.string().required("Chọn tỉnh/thành phố"),
       district: Yup.string().required("Chọn quận/huyện"),

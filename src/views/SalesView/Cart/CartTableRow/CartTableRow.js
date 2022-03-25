@@ -24,14 +24,19 @@ import DiscountPopUp from "../DiscountPopup/DiscountPopup";
 import icon from "../../../../assets/img/product/tch.jpeg";
 import SelectBatch from "../../../../components/SelectBatch/SelectBatch";
 import { useDispatch, useSelector } from "react-redux";
-
+import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { List } from "@mui/material";
 export const CartRow = (props) => {
   const classes = useStyles();
   const haveDiscount = true;
   const info = useSelector((state) => state.info);
+  const branch = info.branch;
 
+console.log("branch",branch)
   const {
     row,
+
     discountData,
     handleDeleteItemCart,
     handleChangeItemQuantity,
@@ -95,10 +100,14 @@ export const CartRow = (props) => {
   };
 
   const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+console.log("row", row)
+
+const [show, setShow] = React.useState(false);
+const [showInfo, setShowInfo] = React.useState(false);
 
   return (
     <>
-      <TableRow hover key={props.row.uuid}>
+      <TableRow hover key={props.row.uuid} onMouseOver={()=>  setShow(true)}  onMouseLeave={()=> setShow(false)} >
         <TableCell align="left">{row.id + 1}</TableCell>
         {/* Sửa lại thành product_code */}
         <TableCell align="left" style={{ width: 5 }}>
@@ -107,13 +116,36 @@ export const CartRow = (props) => {
         <TableCell align="left" style={{ minWidth: 200 }}>
           <ListItem
             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
+           alignItems='center'
           >
             <Box
               component="img"
               sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
               src={row.img_url}
+            
+              
             />
-            <Typography>{row.name}</Typography>
+            <Typography  style={{marginRight:5}} 
+             >{row.name}</Typography>
+            {show? 
+            <Box onMouseOver={()=>setShowInfo(true)}  >
+             <MoreInfo  >     
+             <ListItem >
+                  <Typography style={{width:400}}></Typography>
+                  <Typography style={{fontWeight:700}}>Tồn</Typography>
+                </ListItem>
+               {row.branch_inventories.map(item =>(
+                   <ListItem >
+                      <ListItem style={{width:280, margin:0, padding:0}}>
+                          <Typography style={{fontWeight:700, marginRight:10}}>{item.name}</Typography>
+                          {item.uuid === branch.uuid ? <CheckCircleIcon fontSize="small" color='primary'/> :null} 
+                      </ListItem>
+                      <Typography>{item.quantity_available}</Typography>
+                    </ListItem>
+                ))}  
+            </MoreInfo>
+            </Box>
+           :null}
             {haveDiscount ? (
               <img
                 id="gift"

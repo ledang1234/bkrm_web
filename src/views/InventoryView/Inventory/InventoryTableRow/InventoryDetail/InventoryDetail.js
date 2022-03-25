@@ -141,6 +141,7 @@ const InventoryDetail = (props) => {
     setIsOpenUpdate(false);
   };
 
+  console.log("productDetail",productDetail)
   
   return row.has_variance ? (<>
     {openRow === row.uuid &&

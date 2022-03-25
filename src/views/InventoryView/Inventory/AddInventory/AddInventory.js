@@ -48,6 +48,12 @@ import AddAttribute from "./AddAttribute";
 import RelaltedItemList from "./RelaltedItemList";
 import SnackBarGeneral from "../../../../components/SnackBar/SnackBarGeneral";
 
+import ReactQuill, {Quill} from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import ImageResize from 'quill-image-resize-module-react';
+Quill.register('modules/imageResize', ImageResize);
+
+
 const UploadImages = (img) => {
   return (
     <Box
@@ -95,6 +101,8 @@ const AddInventory = (props) => {
     ]);
   };
 
+  const [description, setDescription] = useState('');
+
   const productFormik = useFormik({
     initialValues: {
       name: "",
@@ -107,7 +115,8 @@ const AddInventory = (props) => {
       product_code: "",
       has_batches: false,
       quantity:0,
-      max_order:999999999
+      max_order:999999999,
+      description:""
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
@@ -341,7 +350,10 @@ const AddInventory = (props) => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
+  const [expandedDescription, setExpandedDescription] = React.useState(false);
+  const handleExpandedDescription = () => {
+    setExpandedDescription(!expanded);
+  };
   //Lô, HSD
   const [outOfDate, setOutOfDate] = React.useState("false");
 
@@ -354,6 +366,13 @@ const AddInventory = (props) => {
 
 
   // console.log("relatedList",relatedList)
+
+
+  useEffect(()=>{
+    console.log(" productFormik.values.description", productFormik.values.description)
+  }, [productFormik.values.description])
+
+
 
   const handleAddProductWithVariation = async () => {
     if(relatedList.length !== 0){
@@ -441,6 +460,7 @@ const AddInventory = (props) => {
       dispatch(statusAction.failedStatus("Tạo sản phẩm thất bại"));
     }
   };
+
 
 
   return (
@@ -733,7 +753,7 @@ const AddInventory = (props) => {
               ))}
               {display.length === 0 ? <UploadImages /> : null}
               <IconButton
-                disabled={display.length > 3 ? true : false}
+                disabled={display.length > 5 ? true : false}
                 color="primary"
                 size="medium"
                 component="label"
@@ -806,14 +826,26 @@ const AddInventory = (props) => {
             <RelaltedItemList
               relatedList={relatedList}
               setRelatedList={setRelatedList}
-
-
-
             />
           </Card>
         ) : null}
         </>
         :null}
+
+
+      {/* MÔ TẢ */}
+      <Card className={classes.attrCard}>
+          <CardHeader
+            onClick={handleExpandedDescription}
+            action={ <IconButton size="small" className={clsx(classes.expand, {  [classes.expandOpen]: expandedDescription, })}  onClick={handleExpandedDescription} aria-expanded={expanded} >  <ExpandMoreIcon /> </IconButton> }
+            title="Mô tả"
+            className={classes.attrHead}
+          />
+          <Collapse in={expandedDescription} timeout="auto" unmountOnExit style={{padding:0}}>
+              <ReactQuill theme="snow" name="description"value={productFormik.values.description} onChange={(val) => productFormik.setFieldValue("description",val)}  modules={modules} formats={formats}  placeholder={'Write something...'} />
+          </Collapse>
+        </Card>
+
 
         {/* Button */}
         <Grid
@@ -862,3 +894,36 @@ const AddInventory = (props) => {
 };
 
 export default AddInventory;
+
+
+const modules = {
+  toolbar: [
+    [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+    [{size: []}],
+    [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{'color':[]}],
+    [{'background':[]}],
+    [{'list': 'ordered'}, {'list': 'bullet'}, 
+     {'indent': '-1'}, {'indent': '+1'}],
+    ['link', 'image', 'video'],
+    ['clean'],
+    
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  },
+  imageResize: {
+    parchment: Quill.import('parchment'),
+    modules: ['Resize', 'DisplaySize','Toolbar']
+ }
+}
+
+
+const formats = [
+  'header', 'font', 'size',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image', 'video','color','background'
+]

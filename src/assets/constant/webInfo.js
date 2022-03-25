@@ -22,6 +22,18 @@ const webInfo = {
       boxDistance:1,
       // marginContainer:10,
       // boxDistance:2,
-    }   
+    } ,
+    cart:{
+      summaryPosition:'right',
+      header:"show"
+    },
+    other:{
+      status:false,
+      detail:{
+        id:"f9yq8g",
+        rows:[],
+        version:1
+      },
+    }
 }
 export default webInfo
