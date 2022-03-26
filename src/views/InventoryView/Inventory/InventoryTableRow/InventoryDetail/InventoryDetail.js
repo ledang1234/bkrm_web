@@ -42,8 +42,10 @@ import clsx from "clsx";
 import { FormatedProductStatus } from "../../../../../components/TableCommon/util/format";
 import VarianceModal from "./VarianceModal";
 import { VarianceProductMiniTableRow } from "../../../../../components/MiniTableRow/MiniTableRow";
+import branchApi from "../../../../../api/branchApi";
 
 import defaultProduct from "../../../../../assets/img/product/default-product.png"
+import BranchInventoryPopUp from "./BranchInventoryPopUp";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -84,6 +86,8 @@ const InventoryDetail = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [thisReload, setThisReload] = useState(false);
   const dispatch = useDispatch();
+
+
   const [productDetail, setProductDetail] = useState({
     name: "",
     bar_code: "",
@@ -117,6 +121,9 @@ const InventoryDetail = (props) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const branchs = info.branchsOfStore
+  console.log("branchs",branchs)
+  // const [branchs, setBranchs] = useState(info.branchsOfStore);
 
   const [isOpenVarianceDetailModal, setIsOpenVariaceDetailModal] =
     useState(false);
@@ -139,6 +146,12 @@ const InventoryDetail = (props) => {
   const handleCloseUpdate = (status) => {
     setIsOpenUpdate(false);
   };
+
+
+  console.log("roweeee", row)
+
+
+  const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
 
 
   return row.has_variance ? (
@@ -197,7 +210,7 @@ const InventoryDetail = (props) => {
                     setSelectedVariance(variance);
                   }}
                 >
-                  <Button size="small" color="primary" variant="outlined">
+                  <Button size="small" color="primary" variant="outlined" >
                     Chi tiết
                   </Button>
                 </TableCell>
@@ -220,6 +233,14 @@ const InventoryDetail = (props) => {
           parentProps={props.parentProps}
           row={selectedVariance}
           handleClose={() => setIsOpenVariaceDetailModal(false)}
+          branchs={branchs}
+          // handleBranchQuantity={()=>{setOpenDetailInventory(true); console.log("helllllooo")}}
+          setReload={() => {
+            setReload();
+            setThisReload(!thisReload);
+          }}
+         batches={row.batches}
+         has_batches={row.has_batches}
         />
       )}
     </>
@@ -382,28 +403,46 @@ const InventoryDetail = (props) => {
                   </Grid>
                 </Grid>
 
-                <Grid container direction="row" justifyContent="flex-start">
+                <Grid container direction="row" justifyContent="flex-start" alignItems='center'>
                   <Grid item xs={4} sm={4}>
                     <Typography variant="h5" gutterBottom component="div">
                       Tồn kho
                     </Typography>
                   </Grid>
-                  <Grid item sm={6}>
+                  <Grid item sm={2}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {row.branch_quantity}{" "}
+                      {row.branch_quantity.toLocaleString()}{" "}
                     </Typography>
                   </Grid>
+                  {branchs.length >1 || row.has_batches?
+                   <Grid item sm={4} style={{marginTop:-5, marginBottom:5}}>
+                      <Button size='small' variant='contained'color='primary' style={{textTransform:'none'}} onClick={()=>setOpenDetailInventory(true)}> Chi tiết</Button>
+                  </Grid>:null}
+                  {openDetailInventory?
+                  <BranchInventoryPopUp 
+                    branch_inventories={row.branch_inventories}branchs={branchs}open={openDetailInventory}
+                    onClose={()=>setOpenDetailInventory(false)}
+                    setReload={() => {
+                      setReload();
+                      setThisReload(!thisReload);
+                     }}
+                     batches={row.batches}
+                     has_batches={row.has_batches}
+                   />
+                   
+                   :null}
                 </Grid>
-
+                {row.has_batches ? <Typography variant='h6' style={{color:theme.customization.primaryColor[500], marginBottom:10}}>* Sản phẩm quản lý theo lô *</Typography>:null}
+ 
                 <Grid container direction="row" justifyContent="flex-start">
                   <Grid item xs={4} sm={6}>
                     <Typography variant="h5" gutterBottom component="div">
-                      Số lượng đặt hàng lại
+                      SL đặt hàng lại
                     </Typography>
                   </Grid>
                   <Grid item sm={6}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {row.min_reorder_quantity}{" "}
+                      {row.min_reorder_quantity.toLocaleString()}{" "}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -411,12 +450,12 @@ const InventoryDetail = (props) => {
                 <Grid container direction="row" justifyContent="flex-start">
                   <Grid item xs={4} sm={7}>
                     <Typography variant="h5" gutterBottom component="div">
-                      Số lượng nhập hàng tối đa
+                      SL nhập hàng tối đa
                     </Typography>
                   </Grid>
                   <Grid item sm={5}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {row.max_order}{" "}
+                      {row.max_order.toLocaleString()}{" "}
                     </Typography>
                   </Grid>
                 </Grid>

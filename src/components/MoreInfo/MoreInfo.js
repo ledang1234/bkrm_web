@@ -6,8 +6,9 @@ import {Typography,Tooltip} from '@material-ui/core';
 
 const HtmlTooltip = withStyles((theme) => ({
     tooltip: {
-      backgroundColor: '#fff',
-      color: 'rgba(0, 0, 0, 0.87)',
+      backgroundColor: '#6b6b6b',
+      // color: 'rgba(0, 0, 0, 0.87)',
+      color: '#fff',
       // maxWidth: 220,
       fontSize: theme.typography.pxToRem(12),
       border: '1px solid #000',

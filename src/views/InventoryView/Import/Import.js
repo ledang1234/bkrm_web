@@ -55,6 +55,7 @@ import moment from "moment";
 import AddInventory from "../Inventory/AddInventory/AddInventory";
 import supplierApi from "../../../api/supplierApi";
 import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
+import branchApi from "../../../api/branchApi";
 
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
@@ -70,6 +71,7 @@ const Import = () => {
   const branch = info.branch;
   const user_uuid = useSelector((state) => state.info.user.uuid);
 
+  console.log("info", info)
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -153,6 +155,19 @@ const Import = () => {
 
     fetchSupplier();
   }, [reloadSupplier]);
+
+  const [branchs, setBranchs] = useState([]);
+  useEffect(() => {
+    const loading = async () => {
+      try {
+        const response = await branchApi.getAllBranches(store_uuid);
+        setBranchs(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loading()
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -253,6 +268,8 @@ const Import = () => {
         name: selectedOption.name,
         has_batches: selectedOption.has_batches,
         batches: selectedOption.batches,
+        branch_inventories:selectedOption.branch_inventories
+
       };
 
       let newCartList = update(cartList, {
@@ -596,6 +613,7 @@ const Import = () => {
                             handleChangeItemPrice={handleChangeItemPrice}
                             handleChangeItemQuantity={handleChangeItemQuantity}
                             handleUpdateBatches={handleUpdateBatches}
+                            branchs={branchs}
                           />
                         );
                       })}

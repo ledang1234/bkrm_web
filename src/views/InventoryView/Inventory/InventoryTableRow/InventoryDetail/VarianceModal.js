@@ -40,7 +40,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { FormatedProductStatus } from "../../../../../components/TableCommon/util/format";
 import ModalWrapperWithClose from "../../../../../components/Modal/ModalWrapperWithClose";
 import DialogWrapper from "../../../../../components/Modal/DialogWrapper";
-
+import BranchInventoryPopUp from "./BranchInventoryPopUp";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -72,7 +72,7 @@ const UploadImage = () => {
   );
 };
 const VarianceModal = (props) => {
-  const { row } = props;
+  const { row ,branchs,setReload,batches,has_batches} = props;
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -120,6 +120,7 @@ const VarianceModal = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
+  console.log("roww", row)
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -134,6 +135,9 @@ const VarianceModal = (props) => {
 
     fetchProduct();
   }, [store_uuid]);
+
+  const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
+
 
   return (
     // <ModalWrapperWithClose
@@ -282,12 +286,54 @@ const VarianceModal = (props) => {
                         Tồn kho
                       </Typography>
                     </Grid>
-                    <Grid item sm={6}>
+                    <Grid item sm={2}>
                       <Typography variant="body1" gutterBottom component="div">
                         {row.branch_quantity}{" "}
                       </Typography>
                     </Grid>
+                    {branchs.length >1?
+                   <Grid item sm={4} style={{marginTop:-5, marginBottom:5}}>
+                      <Button size='small' variant='contained'color='primary' style={{textTransform:'none'}} onClick={()=>setOpenDetailInventory(true)}> Chi tiết</Button>
+                  </Grid>:null}
+                  {openDetailInventory?
+                  <BranchInventoryPopUp 
+                    branch_inventories={row.branch_inventories}branchs={branchs}open={openDetailInventory}
+                    onClose={()=>setOpenDetailInventory(false)}
+                    setReload={setReload}
+                    batches={batches}
+                    has_batches={has_batches}
+                   />
+                   
+                   :null}
+                 
                   </Grid>
+
+                  <Grid container direction="row" justifyContent="flex-start">
+                    <Grid item xs={3} sm={6}>
+                      <Typography variant="h5" gutterBottom component="div">
+                        SL đặt hàng lại
+                      </Typography>
+                    </Grid>
+                    <Grid item sm={6}>
+                      <Typography variant="body1" gutterBottom component="div">
+                        {row.min_reorder_quantity}{" "}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+                  <Grid container direction="row" justifyContent="flex-start">
+                    <Grid item xs={3} sm={6}>
+                      <Typography variant="h5" gutterBottom component="div">
+                        SL nhập hàng tối đa
+                      </Typography>
+                    </Grid>
+                    <Grid item sm={6}>
+                      <Typography variant="body1" gutterBottom component="div">
+                        {row.max_order}{" "}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
                 </Grid>
               </Grid>
 
