@@ -94,5 +94,9 @@ const productApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/createBatch`;
     return axiosClient.post(url, body);
   },
+  productOrderRecommend: (storeUuid, branchUuid) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/productOrderRecommend`;
+    return axiosClient.get(url);
+  }
 };
 export default productApi;

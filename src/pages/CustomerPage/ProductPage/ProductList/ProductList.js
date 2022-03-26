@@ -19,6 +19,7 @@ import {ColorOutlineButtonCart} from "../../../../components/Button/ColorButton"
 import { useDispatch, useSelector } from 'react-redux';
 import { customerPageActions } from '../../../../store/slice/customerPageSlice';
 import { success } from '../../../../components/StatusModal/StatusModal';
+import defaultProduct from '../../../../assets/img/product/default-product.png'
 import _ from 'lodash'
 const ProductList = (props) => {
     let { categoryId } = useParams();
@@ -95,7 +96,7 @@ const ProductList = (props) => {
                         >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border&& isMargin ?7:0}}
-                                image={item.img_urls.length  ? item.img_urls[0].url : ''}
+                                image={JSON.parse(item.img_urls ? item.img_urls : "[]").length  ? JSON.parse(item.img_urls ? item.img_urls : "[]").at(0) : defaultProduct}
                             />
                             <Box style={{marginTop:10}}>
                                 <CardContent>
