@@ -55,6 +55,7 @@ const OrderProductList = () => {
    //collapse
    const [openRow, setRowOpen] = React.useState(null);
    const handleOpenRow = (row) => {
+     console.log(row)
        if (row !==  openRow){setRowOpen(row);}
        else{setRowOpen(null)}  
    };
@@ -233,7 +234,7 @@ const OrderProductList = () => {
          <>
          { orderProductList.map((row, index) => {
             return (
-              <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  
+              <BillMiniTableRow key={row.id} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  
               //onReload={onReload} 
               totalCost={10000}  id={"OR00001"} partnerName={"THAY THẾ"} date={"22/12/2008"} 
               typeBill={"Đơn đặt hàng nhập"} />

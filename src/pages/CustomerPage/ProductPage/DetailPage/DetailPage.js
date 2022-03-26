@@ -40,8 +40,9 @@ const DetailPage = (props) => {
         <Grid item xs={12} md={6}>
             <Carousel   showArrows={true} showStatus={false} infiniteLoop={true} emulateTouch={true} swipeable={true} dynamicHeight={false}  showThumbs={true}
             >
-                {detailProduct?.img_urls?.map((img)=><img  src={img.url}style={{borderRadius:10}} />)}
-            </Carousel>  
+                {JSON.parse(detailProduct?.img_urls ?detailProduct?.img_urls: "[]" )?.map((url)=><img  src={url}style={{borderRadius:10}} />)}
+            </Carousel>
+           
         </Grid>
 
         <Grid item xs={12} md={6}>

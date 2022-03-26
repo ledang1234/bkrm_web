@@ -37,6 +37,7 @@ import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 import { useSelector } from "react-redux";
+import openNotification from "../../../components/StatusPopup/StatusPopup";
 
 import * as excel from "../../../assets/constant/excel";
 
@@ -200,6 +201,19 @@ const Inventory = () => {
   const [isLoadingProduct, setIsLoadingProduct] = useState(false);
   const [productErrors, setProductErrors] = useState([]);
 
+
+  const handleClickRecommend = async () => {
+    if (store_uuid && branch_uuid) {
+      try {
+        const res = await productApi.productOrderRecommend(store_uuid, branch_uuid);
+        alert(JSON.stringify(res.data, null, 2))
+      } catch (err) {
+        console.log(err);
+        openNotification('error', 'Không thể tạo gợi ý', '')
+      }
+    }
+  }
+
   return (
     <Card className={classes.root}>
       <ProductImportPopper
@@ -224,6 +238,14 @@ const Inventory = () => {
               Danh mục
             </Button>
           </Tooltip>
+          <Button
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleClickRecommend}
+            >
+              Gợi ý đặt hàng
+            </Button>
 
           <ButtonBase sx={{ borderRadius: "16px" }} onClick={handleClickOpen}>
             <Avatar variant="rounded" className={classes.headerAvatar}>
