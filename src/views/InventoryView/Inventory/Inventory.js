@@ -21,7 +21,7 @@ import { useReactToPrint } from "react-to-print";
 //import api
 import productApi from "../../../api/productApi";
 import storeApi from "../../../api/storeApi";
-
+import branchApi from "../../../api/branchApi"
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
 import * as TableType from "../../../assets/constant/tableType";
@@ -36,7 +36,7 @@ import SnackBar from "../../../components/SnackBar/SnackBar";
 import TableHeader from "../../../components/TableCommon/TableHeader/TableHeader";
 import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
-import { useSelector } from "react-redux";
+import { useSelector ,useDispatch} from "react-redux";
 
 import * as excel from "../../../assets/constant/excel";
 
@@ -47,6 +47,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { ProductMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import InventoryFilter from "./InventoryTool/InventoryFilter";
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination";
+import { infoActions } from "../../../store/slice/infoSlice";
 
 import defaultProduct from "../../../assets/img/product/default-product.png";
 
@@ -58,6 +59,7 @@ const Inventory = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
   const [openFilter, setOpenFilter] = React.useState(false);
+  const dispatch = useDispatch();
   const handleToggleFilter = () => {
     setOpenFilter(!openFilter);
   };
@@ -86,6 +88,24 @@ const Inventory = () => {
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid]);
+
+  const branchs = info.branchsOfStore
+
+  useEffect(() => {
+    const loading = async () => {
+      try {
+        const response = await branchApi.getAllBranches(store_uuid);
+        // setBranchs(response.data);
+        console.log("my branchs",response.data)
+        dispatch(infoActions.setBranchsOfStore(response.data));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loading()
+    console.log("my branchs",branchs)
+  }, []);
+
 
   console.log("store", JSON.parse(info.store.general_configuration));
 

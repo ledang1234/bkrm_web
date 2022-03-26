@@ -5,6 +5,9 @@ import { customizeAction } from "./slice/customizeSlice";
 import userApi from "../api/userApi";
 import { pink, blue, grey } from "@material-ui/core/colors";
 import { statusAction } from "./slice/statusSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+
 export const verifyToken = () => {
   return async (dispatch) => {
     dispatch(loadingActions.startLoad());
@@ -57,6 +60,7 @@ export const logInHandler = (userName, password) => {
       });
       return response;
     };
+
     try {
       const rs = await logIn();
       if (rs.access_token) {

@@ -193,6 +193,19 @@ const Cart = () => {
     }
   }, [reloadCustomers]);
 
+  const [branchs, setBranchs] = useState([]);
+  useEffect(() => {
+    const loading = async () => {
+      try {
+        const response = await branchApi.getAllBranches(store_uuid);
+        setBranchs(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loading()
+  }, []);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -523,6 +536,7 @@ const Cart = () => {
     setBarcodeChecked(!barcodeChecked);
   };
 
+  
   return (
     <Grid
       container
@@ -636,7 +650,7 @@ const Cart = () => {
                         return (
                           <CartRow
                             row={row}
-                            // branchs={branchs}
+                            branchs={branchs}
                             handleUpdateBatches={handleUpdateBatches}
                             handleDeleteItemCart={handleDeleteItemCart}
                             handleChangeItemPrice={handleChangeItemPrice}

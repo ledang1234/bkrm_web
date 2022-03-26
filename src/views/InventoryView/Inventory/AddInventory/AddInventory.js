@@ -204,6 +204,10 @@ const AddInventory = (props) => {
         "has_batches",
         Number(productFormik.values.has_batches)
       );
+      bodyFormData.append(
+        "description",
+        productFormik.values.description.toString()
+      );
 
       bodyFormData.append("branch_uuid", branch_uuid);
       bodyFormData.append("img_url", imageURL);
@@ -411,6 +415,10 @@ const AddInventory = (props) => {
       bodyFormData.append(
         "has_batches",
         Number(productFormik.values.has_batches)
+      );
+      bodyFormData.append(
+        "description",
+        productFormik.values.description.toString()
       );
       console.log(relatedList);
 

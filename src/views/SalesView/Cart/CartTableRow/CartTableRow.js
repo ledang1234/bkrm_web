@@ -13,6 +13,7 @@ import {
   Chip,
   Button,
   Typography,
+  Grid
 } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
@@ -40,7 +41,7 @@ export const CartRow = (props) => {
 console.log("branch",branch)
   const {
     row,
-
+    branchs,
     discountData,
     handleDeleteItemCart,
     handleChangeItemQuantity,
@@ -104,12 +105,17 @@ console.log("branch",branch)
   };
 
   const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
-console.log("row", row)
+console.log("roweeee", row)
 
 const [show, setShow] = React.useState(false);
-const [showInfo, setShowInfo] = React.useState(false);
 
-  return (
+
+const findBranchQuantity = (id) => {
+  const rs = row.branch_inventories.find(x => x.uuid === id)?.quantity_available
+  if(rs){return rs }
+  else{ return 0}
+}
+return (
     <>
       <TableRow hover key={props.row.uuid} onMouseOver={()=>  setShow(true)}  onMouseLeave={()=> setShow(false)} >
         <TableCell align="left">{row.id + 1}</TableCell>
@@ -132,13 +138,25 @@ const [showInfo, setShowInfo] = React.useState(false);
             <Typography  style={{marginRight:5}} 
              >{row.name}</Typography>
             {show? 
-            <Box onMouseOver={()=>setShowInfo(true)}  >
              <MoreInfo  >     
-             <ListItem >
-                  <Typography style={{width:400}}></Typography>
+              <ListItem >
+                  <Typography style={{width:180}}></Typography>
                   <Typography style={{fontWeight:700}}>Tồn</Typography>
                 </ListItem>
-               {row.branch_inventories.map(item =>(
+                {branchs.map((item) => {
+                  console.log("itemm", item)
+                  return(
+                  <ListItem >
+                      <ListItem style={{width:180, margin:0, padding:0}}>
+                          <Typography style={{fontWeight:700, marginRight:10}}>{item.name}</Typography>
+                          {item.uuid === branch.uuid ? <CheckCircleIcon fontSize="small" color='primary'/> :null} 
+                      </ListItem>
+                      <Grid justifyContent='flex-end'>
+                      <Typography >{findBranchQuantity(item.uuid)}</Typography>
+                    </Grid>
+                </ListItem>
+                 ) })}
+               {/* {row.branch_inventories.map(item =>(
                    <ListItem >
                       <ListItem style={{width:280, margin:0, padding:0}}>
                           <Typography style={{fontWeight:700, marginRight:10}}>{item.name}</Typography>
@@ -146,9 +164,9 @@ const [showInfo, setShowInfo] = React.useState(false);
                       </ListItem>
                       <Typography>{item.quantity_available}</Typography>
                     </ListItem>
-                ))}  
+                ))}   */}
             </MoreInfo>
-            </Box>
+    
            :null}
             {haveDiscount ? (
               <img

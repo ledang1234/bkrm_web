@@ -26,17 +26,21 @@ import AddBatch from "./AddBatch";
 import SelectBatch from "./SelectBatch";
 import { useDispatch, useSelector } from "react-redux";
 import defaultProduct from '../../../../assets/img/product/default-product.png'
+import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 export const ImportRow = (props) => {
   const classes = useStyles();
   const {
     row,
+    branchs,
     handleDeleteItemCart,
     handleChangeItemQuantity,
     handleChangeItemPrice,
     handleUpdateBatches,
   } = props;
   const info = useSelector((state) => state.info);
+  const branch = info.branch;
 
   const updateQuantity = (newQuantity) => {
     handleChangeItemQuantity(row.uuid, newQuantity);
@@ -90,10 +94,19 @@ export const ImportRow = (props) => {
     handleUpdateBatches(row.uuid, selectedBatches);
   }, [selectedBatches]);
 
+
   const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+  const [show, setShow] = React.useState(false);
+
+
+const findBranchQuantity = (id) => {
+  const rs = row.branch_inventories.find(x => x.uuid === id)?.quantity_available
+  if(rs){return rs }
+  else{ return 0}
+}
   return (
     <>
-      <TableRow hover key={props.row.uuid}>
+      <TableRow hover key={props.row.uuid} onMouseOver={()=>  setShow(true)}  onMouseLeave={()=> setShow(false)} >
         <TableCell align="left" style={{ width: 5 }}>
           {row.id + 1}
         </TableCell>
@@ -107,7 +120,29 @@ export const ImportRow = (props) => {
               sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
               src={JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) || defaultProduct}
             />
-            {row.name}
+            <Typography  > {row.name} </Typography>
+
+            {show? 
+             <MoreInfo  >     
+                 <ListItem >
+                  <Typography style={{width:180}}></Typography>
+                  <Typography style={{fontWeight:700}}>Tồn</Typography>
+                </ListItem>
+
+                 {branchs.map((item) => {
+                  console.log("itemm", item)
+                  return(
+                  <ListItem >
+                      <ListItem style={{width:180, margin:0, padding:0}}>
+                          <Typography style={{fontWeight:700, marginRight:10}}>{item.name}</Typography>
+                          {item.uuid === branch.uuid ? <CheckCircleIcon fontSize="small" color='primary'/> :null} 
+                      </ListItem>
+                      <Typography>{findBranchQuantity(item.uuid)}</Typography>
+                </ListItem>
+                 ) })}
+            </MoreInfo>
+    
+           :null}
           </ListItem>
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
