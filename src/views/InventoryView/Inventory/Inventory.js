@@ -89,25 +89,6 @@ const Inventory = () => {
     setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid]);
 
-  const branchs = info.branchsOfStore
-
-  useEffect(() => {
-    const loading = async () => {
-      try {
-        const response = await branchApi.getAllBranches(store_uuid);
-        // setBranchs(response.data);
-        console.log("my branchs",response.data)
-        dispatch(infoActions.setBranchsOfStore(response.data));
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    loading()
-    console.log("my branchs",branchs)
-  }, []);
-
-
-  console.log("store", JSON.parse(info.store.general_configuration));
 
   const initialQuery = {
     orderBy: "products.created_at",

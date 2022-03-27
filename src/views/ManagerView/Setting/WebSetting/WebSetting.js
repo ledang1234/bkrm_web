@@ -17,7 +17,7 @@ import {
   FormControl,
   RadioGroup,
   TextField,
-
+  Checkbox,
   Card,
   Radio,
   Grid,
@@ -26,7 +26,10 @@ import {
   Box,
   Switch,
   ListItem,
+  MenuItem,
+  Select
 } from "@material-ui/core";
+import ColorPicker from "../../../../components/ColorPicker/ColorPicker"
 import LanguageIcon from "@material-ui/icons/Language";
 import LinkIcon from "@material-ui/icons/Link";
 import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWithClose";
@@ -38,6 +41,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import NavBarSetting from "./NavBarSetting";
 import ProductSetting from "./ProductSetting";
 import MainPageSetting from "./MainPageSetting"
+import FooterSetting from "./FooterSetting"
+import OrderManagement from "./OrderManagement"
 import { useStyles } from "./style";
 import { useSelector ,useDispatch} from "react-redux";
 import storeApi from "../../../../api/storeApi";
@@ -46,19 +51,30 @@ import CartSetting from "./CartSetting"
 import AbousUsSetting from "./AbousUsSetting";
 import { Link } from "react-router-dom";
 import { customizeAction } from "../../../../store/slice/customizeSlice";
+import DetailSetting from "./DetailSetting"
+import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
 
 const WebSetting = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const domainName = "http://localhost:3000/#/store/";
+  // redux 
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+  const branches = info.branchsOfStore
 
   // api
   // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
 
-  
   const webInfo = {
     webAddress: "lyquochai",
     status: "inactive",
+    orderManagement:{
+      branchOption:'default',
+      branchDefault: branches[0].uuid,
+      orderWhenOutOfSctock:false,
+
+    },
     mainColor: { r: "250", g: "140", b: "22", a: "1", hex: "#fa8c16" }, //#f2a5ae , //#fa8c16"       // mainColor: {  r: '242', g: '165', b: '174',  a: '1', hex:'#fa8c16'},
     bgColor: { r: "255", g: "255", b: "255", a: "1", hex: "#ffffff" },
     navBar: {
@@ -68,9 +84,9 @@ const WebSetting = () => {
       textNav: ["1", 17, 600], //0-left 1-right //color: black-white-grey-maincolor, size: small - large(16):,  bold:no() -yes (600)
     },
     listProduct: {
-      priceStyle: ["0", 18, 300], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
+      priceStyle: ["0", 18, 400], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
       nameStyle: ["0", 19, 600], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
-      btnStyle: ["1", "0"], //0-left 1-right //haveBtn: no-yes, style:circle - box
+      btnStyle: ["1", "1"], //0-left 1-right //haveBtn: no-yes, style:circle - box
       isBox: "1",
       isMargin: "0",
       border: "1",
@@ -90,10 +106,26 @@ const WebSetting = () => {
         version:1
       },
     },
+    detailPage:{
+      priceStyle: ["0", 24, 700],
+      nameStyle: ["0", 34, 700],
+    },
     mainPage:{
+      showbestSeller:true,
+      numberTopBestSeller:10,
+      showNewArrival:true,
+      numberTopNewArrival:10,
+      showDiscount:true
+    },
+    footer:{
+      color:'0',
+      bgColor:{ r: "0", g: "0", b: "0", a: "1", hex: "#000000" },
+      btnType:'0',
+      showSocial:true
 
     }
   };
+
 
 
   const [web, setWeb] = React.useState(webInfo);
@@ -111,22 +143,19 @@ const WebSetting = () => {
   // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
 
   const [logoStore,setLogoStore] = useState(null)
-  // redux 
-  const info = useSelector((state) => state.info);
-  const store_uuid = info.store.uuid;
-  // useEffect(() => {
-  //   const loadData = async () => {
-  //     const response = await storeApi.getStoreInfo(store_uuid);
-  //     if (response.data.web_configuration) {
-  //       setWeb(JSON.parse(response.data.web_configuration));
-  //       setLogoStore(JSON.parse(response.data.store_configuration).img_url)
-  //     }
-  //   };
+  useEffect(() => {
+    const loadData = async () => {
+      const response = await storeApi.getStoreInfo(store_uuid);
+      if (response.data.web_configuration) {
+        setWeb(JSON.parse(response.data.web_configuration));
+        setLogoStore(JSON.parse(response.data.store_configuration).img_url)
+      }
+    };
 
-  //   if (store_uuid) {
-  //     loadData();
-  //   }
-  // }, [store_uuid]);
+    if (store_uuid) {
+      loadData();
+    }
+  }, [store_uuid]);
 
   // 1.
 
@@ -172,6 +201,24 @@ const WebSetting = () => {
   const [expandedCart, setExpandedCart] = React.useState(false);
   const [expandedMainPage, setExpandedMainPage] = React.useState(false);
   const [expandedOther, setExpandedOther] = React.useState(false);
+  const [expandedFooter, setExpandedFooter] = React.useState(false);
+
+  
+  const handleChangeOrderManagement = (event) => {
+    const { name, value } = event.target;
+    console.log("name",name)
+    console.log("value",value)
+    setWeb((prevState) => {
+      return {
+        ...prevState,
+        orderManagement: {
+          ...prevState["orderManagement"],
+          [name]: value,
+        },
+      };
+    });
+    console.log("webInfo",webInfo.orderManagement)
+  };
 
   const handleChangeNavBar = (event) => {
     const { name, value } = event.target;
@@ -224,6 +271,21 @@ const WebSetting = () => {
       };
     });
   };
+  const handleChangeFooter = (event) => {
+    const { name, value } = event.target;
+    setWeb((prevState) => {
+      return {
+        ...prevState,
+        footer: {
+          ...prevState["footer"],
+          [name]: value,
+        },
+      };
+    });
+  };
+  
+
+ 
   
 
   return (
@@ -288,97 +350,21 @@ const WebSetting = () => {
         </ModalWrapperWithClose>
       ) : null}
 
+      {/*1. Tồn kho */}
+      <OrderManagement 
+       web={web}
+       handleChangeOrderManagement={handleChangeOrderManagement}
+       setWeb={setWeb}
+      />
+
+     
+    
       {/* 2.Tổng quan */}
-      <ListItem style={{ padding: 0, margin: 0, marginBottom: 10 }}>
-        <Typography style={{ fontWeight: 500, marginRight: 10 }}>
-          Màu chính:{" "}
-        </Typography>
-        <div>
-          <Grid
-            container
-            onClick={() => setDisplayColorPicker(!displayColorPicker)}
-          >
-            <Grid item className={classes.swatch}>
-              <div
-                style={{
-                  width: 18,
-                  height: 18,
-                  background: `rgba(${web.mainColor.r}, ${web.mainColor.g}, ${web.mainColor.b}, ${web.mainColor.a})`,
-                }}
-              />
-            </Grid>
-            <Grid item className={classes.swatch} style={{ width: 70 }}>
-              {web.mainColor.hex}
-            </Grid>
-            <Grid item className={classes.swatch}>
-              {web.mainColor.a * 100} %
-            </Grid>
-          </Grid>
-          {displayColorPicker ? (
-            <div className={classes.popover}>
-              <div
-                className={classes.cover}
-                onClick={() => setDisplayColorPicker(false)}
-              />
-              <SketchPicker
-                color={{
-                  r: web.mainColor.r,
-                  g: web.mainColor.g,
-                  b: web.mainColor.b,
-                  a: web.mainColor.a,
-                }}
-                onChange={handleChangeMainColor}
-              />
-            </div>
-          ) : null}
-        </div>
-      </ListItem>
+      <ColorPicker title={"Màu chính"} mainColor={web.mainColor}  handleChangeMainColor={handleChangeMainColor} displayColorPicker={displayColorPicker} setDisplayColorPicker={setDisplayColorPicker}/>
+      <ColorPicker title={"Màu nền"} mainColor={web.bgColor}  handleChangeMainColor={handleChangeBgColor} displayColorPicker={displayColorPicker1} setDisplayColorPicker={setDisplayColorPicker1}/>
 
-      <ListItem style={{ padding: 0, margin: 0, marginBottom: 15 }}>
-        <Typography style={{ fontWeight: 500, marginRight: 20 }}>
-          Màu nền:{" "}
-        </Typography>
-        <div>
-          <Grid
-            container
-            onClick={() => setDisplayColorPicker1(!displayColorPicker1)}
-          >
-            <Grid item className={classes.swatch}>
-              <div
-                style={{
-                  width: 18,
-                  height: 18,
-                  background: `rgba(${web.bgColor.r}, ${web.bgColor.g}, ${web.bgColor.b}, ${web.bgColor.a})`,
-                }}
-              />
-            </Grid>
-            <Grid item className={classes.swatch} style={{ width: 70 }}>
-              {web.bgColor.hex}
-            </Grid>
-            <Grid item className={classes.swatch}>
-              {web.bgColor.a * 100} %
-            </Grid>
-          </Grid>
-          {displayColorPicker1 ? (
-            <div className={classes.popover}>
-              <div
-                className={classes.cover}
-                onClick={() => setDisplayColorPicker1(false)}
-              />
-              <SketchPicker
-                color={{
-                  r: web.bgColor.r,
-                  g: web.bgColor.g,
-                  b: web.bgColor.b,
-                  a: web.bgColor.a,
-                }}
-                onChange={handleChangeBgColor}
-              />
-            </div>
-          ) : null}
-        </div>
-      </ListItem>
 
+     
       {/* 3.Thanh công cụ*/}
       <SettingCollapse
         title="Thanh công cụ"
@@ -427,7 +413,7 @@ const WebSetting = () => {
         expand={expandedDetailProduct}
         setExpanded={setExpandedDetailProduct}
       >
-        Hello
+        <DetailSetting web={web} setWeb={setWeb}/>
       </SettingCollapse>
 
       {/*6. Giỏ hàng */}
@@ -440,6 +426,19 @@ const WebSetting = () => {
        web={web}
        setWeb={setWeb}
        handleChangeCart={handleChangeCart}
+       />
+      </SettingCollapse>
+
+        {/*6. Footer */}
+        <SettingCollapse
+        title="Footer"
+        expand={expandedFooter}
+        setExpanded={setExpandedFooter}
+      >
+       <FooterSetting 
+          web={web}
+          setWeb={setWeb}
+          handleChangeFooter={handleChangeFooter}
        />
       </SettingCollapse>
 
@@ -457,10 +456,10 @@ const WebSetting = () => {
        <ListItem style={{margin:0, padding:0, marginBottom:10}}>
         <Typography style={{fontWeight:500, marginRight:20, color:"#000",fontSize:15}}>Trang "Giới thiệu": </Typography>
         <Switch checked={web.other.status} onChange={()=>{
-                let newWeb = {...web}
-                newWeb.other.status = !newWeb.other.status
-                setWeb(newWeb)
-            }}
+            let newWeb = {...web}
+            newWeb.other.status = !newWeb.other.status
+            setWeb(newWeb)
+        }}
         />
     </ListItem>  
     <Button variant='contained' color='primary'  component={Link} to={'/home/manager/aboutus-setting'} onClick={()=> {dispatch(customizeAction.setSidebarOpen(false));}}>Tạo giao diện</Button>
@@ -544,3 +543,4 @@ export const CustomTextField = withStyles({
     },
   },
 })(TextField);
+

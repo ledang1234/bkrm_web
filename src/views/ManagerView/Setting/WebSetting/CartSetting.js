@@ -21,8 +21,9 @@ const CartSetting = ({handleChangeCart,web,setWeb}) => {
         <FormControl component="fieldset">
             <RadioGroup  name="header" value={web.cart.header} onChange={handleChangeCart}>
             <div>
-                <FormControlLabel value={"none"} control={<Radio color="primary" />} label="Không hiển thị" />
                 <FormControlLabel value={"show"} control={<Radio color="primary"/>} label="Hiển thị" />
+
+                <FormControlLabel value={"none"} control={<Radio color="primary" />} label="Không hiển thị" />
             </div>
             </RadioGroup>
         </FormControl>

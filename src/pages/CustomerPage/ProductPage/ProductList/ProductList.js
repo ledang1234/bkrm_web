@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 // import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import library 
 import {Button,Grid,Card,Box,CardActions,Tabs,Tab,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Switch,Menu,MenuItem,ListItem,IconButton,TableBody,Typography, darken} from '@material-ui/core'
-import icon from '../../../../assets/img/product/tradao.jpeg';
+import icon from '../../../../assets/img/product/default.png';
 // import icon from '../../../assets/img/product/tap.png';
 // import icon from '../../../assets/img/product/rice.png';
 //import project 
@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { customerPageActions } from '../../../../store/slice/customerPageSlice';
 import { success } from '../../../../components/StatusModal/StatusModal';
 import _ from 'lodash'
+
 const ProductList = (props) => {
     let { categoryId } = useParams();
     const {mainColor,isMargin, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance, InventoryList} = props;
@@ -81,11 +82,14 @@ const ProductList = (props) => {
         }
     }
     
+    
     return (
         <Box className={classes.container} style={{marginLeft:`${marginContainer}vw`,marginRight:`${marginContainer}vw`,}}>
             <Grid container direction="row" spacing={2} justifyContent="center" >
              {/* Đổi list đúng với category */}
              {InventoryList?.map(item=>{
+                 const image = JSON.parse(item.img_urls) ?JSON.parse(item.img_urls) [0]:null
+                 console.log("item", )
                  return( 
                      <>
                      {Number(isBox)?
@@ -95,7 +99,7 @@ const ProductList = (props) => {
                         >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border&& isMargin ?7:0}}
-                                image={item.img_urls.length  ? item.img_urls[0].url : ''}
+                                image={image  ? image : icon}
                             />
                             <Box style={{marginTop:10}}>
                                 <CardContent>
@@ -110,7 +114,7 @@ const ProductList = (props) => {
                         >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border?7:0}}
-                                image={item.img_urls.length  ? item.img_urls[0].url : ''}
+                                image={image  ? image : icon}
                             />
                             <Box style={{marginTop:10}}>
                                 {isMargin? 
@@ -138,6 +142,7 @@ export const InfoComponent = (props)=>{
     const theme = useTheme();
     const classes = useStyles(theme);
 
+    console.log("item",item)
     return (
         <>
         <Typography gutterBottom className={clsx( nameLineClass, classes.name, alignCenter && classes.alignCenter)} style={{color:nameColor, fontWeight:nameBold, fontSize:Number(nameSize)}}>
@@ -148,7 +153,7 @@ export const InfoComponent = (props)=>{
             <Grid container direction="row" alignItems="center" justifyContent="space-between" style={{marginBottom:-9}}>
                 <Grid item>
                     <Typography variant="body2" style={{color:priceColor, fontWeight:priceBold, fontSize:Number(priceSize)}}  >
-                        {item.list_price}
+                        {item.list_price.toLocaleString()} đ
                     </Typography>
                 
                 </Grid>
@@ -172,7 +177,7 @@ export const InfoComponent = (props)=>{
             :
             <>
             <Typography   className={alignCenter &&classes.alignCenter} style={{color:priceColor, fontWeight:priceBold, fontSize:Number(priceSize)}} >
-                {item.price}.000đ
+                {item.list_price.toLocaleString()} đ
             </Typography>
 
             {Number(btnStyle[0])?

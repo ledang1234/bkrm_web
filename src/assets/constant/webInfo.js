@@ -34,6 +34,28 @@ const webInfo = {
         rows:[],
         version:1
       },
+    },
+    detailPage:{
+      priceStyle: ["0", 24, 700],
+      nameStyle: ["0", 34, 700],
+    },
+    mainPage:{
+      bestSeller:{
+        status:true,
+        numberTop:10
+      },
+      newArrival:{
+        status:true,
+        numberTop:10
+      },
+      discount:true
+    },
+    footer:{
+      color:'0',
+      bgColor:{ r: "0", g: "0", b: "0", a: "1", hex: "#000000" },
+      btnType:'0',
+      showSocial:true
+
     }
 }
 export default webInfo

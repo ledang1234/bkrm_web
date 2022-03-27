@@ -33,21 +33,27 @@ const DetailPage = (props) => {
     const detailProduct = products.find(prod => prod.product_code === productCode);
     // const attribute_value = JSON.parse(detailProduct.attribute_value)
     const [quantity, setQuantity]  = useState(1)
-    console.log("detailProduct",detailProduct)
+
+    const image = detailProduct? JSON.parse(detailProduct?.img_urls) :null
+
+    const {priceStyle, nameStyle} = webInfo.detailPage
+  
+
+
     return (
     <div className={classes.root}>
       <Grid container  direction="row" justifyContent="space-between" alignItems="flex-start" spacing={8}>
         <Grid item xs={12} md={6}>
             <Carousel   showArrows={true} showStatus={false} infiniteLoop={true} emulateTouch={true} swipeable={true} dynamicHeight={false}  showThumbs={true}
             >
-                {detailProduct?.img_urls?.map((img)=><img  src={img.url}style={{borderRadius:10}} />)}
+                {image?.map((img)=> <img  src={img}style={{borderRadius:10}} />)}
             </Carousel>  
         </Grid>
 
         <Grid item xs={12} md={6}>
           <Box>
-              <Typography variant="h1" style={{marginBottom:25}}>{detailProduct?.name}</Typography>
-              <Typography variant="h2">{detailProduct?.list_price.toLocaleString()} đ</Typography>
+              <Typography variant="h1" style={{marginBottom:25,color:nameStyle[0] === "0" ? "#000": mainColor , fontWeight:nameStyle[2], fontSize: Number(nameStyle[1])}}>{detailProduct?.name}</Typography>
+              <Typography variant="h2" style={{color:priceStyle[0] === "0" ? "#000": mainColor , fontWeight:priceStyle[2], fontSize: Number(priceStyle[1])}}>{detailProduct?.list_price.toLocaleString()} đ</Typography>
               <Typography variant="h5" style={{marginTop:40, marginBottom:10}}>Số lượng :</Typography>
               <ButtonGroup disableElevation variant="contained"  >
                 <CustomButton mainColor='#f7f7f7'  textColor='#000' size="small" color='secondary'onClick={()=>{if(quantity>1){setQuantity(quantity-1)}}}> <RemoveIcon /></CustomButton>
@@ -60,9 +66,6 @@ const DetailPage = (props) => {
         </Grid>
       </Grid>
     
-        {/* <Box  style={{backgroundColor:'#f7f7f7', fontWeight:500, height:40, padding:10, marginTop:100}}>
-            MÔ TẢ SẢN PHẨM
-        </Box> */}
         <Divider  style={{marginTop:20}}/>
         <Typography  style={{color:'#000', fontSize:18,fontWeight:500, marginTop:20,}}>Mô tả sản phẩm</Typography>
 

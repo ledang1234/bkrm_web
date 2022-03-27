@@ -86,6 +86,7 @@ export default function VNDInput(props) {
 }
 export function ThousandSeperatedInput(props) {
   const { defaultPrice, value, max } = props
+  console.log("valueeee",value)
   return (
     <TextField
       name="numberformat"
