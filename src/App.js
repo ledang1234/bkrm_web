@@ -13,7 +13,7 @@ import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import Customization from "./components/Customization/Customization";
 import SignupPage from "./pages/SignupPage/SignupPage";
-import { verifyToken, setCustomization } from "./store/actionCreator";
+import { verifyToken, setCustomization, loadBranches } from "./store/actionCreator";
 import { useEffect, useState } from "react";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import LoadingModal from "./components/LoadingModal/LoadingModal";
@@ -27,6 +27,7 @@ import { SwitchCamera } from "@material-ui/icons";
 import "./index.css";
 function App() {
   const customization = useSelector((state) => state.customize);
+  const store_uuid = useSelector((state) => state.info.store.uuid);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const [path, setPath] = useState("/home");
@@ -34,10 +35,11 @@ function App() {
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
     setPath(sessionStorage.getItem("BKRMprev"));
-    
+    dispatch(loadBranches(store_uuid));
+
   }, [dispatch]);
   useEffect(() => {
-    console.log("reload")
+    dispatch(loadBranches(store_uuid));
   })
   return (
     <ThemeProvider theme={themes(customization)}>

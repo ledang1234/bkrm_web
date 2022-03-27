@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ModalWrapperWithClose(props) {
-  const {title,open,handleClose,handleSubmit,name} = props
+  const {title,open,handleClose,handleSubmit,name,size} = props
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -44,8 +44,8 @@ export default function ModalWrapperWithClose(props) {
             <Box className={classes.container}>
                 <Box>   
                   <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                      <Typography variant="h3" >{title}</Typography>
-                      <IconButton aria-label="close"   onClick={handleClose}>
+                      <Typography variant={size?size:"h3"} >{title}</Typography>
+                      <IconButton aria-label="close" onClick={handleClose}>
                         <CloseIcon  fontSize="small" />
                       </IconButton>
                 </Grid>

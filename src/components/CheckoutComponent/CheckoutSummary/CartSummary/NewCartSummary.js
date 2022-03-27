@@ -147,7 +147,7 @@ const CartSummary = (props) => {
   }
   let haveDiscount = checkHaveDiscount();
   const [openDiscount, setOpenDiscount] = React.useState(false);
-  console.log("cartData",cartData)
+  // console.log("cartData",cartData)
 
   
   return (

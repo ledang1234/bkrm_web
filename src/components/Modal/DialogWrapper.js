@@ -11,7 +11,7 @@ const DialogWrapper = (props) => {
 
     const {handleClose, title,open} = props
   return (
-    <Dialog  open={open} onClose={handleClose} >
+    <Dialog  open={open} onClose={handleClose} maxWidth={'md'} >
       <DialogTitle id="form-dialog-title">
         <Typography style={{paddingTop: '24px', marginTop:-5, marginBottom:-10, }}  variant="h2">
          {title}

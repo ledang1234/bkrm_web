@@ -25,9 +25,34 @@ const orderApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/orders/${orderUuid}`;
     return axiosClient.put(url, body)
   },
+  
+  
+  // api for customer order
   searchCustomerOrder: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders`;
     return axiosClient.get(url, {params: query});
+  },
+  processCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/process`;
+    return axiosClient.get(url);
+  },
+  confirmCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/confirm`;
+    return axiosClient.post(url);
+  },
+  cancleCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/cancle`;
+    return axiosClient.post(url);
+  },
+  paymentCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/payment`;
+    return axiosClient.post(url);
+  },
+  updateCustomerOrder: (storeUuid, branchUuid, customerOrderId, newDetails) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/updateDetails`;
+    return axiosClient.post(url, {
+      details: JSON.stringify(newDetails)
+    });
   },
 };
 export default orderApi;

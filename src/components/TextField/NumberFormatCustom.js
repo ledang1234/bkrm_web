@@ -85,7 +85,8 @@ export default function VNDInput(props) {
   );
 }
 export function ThousandSeperatedInput(props) {
-  const { defaultPrice, value } = props
+  const { defaultPrice, value, max } = props
+  console.log("valueeee",value)
   return (
     <TextField
       name="numberformat"
@@ -95,6 +96,7 @@ export function ThousandSeperatedInput(props) {
         inputComponent: NumberFormatCustom,
         inputProps: {
           style: { textAlign: "right" },
+          max: max? max:null
         }
          
       }}

@@ -61,11 +61,16 @@ import {
   PrintReceiptWhenSellSetting,
   VatSetting,
 } from "./OtherSetting";
+import { useDispatch } from "react-redux";
+
 import SettingsIcon from "@material-ui/icons/Settings";
 import StoreSetting from "../StoreSetting/StoreSetting";
 import SettingItem from "./SettingItem";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { infoActions } from "../../../../store/slice/infoSlice";
+
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -84,11 +89,17 @@ const useStyles = makeStyles((theme) =>
 const GeneralSetting = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const dispatch = useDispatch();
 
   //call api here
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  console.log("store",JSON.parse(info.store.general_configuration))
+
+  const [checked, setChecked] = React.useState(JSON.parse(info.store.general_configuration))
+  const [change, setChange] = useState(false)
+
   useEffect(() => {
     const loadData = async () => {
       const response = await storeApi.getStoreInfo(store_uuid);
@@ -96,101 +107,125 @@ const GeneralSetting = () => {
         setChecked(JSON.parse(response.data.general_configuration));
       }
     };
-
     if (store_uuid) {
       loadData();
     }
   }, [store_uuid]);
 
-  const [checked, setChecked] = React.useState({
-    //
-    inventory: { status: true },
-    recommendedProduct: { status: true },
-    variation: { status: true },
-    expiryDate: { status: true },
+  // const [checked, setChecked] = React.useState({
+  //   //
+  //   inventory: { status: true },
+  //   recommendedProduct: { status: true },
+  //   variation: { status: true },
+  //   expiryDate: { status: true },
 
-    //
-    customerScore: {
-      status: false,
-      value: 10000,
-      exceptDiscountProduct: false,
-      exceptDiscountInvoice: false,
-      exceptVoucher: false,
-    },
-    email: {
-      status: false,
-      emailAddress: "",
-      password: "",
-    },
-    notifyDebt: {
-      status: true,
-      checkDebtAmount: true,
-      debtAmount: "500000",
-      checkNumberOfDay: false,
-      numberOfDay: "15",
-      typeDebtDay: "firstDebt",
-      canNotContinueBuy: false,
-      canNotContinueDebt: false,
-    },
+  //   //
+  //   customerScore: {
+  //     status: false,
+  //     value: 10000,
+  //     exceptDiscountProduct: false,
+  //     exceptDiscountInvoice: false,
+  //     exceptVoucher: false,
+  //   },
+  //   email: {
+  //     status: false,
+  //     emailAddress: "",
+  //     password: "",
+  //   },
+  //   notifyDebt: {
+  //     status: true,
+  //     checkDebtAmount: true,
+  //     debtAmount: "500000",
+  //     checkNumberOfDay: false,
+  //     numberOfDay: "15",
+  //     typeDebtDay: "firstDebt",
+  //     canNotContinueBuy: false,
+  //     canNotContinueDebt: false,
+  //   },
 
-    //
-    returnLimit: {
-      status: false,
-      day: 7,
-    },
-    canFixPriceSell: {
-      status: false,
-      cart: false,
-      import: true,
-      returnCart: true,
-      returnImport: true,
-    },
-    printReceiptWhenSell: {
-      status: true,
-      cart: true,
-      import: false,
-      returnCart: false,
-      returnImport: false,
-      order: false,
-      checkInventroy: false,
-    },
-    discount: {
-      status: true,
-      applyMultiple: false,
-      applyOnline: true,
-    },
-    voucher: { status: true },
-    delivery: { status: true },
+  //   //
+  //   returnLimit: {
+  //     status: false,
+  //     day: 7,
+  //   },
+  //   canFixPriceSell: {
+  //     status: false,
+  //     cart: false,
+  //     import: true,
+  //     returnCart: true,
+  //     returnImport: true,
+  //   },
+  //   printReceiptWhenSell: {
+  //     status: true,
+  //     cart: true,
+  //     import: false,
+  //     returnCart: false,
+  //     returnImport: false,
+  //     order: false,
+  //     checkInventroy: false,
+  //   },
+  //   discount: {
+  //     status: true,
+  //     applyMultiple: false,
+  //     applyOnline: true,
+  //   },
+  //   voucher: { status: true },
+  //   delivery: { status: true },
 
-    vat: {
-      status: false,
-      listCost: [{ key: "1", costName: "", value: 0, type: "%" }],
-    },
+  //   vat: {
+  //     status: false,
+  //     listCost: [{ key: "1", costName: "", value: 0, type: "%" }],
+  //   },
 
-    //
-    orderLowStock: {
-      status: true,
-      choiceQuantity: "select", //number
-      selectQuantity: "latest", //avg
-      inputQuantity: 10,
-      selectSuplier: "latest", //manytime
-    },
-    autoApplyDiscount: { status: true },
-  });
+  //   //
+  //   orderLowStock: {
+  //     status: true,
+  //     choiceQuantity: "select", //number
+  //     selectQuantity: "latest", //avg
+  //     inputQuantity: 10,
+  //     selectSuplier: "latest", //manytime
+  //   },
+  //   autoApplyDiscount: { status: true },
+  // });
 
-  const handleToggle = (event) => {
-    const { name, checked } = event.target;
-    setChecked((prevState) => {
+  useEffect(() =>{
+    if(change){
+      callApi()
+      setChange(false)
+    }
+  }, [change])
+
+  const callApi = async() =>{
+    try {
+      const response = storeApi.updateStoreInfo(store_uuid, {
+        general_configuration: JSON.stringify(checked),
+      });
+      openNotification("success", "Lưu cài đặt chung thành công");
+      console.log("checkedssss",checked)
+      dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
+      
+    } catch (err) {
+      console.log(err);
+      openNotification("error", "Lưu cài đặt chung thất bại");
+    }
+  
+  }
+  const handleToggle =  (event) => {
+    const { name } = event.target;
+     setChecked((prevState) => {
       return {
         ...prevState,
         [name]: {
           ...prevState[name],
-          status: checked,
+          status: event.target.checked,
         },
       };
     });
+    console.log(checked)
     //CALL API: Mỗi lần toggle là đẩy lên backend
     // như vậy nhiều quá á, làm nút SAVE nha
+    // callApi()
+    setChange(true)
   };
 
   const [open, setOpen] = React.useState({
@@ -214,7 +249,7 @@ const GeneralSetting = () => {
         };
       });
     } else {
-      setChecked((prevState) => {
+        setChecked((prevState) => {
         return {
           ...prevState,
           [name]: {
@@ -223,6 +258,9 @@ const GeneralSetting = () => {
           },
         };
       });
+    
+      setChange(true)
+  
     }
   };
 
@@ -242,6 +280,7 @@ const GeneralSetting = () => {
         },
       };
     });
+    setChange(true)
 
     // CALL API ĐẨY LÊN BACK END HERE....
 
@@ -711,13 +750,15 @@ const GeneralSetting = () => {
           />
         </ModalWrapperWithClose>
       ) : null}
-      <Button
+      {/* <Button
         onClick={async () => {
           try {
             const response = storeApi.updateStoreInfo(store_uuid, {
               general_configuration: JSON.stringify(checked),
             });
             openNotification("success", "Lưu cài đặt chung thành công");
+            dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
+            
           } catch (err) {
             console.log(err);
             openNotification("error", "Lưu cài đặt chung thất bại");
@@ -725,106 +766,10 @@ const GeneralSetting = () => {
         }}
       >
         Lưu thay đổi
-      </Button>
+      </Button> */}
     </Card>
   );
 };
 
-// const SettingItem = (props) => {
-//   const {statusChecked,actionToggle, title, subTitle, name,detail,setOpen} = props
-//   const theme = useTheme();
-//   const classes = useStyles(theme);
-//   const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
-
-//   const handlePopup = (name) => {
-//       setOpen((prevState) => {
-//         return {
-//           ...prevState,
-//           [name]: true ,
-//         };
-//       });
-//   };
-//   return (
-//     <>
-//     <ListItem style={{margin:xsScreen?0:null, padding:xsScreen?0:null}}>
-//         <ListItemIcon >
-//             {props.children}
-//         </ListItemIcon>
-//         <ListItemText
-//         primary={<Typography style={{ fontSize:16,fontWeight:500 }}>{title}</Typography>}
-//         secondary={<Typography style={{ fontSize:13 , color:'#9f9f9f', marginTop:2}}>{subTitle}</Typography>} />
-//         {detail && statusChecked ?
-//         <Button variant="outlined"   size="small"style={{marginRight:50, textTransform:'none', fontWeight:700}} color="primary"
-//           onClick={()=>handlePopup(name)} >
-//           Chi tiết
-//         </Button>:null}
-//         <ListItemSecondaryAction >
-//             <IOSSwitch
-//                 edge="end"
-//                 name={name}
-//                 onChange={actionToggle}
-//                 checked={statusChecked}
-//             />
-//         </ListItemSecondaryAction>
-//     </ListItem>
-//     <Divider />
-//     </>
-//   )
-// }
-
-// const IOSSwitch = withStyles((theme) => ({
-//     root: {
-//       width: 42,
-//       height: 26,
-//       padding: 0,
-//       margin: theme.spacing(1),
-//     },
-//     switchBase: {
-//       padding: 1,
-//       '&$checked': {
-//         transform: 'translateX(16px)',
-//         color: theme.palette.common.white,
-//         '& + $track': {
-//         //   backgroundColor: '#52d869',
-//             backgroundColor: theme.customization.secondaryColor[500],
-//           opacity: 1,
-//           border: 'none',
-//         },
-//       },
-//       '&$focusVisible $thumb': {
-//         // color: '#52d869',
-//         color:  theme.customization.secondaryColor[500],
-//         border: '6px solid #fff',
-//       },
-//     },
-//     thumb: {
-//       width: 24,
-//       height: 24,
-//     },
-//     track: {
-//       borderRadius: 26 / 2,
-//       border: `1px solid ${theme.palette.grey[400]}`,
-//       backgroundColor: theme.palette.grey[50],
-//       opacity: 1,
-//       transition: theme.transitions.create(['background-color', 'border']),
-//     },
-//     checked: {},
-//     focusVisible: {},
-//   }))(({ classes, ...props }) => {
-//     return (
-//       <Switch
-//         focusVisibleClassName={classes.focusVisible}
-//         disableRipple
-//         classes={{
-//           root: classes.root,
-//           switchBase: classes.switchBase,
-//           thumb: classes.thumb,
-//           track: classes.track,
-//           checked: classes.checked,
-//         }}
-//         {...props}
-//       />
-//     );
-//   });
 
 export default GeneralSetting;

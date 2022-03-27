@@ -1,10 +1,16 @@
 import { authActions } from "./slice/authSlice";
 import { loadingActions } from "./slice/loadingSlice";
 import { infoActions } from "./slice/infoSlice";
+
 import { customizeAction } from "./slice/customizeSlice";
 import userApi from "../api/userApi";
+import branchApi from "../api/branchApi";
+
 import { pink, blue, grey } from "@material-ui/core/colors";
 import { statusAction } from "./slice/statusSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+
 export const verifyToken = () => {
   return async (dispatch) => {
     dispatch(loadingActions.startLoad());
@@ -12,8 +18,10 @@ export const verifyToken = () => {
       const response = await userApi.verify();
       return response;
     };
+  
     try {
       const rs = await verifyToken();
+   
       if (rs) {
         dispatch(authActions.logIn());
         if (rs.role == "owner") {
@@ -36,6 +44,9 @@ export const verifyToken = () => {
         }
         dispatch(infoActions.setStore(rs.store));
         dispatch(infoActions.setRole(rs.role));
+
+     
+
       } else {
         dispatch(authActions.logOut());
       }
@@ -57,6 +68,7 @@ export const logInHandler = (userName, password) => {
       });
       return response;
     };
+
     try {
       const rs = await logIn();
       if (rs.access_token) {
@@ -156,5 +168,32 @@ export const selectBranch = (uuid, name) => {
       uuid: uuid,
       name: name,
     });
+  };
+};
+
+
+
+
+// useEffect(() => {
+//   const getBranches = async()=> { 
+//     try{
+//     const branches = await branchApi.getAllBranches(infoDetail.store.uuid);
+//     dispatch(infoActions.setBranchsOfStore(branches.data));  
+//     }catch(err){
+//       console.log(err)
+//    }
+//   }
+//   getBranches()   
+// }, []);
+export const loadBranches= (store_uuid) => {
+  return async (dispatch) => {
+    try {
+      const rs = await branchApi.getAllBranches(store_uuid);
+      if (rs) {
+        dispatch(infoActions.setBranchsOfStore(rs.data));  
+      } 
+    } catch (error) {
+      console.log(error)
+    }
   };
 };

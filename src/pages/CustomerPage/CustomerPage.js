@@ -20,6 +20,7 @@ import MainPage from "./MainPage/MainPage";
 import ProductPage from "./ProductPage/ProductPage";
 import DetailPage from "./ProductPage/DetailPage/DetailPage";
 import CartButton from "../../components/Button/CartButton";
+import SocialMediaButton from "../../components/Button/SocialMediaButton";
 import Footer from "./Footer/Footer";
 import StorePage from "./StorePage/StorePage";
 import AboutUsPage from "./AboutUsPage/AboutUsPage";
@@ -50,8 +51,12 @@ const CustomerPage = () => {
 
   const {categories, products, storeInfo} = useSelector(state => state.customerPage)
 
+  const storeSetting = storeInfo.store_configuration ? JSON.parse(storeInfo.store_configuration) : null
   //0.Store Info 
-  var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
+  // var logoStore = "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
+  var logoStore = storeSetting?.img_url ?  storeSetting.img_url : "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
+
+  
   //1.  API GET ALL CATEGORY HERE
   //....
  //2.  GET SETTING
@@ -99,7 +104,7 @@ const CustomerPage = () => {
 
       dispatch(customerPageActions.setCategories(data[0].data ? data[0].data : []));
       dispatch(customerPageActions.setProducts(data[1].data ? data[1].data : []));
-      // console.log(data)
+      console.log(data)
     };
     fetchStore();
   }, []);
@@ -129,15 +134,16 @@ const CustomerPage = () => {
             webInfo={webInfo}
           />
         </Route>
-        <Route exact path={`${url}/promotion`}>
+        {/* <Route exact path={`${url}/promotion`}>
           <PromotionPage />
-        </Route>
+        </Route> */}
         <Route exact path={`${url}/storeInfo`}>
           <StorePage />
         </Route>
-        {/* <Route exact path={`${path}/aboutUs`}>
-          <AboutUsPage />
-        </Route> */}
+      {webInfo.other.status?
+       <Route exact path={`${url}/aboutUs`}>
+          <AboutUsPage webInfo={webInfo}/>
+        </Route>:null}
 
         <Route exact path={`${url}/cart`}>
           <CartPage webInfo={webInfo}  />
@@ -150,7 +156,11 @@ const CustomerPage = () => {
           />
         </Route>
         <Route exact path={`${url}/category/:categoryId/products/:productCode`}>
-          <DetailPage />
+          <DetailPage webInfo={webInfo} />
+        </Route>
+
+        <Route exact path={`${url}/products/:productCode`}>
+          <DetailPage webInfo={webInfo} />
         </Route>
         {/* Tại sao define route detail trong ProductPage 
           hoặc define route detial sau route product ko đc  
@@ -170,7 +180,7 @@ const CustomerPage = () => {
       </Switch>
     </Box>
 
-    {/* <Footer/> */}
+    <Footer web={webInfo}/>
   </div>) 
   } else {
     return <div>Error</div>

@@ -53,6 +53,7 @@ const StoreSetting = (props) => {
   const [display, setDisplay] = useState([]);
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+
   useEffect(() => {
     const loadData = async () => {
       const response = await storeApi.getStoreInfo(store_uuid);
@@ -219,7 +220,7 @@ const StoreSetting = (props) => {
           size="small"
           color="primary"
           onClick={handleUpdateStore}
-          disabled={!(formik.isValid && Object.keys(formik.touched).length > 0)}
+          disabled={!(formik.isValid)}
         >
           Lưu thay đổi
         </Button>

@@ -327,6 +327,8 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
   const handleChangePrice = (newPrice) => {
     handleProductPriceChange(detail.id, newPrice);
   };
+  const info = useSelector((state) => state.info);
+  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
 
   return (
     <TableRow hover key={detail.id}>
@@ -335,8 +337,11 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
       <TableCell align="left">{detail.name}</TableCell>
       <TableCell align="right"><Input.ThousandFormat style={{ width: 70 }} value={detail.unit_price}/></TableCell>
       <TableCell align="right">
+      { canFixPriceSell.status && canFixPriceSell.returnImport?
         <Input.ThousandSeperatedInput id="standard-basic" style={{ width: 70 }} size="small" inputProps={{ style: { textAlign: 'right' } }} defaultPrice={detail.returnPrice} onChange={(e) => handleChangePrice(e.target.value)} />
-      </TableCell>
+     :<Input.ThousandFormat  value={detail.returnPrice} > </Input.ThousandFormat>}
+     
+        </TableCell>
 
       {/* <TableCell align="left" padding="none">
         <ButtonQuantity

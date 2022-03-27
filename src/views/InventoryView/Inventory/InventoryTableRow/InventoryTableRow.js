@@ -21,7 +21,7 @@ import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {ProductMiniTableRow} from "../../../../components/MiniTableRow/MiniTableRow"
-
+import defaultProduct from "../../../../assets/img/product/default-product.png"
 const InventoryTableRow = (props) => {
   const { row, handleOpenRow, openRow } = props;
   const classes = useRowStyles();
@@ -47,7 +47,7 @@ const InventoryTableRow = (props) => {
             <Box
               component="img"
               sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}
-              src={row.img_url}
+              src={JSON.parse(row.img_urls)?.at(0) || defaultProduct}
             />
             <Typography className={classes.fontName}>{row.name}</Typography>
           </ListItem>

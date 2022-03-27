@@ -148,7 +148,7 @@ const CartSummary = (props) => {
 
                 {/* 2. PAYMENT INFO  */}
                 {
-                    !mode?
+                !mode?
              <>
               {/* 2.1 Mode 1 */}
                 <Grid container direction="row" justifyContent="space-between" className={classes.marginBox}>

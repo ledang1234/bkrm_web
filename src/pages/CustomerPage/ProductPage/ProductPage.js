@@ -29,17 +29,21 @@ const ProductPage = (props) => {
     //....
     let { categoryId } = useParams();
     const {products, categories} = useSelector(state => state.customerPage);
-    const productOfCategory = products.filter(product => product.category.id.toString() === categoryId)
+    let productOfCategory = products.filter(product => product.category.id.toString() === categoryId)
+
+    productOfCategory= productOfCategory.filter(product => product.attribute_value !== null )
+
     const category = categories.find(cat => cat.id.toString() === categoryId)
 
-    
+    console.log("productOfCategory", productOfCategory)   
+    console.log("clickItem",clickItem) 
     return (
         <>
             {/* 1. TITLE */}
             {/* Đổi sang breadcrumb ?? */}
             <Typography variant="h6" style={{/*flexGrow: 1,textAlign: "center",*/marginLeft:40, marginBottom:10, marginTop:100}}>{clickItem? clickItem:category?.name}</Typography>
             
-            
+
             {/* 2. LIST */}
             {/* // InventoryList theo category get from api */}
             <ProductList InventoryList={productOfCategory} mainColor={`rgba(${ mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/>

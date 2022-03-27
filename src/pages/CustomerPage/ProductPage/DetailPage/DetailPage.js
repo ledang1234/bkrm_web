@@ -1,5 +1,5 @@
-import React from 'react'
-import {Button,Grid,Paper,Card,Box,CardActions,Tabs,Tab,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Menu,MenuItem,ListItem,IconButton,TableBody,Typography} from '@material-ui/core'
+import React, {useState} from 'react'
+import {Button,Grid,Paper,Card,Box,CardActions,Tabs,ButtonGroup,Divider,Tab,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Menu,MenuItem,ListItem,IconButton,TableBody,Typography} from '@material-ui/core'
 import { useTheme, makeStyles, styled ,lighten} from "@material-ui/core/styles";
 import { Carousel } from "react-responsive-carousel";
 import { Route, Switch, useRouteMatch, useParams } from "react-router-dom";
@@ -7,6 +7,11 @@ import {useSelector} from 'react-redux'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import clsx from "clsx";
+// import {VNDFormat} from "../"
+import {VNDFormat} from "../../../../components/TextField/NumberFormatCustom"
+import {CustomButton} from "../../../../components/Button/ColorButton"
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 const useStyles = makeStyles((theme,) => ({
     root: {
         flexGrow: 1,
@@ -16,65 +21,55 @@ const useStyles = makeStyles((theme,) => ({
     },
 }));
 
-const images=[
-    "https://minio.thecoffeehouse.com/image/admin/Bottle_TraDao_836487.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/1633147051_photo-2021-10-02-10-52-45.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/1633147050_photo-2021-10-02-10-52-44.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/Bottle_TraDao_836487.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/1633147051_photo-2021-10-02-10-52-45.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/1633147050_photo-2021-10-02-10-52-44.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/Bottle_TraDao_836487.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/1633147051_photo-2021-10-02-10-52-45.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/1633147050_photo-2021-10-02-10-52-44.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/Bottle_TraDao_836487.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/1633147051_photo-2021-10-02-10-52-45.jpg",
-    "https://minio.thecoffeehouse.com/image/admin/1633147050_photo-2021-10-02-10-52-44.jpg",
-]
-const detailProduct={
-        id: 1,
-        name: "Trà Đào Cam Sả Chai Fresh 500ML",
-        price:200,
-        import_price: 100,
-        barcode: 23443355545,
-        category_id:"1",
-        status:"active",
-        image_url:"/src/assets/img/product/1.jpg",
-        quantity:0,
-        category:"Thuc pham"  
-}
 
-const DetailPage = () => {
+
+const DetailPage = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
+    const {webInfo} = props;
+    const mainColor = `rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${webInfo.mainColor.a })`;
     const {productCode} = useParams();
     const {products } = useSelector(state => state.customerPage)
     const detailProduct = products.find(prod => prod.product_code === productCode);
+    // const attribute_value = JSON.parse(detailProduct.attribute_value)
+    const [quantity, setQuantity]  = useState(1)
+
+    const image = detailProduct? JSON.parse(detailProduct?.img_urls) :null
+
+    const {priceStyle, nameStyle} = webInfo.detailPage
+  
+
+
     return (
     <div className={classes.root}>
       <Grid container  direction="row" justifyContent="space-between" alignItems="flex-start" spacing={8}>
         <Grid item xs={12} md={6}>
-            {/* Hình đã đc cắt vuông trên database */}
-            <Carousel 
-                showArrows={false} 
-                showStatus={false}
-                infiniteLoop={true}
-                emulateTouch={true}
-                swipeable={true}
-                dynamicHeight={false} 
-                showThumbs={true} 
+            <Carousel   showArrows={true} showStatus={false} infiniteLoop={true} emulateTouch={true} swipeable={true} dynamicHeight={false}  showThumbs={true}
             >
-                {detailProduct?.img_urls?.map((img)=><img  src={img.url}style={{borderRadius:10}} />)}
+                {JSON.parse(detailProduct?.img_urls ?detailProduct?.img_urls: "[]" )?.map((url)=><img  src={url}style={{borderRadius:10}} />)}
             </Carousel>
            
         </Grid>
 
         <Grid item xs={12} md={6}>
           <Box>
-              <Typography variant="h1">{detailProduct?.name}</Typography>
-              <Typography variant="h2">{detailProduct?.list_price}</Typography>
+              <Typography variant="h1" style={{marginBottom:25,color:nameStyle[0] === "0" ? "#000": mainColor , fontWeight:nameStyle[2], fontSize: Number(nameStyle[1])}}>{detailProduct?.name}</Typography>
+              <Typography variant="h2" style={{color:priceStyle[0] === "0" ? "#000": mainColor , fontWeight:priceStyle[2], fontSize: Number(priceStyle[1])}}>{detailProduct?.list_price.toLocaleString()} đ</Typography>
+              <Typography variant="h5" style={{marginTop:40, marginBottom:10}}>Số lượng :</Typography>
+              <ButtonGroup disableElevation variant="contained"  >
+                <CustomButton mainColor='#f7f7f7'  textColor='#000' size="small" color='secondary'onClick={()=>{if(quantity>1){setQuantity(quantity-1)}}}> <RemoveIcon /></CustomButton>
+                <CustomButton mainColor='#fff'  textColor='#000'  >{quantity}</CustomButton>
+                <CustomButton mainColor='#f7f7f7' textColor='#000'size="small" onClick={()=>{setQuantity(quantity + 1)}}><AddIcon /></CustomButton>
+            </ButtonGroup>
+
           </Box>
+          <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}}  >Thêm vào giỏ hàng</CustomButton>
         </Grid>
       </Grid>
+    
+        <Divider  style={{marginTop:20}}/>
+        <Typography  style={{color:'#000', fontSize:18,fontWeight:500, marginTop:20,}}>Mô tả sản phẩm</Typography>
+
     </div>
         
     )

@@ -27,6 +27,7 @@ import InventoryDetail from '../../views/InventoryView/Inventory/InventoryTableR
 import DiscountPopUp from "../../views/SalesView/Cart/DiscountPopup/DiscountPopup"
 import ButtonQuantity from "../../components/Button/ButtonQuantity";
 
+import defaultProduct from "../../assets/img/product/default-product.png"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -283,7 +284,7 @@ export const ProductMiniTableRow = (props) =>{
                  <Box
                     component="img"
                     sx={{ height: 45, width: 45, borderRadius: 10, marginRight: 15 }}
-                    src={row.img_url}
+                    src={JSON.parse(row.img_urls)?.at(0) || defaultProduct}
                     />                   
                      <Grid  container direction="column"justifyContent="space-between" >
                     <Typography style={{marginTop:-7, marginBottom:10}}>{name}</Typography>

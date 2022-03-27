@@ -174,6 +174,12 @@ function InvoiceDetail(props) {
     content: () => componentRef.current,
   });
 
+  function getDifferenceInDays(date1, date2) {
+    const diffInMs = Math.abs(date2 - date1);
+    return diffInMs / (1000 * 60 * 60 * 24);
+  }
+
+  const returnLimit = JSON.parse(info.store.general_configuration).returnLimit
   return (
     <Collapse
       in={isMini ? true : openRow === row.uuid}
@@ -519,7 +525,7 @@ function InvoiceDetail(props) {
               </Button>{" "}
             </>
           ) : null}
-
+        {returnLimit.status === false || returnLimit.status === true && (getDifferenceInDays(new Date(),new Date(row.creation_date)) < returnLimit.day) ?
           <Button
             variant="contained"
             size="small"
@@ -528,7 +534,7 @@ function InvoiceDetail(props) {
           >
             Trả hàng
           </Button>
-
+        :null}
           <IconButton
             aria-label="more"
             aria-controls="long-menu"

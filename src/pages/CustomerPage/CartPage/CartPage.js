@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useTheme, makeStyles, createStyles,lighten,styled } from "@material-ui/core/styles";
 import {
@@ -27,6 +28,12 @@ import {useDispatch, useSelector} from "react-redux"
 import { customerPageActions } from '../../../store/slice/customerPageSlice';
 import customerPageApi from '../../../api/customerPageApi'
 import { error, success } from "../../../components/StatusModal/StatusModal";
+import CartSummary from "./CartSummary/CartSummary"
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { VNDFormat } from "../../../components/TextField/NumberFormatCustom";
+import DialogWrapper from "../../../components/Modal/DialogWrapper"
+import {CartRowNoHeader} from "./CartTableRow/CartTableRow"
 const useStyles = makeStyles((theme) =>
   createStyles({
     textTitle: {
@@ -47,7 +54,7 @@ export const CartHeadCells = [
   { id: "name", align: "left", disablePadding: true, label: "Sản phẩm" },
   { id: "price", align: "center", disablePadding: true, label: "Đơn giá" },
   { id: "quantity", align: "center", disablePadding: true, label: "Số lượng" },
-  { id: "total", align: "right", disablePadding: true, label: "Thành tiền" },
+  { id: "total", align: "center", disablePadding: true, label: "Thành tiền" },
   { id: "action", align: "right", disablePadding: true, label: "" },
 ];
 
@@ -55,10 +62,15 @@ const CartPage = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const {mainColor} = props.webInfo
+  const {mainColor, cart} = props.webInfo
+  console.log("cart",cart.summaryPosition)
   
+  const [openPopUp, setOpenPopUp] = useState(false)
 
   const {order, storeInfo } = useSelector(state => state.customerPage)
+
+ 
+
   const dispatch = useDispatch()
   const [cartList, setCartList] = React.useState([
     {
@@ -87,23 +99,80 @@ const CartPage = (props) => {
     dispatch(customerPageActions.setOrder(newOrder))
   }
 
-  const handleChangeOrder = (field, value) => {
-    let newOrder = _.cloneDeep(order)
-    newOrder[field] = value
+  // const handleChangeOrder = (field, value) => {
+  //   let newOrder = _.cloneDeep(order)
+  //   newOrder[field] = value
     
-    dispatch(customerPageActions.setOrder(newOrder))
-  }
+  //   dispatch(customerPageActions.setOrder(newOrder))
+  // }
 
   const calculateTotal = () => {
     let total = 0;
     order.cartItem.forEach(item => total += item.list_price * item.quantity)
     return total
   }
+  const calculateQuantity = () => {
+    let rs = order.cartItem?.reduce((b, a) => b + a.quantity, 0) ;
+    if(rs) return rs 
+    return 0
+   
+  }
+  const formik = useFormik({
+    initialValues: {
+      name: order.name? order.name: "",
+      email: order.email? order.email: "",
+      phone: order.phone? order.phone: "",
+      address:  order.address? order.address: "",
+      ward:order.ward? order.ward: "",
+      district: order.district? order.district: "",
+      city: order.city? order.city: "",
+  
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập họ và tên"),
+      phone: Yup.string()
+        .length(10, "Số điện thoại không chính xác")
+        .required("Nhập số điện thoại")
+        .matches(/^\d+$/,"Số điện thoại không chính xác"),
+      // email: Yup.string().email("Email không chính xác"),
+      address: Yup.string().required("Nhập địa chỉ"),
+      city: Yup.string().required("Chọn tỉnh/thành phố"),
+      district: Yup.string().required("Chọn quận/huyện"),
+      ward: Yup.string().required("Chọn phường/xã"),
+    }),
+  })
+  const handleSubmit = async () => {
+    try {
+      let submitOrder = _.omit(order, "cartItem")
+      // let submitOrder = _.omit(formik.values, "cartItem")
+
+      submitOrder.details = JSON.stringify(order.cartItem) 
+      console.log("cartItme", order.cartItem)
+
+      console.log("submitOrder",submitOrder)
+      
+      const res = await customerPageApi.addOrder(storeInfo.uuid, {...submitOrder, total_amount: calculateTotal()});
+      success("Đặt đơn hàng thành công")
+      dispatch(customerPageActions.setOrder({
+        name: "",
+        phone: "",
+        cartItem: [],
+        address: "",
+        branchId: storeInfo.branches?.at(0)?.id,
+      }))
+    } catch (err) {
+      console.log(err)
+      error('Đặt đơn hàng thất bại')
+    }
+    
+}
+
+
 
   return (
     <div style={{ backgroundColor: "#fff" }}>
       <Box style={{ marginTop: 100, marginLeft: 50, marginRight: 50 }}>
-        <Typography style={{ flexGrow: 1, textAlign: "center" }} variant="h2">
+        <Typography style={{ flexGrow: 1, textAlign: "center",marginBottom:8}} variant="h2">
           Giỏ hàng
         </Typography>
         {/* <Typography
@@ -131,15 +200,17 @@ const CartPage = (props) => {
           // alignItems="center"
           spacing={2}
         >
-          <Grid item sm={12} md={8}>
+          <Grid item sm={12} md={cart.summaryPosition==="right" ?8 : 12}>
+            
             <Card style={{ boxShadow: "0px 5px 10px rgba(0,0,0,0.1)" }}>
               <Box style={{ padding: 30 }}>
                 <TableWrapper isCart={true}>
-                  <TableHeader
+                {cart.header==='show'? 
+                <TableHeader
                     classes={classes}
                     isCustomer={true}
                     headerData={CartHeadCells}
-                  />
+                  />:null}
                   <TableBody>
                     {order.cartItem.map((row, index) => {
                       return (
@@ -154,116 +225,30 @@ const CartPage = (props) => {
                   </TableBody>
                 </TableWrapper>
               </Box>
-            </Card>
+            </Card>             
           </Grid>
 
-          <Grid item sm={12} md={4} className={classes.card}>
+         {cart.summaryPosition==="right"? <Grid item sm={12} md={4} className={classes.card}>
             <Card className={classes.card} style={{ padding: 20 }}>
-              <Grid
-                container
-                direction="column"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Box
-                  component="form"
-                  sx={{
-                    "& .MuiTextField-root": { m: 1, width: "100%" },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    error={!order.name}
-                    value={order.name}
-                    label="Họ và tên"
-                    style={{ marginBottom: 20 }}
-                    // helperText="Họ và tên không được trống."
-                    onChange={(e) => handleChangeOrder("name", e.target.value)}
-                  />
-                  <TextField
-                    error={!order.phone}
-                    label="Số điện thoại"
-                    value={order.phone}
-                    style={{ marginBottom: 20 }}
-                    onChange={(e) => handleChangeOrder("phone", e.target.value)}
-                    // helperText="Số điện thoại không được trống."
-                  />
-                  <InputLabel id="demo-simple-select-label">
-                    Chi nhánh
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    defaultValue={storeInfo.branches?.at(0)?.id}
-                    value={order.branch_id}
-                    label="Chi nhánh"
-                    style={{ width: "100%" }}
-                    onChange={(e) =>
-                      handleChangeOrder("branch_id", e.target.value)
-                    }
-                  >
-                    {storeInfo.branches?.map((branch) => (
-                      <MenuItem value={branch.id}>{branch.name}</MenuItem>
-                    ))}
-                  </Select>
-                  <TextField
-                    value={order.address}
-                    label="Địa chỉ"
-                    onChange={(e) =>
-                      handleChangeOrder("address", e.target.value)
-                    }
-                  />
-                </Box>
-
-                
-                  <Typography
-                    style={{ fontSize: 19, fontWeight: 500, color: "#000" }}
-                  >
-                    Tổng tiền ({order.cartItem.length} mặt hàng):
-                  </Typography>
-                  <Typography
-                    style={{ fontSize: 22, fontWeight: 700, color: "red" }}
-                  >
-                    {calculateTotal()}
-                  </Typography>
-                
-              </Grid>
-              {/* <Button style={{marginTop:30}}variant="contained" fullWidth style={{color:mainColor}}>Đặt hàng</Button> */}
-              <ColorButton
-                mainColor={mainColor}
-                color="primary"
-                style={{ marginTop: 30 }}
-                variant="contained"
-                fullWidth
-                disabled={!order.name || !order.phone || !calculateTotal()}
-                onClick={ async () => {
-                  try {
-                    let submitOrder = _.omit(order, "cartItem")
-                    submitOrder.details = JSON.stringify(order.cartItem) 
-                    
-                    const res = await customerPageApi.addOrder(storeInfo.uuid, {...submitOrder, total_amount: calculateTotal()});
-                    success("Thêm hóa đơn thành công")
-                    dispatch(customerPageActions.setOrder({
-                      name: "",
-                      phone: "",
-                      cartItem: [],
-                      address: "",
-                      branchId: storeInfo.branches?.at(0)?.id,
-                    }))
-                  } catch (err) {
-                    console.log(err)
-                    error('Thêm hóa đơn thất bại')
-                  }
-                  
-                }}
-              >
-                {" "}
-                Đặt hàng{" "}
-              </ColorButton>
+            <CartSummary formik={formik} order={order} calculateTotal={calculateTotal} handleSubmit={handleSubmit} calculateQuantity={calculateQuantity}  mainColor={mainColor}/> 
             </Card>
           </Grid>
+          :
+          <Box style={{position: "fixed",bottom: 0,right:0,left:0, border: "1px solid #b6b6b6", height:70, padding:20}}>
+            <Grid  container justifyContent="space-between"  alignItems='center'>
+                <Grid item> <Typography variant='h2'>Tạm tính : <VNDFormat style={{color:'red'}}value={calculateTotal()}/></Typography> </Grid>
+                <Grid item> 
+                    < Button  mainColor={mainColor}  color="primary" style={{borderRadius:5}}  variant="contained" fullWidth  disabled={!(formik.isValid)|| !calculateTotal()}  onClick={()=>setOpenPopUp(true)}  > {" "}
+                      Đặt hàng{" "}
+                    </Button>
+                </Grid>
+            </Grid>
+            <DialogWrapper title={'Thông tin giỏ hàng'} handleClose={()=>setOpenPopUp(false)} open={openPopUp} > 
+                <CartSummary formik={formik} order={order} calculateTotal={calculateTotal} handleSubmit={handleSubmit} calculateQuantity={calculateQuantity}  mainColor={mainColor} isPopUp={true} handleClose={()=>setOpenPopUp(false)}/> 
+            </DialogWrapper>
+          </Box>
+
+          }
         </Grid>
       </Box>
     </div>

@@ -6,25 +6,27 @@ import {Typography,Tooltip} from '@material-ui/core';
 
 const HtmlTooltip = withStyles((theme) => ({
     tooltip: {
-      backgroundColor: '#f5f5f9',
-      color: 'rgba(0, 0, 0, 0.87)',
-      maxWidth: 220,
+      backgroundColor: '#6b6b6b',
+      // color: 'rgba(0, 0, 0, 0.87)',
+      color: '#fff',
+      // maxWidth: 220,
       fontSize: theme.typography.pxToRem(12),
-      border: '1px solid #dadde9',
+      border: '1px solid #000',
     },
   }))(Tooltip);
 
-const MoreInfo = () => {
+const MoreInfo = (props) => {
+  const {title, content} = props
     return (
-        <div>
-            
+        <div> 
             <HtmlTooltip
                 arrow
                 title={
                 <React.Fragment>
-                    <Typography color="inherit">Tooltip with HTML</Typography>
+                    {/* <Typography color="inherit">Tooltip with HTML</Typography>
                     <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
-                    {"It's very engaging. Right?"}
+                    {"It's very engaging. Right?"} */}
+                    {props.children}
                 </React.Fragment>
                 }
             >
