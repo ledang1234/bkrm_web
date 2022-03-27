@@ -195,7 +195,10 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
     }
   };
   
-  
+  const isOrderEmpty = () => {
+    return order.details?.every(detail => detail.quantity === 0);
+  }
+
   return (
     <ModalWrapper open={isOpen} handleClose={handleClose} title="Đơn đặt">
       <Typography variant="h3">{customerOrder.customer_order_code}</Typography>
@@ -306,6 +309,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
               variant="contained"
               size="small"
               color="secondary"
+
               onClick={handleClose}
             >
               Hủy
@@ -316,6 +320,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
               style={{ marginLeft: 20 }}
               color="primary"
               // onClick={handleSubmit}
+              disabled={isOrderEmpty()}
             >
               Xác nhận
             </Button>
