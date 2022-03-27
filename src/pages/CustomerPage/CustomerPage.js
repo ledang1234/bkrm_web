@@ -104,7 +104,7 @@ const CustomerPage = () => {
 
       dispatch(customerPageActions.setCategories(data[0].data ? data[0].data : []));
       dispatch(customerPageActions.setProducts(data[1].data ? data[1].data : []));
-      // console.log(data)
+      console.log(data)
     };
     fetchStore();
   }, []);

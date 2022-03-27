@@ -10,7 +10,6 @@ import OrderProductListDetail from './OrderProductListDetail/OrderProductListDet
 const OrderProductListTableRow = (props) => {
     const { row, handleOpenRow,openRow} = props;
     const classes = useRowStyles();
-    console.log(openRow === row.id)
     return (
         <>
         {/* ROW */}

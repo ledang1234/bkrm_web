@@ -147,6 +147,7 @@ const CartPage = (props) => {
       // let submitOrder = _.omit(formik.values, "cartItem")
 
       submitOrder.details = JSON.stringify(order.cartItem) 
+      console.log("cartItme", order.cartItem)
 
       console.log("submitOrder",submitOrder)
       

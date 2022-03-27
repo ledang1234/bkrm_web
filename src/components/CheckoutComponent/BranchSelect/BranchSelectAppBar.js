@@ -17,6 +17,7 @@ export default function BranchSelectAppBar({ store_uuid }) {
       infoActions.setBranch({
         uuid: event.target.value.uuid,
         name: event.target.value.name,
+        id: event.target.value.id,
       })
     );
   };
@@ -29,6 +30,7 @@ export default function BranchSelectAppBar({ store_uuid }) {
       infoActions.setBranch({
         uuid: response.data[0].uuid,
         name: response.data[0].name,
+        id: response.data[0].id,
       })
     );
   };

@@ -443,6 +443,11 @@ const AddInventory = (props) => {
         );
       }
 
+      bodyFormData.append(
+        "attribute_value",
+        JSON.stringify(datas)
+      );
+
       bodyFormData.append("img_url", imageURL);
 
       images.forEach((image) => bodyFormData.append("images[]", image));

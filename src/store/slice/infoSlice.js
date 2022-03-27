@@ -31,6 +31,7 @@ const initialUserInfoSlice = {
   branch: {
     uuid: "",
     name: "",
+    id: '',
   },
   role: "",
   branchsOfStore:[]
