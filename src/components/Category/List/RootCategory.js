@@ -8,7 +8,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import SubCategory from "./SubCategory";
 import { useSelector } from "react-redux";
 import productApi from "../../../api/productApi";
 import IconButton from "@material-ui/core/IconButton";
@@ -20,13 +19,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import UpdateCategory from "./UpdateCategory";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
-    zIndex: 1
-  },
   nested: {
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(2),
   },
 }));
 
@@ -46,7 +40,11 @@ export default function RootCategory(props) {
         console.log(error);
       }
     };
-    fetchCategoryList();
+    if(!props.useNestedApi){
+      fetchCategoryList();
+    }else{
+      setSubCategories()
+    }
   }, [store_uuid, props.category.uuid, props.reset]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -62,7 +60,7 @@ export default function RootCategory(props) {
     <List
       component="nav"
       aria-labelledby="nested-list-subheader"
-      className={classes.root}
+      className={props.fromRoot ? classes.root : classes.nested}
     >
       <UpdateCategory onReset={props.onReset} open={update} handleClose={handleClose} category={props.category}/>
       <ListItem >
@@ -79,12 +77,12 @@ export default function RootCategory(props) {
           }
         />
         {props.category.children.length === 0 ? null : open ? (
-          <IconButton size="small" onClick={handleClick} style={{ zIndex: 2 }} >
+          <IconButton size="small" onClick={handleClick} >
             {" "}
             <ExpandLess />{" "}
           </IconButton>
         ) : (
-          <IconButton size="small" onClick={handleClick} style={{ zIndex: 2 }}>
+          <IconButton size="small" onClick={handleClick} >
             {" "}
             <ExpandMore button />{" "}
           </IconButton>
@@ -92,7 +90,7 @@ export default function RootCategory(props) {
       </ListItem>
       <Collapse in={open} unmountOnExit>
         {subCategories.map((category) => (
-          <SubCategory key={category.uuid} category={category} onReset={props.onReset}/>
+          <RootCategory key={category.uuid} category={category} onReset={props.onReset} reset={props.reset}/>
         ))}
       </Collapse>
     </List>

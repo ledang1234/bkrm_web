@@ -45,6 +45,7 @@ import TagsInput from "../../../../components/TextField/TagsInput";
 import AddAttribute from "./AddAttribute";
 import RelaltedItemList from "./RelaltedItemList";
 import SnackBarGeneral from "../../../../components/SnackBar/SnackBarGeneral";
+import CategorySelect from "../../../../components/Category/CategorySelect";
 
 const UploadImages = (img) => {
   return (
@@ -66,15 +67,7 @@ const AddInventory = (props) => {
   const { handleClose, open } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
   const handleCloseCategory = () => setOpenAddCategory(false);
-  const [categoryList, setCategoryList] = useState([
-    {
-      uuid: "",
-      parent_category_id: null,
-      name: "",
-      created_at: "",
-      updated_at: "",
-    },
-  ]);
+  const [categoryList, setCategoryList] = useState([]);
 
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
@@ -215,7 +208,7 @@ const AddInventory = (props) => {
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
-        const response = await productApi.getAllCategory(store_uuid);
+        const response = await productApi.getNestedCategory(store_uuid);
         setCategoryList(response.data);
         productFormik.setFieldValue("category", response.data[0].uuid);
       } catch (error) {
@@ -556,11 +549,7 @@ const AddInventory = (props) => {
                   onChange={productFormik.handleChange}
                   onBlur={productFormik.handleBlur}
                 >
-                  {categoryList.map((category) => (
-                    <option key={category.uuid} value={category.uuid}>
-                      {category.name}
-                    </option>
-                  ))}
+                  <CategorySelect categoryList={categoryList}/>
                 </Select>
               </FormControl>
               <Tooltip title="Thêm danh mục">
