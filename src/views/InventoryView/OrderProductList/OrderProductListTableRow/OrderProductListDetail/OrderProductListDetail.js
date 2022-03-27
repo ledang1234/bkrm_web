@@ -96,7 +96,7 @@ const OrderProductListDetail = (props) => {
 
     return (
         // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
-        <Collapse in={ isMini? true: true } timeout="auto" unmountOnExit>
+        <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}

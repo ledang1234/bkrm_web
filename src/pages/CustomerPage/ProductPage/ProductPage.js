@@ -30,7 +30,9 @@ const ProductPage = (props) => {
     let { categoryId } = useParams();
     const {products, categories} = useSelector(state => state.customerPage);
     let productOfCategory = products.filter(product => product.category.id.toString() === categoryId)
-    // productOfCategory= productOfCategory.filter(product => product.attribute_value !== null )
+
+    productOfCategory= productOfCategory.filter(product => product.attribute_value !== null )
+
     const category = categories.find(cat => cat.id.toString() === categoryId)
 
     console.log("productOfCategory", productOfCategory)   

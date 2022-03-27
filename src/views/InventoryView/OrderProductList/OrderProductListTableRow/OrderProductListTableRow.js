@@ -10,7 +10,7 @@ import OrderProductListDetail from './OrderProductListDetail/OrderProductListDet
 const OrderProductListTableRow = (props) => {
     const { row, handleOpenRow,openRow} = props;
     const classes = useRowStyles();
-
+    console.log(openRow === row.id)
     return (
         <>
         {/* ROW */}
@@ -34,7 +34,7 @@ const OrderProductListTableRow = (props) => {
             <TableRow>
               {/* colspan  => số cột trong collapse */}
               <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>           
-                    <OrderProductListDetail parentProps={props}/>       
+                    <OrderProductListDetail parentProps={props} openRow={openRow}/>       
               </TableCell>
        
             </TableRow>
