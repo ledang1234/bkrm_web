@@ -146,7 +146,7 @@ const OrderProductList = () => {
       
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, branch_uuid, query]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, query, reload]);
 
 
   return (
@@ -225,7 +225,7 @@ const OrderProductList = () => {
               <TableBody>
                 {customerOrders.map((row, index) => {
                     return (
-                      <OrderProductListTableRow key={row.id} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} />
+                      <OrderProductListTableRow key={row.id} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} reload={onReload}/>
          
                     );
                 })}

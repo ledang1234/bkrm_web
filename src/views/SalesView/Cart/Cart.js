@@ -497,6 +497,7 @@ const Cart = () => {
         tax: "0",
         shipping: "0",
         delivery: cart.delivery,
+        is_customer_order: false,
       };
       console.log("bpdy", body)
 

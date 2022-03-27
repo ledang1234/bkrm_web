@@ -8,7 +8,7 @@ import {FormatedStatusOrder} from '../../../../components/TableCommon/util/forma
 import OrderProductListDetail from './OrderProductListDetail/OrderProductListDetail'
 
 const OrderProductListTableRow = (props) => {
-    const { row, handleOpenRow,openRow} = props;
+    const { row, handleOpenRow,openRow, reload} = props;
     const classes = useRowStyles();
     return (
         <>
@@ -24,7 +24,7 @@ const OrderProductListTableRow = (props) => {
                 <TableCell align="left">{row.phone}</TableCell>
                 <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_amount} /></TableCell>
                 <TableCell align="center">
-                    <FormatedStatusOrder status={row.status}/>
+                    <FormatedStatusOrder status={row.status === 'confirmed' ? 3 : ""}/>
                 </TableCell>
                 <TableCell align="left">{row.address}</TableCell>
             </TableRow>
@@ -33,7 +33,7 @@ const OrderProductListTableRow = (props) => {
             <TableRow>
               {/* colspan  => số cột trong collapse */}
               <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>           
-                    <OrderProductListDetail parentProps={props} openRow={openRow}/>       
+                    <OrderProductListDetail parentProps={props} openRow={openRow} reload={reload}/>       
               </TableCell>
        
             </TableRow>

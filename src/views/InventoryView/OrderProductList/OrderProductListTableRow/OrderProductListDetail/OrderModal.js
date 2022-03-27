@@ -14,6 +14,8 @@ import Paper from "@material-ui/core/Paper";
 import orderApi from "../../../../../api/orderApi";
 import openNotification from "../../../../../components/StatusPopup/StatusPopup";
 import _ from "lodash";
+import moment from 'moment';
+import { statusAction } from "../../../../../store/slice/statusSlice";
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -53,6 +55,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
           unit_price: detail.list_price,
           id: detail.id,
           uuid: detail.uuid,
+          discount: 0,
           has_batches: detail.has_batches,
           quantity: detail.has_batches
             ? 0
@@ -63,9 +66,14 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
         }));
 
         const newOrder = {
-          name: customerOrder.name,
-          phone: customerOrder.phone,
-          address: customerOrder.address,
+          new_customer: {
+            name: customerOrder.name,
+            phone: customerOrder.phone,
+            address: customerOrder.address,
+            ward: customerOrder.ward,
+            province: customerOrder.province,
+            district: customerOrder.district,
+          },
           details: details,
           discount: 0,
           description: "",
@@ -73,6 +81,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
             details,
             (detail) => detail.quantity * detail.unit_price
           ),
+          status: 'debt'
         };
 
         setOrder(newOrder);
@@ -83,6 +92,34 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
     }
   }, []);
 
+  const handleConfirm = async () => {
+    let d = moment.now() / 1000;
+    let orderTime = moment
+      .unix(d)
+      .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+    let body = {
+      ...order,
+      discount: order.discount.toString(),
+      paid_amount: 0,
+      payment_method: "cash",
+      creation_date: orderTime,
+      paid_date: "",
+      tax: "0",
+      shipping: "0",
+      is_customer_order: true,
+      new_customer: JSON.stringify(order.new_customer)
+    };
+
+    try {
+      handleClose()
+      let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
+      let updateCustomerOrderRes = await orderApi.confirmCustomerOrder(store_uuid, branch.uuid, customerOrder.id);
+      dispatch(statusAction.successfulStatus(`Tạo hóa đơn thành công ${res.data.order.order_code}`))
+    } catch (err) {
+      dispatch(statusAction.failedStatus(`Tạo hóa đơn thất bại`))
+      console.log(err);
+    }
+  };
   const getBranchInventory = (productId, inventoryInfo) => {
     const product = inventoryInfo.find(
       (inventory) => inventory.id === productId
@@ -319,7 +356,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
               size="small"
               style={{ marginLeft: 20 }}
               color="primary"
-              // onClick={handleSubmit}
+              onClick={handleConfirm}
               disabled={isOrderEmpty()}
             >
               Xác nhận

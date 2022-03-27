@@ -25,7 +25,7 @@ function InvoiceTableRow(props) {
       >
         <TableCell align="left">{row.order_code}</TableCell>
         <TableCell align="left" className={classes.fontName}>
-          {row.paid_date}
+          {row.creation_date}
         </TableCell>
         <TableCell
           align="left"

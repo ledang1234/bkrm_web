@@ -63,7 +63,7 @@ createStyles({
 
 
 const OrderProductListDetail = (props) => {
-    const {row,openRow }= props.parentProps;
+    const {row,openRow, reload }= props.parentProps;
     const {isMini}= props.parentProps;
 
     const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
@@ -337,7 +337,7 @@ const OrderProductListDetail = (props) => {
               </>
             ) : null}
 
-            <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick={() => setIsOrderModalOpen(true)}>
+            <Button disabled={row.status === 'confirmed'} variant="contained" size="small" style={{ marginLeft: 15 }} onClick={() => setIsOrderModalOpen(true)}>
               Xử lý đơn đặt
             </Button>
 
@@ -375,7 +375,7 @@ const OrderProductListDetail = (props) => {
             </StyledMenu>
           </Grid>
 
-          {isOrderModalOpen && <OrderModal customerOrder={row} handleClose={() => setIsOrderModalOpen(false)} isOpen={isOrderModalOpen}/>}
+          {isOrderModalOpen && <OrderModal customerOrder={row} handleClose={() => {setIsOrderModalOpen(false); reload()}} isOpen={isOrderModalOpen}/>}
 
           <Dialog
             fullWidth={true}
