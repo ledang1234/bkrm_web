@@ -39,6 +39,8 @@ import { customizeAction } from "../../store/slice/customizeSlice";
 
 import PersonIcon from "@material-ui/icons/Person";
 import DeliveryView from "../../views/DeliveryView/DeliveryView";
+import branchApi from "../../api/branchApi"
+import { infoActions } from "../../store/slice/infoSlice";
 
 const drawerWidth = 240;
 
@@ -71,6 +73,8 @@ const HomePage = (props) => {
   const handleToggleSidebar = (open) => {
     dispatch(customizeAction.setSidebarOpen(open));
   };
+
+
 
 
   const divLogo = () => {

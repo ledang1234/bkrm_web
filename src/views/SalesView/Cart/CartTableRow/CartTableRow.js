@@ -105,7 +105,6 @@ console.log("branch",branch)
   };
 
   const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
-console.log("roweeee", row)
 
 const [show, setShow] = React.useState(false);
 

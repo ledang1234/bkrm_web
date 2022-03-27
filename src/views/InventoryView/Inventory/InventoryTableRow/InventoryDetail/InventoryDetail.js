@@ -122,7 +122,6 @@ const InventoryDetail = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
   const branchs = info.branchsOfStore
-  console.log("branchs",branchs)
   // const [branchs, setBranchs] = useState(info.branchsOfStore);
 
   const [isOpenVarianceDetailModal, setIsOpenVariaceDetailModal] =
@@ -148,7 +147,6 @@ const InventoryDetail = (props) => {
   };
 
 
-  console.log("roweeee", row)
 
 
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)

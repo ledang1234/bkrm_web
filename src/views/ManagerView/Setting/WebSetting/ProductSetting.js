@@ -100,7 +100,7 @@ const ProductSetting = ({web,handleChangeListProduct,setWeb}) => {
     useEffect(()=>{
         if(Number(web.listProduct.btnStyle[1]) === 0 &&  web.listProduct.alignCenter){
             var newWeb = {...web};
-            newWeb.listProduct.btnStyle[1] ="1"
+            newWeb.listProduct.btnStyle[1] = "1"
             setWeb(newWeb)
         }
     }, [web.listProduct.alignCenter])
@@ -114,7 +114,6 @@ const ProductSetting = ({web,handleChangeListProduct,setWeb}) => {
     }, [web.listProduct.btnStyle[1]])
       
    
-console.log("btnStyle[1]",btnStyle[1])
     return (
         <>
        <Grid container justifyContent='space-between'>

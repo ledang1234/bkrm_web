@@ -20,6 +20,7 @@ import MainPage from "./MainPage/MainPage";
 import ProductPage from "./ProductPage/ProductPage";
 import DetailPage from "./ProductPage/DetailPage/DetailPage";
 import CartButton from "../../components/Button/CartButton";
+import SocialMediaButton from "../../components/Button/SocialMediaButton";
 import Footer from "./Footer/Footer";
 import StorePage from "./StorePage/StorePage";
 import AboutUsPage from "./AboutUsPage/AboutUsPage";
@@ -179,7 +180,7 @@ const CustomerPage = () => {
       </Switch>
     </Box>
 
-    {/* <Footer/> */}
+    <Footer web={webInfo}/>
   </div>) 
   } else {
     return <div>Error</div>
