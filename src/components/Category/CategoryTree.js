@@ -22,7 +22,7 @@ const CategoryTree = (props) => {
   return (
     <Box {...props}>
       {parentCategories.map((category) => (
-        <RootCategory key={category.uuid} category={category} reset={props.reset} onReset={props.onReset}/>
+        <RootCategory key={category.uuid} category={category} reset={props.reset} onReset={props.onReset} fromRoot={true}/>
       ))}
     </Box>
   );

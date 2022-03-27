@@ -10,9 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 import ModalWrapper from "../../../../components/Modal/ModalWrapper";
 import productApi from "../../../../api/productApi";
-import { useSelector,useDispatch } from "react-redux";
-import {statusAction} from "../../../../store/slice/statusSlice"
-
+import { useSelector, useDispatch } from "react-redux";
+import { statusAction } from "../../../../store/slice/statusSlice"
+import CategorySelect from "../../../../components/Category/CategorySelect";
 const AddCategory = (props) => {
   const [categoryList, setCategoryList] = useState([]);
   const [categoryInfo, setCategoryInfo] = useState({
@@ -25,7 +25,9 @@ const AddCategory = (props) => {
     const fetchAllCategory = async () => {
       try {
         const response = await productApi.getAllCategory(store_uuid);
-        setCategoryList(response.data);
+        const response_1 = await productApi.getNestedCategory(store_uuid);
+        console.log(response_1, "response 1")
+        setCategoryList(response_1.data);
       } catch (error) { }
     };
     fetchAllCategory();
@@ -41,7 +43,7 @@ const AddCategory = (props) => {
       props.onReset()
       dispatch(statusAction.successfulStatus("Tạo danh mục thành công"));
 
-      
+
     } catch (error) {
       console.log(error);
       dispatch(statusAction.failedStatus("Tạo danh mục thất bại"));
@@ -79,6 +81,7 @@ const AddCategory = (props) => {
               native
               label="Danh mục cha"
               id="category"
+              value={categoryInfo.uuid}
               onChange={(e) =>
                 setCategoryInfo({
                   ...categoryInfo,
@@ -87,11 +90,7 @@ const AddCategory = (props) => {
               }
             >
               <option aria-label="None" value="" />
-              {categoryList.map((category) => (
-                <option key={category.uuid} value={category.uuid}>
-                  {category.name}
-                </option>
-              ))}
+              <CategorySelect categoryList={categoryList}/>
             </Select>
           </FormControl>
         </Grid>
@@ -129,3 +128,4 @@ const AddCategory = (props) => {
 };
 
 export default AddCategory;
+

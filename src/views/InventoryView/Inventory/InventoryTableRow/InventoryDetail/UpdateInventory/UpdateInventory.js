@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { statusAction } from "../../../../../../store/slice/statusSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import CategorySelect from "../../../../../../components/Category/CategorySelect";
 const UploadImages = (img) => {
   return (
     <Box
@@ -48,15 +49,7 @@ const UpdateInventory = (props) => {
   const { handleClose, open } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
   const handleCloseCategory = () => setOpenAddCategory(false);
-  const [categoryList, setCategoryList] = useState([
-    {
-      uuid: "",
-      parent_category_id: null,
-      name: "",
-      created_at: "",
-      updated_at: "",
-    },
-  ]);
+  const [categoryList, setCategoryList] = useState([]);
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
   useEffect(()=>{
@@ -83,7 +76,7 @@ const UpdateInventory = (props) => {
       barcode: props.productInfo.bar_code ? props.productInfo.bar_code : '',
       importedPrice: props.productInfo.standard_price || 0,
       salesPrice: props.productInfo.list_price || 0,
-      category: props.productInfo.category.uuid || 0,
+      category: props.productInfo.category.uuid || "Mặc định",
       unit: props.productInfo.quantity_per_unit || '',
       re_order_point: props.productInfo.min_reorder_quantity || 0,
       product_code: props.productInfo.product_code || '',
@@ -145,7 +138,7 @@ const UpdateInventory = (props) => {
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
-        const response = await productApi.getAllCategory(store_uuid);
+        const response = await productApi.getNestedCategory(store_uuid);
         setCategoryList(response.data);
       } catch (error) {
         console.log(error);
@@ -209,16 +202,6 @@ const UpdateInventory = (props) => {
               onBlur={productFormik.handleBlur}
               type="text"
             />
-            {/* <TextField
-              label="Mã sản phẩm (tự động)"
-              variant="outlined"
-              fullWidth
-              size="small"
-              className={classes.margin}
-              name="product_code"
-              onChange={productFormik.handleChange}
-              value={productFormik.values.product_code}
-            /> */}
             <TextField
               label="Mã vạch"
               variant="outlined"
@@ -264,11 +247,7 @@ const UpdateInventory = (props) => {
                   onChange={productFormik.handleChange}
                   onBlur={productFormik.handleBlur}
                 >
-                  {categoryList.map((category) => (
-                    <option key={category.uuid} value={category.uuid}>
-                      {category.name}
-                    </option>
-                  ))}
+                  <CategorySelect categoryList={categoryList}/>
                 </Select>
               </FormControl>
               <Tooltip title="Thêm danh mục">
