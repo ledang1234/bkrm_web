@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState}  from 'react'
 import { useTheme, makeStyles, styled ,lighten} from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import clsx from "clsx";
@@ -21,7 +21,8 @@ import { customerPageActions } from '../../../../store/slice/customerPageSlice';
 import { success } from '../../../../components/StatusModal/StatusModal';
 import defaultProduct from '../../../../assets/img/product/default-product.png'
 import _ from 'lodash'
-
+import PopUpProduct from "../PopUpProduct/PopUpProduct"
+import openNotification from "../../../../components/StatusPopup/StatusPopup";
 const ProductList = (props) => {
     let { categoryId } = useParams();
     const {mainColor,isMargin, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance, InventoryList} = props;
@@ -30,8 +31,9 @@ const ProductList = (props) => {
     // const mainColor=`rgba(${ web.mainColor.r }, ${ web.mainColor.g }, ${ web.mainColor.b }, ${ web.mainColor.a })`
 
     let {url} = useRouteMatch();
-    const {order} = useSelector(state => state.customerPage)
-
+    const {order, webSetting} = useSelector(state => state.customerPage)
+    const orderWhenOutOfSctock = webSetting.orderManagement.orderWhenOutOfSctock
+    const branchOption = webSetting.orderManagement.branchOption
 
     //customization 
     const lgScreen = useMediaQuery(theme.breakpoints.down("lg")) ;
@@ -63,24 +65,38 @@ const ProductList = (props) => {
     console.log("nameColor",nameColor)
     
     const dispatch = useDispatch()
-    const openPopUp = (product) =>{
+
+    const [openQuickPopUp, setOpenQuickPopUp] = useState(false)
+    const [selectedItem, setSelectedItem] = useState(false)
+
+    const addProductToCart = (product, addQuantity=1) => {
         const newItem = {...product}
         try {
-            console.log(newItem);
+            console.log("newItem",newItem);
             const index = order.cartItem.findIndex(item => item.uuid === newItem.uuid);
             console.log(index)
             const newOrder = _.cloneDeep(order);
             if (index !== -1) {
-                newOrder.cartItem[index].quantity += 1;
+                // newOrder.cartItem[index].quantity += 1;
+                newOrder.cartItem[index].quantity += addQuantity;
             } else {
-                newItem.quantity = 1;
+                // newItem.quantity = 1;
+                newItem.quantity = addQuantity;
                 newOrder.cartItem.push(newItem);
             }
             dispatch(customerPageActions.setOrder(newOrder))
-            success("Thêm sản phẩm thành công")
+            // success("Thêm sản phẩm thành công")
+            openNotification("success", "Thêm sản phẩm thành công");
         } catch(err) {
             console.log(err)
         }
+    }
+    const openPopUp = (product) =>{
+        if(product.has_variance){
+            setOpenQuickPopUp(true)
+            return
+        }
+        addProductToCart(product)
     }
     
     
@@ -88,9 +104,10 @@ const ProductList = (props) => {
         <Box className={classes.container} style={{marginLeft:`${marginContainer}vw`,marginRight:`${marginContainer}vw`,}}>
             <Grid container direction="row" spacing={2} justifyContent="center" >
              {/* Đổi list đúng với category */}
+            {openQuickPopUp? <PopUpProduct  addProductToCart={addProductToCart}mainColor={mainColor} product={selectedItem}open={openQuickPopUp} onClose={()=>setOpenQuickPopUp(false)} />:null}
              {InventoryList?.map(item=>{
                  const image = JSON.parse(item.img_urls) ?JSON.parse(item.img_urls) [0]:null
-                 console.log("item", )
+             
                  return( 
                      <>
                      {Number(isBox)?
@@ -104,7 +121,7 @@ const ProductList = (props) => {
                             />
                             <Box style={{marginTop:10}}>
                                 <CardContent>
-                                    < InfoComponent openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                    < InfoComponent setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                                 </CardContent>   
                             </Box>
                         </CardActionArea>
@@ -115,15 +132,15 @@ const ProductList = (props) => {
                         >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border?7:0}}
-                                image={image  ? image : icon}
+                                image={JSON.parse(item.img_urls ? item.img_urls : "[]").length  ? JSON.parse(item.img_urls ? item.img_urls : "[]").at(0) : defaultProduct}
                             />
                             <Box style={{marginTop:10}}>
                                 {isMargin? 
                                 <CardContent>
-                                    < InfoComponent openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                    < InfoComponent setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                                 </CardContent>
                                 :
-                                < InfoComponent openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                < InfoComponent setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                             }    
                             </Box>
                         </CardActionArea>
@@ -138,12 +155,11 @@ const ProductList = (props) => {
     )
 }
 export const InfoComponent = (props)=>{
-    const {openPopUp,item,mainColor,btnStyle,alignCenter, nameColor,priceColor,nameSize,nameBold,nameLineClass,priceSize,priceBold} = props;
+    const {openPopUp,setSelectedItem,item,mainColor,btnStyle,alignCenter, nameColor,priceColor,nameSize,nameBold,nameLineClass,priceSize,priceBold} = props;
     let { path } = useRouteMatch();
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    console.log("item",item)
     return (
         <>
         <Typography gutterBottom className={clsx( nameLineClass, classes.name, alignCenter && classes.alignCenter)} style={{color:nameColor, fontWeight:nameBold, fontSize:Number(nameSize)}}>
@@ -168,6 +184,7 @@ export const InfoComponent = (props)=>{
                                 // Prevent CardActionArea Click
                                 event.preventDefault()
                                 openPopUp(item);
+                                setSelectedItem(item)
                             }}
                         >
                             <AddIcon fontSize="small"/>
@@ -187,6 +204,7 @@ export const InfoComponent = (props)=>{
                     // Prevent CardActionArea Click
                     event.preventDefault()
                     openPopUp(item);
+                    setSelectedItem(item)
                 }}
                 style={{marginBottom:-12,marginTop:10 }}
                 >

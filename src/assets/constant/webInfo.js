@@ -1,6 +1,12 @@
 const webInfo = {
     webAddress :'lyquochai',
     status:'inactive',
+    orderManagement:{
+      branchOption:'default',
+      branchDefault: null,
+      orderWhenOutOfSctock:false,
+
+    },
     // mainColor: {  r: '250', g: '140', b: '22',  a: '1', hex:'#fa8c16'} ,
     mainColor: {  r: '242', g: '165', b: '174',  a: '1', hex:'#f2a5ae'},  
     bgColor:{r: '255', g: '255', b: '255',  a: '1',hex:'#ffffff'},

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavBar = (props) => {
-    const {storeInfo,logo, handleClickItem,category} = props;
+    const {storeInfo,logo, handleClickItem,category,number} = props;
     const {buttonLogin,buttonCart,navColor,textNav} = props.webInfo.navBar;
     console.log("props.webInfo",props.webInfo.other)
     const  hasAboutUs = props.webInfo.other.status
@@ -267,7 +267,7 @@ const NavBar = (props) => {
                     to={`${url}/cart`}
                     >
                       <Tooltip title="Giỏ hàng">
-                        <StyledBadge color="error" badgeContent={3}>
+                        <StyledBadge color="error" badgeContent={number}>
                           <ShoppingCartIcon  style={{color:parseInt(navColor) === 0?"#fff":mainColor}}/>
                         </StyledBadge>
                       </Tooltip>

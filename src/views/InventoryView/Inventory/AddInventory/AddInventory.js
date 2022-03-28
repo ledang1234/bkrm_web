@@ -207,6 +207,7 @@ const AddInventory = (props) => {
       bodyFormData.append(
         "description",
         productFormik.values.description.toString()
+        // JSON.stringify(datas)
       );
 
       bodyFormData.append("branch_uuid", branch_uuid);
@@ -352,7 +353,7 @@ const AddInventory = (props) => {
   };
   const [expandedDescription, setExpandedDescription] = React.useState(false);
   const handleExpandedDescription = () => {
-    setExpandedDescription(!expanded);
+    setExpandedDescription(!expandedDescription);
   };
   //Lô, HSD
   const [outOfDate, setOutOfDate] = React.useState("false");
@@ -366,6 +367,8 @@ const AddInventory = (props) => {
 
   // console.log("relatedList",relatedList)
 
+  console.log("helllloo",typeof(productFormik.values.description))
+  console.log("datasdatas",datas)
   const handleAddProductWithVariation = async () => {
     if (relatedList.length !== 0) {
       // var isValid = datas.map(item => item.key === 'unset'?  false  )
@@ -419,6 +422,7 @@ const AddInventory = (props) => {
       bodyFormData.append(
         "description",
         productFormik.values.description.toString()
+        // JSON.stringify(productFormik.values.description)
       );
       console.log(relatedList);
 
@@ -442,7 +446,7 @@ const AddInventory = (props) => {
           })
         );
       }
-
+      console.log("datas",datas)
       bodyFormData.append(
         "attribute_value",
         JSON.stringify(datas)
@@ -857,7 +861,10 @@ const AddInventory = (props) => {
           <Collapse in={expandedDescription} timeout="auto" unmountOnExit style={{padding:0}}>
               <ReactQuill theme="snow" name="description"value={productFormik.values.description} onChange={(val) => productFormik.setFieldValue("description",val)}  modules={modules} formats={formats}  placeholder={'Write something...'} />
           </Collapse>
+
+
         </Card>
+
 
 
         {/* Button */}

@@ -11,6 +11,7 @@ import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom"
 // import DiscountPopUp from "../DiscountPopup/DiscountPopup"
 import icon from '../../../../assets/img/product/tch.jpeg';
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
+import defaultProduct from '../../../../assets/img/product/default-product.png'
 
  const CartRow = (props) =>{
     const classes = useStyles(); 
@@ -21,12 +22,12 @@ import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
     const updateQuantity = (newQuantity) => {
       handleChangeItemQuantity(index, newQuantity)
     }
-    
+    const image=JSON.parse(row.img_urls ? row.img_urls : "[]").length  ? JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) : defaultProduct
     return (
         <TableRow  key={props.row.uuid} >
           <TableCell align="left" style={{minWidth:200, }}>
             <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10, alignItems:"flex-start", }}> 
-                <Box component="img" sx={{ height: 90, width: 90,  borderRadius:10,  marginRight:15 }} src={row.img_urls[0] ? row.img_urls[0].url : ""} />
+                <Box component="img" sx={{ height: 80, width: 80,  borderRadius:10,  marginRight:15 }} src={image } />
                 <Typography  style={{color:"#000",  marginTop:10, fontSize:14, }}>{row.name}</Typography>  
             </ListItem> 
 
