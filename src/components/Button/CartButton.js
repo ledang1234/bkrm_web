@@ -48,6 +48,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const CartButton = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const {number} = props
+  console.log("number",number)
   return (
     // <Tooltip title="Giỏ hàng">
     <Fab
@@ -57,7 +59,7 @@ const CartButton = (props) => {
       to={`/store/${props.storeInfo?.web_page}/cart`}
     >
       <ButtonBase size="large" style={{ margin: 10 }}>
-        <StyledBadge color="error" badgeContent={3}>
+        <StyledBadge color="error" badgeContent={number}>
           <ShoppingCartTwoToneIcon />
         </StyledBadge>
       </ButtonBase>

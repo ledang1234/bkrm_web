@@ -179,7 +179,7 @@ const salesModule = {
       icon2: icons1.RestorePageTwoToneIcon,
     },
     {
-      id: 4,
+      id: 22,
       title: "Đặt Hàng",
       url: "/home/sales/order-list",
       icon: orderListIcon,

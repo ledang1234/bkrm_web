@@ -13,6 +13,10 @@ import {
   Box,
   Button,
   Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 
 import NavBar from "./NavBar/NavBar";
@@ -29,9 +33,12 @@ import CartPage from "./CartPage/CartPage";
 import customerPageApi from "../../api/customerPageApi";
 import StoreContext from "./StoreContext";
 import { useParams } from "react-router-dom";
-import webSetting from "../../assets/constant/webInfo";
+// import webSetting from "../../assets/constant/webInfo";
 import {useDispatch, useSelector} from 'react-redux';
 import {customerPageActions} from '../../store/slice/customerPageSlice'
+import ModalWrapperWithClose from "../../components/Modal/ModalWrapperWithClose";
+import { fabClasses } from "@mui/material";
+import { ColorButton } from "../../components/Button/ColorButton";
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
@@ -60,7 +67,7 @@ const CustomerPage = () => {
   //1.  API GET ALL CATEGORY HERE
   //....
  //2.  GET SETTING
- 
+
 
   const renderTree = (items) => {
     return (
@@ -86,18 +93,24 @@ const CustomerPage = () => {
   };
 
   const dispatch = useDispatch()
+  const { webSetting} = useSelector(state => state.customerPage)
+
   const [webInfo, setWebInfo] = useState(webSetting)
-  
+
   useEffect(() => {
     if (!storeWebPage) {
       return;
     }
     const fetchStore = async () => {
       const res = await customerPageApi.storeInfo(storeWebPage);
-      console.log(res.data);
+      console.log("res.data",res.data);
       setWebInfo(JSON.parse(res.data.web_configuration))
+      
+      dispatch(customerPageActions.setWebSetting(JSON.parse(res.data.web_configuration)))
+  
       console.log(webInfo)
       dispatch(customerPageActions.setStoreInfo(res.data))
+  
       const data = await Promise.all([customerPageApi.storeCategroies(res.data.uuid), 
         customerPageApi.storeProducts(res.data.uuid)]
       )
@@ -105,24 +118,59 @@ const CustomerPage = () => {
       dispatch(customerPageActions.setCategories(data[0].data ? data[0].data : []));
       dispatch(customerPageActions.setProducts(data[1].data ? data[1].data : []));
       console.log(data)
+
+      const  webSetting = JSON.parse(res.data.web_configuration)
+
+      console.log(webSetting.orderManagement.branchOption==='choose')
+      if(webSetting.orderManagement.branchOption==='choose'&& res.data.branches.length > 1 && !webSetting.orderManagement.orderWhenOutOfSctock ){
+        setOpenPopUpChooseBranch(true)
+      }
+
     };
     fetchStore();
   }, []);
+  const {order} = useSelector(state => state.customerPage)
+  const number = order.cartItem.reduce((partialSum, a) => partialSum + a.quantity, 0)
 
+  const branches = storeInfo.branches
+  const [openPopUpChooseBranch , setOpenPopUpChooseBranch] = useState(false )
+
+  const mainColor =  `rgba(${ webSetting.mainColor.r }, ${ webSetting.mainColor.g }, ${ webSetting.mainColor.b }, ${webSetting.mainColor.a })`
+
+  const {selectedBranch, setSelectedBranch} = useState('');
 
   if (storeWebPage) {
 
   return (<div className={classes.root}>
+
+    <ModalWrapperWithClose title={'Chọn chi nhánh gần bạn'}  open={openPopUpChooseBranch} handleClose={()=>setOpenPopUpChooseBranch(false)} >
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
+          <InputLabel>Chi nhánh</InputLabel>
+          <Select
+            value={selectedBranch}
+            label="Chi nhánh"
+            onChange={setSelectedBranch}
+          >
+            {branches?.map(branch => {
+                return (<MenuItem value={branch}>{branch.name}</MenuItem>)
+             })}
+          </Select>
+        </FormControl>
+        <Box style={{display:'flex',justifyContent:'flex-end'}}>
+        <ColorButton varaint='contained' style={{marginTop:30}}  mainColor={mainColor} >Xác nhận</ColorButton>
+        </Box>
+
+    </ModalWrapperWithClose>
     <NavBar
       // storeInfo={storeInfo}
       handleClickItem={handleClickItem}
       category={categories ? categories : []}
-
+      number={number !==0  ?number:"0"}
       logo={logoStore}
       webInfo={webInfo}
     />
     {parseInt(webInfo.navBar.buttonCart) === 0 ?
-     <CartButton storeInfo={storeInfo} />:null
+     <CartButton storeInfo={storeInfo} number={number !==0  ?number:"0"} />:null
     }
     
 

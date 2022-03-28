@@ -130,7 +130,6 @@ const findBranchQuantity = (id) => {
                 </ListItem>
 
                  {branchs.map((item) => {
-                  console.log("itemm", item)
                   return(
                   <ListItem >
                       <ListItem style={{width:180, margin:0, padding:0}}>
