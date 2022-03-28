@@ -5,6 +5,8 @@ import TableHeader  from '../../components/TableCommon/TableHeader/TableHeader'
 import TableWrapper from '../../components/TableCommon/TableWrapper/TableWrapper'
 import {ThousandFormat} from '../../components/TextField/NumberFormatCustom'
 import moment from "moment";
+import setting from "../../assets/constant/setting"
+
 import  clsx from "clsx"
 //import library
 import {
@@ -94,11 +96,13 @@ var QRCode = require('qrcode.react');
 
 export const ReceiptPrinter = ({cart, date}) => {
     const info = useSelector((state) => state.info);
+    console.log("info",info)
     // var link = "https://www.facebook.com/GiaLePhuongg/";
     // var logo ="https://newstatic2.clingme.vn/resized/images/default/cms-images/place/0/0/17/1550914926_557320_w600.jpg"
-    var link = JSON.parse(info.store.store_configuration).custom_web;
-    var logo  = JSON.parse(info.store.store_configuration).img_url ;
-    //  console.log("info.store",JSON.parse(info.store.store_configuration).img_url)
+    const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+    var link = store_setting?.custom_web;
+    var logo  = store_setting?.img_url ;
     const theme = useTheme();
     const classes = useStyles(theme);
 

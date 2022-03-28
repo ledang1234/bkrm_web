@@ -50,10 +50,10 @@ const ProductPage = (props) => {
             {/* 1. TITLE */}
             {/* Đổi sang breadcrumb ?? */}
             {/* <Typography variant="h6" style={{marginLeft:40, marginBottom:10, marginTop:100}}>{categoryId? category?.name : "Tất cả sản phẩm"}</Typography> */}
-             <Typography variant="h3" style={{/*flexGrow: 1,textAlign: "center",*/marginLeft:40, marginBottom:10, marginTop:100}}>{ category?.name }</Typography>
+             <Typography variant="h6" style={{/*flexGrow: 1,textAlign: "center",*/marginLeft:40, marginBottom:10, marginTop:100}}>{ category?.name }</Typography>
 
             {/* 2. LIST */}
-            <ProductList InventoryList={productOfCategory} mainColor={`rgba(${ mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/>
+            <ProductList InventoryList={productOfCategory}   mainColor={`rgba(${ mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/>
 
             {/* 3. NAVIGATION PAGE NAV  */}
             {/*  */}

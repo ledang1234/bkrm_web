@@ -11,7 +11,6 @@ import {CustomButton} from "../../../../components/Button/ColorButton"
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
-    console.log("productproduct",product)
     const theme = useTheme();
     const useStyles = makeStyles((theme) => ({
       radio: {

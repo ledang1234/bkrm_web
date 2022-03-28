@@ -27,6 +27,7 @@ import {statusAction} from '../../../store/slice/statusSlice';
 import {ReturnCartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import _ from 'lodash';
+import setting from "../../../assets/constant/setting"
 
 function InvoiceReturnPopUp(props) {
   const { order, classes, handleCloseReturn , reload, reloadDetail } = props;
@@ -328,7 +329,9 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
     handleProductPriceChange(detail.id, newPrice);
   };
   const info = useSelector((state) => state.info);
-  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+  const canFixPriceSell= store_setting?.canFixPriceSell
 
   return (
     <TableRow hover key={detail.id}>

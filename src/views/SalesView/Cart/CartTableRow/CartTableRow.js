@@ -31,6 +31,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { List } from "@mui/material";
 
 import defaultProduct from '../../../../assets/img/product/default-product.png'
+import setting from "../../../../assets/constant/setting"
 
 export const CartRow = (props) => {
   const classes = useStyles();
@@ -104,7 +105,9 @@ console.log("branch",branch)
     setSelectedBatches(newBatches);
   };
 
-  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+const canFixPriceSell= store_setting?.canFixPriceSell
 
 const [show, setShow] = React.useState(false);
 
