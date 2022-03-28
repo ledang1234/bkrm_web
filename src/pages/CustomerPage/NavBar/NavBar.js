@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavBar = (props) => {
-    const {storeInfo,logo, handleClickItem,category,number} = props;
+    const {storeInfo,logo,category,number} = props;
     const {buttonLogin,buttonCart,navColor,textNav} = props.webInfo.navBar;
     console.log("props.webInfo",props.webInfo.other)
     const  hasAboutUs = props.webInfo.other.status
@@ -177,9 +177,8 @@ const NavBar = (props) => {
                   </Button>
                   <HoverMenuBtn
                     className={classes.btnNav}
-                    handleClickItem={handleClickItem}
                     category={category}
-                    // style
+                    mainColor={mainColor}
                     textColor={textColor}
                     textSize={textSize}
                     textBold={textBold}
