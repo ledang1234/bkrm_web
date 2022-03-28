@@ -31,11 +31,11 @@ const ProductList = (props) => {
     const dispatch = useDispatch()
 
 
-    // const {webInfo,InventoryList} = props;
+    // const {webInfo} = props;
     // const {isMargin, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance} = props.webInfo.listProduct
     // const mainColor=`rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${ webInfo.mainColor.a })`
 
-    const {isMargin, mainColor,priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance,InventoryList} = props
+    const {isMargin,mainColor,priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance,InventoryList} = props
     // const mainColor=`rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${ webInfo.mainColor.a })`
 
 

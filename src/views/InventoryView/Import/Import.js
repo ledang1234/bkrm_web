@@ -56,6 +56,7 @@ import AddInventory from "../Inventory/AddInventory/AddInventory";
 import supplierApi from "../../../api/supplierApi";
 import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import branchApi from "../../../api/branchApi";
+import setting from "../../../assets/constant/setting"
 
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
@@ -70,6 +71,7 @@ const Import = () => {
   const store_uuid = info.store.uuid;
   const branch = info.branch;
   const user_uuid = useSelector((state) => state.info.user.uuid);
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   console.log("info", info)
   ////------------ I. DATA (useState) ----------------
@@ -397,7 +399,7 @@ const Import = () => {
     // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
     //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
-    const printReceiptWhenSell= JSON.parse(info.store.general_configuration).printReceiptWhenSell
+    const printReceiptWhenSell= store_setting?.printReceiptWhenSell
     var emptyCart = cart.cartItem.filter((item) => item.quantity).length === 0;
     if (emptyCart) {
       setOpenSnack(true);

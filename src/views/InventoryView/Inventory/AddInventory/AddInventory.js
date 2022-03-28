@@ -50,7 +50,7 @@ import AddAttribute from "./AddAttribute";
 import RelaltedItemList from "./RelaltedItemList";
 import SnackBarGeneral from "../../../../components/SnackBar/SnackBarGeneral";
 import CategorySelect from "../../../../components/Category/CategorySelect";
-
+import setting from "../../../../assets/constant/setting"
 import ReactQuill, {Quill} from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageResize from 'quill-image-resize-module-react';
@@ -459,7 +459,7 @@ const AddInventory = (props) => {
     }
   };
 
-
+const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
   return (
     <Dialog
       open={open}
@@ -489,7 +489,7 @@ const AddInventory = (props) => {
             Thêm sản phẩm
           </Typography>
           <Box style={{ width: "70%" }}>
-            {JSON.parse(info.store.general_configuration).recommendedProduct
+            {store_setting?.recommendedProduct
               .status ? (
               <SearchWithAutoComplete
                 handleDefaultSelect={selectSampleProductHandler}
@@ -769,7 +769,7 @@ const AddInventory = (props) => {
             </Box>
           </Grid>
         </Grid>
-        {JSON.parse(info.store.general_configuration).expiryDate.status ? (
+        {store_setting?.expiryDate.status ? (
           <div style={{ flexGrow: 1, textAlign: "right" }}>
             <FormControlLabel
               control={
@@ -787,7 +787,7 @@ const AddInventory = (props) => {
           </div>
         ) : null}
 
-        {JSON.parse(info.store.general_configuration).variation.status ? (
+        {store_setting?.variation.status ? (
           <>
             <Card className={classes.attrCard}>
               <CardHeader

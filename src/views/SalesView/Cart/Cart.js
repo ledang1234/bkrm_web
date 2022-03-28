@@ -58,6 +58,7 @@ import customerApi from "../../../api/customerApi";
 import { calculateTotalQuantity } from "../../../components/TableCommon/util/sortUtil";
 import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import branchApi from "../../../api/branchApi";
+import setting from "../../../assets/constant/setting"
 
 const Cart = () => {
   const theme = useTheme();
@@ -68,6 +69,7 @@ const Cart = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch = info.branch;
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   const [customers, setCustomers] = useState([]);
 
@@ -450,9 +452,9 @@ const Cart = () => {
   
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
-
+    
     var emptyCart = cart.cartItem.length === 0;
-    const printReceiptWhenSell=JSON.parse(info.store.general_configuration).printReceiptWhenSell
+    const printReceiptWhenSell=store_setting?.printReceiptWhenSell
     var correctQuantity = cart.cartItem.every(function (element, index) {
       console.log(element);
       if (element.quantity > element.branch_quantity) return false;

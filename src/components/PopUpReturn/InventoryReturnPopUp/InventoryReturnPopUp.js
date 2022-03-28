@@ -36,6 +36,7 @@ import purchaseReturnApi from "../../../api/purchaseReturnApi";
 import { statusAction } from "../../../store/slice/statusSlice";
 import { ReturnCartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import setting from "../../../assets/constant/setting"
 
 function InventoryReturnPopUp(props) {
   const { purchaseOrder, classes, handleCloseReturn, reload, reloadDetail } =
@@ -351,7 +352,9 @@ function ImportReturnTableRow({
     handleProductPriceChange(detail.id, newPrice);
   };
   const info = useSelector((state) => state.info);
-  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+  const canFixPriceSell= store_setting?.canFixPriceSell
   return (
     <TableRow hover key={detail.id}>
       <TableCell align="left" style={{ width: 5 }}>
