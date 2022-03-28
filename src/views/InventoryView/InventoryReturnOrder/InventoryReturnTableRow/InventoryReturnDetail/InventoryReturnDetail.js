@@ -20,6 +20,7 @@ import {
   Button,
   ListItemIcon,
   ListItemText,
+  Chip,
   IconButton,
 } from "@material-ui/core";
 
@@ -279,7 +280,28 @@ const InventoryReturnDetail = (props) => {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                <TableCell align="right">{detail.quantity}</TableCell>
+                <TableCell align="right">
+                  {detail.quantity}
+                  <div>
+                      {detail.batches
+                        ? JSON.parse(detail.batches).filter(batch => batch.returned_quantity !== 0).map((batch) => (
+                            <Chip
+                              size="small"
+                              label={`${
+                                batch?.batch_code ? batch?.batch_code : "Mới"
+                              }(${
+                                batch?.expiry_date
+                                  ? batch?.expiry_date.substring(0, 10)
+                                  : ""
+                              }) - ${batch.returned_quantity}`}
+                              key={batch.id}
+                              color={batch.is_new ? "primary" : "secondary"}
+                              variant="outlined"
+                            />
+                          ))
+                        : null}
+                    </div>
+                </TableCell>
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
                 </TableCell>
