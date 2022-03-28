@@ -29,14 +29,12 @@ const ProductPage = (props) => {
     //....
     let { categoryId } = useParams();
     const {products, categories} = useSelector(state => state.customerPage);
-    let productOfCategory = products.filter(product => product.category.id.toString() === categoryId)
+    // let productOfCategory = products.filter(product => product.category.id.toString() === categoryId)
+    let productOfCategory = products.filter(product => product.category.id.toString() === categoryId &&(product.attribute_value === null || product.has_variance === 1) )
 
-    productOfCategory= productOfCategory.filter(product => product.attribute_value !== null )
-
+      console.log("productOfCategory",productOfCategory)
     const category = categories.find(cat => cat.id.toString() === categoryId)
 
-    console.log("productOfCategory", productOfCategory)   
-    console.log("clickItem",clickItem) 
     return (
         <>
             {/* 1. TITLE */}

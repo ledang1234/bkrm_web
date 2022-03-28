@@ -5,6 +5,8 @@ const openNotification = (type, message, description) => {
     message: message,
     description: description,
     placement: "bottomRight",
+    // placement: "topRight",
+
   });
 };
 export default openNotification;
