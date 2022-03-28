@@ -10,7 +10,7 @@ import defaultProduct from '../../../../assets/img/product/default-product.png'
 import {CustomButton} from "../../../../components/Button/ColorButton"
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
+const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart,getIsOutOfStockStatus}) => {
     const theme = useTheme();
     const useStyles = makeStyles((theme) => ({
       radio: {
@@ -26,7 +26,6 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
     const [quantity, setQuantity]  = useState(1)
     const {products } = useSelector(state => state.customerPage)
 
-    console.log("mainColor",mainColor)
     // const color = `rgba(${ mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${mainColor.a })`;
 
     const attrValue = product?.attribute_value? JSON.parse(product.attribute_value):null
@@ -35,7 +34,9 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
     const all_child_product = product?.has_variance ? products.filter( item => item.parent_product_code === product.product_code):null
     const [selectAttr, setSelectedAttr]  = useState(initValue)
 
-      useEffect(()=>{
+
+    useEffect(()=>{
+      console.log("hello")
         setSelectedProduct(getChoosenProductWithVariance())
     },[selectAttr])
     
@@ -57,7 +58,6 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
         for (let i = 0; i<selectAttr?.length ; i++){
           choosenProduct =  choosenProduct.filter(item=> 
             JSON.parse(item.attribute_value)[i].value.includes(selectAttr[i]) )
-            console.log("choosenProduct",choosenProduct)
         }
         return choosenProduct[0]
     }
@@ -65,7 +65,11 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
     const [selectedProduct, setSelectedProduct] = useState(product?.has_variance?getChoosenProductWithVariance() :null)
 
     
-
+    // const [  isLowStock , setIsLowStock] = useState(getStockStatus(selectedProduct))
+  //   useEffect(()=>{
+  //     setIsLowStock(getStockStatus(selectedProduct))
+  //     console.log(isLowStock)
+  // },[selectedProduct])
 
   return (
     <ModalWrapperWithClose open={open} handleClose={onClose}  title={'Thêm sản phẩm'}>
@@ -110,7 +114,9 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
                 )
           })}
 
-        <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}} onClick={()=>{addProductToCart(selectedProduct,quantity )}}  >Thêm vào giỏ hàng</CustomButton>
+        {! getIsOutOfStockStatus(selectedProduct) ?<CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}} onClick={()=>{addProductToCart(selectedProduct,quantity )}}  >Thêm vào giỏ hàng</CustomButton>
+        : <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}} >Hết hàng</CustomButton>
+        }
        
       </Box>
     </ModalWrapperWithClose>

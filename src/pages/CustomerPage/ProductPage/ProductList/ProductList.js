@@ -29,19 +29,36 @@ const ProductList = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const dispatch = useDispatch()
-
-
-    // const {webInfo} = props;
-    // const {isMargin, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance} = props.webInfo.listProduct
-    // const mainColor=`rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${ webInfo.mainColor.a })`
-
     const {isMargin,mainColor,priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance,InventoryList} = props
-    // const mainColor=`rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${ webInfo.mainColor.a })`
+
+    const {order, storeInfo} = useSelector(state => state.customerPage)
+    const webSetting = storeInfo.web_configuration? JSON.parse(storeInfo.web_configuration):null
+    const orderWhenOutOfSctock = webSetting?.orderManagement.orderWhenOutOfSctock
+    const branchOption = webSetting?.orderManagement.branchOption
 
 
-    const {order} = useSelector(state => state.customerPage)
-    // const orderWhenOutOfSctock = webSetting.orderManagement.orderWhenOutOfSctock
-    // const branchOption = webSetting.orderManagement.branchOption
+    function getIsOutOfStockStatus (product) {
+        console.log("product",product)
+        console.log("canorderWhenOutOfSctock",orderWhenOutOfSctock)
+        if(orderWhenOutOfSctock){
+            return false
+        }else{
+            if(branchOption === 'default'){
+                let branchId = webSetting?.orderManagement.branchDefault
+                const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
+                console.log("default branch", branch)
+                return Number(branch.quantity_available) === 0
+            }else if (branchOption === 'choose'){
+                let branchId = localStorage.getItem(storeInfo.uuid);
+                const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
+                console.log("choose branch", branch)
+                return Number(branch.quantity_available) === 0
+            }else{
+                return Number(product.quantity_available) === 0
+            }
+        }
+    }
+
 
     //customization 
     const lgScreen = useMediaQuery(theme.breakpoints.down("lg")) ;
@@ -110,7 +127,7 @@ const ProductList = (props) => {
         <Box className={classes.container} style={{marginLeft:`${marginContainer}vw`,marginRight:`${marginContainer}vw`,}}>
             <Grid container direction="row" spacing={2} justifyContent="center" >
              {/* Đổi list đúng với category */}
-            {openQuickPopUp? <PopUpProduct  addProductToCart={addProductToCart}mainColor={mainColor} product={selectedItem}open={openQuickPopUp} onClose={()=>setOpenQuickPopUp(false)} />:null}
+            {openQuickPopUp? <PopUpProduct getIsOutOfStockStatus={getIsOutOfStockStatus} addProductToCart={addProductToCart}mainColor={mainColor} product={selectedItem}open={openQuickPopUp} onClose={()=>setOpenQuickPopUp(false)} />:null}
              {InventoryList?.map(item=>{
                  const image = JSON.parse(item.img_urls) ?JSON.parse(item.img_urls) [0]:null
              

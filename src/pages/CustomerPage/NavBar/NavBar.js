@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { useTheme, makeStyles, styled ,lighten,darken} from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 //import library
@@ -18,7 +18,11 @@ import {
   Drawer,
   ListItem,
   ListItemText,
-  Divider
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 //import icons
 import MenuIcon from "@material-ui/icons/Menu";
@@ -53,7 +57,9 @@ const NavBar = (props) => {
     console.log("props.webInfo",props.webInfo.other)
     const  hasAboutUs = props.webInfo.other.status
     const mainColor=`rgba(${ props.webInfo.mainColor.r }, ${ props.webInfo.mainColor.g }, ${ props.webInfo.mainColor.b }, ${ props.webInfo.mainColor.a })`
-
+    const branches = storeInfo.branches
+    const webSetting = storeInfo.web_configuration? JSON.parse(storeInfo.web_configuration):null
+    const branchOption = webSetting?.orderManagement.branchOption
     // 
     let { url } = useRouteMatch();
     const theme = useTheme();
@@ -77,6 +83,11 @@ const NavBar = (props) => {
       setState(open);
     };
 
+    const [selectedBranch, setSelectedBranch] = useState(localStorage.getItem(storeInfo.uuid));
+
+    // useEffect(()=>{
+    //   setSelectedBranch( localStorage.getItem(storeInfo.uuid))
+    // },[])
     const drawer = () => (
       <div
         className={clsx(classes.list)}
@@ -162,7 +173,7 @@ const NavBar = (props) => {
             ) : (
               //Nav bar
               <Grid container item sm={10} direction="row" alignItems="center">
-                <Grid container item sm={8} direction="row">
+                <Grid container item sm={7} direction="row">
                   <Button
                     className={classes.btnNav}
                     component={Link}
@@ -226,10 +237,31 @@ const NavBar = (props) => {
                 <Grid
                   container
                   item
-                  sm={4}
+                  sm={5}
                   direction="row"
                   justifyContent="flex-end"
+                  alignItems='center'
                 >
+                {branchOption === 'choose'?
+                 <Box style={{marginRight:20}}>
+                <FormControl variant="standard" sx={{ m: 1, width: 100 }} fullWidth>
+                  {/* <InputLabel>Chi nhánh</InputLabel> */}
+                  <Select
+                    style={{backgroundColor:"#fff",padding:5, borderRadius:30}}
+                    value={selectedBranch?selectedBranch:localStorage.getItem(storeInfo.uuid)}
+                    // label="Chi nhánh"
+                    // variant='contained'
+                    onChange={(e)=>{
+                      localStorage.setItem(storeInfo.uuid , e.target.value);
+                      setSelectedBranch(e.target.value)
+                    }}
+                  >
+                    {branches?.map(branch => {
+                        return (<MenuItem  key={branch.uuid}value={branch.uuid}>{branch.name}</MenuItem>)
+                    })}
+                  </Select>
+                </FormControl>
+                </Box>:null}
                   {parseInt(buttonLogin) == 0? 
                   <>
                    <ColorOutlineButton

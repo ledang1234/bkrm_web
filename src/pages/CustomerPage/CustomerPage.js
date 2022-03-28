@@ -52,6 +52,7 @@ const CustomerPage = () => {
 
   const [webInfo, setWebInfo] = useState(webSetting)
 
+  console.log("storeInfooooo",storeInfo)
   useEffect(() => {
     if (!storeWebPage) {
       return;
@@ -69,7 +70,7 @@ const CustomerPage = () => {
 
       const  webSetting = JSON.parse(res.data.web_configuration)
 
-      if(webSetting.orderManagement.branchOption==='choose'&& res.data.branches.length > 1 && !webSetting.orderManagement.orderWhenOutOfSctock ){
+      if(webSetting.orderManagement.branchOption==='choose'&& res.data.branches.length > 1 && !webSetting.orderManagement.orderWhenOutOfSctock && !localStorage.getItem(res.data.uuid)){
         setOpenPopUpChooseBranch(true)
       }
 
@@ -80,39 +81,20 @@ const CustomerPage = () => {
   const number = order.cartItem.reduce((partialSum, a) => partialSum + a.quantity, 0)
 
   const branches = storeInfo.branches
-  const {selectedBranch, setSelectedBranch} = useState('');
+  // const {selectedBranch, setSelectedBranch} = useState(null);
+
   const [openPopUpChooseBranch , setOpenPopUpChooseBranch] = useState(false)
 
-  const mainColor =  `rgba(${ webSetting.mainColor.r }, ${ webSetting.mainColor.g }, ${ webSetting.mainColor.b }, ${webSetting.mainColor.a })`
+
+  const mainColor =  `rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${webInfo.mainColor.a })`
 
 
   if (storeWebPage) {
   return (<div className={classes.root}>
 
-    <SimpleModal open={openPopUpChooseBranch}>
-          <Typography  style={{ fontSize:21, fontWeight:500, color:'#000',marginTop:10, marginBottom:15, marginRight:30}}>Chọn chi nhánh gần bạn</Typography>
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
-          <InputLabel>Chi nhánh</InputLabel>
-          <Select
-            value={selectedBranch}
-            label="Chi nhánh"
-            onChange={setSelectedBranch}
-          >
-            {branches?.map(branch => {
-                return (<MenuItem value={branch}>{branch.name}</MenuItem>)
-             })}
-          </Select>
-        </FormControl>
-        <Box style={{display:'flex',justifyContent:'flex-end'}}>
-        <ColorButton varaint='contained' style={{marginTop:30}}  mainColor={mainColor} 
-            onClick={()=>{
-              setOpenPopUpChooseBranch(false)
-            }}
-         >
-          Xác nhận
-        </ColorButton>
-        </Box>
-    </SimpleModal>
+    {openPopUpChooseBranch ?
+    <PopUpChoooseBranch openPopUpChooseBranch={openPopUpChooseBranch}  setOpenPopUpChooseBranch={setOpenPopUpChooseBranch} branches={branches} mainColor={mainColor}/>
+    :null}
 
     <NavBar
       storeInfo={storeInfo}
@@ -176,3 +158,38 @@ const CustomerPage = () => {
 
 export default CustomerPage;
 
+
+
+const PopUpChoooseBranch = ({openPopUpChooseBranch,setOpenPopUpChooseBranch,branches,mainColor}) =>{
+  const {storeInfo} = useSelector(state => state.customerPage)
+
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  return (
+    <SimpleModal open={openPopUpChooseBranch}>
+          <Typography  style={{ fontSize:21, fontWeight:500, color:'#000',marginTop:10, marginBottom:15, marginRight:30}}>Chọn chi nhánh gần bạn</Typography>
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
+          <InputLabel>Chi nhánh</InputLabel>
+          <Select
+            value={selectedBranch}
+            label="Chi nhánh"
+            onChange={(e)=>setSelectedBranch(e.target.value)}
+          >
+            {branches?.map(branch => {
+                return (<MenuItem  key={branch.uuid}value={branch}>{branch.name}</MenuItem>)
+             })}
+          </Select>
+        </FormControl>
+        <Box style={{display:'flex',justifyContent:'flex-end'}}>
+        <ColorButton varaint='contained' style={{marginTop:30}}  mainColor={selectedBranch?mainColor:"#dddddd"} 
+            disabled={!selectedBranch }
+            onClick={()=>{
+              localStorage.setItem(storeInfo.uuid , selectedBranch.uuid);
+              setOpenPopUpChooseBranch(false)
+            }}
+         >
+          Xác nhận
+        </ColorButton>
+        </Box>
+    </SimpleModal>
+  )
+}
