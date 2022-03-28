@@ -25,15 +25,23 @@ import PopUpProduct from "../PopUpProduct/PopUpProduct"
 import openNotification from "../../../../components/StatusPopup/StatusPopup";
 const ProductList = (props) => {
     let { categoryId } = useParams();
-    const {mainColor,isMargin, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance, InventoryList} = props;
+    let {url} = useRouteMatch();
     const theme = useTheme();
     const classes = useStyles(theme);
-    // const mainColor=`rgba(${ web.mainColor.r }, ${ web.mainColor.g }, ${ web.mainColor.b }, ${ web.mainColor.a })`
+    const dispatch = useDispatch()
 
-    let {url} = useRouteMatch();
-    const {order, webSetting} = useSelector(state => state.customerPage)
-    const orderWhenOutOfSctock = webSetting.orderManagement.orderWhenOutOfSctock
-    const branchOption = webSetting.orderManagement.branchOption
+
+    // const {webInfo,InventoryList} = props;
+    // const {isMargin, priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance} = props.webInfo.listProduct
+    // const mainColor=`rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${ webInfo.mainColor.a })`
+
+    const {isMargin, mainColor,priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance,InventoryList} = props
+    // const mainColor=`rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${ webInfo.mainColor.a })`
+
+
+    const {order} = useSelector(state => state.customerPage)
+    // const orderWhenOutOfSctock = webSetting.orderManagement.orderWhenOutOfSctock
+    // const branchOption = webSetting.orderManagement.branchOption
 
     //customization 
     const lgScreen = useMediaQuery(theme.breakpoints.down("lg")) ;
@@ -62,9 +70,7 @@ const ProductList = (props) => {
     const priceBold = priceStyle[2]
     const alignCenter = Number(props.alignCenter)
 
-    console.log("nameColor",nameColor)
     
-    const dispatch = useDispatch()
 
     const [openQuickPopUp, setOpenQuickPopUp] = useState(false)
     const [selectedItem, setSelectedItem] = useState(false)
