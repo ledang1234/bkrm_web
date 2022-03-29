@@ -97,6 +97,11 @@ const productApi = {
   productOrderRecommend: (storeUuid, branchUuid) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/productOrderRecommend`;
     return axiosClient.get(url);
-  }
+  },
+  transferInventory: (storeUuid, branchUuid, body) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/transferInventory`;
+    return axiosClient.post(url, body);
+  },
+  
 };
 export default productApi;

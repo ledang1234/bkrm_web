@@ -428,6 +428,7 @@ const InventoryDetail = (props) => {
                      }}
                      batches={row.batches}
                      has_batches={row.has_batches}
+                    row={row}
                    />
                    
                    :null}

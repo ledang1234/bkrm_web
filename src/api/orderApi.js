@@ -11,7 +11,7 @@ const orderApi = {
   },
   getAllOfBranch: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/orders`;
-    return axiosClient.get(url, {params: query});
+    return axiosClient.get(url, { params: query });
   },
   getOrder: (storeUuid, orderUuid) => {
     const url = `stores/${storeUuid}/orders/${orderUuid}`;
@@ -19,26 +19,25 @@ const orderApi = {
   },
   searchOrder: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/orders`;
-    return axiosClient.get(url, {params: query});
+    return axiosClient.get(url, { params: query });
   },
-  editOrderApi: (storeUuid,  branchUuid,orderUuid, body) => {
+  editOrderApi: (storeUuid, branchUuid, orderUuid, body) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/orders/${orderUuid}`;
-    return axiosClient.put(url, body)
+    return axiosClient.put(url, body);
   },
-  
-  
+
   // api for customer order
   searchCustomerOrder: (storeUuid, branchUuid, query) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders`;
-    return axiosClient.get(url, {params: query});
+    return axiosClient.get(url, { params: query });
   },
   processCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/process`;
     return axiosClient.get(url);
   },
-  confirmCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
+  confirmCustomerOrder: (storeUuid, branchUuid, customerOrderId, body) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/confirm`;
-    return axiosClient.post(url);
+    return axiosClient.post(url, body);
   },
   cancleCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/cancle`;
@@ -51,7 +50,7 @@ const orderApi = {
   updateCustomerOrder: (storeUuid, branchUuid, customerOrderId, newDetails) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/updateDetails`;
     return axiosClient.post(url, {
-      details: JSON.stringify(newDetails)
+      details: JSON.stringify(newDetails),
     });
   },
 };
