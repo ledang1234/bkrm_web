@@ -63,7 +63,6 @@ const ProductImportPopper = ({ open, loading, errors, handleClose }) => {
     });
 
     setDataTable(mappedData);
-    console.log(mappedData);
   }, [errors]);
 
   const renderErrorCard = () => {

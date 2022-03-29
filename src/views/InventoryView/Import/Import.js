@@ -73,7 +73,6 @@ const Import = () => {
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
-  console.log("info", info)
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -250,7 +249,6 @@ const Import = () => {
 
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
-    console.log("selectedOption.batches",selectedOption.batches)
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === selectedOption.uuid
     );

@@ -129,7 +129,6 @@ const AddDiscount = (props) => {
     }]);
 
   const  handleChangeMoneyType = (index, value) => {
-    console.log("rowsInvoice",rowsInvoice)
     let newArr = [...rowsInvoice];
     newArr[index].type = value;
     setRowsInvoice(newArr);
@@ -188,8 +187,6 @@ const AddDiscount = (props) => {
   }
 
   const deleteAttr = (key) => {
-    console.log("key",key);
-    console.log("rowsInvoice",rowsInvoice);
     var newArr = [...rowsInvoice];
     newArr = newArr.filter(row => row.key !== key)
     setRowsInvoice(newArr);
@@ -560,7 +557,6 @@ const AddDiscount = (props) => {
             try {
               const response = await promotionCouponApi.createPromotion(store_uuid, body)
               handleClose("Success")
-              console.log(response.status)
 
             } catch (err) {
               handleClose("Failed");

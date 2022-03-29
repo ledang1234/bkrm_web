@@ -88,10 +88,7 @@ const CheckHistoryDetail = (props) => {
     ?.map((detail) => detail.quantity * detail.unit_price)
     .reduce((total, ele) => total + ele, 0)
 
-    useEffect(() => {
-      console.log(row)
-    }, [])
-
+ 
     return (
       // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
       <Collapse

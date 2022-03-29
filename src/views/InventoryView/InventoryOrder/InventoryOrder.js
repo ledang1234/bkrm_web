@@ -51,8 +51,7 @@ const InventoryOrder = () => {
   //collapse
   const [openRow, setRowOpen] = React.useState(null);
   const handleOpenRow = (row) => {
-    console.log(row);
-    console.log(openRow);
+
     if (row !== openRow) {
       setRowOpen(row);
     } else {
@@ -144,9 +143,6 @@ const InventoryOrder = () => {
     message: "Kiểm kho thất bại",
   });
 
-  useEffect(() => {
-    console.log(query)
-  }, [query])
 
   return (
     <Card className={classes.root}>

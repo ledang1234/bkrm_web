@@ -73,7 +73,6 @@ function sliceIntoChunks(arr, chunkSize) {
 const BodyWeekBox =({day,groupList,handlePopUp,setClickSchedule ,shift,mode}) =>{
     const theme = useTheme();
     const classes = useStyles(theme);
-    console.log('mode',mode)
 
     if (groupList === undefined){return  <Box className={classes.center} border={1} borderTop={0} borderLeft={0} style={{ height:280, borderColor:grey[300],minWidth:152,}} > <Grid  container  direction="row" justifyContent={"space-around"} alignItems="center" ><div style={{width:50}}></div><div style={{width:50}}></div> <div style={{width:50}}></div></Grid></Box> }   
     else{

@@ -203,7 +203,6 @@ const GeneralSetting = () => {
         general_configuration: JSON.stringify(checked),
       });
       openNotification("success", "Lưu cài đặt chung thành công");
-      console.log("checkedssss",checked)
       dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
       
     } catch (err) {
@@ -223,7 +222,6 @@ const GeneralSetting = () => {
         },
       };
     });
-    console.log(checked)
     //CALL API: Mỗi lần toggle là đẩy lên backend
     // như vậy nhiều quá á, làm nút SAVE nha
     // callApi()

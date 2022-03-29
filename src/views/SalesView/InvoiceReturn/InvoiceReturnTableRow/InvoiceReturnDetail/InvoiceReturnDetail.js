@@ -76,7 +76,6 @@ function InvoiceReturnDetail(props) {
     const loadData = async () => {
       try {
         const res = await refundApi.getRefund(store_uuid, row.uuid);
-        console.log("invoice return", res.data)
         setRefund(res.data);
       } catch (error) {
         setRefund({

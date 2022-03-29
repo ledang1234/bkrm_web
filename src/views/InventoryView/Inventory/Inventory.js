@@ -160,7 +160,6 @@ const Inventory = () => {
   };
   const handleCloseCategory = () => {
     setOpenCategory(false);
-    console.log("here");
   };
 
   //status add

@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
 const NavBar = (props) => {
     const {storeInfo,logo,category,number,changeBranch} = props;
     const {buttonLogin,buttonCart,navColor,textNav} = props.webInfo.navBar;
-    console.log("props.webInfo",props.webInfo.other)
     const  hasAboutUs = props.webInfo.other.status
     const mainColor=`rgba(${ props.webInfo.mainColor.r }, ${ props.webInfo.mainColor.g }, ${ props.webInfo.mainColor.b }, ${ props.webInfo.mainColor.a })`
     const branches = storeInfo.branches

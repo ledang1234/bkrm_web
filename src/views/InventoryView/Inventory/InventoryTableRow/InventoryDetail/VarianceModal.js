@@ -110,7 +110,6 @@ const VarianceModal = (props) => {
       const response = await productApi.deleteProduct(store_uuid, row.uuid);
       dispatch(statusAction.successfulStatus("Xóa thành công"));
       props.parentProps.setReload(true);
-      console.log(response);
     } catch (error) {
       console.log(error);
       dispatch(statusAction.failedStatus("Xóa thất bại"));
@@ -120,7 +119,6 @@ const VarianceModal = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-  console.log("roww", row)
   useEffect(() => {
     const fetchProduct = async () => {
       try {

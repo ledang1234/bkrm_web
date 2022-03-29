@@ -78,7 +78,6 @@ const ProductSetting = ({web,handleChangeListProduct,setWeb}) => {
      const priceBold = priceStyle[2]
 
      const alignCenter = Number(web.listProduct.alignCenter)
-     console.log("nameColor",nameColor)
      
 
     const handleChangeNameIndex = (event, index)=>{
@@ -371,8 +370,7 @@ const InfoComponent = (props)=>{
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    console.log("nameSizeưeee",nameSize)
-    return (
+   return (
         <>
         <Typography gutterBottom className={clsx( classes.multiLineEllipsis, classes.name, alignCenter && classes.alignCenter)} style={{fontSize:Number(nameSize),color:nameColor, fontWeight:nameBold, }}>
         {item.name}

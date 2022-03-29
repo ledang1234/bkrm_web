@@ -45,7 +45,6 @@ const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_pri
                 return row
             }
         })
-        console.log(newArr)
         setRelatedList(newArr);
     }
 

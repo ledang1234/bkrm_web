@@ -65,7 +65,6 @@ const cellPlugins = [
 const PromotionPage = () => {
     const [value, setValue] = useState(null);
 
-    console.log("value",value)
     return (
         <div>
             <Editor

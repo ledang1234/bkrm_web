@@ -81,7 +81,6 @@ export const ImportRow = (props) => {
         newBatches.push(newBatch);
       }
     });
-    console.log(newBatches);
     setSelectedBatches(newBatches);
   };
 

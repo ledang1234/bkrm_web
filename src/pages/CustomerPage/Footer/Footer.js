@@ -46,11 +46,7 @@ const Footer = ({web}) => {
     const color = `rgba(${web.footer?.bgColor.r}, ${web.footer?.bgColor.g}, ${web.footer?.bgColor.b}, ${web.footer?.bgColor.a})`
     const textColor = returnColor(web.footer.color)
     // const textColor = '#000'
-    console.log('web.footer.color)',web.footer.color)
 
-
-  
-    console.log("storeInfo",storeInfo)
     return (
         <div style={{minHeight:200, marginTop:140, background:color, padding:20}}>
             { web.footer.showSocial? <SocialMediaButton /> :null}

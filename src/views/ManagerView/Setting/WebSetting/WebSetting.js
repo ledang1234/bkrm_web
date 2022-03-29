@@ -53,6 +53,7 @@ import { Link } from "react-router-dom";
 import { customizeAction } from "../../../../store/slice/customizeSlice";
 import DetailSetting from "./DetailSetting"
 import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
+import { success ,error,warning, info} from '../../../../components/StatusModal/StatusModal';
 
 const WebSetting = () => {
   const theme = useTheme();
@@ -67,12 +68,12 @@ const WebSetting = () => {
   // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
 
   const webInfo = {
-    webAddress: "lyquochai",
+    webAddress: "",
     status: "inactive",
     orderManagement:{
       branchOption:'default',
-      // branchDefault: branches[0].uuid,
-      branchDefault: null,
+      branchDefault: branches?  branches[0]?.id:null,
+      // branchDefault: null,
 
       orderWhenOutOfSctock:false,
 
@@ -115,41 +116,46 @@ const WebSetting = () => {
     mainPage:{
       showbestSeller:true,
       numberTopBestSeller:10,
-      showNewArrival:true,
+      showNewArrival:false,
       numberTopNewArrival:10,
-      showDiscount:true
+      showDiscount:false
     },
     footer:{
       color:'0',
       bgColor:{ r: "0", g: "0", b: "0", a: "1", hex: "#000000" },
       btnType:'0',
-      showSocial:true
+      showSocial:false
 
     }
   };
 
-
-
+ 
   const [web, setWeb] = React.useState(webInfo);
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
   const [imageURL, setImageURL] = useState("");
 
 
-  console.log("web", web)
+
+  
   const [displayColorPicker, setDisplayColorPicker] = React.useState(false);
   const [displayColorPicker1, setDisplayColorPicker1] = React.useState(false);
   const [openLinkWarningPopup, seOpenLinkWarningPopup] = React.useState(false);
   const dispatch = useDispatch();
 
   // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
-
+  let haveNotActiveBefore = false
   const [logoStore,setLogoStore] = useState(null)
   useEffect(() => {
     const loadData = async () => {
       const response = await storeApi.getStoreInfo(store_uuid);
       if (response.data.web_configuration) {
         setWeb(JSON.parse(response.data.web_configuration));
+        // setLogoStore(JSON.parse(response.data.store_configuration).img_url)
+      }else{
+        haveNotActiveBefore = true
+      }
+      if (response.data.store_configuration) {
         setLogoStore(JSON.parse(response.data.store_configuration).img_url)
       }
     };
@@ -158,6 +164,7 @@ const WebSetting = () => {
       loadData();
     }
   }, [store_uuid]);
+
 
   // 1.
 
@@ -168,7 +175,7 @@ const WebSetting = () => {
   };
 
   const openLinkTab = () => {
-    if (web.status === "active" && webInfo.webAddress.length !== 0) {
+    if (web.status === "active" ) {
       window.open(domainName + web.webAddress);
     } else {
       seOpenLinkWarningPopup(true);
@@ -208,8 +215,7 @@ const WebSetting = () => {
   
   const handleChangeOrderManagement = (event) => {
     const { name, value } = event.target;
-    console.log("name",name)
-    console.log("value",value)
+
     setWeb((prevState) => {
       return {
         ...prevState,
@@ -219,12 +225,10 @@ const WebSetting = () => {
         },
       };
     });
-    console.log("webInfo",webInfo.orderManagement)
   };
 
   const handleChangeNavBar = (event) => {
     const { name, value } = event.target;
-    console.log("web", web);
     setWeb((prevState) => {
       return {
         ...prevState,
@@ -237,8 +241,7 @@ const WebSetting = () => {
   };
   const handleChangeListProduct = (event) => {
     const { name, value } = event.target;
-    console.log("web", web);
-    setWeb((prevState) => {
+   setWeb((prevState) => {
       return {
         ...prevState,
         listProduct: {
@@ -287,14 +290,52 @@ const WebSetting = () => {
   };
   
 
- 
-  
-
   return (
     <Card className={classes.root}>
-      <Typography className={classes.headerTitle} variant="h2">
-        Trang web
-      </Typography>
+      <Grid container direction="row" alignItems="center">
+          <Typography className={classes.headerTitle} variant="h2" style={{marginRight:-50}}>
+            Trang web
+          </Typography>
+          <Button variant='contained'size='small' color='primary' 
+          onClick={()=>{
+             if(web.status === "inactive"){
+                  // if(web.webAddress.length === 0) {
+                    if(haveNotActiveBefore) {
+                    error("Chưa cài đặt địa chỉ trang web"," Cài đặt trang web và lưu thay đổi trước khi kích hoạt trang web");   
+                  }else{
+                    try {
+                      var newWeb = { ...web };
+                      newWeb.status = 'active';
+                      setWeb(newWeb);
+                      const response = storeApi.updateStoreInfo(store_uuid, {
+                        web_configuration: JSON.stringify(newWeb),
+                      });
+                      openNotification("success", "Kích hoạt thành công");
+                    } catch (err) {
+                      console.log(err);
+                      openNotification("success", "Kích hoạt thất bại");
+                    }
+                  }
+                 
+             }else{
+                  try {
+                    var newWeb = { ...web };
+                    newWeb.status = 'inactive';
+                    setWeb(newWeb);
+                    const response = storeApi.updateStoreInfo(store_uuid, {
+                      web_configuration: JSON.stringify(newWeb),
+                    });
+                    openNotification("success", "Ngưng kích hoạt thành công");
+                  } catch (err) {
+                    console.log(err);
+                    openNotification("success", "Ngưng kích hoạt thất bại");
+                  }
+             }
+        }}
+            >
+           {web.status === "inactive"?  "Kích hoạt" : "Ngưng kích hoạt"  }
+          </Button>
+      </Grid>
 
       {/* 1.Địa chỉ trang web */}
       <Typography
@@ -320,7 +361,7 @@ const WebSetting = () => {
           onChange={(e) => {
             handleWebAddress(e);
           }}
-          placeholder="Tên_cửa_hàng"
+          placeholder="ĐIỀN_TÊN_CỬA_HÀNG"
           style={{
             border: 0,
             outline: 0,
@@ -479,13 +520,20 @@ const WebSetting = () => {
       <Button
         variant='contained'
         color='primary'
-       
         onClick={async () => {
           try {
-            const response = storeApi.updateStoreInfo(store_uuid, {
-              web_configuration: JSON.stringify(web),
-            });
-            openNotification("success", "Lưu cài đặt chung thành công");
+            if(web.webAddress.length === 0) {
+              error("Tên địa chỉ trang web trống"," Chưa cài đặt địa chỉ trang web. Cài đạt trang web và lưu thay đổi trước khi kích hoạt trang web");
+            }else{
+              const response = storeApi.updateStoreInfo(store_uuid, {
+                web_configuration: JSON.stringify(web),
+              });
+              // CHECK TÊN NÀY TỒN TẠI CHƯA
+              openNotification("success", "Lưu cài đặt chung thành công");
+              // setWebNameBeforeSave(web.webAddress)
+              haveNotActiveBefore = true
+            }
+            
           } catch (err) {
             console.log(err);
             openNotification("success", "Lưu cài đặt chung thất bại");

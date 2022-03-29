@@ -48,7 +48,6 @@ const UpdateCustomer = (props) => {
   const { handleClose, open, onReload } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
-  console.log('paymentImfo',props.customerDetail)
   const customerFormik = useFormik({
     initialValues: {
       name: props.customerDetail?.name || "",

@@ -140,7 +140,6 @@ const ToolBar = (props) => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const myJson = xlsx.utils.sheet_to_json(worksheet)
-        console.log("input", myJson)
         const json = []
         myJson.map((product) => {
           json.push({
@@ -188,7 +187,6 @@ const ToolBar = (props) => {
               style={{marginTop:12, marginLeft:10}}
               variant="outlined"
               onKeyUp={(e) => {
-                console.log("e.keyCode == 0 || e.keyCode == 32" ,e.keyCode == 0 || e.keyCode == 32 ) 
                 if (e.key === "Enter") {
                   setSearchKey(e.target.value)
                 }}

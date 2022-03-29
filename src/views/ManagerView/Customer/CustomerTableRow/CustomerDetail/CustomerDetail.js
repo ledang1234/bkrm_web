@@ -93,7 +93,6 @@ const CustomerDetail = (props) => {
     }
   };
 
-  console.log("Row", row)
   return (
     <Collapse in={isMini ? true : openRow === row.uuid} timeout="auto" unmountOnExit>
       <ConfirmPopUp

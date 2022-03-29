@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_price, standard_price }) => {
-    // console.log("init", datas)
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -49,9 +48,8 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_pri
 
                     }
                 }
-                // console.log("_set",_set)
                 if(_set.length !== 0) {mySet = _set}
-                // console.log("mySet",mySet)
+
             }
          }
         return mySet
@@ -139,7 +137,6 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
     const handleChangeAttr = (event) => {
         var valid = true;
         datas.map((row)=>{if(row.key === event.target.value){valid = false}    })
-        console.log("valid",valid )
 
         if (valid){
             updateFieldChanged(index, event.target.value)   

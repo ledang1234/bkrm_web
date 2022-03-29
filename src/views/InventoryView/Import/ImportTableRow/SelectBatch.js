@@ -105,7 +105,6 @@ export default function SelectBatch({ handleSubmit, handleClose, row }) {
             const nonZeroBatch = selectedBatches.filter(
               (batch) => batch.additional_quantity
             );
-            console.log(nonZeroBatch);
             handleSubmit(nonZeroBatch);
             handleClose();
           }}

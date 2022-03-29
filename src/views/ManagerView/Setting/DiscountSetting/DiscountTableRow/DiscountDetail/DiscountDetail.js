@@ -83,12 +83,7 @@ const DiscountDetail = (props) => {
     const discountKey= promotion_condition?.discountKey;// invoice, product
     const discountType = promotion_condition?.discountType; //discountInvoice , sendGift, sendVoucher,priceByQuantity
 
- 
-    console.log("===========")
-    console.log("rowsInvoice",rowsInvoice)
-    console.log("row",row)
-    console.log("discountKey",discountKey)
-    console.log("discountType",discountType)
+
 
     // CALL APII (đổi thanhd api)
  

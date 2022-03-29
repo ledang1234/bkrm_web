@@ -83,9 +83,6 @@ const DetailPage = (props) => {
     let initValue = disableValueList ? disableValueList.map(i => i.filter(value =>value)[0]):null
     const [selectAttr, setSelectedAttr]  = useState(initValue)
 
-    console.log("disableValueList",disableValueList)
-    console.log("initValue",initValue)
-    console.log("selectAttr",selectAttr)
     
     useEffect(()=>{
       detailProduct = products.find(prod => prod.product_code === productCode);
@@ -173,7 +170,6 @@ const DetailPage = (props) => {
               newItem.quantity  = addQuantity;
               newOrder.cartItem.push(newItem);
           }
-          console.log("newOrder",newOrder)
           dispatch(customerPageActions.setOrder(newOrder))
           // success("Thêm sản phẩm thành công")
           openNotification("success", "Thêm sản phẩm thành công");

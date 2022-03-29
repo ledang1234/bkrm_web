@@ -225,7 +225,7 @@ const CartSummary = (props) => {
                 <ListItem style={{padding: 0,margin:0}}>
                 <Typography variant="h5">Tổng tiền hàng</Typography>
                 {haveDiscount ? 
-                <div onClick={()=>{setOpenDiscount(!openDiscount);console.log("hello")}}>
+                <div onClick={()=>{setOpenDiscount(!openDiscount)}}>
                     <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} />
 
                 </div>

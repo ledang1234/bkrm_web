@@ -88,13 +88,11 @@ function InventoryReturnPopUp(props) {
     );
     const newPurchaseReturn = _.cloneDeep(purchaseReturn);
 
-    console.log(newBatches);
     newPurchaseReturn.details[itemIndex].selectedBatches = newBatches;
     newPurchaseReturn.details[itemIndex].returnQuantity = _.sumBy(
       newBatches,
       "returned_quantity"
     );
-    console.log(newPurchaseReturn);
     setPurchaseReturn(newPurchaseReturn);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
@@ -344,7 +342,6 @@ function ImportReturnTableRow({
   const classes = useStyles();
   const [show, setShow] = React.useState("none");
   useEffect(() => {}, [detail]);
-  console.log(detail);
   const handleChangeQuantity = (newQuantity) => {
     handleItemQuantityChange(detail.id, newQuantity);
   };
@@ -413,7 +410,6 @@ function ImportReturnTableRow({
                     if (value > batch.max_return_quantity || value < 0) {
                       return;
                     } else {
-                      console.log(value);
                       const newSelectedBatches = [...detail.selectedBatches];
                       newSelectedBatches[index].returned_quantity = value;
                       handleChangeBatches(detail.id, newSelectedBatches);

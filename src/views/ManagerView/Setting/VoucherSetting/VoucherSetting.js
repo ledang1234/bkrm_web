@@ -57,7 +57,6 @@ const VoucherSetting = () => {
             limit: pagingState.limit,
           }
         );
-        console.log("vouchers", response.vouchers)
         setNewVoucherList(response.vouchers)
         setTotalRows(response.total_rows)
       }

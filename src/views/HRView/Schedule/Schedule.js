@@ -110,7 +110,6 @@ const Schedule = () => {
           mode
         );
         setShiftInfo(response.data);
-        console.log(response.data);
       } catch (err) {
         console.log(err);
       }

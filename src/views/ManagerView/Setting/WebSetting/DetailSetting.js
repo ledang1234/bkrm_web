@@ -44,7 +44,6 @@ const DetailSetting = ({handleChangeCart,web,setWeb}) => {
     "https://minio.thecoffeehouse.com/image/admin/1633147050_photo-2021-10-02-10-52-44.jpg",
     ]
 
-    console.log("web",web)
   return (
     <>
     <Grid container spacing={8}>

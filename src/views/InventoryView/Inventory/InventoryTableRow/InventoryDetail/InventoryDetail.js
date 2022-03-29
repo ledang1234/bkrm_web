@@ -152,7 +152,6 @@ const InventoryDetail = (props) => {
 
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
 
-  console.log("productDetail",productDetail)
 
   return row.has_variance ? (
     <>

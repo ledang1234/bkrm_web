@@ -389,7 +389,6 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
                     if (value > batch.max_return_quantity || value < 0) {
                       return;
                     } else {
-                      console.log(value);
                       const newSelectedBatches = [...detail.selectedBatches];
                       newSelectedBatches[index].returned_quantity = value;
                       handleChangeBatches(detail.id, newSelectedBatches);
