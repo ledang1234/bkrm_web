@@ -167,7 +167,6 @@ const SearchProduct = (props) => {
           e.preventDefault();
           e.stopPropagation();
           // increase if selected
-          console.log(selectedOption);
           if (selectedOption.name) {
             props.handleSearchBarSelect(selectedOption);
           } else {

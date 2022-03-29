@@ -161,7 +161,7 @@ const HomePage = (props) => {
 
             <Box display="flex" flexDirection="row" alignItems="center">
               <BranchSelectAppBar store_uuid={infoDetail.store.uuid} />
-              <IconButton color="primary" size="small" onClick={() => { setOpenUserInfo(true); console.log(infoDetail) }} >
+              <IconButton color="primary" size="small" onClick={() => { setOpenUserInfo(true); }} >
                 <PersonIcon fontSize="large" />
               </IconButton>
               <Box

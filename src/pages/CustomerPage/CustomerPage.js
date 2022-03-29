@@ -119,7 +119,6 @@ const CustomerPage = () => {
 
   const mainColor =  `rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${webInfo.mainColor.a })`
 
-  console.log("`${url}/products/:productCode`",`${url}/category/:categoryId/products/:productCode`)
 
   if (storeWebPage) {
   return (<div className={classes.root}>
@@ -195,7 +194,6 @@ export default CustomerPage;
 
 const PopUpChoooseBranch = ({openPopUpChooseBranch,changeBranch,setOpenPopUpChooseBranch,branches,mainColor}) =>{
   const {storeInfo} = useSelector(state => state.customerPage)
-  console.log("branchesấd",branches)
   const [selectedBranch, setSelectedBranch] = useState(null);
   return (
     <SimpleModal open={openPopUpChooseBranch}>

@@ -39,7 +39,7 @@ export const CartRow = (props) => {
   const info = useSelector((state) => state.info);
   const branch = info.branch;
 
-console.log("branch",branch)
+
   const {
     row,
     branchs,
@@ -72,7 +72,7 @@ console.log("branch",branch)
     selectedBatches.forEach((batch) => {
       total += Number(batch.additional_quantity);
     });
-    console.log(total);
+
     updateQuantity(total);
     handleUpdateBatches(row.uuid, selectedBatches);
   }, [selectedBatches]);
@@ -101,7 +101,7 @@ console.log("branch",branch)
         newBatches.push(newBatch);
       }
     });
-    console.log(newBatches);
+
     setSelectedBatches(newBatches);
   };
 

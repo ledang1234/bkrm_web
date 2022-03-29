@@ -175,7 +175,6 @@ const WebSetting = () => {
   };
 
   const openLinkTab = () => {
-    console.log("web.status",web.status)
     if (web.status === "active" ) {
       window.open(domainName + web.webAddress);
     } else {
@@ -216,8 +215,7 @@ const WebSetting = () => {
   
   const handleChangeOrderManagement = (event) => {
     const { name, value } = event.target;
-    console.log("name",name)
-    console.log("value",value)
+
     setWeb((prevState) => {
       return {
         ...prevState,
@@ -227,12 +225,10 @@ const WebSetting = () => {
         },
       };
     });
-    console.log("webInfo",webInfo.orderManagement)
   };
 
   const handleChangeNavBar = (event) => {
     const { name, value } = event.target;
-    console.log("web", web);
     setWeb((prevState) => {
       return {
         ...prevState,
@@ -245,8 +241,7 @@ const WebSetting = () => {
   };
   const handleChangeListProduct = (event) => {
     const { name, value } = event.target;
-    console.log("web", web);
-    setWeb((prevState) => {
+   setWeb((prevState) => {
       return {
         ...prevState,
         listProduct: {

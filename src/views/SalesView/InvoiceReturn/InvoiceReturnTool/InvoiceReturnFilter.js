@@ -47,7 +47,6 @@ const InvoiceReturnFilter = (props) => {
       paymentMethod: '',
     },
     onSubmit: async values => {
-      console.log(values)
       const res = await refundApi.searchRefund(store_uuid, branch_uuid, values)
       setRefunds(res.data)
     },

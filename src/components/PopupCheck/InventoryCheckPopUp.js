@@ -428,7 +428,6 @@ function InventoryCheckTableRow({
     }
   }, [])
   const handleSelectBatch = (index) => {
-    console.log(index)
     const newBatches = [...batches];
     newBatches[index].is_checked = true;
     setBatches(newBatches)

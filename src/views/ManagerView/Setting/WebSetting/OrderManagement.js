@@ -36,7 +36,6 @@ const OrderManagement = ({web,setWeb,handleChangeOrderManagement}) => {
         setWeb(newWeb);
      };
 
-     console.log("branchesèdvffđsss",branches)
 
 
   return (

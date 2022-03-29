@@ -80,7 +80,6 @@ const MainPageSetting = (props) => {
           };
         });
       };
-console.log("web.mainPage.numberTopBestSeller",web.mainPage)
   return (
     <>
         <Typography style={{fontWeight:500, marginRight:20, color:"#000",fontSize:15}}>Hình ảnh Banner: </Typography>

@@ -84,9 +84,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
     onClose()
     setReload()
   }
-  console.log("batch",batches)
   const currenBranchInventory = findBranchQuantity(branch_uuid)
-  console.log("valueQuantity",valueQuantity)
     return (
         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" maxWidth="xs" fullWidth={true}>
             <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -155,9 +153,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
                     batches.map((batch) => {
                         let newValueQuantity = [...valueQuantity]
                         let index = newValueQuantity.findIndex(item=>item.batch_code ===  batch?.batch_code)
-                        console.log("newValueQuantity",newValueQuantity)
-                        console.log("index",index)
-                        console.log("quantity",newValueQuantity[index]?.quantity )
+                      
                      return(
                         <Grid container  spacing={3} alignItems='center' style={{margin:2}}>
                             <Grid item xs={3}> {batch?.batch_code} </Grid>

@@ -96,7 +96,6 @@ var QRCode = require('qrcode.react');
 
 export const ReceiptPrinter = ({cart, date}) => {
     const info = useSelector((state) => state.info);
-    console.log("info",info)
     // var link = "https://www.facebook.com/GiaLePhuongg/";
     // var logo ="https://newstatic2.clingme.vn/resized/images/default/cms-images/place/0/0/17/1550914926_557320_w600.jpg"
     const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting

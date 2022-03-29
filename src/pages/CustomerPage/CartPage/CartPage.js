@@ -63,7 +63,6 @@ const CartPage = (props) => {
   const classes = useStyles(theme);
 
   const {mainColor, cart} = props.webInfo
-  console.log("cart",cart.summaryPosition)
   
   const [openPopUp, setOpenPopUp] = useState(false)
 
@@ -169,9 +168,7 @@ const CartPage = (props) => {
       const branch = await getBranch()
       let submitOrder = _.omit({...order, branch_id:Number(branch)}, "cartItem")
       submitOrder.details = JSON.stringify(order.cartItem) 
-      console.log("cartItme", order.cartItem)
-
-      console.log("submitOrder",submitOrder)
+      
       
       const res = await customerPageApi.addOrder(storeInfo.uuid, {...submitOrder, total_amount: calculateTotal()});
       success("Đặt đơn hàng thành công")

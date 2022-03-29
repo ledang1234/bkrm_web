@@ -78,9 +78,7 @@ const DiscountSetting = () => {
     //     })
     // }, [reload, store_uuid]);
 
-    useEffect(() => {
-      console.log("newDiscountList", newDiscountList)
-    }, [newDiscountList])
+
     const theme = useTheme();
     const classes = useStyles(theme);
     const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
@@ -261,8 +259,7 @@ const ComponentToPrint = ({discountList,classes}) =>{
   )
 }
 function getDiscountType (discountKey, discountType){
-  console.log("discountKey",discountKey)
-  console.log("discountType",discountType)
+
   if(discountKey === "invoice"){
       if(discountType ==="sendGift"){return "Tặng hàng"}
       else if (discountType ==="sendVoucher"){ return "Tặng voucher"}

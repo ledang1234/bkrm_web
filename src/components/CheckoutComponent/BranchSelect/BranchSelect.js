@@ -21,7 +21,6 @@ export default function BranchSelect(props) {
 
   const loadingData = async () => {
     let response = await branchApi.getBranches(store_uuid);
-    console.log(response.data)
     setBranches(response.data);
     setSelectedBranch(response.data.filter(branch => branch.uuid === current_branch_uuid)[0]);
   }

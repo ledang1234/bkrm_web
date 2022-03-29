@@ -360,8 +360,6 @@ const AddInventory = (props) => {
 
   // console.log("relatedList",relatedList)
 
-  console.log("helllloo",typeof(productFormik.values.description))
-  console.log("datasdatas",datas)
   const handleAddProductWithVariation = async () => {
     if (relatedList.length !== 0) {
       // var isValid = datas.map(item => item.key === 'unset'?  false  )
@@ -417,7 +415,6 @@ const AddInventory = (props) => {
         productFormik.values.description.toString()
         // JSON.stringify(productFormik.values.description)
       );
-      console.log(relatedList);
 
       for (var i = 0; i < relatedList.length; i++) {
         const values = relatedList[i].name.split("-");
@@ -439,7 +436,6 @@ const AddInventory = (props) => {
           })
         );
       }
-      console.log("datas",datas)
       bodyFormData.append(
         "attribute_value",
         JSON.stringify(datas)

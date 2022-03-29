@@ -84,7 +84,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
     const loadBranches = async () => {
       try {
         const response = await branchApi.getAllBranches(store_uuid);
-        console.log(response.data);
         setBranches(response.data);
       } catch (err) {
         console.log(err);
@@ -170,7 +169,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
     const loadBranches = async () => {
       try {
         const response = await branchApi.getAllBranches(store_uuid);
-        console.log(response.data);
         setBranches(response.data);
       } catch (err) {
         console.log(err);

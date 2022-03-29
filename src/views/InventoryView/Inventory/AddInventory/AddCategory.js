@@ -26,7 +26,6 @@ const AddCategory = (props) => {
       try {
         const response = await productApi.getAllCategory(store_uuid);
         const response_1 = await productApi.getNestedCategory(store_uuid);
-        console.log(response_1, "response 1")
         setCategoryList(response_1.data);
       } catch (error) { }
     };

@@ -456,7 +456,6 @@ const Cart = () => {
     var emptyCart = cart.cartItem.length === 0;
     const printReceiptWhenSell=store_setting?.printReceiptWhenSell
     var correctQuantity = cart.cartItem.every(function (element, index) {
-      console.log(element);
       if (element.quantity > element.branch_quantity) return false;
       else return true;
     });
@@ -479,7 +478,6 @@ const Cart = () => {
       let orderTime = moment
         .unix(d)
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-      console.log(orderTime);
 
       let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
       console.log(cart.paid_amount, cart.total_amount, cart.discount);
@@ -501,11 +499,10 @@ const Cart = () => {
         delivery: cart.delivery,
         is_customer_order: false,
       };
-      console.log("bpdy", body)
 
       try {
         let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
-        console.log("body", body);
+
         setSnackStatus({
           style: "success",
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,

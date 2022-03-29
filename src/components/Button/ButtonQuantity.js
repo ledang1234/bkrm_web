@@ -21,7 +21,6 @@ const ButtonQuantity = (props) =>{
 
       else if(limit) {
         if(quantity >= Number(limit)) {
-          console.log('true')
           setQuantity(quantity)
           return
         } 
