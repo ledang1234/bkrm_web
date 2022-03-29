@@ -100,10 +100,10 @@ const DetailPage = (props) => {
     if(orderWhenOutOfSctock){
         return 999999999
     }else{
-        if (product?.has_variance){
-            let sum =  all_child_product?.reduce((sum,a)=>sum + Number(a.quantity_available), 0)
-            return sum
-        }
+        // if (product?.has_variance){
+        //     let sum =  all_child_product?.reduce((sum,a)=>sum + Number(a.quantity_available), 0)
+        //     return sum
+        // }
         if(branchOption === 'auto'  ){
             return Number(product.quantity_available) ? Number(product.quantity_available):0
         }

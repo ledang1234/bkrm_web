@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+
+
 const initialCustomerPage = {
+  // storeInfo: {},
   storeInfo: {},
   products: [],
   order: { name: "", phone: "", address: "", cartItem: [], branch_id: 57},

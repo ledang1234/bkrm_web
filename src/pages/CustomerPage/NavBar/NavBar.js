@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavBar = (props) => {
-    const {storeInfo,logo,category,number} = props;
+    const {storeInfo,logo,category,number,changeBranch} = props;
     const {buttonLogin,buttonCart,navColor,textNav} = props.webInfo.navBar;
     console.log("props.webInfo",props.webInfo.other)
     const  hasAboutUs = props.webInfo.other.status
@@ -254,6 +254,12 @@ const NavBar = (props) => {
                     onChange={(e)=>{
                       localStorage.setItem(storeInfo.uuid , e.target.value);
                       setSelectedBranch(e.target.value)
+
+
+                     
+                      changeBranch();
+
+
                     }}
                   >
                     {branches?.map(branch => {

@@ -42,17 +42,37 @@ const ProductList = (props) => {
     const {products} = useSelector(state => state.customerPage);
 
 
-
-    function getStockQuantity (product, all_child_product=null) {
+    // function getStockQuantity (product, all_child_product=null) {
+    //     if(!product){return }
+    //     if(orderWhenOutOfSctock){
+    //         return 999999999
+    //     }else{
+    //         if (product?.has_variance){
+    //             all_child_product= all_child_product? all_child_product: products.filter( item => item.parent_product_code === product.product_code)
+    //             console.log("all_child_product",all_child_product)
+    //             let sum =  all_child_product?.reduce((sum,a)=>sum + Number(a.quantity_available), 0)
+    //             return sum
+    //         }
+    //         if(branchOption === 'auto'  ){
+    //             return Number(product?.quantity_available) ? Number(product?.quantity_available):0
+    //         }
+    //         else if(branchOption === 'default'){
+    //             let branchId = webSetting?.orderManagement.branchDefault
+    //             const branch = product.branch_inventories?.find(branch => Number(branch.branch_id) === Number(branchId))
+    //             return Number(branch?.quantity_available) ? Number(branch?.quantity_available):0
+    //         }else {
+    //             let branchId = localStorage.getItem(storeInfo.uuid);
+    //             const branch = product.branch_inventories?.find(branch => Number(branch.branch_id) === Number(branchId))
+    //             return Number(branch?.quantity_available)  ? Number(branch?.quantity_available) :0
+    //         }
+    //     }
+    
+    // }
+    function getStockQuantity (product) {
         if(!product){return }
         if(orderWhenOutOfSctock){
             return 999999999
-        }else{
-            if (product?.has_variance){
-                all_child_product= all_child_product? all_child_product: products.filter( item => item.parent_product_code === product.product_code)
-                let sum =  all_child_product?.reduce((sum,a)=>sum + Number(a.quantity_available), 0)
-                return sum
-            }
+        }else{          
             if(branchOption === 'auto'  ){
                 return Number(product?.quantity_available) ? Number(product?.quantity_available):0
             }
@@ -68,7 +88,39 @@ const ProductList = (props) => {
         }
     
     }
+    function getIsAllVarianceOutOfStock (product) {   
+        if(!product || !product.has_variance){return }
+        if(orderWhenOutOfSctock){
+            return false
+        }else{          
+            const all_child_product =  products.filter( item => item.parent_product_code === product.product_code)
 
+            if(branchOption === 'auto'  ){
+                for (let i = 0; i < all_child_product?.length ; i++){
+                    if (Number(all_child_product[i]?.quantity_available)>0){return false} 
+                }
+                return true
+            }
+            else if(branchOption === 'default'){
+                let branchId = webSetting?.orderManagement.branchDefault
+                for (let i = 0; i < all_child_product?.length ; i++){
+                    const branch = all_child_product[i]?.branch_inventories?.find(branch => Number(branch.branch_id) === Number(branchId))
+                    if (Number(branch?.quantity_available)>0){return false} 
+                }
+                return true 
+            }else {
+                let branchId = localStorage.getItem(storeInfo.uuid);
+                for (let i = 0; i < all_child_product?.length ; i++){
+                    const branch = all_child_product[i]?.branch_inventories?.find(branch => Number(branch.branch_id) === Number(branchId))
+                    if (Number(branch?.quantity_available)>0){return false} 
+                }
+                return true 
+            }
+        }
+    
+    }
+
+   
 
     //customization 
     const lgScreen = useMediaQuery(theme.breakpoints.down("lg")) ;
@@ -150,7 +202,11 @@ const ProductList = (props) => {
             {openQuickPopUp? <PopUpProduct getStockQuantity={getStockQuantity} addProductToCart={addProductToCart}mainColor={mainColor} product={selectedItem}open={openQuickPopUp} onClose={()=>setOpenQuickPopUp(false)} />:null}
              {InventoryList?.map(item=>{
                  const image = JSON.parse(item.img_urls) ?JSON.parse(item.img_urls) [0]:null
-                const stockQuantity  = getStockQuantity(item) 
+                //  const stockQuantity  = getStockQuantity(item) 
+                const varianceProductStatus = getIsAllVarianceOutOfStock(item.has_variance?item:null) ? 0 : 99
+                const stockQuantity  = !item.has_variance ? getStockQuantity(item) : varianceProductStatus
+               
+
                  return( 
                      <>
                      {Number(isBox)?
