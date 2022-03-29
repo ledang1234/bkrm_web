@@ -113,6 +113,7 @@ const ProductSetting = ({web,handleChangeListProduct,setWeb}) => {
         }
     }, [web.listProduct.btnStyle[1]])
       
+    console.log("web.listProduct.btnStyle[1].toString()",web.listProduct.btnStyle[1].toString())
    
     return (
         <>

@@ -202,7 +202,6 @@ const ProductList = (props) => {
             {openQuickPopUp? <PopUpProduct getStockQuantity={getStockQuantity} addProductToCart={addProductToCart}mainColor={mainColor} product={selectedItem}open={openQuickPopUp} onClose={()=>setOpenQuickPopUp(false)} />:null}
              {InventoryList?.map(item=>{
                  const image = JSON.parse(item.img_urls) ?JSON.parse(item.img_urls) [0]:null
-                //  const stockQuantity  = getStockQuantity(item) 
                 const varianceProductStatus = getIsAllVarianceOutOfStock(item.has_variance?item:null) ? 0 : 99
                 const stockQuantity  = !item.has_variance ? getStockQuantity(item) : varianceProductStatus
                

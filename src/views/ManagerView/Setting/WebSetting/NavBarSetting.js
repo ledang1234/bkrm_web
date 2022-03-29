@@ -151,7 +151,8 @@ const NavBarSetting = ({web,handleChangeNavBar,logo,setWeb}) => {
             justifyContent="space-between"
           >
             <Grid item sm={2}>
-              <img src={logo} style={{height:50}}/>
+             {logo? <img src={logo} style={{height:50}}/>:
+             <Typography variant='h3'>BKRM</Typography>}
             </Grid>
             <Grid container item sm={10} direction="row" alignItems="center">
                 <Grid container item sm={8} direction="row">

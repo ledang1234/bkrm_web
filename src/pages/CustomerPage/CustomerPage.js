@@ -48,7 +48,8 @@ const CustomerPage = () => {
   const {categories, products, storeInfo,order} = useSelector(state => state.customerPage)
 
   const storeSetting = storeInfo.store_configuration ? JSON.parse(storeInfo.store_configuration) : null
-  var logoStore = storeSetting?.img_url ?  storeSetting.img_url : "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
+  // var logoStore = storeSetting?.img_url ?  storeSetting.img_url : "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg"
+  var logoStore = storeSetting?.img_url ?  storeSetting.img_url :null
 
   const [webInfo, setWebInfo] = useState(webSetting)
 
