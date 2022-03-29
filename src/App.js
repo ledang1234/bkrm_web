@@ -39,7 +39,7 @@ function App() {
 
   }, [dispatch]);
   useEffect(() => {
-    // dispatch(loadBranches(store_uuid));
+    dispatch(loadBranches(store_uuid));
   })
   return (
     <ThemeProvider theme={themes(customization)}>

@@ -99,12 +99,7 @@ const CartPage = (props) => {
     dispatch(customerPageActions.setOrder(newOrder))
   }
 
-  // const handleChangeOrder = (field, value) => {
-  //   let newOrder = _.cloneDeep(order)
-  //   newOrder[field] = value
-    
-  //   dispatch(customerPageActions.setOrder(newOrder))
-  // }
+ 
 
   const calculateTotal = () => {
     let total = 0;
@@ -141,11 +136,37 @@ const CartPage = (props) => {
       ward: Yup.string().required("Chọn phường/xã"),
     }),
   })
+
+    const getAutoBranch = () =>{
+      //  CODE HERE
+    }
+
+  const getBranch = async () =>{
+    const webSetting = storeInfo.web_configuration? JSON.parse(storeInfo.web_configuration):null
+    const branchOption = webSetting?.orderManagement.branchOption
+    if(branchOption === 'auto'  ){
+        // Auto
+        // const autoBranch = await getAutoBranch()
+        const autoBranch = 46
+        return autoBranch.id
+    }
+    else if(branchOption === 'default'){
+      // Default
+      // THợp branch default cài trong setting bị xoá thì sao ??? => lúc xoá branch tự update lại setting
+        let branchId = webSetting?.orderManagement.branchDefault
+        return branchId
+    }else {
+       // Choose
+        // THợp branch đã lưu trong localStorage bị xoá thì sao ??? => lúc load trang check local value có trong các branch đang có ko ... nếu có thì cho chọn lại? hoặc ...
+        let branchId = localStorage.getItem(storeInfo.uuid);
+        return branchId
+    }
+  }
+
   const handleSubmit = async () => {
     try {
-      let submitOrder = _.omit(order, "cartItem")
-      // let submitOrder = _.omit(formik.values, "cartItem")
-
+      const branch = await getBranch()
+      let submitOrder = _.omit({...order, branch_id:Number(branch)}, "cartItem")
       submitOrder.details = JSON.stringify(order.cartItem) 
       console.log("cartItme", order.cartItem)
 
@@ -158,7 +179,7 @@ const CartPage = (props) => {
         phone: "",
         cartItem: [],
         address: "",
-        branchId: storeInfo.branches?.at(0)?.id,
+        branch_id: storeInfo.branches?.at(0)?.id,
       }))
     } catch (err) {
       console.log(err)
@@ -175,16 +196,7 @@ const CartPage = (props) => {
         <Typography style={{ flexGrow: 1, textAlign: "center",marginBottom:8}} variant="h2">
           Giỏ hàng
         </Typography>
-        {/* <Typography
-          className={classes.textTitle}
-          variant="body2"
-          style={{ marginBottom: 20 }}
-        >
-          {order.cartItem.length}
-        </Typography> */}
-        {/* <div style={{ flexGrow: 1, textAlign: "center"}} > */}
-        {/* hello */}
-        {/* <div style={{flexGrow: 1, textAlign: "center"}}> */}
+       
         <Grid container justifyContent="center">
           <Divider
             sx={{ borderBottomWidth: 5 }}

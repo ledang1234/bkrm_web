@@ -71,7 +71,8 @@ const CustomerPage = () => {
       const  webSetting = JSON.parse(res.data.web_configuration)
 
       if(webSetting.orderManagement.branchOption==='choose'&& res.data.branches.length > 1 && !webSetting.orderManagement.orderWhenOutOfSctock && !localStorage.getItem(res.data.uuid)){
-        setOpenPopUpChooseBranch(true)
+  
+      setOpenPopUpChooseBranch(true)
       }
 
     };
@@ -163,12 +164,12 @@ export default CustomerPage;
 
 const PopUpChoooseBranch = ({openPopUpChooseBranch,setOpenPopUpChooseBranch,branches,mainColor}) =>{
   const {storeInfo} = useSelector(state => state.customerPage)
-
+  console.log("branchesấd",branches)
   const [selectedBranch, setSelectedBranch] = useState(null);
   return (
     <SimpleModal open={openPopUpChooseBranch}>
           <Typography  style={{ fontSize:21, fontWeight:500, color:'#000',marginTop:10, marginBottom:15, marginRight:30}}>Chọn chi nhánh gần bạn</Typography>
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
+          <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
           <InputLabel>Chi nhánh</InputLabel>
           <Select
             value={selectedBranch}
@@ -176,7 +177,7 @@ const PopUpChoooseBranch = ({openPopUpChooseBranch,setOpenPopUpChooseBranch,bran
             onChange={(e)=>setSelectedBranch(e.target.value)}
           >
             {branches?.map(branch => {
-                return (<MenuItem  key={branch.uuid}value={branch}>{branch.name}</MenuItem>)
+                return (<MenuItem  key={branch.id}value={branch}>{branch.name}</MenuItem>)
              })}
           </Select>
         </FormControl>
@@ -184,7 +185,7 @@ const PopUpChoooseBranch = ({openPopUpChooseBranch,setOpenPopUpChooseBranch,bran
         <ColorButton varaint='contained' style={{marginTop:30}}  mainColor={selectedBranch?mainColor:"#dddddd"} 
             disabled={!selectedBranch }
             onClick={()=>{
-              localStorage.setItem(storeInfo.uuid , selectedBranch.uuid);
+              localStorage.setItem(storeInfo.uuid , selectedBranch.id);
               setOpenPopUpChooseBranch(false)
             }}
          >
