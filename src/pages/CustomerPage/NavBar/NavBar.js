@@ -257,7 +257,7 @@ const NavBar = (props) => {
                     }}
                   >
                     {branches?.map(branch => {
-                        return (<MenuItem  key={branch.uuid}value={branch.uuid}>{branch.name}</MenuItem>)
+                        return (<MenuItem  key={branch.uuid}value={branch.id}>{branch.name}</MenuItem>)
                     })}
                   </Select>
                 </FormControl>

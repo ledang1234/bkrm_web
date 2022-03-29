@@ -98,17 +98,16 @@ const DetailPage = (props) => {
             return sum
         }
         if(branchOption === 'auto'  ){
-          console.log(" Number(product.quantity_available) ", Number(product.quantity_available) )
             return Number(product.quantity_available) ? Number(product.quantity_available):0
         }
         else if(branchOption === 'default'){
             let branchId = webSetting?.orderManagement.branchDefault
-            const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
-            return Number(branch.quantity_available) ?Number(branch.quantity_available):0
+            const branch = product.branch_inventories.find(branch =>Number(branch.branch_id) === Number(branchId))
+            return Number(branch?.quantity_available) ?Number(branch?.quantity_available):0
         }else {
             let branchId = localStorage.getItem(storeInfo.uuid);
-            const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
-            return Number(branch.quantity_available)  ? Number(branch.quantity_available) :0
+            const branch = product.branch_inventories.find(branch => Number(branch.branch_id) === Number(branchId))
+            return Number(branch?.quantity_available)  ? Number(branch?.quantity_available) :0
         }
     }
 

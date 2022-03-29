@@ -36,6 +36,8 @@ const OrderManagement = ({web,setWeb,handleChangeOrderManagement}) => {
         setWeb(newWeb);
      };
 
+     console.log("branchesèdvffđsss",branches)
+
 
   return (
     <>
@@ -65,7 +67,7 @@ const OrderManagement = ({web,setWeb,handleChangeOrderManagement}) => {
                   >
                     {branches?.map((branch)=>{
                       return (
-                        <MenuItem key={branch.uuid} value={branch.uuid}>{branch.name}</MenuItem>
+                        <MenuItem key={branch.uuid} value={branch.id}>{branch.name}</MenuItem>
                       )
                     })}
                   </Select>
