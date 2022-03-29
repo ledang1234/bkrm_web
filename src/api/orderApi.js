@@ -40,12 +40,12 @@ const orderApi = {
     return axiosClient.post(url, body);
   },
   cancleCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
-    const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/cancle`;
+    const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/cancel`;
     return axiosClient.post(url);
   },
-  paymentCustomerOrder: (storeUuid, branchUuid, customerOrderId) => {
+  paymentCustomerOrder: (storeUuid, branchUuid, customerOrderId, body) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/payment`;
-    return axiosClient.post(url);
+    return axiosClient.post(url, body);
   },
   updateCustomerOrder: (storeUuid, branchUuid, customerOrderId, newDetails) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/customerOrders/${customerOrderId}/updateDetails`;

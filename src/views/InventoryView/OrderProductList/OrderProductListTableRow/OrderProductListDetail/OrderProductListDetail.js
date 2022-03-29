@@ -18,7 +18,10 @@ import { VNDFormat,ThousandFormat } from '../../../../../components/TextField/Nu
 
 import { grey} from '@material-ui/core/colors'
 import OrderModal from './OrderModal';
-
+import orderApi from '../../../../../api/orderApi';
+import { statusAction } from '../../../../../store/slice/statusSlice';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
 const useStyles = makeStyles((theme) =>
 createStyles({
   root: {
@@ -75,6 +78,10 @@ const OrderProductListDetail = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
+    const branch_uuid = info.branch.uuid;
+    const branch = info.branch;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -96,7 +103,23 @@ const OrderProductListDetail = (props) => {
       setOpen(false);
     };
 
+    const dispatch = useDispatch();
 
+    const handlePayment = async () => {
+      let d = moment.now() / 1000;
+      let paid_date = moment
+        .unix(d)
+        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
+      try {
+        const res = await orderApi.paymentCustomerOrder(store_uuid, branch_uuid, row.id , {paid_date: paid_date})
+        reload();
+        dispatch(statusAction.successfulStatus('Thanh toán thành công'))
+      }catch(err) {
+        console.log(err);
+        dispatch(statusAction.failedStatus('Thanh toán thất bại'))
+      }
+    }
     return (
       // <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
       <Collapse in={openRow === row.id} timeout="auto" unmountOnExit>
@@ -289,6 +312,32 @@ const OrderProductListDetail = (props) => {
                   </Typography>
                 </Grid>
               </Grid>
+
+              <Grid container direction="row" justifyContent={"flex-end"}>
+                <Grid item xs={6} sm={2}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Giảm giá
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    <VNDFormat value={row.discount} />{" "}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container direction="row" justifyContent={"flex-end"}>
+                <Grid item xs={6} sm={2}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Cần thu
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    <VNDFormat value={row.total_amount - row.discount} />{" "}
+                  </Typography>
+                </Grid>
+              </Grid>
               {/* <Grid container direction="row" justifyContent={ "flex-end"}>
                         <Grid item xs={6}sm={2} >
                             <Typography variant="h5" gutterBottom component="div">Số mặt hàng đã nhập đủ</Typography>    
@@ -337,8 +386,12 @@ const OrderProductListDetail = (props) => {
               </>
             ) : null}
 
-            <Button disabled={row.status === 'confirmed'} variant="contained" size="small" style={{ marginLeft: 15 }} onClick={() => setIsOrderModalOpen(true)}>
+            <Button disabled={row.status !== 'new'} variant="contained" size="small" style={{ marginLeft: 15 }} onClick={() => setIsOrderModalOpen(true)}>
               Xử lý đơn đặt
+            </Button>
+            
+            <Button disabled={row.status !== 'confirmed'} variant="contained" size="small" style={{ marginLeft: 15 }} onClick={handlePayment}>
+              Thanh toán
             </Button>
 
             <IconButton

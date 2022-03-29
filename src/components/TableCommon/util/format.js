@@ -128,7 +128,7 @@ export const FormatedProductStatusReport = (props) => {
 
 export const FormatedStatusOrder = (props) => {
   switch (props.status) {
-    case 0:
+    case "new":
       return (
         <Chip
           label="Chờ chấp nhận"
@@ -144,7 +144,7 @@ export const FormatedStatusOrder = (props) => {
           {"Chờ chấp nhận"}{" "}
         </Chip>
       );
-    case 1:
+    case "confirmed":
       return (
         <Chip
           label="Chờ giao"
@@ -160,10 +160,10 @@ export const FormatedStatusOrder = (props) => {
           {"Chờ giao"}{" "}
         </Chip>
       );
-    case 2:
+    case "cancelled":
       return (
         <Chip
-          label="Chưa giao đủ"
+          label="Đã hủy"
           color="#00ded7"
           variant="outlined"
           style={{
@@ -173,10 +173,10 @@ export const FormatedStatusOrder = (props) => {
             height: 28,
           }}
         >
-          {"Chưa giao đủ"}{" "}
+          {"Đã hủy"}{" "}
         </Chip>
       );
-    case 3:
+    case "paid":
       return (
         <Chip
           label="Hoàn thành"
@@ -195,7 +195,7 @@ export const FormatedStatusOrder = (props) => {
     default:
       return (
         <Chip
-          label="Chờ"
+          label="Chờ xử lý"
           color="#ff007d"
           variant="outlined"
           style={{

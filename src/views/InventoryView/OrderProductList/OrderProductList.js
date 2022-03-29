@@ -158,7 +158,7 @@ const OrderProductList = () => {
           > 
               {/* 1. ADD POP UP */}
                 <Typography className={classes.headerTitle} variant="h5">
-                    Đơn đặt hàng nhập
+                    Đơn đặt hàng
                 </Typography>
 
                 <Grid className={classes.btngroup1} >

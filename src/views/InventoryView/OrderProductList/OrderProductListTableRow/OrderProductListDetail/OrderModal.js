@@ -29,6 +29,7 @@ import openNotification from "../../../../../components/StatusPopup/StatusPopup"
 import _ from "lodash";
 import moment from "moment";
 import { statusAction } from "../../../../../store/slice/statusSlice";
+import ModalWrapperWithClose from "../../../../../components/Modal/ModalWrapperWithClose";
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -124,6 +125,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
     };
 
     try {
+      
       handleClose();
       let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
       let updateCustomerOrderRes = await orderApi.confirmCustomerOrder(
@@ -132,7 +134,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
         customerOrder.id,
         {
           order_code: res.data.order.order_code,
-          order_id: res.data.order.order_id,
+          order_id: res.data.order.id,
         }
       );
       dispatch(
@@ -286,8 +288,19 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
     return order.details?.every((detail) => detail.quantity === 0);
   };
 
+  const handleCancelOrder = async () => {
+    handleClose();
+    try {
+      const res = await orderApi.cancleCustomerOrder(store_uuid, branch_uuid, customerOrder.id);
+      dispatch(statusAction.successfulStatus("Hủy đơn đặt thành công"));
+    } catch (err) {
+      console.log(err)
+      dispatch(statusAction.failedStatus("Hủy đơn đặt thất bại"))
+    }
+  }
+
   return (
-    <ModalWrapper open={isOpen} handleClose={handleClose} title="Đơn đặt">
+    <ModalWrapperWithClose open={isOpen} handleClose={handleClose} title="Đơn đặt">
       <Typography variant="h3">{customerOrder.customer_order_code}</Typography>
       <Grid
         container
@@ -398,7 +411,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
               variant="contained"
               size="small"
               color="secondary"
-              onClick={handleClose}
+              onClick={handleCancelOrder}
             >
               Hủy
             </Button>
@@ -415,7 +428,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
           </Box>
         </Grid>
       </Grid>
-    </ModalWrapper>
+    </ModalWrapperWithClose>
   );
 };
 
