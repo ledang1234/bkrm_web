@@ -42,30 +42,32 @@ const ProductList = (props) => {
     const {products} = useSelector(state => state.customerPage);
 
 
-    function getIsOutOfStockStatus (product) {
-        console.log("product",product)
+
+    function getStockQuantity (product, all_child_product=null) {
+        if(!product){return }
         if(orderWhenOutOfSctock){
-            return false
+            return 999999999
         }else{
-            if (product.has_variance){
-                const all_child_product = products.filter( item => item.parent_product_code === product.product_code)
+            if (product?.has_variance){
+                all_child_product= all_child_product? all_child_product: products.filter( item => item.parent_product_code === product.product_code)
                 let sum =  all_child_product?.reduce((sum,a)=>sum + Number(a.quantity_available), 0)
-                console.log("sum",sum)
-                return sum === 0
+                return sum
             }
             if(branchOption === 'auto'  ){
-                return Number(product.quantity_available) === 0
+              console.log(" Number(product.quantity_available) ", Number(product.quantity_available) )
+                return Number(product.quantity_available) ? Number(product.quantity_available):0
             }
             else if(branchOption === 'default'){
                 let branchId = webSetting?.orderManagement.branchDefault
                 const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
-                return Number(branch.quantity_available) === 0
+                return Number(branch.quantity_available) ?Number(branch.quantity_available):0
             }else {
                 let branchId = localStorage.getItem(storeInfo.uuid);
                 const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
-                return Number(branch.quantity_available) === 0
+                return Number(branch.quantity_available)  ? Number(branch.quantity_available) :0
             }
         }
+    
     }
 
 
@@ -101,13 +103,18 @@ const ProductList = (props) => {
     const [openQuickPopUp, setOpenQuickPopUp] = useState(false)
     const [selectedItem, setSelectedItem] = useState(false)
 
-    const addProductToCart = (product, addQuantity=1) => {
-        const newItem = {...product}
-        
+    const addProductToCart = (product, addQuantity=1,stockQuantity) => {
+        const newItem = {...product}  
         try {
-            console.log("newItem",newItem);
+            const itemInCart = order.cartItem.find(item => item.uuid === product.uuid);
+            let totalQuantityWillInCart  = itemInCart?Number(itemInCart.quantity) +addQuantity:addQuantity 
+            if(stockQuantity < totalQuantityWillInCart) {
+              const mess = !itemInCart.quantity ? `Số lượng đặt vượt tồn kho. \n  Tồn kho: ${stockQuantity}`:
+                    `Số lượng đặt vượt tồn kho. \n  Tồn kho: ${stockQuantity}.\r      Giỏ hàng đang có: ${Number(itemInCart.quantity)}`
+              warning(mess)
+              return 
+             }
             const index = order.cartItem.findIndex(item => item.uuid === newItem.uuid);
-            console.log(index)
             const newOrder = _.cloneDeep(order);
             if (index !== -1) {
                 // newOrder.cartItem[index].quantity += 1;
@@ -124,8 +131,8 @@ const ProductList = (props) => {
             console.log(err)
         }
     }
-    const openPopUp = (product,isLowStock) =>{
-        if(isLowStock){
+    const openPopUp = (product,stockQuantity) =>{
+        if(stockQuantity === 0){
             warning("Sản phẩm hết hàng")
             return
         }
@@ -133,7 +140,7 @@ const ProductList = (props) => {
             setOpenQuickPopUp(true)
             return
         }
-        addProductToCart(product)
+        addProductToCart(product,stockQuantity)
     }
     
     
@@ -141,10 +148,10 @@ const ProductList = (props) => {
         <Box className={classes.container} style={{marginLeft:`${marginContainer}vw`,marginRight:`${marginContainer}vw`,}}>
             <Grid container direction="row" spacing={2} justifyContent="center" >
              {/* Đổi list đúng với category */}
-            {openQuickPopUp? <PopUpProduct getIsOutOfStockStatus={getIsOutOfStockStatus} addProductToCart={addProductToCart}mainColor={mainColor} product={selectedItem}open={openQuickPopUp} onClose={()=>setOpenQuickPopUp(false)} />:null}
+            {openQuickPopUp? <PopUpProduct getStockQuantity={getStockQuantity} addProductToCart={addProductToCart}mainColor={mainColor} product={selectedItem}open={openQuickPopUp} onClose={()=>setOpenQuickPopUp(false)} />:null}
              {InventoryList?.map(item=>{
                  const image = JSON.parse(item.img_urls) ?JSON.parse(item.img_urls) [0]:null
-                const isLowStock  = getIsOutOfStockStatus(item)
+                const stockQuantity  = getStockQuantity(item) 
                  return( 
                      <>
                      {Number(isBox)?
@@ -160,12 +167,12 @@ const ProductList = (props) => {
                             >
                              {/* <Box component="img" sx={{  height: 40, width: 40, }} style={{zIndex:20,marginTop:10}} src={soldOutIcon}/> */}
                            {/* display:'flex', justifyContent:'flex-end' */}
-                           {isLowStock ? <Box style={{paddingTop:2, }}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
+                           {stockQuantity === 0? <Box style={{paddingTop:2, }}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
                             </CardMedia>
 
                             <Box style={{marginTop:10}}>
                                 <CardContent>
-                                    < InfoComponent isLowStock={isLowStock} setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                    < InfoComponent stockQuantity={stockQuantity} setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                                 </CardContent>   
                             </Box>
                         </CardActionArea>
@@ -178,16 +185,16 @@ const ProductList = (props) => {
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border?7:0}}
                                 image={JSON.parse(item.img_urls ? item.img_urls : "[]").length  ? JSON.parse(item.img_urls ? item.img_urls : "[]").at(0) : defaultProduct}
                             >
-                            {isLowStock ? <Box style={{paddingTop:2}}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
+                            {stockQuantity === 0? <Box style={{paddingTop:2}}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
 
                             </CardMedia>
                             <Box style={{marginTop:10}}>
                                 {isMargin? 
                                 <CardContent>
-                                    < InfoComponent isLowStock={isLowStock}  setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                    < InfoComponent stockQuantity={stockQuantity}  setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                                 </CardContent>
                                 :
-                                < InfoComponent isLowStock={isLowStock}  setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                < InfoComponent stockQuantity={stockQuantity}  setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                             }    
                             </Box>
                         </CardActionArea>
@@ -202,7 +209,7 @@ const ProductList = (props) => {
     )
 }
 export const InfoComponent = (props)=>{
-    const {openPopUp,isLowStock,setSelectedItem,item,mainColor,btnStyle,alignCenter, nameColor,priceColor,nameSize,nameBold,nameLineClass,priceSize,priceBold} = props;
+    const {openPopUp,stockQuantity,setSelectedItem,item,mainColor,btnStyle,alignCenter, nameColor,priceColor,nameSize,nameBold,nameLineClass,priceSize,priceBold} = props;
     let { path } = useRouteMatch();
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -230,7 +237,7 @@ export const InfoComponent = (props)=>{
                             onClick={(event) => {
                                 // Prevent CardActionArea Click
                                 event.preventDefault()
-                                openPopUp(item,isLowStock);
+                                openPopUp(item,stockQuantity);
                                 setSelectedItem(item)
                             }}
                         >
@@ -250,7 +257,7 @@ export const InfoComponent = (props)=>{
                 onClick={(event) => {
                     // Prevent CardActionArea Click
                     event.preventDefault()
-                    openPopUp(item,isLowStock);
+                    openPopUp(item,stockQuantity);
                     setSelectedItem(item)
                 }}
                 style={{marginBottom:-12,marginTop:10 }}
