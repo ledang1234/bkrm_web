@@ -1,3 +1,5 @@
+
+
 import React, {useState,useEffect} from 'react'
 import {Button,Grid,Paper,Card,Box,CardActions,Tabs,FormControl,ButtonGroup,Divider,FormLabel,Tab,RadioGroup,Radio,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Menu,MenuItem,ListItem,IconButton,TableBody,Typography} from '@material-ui/core'
 import { useTheme, makeStyles, styled ,lighten} from "@material-ui/core/styles";
@@ -18,7 +20,7 @@ import { customerPageActions } from '../../../../store/slice/customerPageSlice';
 
 import ReactQuill, {Quill} from 'react-quill';
 import openNotification from "../../../../components/StatusPopup/StatusPopup";
-
+import { success ,error,warning, info} from '../../../../components/StatusModal/StatusModal';
 
 
 
@@ -42,7 +44,7 @@ const DetailPage = (props) => {
       checked: {}
   }));
      
-  const dispatch = useDispatch()
+    const dispatch = useDispatch()
     const classes = useStyles(theme);
     const {productCode} = useParams();
     const {products } = useSelector(state => state.customerPage)
@@ -52,21 +54,70 @@ const DetailPage = (props) => {
     const {order} = useSelector(state => state.customerPage)
 
 
-    const attrValue = detailProduct?.attribute_value? JSON.parse(detailProduct.attribute_value):null
-    const initValue = attrValue?.map(row => row.items[0])
-    const [selectAttr, setSelectedAttr]  = useState(initValue)
-    const all_child_product = detailProduct?.has_variance ? products.filter( item => item.parent_product_code === detailProduct.product_code):null
-    
+    const { storeInfo} = useSelector(state => state.customerPage)
+    const webSetting = storeInfo.web_configuration? JSON.parse(storeInfo.web_configuration):null
+    const orderWhenOutOfSctock = webSetting?.orderManagement.orderWhenOutOfSctock
+    const branchOption = webSetting?.orderManagement.branchOption
 
+
+    //
+    const all_child_product = detailProduct?.has_variance ? products.filter( item => item.parent_product_code === detailProduct.product_code):null
+    const attrValue = detailProduct?.attribute_value? JSON.parse(detailProduct.attribute_value):null
+
+    const getSumQuantityOfAvalueToDisableRadio = () =>{
+      return attrValue?.map((attr,indexKey) => {
+        const arr =  attr.items.map((val, indexItems) => {
+          const myObj = all_child_product.filter(item => {
+            let att = JSON.parse(item.attribute_value).filter(att => att.name === attr.key )[0]
+            if(att){ return att.name === attr.key && att.value.includes(val)  }
+          });
+          for (let i = 0; i < myObj?.length ; i++){
+            if(getStockQuantity(myObj[i]) >0) {return val}
+          }
+          return null  
+        })
+        return arr
+      })
+    }
+    const disableValueList = detailProduct?.has_variance ?  getSumQuantityOfAvalueToDisableRadio() :null
+    const initValue = disableValueList ? disableValueList.map(i => i.filter(value =>value)[0]):null
+    const [selectAttr, setSelectedAttr]  = useState(initValue)
+
+    console.log("disableValueList",disableValueList)
+    console.log("initValue",initValue)
+    console.log("selectAttr",selectAttr)
+
+
+  function getStockQuantity (product) {
+    if(!product){return }
+    if(orderWhenOutOfSctock){
+        return 999999999
+    }else{
+        if (product?.has_variance){
+            let sum =  all_child_product?.reduce((sum,a)=>sum + Number(a.quantity_available), 0)
+            return sum
+        }
+        if(branchOption === 'auto'  ){
+          console.log(" Number(product.quantity_available) ", Number(product.quantity_available) )
+            return Number(product.quantity_available) ? Number(product.quantity_available):0
+        }
+        else if(branchOption === 'default'){
+            let branchId = webSetting?.orderManagement.branchDefault
+            const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
+            return Number(branch.quantity_available) ?Number(branch.quantity_available):0
+        }else {
+            let branchId = localStorage.getItem(storeInfo.uuid);
+            const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
+            return Number(branch.quantity_available)  ? Number(branch.quantity_available) :0
+        }
+    }
+
+}
 
     useEffect(()=>{
         setSelectedProduct(getChoosenProductWithVariance())
     },[selectAttr])
-    useEffect(()=>{
-      if(detailProduct?.has_variance){
-        setSelectedProduct(getChoosenProductWithVariance())
-      }
-    },[])
+
     
 
     const getChoosenProductWithVariance = ()=>{
@@ -79,7 +130,6 @@ const DetailPage = (props) => {
     }
 
     const [selectedProduct, setSelectedProduct] = useState(null)
-
   
     const handleChange = (e, keyIndex,val) =>{
       let newSelectAttr = [...selectAttr];
@@ -88,21 +138,26 @@ const DetailPage = (props) => {
 
     }
 
-
-    const addProduct= () =>{
+    const addProduct= (stockQuantityOfSelectedProduct) =>{
       if(detailProduct.has_variance) {
-        addProductToCart(selectedProduct, quantity)
+        addProductToCart(selectedProduct, quantity,stockQuantityOfSelectedProduct)
         return
       }
-      addProductToCart(detailProduct, quantity)
+      addProductToCart(detailProduct, quantity,stockQuantityOfSelectedProduct)
     }
 
-    const addProductToCart = (product, addQuantity=1) => {
+    const addProductToCart = (product, addQuantity=1,stockQuantityOfSelectedProduct) => {
       const newItem = {...product}
       try {
-          console.log(newItem);
+            const itemInCart = order.cartItem.find(item => item.uuid === selectedProduct.uuid);
+            let totalQuantityWillInCart  = itemInCart?Number(itemInCart.quantity) +quantity:quantity 
+            if(stockQuantityOfSelectedProduct < totalQuantityWillInCart) {
+              const mess = !itemInCart.quantity ? `Số lượng đặt vượt tồn kho. \n  Tồn kho: ${stockQuantityOfSelectedProduct}`:
+                    `Số lượng đặt vượt tồn kho. \n  Tồn kho: ${stockQuantityOfSelectedProduct}.\r      Giỏ hàng đang có: ${Number(itemInCart.quantity)}`
+              warning(mess)
+              return
+             }
           const index = order.cartItem.findIndex(item => item.uuid === newItem.uuid);
-          console.log(index)
           const newOrder = _.cloneDeep(order);
           if (index !== -1) {
               // newOrder.cartItem[index].quantity += 1;
@@ -121,9 +176,10 @@ const DetailPage = (props) => {
       }
   }
 
- 
+
 
     const image = JSON.parse(detailProduct?.img_urls ?detailProduct?.img_urls: "[]" )
+    const stockQuantityOfSelectedProduct = detailProduct?.has_variance ? getStockQuantity(selectedProduct) :getStockQuantity(detailProduct)
     return (
     <div className={classes.root}>
       <Grid container  direction="row" justifyContent="space-between" alignItems="flex-start" spacing={8}>
@@ -131,7 +187,8 @@ const DetailPage = (props) => {
           {image.length !==0?
           <Carousel   showArrows={true} showStatus={false} infiniteLoop={true} emulateTouch={true} swipeable={true} dynamicHeight={false}  showThumbs={true}
             >
-                {image?.map((url)=><img  src={url}style={{borderRadius:10}} />)}
+                {image?.map((url)=>
+                <img  src={url}style={{borderRadius:10}} /> )}
             </Carousel>
            :
           <Box  component="img" sx={{  marginLeft: 7, marginRight: 7,  borderRadius: 2}} src={defaultProduct}/>
@@ -140,6 +197,8 @@ const DetailPage = (props) => {
 
         <Grid item xs={12} md={6}>
           <Box>
+              {( detailProduct?.has_variance && selectedProduct) ||( !detailProduct?.has_variance && getStockQuantity(detailProduct)) >0 ?null:
+              <Box style={{paddingTop:2,marginBottom:10, marginTop:-10 }}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:65, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:14}}>Hết hàng</Box></Box>}
               <Typography variant="h1" style={{marginBottom:25,color:nameStyle[0] === "0" ? "#000": mainColor , fontWeight:nameStyle[2], fontSize: Number(nameStyle[1])}}>{detailProduct?.name}</Typography>
               <Typography variant="h2" style={{color:priceStyle[0] === "0" ? "#000": mainColor , fontWeight:priceStyle[2], fontSize: Number(priceStyle[1])}}>{detailProduct?.list_price.toLocaleString()} đ</Typography>
               <Typography variant="h5" style={{marginTop:40, marginBottom:10}}>Số lượng :</Typography>
@@ -157,13 +216,13 @@ const DetailPage = (props) => {
                       <Typography style={{fontSize:15, color:'#000', fontWeight:500, }}>{attr.key}</Typography> 
                     </Box> 
                   <FormControl>
-                 
-                      {/* <Typography style={{fontSize:15, color:'#000', fontWeight:500}}>{attr.key}</Typography>   */}
-                        <RadioGroup  value={selectAttr[indexKey]} onChange={(e)=>handleChange(e,indexKey)} >
+                       <RadioGroup  value={selectAttr?selectAttr[indexKey]: null} onChange={(e)=>handleChange(e,indexKey)} >
                           <div>
                               {attr.items.map(((val, indexItems) => {
+                                const isDisabled = !disableValueList[indexKey].includes(val)
+                                
                                 return(
-                                <FormControlLabel value={val} control={<Radio   classes={{root: classes.radio, checked: classes.checked}}  />} label={<Typography style={{color:'#000', fontSize:18,marginRight:15}}>{val}</Typography>}/>
+                                <FormControlLabel value={val} control={<Radio   classes={{root: classes.radio, checked: classes.checked}} disabled={isDisabled || !selectedProduct } />} label={<Typography style={{color:'#000', fontSize:18,marginRight:15}}>{val}</Typography>}/>
                                ) }))}  
                           </div>
                         </RadioGroup>
@@ -173,9 +232,13 @@ const DetailPage = (props) => {
                 )
               })
               :null
-            }
+           }
           </Box>
-          <CustomButton fullWidth mainColor={mainColor} style={{marginTop:50}} onClick={addProduct} >Thêm vào giỏ hàng</CustomButton>
+          {/* {( detailProduct?.has_variance && selectedProduct && getStockQuantity(selectedProduct))  > 0||( !detailProduct?.has_variance && getStockQuantity(detailProduct))  > 0? */}
+          {( detailProduct?.has_variance && selectedProduct && stockQuantityOfSelectedProduct> 0)  ||( !detailProduct?.has_variance && stockQuantityOfSelectedProduct> 0)  ?
+
+          <CustomButton fullWidth mainColor={mainColor} style={{marginTop:50}} onClick={()=>addProduct(stockQuantityOfSelectedProduct)} >Thêm vào giỏ hàng</CustomButton>
+          : <CustomButton fullWidth mainColor={mainColor} style={{marginTop:50,color:'#fff'}} disabled >Hết hàng</CustomButton>}
         </Grid>
       </Grid>
     
@@ -193,11 +256,4 @@ const DetailPage = (props) => {
 export default DetailPage
 
 
-{/* <Typography style={{fontSize:15, color:'#000', fontWeight:500, marginBottom:10}}>{attr.key}</Typography> 
-                    <Grid container >
-                        {attr.items.map(((val, indexVal) => (
-                          <Box  style={{border: "1px solid #b8b8b8",backgroundColor: selectAttr[indexKey]  === val?  mainColor:null, color: selectAttr[indexKey]  === val?  '#fff':null, padding:6, paddingRight:20, paddingLeft:20, marginRight:10}}>
-                            <Typography  onChange={(e)=>handleChange(e,indexKey,val )} style={{ fontSize:17, fontWeight:500}}>{val}</Typography>
-                          </Box>
-                          )))}  
-                    </Grid>                        */}
+

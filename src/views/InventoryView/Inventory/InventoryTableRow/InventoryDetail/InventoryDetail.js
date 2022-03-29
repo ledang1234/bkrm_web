@@ -95,6 +95,7 @@ const InventoryDetail = (props) => {
     images: [],
     suppliers: [],
   });
+
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -151,6 +152,7 @@ const InventoryDetail = (props) => {
 
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
 
+  console.log("productDetail",productDetail)
 
   return row.has_variance ? (
     <>

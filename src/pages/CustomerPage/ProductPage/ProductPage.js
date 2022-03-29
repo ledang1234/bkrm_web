@@ -45,6 +45,10 @@ const ProductPage = (props) => {
 
     let productOfCategory = categoryId ? products.filter(product => product.category.id.toString() === categoryId &&(product.attribute_value === null || product.has_variance === 1) ) 
                         :products.filter(product => product.attribute_value === null || product.has_variance === 1 ) 
+
+    // let varianceProductOfCategory = categoryId ? products.filter(product => product.category.id.toString() === categoryId &&(product.attribute_value !== null && product.has_variance !== 1) ) 
+    //                     :products.filter(product => product.attribute_value !== null || product.has_variance !== 1 ) 
+
     return (
         <>
             {/* 1. TITLE */}

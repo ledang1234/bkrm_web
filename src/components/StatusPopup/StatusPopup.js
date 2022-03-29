@@ -6,6 +6,8 @@ const openNotification = (type, message, description) => {
     description: description,
     placement: "bottomRight",
     // placement: "topRight",
+    // style:{marginTop:60}
+    // style:{backgroundColor:'#4BB04F',  fontWeight:500}
 
   });
 };
