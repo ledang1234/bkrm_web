@@ -18,11 +18,15 @@ import {useStyles} from './style'
 import {ColorOutlineButtonCart} from "../../../../components/Button/ColorButton"
 import { useDispatch, useSelector } from 'react-redux';
 import { customerPageActions } from '../../../../store/slice/customerPageSlice';
-import { success } from '../../../../components/StatusModal/StatusModal';
+import { success ,error,warning, info} from '../../../../components/StatusModal/StatusModal';
 import defaultProduct from '../../../../assets/img/product/default-product.png'
 import _ from 'lodash'
 import PopUpProduct from "../PopUpProduct/PopUpProduct"
 import openNotification from "../../../../components/StatusPopup/StatusPopup";
+import soldOutIcon from "../../../../assets/img/icon/sold-out.png"
+import soldOutIcon1 from "../../../../assets/img/icon/sold-out-1.png"
+import soldOutIcon2 from "../../../../assets/img/icon/out-of-stock.png"
+
 const ProductList = (props) => {
     let { categoryId } = useParams();
     let {url} = useRouteMatch();
@@ -35,26 +39,31 @@ const ProductList = (props) => {
     const webSetting = storeInfo.web_configuration? JSON.parse(storeInfo.web_configuration):null
     const orderWhenOutOfSctock = webSetting?.orderManagement.orderWhenOutOfSctock
     const branchOption = webSetting?.orderManagement.branchOption
+    const {products} = useSelector(state => state.customerPage);
 
 
     function getIsOutOfStockStatus (product) {
         console.log("product",product)
-        console.log("canorderWhenOutOfSctock",orderWhenOutOfSctock)
         if(orderWhenOutOfSctock){
             return false
         }else{
-            if(branchOption === 'default'){
+            if (product.has_variance){
+                const all_child_product = products.filter( item => item.parent_product_code === product.product_code)
+                let sum =  all_child_product?.reduce((sum,a)=>sum + Number(a.quantity_available), 0)
+                console.log("sum",sum)
+                return sum === 0
+            }
+            if(branchOption === 'auto'  ){
+                return Number(product.quantity_available) === 0
+            }
+            else if(branchOption === 'default'){
                 let branchId = webSetting?.orderManagement.branchDefault
                 const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
-                console.log("default branch", branch)
                 return Number(branch.quantity_available) === 0
-            }else if (branchOption === 'choose'){
+            }else {
                 let branchId = localStorage.getItem(storeInfo.uuid);
                 const branch = product.branch_inventories.find(branch => branch.uuid === branchId)
-                console.log("choose branch", branch)
                 return Number(branch.quantity_available) === 0
-            }else{
-                return Number(product.quantity_available) === 0
             }
         }
     }
@@ -94,6 +103,7 @@ const ProductList = (props) => {
 
     const addProductToCart = (product, addQuantity=1) => {
         const newItem = {...product}
+        
         try {
             console.log("newItem",newItem);
             const index = order.cartItem.findIndex(item => item.uuid === newItem.uuid);
@@ -114,7 +124,11 @@ const ProductList = (props) => {
             console.log(err)
         }
     }
-    const openPopUp = (product) =>{
+    const openPopUp = (product,isLowStock) =>{
+        if(isLowStock){
+            warning("Sản phẩm hết hàng")
+            return
+        }
         if(product.has_variance){
             setOpenQuickPopUp(true)
             return
@@ -130,21 +144,28 @@ const ProductList = (props) => {
             {openQuickPopUp? <PopUpProduct getIsOutOfStockStatus={getIsOutOfStockStatus} addProductToCart={addProductToCart}mainColor={mainColor} product={selectedItem}open={openQuickPopUp} onClose={()=>setOpenQuickPopUp(false)} />:null}
              {InventoryList?.map(item=>{
                  const image = JSON.parse(item.img_urls) ?JSON.parse(item.img_urls) [0]:null
-             
+                const isLowStock  = getIsOutOfStockStatus(item)
                  return( 
                      <>
                      {Number(isBox)?
                      <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{margin:`${boxDistance}%`, width:widthSize, borderRadius:border?7:0}} >
+
                         <CardActionArea 
                             component={Link} to={`${url}/products/${item.product_code}`} 
                         >
+
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border&& isMargin ?7:0}}
                                 image={JSON.parse(item.img_urls ? item.img_urls : "[]").length  ? JSON.parse(item.img_urls ? item.img_urls : "[]").at(0) : defaultProduct}
-                            />
+                            >
+                             {/* <Box component="img" sx={{  height: 40, width: 40, }} style={{zIndex:20,marginTop:10}} src={soldOutIcon}/> */}
+                           {/* display:'flex', justifyContent:'flex-end' */}
+                           {isLowStock ? <Box style={{paddingTop:2, }}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
+                            </CardMedia>
+
                             <Box style={{marginTop:10}}>
                                 <CardContent>
-                                    < InfoComponent setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                    < InfoComponent isLowStock={isLowStock} setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                                 </CardContent>   
                             </Box>
                         </CardActionArea>
@@ -156,14 +177,17 @@ const ProductList = (props) => {
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border?7:0}}
                                 image={JSON.parse(item.img_urls ? item.img_urls : "[]").length  ? JSON.parse(item.img_urls ? item.img_urls : "[]").at(0) : defaultProduct}
-                            />
+                            >
+                            {isLowStock ? <Box style={{paddingTop:2}}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
+
+                            </CardMedia>
                             <Box style={{marginTop:10}}>
                                 {isMargin? 
                                 <CardContent>
-                                    < InfoComponent setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                    < InfoComponent isLowStock={isLowStock}  setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                                 </CardContent>
                                 :
-                                < InfoComponent setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
+                                < InfoComponent isLowStock={isLowStock}  setSelectedItem={setSelectedItem} openPopUp={openPopUp}  item={item} mainColor={mainColor} btnStyle={btnStyle} alignCenter={alignCenter} nameColor={nameColor} priceColor={priceColor} nameSize={nameSize} nameBold={nameBold} nameLineClass={nameLineClass} priceBold={priceBold}priceSize={priceSize} />
                             }    
                             </Box>
                         </CardActionArea>
@@ -178,7 +202,7 @@ const ProductList = (props) => {
     )
 }
 export const InfoComponent = (props)=>{
-    const {openPopUp,setSelectedItem,item,mainColor,btnStyle,alignCenter, nameColor,priceColor,nameSize,nameBold,nameLineClass,priceSize,priceBold} = props;
+    const {openPopUp,isLowStock,setSelectedItem,item,mainColor,btnStyle,alignCenter, nameColor,priceColor,nameSize,nameBold,nameLineClass,priceSize,priceBold} = props;
     let { path } = useRouteMatch();
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -198,7 +222,7 @@ export const InfoComponent = (props)=>{
                 
                 </Grid>
                 {Number(btnStyle[0])?
-                    <Grid item>
+                    <Grid item>     
                         <IconButton size="small"  style={{color:'#fff', background:mainColor}} 
                             // Stop Ripple Effect
                             onTouchStart={(event) => event.stopPropagation()}
@@ -206,12 +230,12 @@ export const InfoComponent = (props)=>{
                             onClick={(event) => {
                                 // Prevent CardActionArea Click
                                 event.preventDefault()
-                                openPopUp(item);
+                                openPopUp(item,isLowStock);
                                 setSelectedItem(item)
                             }}
                         >
                             <AddIcon fontSize="small"/>
-                        </IconButton>
+                        </IconButton>:
                     </Grid> :null }
 
             </Grid>
@@ -226,7 +250,7 @@ export const InfoComponent = (props)=>{
                 onClick={(event) => {
                     // Prevent CardActionArea Click
                     event.preventDefault()
-                    openPopUp(item);
+                    openPopUp(item,isLowStock);
                     setSelectedItem(item)
                 }}
                 style={{marginBottom:-12,marginTop:10 }}

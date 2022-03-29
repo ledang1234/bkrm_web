@@ -10,6 +10,9 @@ import defaultProduct from '../../../../assets/img/product/default-product.png'
 import {CustomButton} from "../../../../components/Button/ColorButton"
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import soldOutIcon from "../../../../assets/img/icon/sold-out.png"
+import soldOutIcon1 from "../../../../assets/img/icon/sold-out-1.png"
+
 const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart,getIsOutOfStockStatus}) => {
     const theme = useTheme();
     const useStyles = makeStyles((theme) => ({
@@ -115,7 +118,7 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart,getIsOut
           })}
 
         {! getIsOutOfStockStatus(selectedProduct) ?<CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}} onClick={()=>{addProductToCart(selectedProduct,quantity )}}  >Thêm vào giỏ hàng</CustomButton>
-        : <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}} >Hết hàng</CustomButton>
+        : <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100, color:'#fff'}} disabled >Hết hàng</CustomButton>
         }
        
       </Box>

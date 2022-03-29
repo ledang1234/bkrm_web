@@ -71,7 +71,9 @@ const WebSetting = () => {
     status: "inactive",
     orderManagement:{
       branchOption:'default',
-      branchDefault: branches[0].uuid,
+      // branchDefault: branches[0].uuid,
+      branchDefault: null,
+
       orderWhenOutOfSctock:false,
 
     },
@@ -86,7 +88,7 @@ const WebSetting = () => {
     listProduct: {
       priceStyle: ["0", 18, 400], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600)
       nameStyle: ["0", 19, 600], //0-left 1-right //color: normal-maincolor , size: small - large(16), bold:no() -yes (600), maxNumberOFline: 1-2
-      btnStyle: ["1", "1"], //0-left 1-right //haveBtn: no-yes, style:circle - box
+      btnStyle: ["1", "0"], //0-left 1-right //haveBtn: no-yes, style:circle - box
       isBox: "1",
       isMargin: "0",
       border: "1",

@@ -220,7 +220,7 @@ const ProductSetting = ({web,handleChangeListProduct,setWeb}) => {
            <Grid item >
            <Typography style={{fontWeight:500, marginRight:20, color:"#000",fontSize:15}}>Khung sản phẩm: </Typography>
                 <ListItem style={{margin:0, padding:0, marginBottom:8}}>
-                    <Typography style={{fontWeight:500, marginRight:20}}>Kiểu: </Typography>
+                    <Typography style={{fontWeight:500, marginRight:20}}>Khung: </Typography>
                     <FormControl component="fieldset">
                         <RadioGroup name="isBox" value={web.listProduct.isBox.toString()} onChange={handleChangeListProduct}>
                         <div>

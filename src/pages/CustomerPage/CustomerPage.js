@@ -88,6 +88,7 @@ const CustomerPage = () => {
 
   const mainColor =  `rgba(${ webInfo.mainColor.r }, ${ webInfo.mainColor.g }, ${ webInfo.mainColor.b }, ${webInfo.mainColor.a })`
 
+  console.log("`${url}/products/:productCode`",`${url}/category/:categoryId/products/:productCode`)
 
   if (storeWebPage) {
   return (<div className={classes.root}>
@@ -136,13 +137,13 @@ const CustomerPage = () => {
           <DetailPage webInfo={webInfo} />
         </Route>
 
-        <Route exact path={`${url}/products/:productCode`}>
+        {/* <Route exact path={`${url}/products/:productCode`}>
           <DetailPage webInfo={webInfo} />
-        </Route>
+        </Route> */}
     
-        <Route exact path={`${url}/all`}>
+        {/* <Route exact path={`${url}/all`}>
           <ProductPage  webInfo={webInfo} />
-        </Route>
+        </Route> */}
 
         <Route path={`${url}/*`} component={PageNotFound} />
       </Switch>
