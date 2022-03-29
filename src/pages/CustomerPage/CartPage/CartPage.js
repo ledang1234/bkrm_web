@@ -138,7 +138,8 @@ const CartPage = (props) => {
   })
 
     const getAutoBranch = () =>{
-      //  CODE HERE
+        //  CODE HERE
+
     }
 
   const getBranch = async () =>{

@@ -42,7 +42,9 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart,getStock
             if(att){ return att.name === attr.key && att.value.includes(val)  }
           });
           for (let i = 0; i < myObj?.length ; i++){
-            if(getStockQuantity(myObj[i],all_child_product) >0 ) {return val}
+            // if(getStockQuantity(myObj[i],all_child_product) >0 ) {return val}
+            if(getStockQuantity(myObj[i]) >0 ) {return val}
+
           }
           return null  
         })
@@ -82,9 +84,10 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart,getStock
     }
 
     const [selectedProduct, setSelectedProduct] = useState(null)
-    const stockQuantityOfSelectedProduct = getStockQuantity(selectedProduct ,all_child_product )
+    // const stockQuantityOfSelectedProduct = getStockQuantity(selectedProduct ,all_child_product )
 
-    
+    const stockQuantityOfSelectedProduct = getStockQuantity(selectedProduct  )
+
     // const [  isLowStock , setIsLowStock] = useState(getStockStatus(selectedProduct))
   //   useEffect(()=>{
   //     setIsLowStock(getStockStatus(selectedProduct))

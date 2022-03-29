@@ -52,16 +52,22 @@ const CustomerPage = () => {
 
   const [webInfo, setWebInfo] = useState(webSetting)
 
-  console.log("storeInfooooo",storeInfo)
   useEffect(() => {
     if (!storeWebPage) {
       return;
     }
+    let JSONdata = localStorage.getItem(storeWebPage);
+    const data = JSON.parse(JSONdata)
+    
+      if(data){
+          dispatch(customerPageActions.setStoreInfo(data.storeInfo))
+          dispatch(customerPageActions.setCategories(data.categories));
+          dispatch(customerPageActions.setProducts(data.products))
+      }
     const fetchStore = async () => {
       const res = await customerPageApi.storeInfo(storeWebPage);
       setWebInfo(JSON.parse(res.data.web_configuration))
       dispatch(customerPageActions.setStoreInfo(res.data))
-  
       const data = await Promise.all([customerPageApi.storeCategroies(res.data.uuid), 
         customerPageApi.storeProducts(res.data.uuid)]
       )
@@ -71,14 +77,37 @@ const CustomerPage = () => {
       const  webSetting = JSON.parse(res.data.web_configuration)
 
       if(webSetting.orderManagement.branchOption==='choose'&& res.data.branches.length > 1 && !webSetting.orderManagement.orderWhenOutOfSctock && !localStorage.getItem(res.data.uuid)){
-  
-      setOpenPopUpChooseBranch(true)
+          setOpenPopUpChooseBranch(true)
       }
+      localStorage.setItem(storeWebPage,JSON.stringify({
+        storeInfo:res.data,
+        products:data[1].data ? data[1].data : [],
+        order:localStorage.getItem(storeWebPage) ?localStorage.getItem(storeWebPage).order :  { name: "", phone: "", address: "", cartItem: [], branch_id: 57},
+        categories:data[0].data ? data[0].data : []
+      }));
 
     };
     fetchStore();
   }, []);
 
+    const changeBranch = async () => {
+      const res = await customerPageApi.storeInfo(storeWebPage);
+      setWebInfo(JSON.parse(res.data.web_configuration))
+      dispatch(customerPageActions.setStoreInfo(res.data))
+
+      const data = await Promise.all([customerPageApi.storeCategroies(res.data.uuid), 
+        customerPageApi.storeProducts(res.data.uuid)]
+      )
+      dispatch(customerPageActions.setCategories(data[0].data ? data[0].data : []));
+      dispatch(customerPageActions.setProducts(data[1].data ? data[1].data : []));
+      localStorage.setItem(storeWebPage,JSON.stringify({
+        storeInfo:res.data,
+        products:data[1].data ? data[1].data : [],
+        order:localStorage.getItem(storeWebPage) ?localStorage.getItem(storeWebPage).order :  { name: "", phone: "", address: "", cartItem: [], branch_id: 57},
+        categories:data[0].data ? data[0].data : []
+      }));
+    };
+  
   const number = order.cartItem.reduce((partialSum, a) => partialSum + a.quantity, 0)
 
   const branches = storeInfo.branches
@@ -95,10 +124,11 @@ const CustomerPage = () => {
   return (<div className={classes.root}>
 
     {openPopUpChooseBranch ?
-    <PopUpChoooseBranch openPopUpChooseBranch={openPopUpChooseBranch}  setOpenPopUpChooseBranch={setOpenPopUpChooseBranch} branches={branches} mainColor={mainColor}/>
+    <PopUpChoooseBranch  changeBranch={changeBranch} openPopUpChooseBranch={openPopUpChooseBranch}  setOpenPopUpChooseBranch={setOpenPopUpChooseBranch} branches={branches} mainColor={mainColor}/>
     :null}
 
     <NavBar
+    changeBranch={changeBranch}
       storeInfo={storeInfo}
       category={categories ? categories : []}
       number={number !==0  ?number:"0"}
@@ -162,7 +192,7 @@ export default CustomerPage;
 
 
 
-const PopUpChoooseBranch = ({openPopUpChooseBranch,setOpenPopUpChooseBranch,branches,mainColor}) =>{
+const PopUpChoooseBranch = ({openPopUpChooseBranch,changeBranch,setOpenPopUpChooseBranch,branches,mainColor}) =>{
   const {storeInfo} = useSelector(state => state.customerPage)
   console.log("branchesấd",branches)
   const [selectedBranch, setSelectedBranch] = useState(null);
@@ -187,6 +217,7 @@ const PopUpChoooseBranch = ({openPopUpChooseBranch,setOpenPopUpChooseBranch,bran
             onClick={()=>{
               localStorage.setItem(storeInfo.uuid , selectedBranch.id);
               setOpenPopUpChooseBranch(false)
+              changeBranch()
             }}
          >
           Xác nhận
