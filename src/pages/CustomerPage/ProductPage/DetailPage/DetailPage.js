@@ -48,7 +48,7 @@ const DetailPage = (props) => {
     const classes = useStyles(theme);
     const {productCode} = useParams();
     const {products } = useSelector(state => state.customerPage)
-    const detailProduct = products.find(prod => prod.product_code === productCode);
+    let detailProduct = products.find(prod => prod.product_code === productCode);
     const [quantity, setQuantity]  = useState(1)
     const {priceStyle, nameStyle} = webInfo.detailPage
     const {order} = useSelector(state => state.customerPage)
@@ -79,14 +79,21 @@ const DetailPage = (props) => {
         return arr
       })
     }
-    const disableValueList = detailProduct?.has_variance ?  getSumQuantityOfAvalueToDisableRadio() :null
-    const initValue = disableValueList ? disableValueList.map(i => i.filter(value =>value)[0]):null
+    let disableValueList = detailProduct?.has_variance ?  getSumQuantityOfAvalueToDisableRadio() :null
+    let initValue = disableValueList ? disableValueList.map(i => i.filter(value =>value)[0]):null
     const [selectAttr, setSelectedAttr]  = useState(initValue)
 
     console.log("disableValueList",disableValueList)
     console.log("initValue",initValue)
     console.log("selectAttr",selectAttr)
-
+    
+    useEffect(()=>{
+      detailProduct = products.find(prod => prod.product_code === productCode);
+      disableValueList = detailProduct?.has_variance ?  getSumQuantityOfAvalueToDisableRadio() :null
+      initValue = disableValueList ? disableValueList.map(i => i.filter(value =>value)[0]):null
+      setSelectedAttr(initValue)
+    },[products])
+    
 
   function getStockQuantity (product) {
     if(!product){return }
@@ -117,7 +124,7 @@ const DetailPage = (props) => {
         setSelectedProduct(getChoosenProductWithVariance())
     },[selectAttr])
 
-    
+
 
     const getChoosenProductWithVariance = ()=>{
       let choosenProduct = all_child_product? [...all_child_product] :[]
