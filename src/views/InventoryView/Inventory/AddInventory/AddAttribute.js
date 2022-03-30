@@ -43,7 +43,7 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_pri
                 var _set = [];
                 for (let j = 0; j < mySet.length ; j++ ){
                     for (let k = 0; k < newArr[i].items.length ; k++ ){
-                        _set.push(mySet[j].concat( ' - ',newArr[i].items[k]))
+                        _set.push(mySet[j].concat( ` -  `,newArr[i].items[k]))
                         // _set.push({name:mySet[j].concat( ' - ',newArr[i].items[k]), attList:[]})
 
                     }
@@ -58,7 +58,9 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_pri
       useEffect (() =>{
         var list = []
         // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:standard_price?standard_price:0, list_price :list_price?list_price:0}))
+        // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:standard_price?standard_price:0, list_price :list_price?list_price:0}))
+        generateList().map(e =>list.push({name:e,product_code:"",quantity:0, bar_code: "",standard_price:standard_price?standard_price:0, list_price :list_price?list_price:0}))
+
         setRelatedList(list)
     
 

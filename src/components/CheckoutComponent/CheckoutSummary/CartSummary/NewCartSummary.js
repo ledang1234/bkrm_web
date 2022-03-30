@@ -72,6 +72,7 @@ const CartSummary = (props) => {
     mode,
     reloadCustomers,
     discountData,
+    isScore
   } = props;
 
   const theme = useTheme();
@@ -112,7 +113,7 @@ const CartSummary = (props) => {
   // so tien khach đưa
   const [customerMoney, setCustomerMoney] = React.useState("0");
   
-  
+  console.log("currentCustomer",currentCustomer)
   // React.useEffect(() => {console.log(currentBranch)})
 
   // console.log("cartItem")
@@ -275,6 +276,24 @@ const CartSummary = (props) => {
               </Typography>
             </Grid>
 
+           {isScore && currentCustomer? <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              className={classes.marginRow}
+            >
+              <Typography variant="h5">Tích điểm</Typography>
+              <Typography variant="body2">
+                <ListItem style={{padding:0, margin:0}}>
+                <ThousandFormat
+                  // style={{ color: "#2096f3", fontWeight: 500 }}
+                  value={cartData.scores}
+                />
+               {currentCustomer?.points? <Typography>/{currentCustomer.points}</Typography> : null} 
+               </ListItem>
+              </Typography>
+            </Grid>:null}
+
             <Grid
               container
               direction="row"
@@ -295,18 +314,6 @@ const CartSummary = (props) => {
               />
             </Grid>
 
-            {/* <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.marginRow}>
-                                <Typography variant="h5">
-                                    Khách đưa
-                                </Typography>
-                                <VNDInput id="standard-basic" style={{ width: 90 }}
-                                    // defaultValue={(cartData.total_amount - cartData.discount).toString()}
-                                    defaultValue={cartData.total_amount - cartData.discount}
-                                    // value={cartData.paid_amount}
-                                    // value={cartData.total_amount - cartData.discount}
-                                    size="small" inputProps={{ style: { textAlign: "right" } }}
-                                    onChange={(e) => setCustomerMoney(e.target.value)} />
-                            </Grid> */}
 
             <Grid
               container

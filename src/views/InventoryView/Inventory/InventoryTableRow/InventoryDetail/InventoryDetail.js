@@ -77,7 +77,7 @@ const UploadImage = () => {
   );
 };
 const InventoryDetail = (props) => {
-  const { row, openRow, setReload } = props.parentProps;
+  const { row, openRow, setReload ,isManageInventory} = props.parentProps;
   const { isMini } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -240,6 +240,7 @@ const InventoryDetail = (props) => {
           }}
          batches={row.batches}
          has_batches={row.has_batches}
+         isManageInventory={isManageInventory}
         />
       )}
     </>
@@ -258,6 +259,7 @@ const InventoryDetail = (props) => {
             setReload();
             setThisReload(!thisReload);
           }}
+          isManageInventory={isManageInventory}
         />
       )}
       <ConfirmPopUp
@@ -401,7 +403,8 @@ const InventoryDetail = (props) => {
                     </Typography>
                   </Grid>
                 </Grid>
-
+                {isManageInventory?
+                <>
                 <Grid container direction="row" justifyContent="flex-start" alignItems='center'>
                   <Grid item xs={4} sm={4}>
                     <Typography variant="h5" gutterBottom component="div">
@@ -459,6 +462,8 @@ const InventoryDetail = (props) => {
                     </Typography>
                   </Grid>
                 </Grid>
+                </>:null
+                }
               </Grid>
             </Grid>
 

@@ -455,6 +455,7 @@ const AddInventory = (props) => {
     }
   };
 
+  console.log("relatedListttt",relatedList)
 const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
   return (
     <Dialog
@@ -665,6 +666,8 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
                 Giá vốn đang lớn hơn giá bán !!
               </Typography>
             ) : null}
+            {store_setting?.inventory.status ?
+            <>
             <ThousandSeperatedInput
               label="Tồn kho ban đầu"
               variant="outlined"
@@ -673,7 +676,19 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
               className={classes.margin}
               name="quantity"
               value={productFormik.values.quantity}
-              onChange={productFormik.handleChange}
+              // onChange={productFormik.handleChange}
+              onChange={(e) => {
+                // productFormik.handleChange
+                productFormik.setFieldValue("quantity", e.target.value);
+                if (relatedList.length !== 0) {
+                  var list = [...relatedList];
+                  list = relatedList.map(
+                    (i) => (i.quantity = e.target.value)
+                  );
+                  // list = relatedList.map(e =>({name:e,product_code:"", bar_code: "",standard_price:productFormik.values.importedPrice, list_price :value}))
+                  // setRelatedList(list)
+                }
+              }}
               error={
                 productFormik.touched.quantity && productFormik.errors.quantity
               }
@@ -725,6 +740,7 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
               }
               onBlur={productFormik.handleBlur}
             />
+            </>:null}
           </Grid>
         </Grid>
         <Grid container spacing={2}>
@@ -733,7 +749,7 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
               display="flex"
               flexDirection="row"
               alignItems="center"
-              style={{ marginTop: 10 }}
+              style={{ marginTop: 10, marginBottom:20 }}
             >
               {display.map((img) => (
                 <Tooltip title="Xóa tất cả hình ảnh">
@@ -765,7 +781,9 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
             </Box>
           </Grid>
         </Grid>
-        {store_setting?.expiryDate.status ? (
+        {/* {store_setting?.expiryDate.status  ? ( */}
+
+        {store_setting?.expiryDate.status  &&store_setting?.inventory.status ? (
           <div style={{ flexGrow: 1, textAlign: "right" }}>
             <FormControlLabel
               control={
@@ -785,7 +803,7 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
 
         {store_setting?.variation.status ? (
           <>
-            <Card className={classes.attrCard}>
+            <Card className={classes.attrCard} >
               <CardHeader
                 onClick={handleExpandClick}
                 action={
@@ -827,6 +845,7 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
                 <RelaltedItemList
                   relatedList={relatedList}
                   setRelatedList={setRelatedList}
+                  isManageInventory = {store_setting?.inventory.status}
                 />
               </Card>
             ) : null}

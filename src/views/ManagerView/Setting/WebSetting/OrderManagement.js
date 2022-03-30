@@ -26,7 +26,7 @@ import {
   import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
   import { useSelector ,useDispatch} from "react-redux";
 
-const OrderManagement = ({web,setWeb,handleChangeOrderManagement}) => {
+const OrderManagement = ({web,setWeb,handleChangeOrderManagement,showOutOfStock}) => {
     const info = useSelector((state) => state.info);
     const branches = info.branchsOfStore
 
@@ -44,6 +44,7 @@ const OrderManagement = ({web,setWeb,handleChangeOrderManagement}) => {
         Quản lý đơn đặt hàng:
       </Typography>
       {/* <div style={{border: "1px solid #c8c8c8",marginBottom:30, padding:15, borderRadius:20}}> */}
+      {branches?.length > 1 ?
       <Box style={{marginLeft:30}}> 
         <FormControl>
         <Typography style={{fontWeight:500, marginRight:20, color:'#6B6B6B'}}>Chi nhánh nhận đơn đặt hàng: </Typography>  
@@ -82,7 +83,12 @@ const OrderManagement = ({web,setWeb,handleChangeOrderManagement}) => {
             } />
           </RadioGroup>
         </FormControl>
-      </Box>
+      </Box>: null}
+
+
+
+
+      {showOutOfStock? 
       <FormControlLabel
             style={{marginBottom:30}}
             control={ <Checkbox  checked={web.orderManagement.orderWhenOutOfSctock}  name="orderWhenOutOfSctock" 
@@ -92,7 +98,7 @@ const OrderManagement = ({web,setWeb,handleChangeOrderManagement}) => {
             /> }
             label={ <Typography style={{fontWeight:500, marginLeft:20, color:'#6B6B6B'}}>Cho phép đặt hàng khi hết tồn kho </Typography>}
             labelPlacement="start"
-      />
+      />:null}
       {/* </div> */}
      
       

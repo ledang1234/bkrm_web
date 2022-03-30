@@ -72,7 +72,7 @@ const UploadImage = () => {
   );
 };
 const VarianceModal = (props) => {
-  const { row ,branchs,setReload,batches,has_batches} = props;
+  const { row ,branchs,setReload,batches,has_batches,isManageInventory} = props;
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -277,7 +277,8 @@ const VarianceModal = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-
+                    {isManageInventory? 
+                    <>
                   <Grid container direction="row" justifyContent="flex-start">
                     <Grid item xs={3} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
@@ -331,7 +332,7 @@ const VarianceModal = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-
+                    </>:null}
                 </Grid>
               </Grid>
 

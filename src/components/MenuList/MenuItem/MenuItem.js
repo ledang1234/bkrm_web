@@ -20,6 +20,7 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import setting from "../../../assets/constant/setting"
 
 
 
@@ -66,6 +67,8 @@ const MenuItem = (props) => {
   const Icon1 = item.icon2;
 
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const info = useSelector((state) => state.info);
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
 
   function getMenuIcon(type) {
@@ -98,6 +101,10 @@ const MenuItem = (props) => {
     dispatch(customizeAction.setItemMenuOpen(id));
     if (collapse) { setOpen(!open) }
   }
+ 
+  if(!store_setting.inventory.status && (item.id  == 4 || item.id ==6 || item.id == 7 || item.id == 9 || item.id == 11 || item.id==12)){
+      return null
+  }
 
   return (
     <>
@@ -118,16 +125,7 @@ const MenuItem = (props) => {
 
           {/* { getMenuIcon(1)} */}
         </ListItemIcon>
-        {/* <ListItemIcon >
-              <Box
-                component="img"
-                sx={{
-                  height: 24,
-                  width: 24, 
-                }}
-                src={item.icon}
-              />
-          </ListItemIcon> */}
+    
 
         <Typography
           className={clsx([classes.menuText], {
