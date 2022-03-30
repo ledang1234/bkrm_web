@@ -38,6 +38,8 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { batch, useDispatch, useSelector } from "react-redux";
 import ModalWrapperWithClose from "../../../../../components/Modal/ModalWrapperWithClose"
 import { ThousandSeperatedInput } from '../../../../../components/TextField/NumberFormatCustom';
+import productApi from '../../../../../api/productApi'
+import { statusAction } from '../../../../../store/slice/statusSlice';
 const useStyles = makeStyles((theme) =>
     createStyles({
 
@@ -52,7 +54,7 @@ const useStyles = makeStyles((theme) =>
 
 })
 );
-const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReload,batches,has_batches }) => {
+const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReload,batches,has_batches,row }) => {
     const theme = useTheme();
   const classes = useStyles(theme);
   const info = useSelector((state) => state.info);
@@ -64,14 +66,14 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
     else{ return 0}
   }
   const [openModal, setOpenModal] = useState(null)
-
+  const dispatch = useDispatch();
     const generateInitial = () =>{
         let arr = []
-         batches.map(item => arr.push({batch_code: item.batch_code , quantity: 0} ))
+         batches.map(item => arr.push({batch_code: item.batch_code , quantity: 0, expiry_date: item.expiry_date, position: item.position} ))
         return arr
     }
     const [valueQuantity,setValueQuantity] = useState(!has_batches?0:generateInitial())
-  const confirmTransferQuantity = () => {  
+  const confirmTransferQuantity = async () => {  
     //CALL API HERE
     //   openModal : branch chuyển tới
 
@@ -79,14 +81,26 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
     //( + nếu là lô thì là array object [{batch_code:"L0001", quantity:"2"}])
      //( + nếu ko là lô thì là số 
 
+    const body = {
+        to_branch: openModal.id,
+        value_quantity: has_batches ? _.sumBy(valueQuantity, 'quantity') : valueQuantity,
+        batches: JSON.stringify(valueQuantity.filter(batch => batch.quantity)),
+        has_batches: has_batches,
+        product_id: row.id
+    }
+    try {
+        const res = await productApi.transferInventory(store_uuid, branch_uuid, body);
+        dispatch(statusAction.successfulStatus('Chuyển tồn kho thành công!'))
+    } catch (err) {
+        console.log(err)
+        dispatch(statusAction.failedStatus('Chuyển tồn kho thất bại'))
+    }
 
     setOpenModal(null)
     onClose()
     setReload()
   }
-  console.log("batch",batches)
   const currenBranchInventory = findBranchQuantity(branch_uuid)
-  console.log("valueQuantity",valueQuantity)
     return (
         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" maxWidth="xs" fullWidth={true}>
             <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -155,9 +169,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
                     batches.map((batch) => {
                         let newValueQuantity = [...valueQuantity]
                         let index = newValueQuantity.findIndex(item=>item.batch_code ===  batch?.batch_code)
-                        console.log("newValueQuantity",newValueQuantity)
-                        console.log("index",index)
-                        console.log("quantity",newValueQuantity[index]?.quantity )
+                      
                      return(
                         <Grid container  spacing={3} alignItems='center' style={{margin:2}}>
                             <Grid item xs={3}> {batch?.batch_code} </Grid>
@@ -168,7 +180,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
                                         value={newValueQuantity[index]?.quantity} 
                                             onChange={(e)=>{
                                               
-                                                newValueQuantity[index].quantity= e.target.value
+                                                newValueQuantity[index].quantity= Number(e.target.value)
                                                 setValueQuantity(newValueQuantity)                                          
                                             }}
                                             />

@@ -1,6 +1,19 @@
-import {Box,Button, Grid, TextField, Typography, Select, MenuItem, Chip, InputLabel, FormControl} from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Select,
+  MenuItem,
+  Chip,
+  InputLabel,
+  FormControl,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import VNDInput, {VNDFormat} from "../../../../../components/TextField/NumberFormatCustom";
+import VNDInput, {
+  VNDFormat,
+} from "../../../../../components/TextField/NumberFormatCustom";
 import ModalWrapper from "../../../../../components/Modal/ModalWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
@@ -14,8 +27,9 @@ import Paper from "@material-ui/core/Paper";
 import orderApi from "../../../../../api/orderApi";
 import openNotification from "../../../../../components/StatusPopup/StatusPopup";
 import _ from "lodash";
-import moment from 'moment';
+import moment from "moment";
 import { statusAction } from "../../../../../store/slice/statusSlice";
+import ModalWrapperWithClose from "../../../../../components/Modal/ModalWrapperWithClose";
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -81,7 +95,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
             details,
             (detail) => detail.quantity * detail.unit_price
           ),
-          status: 'debt'
+          status: "debt",
         };
 
         setOrder(newOrder);
@@ -107,16 +121,29 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
       tax: "0",
       shipping: "0",
       is_customer_order: true,
-      new_customer: JSON.stringify(order.new_customer)
+      new_customer: JSON.stringify(order.new_customer),
     };
 
     try {
-      handleClose()
+      
+      handleClose();
       let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
-      let updateCustomerOrderRes = await orderApi.confirmCustomerOrder(store_uuid, branch.uuid, customerOrder.id);
-      dispatch(statusAction.successfulStatus(`Tạo hóa đơn thành công ${res.data.order.order_code}`))
+      let updateCustomerOrderRes = await orderApi.confirmCustomerOrder(
+        store_uuid,
+        branch.uuid,
+        customerOrder.id,
+        {
+          order_code: res.data.order.order_code,
+          order_id: res.data.order.id,
+        }
+      );
+      dispatch(
+        statusAction.successfulStatus(
+          `Tạo hóa đơn thành công ${res.data.order.order_code}`
+        )
+      );
     } catch (err) {
-      dispatch(statusAction.failedStatus(`Tạo hóa đơn thất bại`))
+      dispatch(statusAction.failedStatus(`Tạo hóa đơn thất bại`));
       console.log(err);
     }
   };
@@ -139,24 +166,34 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
 
   const handleSelectBatch = (e, detailIndex) => {
     const batch = e.target.value;
-    if (order.details[detailIndex].selectedBatches.find((selectedBatch) =>selectedBatch.batch_code === batch.batch_code)) {
+    if (
+      order.details[detailIndex].selectedBatches.find(
+        (selectedBatch) => selectedBatch.batch_code === batch.batch_code
+      )
+    ) {
       return;
     }
     const newSelectedBatches = [...order.details[detailIndex].selectedBatches];
     newSelectedBatches.push({ ...batch, additional_quantity: 0 });
     const newOrder = { ...order };
-    newOrder.details[detailIndex].selectedBatches =
-      newSelectedBatches;
+    newOrder.details[detailIndex].selectedBatches = newSelectedBatches;
     setOrder(newOrder);
-  }
+  };
 
-  const handleChangeBatchQuantity = (e, detailIndex, selectedBatchIndex ) => {
+  const handleChangeBatchQuantity = (e, detailIndex, selectedBatchIndex) => {
     const value = Number(e.target.value);
-    if (value > order.details[detailIndex].selectedBatches[selectedBatchIndex].quantity || value < 0) {
+    if (
+      value >
+        order.details[detailIndex].selectedBatches[selectedBatchIndex]
+          .quantity ||
+      value < 0
+    ) {
       return;
     }
     const newOrder = { ...order };
-    newOrder.details[detailIndex].selectedBatches[selectedBatchIndex].additional_quantity = value;
+    newOrder.details[detailIndex].selectedBatches[
+      selectedBatchIndex
+    ].additional_quantity = value;
     newOrder.details[detailIndex].quantity = _.sumBy(
       newOrder.details[detailIndex].selectedBatches,
       "additional_quantity"
@@ -166,7 +203,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
       (detail) => detail.quantity * detail.unit_price
     );
     setOrder(newOrder);
-  }
+  };
 
   const handleChangeDetailQuantity = (e, detailIndex) => {
     const value = Number(e.target.value);
@@ -180,7 +217,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
       (detail) => detail.quantity * detail.unit_price
     );
     setOrder(newOrder);
-  }
+  };
 
   const renderQuantityInput = (detail, detailIndex) => {
     if (detail?.has_batches) {
@@ -189,8 +226,12 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
           <Typography>Tổng: {detail.quantity}</Typography>
           <FormControl variant="standard">
             <InputLabel id="batch-label">Lô</InputLabel>
-            <Select labelId="batch-label" autoWidth labelWidth={100} fullWidth
-              onChange={e => handleSelectBatch(e, detailIndex)}
+            <Select
+              labelId="batch-label"
+              autoWidth
+              labelWidth={100}
+              fullWidth
+              onChange={(e) => handleSelectBatch(e, detailIndex)}
             >
               {detail.batches.map((batch) => (
                 <MenuItem value={batch} key={batch.code}>{`${
@@ -204,17 +245,26 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
           {detail.selectedBatches.map((batch, selectedBatchIndex) => (
             <div
               style={{
-                marginTop: 5, marginBottom: 5, display: "flex", flexDirection: "row",
-                alignItems: "center", gap: 5,backgroundColor: "#eee",
+                marginTop: 5,
+                marginBottom: 5,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 5,
+                backgroundColor: "#eee",
               }}
             >
               <Typography>{`${batch.batch_code}${
                 batch.expiry_date ? "(" + batch.expiry_date + ")" : ""
               }`}</Typography>
               <TextField
-                type="number" size="small" style={{ width: 30 }}
+                type="number"
+                size="small"
+                style={{ width: 30 }}
                 value={batch.additional_quantity}
-                onChange={e => handleChangeBatchQuantity(e, detailIndex, selectedBatchIndex)}
+                onChange={(e) =>
+                  handleChangeBatchQuantity(e, detailIndex, selectedBatchIndex)
+                }
               />
               <Typography>{`/${batch.quantity}`}</Typography>
             </div>
@@ -224,20 +274,33 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
     } else {
       return (
         <TextField
-          type="number" size="small" style={{ width: 30 }}
+          type="number"
+          size="small"
+          style={{ width: 30 }}
           value={Math.min(detail.quantity, detail.branchInventory)}
-          onChange={e => handleChangeDetailQuantity(e, detailIndex)}
+          onChange={(e) => handleChangeDetailQuantity(e, detailIndex)}
         />
       );
     }
   };
-  
+
   const isOrderEmpty = () => {
-    return order.details?.every(detail => detail.quantity === 0);
+    return order.details?.every((detail) => detail.quantity === 0);
+  };
+
+  const handleCancelOrder = async () => {
+    handleClose();
+    try {
+      const res = await orderApi.cancleCustomerOrder(store_uuid, branch_uuid, customerOrder.id);
+      dispatch(statusAction.successfulStatus("Hủy đơn đặt thành công"));
+    } catch (err) {
+      console.log(err)
+      dispatch(statusAction.failedStatus("Hủy đơn đặt thất bại"))
+    }
   }
 
   return (
-    <ModalWrapper open={isOpen} handleClose={handleClose} title="Đơn đặt">
+    <ModalWrapperWithClose open={isOpen} handleClose={handleClose} title="Đơn đặt">
       <Typography variant="h3">{customerOrder.customer_order_code}</Typography>
       <Grid
         container
@@ -331,9 +394,11 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
                     <VNDFormat value={detail.quantity * detail.unit_price} />{" "}
                   </TableCell>
                   <TableCell align="right">
-                    {detail.quantity < detail.orderredQuantity
-                      ? <Typography style={{color: 'red'}}>Không đủ</Typography>
-                      : <Typography style={{color: 'green'}}>Đủ</Typography>}
+                    {detail.quantity < detail.orderredQuantity ? (
+                      <Typography style={{ color: "red" }}>Không đủ</Typography>
+                    ) : (
+                      <Typography style={{ color: "green" }}>Đủ</Typography>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -346,8 +411,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
               variant="contained"
               size="small"
               color="secondary"
-
-              onClick={handleClose}
+              onClick={handleCancelOrder}
             >
               Hủy
             </Button>
@@ -364,7 +428,7 @@ const OrderModal = ({ handleClose, customerOrder, isOpen }) => {
           </Box>
         </Grid>
       </Grid>
-    </ModalWrapper>
+    </ModalWrapperWithClose>
   );
 };
 

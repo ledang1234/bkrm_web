@@ -54,8 +54,7 @@ export default DiscountTableRow
 
 
 function getDiscountType (discountKey, discountType){
-    console.log("discountKey",discountKey)
-    console.log("discountType",discountType)
+
     if(discountKey === "invoice"){
         if(discountType ==="sendGift"){return "Tặng hàng"}
         else if (discountType ==="sendVoucher"){ return "Tặng voucher"}

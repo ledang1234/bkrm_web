@@ -55,7 +55,6 @@ const OrderProductList = () => {
    //collapse
    const [openRow, setRowOpen] = React.useState(null);
    const handleOpenRow = (row) => {
-     console.log(row)
        if (row !==  openRow){setRowOpen(row);}
        else{setRowOpen(null)}  
    };
@@ -158,7 +157,7 @@ const OrderProductList = () => {
           > 
               {/* 1. ADD POP UP */}
                 <Typography className={classes.headerTitle} variant="h5">
-                    Đơn đặt hàng nhập
+                    Đơn đặt hàng
                 </Typography>
 
                 <Grid className={classes.btngroup1} >

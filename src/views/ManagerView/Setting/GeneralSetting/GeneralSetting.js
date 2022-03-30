@@ -70,6 +70,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { infoActions } from "../../../../store/slice/infoSlice";
 
+import setting from "../../../../assets/constant/setting"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -95,9 +96,10 @@ const GeneralSetting = () => {
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-  console.log("store",JSON.parse(info.store.general_configuration))
 
-  const [checked, setChecked] = React.useState(JSON.parse(info.store.general_configuration))
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+  const [checked, setChecked] = React.useState(store_setting)
   const [change, setChange] = useState(false)
 
   useEffect(() => {
@@ -201,7 +203,6 @@ const GeneralSetting = () => {
         general_configuration: JSON.stringify(checked),
       });
       openNotification("success", "Lưu cài đặt chung thành công");
-      console.log("checkedssss",checked)
       dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
       
     } catch (err) {
@@ -221,7 +222,6 @@ const GeneralSetting = () => {
         },
       };
     });
-    console.log(checked)
     //CALL API: Mỗi lần toggle là đẩy lên backend
     // như vậy nhiều quá á, làm nút SAVE nha
     // callApi()

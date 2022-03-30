@@ -71,12 +71,10 @@ const SupplierDetail = (props) => {
   };
   const handleDeleteSupplier = async () => {
     setDeleteConfirm(false)
-    console.log(store_uuid, row.uuid);
     try {
       const response = await supplierApi.deleteSupplier(store_uuid, row.uuid);
       dispatch(statusAction.successfulStatus("Xóa thành công"));
       props.parentProps.setReload();
-      console.log(response.message);
     } catch (error) {
       console.log(error);
       dispatch(statusAction.failedStatus("Xóa thất bại"));

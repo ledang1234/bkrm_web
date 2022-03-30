@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_price, standard_price }) => {
-    // console.log("init", datas)
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -44,14 +43,13 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_pri
                 var _set = [];
                 for (let j = 0; j < mySet.length ; j++ ){
                     for (let k = 0; k < newArr[i].items.length ; k++ ){
-                        _set.push(mySet[j].concat( ' - ',newArr[i].items[k]))
+                        _set.push(mySet[j].concat( ` -  `,newArr[i].items[k]))
                         // _set.push({name:mySet[j].concat( ' - ',newArr[i].items[k]), attList:[]})
 
                     }
                 }
-                // console.log("_set",_set)
                 if(_set.length !== 0) {mySet = _set}
-                // console.log("mySet",mySet)
+
             }
          }
         return mySet
@@ -60,7 +58,9 @@ const AddAttribute = ({ attributeList, datas, setDatas, setRelatedList, list_pri
       useEffect (() =>{
         var list = []
         // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:0, list_price :0}))
-        generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:standard_price?standard_price:0, list_price :list_price?list_price:0}))
+        // generateList().map(e =>list.push({name:e,product_code:"", bar_code: "",standard_price:standard_price?standard_price:0, list_price :list_price?list_price:0}))
+        generateList().map(e =>list.push({name:e,product_code:"",quantity:0, bar_code: "",standard_price:standard_price?standard_price:0, list_price :list_price?list_price:0}))
+
         setRelatedList(list)
     
 
@@ -139,7 +139,6 @@ const AttributeRow = ({ attributeList, data, datas, updateFieldChanged, index, d
     const handleChangeAttr = (event) => {
         var valid = true;
         datas.map((row)=>{if(row.key === event.target.value){valid = false}    })
-        console.log("valid",valid )
 
         if (valid){
             updateFieldChanged(index, event.target.value)   

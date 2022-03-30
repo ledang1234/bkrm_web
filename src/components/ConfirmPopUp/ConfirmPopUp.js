@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@material-ui/core";
+import { Box, Button, Typography, TextField } from "@material-ui/core";
 import React from "react";
 import ModalWrapper from "../Modal/ModalWrapper";
 const ConfirmPopUp = (props) => {
@@ -6,6 +6,18 @@ const ConfirmPopUp = (props) => {
     <ModalWrapper {...props}>
       <Box>
         <Typography>{props.message}</Typography>
+        {props.passwordRequired ?
+          <TextField
+          style={{marginTop:20}}
+            id="name"
+            name="name"
+            label="Mật khẩu"
+            variant="outlined"
+            type="password"
+            fullWidth
+            size="small"
+          /> : null}
+
       </Box>
       <Box
         style={{
@@ -33,7 +45,7 @@ const ConfirmPopUp = (props) => {
           }}
         >
           {" "}
-          Xóa
+          Xác nhận
         </Button>
       </Box>
     </ModalWrapper>

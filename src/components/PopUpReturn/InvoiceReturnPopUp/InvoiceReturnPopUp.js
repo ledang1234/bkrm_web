@@ -27,6 +27,7 @@ import {statusAction} from '../../../store/slice/statusSlice';
 import {ReturnCartMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import _ from 'lodash';
+import setting from "../../../assets/constant/setting"
 
 function InvoiceReturnPopUp(props) {
   const { order, classes, handleCloseReturn , reload, reloadDetail } = props;
@@ -285,6 +286,7 @@ function InvoiceReturnPopUp(props) {
                     detail={detail}
                     handleProductPriceChange={handleProductPriceChange}
                     handleItemQuantityChange={handleItemQuantityChange}
+                    isCart={true}
                   />
 
                 ))
@@ -328,7 +330,9 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
     handleProductPriceChange(detail.id, newPrice);
   };
   const info = useSelector((state) => state.info);
-  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+  const canFixPriceSell= store_setting?.canFixPriceSell
 
   return (
     <TableRow hover key={detail.id}>
@@ -386,7 +390,6 @@ function CartReturnTableRow({ detail, handleProductPriceChange, handleItemQuanti
                     if (value > batch.max_return_quantity || value < 0) {
                       return;
                     } else {
-                      console.log(value);
                       const newSelectedBatches = [...detail.selectedBatches];
                       newSelectedBatches[index].returned_quantity = value;
                       handleChangeBatches(detail.id, newSelectedBatches);

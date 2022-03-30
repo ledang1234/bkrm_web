@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 const InventoryFilter = (props) => {
-    const {handleToggleFilter,openFilter,query, setQuery} =props;
+    const {handleToggleFilter,openFilter,query, setQuery,isManageInventory} =props;
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -82,6 +82,8 @@ const InventoryFilter = (props) => {
       />
 
       {/* 4. Tồn kho from-to */} 
+    {isManageInventory?
+    <>
       <Typography variant="h5"className={classes.text} >Tồn kho:</Typography>
       <ThousandSeperatedInput  label="Từ" variant="outlined" fullWidth size="small" className={classes.textField}
         name="minInventory"
@@ -93,7 +95,7 @@ const InventoryFilter = (props) => {
         value={formik.values.maxInventory}
         onChange={formik.handleChange}
       />
-
+</>:null}
 
       {/* 5. Tinh trang ton kho : còn hang het hang */} 
       {/* <Typography variant="h5"className={classes.text} >Tình trạng:</Typography>
@@ -125,6 +127,8 @@ const InventoryFilter = (props) => {
       /> */}
 
       {/* Ngung kinh doanh ? */}
+
+      <Typography variant="h5"className={classes.text} >Trạng thái:</Typography>
 
       <FormControl
           className={classes.formControl}

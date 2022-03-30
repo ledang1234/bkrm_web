@@ -72,7 +72,7 @@ const UploadImage = () => {
   );
 };
 const VarianceModal = (props) => {
-  const { row ,branchs,setReload,batches,has_batches} = props;
+  const { row ,branchs,setReload,batches,has_batches,isManageInventory} = props;
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -110,7 +110,6 @@ const VarianceModal = (props) => {
       const response = await productApi.deleteProduct(store_uuid, row.uuid);
       dispatch(statusAction.successfulStatus("Xóa thành công"));
       props.parentProps.setReload(true);
-      console.log(response);
     } catch (error) {
       console.log(error);
       dispatch(statusAction.failedStatus("Xóa thất bại"));
@@ -120,7 +119,6 @@ const VarianceModal = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-  console.log("roww", row)
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -279,7 +277,8 @@ const VarianceModal = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-
+                    {isManageInventory? 
+                    <>
                   <Grid container direction="row" justifyContent="flex-start">
                     <Grid item xs={3} sm={6}>
                       <Typography variant="h5" gutterBottom component="div">
@@ -333,7 +332,7 @@ const VarianceModal = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-
+                    </>:null}
                 </Grid>
               </Grid>
 

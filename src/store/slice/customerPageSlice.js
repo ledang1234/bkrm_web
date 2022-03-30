@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import webInfo from "../../assets/constant/webInfo"
+
+
 const initialCustomerPage = {
+  // storeInfo: {},
   storeInfo: {},
   products: [],
   order: { name: "", phone: "", address: "", cartItem: [], branch_id: 57},
   categories: [],
-  webSetting: webInfo
 };
 const customerPageSlice = createSlice({
   name: "customerPage",
@@ -23,9 +24,7 @@ const customerPageSlice = createSlice({
     setStoreInfo(state, action) {
       state.storeInfo = action.payload;
     },
-    setWebSetting(state, action) {
-      state.webSetting = action.payload;
-    },
+    
   },
 });
 export default customerPageSlice;

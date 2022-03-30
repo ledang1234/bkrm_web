@@ -18,16 +18,22 @@ const useCascadingMenuStyles = makeStyles((theme) => ({
   submenu: {
     marginTop: theme.spacing(-1),
   },
-  title: {
+  title:props =>( {
     flexGrow: 1,
     color:grey[700],
-    width:150,
-    // marginLeft:4,
-    // marginRight:4,
-    // "&:hover": {
-    //   backgroundColor: theme.customization.primaryColor[50],
-    // }
-},
+    minWidth:150,
+    color:'#000',
+    fontSize:16,
+    marginLeft:2,
+    marginRight:2,
+    "&:hover": {
+      // backgroundColor: theme.customization.primaryColor[50],
+      backgroundColor: lighten(props.mainColor,0.8 ),
+
+    },
+    marginTop:2,
+    marginBottom:2
+  }),
   moreArrow: {
     marginRight: theme.spacing(-1),
   },
@@ -43,16 +49,14 @@ const CascadingContext = React.createContext({
   rootPopupState: null,
 })
 
-function CascadingMenuItem({ onClick,title, id ,...props }) {
-  const classes = useCascadingMenuStyles()
+function CascadingMenuItem({ onClick,title,mainColor, id ,...props }) {
+  const classes = useCascadingMenuStyles({mainColor})
   let { path } = useRouteMatch();
   const { rootPopupState } = React.useContext(CascadingContext)
   if (!rootPopupState) throw new Error('must be used inside a CascadingMenu')
   const handleClick = React.useCallback(
     (event) => {
-      rootPopupState.close(event)
-        props.handleClickItem(title)
-        
+      rootPopupState.close(event)        
     },
     [rootPopupState, onClick]
   )
@@ -63,9 +67,10 @@ function CascadingMenuItem({ onClick,title, id ,...props }) {
    />
 }
 
-function CascadingSubmenu({ onClick,title,id, popupId, ...props }) {
+function CascadingSubmenu({ onClick,title,mainColor,id, popupId, ...props }) {
   let { url } = useRouteMatch();
-  const classes = useCascadingMenuStyles()
+
+  const classes = useCascadingMenuStyles({mainColor})
   const { parentPopupState } = React.useContext(CascadingContext)
   const popupState = usePopupState({
     popupId,
@@ -78,9 +83,6 @@ function CascadingSubmenu({ onClick,title,id, popupId, ...props }) {
   const handleClick = React.useCallback(
     (event) => {
         rootPopupState.close(event)
- 
-        props.handleClickItem(title)
-       
     },
     [rootPopupState, onClick]
   )
@@ -124,9 +126,10 @@ function CascadingMenu({ popupState, ...props }) {
   )
 }
 const HoverMenuBtn = (props) => {
-  const {handleClickItem,category,textColor,textSize,textBold} = props;
+  const {category,mainColor,textColor,textSize,textBold} = props;
   let { url } = useRouteMatch();
-  const classes = useCascadingMenuStyles();
+
+  const classes = useCascadingMenuStyles({mainColor});
   const popupState = usePopupState({
     popupId: 'demoMenu',
     variant: 'popover',
@@ -135,19 +138,17 @@ const HoverMenuBtn = (props) => {
         if(nodes.children){
            return(
             <CascadingSubmenu 
-         
             popupId={nodes.uuid} 
             id={nodes.id}
             title={nodes.name} 
-            handleClickItem={handleClickItem}
+            mainColor={mainColor}
          >
            {
            nodes.children.length ? nodes.children.map((node) => renderTree(node)) : 
-                <CascadingMenuItem 
-               
+                <CascadingMenuItem    
                 id={nodes.id}
                 title={nodes.name} 
-                handleClickItem={handleClickItem}
+                mainColor={mainColor}
                 >
                     {nodes.name}
                 </CascadingMenuItem>
@@ -158,10 +159,10 @@ const HoverMenuBtn = (props) => {
             return(
                 <CascadingMenuItem 
                 id={nodes.id}
-                title={nodes.title} 
-                handleClickItem={handleClickItem}
+                title={nodes.name} 
+                mainColor={mainColor}
                 >
-                    {nodes.title}
+                    {nodes.name}
                 </CascadingMenuItem>
             );
         }
@@ -174,7 +175,8 @@ const HoverMenuBtn = (props) => {
         {...bindFocus(popupState)}
         className={classes.btnNav} 
         style={{color:textColor, fontWeight:textBold, fontSize:textSize}}
-        component={Link} to={`${url}/products/all`}
+        component={Link} 
+        to={`${url}/all`}
       >
         Sản phẩm
       </Button>
@@ -192,46 +194,4 @@ const HoverMenuBtn = (props) => {
 }
 
 export default HoverMenuBtn
-
-// const category =[
-//     {
-//         id:1,
-//         title:"Quần áo",
-//         children:[
-//             {
-//                 id:6,
-//                 title:"Quần",
-//                 children:[
-//                     {title:"Quần dài"},
-//                     {title:"Quần đùi"},
-//                 ]
-//             },
-//             {
-//                 id:7,
-//                 title:"Áo",
-//                 children:[
-//                     {title:"Áo dài"},
-//                     {title:"Áo thun"},
-//                 ]
-            
-//             },
-//             {id:8,title:"Đầm"},
-//             {id:9,title:"Váy"},
-
-//         ]
-//     },
-//     {
-//         id:2,
-//         title:"Phụ kiện",
-//         children:[
-//             {id:10,title:"Nón"},
-//             {id:11,title:"Mắt kiếng"},
-//         ]
-//     },
-//     {id:3,title:"Túi xách"},
-//     {id:4,title:"Giày dép"},
-//     {id:5,title:"Quần"}
-
-// ]
-
 

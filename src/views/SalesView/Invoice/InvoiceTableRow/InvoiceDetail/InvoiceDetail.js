@@ -44,6 +44,7 @@ import orderApi from "../../../../../api/orderApi";
 import { VNDFormat } from "../../../../../components/TextField/NumberFormatCustom";
 import PayRemaining from "../../../../../components/Modal/PayRemaining";
 import invoiceApi from "../../../../../api/invoiceApi";
+import setting from "../../../../../assets/constant/setting"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -178,8 +179,9 @@ function InvoiceDetail(props) {
     const diffInMs = Math.abs(date2 - date1);
     return diffInMs / (1000 * 60 * 60 * 24);
   }
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
-  const returnLimit = JSON.parse(info.store.general_configuration).returnLimit
+  const returnLimit = store_setting?.returnLimit
   return (
     <Collapse
       in={isMini ? true : openRow === row.uuid}

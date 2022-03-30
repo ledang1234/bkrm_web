@@ -24,7 +24,7 @@ const OrderProductListTableRow = (props) => {
                 <TableCell align="left">{row.phone}</TableCell>
                 <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_amount} /></TableCell>
                 <TableCell align="center">
-                    <FormatedStatusOrder status={row.status === 'confirmed' ? 3 : ""}/>
+                    <FormatedStatusOrder status={row.status}/>
                 </TableCell>
                 <TableCell align="left">{row.address}</TableCell>
             </TableRow>

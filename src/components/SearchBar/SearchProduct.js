@@ -37,6 +37,8 @@ import { useSelector } from "react-redux";
 import { render } from "sass";
 import { VNDFormat } from "../TextField/NumberFormatCustom";
 import defaultProduct from "../../assets/img/product/default-product.png"
+import setting from "../../assets/constant/setting"
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     input: {
@@ -80,6 +82,7 @@ const SearchProduct = (props) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   const loadingData = async (searchKey) => {
     try {
@@ -115,9 +118,12 @@ const SearchProduct = (props) => {
           <Typography variant="h5">{`#${option.product_code}`}</Typography>
           <Typography variant="h5">{option.name}</Typography>
           <Grid container item direction="row" justifyContent="space-between">
+           
+        
             <Typography variant="body2">
-              Tồn kho: {option.branch_quantity}
+            { store_setting?.inventory.status? `Tồn kho: ${option.branch_quantity}`  :null}
             </Typography>
+         
            {props.isCart? 
            <Typography variant="body2">
            Giá bán: <VNDFormat value={option.list_price}></VNDFormat>
@@ -167,7 +173,6 @@ const SearchProduct = (props) => {
           e.preventDefault();
           e.stopPropagation();
           // increase if selected
-          console.log(selectedOption);
           if (selectedOption.name) {
             props.handleSearchBarSelect(selectedOption);
           } else {

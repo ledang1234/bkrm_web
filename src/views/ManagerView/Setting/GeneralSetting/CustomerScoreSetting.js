@@ -31,7 +31,6 @@ const handleCheckbox= (event) => {
     })
   };
   
-  console.log("customerStore",checked)
 
   return (
     <>

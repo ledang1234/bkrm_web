@@ -78,7 +78,6 @@ const ProductSetting = ({web,handleChangeListProduct,setWeb}) => {
      const priceBold = priceStyle[2]
 
      const alignCenter = Number(web.listProduct.alignCenter)
-     console.log("nameColor",nameColor)
      
 
     const handleChangeNameIndex = (event, index)=>{
@@ -220,7 +219,7 @@ const ProductSetting = ({web,handleChangeListProduct,setWeb}) => {
            <Grid item >
            <Typography style={{fontWeight:500, marginRight:20, color:"#000",fontSize:15}}>Khung sản phẩm: </Typography>
                 <ListItem style={{margin:0, padding:0, marginBottom:8}}>
-                    <Typography style={{fontWeight:500, marginRight:20}}>Kiểu: </Typography>
+                    <Typography style={{fontWeight:500, marginRight:20}}>Khung: </Typography>
                     <FormControl component="fieldset">
                         <RadioGroup name="isBox" value={web.listProduct.isBox.toString()} onChange={handleChangeListProduct}>
                         <div>
@@ -371,8 +370,7 @@ const InfoComponent = (props)=>{
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    console.log("nameSizeưeee",nameSize)
-    return (
+   return (
         <>
         <Typography gutterBottom className={clsx( classes.multiLineEllipsis, classes.name, alignCenter && classes.alignCenter)} style={{fontSize:Number(nameSize),color:nameColor, fontWeight:nameBold, }}>
         {item.name}

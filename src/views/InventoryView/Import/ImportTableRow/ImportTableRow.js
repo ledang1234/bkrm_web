@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import defaultProduct from '../../../../assets/img/product/default-product.png'
 import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import setting from "../../../../assets/constant/setting"
 
 export const ImportRow = (props) => {
   const classes = useStyles();
@@ -80,7 +81,6 @@ export const ImportRow = (props) => {
         newBatches.push(newBatch);
       }
     });
-    console.log(newBatches);
     setSelectedBatches(newBatches);
   };
 
@@ -94,8 +94,8 @@ export const ImportRow = (props) => {
     handleUpdateBatches(row.uuid, selectedBatches);
   }, [selectedBatches]);
 
-
-  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  const canFixPriceSell= store_setting?.canFixPriceSell
   const [show, setShow] = React.useState(false);
 
 

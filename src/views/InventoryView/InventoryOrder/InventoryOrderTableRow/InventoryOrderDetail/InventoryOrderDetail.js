@@ -139,7 +139,6 @@ const InventoryOrderDetail = (props) => {
           store_uuid,
           row.uuid
         );
-        console.log("purchase detail", res.data);
         setPurchaseOrder(res.data);
       } catch (error) {
         setPurchaseOrder({

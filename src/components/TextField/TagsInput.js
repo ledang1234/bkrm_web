@@ -26,10 +26,7 @@ export default function TagsInput({ ...props }) {
     selectedTags(selectedItem);
   }, [selectedItem, selectedTags]);
   
-  // console.log("inputValue");
-  // console.log(inputValue);
-  // console.log("selectedItem");
-  // console.log(selectedItem);
+
 
   function handleKeyDown(event) {
     if (event.key === "Enter") {

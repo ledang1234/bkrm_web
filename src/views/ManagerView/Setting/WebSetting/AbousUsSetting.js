@@ -43,7 +43,6 @@ const AbousUsSetting = () => {
         const loadData = async () => {
             const response = await storeApi.getStoreInfo(store_uuid);
             if (response.data.web_configuration) {
-                console.log("response.data.web_configuration",response.data.web_configuration)
                 setValue(JSON.parse(response.data.web_configuration).other.detail);
                 setWeb(JSON.parse(response.data.web_configuration));
             }
@@ -54,16 +53,10 @@ const AbousUsSetting = () => {
         }
   }, [store_uuid]);
 
-
-
-
-    console.log("web",web)
-
     const saveSetting =  async () => {
         try {
             let newWeb = {...web}
             newWeb.other.detail = value
-            console.log("newWeb",newWeb)
             const response = storeApi.updateStoreInfo(store_uuid, {
             web_configuration: JSON.stringify(newWeb),
             });

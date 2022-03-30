@@ -50,7 +50,7 @@ import AddAttribute from "./AddAttribute";
 import RelaltedItemList from "./RelaltedItemList";
 import SnackBarGeneral from "../../../../components/SnackBar/SnackBarGeneral";
 import CategorySelect from "../../../../components/Category/CategorySelect";
-
+import setting from "../../../../assets/constant/setting"
 import ReactQuill, {Quill} from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageResize from 'quill-image-resize-module-react';
@@ -360,8 +360,6 @@ const AddInventory = (props) => {
 
   // console.log("relatedList",relatedList)
 
-  console.log("helllloo",typeof(productFormik.values.description))
-  console.log("datasdatas",datas)
   const handleAddProductWithVariation = async () => {
     if (relatedList.length !== 0) {
       // var isValid = datas.map(item => item.key === 'unset'?  false  )
@@ -417,7 +415,6 @@ const AddInventory = (props) => {
         productFormik.values.description.toString()
         // JSON.stringify(productFormik.values.description)
       );
-      console.log(relatedList);
 
       for (var i = 0; i < relatedList.length; i++) {
         const values = relatedList[i].name.split("-");
@@ -439,7 +436,6 @@ const AddInventory = (props) => {
           })
         );
       }
-      console.log("datas",datas)
       bodyFormData.append(
         "attribute_value",
         JSON.stringify(datas)
@@ -459,7 +455,8 @@ const AddInventory = (props) => {
     }
   };
 
-
+  console.log("relatedListttt",relatedList)
+const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
   return (
     <Dialog
       open={open}
@@ -489,7 +486,7 @@ const AddInventory = (props) => {
             Thêm sản phẩm
           </Typography>
           <Box style={{ width: "70%" }}>
-            {JSON.parse(info.store.general_configuration).recommendedProduct
+            {store_setting?.recommendedProduct
               .status ? (
               <SearchWithAutoComplete
                 handleDefaultSelect={selectSampleProductHandler}
@@ -669,6 +666,8 @@ const AddInventory = (props) => {
                 Giá vốn đang lớn hơn giá bán !!
               </Typography>
             ) : null}
+            {store_setting?.inventory.status ?
+            <>
             <ThousandSeperatedInput
               label="Tồn kho ban đầu"
               variant="outlined"
@@ -677,7 +676,19 @@ const AddInventory = (props) => {
               className={classes.margin}
               name="quantity"
               value={productFormik.values.quantity}
-              onChange={productFormik.handleChange}
+              // onChange={productFormik.handleChange}
+              onChange={(e) => {
+                // productFormik.handleChange
+                productFormik.setFieldValue("quantity", e.target.value);
+                if (relatedList.length !== 0) {
+                  var list = [...relatedList];
+                  list = relatedList.map(
+                    (i) => (i.quantity = e.target.value)
+                  );
+                  // list = relatedList.map(e =>({name:e,product_code:"", bar_code: "",standard_price:productFormik.values.importedPrice, list_price :value}))
+                  // setRelatedList(list)
+                }
+              }}
               error={
                 productFormik.touched.quantity && productFormik.errors.quantity
               }
@@ -729,6 +740,7 @@ const AddInventory = (props) => {
               }
               onBlur={productFormik.handleBlur}
             />
+            </>:null}
           </Grid>
         </Grid>
         <Grid container spacing={2}>
@@ -737,7 +749,7 @@ const AddInventory = (props) => {
               display="flex"
               flexDirection="row"
               alignItems="center"
-              style={{ marginTop: 10 }}
+              style={{ marginTop: 10, marginBottom:20 }}
             >
               {display.map((img) => (
                 <Tooltip title="Xóa tất cả hình ảnh">
@@ -769,7 +781,9 @@ const AddInventory = (props) => {
             </Box>
           </Grid>
         </Grid>
-        {JSON.parse(info.store.general_configuration).expiryDate.status ? (
+        {/* {store_setting?.expiryDate.status  ? ( */}
+
+        {store_setting?.expiryDate.status  &&store_setting?.inventory.status ? (
           <div style={{ flexGrow: 1, textAlign: "right" }}>
             <FormControlLabel
               control={
@@ -787,9 +801,9 @@ const AddInventory = (props) => {
           </div>
         ) : null}
 
-        {JSON.parse(info.store.general_configuration).variation.status ? (
+        {store_setting?.variation.status ? (
           <>
-            <Card className={classes.attrCard}>
+            <Card className={classes.attrCard} >
               <CardHeader
                 onClick={handleExpandClick}
                 action={
@@ -831,6 +845,7 @@ const AddInventory = (props) => {
                 <RelaltedItemList
                   relatedList={relatedList}
                   setRelatedList={setRelatedList}
+                  isManageInventory = {store_setting?.inventory.status}
                 />
               </Card>
             ) : null}

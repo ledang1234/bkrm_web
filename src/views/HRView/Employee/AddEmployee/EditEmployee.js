@@ -30,6 +30,7 @@ import * as Yup from "yup";
 // api
 import { useSelector } from "react-redux";
 import employeeApi from "../../../../api/employeeApi";
+import ConfirmPopup from "../../../../components/ConfirmPopUp/ConfirmPopUp"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -84,7 +85,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
     const loadBranches = async () => {
       try {
         const response = await branchApi.getAllBranches(store_uuid);
-        console.log(response.data);
         setBranches(response.data);
       } catch (err) {
         console.log(err);
@@ -92,7 +92,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
     };
     loadBranches();
   }, [store_uuid]);
-
   const [imageToShow, setImageToShow] = React.useState(employee.img_url);
   const [image, setImage] = React.useState(null);
   const formik = useFormik({
@@ -170,7 +169,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
     const loadBranches = async () => {
       try {
         const response = await branchApi.getAllBranches(store_uuid);
-        console.log(response.data);
         setBranches(response.data);
       } catch (err) {
         console.log(err);
@@ -185,13 +183,20 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
   //     let permissions = selected.map((permission) => permission.key);
   //     setPermissions(permissions);
   //   };
-
+  const [confirm,setConfirm] = React.useState(false);
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
+      <ConfirmPopup open={confirm} handleClose={() => setConfirm(false)} passwordRequired={true} handleConfirm={formik.handleSubmit}
+      message={
+        <Typography>
+          <b>Nhập mật khẩu để lưu thay đổi</b>
+        </Typography>
+      }
+      />
       <DialogTitle id="form-dialog-title">
         <Typography className={classes.headerTitle} variant="h5">
           {fromAvatar ? "Thông tin cá nhân" : "Sửa thông tin nhân viên"}
@@ -366,6 +371,15 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
             </Grid>
             <Grid item xs={6}>
               {/* Select lưong */}
+              <TextField
+                id="outlined-basic"
+                label="Mật khẩu mới"
+                variant="outlined"
+                fullWidth
+                size="small"
+                onChange={formik.handleChange}
+                name="newPassword"
+              />
               <FormControl
                 className={classes.formControl}
                 fullWidth
@@ -458,10 +472,11 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 size="small"
                 variant="outlined"
                 style={{ marginTop: 8 }}
+                disabled={fromAvatar}
               >
                 <InputLabel id="branchSelect">Chi nhánh </InputLabel>
                 <Select
-                  multiple
+                  multiple = {info.role ==="owner"?false:true}
                   variant="outlined"
                   fullWidth
                   id="branches"
@@ -505,7 +520,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
           Huỷ
         </Button>
         <Button
-          onClick={formik.handleSubmit}
+          onClick={fromAvatar ?() => setConfirm(true) :formik.handleSubmit}
           variant="contained"
           size="small"
           color="primary"

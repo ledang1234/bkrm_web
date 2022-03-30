@@ -49,7 +49,6 @@ const CartButton = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const {number} = props
-  console.log("number",number)
   return (
     // <Tooltip title="Giỏ hàng">
     <Fab

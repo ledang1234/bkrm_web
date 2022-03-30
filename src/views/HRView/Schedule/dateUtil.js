@@ -13,7 +13,6 @@ export function ISO8601_week_no(dt)
  }
 
 export function formatDate(mode, date){
-    console.log('mode', mode)
     var dat = date.getDay();
     var dd = date.getDate();
     var mm = date.getMonth()+1; 
@@ -83,7 +82,6 @@ export function getWidthCss(numberOfDayInMonth){
 }
 export function isToday (date){
     const now = new Date();
-    console.log('hello')
     console.log(date.toLocaleDateString("en-US"))
     console.log(now.toLocaleDateString("en-US"))
     return date.toLocaleDateString("en-US") === now.toLocaleDateString("en-US")

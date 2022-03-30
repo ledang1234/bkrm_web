@@ -46,7 +46,7 @@ const UploadImages = (img) => {
 };
 const UpdateInventory = (props) => {
   const dispatch = useDispatch();
-  const { handleClose, open } = props;
+  const { handleClose, open,isManageInventory } = props;
   const [openAddCategory, setOpenAddCategory] = useState(false);
   const handleCloseCategory = () => setOpenAddCategory(false);
   const [categoryList, setCategoryList] = useState([]);
@@ -305,6 +305,8 @@ const UpdateInventory = (props) => {
             />
             {Number(productFormik.values.importedPrice) > Number(productFormik.values.salesPrice) ?<Typography variant='h6' style={{color:'red'}}> Giá vốn đang lớn hơn giá bán !!</Typography>:null}
 
+           {isManageInventory?
+           <>
             <ThousandSeperatedInput
               label="Số lượng đặt hàng lại"
               variant="outlined"
@@ -345,6 +347,8 @@ const UpdateInventory = (props) => {
               }
               onBlur={productFormik.handleBlur}
             />
+
+            </>:null}
           </Grid>
         </Grid>
         <Grid container spacing={2}>          <Grid item xs>

@@ -270,4 +270,4 @@ export const ColorButton = styled(Button)(({mainColor }) => ({
     //   backgroundColor:lighten(`rgba(${ mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${mainColor.a })` , 0.3),
       
     // },
-  }));
+}));

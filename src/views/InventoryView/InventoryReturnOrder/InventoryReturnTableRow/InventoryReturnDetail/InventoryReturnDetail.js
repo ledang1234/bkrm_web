@@ -98,7 +98,6 @@ const InventoryReturnDetail = (props) => {
           store_uuid,
           row.uuid
         );
-        // console.log(res.data)
         setPurchaseReturn(res.data);
       } catch (error) {
         setPurchaseReturn({

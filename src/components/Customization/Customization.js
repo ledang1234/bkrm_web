@@ -120,7 +120,6 @@ const Customization = () => {
   };
   
   const menu = customization.menu;
-  // {console.log(customization.menu)}
   const handleMenu = (menu) => {
     dispatch(customizeAction.setMenu(menu));
     updateLocalStorage({ type: "MENU", payload: menu });

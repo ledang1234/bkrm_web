@@ -31,6 +31,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { List } from "@mui/material";
 
 import defaultProduct from '../../../../assets/img/product/default-product.png'
+import setting from "../../../../assets/constant/setting"
 
 export const CartRow = (props) => {
   const classes = useStyles();
@@ -38,7 +39,7 @@ export const CartRow = (props) => {
   const info = useSelector((state) => state.info);
   const branch = info.branch;
 
-console.log("branch",branch)
+
   const {
     row,
     branchs,
@@ -71,7 +72,7 @@ console.log("branch",branch)
     selectedBatches.forEach((batch) => {
       total += Number(batch.additional_quantity);
     });
-    console.log(total);
+
     updateQuantity(total);
     handleUpdateBatches(row.uuid, selectedBatches);
   }, [selectedBatches]);
@@ -100,11 +101,13 @@ console.log("branch",branch)
         newBatches.push(newBatch);
       }
     });
-    console.log(newBatches);
+
     setSelectedBatches(newBatches);
   };
 
-  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+const canFixPriceSell= store_setting?.canFixPriceSell
 
 const [show, setShow] = React.useState(false);
 
@@ -136,7 +139,7 @@ return (
             />
             <Typography  style={{marginRight:5}} 
              >{row.name}</Typography>
-            {show? 
+            {show && store_setting?.inventory.status? 
              <MoreInfo  >     
               <ListItem >
                   <Typography style={{width:180}}></Typography>
@@ -213,6 +216,7 @@ return (
               quantity={row.quantity}
               setQuantity={updateQuantity}
               branch_quantity={row.branch_quantity}
+              isManageInventory={store_setting?.inventory.status}
             />
           </TableCell>
         )}

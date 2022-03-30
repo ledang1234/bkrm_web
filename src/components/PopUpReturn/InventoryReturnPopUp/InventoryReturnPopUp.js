@@ -36,6 +36,7 @@ import purchaseReturnApi from "../../../api/purchaseReturnApi";
 import { statusAction } from "../../../store/slice/statusSlice";
 import { ReturnCartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import setting from "../../../assets/constant/setting"
 
 function InventoryReturnPopUp(props) {
   const { purchaseOrder, classes, handleCloseReturn, reload, reloadDetail } =
@@ -87,13 +88,11 @@ function InventoryReturnPopUp(props) {
     );
     const newPurchaseReturn = _.cloneDeep(purchaseReturn);
 
-    console.log(newBatches);
     newPurchaseReturn.details[itemIndex].selectedBatches = newBatches;
     newPurchaseReturn.details[itemIndex].returnQuantity = _.sumBy(
       newBatches,
       "returned_quantity"
     );
-    console.log(newPurchaseReturn);
     setPurchaseReturn(newPurchaseReturn);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
@@ -310,6 +309,7 @@ function InventoryReturnPopUp(props) {
                       handleProductPriceChange={handleProductPriceChange}
                       handleItemQuantityChange={handleItemQuantityChange}
                       detail={detail}
+                      isCart={false}
                     />
                   ))
                 )}
@@ -343,7 +343,6 @@ function ImportReturnTableRow({
   const classes = useStyles();
   const [show, setShow] = React.useState("none");
   useEffect(() => {}, [detail]);
-  console.log(detail);
   const handleChangeQuantity = (newQuantity) => {
     handleItemQuantityChange(detail.id, newQuantity);
   };
@@ -351,7 +350,9 @@ function ImportReturnTableRow({
     handleProductPriceChange(detail.id, newPrice);
   };
   const info = useSelector((state) => state.info);
-  const canFixPriceSell= JSON.parse(info.store.general_configuration).canFixPriceSell
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+  const canFixPriceSell= store_setting?.canFixPriceSell
   return (
     <TableRow hover key={detail.id}>
       <TableCell align="left" style={{ width: 5 }}>
@@ -410,7 +411,6 @@ function ImportReturnTableRow({
                     if (value > batch.max_return_quantity || value < 0) {
                       return;
                     } else {
-                      console.log(value);
                       const newSelectedBatches = [...detail.selectedBatches];
                       newSelectedBatches[index].returned_quantity = value;
                       handleChangeBatches(detail.id, newSelectedBatches);

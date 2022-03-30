@@ -58,6 +58,7 @@ import customerApi from "../../../api/customerApi";
 import { calculateTotalQuantity } from "../../../components/TableCommon/util/sortUtil";
 import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import branchApi from "../../../api/branchApi";
+import setting from "../../../assets/constant/setting"
 
 const Cart = () => {
   const theme = useTheme();
@@ -68,6 +69,7 @@ const Cart = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch = info.branch;
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   const [customers, setCustomers] = useState([]);
 
@@ -107,6 +109,7 @@ const Cart = () => {
         discount: "0",
         payment_method: "cash",
         delivery: false,
+        scores:"0"
       },
     ];
   };
@@ -233,6 +236,7 @@ const Cart = () => {
         payment_method: "cash",
         discount: "0",
         delivery: false,
+        scores:'0'
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -251,6 +255,7 @@ const Cart = () => {
           discount: "0",
           payment_method: "cash",
           delivery: false,
+          scores:'0'
         },
       ]);
     } else {
@@ -428,6 +433,7 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
+  
   const updateTotalAmount = () => {
     let total = 0;
     cartList[selectedIndex].cartItem.forEach((item) => {
@@ -443,21 +449,32 @@ const Cart = () => {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
     });
-
+    if(store_setting?.customerScore.status){
+        newCartList = update(newCartList, {
+          [selectedIndex]: {
+            scores: { $set: parseInt(total /store_setting?.customerScore.value) },
+        }});
+    }
+  
     setCartList(newCartList);
   };
 
   
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
-
+    
     var emptyCart = cart.cartItem.length === 0;
-    const printReceiptWhenSell=JSON.parse(info.store.general_configuration).printReceiptWhenSell
-    var correctQuantity = cart.cartItem.every(function (element, index) {
-      console.log(element);
-      if (element.quantity > element.branch_quantity) return false;
-      else return true;
-    });
+    const printReceiptWhenSell=store_setting?.printReceiptWhenSell
+    // var correctQuantity = cart.cartItem.every(function (element, index) {
+    //   if (element.quantity > element.branch_quantity) return false;
+    //   else return true;
+    // });
+    var correctQuantity =store_setting?.inventory.status ?
+    cart.cartItem.every(function (element, index) {
+     if (element.quantity > element.branch_quantity) return false;
+     else return true;
+    }) : true
+
     if (emptyCart || !correctQuantity) {
       setOpenSnack(true);
       if (emptyCart) {
@@ -477,7 +494,6 @@ const Cart = () => {
       let orderTime = moment
         .unix(d)
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-      console.log(orderTime);
 
       let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
       console.log(cart.paid_amount, cart.total_amount, cart.discount);
@@ -499,11 +515,10 @@ const Cart = () => {
         delivery: cart.delivery,
         is_customer_order: false,
       };
-      console.log("bpdy", body)
 
       try {
         let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
-        console.log("body", body);
+
         setSnackStatus({
           style: "success",
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
@@ -659,6 +674,7 @@ const Cart = () => {
                             discountData={discountData.filter(
                               (discount) => discount.discountKey === "product"
                             )}
+
                           />
                         );
                       })}
@@ -676,6 +692,7 @@ const Cart = () => {
                         discountData={discountData.filter(
                           (discount) => discount.discountKey === "product"
                         )}
+                        isCart={true}
                       />
                     );
                   })
@@ -733,6 +750,7 @@ const Cart = () => {
                 discountData={discountData.filter(
                   (discount) => discount.discountKey === "invoice"
                 )}
+                isScore={store_setting?.customerScore.status}
               />
             ) : (
               <CartSummary

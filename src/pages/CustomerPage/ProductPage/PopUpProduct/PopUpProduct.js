@@ -10,8 +10,10 @@ import defaultProduct from '../../../../assets/img/product/default-product.png'
 import {CustomButton} from "../../../../components/Button/ColorButton"
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
-    console.log("productproduct",product)
+import soldOutIcon from "../../../../assets/img/icon/sold-out.png"
+import soldOutIcon1 from "../../../../assets/img/icon/sold-out-1.png"
+
+const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart,getStockQuantity}) => {
     const theme = useTheme();
     const useStyles = makeStyles((theme) => ({
       radio: {
@@ -27,24 +29,43 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
     const [quantity, setQuantity]  = useState(1)
     const {products } = useSelector(state => state.customerPage)
 
-    console.log("mainColor",mainColor)
-    // const color = `rgba(${ mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${mainColor.a })`;
 
+    //
+    const all_child_product = product?.has_variance ? products.filter( item => item.parent_product_code === product.product_code):null
     const attrValue = product?.attribute_value? JSON.parse(product.attribute_value):null
 
-    const initValue = attrValue?.map(row => row.items[0])
-    const all_child_product = product?.has_variance ? products.filter( item => item.parent_product_code === product.product_code):null
+    const getSumQuantityOfAvalueToDisableRadio = () =>{
+      return attrValue?.map((attr,indexKey) => {
+        const arr =  attr.items.map((val, indexItems) => {
+          const myObj = all_child_product.filter(item => {
+            let att = JSON.parse(item.attribute_value).filter(att => att.name === attr.key )[0]
+            if(att){ return att.name === attr.key && att.value.includes(val)  }
+          });
+          for (let i = 0; i < myObj?.length ; i++){
+            // if(getStockQuantity(myObj[i],all_child_product) >0 ) {return val}
+            if(getStockQuantity(myObj[i]) >0 ) {return val}
+
+          }
+          return null  
+        })
+        return arr
+      })
+    }
+
+    const disableValueList = product?.has_variance ?  getSumQuantityOfAvalueToDisableRadio() :null
+    const initValue = disableValueList ? disableValueList.map(i => i.filter(value =>value)[0]):null
     const [selectAttr, setSelectedAttr]  = useState(initValue)
 
-      useEffect(()=>{
+
+    useEffect(()=>{
         setSelectedProduct(getChoosenProductWithVariance())
     },[selectAttr])
     
-    useEffect(()=>{
-      if(product?.has_variance){
-        setSelectedProduct(getChoosenProductWithVariance())
-      }
-    },[])
+    // useEffect(()=>{
+    //   if(product?.has_variance){
+    //     setSelectedProduct(getChoosenProductWithVariance())
+    //   }
+    // },[])
     
 
     const handleChange = async(e, keyIndex,val) =>{
@@ -58,15 +79,20 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
         for (let i = 0; i<selectAttr?.length ; i++){
           choosenProduct =  choosenProduct.filter(item=> 
             JSON.parse(item.attribute_value)[i].value.includes(selectAttr[i]) )
-            console.log("choosenProduct",choosenProduct)
         }
         return choosenProduct[0]
     }
 
-    const [selectedProduct, setSelectedProduct] = useState(product?.has_variance?getChoosenProductWithVariance() :null)
+    const [selectedProduct, setSelectedProduct] = useState(null)
+    // const stockQuantityOfSelectedProduct = getStockQuantity(selectedProduct ,all_child_product )
 
-    
+    const stockQuantityOfSelectedProduct = getStockQuantity(selectedProduct  )
 
+    // const [  isLowStock , setIsLowStock] = useState(getStockStatus(selectedProduct))
+  //   useEffect(()=>{
+  //     setIsLowStock(getStockStatus(selectedProduct))
+  //     console.log(isLowStock)
+  // },[selectedProduct])
 
   return (
     <ModalWrapperWithClose open={open} handleClose={onClose}  title={'Thêm sản phẩm'}>
@@ -76,6 +102,8 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
         <Box  component="img" sx={{  width:120,height:120,borderRadius: 2}} src={image.length === 0?defaultProduct :image[0]}/> 
         
         <Box style={{ marginLeft:15}}>
+             {(  selectedProduct) ?null:
+              <Box style={{paddingTop:2,marginBottom:10, marginTop:-10 }}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:65, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:14}}>Hết hàng</Box></Box>}
             <Typography style={{fontWeight:500, fontSize:18, color:'#000', marginBottom:10}} >{product?.name}</Typography>
             <Typography style={{fontWeight:400, fontSize:16, color:'#000'}} >{product?.list_price.toLocaleString()}đ</Typography>
             
@@ -101,8 +129,9 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
                         <RadioGroup  value={selectAttr[indexKey]} onChange={(e)=>handleChange(e,indexKey)} >
                           <div>
                               {attr.items.map(((val, indexItems) => {
+                                const isDisabled = !disableValueList[indexKey].includes(val)
                                 return(
-                                <FormControlLabel value={val} control={<Radio classes={{root: classes.radio, checked: classes.checked}}   />} label={<Typography style={{color:'#000', fontSize:18, marginRight:15,marginLeft:5}}>{val}</Typography>}/>
+                                <FormControlLabel value={val} control={<Radio classes={{root: classes.radio, checked: classes.checked}}  disabled={isDisabled || !selectedProduct } />} label={<Typography style={{color:'#000', fontSize:18, marginRight:15,marginLeft:5}}>{val}</Typography>}/>
                                ) }))}  
                           </div>
                         </RadioGroup>
@@ -111,7 +140,16 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart}) => {
                 )
           })}
 
-        <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}} onClick={()=>{addProductToCart(selectedProduct,quantity )}}  >Thêm vào giỏ hàng</CustomButton>
+        {  selectedProduct && stockQuantityOfSelectedProduct > 0 ?
+        <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}} 
+        onClick={()=>{
+          onClose()
+          addProductToCart(selectedProduct,quantity,stockQuantityOfSelectedProduct )
+        
+        }}  >
+          Thêm vào giỏ hàng</CustomButton>
+        : <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100, color:'#fff'}} disabled >Hết hàng</CustomButton>
+        }
        
       </Box>
     </ModalWrapperWithClose>

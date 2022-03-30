@@ -22,12 +22,14 @@ import {ThousandFormat} from "../TextField/NumberFormatCustom"
 import ava from '../../assets/img/product/lyimg.jpeg';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import InventoryDetail from '../../views/InventoryView/Inventory/InventoryTableRow/InventoryDetail/InventoryDetail';
 import DiscountPopUp from "../../views/SalesView/Cart/DiscountPopup/DiscountPopup"
 import ButtonQuantity from "../../components/Button/ButtonQuantity";
 
 import defaultProduct from "../../assets/img/product/default-product.png"
+import setting from "../../assets/constant/setting"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -38,7 +40,7 @@ export const CartMiniTableRow = (props) =>{
     const classes = useStyles(); 
     const haveDiscount = true;
 
-    const {row,discountData, handleDeleteItemCart, handleChangeItemQuantity, handleChangeItemPrice} = props
+    const {row,discountData, handleDeleteItemCart,isManageInventory, handleChangeItemQuantity, isCart,handleChangeItemPrice} = props
     const updateQuantity = (newQuantity) => {
         handleChangeItemQuantity(row.uuid, newQuantity)
       }
@@ -47,6 +49,10 @@ export const CartMiniTableRow = (props) =>{
     const handleOpenDiscount = () =>{
       setOpenDiscount(!openDiscount)
     }
+    const info = useSelector((state) => state.info);
+    const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+    const canFixPriceSell= store_setting?.canFixPriceSell
+    const activeFixPrice =  isCart?  (canFixPriceSell.status && canFixPriceSell.cart) :(canFixPriceSell.status && canFixPriceSell.import) 
     return (
         <>
          <ListItem  style={{ padding:10}}>   
@@ -61,13 +67,16 @@ export const CartMiniTableRow = (props) =>{
                                 {openDiscount && <DiscountPopUp open={openDiscount} title={`Khuyến mãi trên ${row.product_code} - ${row.name}`} onClose={()=>{setOpenDiscount(false)}}/>}
                             </ListItem  > 
                             <ListItem style={{margin:0,padding:0}} >    
+                            {activeFixPrice?
                             <Input.ThousandSeperatedInput 
                                 id="standard-basic" style={{maxWidth:70 }} size="small" 
                                 inputProps={{style: { textAlign: "right" }}} 
                                 defaultPrice={row.unit_price} 
                                 value={row.unit_price} 
 
-                                onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}/>
+                                onChange={e => handleChangeItemPrice(props.row.uuid, e.target.value)}/>:
+                                <Input.ThousandFormat  value={row.unit_price} > </Input.ThousandFormat>}
+
                                 <Typography style={{marginLeft:10}}>x</Typography>
                             </ListItem  > 
                         </div>
@@ -110,7 +119,7 @@ export const BillMiniTableRow = (props) =>{
                 
           {typeBill ==="Voucher"?<Typography style={{ fontSize:11, marginTop:-15, marginBottom:7}}> Ngày hết hạn:</Typography>:null}
 
-           <Typography style={{color:"#6b6b6b", fontSize:10, marginTop:-8, marginBottom:5,textAlign: 'right'}}>{date.substring(0, 16)}</Typography>
+           <Typography style={{color:"#6b6b6b", fontSize:10, marginTop:-8, marginBottom:5,textAlign: 'right'}}>{date?.substring(0, 16)}</Typography>
             
             {typeBill === "Khuyến mãi"  ?<Typography style={{marginTop:10}} >{totalCost}  </Typography>:null}
             {typeBill === "Đơn đặt hàng"  || typeBill === "Voucher"?<Typography style={{fontWeight:500, fontSize:17, color:"orange",textAlign: 'right'}}><ThousandFormat value={totalCost}/></Typography> :null}
@@ -208,7 +217,7 @@ export const PartnerMiniTableRow = (props) =>{
 }
 
 
-export const ReturnCartMiniTableRow = ({ detail, handleProductPriceChange, handleItemQuantityChange }) =>{
+export const ReturnCartMiniTableRow = ({ detail, handleProductPriceChange,isCart, handleItemQuantityChange }) =>{
 const classes = useStyles();
   const theme = useTheme();
   const [show, setShow] = React.useState('none');
@@ -221,7 +230,13 @@ const classes = useStyles();
 
   const handleChangePrice = (newPrice) => {
     handleProductPriceChange(detail.id, newPrice);
+    
   };
+  const info = useSelector((state) => state.info);
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  const canFixPriceSell= store_setting?.canFixPriceSell
+  const activeFixPrice =  isCart?  (canFixPriceSell.status && canFixPriceSell.returnCart) :(canFixPriceSell.status && canFixPriceSell.returnImport) 
+
     return (
         <>
         <Typography style={{fontSize:16}} >{detail.product_code} - {detail.name} </Typography>
@@ -232,12 +247,14 @@ const classes = useStyles();
         <Typography style={{ marginBottom:-10, marginTop:10, color:"red"}} >Giá trả: </Typography>
 
         <ListItem style={{margin:0,padding:0}} >  
-            <Input.ThousandSeperatedInput 
+           {activeFixPrice? <Input.ThousandSeperatedInput 
                 id="standard-basic" style={{maxWidth:70 }} size="small" 
                 inputProps={{style: { textAlign: "right" }}} 
                 defaultPrice={detail.returnPrice} 
+                value={detail.returnPrice}
                 onChange={e => handleChangePrice(e.target.value)}/>
-                
+           : <Input.ThousandFormat  value={detail.returnPrice} > </Input.ThousandFormat>
+            }
                 <ButtonQuantity quantity={detail.returnQuantity} limit={detail.quantity - detail.returned_quantity} setQuantity={handleChangeQuantity}  show={show} setShow={setShow} isReturn={true} isMini={true}/> 
         </ListItem  > 
          <Divider style={{marginTop:7}}/>
@@ -256,7 +273,7 @@ export const ProductMiniTableRow = (props) =>{
     const haveDiscount = true;
 
     const {row, handleOpenRow, openRow } = props
-    const {img, id,name ,list_price,standard_price,typePartner ,branch_quantity,min_reorder_quantity} = props
+    const {img, id,name ,list_price,standard_price,typePartner ,branch_quantity,min_reorder_quantity,isManageInventory} = props
     // const classes = useStyles(); 
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
@@ -293,7 +310,8 @@ export const ProductMiniTableRow = (props) =>{
                 </ListItem>  
             </Grid>
             <Grid item xs={3} container direction="column"justifyContent="space-between" alignItems="flex-end" >
-                <Typography style={{marginTop:-5, textAlign: 'right',color:returnColor(branch_quantity,min_reorder_quantity)}}>Tồn: <ThousandFormat value={branch_quantity}/></Typography>
+               {isManageInventory?  <Typography style={{marginTop:-5, textAlign: 'right',color:returnColor(branch_quantity,min_reorder_quantity)}}>Tồn: <ThousandFormat value={branch_quantity}/></Typography>
+               : <Typography></Typography>}
                 <Typography style={{textAlign: 'right', }}>Bán: <ThousandFormat value={list_price}/></Typography>
             </Grid>
         </Grid> 

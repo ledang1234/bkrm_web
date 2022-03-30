@@ -11,6 +11,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { customizeAction } from "../../../store/slice/customizeSlice";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
+import setting from "../../../assets/constant/setting"
 
 const useStyles = makeStyles((theme) => ({
   menuText:{
@@ -56,6 +57,17 @@ const SubItem = (props) => {
       }
       
       dispatch(customizeAction.setItemMenuOpen(id));
+    }
+    const info = useSelector((state) => state.info);
+    const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+    if(!store_setting.discount.status && item.id== 19.2){
+      return null
+    }
+    if(!store_setting.voucher.status && item.id== 19.3){
+      return null
+    }
+    if(!store_setting.email.status && item.id== 19.4){
+      return null
     }
     return (
       <ListItem   
