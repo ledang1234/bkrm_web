@@ -224,14 +224,14 @@ const inventoryModule = {
       icon1: icons.SyncProblemOutlinedIcon,
       icon2: icons1.SyncProblemTwoToneIcon,
     },
-    {
-      id: 9,
-      title: "Đặt Hàng",
-      url: "/home/inventory/order-list",
-      icon: orderListIcon,
-      icon1: icons.AddIcCallOutlinedIcon,
-      icon2: icons1.AddIcCallTwoToneIcon,
-    },
+    // {
+    //   id: 9,
+    //   title: "Đặt Hàng",
+    //   url: "/home/inventory/order-list",
+    //   icon: orderListIcon,
+    //   icon1: icons.AddIcCallOutlinedIcon,
+    //   icon2: icons1.AddIcCallTwoToneIcon,
+    // },
     {
       id: 11,
       title: "Kiểm Kho",

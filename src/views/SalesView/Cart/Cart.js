@@ -109,6 +109,7 @@ const Cart = () => {
         discount: "0",
         payment_method: "cash",
         delivery: false,
+        scores:"0"
       },
     ];
   };
@@ -235,6 +236,7 @@ const Cart = () => {
         payment_method: "cash",
         discount: "0",
         delivery: false,
+        scores:'0'
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -253,6 +255,7 @@ const Cart = () => {
           discount: "0",
           payment_method: "cash",
           delivery: false,
+          scores:'0'
         },
       ]);
     } else {
@@ -430,6 +433,7 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
+  
   const updateTotalAmount = () => {
     let total = 0;
     cartList[selectedIndex].cartItem.forEach((item) => {
@@ -445,7 +449,13 @@ const Cart = () => {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
     });
-
+    if(store_setting?.customerScore.status){
+        newCartList = update(newCartList, {
+          [selectedIndex]: {
+            scores: { $set: parseInt(total /store_setting?.customerScore.value) },
+        }});
+    }
+  
     setCartList(newCartList);
   };
 
@@ -455,10 +465,16 @@ const Cart = () => {
     
     var emptyCart = cart.cartItem.length === 0;
     const printReceiptWhenSell=store_setting?.printReceiptWhenSell
-    var correctQuantity = cart.cartItem.every(function (element, index) {
-      if (element.quantity > element.branch_quantity) return false;
-      else return true;
-    });
+    // var correctQuantity = cart.cartItem.every(function (element, index) {
+    //   if (element.quantity > element.branch_quantity) return false;
+    //   else return true;
+    // });
+    var correctQuantity =store_setting?.inventory.status ?
+    cart.cartItem.every(function (element, index) {
+     if (element.quantity > element.branch_quantity) return false;
+     else return true;
+    }) : true
+
     if (emptyCart || !correctQuantity) {
       setOpenSnack(true);
       if (emptyCart) {
@@ -658,6 +674,7 @@ const Cart = () => {
                             discountData={discountData.filter(
                               (discount) => discount.discountKey === "product"
                             )}
+
                           />
                         );
                       })}
@@ -675,6 +692,7 @@ const Cart = () => {
                         discountData={discountData.filter(
                           (discount) => discount.discountKey === "product"
                         )}
+                        isCart={true}
                       />
                     );
                   })
@@ -732,6 +750,7 @@ const Cart = () => {
                 discountData={discountData.filter(
                   (discount) => discount.discountKey === "invoice"
                 )}
+                isScore={store_setting?.customerScore.status}
               />
             ) : (
               <CartSummary

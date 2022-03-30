@@ -139,7 +139,7 @@ return (
             />
             <Typography  style={{marginRight:5}} 
              >{row.name}</Typography>
-            {show? 
+            {show && store_setting?.inventory.status? 
              <MoreInfo  >     
               <ListItem >
                   <Typography style={{width:180}}></Typography>
@@ -216,6 +216,7 @@ return (
               quantity={row.quantity}
               setQuantity={updateQuantity}
               branch_quantity={row.branch_quantity}
+              isManageInventory={store_setting?.inventory.status}
             />
           </TableCell>
         )}

@@ -286,6 +286,7 @@ function InvoiceReturnPopUp(props) {
                     detail={detail}
                     handleProductPriceChange={handleProductPriceChange}
                     handleItemQuantityChange={handleItemQuantityChange}
+                    isCart={true}
                   />
 
                 ))

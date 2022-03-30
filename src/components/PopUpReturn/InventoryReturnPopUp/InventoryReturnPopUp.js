@@ -309,6 +309,7 @@ function InventoryReturnPopUp(props) {
                       handleProductPriceChange={handleProductPriceChange}
                       handleItemQuantityChange={handleItemQuantityChange}
                       detail={detail}
+                      isCart={false}
                     />
                   ))
                 )}

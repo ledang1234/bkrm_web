@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_price}) => {
+const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_price,isManageInventory}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -53,15 +53,16 @@ const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_pri
            <TableWrapper isCart={true}>
                 <TableHeader
                     classes={classes}
-                    headerData={CustomerHeadCells}
+                    headerData={isManageInventory? CustomerHeadCells :CustomerHeadCells.filter(i => i.id !== "quantity")
+                    }
                 />
                 <TableBody>
                 {relatedList.map((row, index) => {
                     return (
 
                       <TableRow>
-                        <TableCell align="center">{row.name}</TableCell>
-                        <TableCell align="center">
+                        <TableCell align="center" style={{color:'#000', fontWeight:500}}>{row.name}</TableCell>
+                        {/* <TableCell align="center">
                           <TextField
                             value={row.product_code}
                             onChange={(e) =>
@@ -72,7 +73,7 @@ const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_pri
                               )
                             }
                           />
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell align="center">
                           <TextField
                             value={row.bar_code}
@@ -84,7 +85,22 @@ const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_pri
                               )
                             }
                           />
+                          
                         </TableCell>
+                       {isManageInventory?
+                        <TableCell align="center">
+                          <ThousandSeperatedInput
+                            value={row.quantity}
+                            onChange={(e) =>{
+                              handleChangeProperties(
+                                row.name,
+                                "quantity",
+                                e.target.value
+                              )}
+                            }
+                          />
+                        </TableCell>:null}
+
                         <TableCell align="center">
                           <ThousandSeperatedInput
                             value={row.standard_price}
@@ -133,8 +149,9 @@ export default RelaltedItemList
 
 const CustomerHeadCells = [
     { id: 'name', align: 'center', disablePadding: true, label: 'Tên' },
-    { id: 'product_code', align: 'center', disablePadding: true, label: 'Mã hàng' }, 
-    { id: 'bar_code', align: 'center', disablePadding: true, label: 'Mã vạch' },  
+    // { id: 'product_code', align: 'center', disablePadding: true, label: 'Mã hàng' }, 
+    { id: 'bar_code', align: 'center', disablePadding: true, label: 'Mã vạch' }, 
+    { id: 'quantity', align: 'center', disablePadding: true, label: 'Tồn kho ban đầu' },  
     { id: 'standard_price', align: 'center', disablePadding: true, label: 'Giá vốn' },
     { id: 'unit_price', align: 'center', disablePadding: true, label: 'Giá bán' },
     { id: 'action', align: 'center', disablePadding: true, label: '' },

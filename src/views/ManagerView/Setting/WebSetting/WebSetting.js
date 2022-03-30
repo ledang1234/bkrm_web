@@ -137,7 +137,6 @@ const WebSetting = () => {
 
 
 
-  
   const [displayColorPicker, setDisplayColorPicker] = React.useState(false);
   const [displayColorPicker1, setDisplayColorPicker1] = React.useState(false);
   const [openLinkWarningPopup, seOpenLinkWarningPopup] = React.useState(false);
@@ -146,14 +145,19 @@ const WebSetting = () => {
   // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
   let haveNotActiveBefore = false
   const [logoStore,setLogoStore] = useState(null)
+  const [ show_OrderManagement_canOrderWhenOutOfSctock_Status , setShow_OrderManagement_canOrderWhenOutOfSctock_Status] = useState(true)
   useEffect(() => {
     const loadData = async () => {
       const response = await storeApi.getStoreInfo(store_uuid);
+     
       if (response.data.web_configuration) {
         setWeb(JSON.parse(response.data.web_configuration));
         // setLogoStore(JSON.parse(response.data.store_configuration).img_url)
       }else{
         haveNotActiveBefore = true
+      }
+      if(response.data.general_configuration){
+        setShow_OrderManagement_canOrderWhenOutOfSctock_Status(JSON.parse(response.data.general_configuration).inventory.status)
       }
       if (response.data.store_configuration) {
         setLogoStore(JSON.parse(response.data.store_configuration).img_url)
@@ -398,6 +402,7 @@ const WebSetting = () => {
        web={web}
        handleChangeOrderManagement={handleChangeOrderManagement}
        setWeb={setWeb}
+       showOutOfStock={show_OrderManagement_canOrderWhenOutOfSctock_Status}
       />
 
      

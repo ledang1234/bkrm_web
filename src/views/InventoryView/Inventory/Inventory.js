@@ -53,6 +53,7 @@ import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { infoActions } from "../../../store/slice/infoSlice";
 
 import defaultProduct from "../../../assets/img/product/default-product.png";
+import setting from "../../../assets/constant/setting"
 
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
@@ -61,6 +62,10 @@ const Inventory = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+
+
   const [openFilter, setOpenFilter] = React.useState(false);
   const dispatch = useDispatch();
   const handleToggleFilter = () => {
@@ -299,11 +304,18 @@ const Inventory = () => {
           { dbName: "quantity_available", displayName: "Tồn kho" },
           { dbName: "min_reorder_quantity", displayName: "Điểm đặt hàng lại" },
         ]}
-        orderByOptions={[
-          { value: "products.created_at", label: "Ngày nhập" },
+        orderByOptions={
+          store_setting?.inventory.status ?
+         [
+          { value: "products.created_at", label: "Ngày tạo" },
           { value: "products.list_price", label: "Gia ban" },
           { value: "products.standard_price", label: "Gia von" },
           { value: "products.quantity_available", label: "Ton kho" },
+        ]:
+        [
+          { value: "products.created_at", label: "Ngày tạo" },
+          { value: "products.list_price", label: "Gia ban" },
+          { value: "products.standard_price", label: "Gia von" },
         ]}
         orderBy={query.orderBy}
         setOrderBy={(value) => setQuery({ ...query, orderBy: value })}
@@ -320,6 +332,7 @@ const Inventory = () => {
         query={query}
         setProductList={setProductList}
         handleToggleFilter={handleToggleFilter}
+        isManageInventory={store_setting?.inventory.status }
       />
 
       {/* 3. TABLE */}
@@ -333,7 +346,9 @@ const Inventory = () => {
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
-            headerData={HeadCells.InventoryHeadCells}
+            headerData={store_setting?.inventory.status ?HeadCells.InventoryHeadCells:
+              HeadCells.InventoryHeadCells.filter(item => item.id !== "inventory" &&  item.id !== "quantity")
+            }
           />
           <TableBody>
             {productList.map((row, index) => {
@@ -344,6 +359,7 @@ const Inventory = () => {
                   setReload={() => setReload(!reload)}
                   openRow={openRow}
                   handleOpenRow={handleOpenRow}
+                  isManageInventory={store_setting?.inventory.status}
                 />
               );
             })}
@@ -377,6 +393,8 @@ const Inventory = () => {
                 branch_quantity={row.branch_quantity}
                 min_reorder_quantity={row.min_reorder_quantity}
                 typePartner={"Sản phẩm"}
+                isManageInventory={store_setting?.inventory.status}
+
               />
             );
           })}
@@ -398,6 +416,9 @@ const Inventory = () => {
 export default Inventory;
 
 const ComponentToPrint = ({ productList, classes }) => {
+  const info = useSelector((state) => state.info);
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
   return (
     <div>
       <Typography
@@ -415,7 +436,10 @@ const ComponentToPrint = ({ productList, classes }) => {
       <div>
         <TableHeader
           classes={classes}
-          headerData={HeadCells.InventoryHeadCells}
+          headerData={store_setting?.inventory.status ? HeadCells.InventoryHeadCells:
+            HeadCells.InventoryHeadCells.filter(item => item.id !== "inventory" &&  item.id !== "quantity")
+
+          }
         />
         <TableBody>
           {productList.map((row, index) => {

@@ -36,8 +36,9 @@ const ProductList = (props) => {
     const {isMargin,mainColor,priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance,InventoryList} = props
 
     const {order, storeInfo} = useSelector(state => state.customerPage)
+    const storeManageInventory = storeInfo.general_configuration? JSON.parse(storeInfo.general_configuration).inventory.status: true
     const webSetting = storeInfo.web_configuration? JSON.parse(storeInfo.web_configuration):null
-    const orderWhenOutOfSctock = webSetting?.orderManagement.orderWhenOutOfSctock
+    const orderWhenOutOfSctock = webSetting?.orderManagement.orderWhenOutOfSctock ||  !storeManageInventory
     const branchOption = webSetting?.orderManagement.branchOption
     const {products} = useSelector(state => state.customerPage);
 
@@ -70,7 +71,7 @@ const ProductList = (props) => {
     // }
     function getStockQuantity (product) {
         if(!product){return }
-        if(orderWhenOutOfSctock){
+        if(orderWhenOutOfSctock ){
             return 999999999
         }else{          
             if(branchOption === 'auto'  ){

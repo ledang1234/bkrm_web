@@ -18,14 +18,16 @@ import InventoryDetail from "./InventoryDetail/InventoryDetail";
 import { FormatedProductStatus } from "../../../../components/TableCommon/util/format";
 import icon from "../../../../assets/img/product/img.jpeg";
 import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
+import { useDispatch, useSelector } from "react-redux";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {ProductMiniTableRow} from "../../../../components/MiniTableRow/MiniTableRow"
 import defaultProduct from "../../../../assets/img/product/default-product.png"
+
+
 const InventoryTableRow = (props) => {
-  const { row, handleOpenRow, openRow } = props;
+  const { row, handleOpenRow, openRow ,isManageInventory} = props;
   const classes = useRowStyles();
- 
 
   return (
     <>
@@ -61,22 +63,26 @@ const InventoryTableRow = (props) => {
         <TableCell align="right">
           <VNDFormat value={row.standard_price} />
         </TableCell>
+        {isManageInventory ?
+        <>
         <TableCell align="center">
           <FormatedProductStatus
             quantity={row.branch_quantity}
             lowStock={row.min_reorder_quantity}
           />
-        </TableCell>
+        </TableCell> 
         <TableCell align="center" className={classes.fontName}>
           {row.branch_quantity}
         </TableCell>
+          </>
+          : null}
       </TableRow>
 
       {/* DETAIL */}
       <TableRow>
         {/* colspan  => số cột trong collapse */}
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          <InventoryDetail parentProps={props} openRow={openRow} />
+          <InventoryDetail parentProps={props} openRow={openRow} isManageInventory={isManageInventory}/>
         </TableCell>
       </TableRow>
     </>

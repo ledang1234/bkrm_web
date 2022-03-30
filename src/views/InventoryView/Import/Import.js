@@ -627,6 +627,7 @@ const Import = () => {
                         handleDeleteItemCart={handleDeleteItemCart}
                         handleChangeItemPrice={handleChangeItemPrice}
                         handleChangeItemQuantity={handleChangeItemQuantity}
+                        isCart={false}
                       />
                     );
                   })
