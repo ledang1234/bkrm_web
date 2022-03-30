@@ -27,7 +27,7 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
           <RadioGroup  name="choiceQuantity" value={orderLowStock.choiceQuantity} onChange={handleChange}>
           <ListItem>
             <FormControlLabel value="select" control={<Radio  color="primary" />}  />
-            <Typography style={{color:"#000", marginRight:15}}>Dựa trên SL sản phẩm mà chi nhánh đã đặt</Typography>
+            <Typography style={{color:"#000", marginRight:15}}>Dựa trên SL sản phẩm mà chi nhánh đã nhập</Typography>
             <Select
                   name="selectQuantity"
                   value={orderLowStock.selectQuantity}
@@ -35,7 +35,7 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
                   style={{color:theme.customization.primaryColor[500], fontWeight:500}}
               >
                   <MenuItem value={"latest"}> gần đây nhất</MenuItem> 
-                  <MenuItem value={"avg"}> trung bình</MenuItem>
+                  <MenuItem value={"avg"}> trung bình trong 10 lần nhập gần đây </MenuItem>
             </Select>
           </ListItem>
 
@@ -45,8 +45,16 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
               <Typography style={{color:"#000"}}> sản phẩm </Typography>
          </ListItem>
     </RadioGroup>
+
+    <ListItem>
+    <Typography style={{ color:"#000",marginLeft:5,marginRight:5, marginTop:10}}>SL đặt hàng mặc định nếu sản phẩm chưa có lịch sử nhập hàng:</Typography>
+              <ThousandSeperatedInput name="noHistoryQuantity" style={{width:60,marginRight:15}} value={orderLowStock.noHistoryQuantity}  onChange={handleChange} />   
+              <Typography style={{color:"#000"}}> sản phẩm </Typography>
+         </ListItem>
+
+         
     </FormControl>
-      <Typography style={{fontWeight:500, color:"#000",marginRight:15, marginTop:25,marginBottom:5,width:150}}>Nhà cung cấp:</Typography>
+      <Typography style={{fontWeight:500, color:"#000",marginRight:15, marginTop:35,marginBottom:5,width:150}}>Nhà cung cấp:</Typography>
       
       <ListItem>
         <Typography style={{color:"#000", marginRight:15}}>NCC mà chi nhánh đặt sản phẩm</Typography>
@@ -57,7 +65,7 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
               style={{color:theme.customization.primaryColor[500], fontWeight:500}}
           >
               <MenuItem value={"latest"}>gần nhất</MenuItem> 
-              <MenuItem value={"manytime"}>nhiều lần nhất</MenuItem>
+              <MenuItem value={"manytime"}>nhiều lần nhất trong 10 đơn đặt gần đây </MenuItem>
         </Select>
 
       </ListItem>

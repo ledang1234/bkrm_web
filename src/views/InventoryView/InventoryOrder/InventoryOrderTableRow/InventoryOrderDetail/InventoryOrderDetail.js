@@ -226,7 +226,7 @@ const InventoryOrderDetail = (props) => {
             <Grid container direction="row" justifyContent="flex-start">
               <Grid item xs={7} sm={5}>
                 <Typography variant="h5" gutterBottom component="div">
-                  Ngày bán{" "}
+                  Ngày nhập{" "}
                 </Typography>
               </Grid>
               <Grid item sm={4}>
