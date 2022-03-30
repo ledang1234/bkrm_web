@@ -10,8 +10,8 @@ const storeApi = {
     return axiosClient.put(url, body); 
   },
   
-  getActivities: (storeUuid, period) => {
-    const url = `stores/${storeUuid}/activities`;
+  getActivities: (storeUuid, branchUuid,  period) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/activities`;
     return axiosClient.get(url, { params: { period: period } });
   },
 

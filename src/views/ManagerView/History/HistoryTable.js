@@ -9,27 +9,9 @@ import { Typography } from '@mui/material';
 
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
-const HistoryTable = () => {
+const HistoryTable = ({activities}) => {
   const theme = useTheme();
 
-  const info = useSelector((state) => state.info);
-  const store_uuid = info.store.uuid;
-
-  const [activities, setActivities] = useState([]);
-
-  const fetchActivities = async (period) => {
-    try {
-      const res = await storeApi.getActivities(store_uuid, period);
-      setActivities(res.data);
-      console.log(res.data)
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchActivities(30);
-  }, []);
 
   let date = "";
   return (

@@ -41,6 +41,8 @@ const returnTextAction = (type) =>{
         return<Typography style={{color:"#f44336", fontWeight:600}}>Trả hàng</Typography>
     case "purchase_return":
         return<Typography style={{color:"#ff9800", fontWeight:600}}>Trả hàng nhập</Typography>
+    case "inventory_check":
+        return<Typography style={{color:"purple", fontWeight:600}}>Kiểm kho</Typography>
     default:
       return
   }
