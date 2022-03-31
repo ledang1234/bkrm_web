@@ -120,7 +120,7 @@ const ImportSummary = (props) => {
   }
   const [addSupplier, setAddSupplier] =  React.useState({name:'', phone:''})
   React.useEffect(()=>{
-    if(addSupplier.name?.length !==  0){props.handleSelectSupplier(addSupplier)}
+    // if(addSupplier.name?.length !==  0){props.handleSelectSupplier(addSupplier)}
   })
 
   return (

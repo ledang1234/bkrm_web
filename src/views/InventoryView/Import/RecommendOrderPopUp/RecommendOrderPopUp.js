@@ -21,11 +21,10 @@ import React, {useState,useEffect} from 'react'
 import TableRowWithSelect from "./TableRowWithSelect"
 import * as _ from "lodash";
 
-const RecommendOrderPopUp = ({dataRecommend,handleClose,store_setting}) => {
+const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,store_setting}) => {
     const theme = useTheme();
 
 
-    console.log(" store_setting?.orderLowStock", store_setting?.orderLowStock)
     const choiceQuantity = store_setting?.orderLowStock.choiceQuantity
     const selectQuantity= store_setting?.orderLowStock.selectQuantity
     const selectSuplier= store_setting?.orderLowStock.selectSuplier
@@ -45,10 +44,10 @@ const RecommendOrderPopUp = ({dataRecommend,handleClose,store_setting}) => {
             quantity: Number(noHistoryQuantity),
             // quantity: noHistoryQuantity,
             supplier:null,
-            supplier_uuid:null
+            supplier_uuid:null,
+            item:item
         }))
         let data =  dataWillProcess.map((item) =>{
-            console.log("item",item)
             var orderQuantityRecommend = 0;
             var supplierRecommend = null;
             // Calculate quantity
@@ -71,6 +70,7 @@ const RecommendOrderPopUp = ({dataRecommend,handleClose,store_setting}) => {
                 const occurrences =  item.purchase_histories.filter(item => item.name !== "Nhà cung cấp lẻ").reduce( (acc, o) =>  (acc[o.supplier_uuid] = (acc[o.supplier_uuid] || 0)+1 , acc) , {} );
                 supplierRecommend = Object.keys(occurrences).length !== 0? Object.keys(occurrences).reduce((a, b) => occurrences[a] >= occurrences[b] ? a : b) :null 
                 supplierRecommend =  item.purchase_histories?.find(purchase => purchase.supplier_uuid === supplierRecommend)
+                
             }
             let row ={
                 img:JSON.parse(item.img_urls)?.at(0),
@@ -81,20 +81,21 @@ const RecommendOrderPopUp = ({dataRecommend,handleClose,store_setting}) => {
                 standard_price: item.standard_price,
                 quantity: orderQuantityRecommend,
                 // quantity: orderQuantityRecommend.toString(),
-                supplier:supplierRecommend ?{name: supplierRecommend.name , supplier_uuid:supplierRecommend.supplier_uuid}:null,
-                supplier_uuid:supplierRecommend?.supplier_uuid
+                supplier:supplierRecommend ?{name: supplierRecommend.name , phone:supplierRecommend.phone, supplier_uuid:supplierRecommend.supplier_uuid}:null,
+                supplier_uuid:supplierRecommend?.supplier_uuid,
+                item:item
 
             }
             // supplierRecommend?  dataWithFullData.push(row):dataWithNoSupplier.push(row) 
             return row
         })
+      
         // return  [datawithNoHistory,dataWithNoSupplier,dataWithFullData]
         return [...data,...datawithNoHistory]
     }
 
     const [processedData, setProcessedData] = useState(null)
     useEffect(()=>{
-        console.log("processedData",processedData)
         if(dataRecommend){  setProcessedData(processDataRecommend()) }
     },[dataRecommend])
    
@@ -106,10 +107,10 @@ const RecommendOrderPopUp = ({dataRecommend,handleClose,store_setting}) => {
         let newProcessedData = [...processedData];
         newProcessedData[itemIndex].quantity = newQuantity;
         // setProcessedData(newProcessedData);
-        console.log("ssss",processedData)
     }
     
     const RecommendProductGroupBySupplier = () =>{
+     
         // let supplierGroup = processedData?  _.groupBy(processedData[2], 'supplier_uuid') :null;
         let supplierGroup = processedData?  _.groupBy(processedData.filter(data => data.supplier_uuid), 'supplier_uuid') :null;
         return (
@@ -118,8 +119,8 @@ const RecommendOrderPopUp = ({dataRecommend,handleClose,store_setting}) => {
                 let cartRowListBySupplier = supplierGroup[supplier]
                 return (
                 <Box style={{marginBottom:20, marginTop:10}}>
-                    <Typography variant='h4'>{cartRowListBySupplier[0].supplier.name}</Typography>
-                    <TableRowWithSelect  dataRecommend={supplierGroup[supplier]} hanđleChangeQuantity={hanđleChangeQuantity}/>
+                    <Typography variant='h4'>{`${cartRowListBySupplier[0].supplier.name} (${cartRowListBySupplier[0].supplier.phone})`}</Typography>
+                    <TableRowWithSelect handleAddOrderReccomend={handleAddOrderReccomend} dataRecommend={supplierGroup[supplier]} hanđleChangeQuantity={hanđleChangeQuantity} handleClose={handleClose}/>
                 </Box>
                 )
             })
@@ -133,7 +134,7 @@ const RecommendOrderPopUp = ({dataRecommend,handleClose,store_setting}) => {
             data?
             <Box style={{marginBottom:20, marginTop:40}}>
                     <Typography variant='h3' style={{marginBottom:20}}>{"Chưa xác định được NCC"}</Typography>
-                    <TableRowWithSelect  dataRecommend={data}  hanđleChangeQuantity={hanđleChangeQuantity}/>
+                    <TableRowWithSelect handleAddOrderReccomend={handleAddOrderReccomend} dataRecommend={data}  hanđleChangeQuantity={hanđleChangeQuantity} handleClose={handleClose}/>
                 </Box>
             :null
         )
@@ -161,7 +162,7 @@ const RecommendOrderPopUp = ({dataRecommend,handleClose,store_setting}) => {
                     <Typography variant='h3' style={{marginBottom:20}}>{"Chưa xác định được NCC"}</Typography>
                     <TableRowWithSelect  dataRecommend={processedData.filter(data => !data.supplier_uuid)}  hanđleChangeQuantity={hanđleChangeQuantity}/>
                 </Box> */}
-                <RecommendProductGroupWithoutSupplier />
+                {/* <RecommendProductGroupWithoutSupplier /> */}
 
            </>
         :null} 

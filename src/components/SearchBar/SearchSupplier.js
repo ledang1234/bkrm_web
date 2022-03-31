@@ -122,8 +122,9 @@ const SearchSupplier = (props) => {
     />
   );
 
-  const getOptionLabel = (option) => (option.name ? option.name.concat(option.phone? `- ${option.phone}` :'') : "");
+  const getOptionLabel = (option) => (option.name ? option.name.concat(option.phone? ` - ${option.phone}` :'') : "");
 
+  console.log("selectedSupplier",props.selectedSupplier)
   return (
     <div style={{ width: "100%" }}>
       <Autocomplete
@@ -133,14 +134,15 @@ const SearchSupplier = (props) => {
         getOptionLabel={getOptionLabel}
         onChange={(event, value) => {
           if (value) {
+            console.log("valuesssssss",value)
             // setSelectedOption(value);
-            props.handleSearchBarSelect(value);
+            // props.handleSearchBarSelect(value);
           }
         }}
         onInputChange={()=>{
           if(props.selectedSupplier?.name?.length !== 0){
-            props.handleSearchBarSelect({ name: "", phone: "" })
-            props.setAddSupplier({ name: "", phone: "" })
+            // props.handleSearchBarSelect({ name: "", phone: "" })
+            // props.setAddSupplier({ name: "", phone: "" })
           }
           
         }}

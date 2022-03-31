@@ -83,7 +83,7 @@ const headCells = [
     { id: 'list_price', numeric: true, disablePadding: false, label: 'Giá bán',align:'right'  },
     { id: 'standard_price', numeric: true, disablePadding: false, label: 'Giá nhập',align:'right' },
     { id: 'quantity', numeric: true, disablePadding: false, label: 'SL đặt' ,align:'center'},
-    { id: 'supplier_uuid', numeric: true, disablePadding: false, label: 'NCC',align:'center' },
+    // { id: 'supplier_uuid', numeric: true, disablePadding: false, label: 'NCC',align:'center' },
   ];
   
 
@@ -138,22 +138,64 @@ function EnhancedTableHead(props) {
 
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
-    const { numSelected } = props;
+    const {rows,selected} = props;
+    const { numSelected ,handleAddOrderReccomend,handleClose} = props;
     if(numSelected  === 0 ){
         return null
     }
+   
   return (
     <Toolbar
       className={clsx(classes.root, {
         [classes.highlight]: numSelected > 0,
       })}
       style={{height:10,position:"sticky"}}
-
     >
         <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
           Đã chọn: {numSelected} 
         </Typography>
-        <Button variant="contained" size='small' color='secondary' style={{width:200}}>Bỏ vô giỏ hàng</Button>
+        <Button variant="contained" size='small' color='secondary' style={{width:170}} 
+        onClick={()=>{
+            let selectRow = rows.filter(row  => selected.includes(row.uuid))
+            const cartItem = selectRow.map((row, index)=>{
+              let newCartItem = {
+                id: index + 1,
+                uuid: row.item.uuid,
+                quantity: row.quantity,
+                bar_code: row.item.bar_code,
+                product_code: row.item.product_code,
+                unit_price: row.item.standard_price,
+                img_url: row.item.img_url,
+                name: row.item.name,
+                has_batches: row.item.has_batches,
+                batches: [],
+                // CHƯA CÓ
+                branch_inventories:[]
+              };
+              return newCartItem
+            })
+
+            let newCartList = {
+              supplier: {name:rows[0].supplier.name, phone:rows[0].supplier.phone, uuid:rows[0].supplier_uuid},       
+              cartItem: cartItem,
+              // cartItem: [],
+              total_amount: 0,
+              paid_amount: 0,
+              discount: 0,
+              payment_method: "cash"
+            }
+            handleClose()
+            handleAddOrderReccomend(newCartList)
+
+
+            // handleAddOrderReccomend(
+
+            // )
+        }}
+        
+        >
+          Tạo đơn đặt
+      </Button>
     </Toolbar>
   );
 };
@@ -165,7 +207,7 @@ const EnhancedTableToolbar = (props) => {
 
 const TableRowWithSelect = (props) => {
   const classes = useStyles();
-  const {dataRecommend,hanđleChangeQuantity} = props
+  const {dataRecommend,hanđleChangeQuantity,handleAddOrderReccomend,handleClose} = props
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('product_code');
   const [selected, setSelected] = React.useState([]);
@@ -211,7 +253,7 @@ const TableRowWithSelect = (props) => {
   if(!dataRecommend){return}
   return (
     <>
-        <EnhancedTableToolbar numSelected={selected.length}        />
+        <EnhancedTableToolbar numSelected={selected.length} handleAddOrderReccomend={handleAddOrderReccomend} selected={selected} rows={rows}  handleClose={handleClose}   />
         <TableContainer style={{maxHeight:550}} >
           <Table
           stickyHeader
@@ -233,65 +275,7 @@ const TableRowWithSelect = (props) => {
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                .map((row, index) => {
-                  // const isItemSelected = isSelected(row.uuid);
-                  // const labelId = `enhanced-table-checkbox-${index}`;
-                  // const [quantity, setQuantity] = useState(row.quantity)
 
-                  // const updateQuantity = (newQuantity) => {
-                  //   setQuantity(newQuantity)
-                  //   hanđleChangeQuantity(row.uuid, newQuantity);
-                  // };
-                  // return (
-                  //   <TableRow
-                  //     hover
-                  //     // onClick={(event) => handleClick(event, row.uuid)}
-                  //     role="checkbox"
-                  //     aria-checked={isItemSelected}
-                  //     tabIndex={-1}
-                  //     key={row.uuid}
-                  //     selected={isItemSelected}
-                  //   >
-                  //     <TableCell padding="checkbox">
-                  //       <Checkbox
-                  //         checked={isItemSelected}
-                  //         inputProps={{ 'aria-labelledby': labelId }}
-                  //         onClick={(event) => handleClick(event, row.uuid)}
-                  //       />
-                  //     </TableCell>
-                  //     <TableCell component="th" id={labelId} scope="row" padding="none" style={{minWidth:100}}>
-                  //       {row?.product_code}
-                  //     </TableCell>
-                  //     <TableCell align="left"   style={{width:250,paddingTop:10, paddingBottom:10 }} padding="none" >
-                  //           <ListItem
-                  //               style={{ margin:0,marginLeft: -30, marginTop: -10, marginBottom: -10 , padding:0, }}
-                  //           >
-                  //               <Box
-                  //               component="img"
-                  //               sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}
-                  //               src={row.img || defaultProduct}
-                  //               />
-                  //               <Typography className={classes.fontName}>{row?.name}</Typography>
-                  //           </ListItem>
-                  //     </TableCell>
-                  //     <TableCell align="right"  style={{minWidth:110}}>{row?.list_price.toLocaleString()}</TableCell>
-                  //     <TableCell align="right"  style={{minWidth:120}}>{row?.standard_price.toLocaleString()}</TableCell>
-                      
-                  //     {/*                      
-                  //     <TableCell align="right"  style={{minWidth:100}}>{row.quantity}</TableCell>
-                  //     <TableCell align="right">{row.supplier.name}</TableCell> */}
-
-  
-                  //     <TableCell align="center"  style={{minWidth:100}}>
-                  //     <ButtonQuantity
-                  //         quantity={quantity}
-                  //         setQuantity={updateQuantity}
-                  //         isMini={true}
-                  //       />
-                  //     </TableCell>
-                  //     <TableCell align="right">{row.supplier?.name}</TableCell>
-                      
-                  //   </TableRow>
-                  // );
                   return<RowData  row={row} index={index} selected={selected} hanđleChangeQuantity={hanđleChangeQuantity} handleClick={handleClick}/>
                 })}
              
@@ -361,7 +345,7 @@ const RowData = ({row, index,selected,hanđleChangeQuantity,handleClick}) =>{
             isMini={true}
           />
         </TableCell>
-        <TableCell align="right">{row.supplier?.name}</TableCell>
+        {/* <TableCell align="right">{row.supplier?.name}</TableCell> */}
         
       </TableRow>
     );

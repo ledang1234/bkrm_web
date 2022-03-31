@@ -123,12 +123,10 @@ const Import = () => {
 
 
   useEffect(() => {
-    console.log("alo")
     window.localStorage.setItem(
       "importListData",
       JSON.stringify({ user_uuid: user_uuid, cartList: cartList })
     );
-    console.log("alo222")
   }, [cartList]);
 
   //// ----------II. FUNCTION
@@ -212,6 +210,9 @@ const Import = () => {
     setSelectedIndex(cartList.length);
     handleClose();
   };
+
+  
+
   const handleDelete = (index) => {
     // DELETE CART
     cartList.splice(index, 1);
@@ -401,7 +402,6 @@ const Import = () => {
     setCartList(newCartList);
   };
 
-  console.log("cartList[selectedIndex].supplier",cartList[selectedIndex].supplier)
 
   const handleConfirm = async (type) => {
     // type ===  1 là nhập , type ===  0 là đặt
@@ -496,7 +496,6 @@ const Import = () => {
   };
 
 
-  
 
   //print
   const componentRef = useRef();
@@ -533,6 +532,44 @@ const Import = () => {
   }
   const [openRecommendOrderPopUp, setOpenRecommendOrderPopUp] = useState(false)
   const [dataRecommend, setDataRecommend] = useState(null)
+
+  console.log(" cartList[selectedIndex]sssss", cartList[selectedIndex])
+  const handleAddOrderReccomend = (newCartList) => {
+    // ADD CART
+    console.log("hihi",newCartList)
+    setCartList([
+      ...cartList,
+      newCartList,
+    ]);
+    console.log("helllllloo2222")
+    setSelectedIndex(cartList.length);
+    console.log("helllllloo33333")
+    // console.log("newCartList.supplier",newCarstList.supplier)
+    console.log("newCartList.supplier",newCartList.supplier)
+  //   handleSelectSupplier(
+  //   {
+  //     address: "3",
+  //     city: "",
+  //     company: "",
+  //     created_at: "2022-03-31T10:58:01.000000Z",
+  //     debt: 0,
+  //     email: null,
+  //     img_url: "",
+  //     job_title: "",
+  //     name: "đccxcđ",
+  //     payment_info: null,
+  //     phone: "1234567893",
+  //     province: "",
+  //     status: "active",
+  //     supplier_code: "NCC000130",
+  //     total_payment: 0,
+  //     type: "supplier",
+  //     updated_at: "2022-03-31T10:58:01.000000Z",
+  //     uuid: "213e31dc-7e44-43bd-950e-ae27c1eceeae",
+  //     ward: ""
+  // }
+    // )
+  };
 
   return (
     <Grid
@@ -662,7 +699,7 @@ const Import = () => {
                 open={openRecommendOrderPopUp}   
                 handleClose={()=>setOpenRecommendOrderPopUp(false)}
               > 
-                  <ReccomendOrderPopUp dataRecommend={dataRecommend}  handleClose={()=>setOpenRecommendOrderPopUp(false)}  store_setting={store_setting}/>
+                  <ReccomendOrderPopUp handleAddOrderReccomend={handleAddOrderReccomend}dataRecommend={dataRecommend}  handleClose={()=>setOpenRecommendOrderPopUp(false)}  store_setting={store_setting}/>
               </DialogWrapper>
 
               {/* 1.2 TABLE */}
