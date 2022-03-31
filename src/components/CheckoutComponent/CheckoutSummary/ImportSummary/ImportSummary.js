@@ -111,16 +111,18 @@ const ImportSummary = (props) => {
     setOpenPopUp(false);
   };
 
-  const [addSupplier, setAddSupplier] = useState(null)
-  useEffect(()=>{
-    if(addSupplier){handleSelectSupplier(addSupplier)}
-  },[addSupplier])
+
 
   function calculateTotalQuantity ( cartList ) {
     var value= 0
     cartList.map(item => value +=item.quantity )
     return value
   }
+  const [addSupplier, setAddSupplier] =  React.useState({name:'', phone:''})
+  React.useEffect(()=>{
+    if(addSupplier.name?.length !==  0){props.handleSelectSupplier(addSupplier)}
+  })
+
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -159,6 +161,7 @@ const ImportSummary = (props) => {
               currentSupplier ? currentSupplier : { name: "", phone: "" }
             }
             handleSearchBarSelect={handleSelectSupplier}
+            setAddSupplier={setAddSupplier}
           />
         </div>
 
@@ -167,7 +170,8 @@ const ImportSummary = (props) => {
           // handleClose={handleClose}
           handleClose={()=>{setOpen(false)}}
           onReload={props.reloadSuppliers}
-          handleSearchBarSelect={handleSelectSupplier}
+          setAddSupplier={setAddSupplier}
+          isImport={true}
      
         />}
 

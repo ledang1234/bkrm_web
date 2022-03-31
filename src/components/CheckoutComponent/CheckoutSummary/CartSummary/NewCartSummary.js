@@ -148,9 +148,13 @@ const CartSummary = (props) => {
   }
   let haveDiscount = checkHaveDiscount();
   const [openDiscount, setOpenDiscount] = React.useState(false);
-  // console.log("cartData",cartData)
 
-  
+  const [addCustomer, setAddCustomer] =  React.useState({name:'', phone:''});
+  React.useEffect(()=>{
+    console.log("realod addCustomer",addCustomer)
+    if(addCustomer.name?.length !==  0){props.handleSelectCustomer(addCustomer)}
+  })
+
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -190,11 +194,18 @@ const CartSummary = (props) => {
               currentCustomer ? currentCustomer : { name: "", phone: "" }
             }
             handleSearchBarSelect={handleSelectCustomer}
+            setAddCustomer={setAddCustomer}
           />
         </div>
 
         {/* <AddCustomer open={open} handleClose={handleClose} /> */}
-        {open &&<AddCustomer open={open} handleClose={()=>{setOpen(false)}}  onReload={props.reloadCustomers} />}
+        {open &&<AddCustomer 
+        open={open} 
+        handleClose={()=>{setOpen(false)}}  
+        onReload={props.reloadCustomers} 
+        setAddCustomer={setAddCustomer}
+        isCart={true}
+        />}
         {/* when change mode to menu product */}
         {props.children}
 

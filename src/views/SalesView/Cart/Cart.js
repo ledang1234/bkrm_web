@@ -158,6 +158,19 @@ const Cart = () => {
   }, [isUpdateTotalAmount]);
 
   const [customers,setCustomers ] = useState([])
+
+
+  const handleSearchCustomer = async (searchKey) => {
+    try {
+      const response = await customerApi.getCustomers(store_uuid, {
+        search_key: searchKey,
+      });
+      setCustomers(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     const loadingCustomer = async () => {
       try {
@@ -171,18 +184,6 @@ const Cart = () => {
       loadingCustomer();
     }
   }, [store_uuid]);
-
-  const handleSearchCustomer = async (searchKey) => {
-    try {
-      const response = await customerApi.getCustomers(store_uuid, {
-        search_key: searchKey,
-      });
-      setCustomers(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const [reloadCustomers, setReloadCustomers] = useState(false);
   useEffect(() => {
     const loadingCustomer = async () => {
@@ -461,7 +462,7 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
-  
+  console.log("cartList[selectedIndex].customer",cartList[selectedIndex].customer)
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
     
