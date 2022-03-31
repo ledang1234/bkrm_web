@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect,useState} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 //import library
@@ -11,7 +11,8 @@ import {
   Typography,
   Grid,
   Avatar,
-  Dialog
+  Dialog,
+  FormHelperText
 } from "@material-ui/core";
 
 //import project
@@ -48,6 +49,10 @@ const UpdateCustomer = (props) => {
   const { handleClose, open, onReload } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
+  const [phoneExist, setPhoneExist] = React.useState(false);
+  const [clicked, setClicked] =useState(false)
+
+
   const customerFormik = useFormik({
     initialValues: {
       name: props.customerDetail?.name || "",
@@ -69,11 +74,15 @@ const UpdateCustomer = (props) => {
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
 
-  const handleCloseAndReset =() =>{
-    // handleClose()
-    onReload()
-    customerFormik.resetForm()
-  } 
+  // const handleCloseAndReset =() =>{
+  //   // handleClose()
+  //   onReload()
+  //   customerFormik.resetForm()
+  // } 
+  useEffect(() =>{
+    if(phoneExist) {setPhoneExist(false)}
+  },[customerFormik.values.phone])
+
   const dispatch = useDispatch()
   return (
  
@@ -122,6 +131,9 @@ const UpdateCustomer = (props) => {
                 helperText={customerFormik.touched.phone ? customerFormik.errors.phone : null}
                 onBlur={customerFormik.handleBlur}
               />
+               { phoneExist && (
+                <FormHelperText error>Số điện thoại đã được sử dụng</FormHelperText>
+              )}
               <TextField
                 id="outlined-basic"
                 label="Địa chỉ"
@@ -180,7 +192,7 @@ const UpdateCustomer = (props) => {
         </Button>
         <Button
           onClick={async () => {
-            handleClose()
+            setClicked(true)
             let body = {
               name: customerFormik.values.name,
               email: customerFormik.values.email,
@@ -191,18 +203,22 @@ const UpdateCustomer = (props) => {
 
             try {
               const response = await customerApi.updateCustomer(store_uuid, props.customerDetail.uuid, body)
-              handleCloseAndReset()
+              handleClose()
+              // handleCloseAndReset()
               dispatch(statusAction.successfulStatus("Sửa thông tin khách hàng thành công"));
+              onReload()
               
             } catch (err) {
-              dispatch(statusAction.failedStatus("Sửa thông tin khách hàng thất bại"));
+              // dispatch(statusAction.failedStatus("Sửa thông tin khách hàng thất bại"));
+              setPhoneExist(true)
+              setClicked(false)
             }
 
           }}
           variant="contained"
           size="small"
           color="primary"
-          disabled = {!(customerFormik.isValid )}
+          disabled = {!(customerFormik.isValid  )|| clicked}
         >
           Lưu thay đổi
         </Button>

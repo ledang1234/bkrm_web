@@ -17,11 +17,12 @@ import { grey } from "@material-ui/core/colors";
 import AddIcon from "@material-ui/icons/Add";
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     input: {
-      borderRadius: "20px",
+      borderRadius: "20px",       
     },
   })
 );
@@ -63,7 +64,7 @@ const SearchCustomer = (props) => {
       placeholder="Tìm khách hàng"
       margin="normal"
       InputProps={
-        props.selectedCustomer
+        props.selectedCustomer?.name.length === 0 
           ? {
               ...params.InputProps,
               startAdornment: (
@@ -93,10 +94,12 @@ const SearchCustomer = (props) => {
                 <IconButton
                   aria-label="delete"
                   size="small"
-                  onClick={props.handleClickOpen}
+                  onClick={()=>{
+                    props.handleSearchBarSelect({ name: "", phone: "" })
+                  }}
                   style={{ marginRight: -30 }}
                 >
-                  <AddIcon />
+                  <ClearOutlinedIcon fontSize="small" />
                 </IconButton>
               ),
             }
@@ -104,7 +107,7 @@ const SearchCustomer = (props) => {
     />
   );
 
-  const getOptionLabel = (option) => (option.name ? option.name : "");
+  const getOptionLabel = (option) => (option.name ? option.name.concat(option.phone? `- ${option.phone}` :'') : "");
 
   return (
     <div style={{ width: "100%" }}>
@@ -125,6 +128,12 @@ const SearchCustomer = (props) => {
             // setSelectedOption(value);
             props.handleSearchBarSelect(value);
           }
+        }}
+        onInputChange={()=>{
+          if(props.selectedCustomer?.name.length !== 0){
+            props.handleSearchBarSelect({ name: "", phone: "" })
+          }
+          
         }}
         renderInput={renderInput}
         renderOption={renderOption}

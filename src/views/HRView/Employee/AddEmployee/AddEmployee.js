@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useState,useEffect} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 //import library
@@ -71,6 +71,8 @@ const AddEmployee = (props) => {
   const statusState = "Success";
 
   const [userNameError, setUserNameError] = React.useState(false);
+  const [clicked, setClicked] =useState(false)
+
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -148,15 +150,17 @@ const AddEmployee = (props) => {
 
 
       try {
-        setOpen(false)
+        setClicked(true)
         const response = await employeeApi.createEmployee(
           store_uuid,
           formData
         );
+        setOpen(false)
         handleClose("Success");
       } catch (err) {
         // error("Lỗi", "Tên đăng nhập đã tồn tại")
         setUserNameError(true)
+        setClicked(false)
        
       }
     },
@@ -254,6 +258,7 @@ const AddEmployee = (props) => {
                 fullWidth
                 size="small"
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
 
               {formik.errors.name && formik.touched.name && (
@@ -269,6 +274,7 @@ const AddEmployee = (props) => {
                 fullWidth
                 size="small"
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
 
               {formik.errors.phone && formik.touched.phone && (
@@ -285,6 +291,7 @@ const AddEmployee = (props) => {
                 fullWidth
                 size="small"
                 onChange={formik.handleChange }
+                onBlur={formik.handleBlur}
               />
 
               {formik.errors.user_name && formik.touched.user_name && (
@@ -305,6 +312,7 @@ const AddEmployee = (props) => {
                 size="small"
                 value={formik.values.password}
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
 
               {formik.errors.password && formik.touched.password && (
@@ -325,6 +333,7 @@ const AddEmployee = (props) => {
                 className={classes.textField}
                 InputLabelProps={{ shrink: true }}
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
 
               <TextField
@@ -336,6 +345,7 @@ const AddEmployee = (props) => {
                 fullWidth
                 size="small"
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
 
               <FormControl
@@ -353,6 +363,7 @@ const AddEmployee = (props) => {
                   id="demo-simple-select-outlined"
                   name="gender"
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   label="Gender"
                   value={formik.values.gender}
                 >
@@ -370,6 +381,7 @@ const AddEmployee = (props) => {
                 fullWidth
                 size="small"
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
 
               {formik.errors.email && formik.touched.email && (
@@ -385,6 +397,7 @@ const AddEmployee = (props) => {
                 fullWidth
                 size="small"
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
             </Grid>
 
@@ -406,6 +419,7 @@ const AddEmployee = (props) => {
                   name="salary_type"
                   value={formik.values.salary_type}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 >
                   <MenuItem value="none">
                     <em>None</em>
@@ -439,6 +453,7 @@ const AddEmployee = (props) => {
                 // value={values.numberformat}
                 // onChange={handleChange}
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 // InputProps={{
                 //   inputComponent: NumberFormatCustom,
                 // }}
@@ -471,6 +486,7 @@ const AddEmployee = (props) => {
                       .join(", ")
                   }
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 >
                   {permissionChoices.map((branch) => (
                     <MenuItem key={branch.name} value={branch.id}>
@@ -500,6 +516,7 @@ const AddEmployee = (props) => {
                   id="branches"
                   name="branches"
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   size="small"
                   value={formik.values.branches}
                   renderValue={(selected) =>
@@ -544,6 +561,9 @@ const AddEmployee = (props) => {
           variant="contained"
           size="small"
           color="primary"
+          disabled = {!(formik.isValid && Object.keys(formik.touched).length > 0) || clicked}
+          // disabled = { clicked}
+
         >
           Thêm
         </Button>

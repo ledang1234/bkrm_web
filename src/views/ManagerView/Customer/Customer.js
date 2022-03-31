@@ -54,16 +54,16 @@ const Customer = () => {
       setOpen(true);
     };
 
-    const handleClose = (status) => {
-      setOpen(false);
-      setAddStatus(status);
-      if(status === "Success"){
-        onReload();
-        setOpenBar(true);
-      }else if (status === "Fail"){
-        setOpenBar(true);
-      }
-    };
+    // const handleClose = (status) => {
+    //   setOpen(false);
+    //   setAddStatus(status);
+    //   if(status === "Success"){
+    //     onReload();
+    //     setOpenBar(true);
+    //   }else if (status === "Fail"){
+    //     setOpenBar(true);
+    //   }
+    // };
 
     //status add
     const [addStatus, setAddStatus] = React.useState(null);
@@ -175,9 +175,12 @@ const Customer = () => {
         </Grid>
 
         {/* Popup add */}
-       {open && <AddCustomer open={open} handleClose={handleClose} onReload={onReload} />}
+        
+       {/* {open && <AddCustomer open={open} handleClose={handleClose} onReload={onReload} />} */}
+       {open && <AddCustomer open={open} handleClose={()=>setOpen(false)} onReload={onReload} />}
+
         {/* Noti */}
-        <SnackBar openBar={openBar} handleCloseBar={handleCloseBar} addStatus={addStatus}/>
+        {/* <SnackBar openBar={openBar} handleCloseBar={handleCloseBar} addStatus={addStatus}/> */}
 
         
         <Divider  openFilter={openFilter} handleToggleFilter={handleToggleFilter}/>

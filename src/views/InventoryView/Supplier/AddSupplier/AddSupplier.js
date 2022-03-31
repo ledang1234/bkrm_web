@@ -95,7 +95,8 @@ const AddSupplier = (props) => {
   };
   const dispatch = useDispatch();
   const handleAddSupplier = async () => {
-    handleCloseAndReset()
+    handleClose()
+    // handleCloseAndReset()
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", supplierFormik.values.name.toString());
@@ -106,24 +107,30 @@ const AddSupplier = (props) => {
       bodyFormData.append("address", supplierFormik.values.address.toString());
       bodyFormData.append("image", image);
 
-      await supplierApi.createSupplier(
+      // await supplierApi.createSupplier(
+      //   store_uuid,
+      //   bodyFormData
+      // );
+      const rs = await supplierApi.createSupplier(
         store_uuid,
         bodyFormData
       );
       dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
       props.onReload();
+
+     
     } catch (err) {
       dispatch(statusAction.failedStatus("Tạo nhà cung cấp thất bại"));
       console.log(err);
     }
-    handleCloseAndReset()
+    // handleCloseAndReset()
   };
-  const handleCloseAndReset =() =>{
-    handleClose()
-    setImage([])
-    setDisplay([])
-    supplierFormik.resetForm()
-  } 
+  // const handleCloseAndReset =() =>{
+  //   handleClose()
+  //   setImage([])
+  //   setDisplay([])
+  //   supplierFormik.resetForm()
+  // } 
   return (
     // <SimpleModal
     //   open={open}
@@ -134,7 +141,7 @@ const AddSupplier = (props) => {
     //     <Typography className={classes.headerTitle} variant="h5" gutterBottom>
     //       Thêm nhà cung cấp
     //     </Typography>
-    <Dialog open={open} onClose={handleCloseAndReset} >
+    <Dialog open={open} onClose={handleClose} >
       <DialogTitle id="form-dialog-title">
         <Typography className={classes.headerTitle} variant="h5">
           Thêm nhà cung cấp
@@ -294,7 +301,7 @@ const AddSupplier = (props) => {
           }}
         > */}
           <Button
-            onClick={handleCloseAndReset}
+            onClick={handleClose}
             variant="contained"
             size="small"
             color="secondary"
