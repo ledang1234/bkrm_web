@@ -25,6 +25,7 @@ import {
   Avatar,
   Tooltip,
   TextField,
+  Button
 } from "@material-ui/core";
 
 //import constant
@@ -57,7 +58,10 @@ import supplierApi from "../../../api/supplierApi";
 import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import branchApi from "../../../api/branchApi";
 import setting from "../../../assets/constant/setting"
-
+import productApi from "../../../api/productApi";
+import openNotification from "../../../components/StatusPopup/StatusPopup";
+import DialogWrapper from "../../../components/Modal/DialogWrapper";
+import ReccomendOrderPopUp from "./RecommendOrderPopUp/RecommendOrderPopUp"
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
@@ -69,6 +73,8 @@ const Import = () => {
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
+
   const branch = info.branch;
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
@@ -390,15 +396,31 @@ const Import = () => {
     setCartList(newCartList);
   };
 
-  const handleConfirm = async () => {
-    let cart = cartList[selectedIndex];
+  const handleConfirm = async (type) => {
+    // type ===  1 là nhập , type ===  0 là đặt
+    // CHECK ĐẶT THÀNH CÔNG ĐƠN ĐẶT SẼ VỀ SCREEN ĐƠN NHẬP HÀNG (trạng thái chờ nhận hàng) 
+    // table row DETAIL có thể sửa giá nhập (nếu lúc nhập khác lúc đặt)
 
-    // let d = new Date();
-    // let importTime = d.getFullYear() + '-' + (d.getMonth() + 1).toString()  + '-' + d.getDate() + ' '
-    //                 + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+    // Nếu đạt import summary có cho nnhapaj giảm giá + thanh toán trc ko ????
+
+    // BỎ  NÚT TRẢ HÀNG 
+    // ??? CÓ CHO NHẬP TỪNG PHẦN KO ??
+    // + NẾU KO thì sẽ có nút nhập ở cuối -> bâms vào show tổng tiền nhập đã đc tính lại, tiền thanh toán, giảm gía, tiền đã thanh toán trc,...
+    // -----> thành công sẽ update lại trạng thái + nhập vô kho
+     // + NẾU CÓ thì sẽ mỗi row sp có thêm nút nhập -> bấm vô thì sẽ cộng tồn kho , vậy còn tiền thì sao ??(trừ theo mỗi lần bấm nhập -> nếu v thì sẽ ko âply đc giảm giá hay trừ đc khoản thanh toán trc ?? )
+    //  tiền -> phía dưới sẽ có nút thanh toán??
+    
+    // NẾU SỬA LẠI ĐƠN ĐẶT HOẶC HUỶ ĐƠN THÌ SAO ???
+
+    // NẾU LÀ SẢN PHẨM CÓ LÔ THÌ SAO ?? 
+
+    let cart = cartList[selectedIndex];
 
     const printReceiptWhenSell= store_setting?.printReceiptWhenSell
     var emptyCart = cart.cartItem.filter((item) => item.quantity).length === 0;
+    // CHECK NẾU TYPE BẰNG 0(đặt) thì NCC ko đc null 
+    // CHECK NẾU TYPE BẰNG 0(đặt) thì setting có  gửi mail NCC ko , nếu có thì warning email NCC rỗng  ?
+
     if (emptyCart) {
       setOpenSnack(true);
       setSnackStatus({
@@ -414,12 +436,14 @@ const Import = () => {
         .unix(d)
         .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
+
       let body = {
         supplier_uuid: cart.supplier ? cart.supplier.uuid : "",
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
         paid_amount: cart.paid_amount,
         discount: cart.discount.toString(),
+        // CHECK NẾU TYPE BẰNG 0  thì status là chờ hàng
         status:
           Number(cart.total_amount) - Number(cart.discount) >=
           Number(cart.paid_amount)
@@ -436,6 +460,8 @@ const Import = () => {
       };
       try {
         console.log(body)
+         // CHECK NẾU TYPE BẰNG 0(đặt)  thì gọi api đặt hàng (hoặc sửa luôn api này nhưng ko cộng tòn kho)
+        // CHECK NẾU TYPE BẰNG 0(đặt) thì setting có  gửi mail NCC ko , nếu có api gửi mail ?
         let res = await purchaseOrderApi.addInventory(
           store_uuid,
           branch.uuid,
@@ -443,10 +469,10 @@ const Import = () => {
         );
         setSnackStatus({
           style: "success",
-          message: "Nhập hàng thành công: " + res.data.purchase_order_code,
+          message: type === 1? "Nhập hàng thành công: " + res.data.purchase_order_code : "Đặt hàng thành công: " + res.data?.purchase_order_code ,
         });
         setOpenSnack(true);
-        if(printReceiptWhenSell.status && printReceiptWhenSell.import){
+        if(printReceiptWhenSell.status && printReceiptWhenSell.import && type === 1){
           handlePrint()    
         }
         // handlePrint();
@@ -454,13 +480,16 @@ const Import = () => {
       } catch (err) {
         setSnackStatus({
           style: "error",
-          message: "Nhập hàng thất bại! ",
+          message: type === 1? "Nhập hàng thất bại! " :"Dặt hàng thất bại! " ,
         });
         setOpenSnack(true);
         console.log(err);
       }
     }
   };
+
+
+  
 
   //print
   const componentRef = useRef();
@@ -475,6 +504,28 @@ const Import = () => {
   const handleSwitchChange = () => {
     setBarcodeChecked(!barcodeChecked);
   };
+
+
+  // ******* GỢI Ý ĐẶT HÀNG ********
+  const handleClickRecommend = async () => {
+    if (store_uuid && branch_uuid) {
+      try {
+        const res = await productApi.productOrderRecommend(store_uuid, branch_uuid);
+        // alert(JSON.stringify(res.data, null, 2))
+        // setDataRecommend(JSON.stringify(res.data, null, 2))
+        setDataRecommend(res.data)
+
+        // setDataRecommend(null)
+        setOpenRecommendOrderPopUp(true)
+
+      } catch (err) {
+        console.log(err);
+        openNotification('error', 'Không thể tạo gợi ý', '')
+      }
+    }
+  }
+  const [openRecommendOrderPopUp, setOpenRecommendOrderPopUp] = useState(false)
+  const [dataRecommend, setDataRecommend] = useState(null)
 
   return (
     <Grid
@@ -587,6 +638,25 @@ const Import = () => {
                   </Grid>
                 </Grid>
               </Grid>
+              {store_setting?.orderLowStock.status ?
+              <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                className={classes.button}
+                onClick={handleClickRecommend}
+                style={{marginTop:-30}}
+              >
+                Gợi ý đặt hàng
+              </Button> :null}
+            
+              <DialogWrapper 
+                title={"Gợi ý đặt hàng"}
+                open={openRecommendOrderPopUp}   
+                handleClose={()=>setOpenRecommendOrderPopUp(false)}
+              > 
+                  <ReccomendOrderPopUp dataRecommend={dataRecommend}  handleClose={()=>setOpenRecommendOrderPopUp(false)}  store_setting={store_setting}/>
+              </DialogWrapper>
 
               {/* 1.2 TABLE */}
               {!mode ? (

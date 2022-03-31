@@ -72,11 +72,12 @@ const ButtonQuantity = (props) =>{
           </HtmlTooltip>:null}
 
           {/* margin:isMini?0:null, padding:isMini?0:null */}
-          <IconButton style={{ display: isMini?true:show ,color: error_quantity && isManageInventory ? "red":null,margin:isMini?0:null, padding:isMini?0:null}} aria-label="delete" className={classes.margin} size="small" onClick={handleDecrement} >
+          <IconButton style={{ display: isMini?true:show ,color: error_quantity && isManageInventory ? "red":null,margin:isMini?0:null, padding:isMini?0:null,}} aria-label="delete" className={classes.margin} size="small" onClick={handleDecrement} >
+
             <RemoveIcon fontSize="inherit" />
           </IconButton> 
        
-           <TextField  variant={isMini? "outlined" : "standard"} id="standard-basic" style={{width:isMini?45:35 ,padding:0, marginLeft:isCustomer?20:null,marginRight:isCustomer?20:null}} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: isMini?"center": "right", color: error_quantity  && isManageInventory  ? "red":null, fontWeight:error_quantity  && isManageInventory ? 600:null,
+           <TextField  variant={isMini? "outlined" : "standard"} id="standard-basic" style={{width:isMini?45:35 ,padding:0, marginLeft:isCustomer || isMini?20:null,marginRight:isCustomer|| isMini?20:null}} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: isMini?"center": "right", color: error_quantity  && isManageInventory  ? "red":null, fontWeight:error_quantity  && isManageInventory ? 600:null,
           backgroundColor:error_quantity  && isManageInventory ?"#ffe8e8":null
         }}} 
                 value={quantity} onChange={handleQuantity}/>

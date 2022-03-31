@@ -209,17 +209,17 @@ const Inventory = () => {
   const [productErrors, setProductErrors] = useState([]);
 
 
-  const handleClickRecommend = async () => {
-    if (store_uuid && branch_uuid) {
-      try {
-        const res = await productApi.productOrderRecommend(store_uuid, branch_uuid);
-        alert(JSON.stringify(res.data, null, 2))
-      } catch (err) {
-        console.log(err);
-        openNotification('error', 'Không thể tạo gợi ý', '')
-      }
-    }
-  }
+  // const handleClickRecommend = async () => {
+  //   if (store_uuid && branch_uuid) {
+  //     try {
+  //       const res = await productApi.productOrderRecommend(store_uuid, branch_uuid);
+  //       alert(JSON.stringify(res.data, null, 2))
+  //     } catch (err) {
+  //       console.log(err);
+  //       openNotification('error', 'Không thể tạo gợi ý', '')
+  //     }
+  //   }
+  // }
 
   return (
     <Card className={classes.root}>
@@ -245,14 +245,14 @@ const Inventory = () => {
               Danh mục
             </Button>
           </Tooltip>
-          <Button
+          {/* <Button
               variant="outlined"
               color="primary"
               className={classes.button}
               onClick={handleClickRecommend}
             >
               Gợi ý đặt hàng
-            </Button>
+            </Button> */}
 
           <ButtonBase sx={{ borderRadius: "16px" }} onClick={handleClickOpen}>
             <Avatar variant="rounded" className={classes.headerAvatar}>

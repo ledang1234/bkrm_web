@@ -69,6 +69,7 @@ const setting = {
       choiceQuantity: "select", //number
       selectQuantity: "latest", //avg
       inputQuantity: 10,
+      noHistoryQuantity:10,
       selectSuplier: "latest", //manytime
     },
     autoApplyDiscount: { status: true },

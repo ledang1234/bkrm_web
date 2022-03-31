@@ -82,7 +82,7 @@ const InventoryTableRow = (props) => {
       <TableRow>
         {/* colspan  => số cột trong collapse */}
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          <InventoryDetail parentProps={props} openRow={openRow} isManageInventory={isManageInventory}/>
+          <InventoryDetail parentProps={props} openRow={openRow} isManageInventory/>
         </TableCell>
       </TableRow>
     </>

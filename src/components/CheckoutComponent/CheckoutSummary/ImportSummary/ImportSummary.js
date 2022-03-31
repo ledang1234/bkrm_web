@@ -18,6 +18,7 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  ListItem
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
@@ -303,16 +304,27 @@ const ImportSummary = (props) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-
+         
             <Button
               variant="contained"
               fullWidth
               color="primary"
               style={{ marginTop: 40 }}
-              onClick={handleConfirm}
+              onClick={()=>handleConfirm(1)}
             >
               Nhập hàng
             </Button>
+           
+            <Button
+              variant="contained"
+              fullWidth
+              color="secondary"
+              style={{ marginTop: 10 }}
+              onClick={()=>handleConfirm(0)}
+            >
+              Đặt hàng NCC
+            </Button>
+           
           </>
         ) : (
           /* 2.2 Mode 2 */
