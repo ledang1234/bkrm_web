@@ -71,7 +71,7 @@ const Cart = () => {
   const branch = info.branch;
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
-  const [customers, setCustomers] = useState([]);
+  // const [customers, setCustomers] = useState([]);
 
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
@@ -121,7 +121,8 @@ const Cart = () => {
       JSON.stringify({ user_uuid: user_uuid, cartList: cartList })
     );
   }, [cartList]);
-
+  
+ 
   // const[branchs, setBranchs] = useState([])
 
   // useEffect (()=>{
@@ -156,6 +157,7 @@ const Cart = () => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
 
+  const [customers,setCustomers ] = useState([])
   useEffect(() => {
     const loadingCustomer = async () => {
       try {
