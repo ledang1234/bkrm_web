@@ -60,7 +60,6 @@ const ButtonQuantity = (props) =>{
       } 
     }
    
-    console.log("isManageInventory",isManageInventory)
     return(
     <ListItem onMouseOver={handleShow} onMouseOut={handleClose}  > 
 

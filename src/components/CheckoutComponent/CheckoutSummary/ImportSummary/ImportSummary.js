@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState,useEffect} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -84,17 +84,18 @@ const ImportSummary = (props) => {
   };
 
   const dispatch = useDispatch();
-  const handleClose = (status) => {
-    if (status === "Success") {
-      dispatch(statusAction.successfulStatus("Thêm nhà cung cấp thành công"));
-      reloadSuppliers();
-      setOpen(false);
-    } else if (status === "Failure") {
-      dispatch(statusAction.failedStatus("Thêm nhà cung cấp thất bại"));
-    } else {
-      setOpen(false);
-    }
-  };
+  // const handleClose = (status) => {
+  //   if (status === "Success") {
+  //     dispatch(statusAction.successfulStatus("Thêm nhà cung cấp thành công"));
+  //     reloadSuppliers(); 
+  //     setOpen(false);
+  //     console.log("hello")
+  //   } else if (status === "Failure") {
+  //     dispatch(statusAction.failedStatus("Thêm nhà cung cấp thất bại"));
+  //   } else {
+  //     setOpen(false);
+  //   }
+  // };
 
   const handleChangePayment = (event) => {
     handleUpdatePaymentMethod(event.target.value);
@@ -109,6 +110,11 @@ const ImportSummary = (props) => {
   const handleClosePopUp = () => {
     setOpenPopUp(false);
   };
+
+  const [addSupplier, setAddSupplier] = useState(null)
+  useEffect(()=>{
+    if(addSupplier){handleSelectSupplier(addSupplier)}
+  },[addSupplier])
 
   function calculateTotalQuantity ( cartList ) {
     var value= 0
@@ -156,11 +162,14 @@ const ImportSummary = (props) => {
           />
         </div>
 
-        <AddSupplier
+       {open&& <AddSupplier
           open={open}
-          handleClose={handleClose}
-          onReload={() => {}}
-        />
+          // handleClose={handleClose}
+          handleClose={()=>{setOpen(false)}}
+          onReload={props.reloadSuppliers}
+          handleSearchBarSelect={handleSelectSupplier}
+     
+        />}
 
         {/* when change mode to menu product */}
         {props.children}

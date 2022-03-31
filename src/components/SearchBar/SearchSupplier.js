@@ -20,6 +20,7 @@ import supplierApi from "../../api/supplierApi";
 import { useSelector } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { render } from "sass";
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 const useStyles = makeStyles((theme) =>
   createStyles({
     input: {
@@ -76,7 +77,7 @@ const SearchSupplier = (props) => {
       placeholder="Tìm nhà cung cấp"
       margin="normal"
       InputProps={
-        props.selectedSupplier
+        props.selectedSupplier?.name.length === 0 
           ? {
               ...params.InputProps,
               startAdornment: (
@@ -107,10 +108,12 @@ const SearchSupplier = (props) => {
                 <IconButton
                   aria-label="delete"
                   size="small"
-                  onClick={props.handleClickOpen}
+                  onClick={()=>{
+                    props.handleSearchBarSelect({ name: "", phone: "" })
+                  }}
                   style={{ marginRight: -30 }}
                 >
-                  <AddIcon />
+                  <ClearOutlinedIcon fontSize="small" />
                 </IconButton>
               ),
             }
@@ -118,7 +121,7 @@ const SearchSupplier = (props) => {
     />
   );
 
-  const getOptionLabel = (option) => (option.name ? option.name : "");
+  const getOptionLabel = (option) => (option.name ? option.name.concat(option.phone? `- ${option.phone}` :'') : "");
 
   return (
     <div style={{ width: "100%" }}>
@@ -132,6 +135,12 @@ const SearchSupplier = (props) => {
             // setSelectedOption(value);
             props.handleSearchBarSelect(value);
           }
+        }}
+        onInputChange={()=>{
+          if(props.selectedSupplier?.name.length !== 0){
+            props.handleSearchBarSelect({ name: "", phone: "" })
+          }
+          
         }}
         renderInput={renderInput}
         renderOption={renderOption}

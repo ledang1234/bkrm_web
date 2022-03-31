@@ -82,15 +82,15 @@ const CartSummary = (props) => {
     setOpen(true);
   };
   const dispatch = useDispatch();
-  const handleClose = (status) => {
-    if ((status = "Success")) {
-      setOpen(false);
-      reloadCustomers();
-      dispatch(statusAction.successfulStatus("Thêm khách hàng thành công"));
-    } else {
-      dispatch(statusAction.failedStatus("Thêm khách hàng thất bại"));
-    }
-  };
+  // const handleClose = (status) => {
+  //   if ((status = "Success")) {
+  //     setOpen(false);
+  //     reloadCustomers();
+  //     dispatch(statusAction.successfulStatus("Thêm khách hàng thành công"));
+  //   } else {
+  //     dispatch(statusAction.failedStatus("Thêm khách hàng thất bại"));
+  //   }
+  // };
 
   //mode 2: popup
   const [openPopUp, setOpenPopUp] = React.useState(false);
@@ -193,8 +193,8 @@ const CartSummary = (props) => {
           />
         </div>
 
-        <AddCustomer open={open} handleClose={handleClose} />
-
+        {/* <AddCustomer open={open} handleClose={handleClose} /> */}
+        {open &&<AddCustomer open={open} handleClose={()=>{setOpen(false)}}  onReload={props.reloadCustomers} />}
         {/* when change mode to menu product */}
         {props.children}
 

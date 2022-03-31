@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect,useState} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 //import library
@@ -11,7 +11,8 @@ import {
   Typography,
   Grid,
   Avatar,
-  Dialog
+  Dialog,
+  FormHelperText
 } from "@material-ui/core";
 
 //import project
@@ -48,6 +49,9 @@ const AddCustomer = (props) => {
   const { handleClose, open, onReload } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
+  const [phoneExist, setPhoneExist] = React.useState(false);
+  const [clicked, setClicked] =useState(false)
+
   const customerFormik = useFormik({
     initialValues: {
       name: "",
@@ -70,11 +74,16 @@ const AddCustomer = (props) => {
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
 
-  const handleCloseAndReset =() =>{
-    onReload()
-    // handleClose()
-    customerFormik.resetForm()
-  } 
+  // const handleCloseAndReset =() =>{
+  //   onReload()
+  //   // handleClose()
+  //   customerFormik.resetForm()
+  // } 
+ 
+  useEffect(() =>{
+    if(phoneExist) {setPhoneExist(false)}
+  },[customerFormik.values.phone])
+
   const dispatch = useDispatch()
   return (
  
@@ -123,6 +132,9 @@ const AddCustomer = (props) => {
                 helperText={customerFormik.touched.phone ? customerFormik.errors.phone : null}
                 onBlur={customerFormik.handleBlur}
               />
+               { phoneExist && (
+                <FormHelperText error>Số điện thoại đã được sử dụng</FormHelperText>
+              )}
               <TextField
                 id="outlined-basic"
                 label="Địa chỉ"
@@ -182,7 +194,8 @@ const AddCustomer = (props) => {
         </Button>
         <Button
           onClick={async () => {   
-            handleClose()  
+            // handleClose()  
+            setClicked(true)
             let body = {
               name: customerFormik.values.name,
               email: customerFormik.values.email,
@@ -193,17 +206,21 @@ const AddCustomer = (props) => {
 
             try {
               const response = await customerApi.createCustomer(store_uuid, body)
+              handleClose()  
               dispatch(statusAction.successfulStatus("Tạo khách hàng thành công"));
-              handleCloseAndReset()
+              // handleCloseAndReset()
+              props.onReload()
             } catch (err) {
-              dispatch(statusAction.successfulStatus("Tạo khách hàng thất bại"));
+              // dispatch(statusAction.failedStatus("Số điện thoại đã được sử dụng"));
+              setPhoneExist(true)
+              setClicked(false)
             }
 
           }}
           variant="contained"
           size="small"
           color="primary"
-          disabled = {!(customerFormik.isValid && Object.keys(customerFormik.touched).length > 0)}
+          disabled = {!(customerFormik.isValid && Object.keys(customerFormik.touched).length > 0) || clicked}
         >
           Thêm
         </Button>

@@ -101,6 +101,8 @@ const Import = () => {
   const loadLocalStorage = () => {
     if (window.localStorage.getItem("importListData")) {
       const data = JSON.parse(window.localStorage.getItem("importListData"));
+      console.log("data",data)
+
       if (data.user_uuid === user_uuid) {
         return data.cartList;
       }
@@ -119,11 +121,14 @@ const Import = () => {
   };
   const [cartList, setCartList] = React.useState(loadLocalStorage());
 
+
   useEffect(() => {
+    console.log("alo")
     window.localStorage.setItem(
       "importListData",
       JSON.stringify({ user_uuid: user_uuid, cartList: cartList })
     );
+    console.log("alo222")
   }, [cartList]);
 
   //// ----------II. FUNCTION
@@ -396,6 +401,8 @@ const Import = () => {
     setCartList(newCartList);
   };
 
+  console.log("cartList[selectedIndex].supplier",cartList[selectedIndex].supplier)
+
   const handleConfirm = async (type) => {
     // type ===  1 là nhập , type ===  0 là đặt
     // CHECK ĐẶT THÀNH CÔNG ĐƠN ĐẶT SẼ VỀ SCREEN ĐƠN NHẬP HÀNG (trạng thái chờ nhận hàng) 
@@ -415,7 +422,7 @@ const Import = () => {
     // NẾU LÀ SẢN PHẨM CÓ LÔ THÌ SAO ?? 
 
     let cart = cartList[selectedIndex];
-
+    console.log("cart.supplier",cart.supplier)
     const printReceiptWhenSell= store_setting?.printReceiptWhenSell
     var emptyCart = cart.cartItem.filter((item) => item.quantity).length === 0;
     // CHECK NẾU TYPE BẰNG 0(đặt) thì NCC ko đc null 

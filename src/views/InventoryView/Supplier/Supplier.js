@@ -61,10 +61,10 @@ const Supplier = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = (status) => {
-    onReload();
-    setOpen(false);
-  };
+  // const handleClose = (status) => {
+  //   onReload();
+  //   setOpen(false);
+  // };
 
   //status add
   const [addStatus, setAddStatus] = React.useState(null);
@@ -176,13 +176,15 @@ const Supplier = () => {
       </Grid>
 
       {/* Popup add */}
-      <AddSupplier open={open} handleClose={handleClose} onReload={onReload} />
+    {/* <AddSupplier open={open} handleClose={(handleClose)} onReload={onReload} /> */}
+     {open && <AddSupplier open={open} handleClose={()=> setOpen(false)} onReload={onReload} />}
+
       {/* Noti */}
-      <SnackBar
+      {/* <SnackBar
         openBar={openBar}
         handleCloseBar={handleCloseBar}
         addStatus={addStatus}
-      />
+      /> */}
 
       <Divider />
 

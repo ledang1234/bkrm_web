@@ -455,7 +455,6 @@ const AddInventory = (props) => {
     }
   };
 
-  console.log("relatedListttt",relatedList)
 const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
   return (
     <Dialog

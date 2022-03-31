@@ -371,7 +371,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
             </Grid>
             <Grid item xs={6}>
               {/* Select lưong */}
-              <TextField
+              {/* <TextField
                 id="outlined-basic"
                 label="Mật khẩu mới"
                 variant="outlined"
@@ -379,7 +379,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 size="small"
                 onChange={formik.handleChange}
                 name="newPassword"
-              />
+              /> */}
               <FormControl
                 className={classes.formControl}
                 fullWidth
