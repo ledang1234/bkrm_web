@@ -77,7 +77,7 @@ const SearchSupplier = (props) => {
       placeholder="Tìm nhà cung cấp"
       margin="normal"
       InputProps={
-        props.selectedSupplier?.name.length === 0 
+        props.selectedSupplier?.name?.length === 0 
           ? {
               ...params.InputProps,
               startAdornment: (
@@ -137,7 +137,7 @@ const SearchSupplier = (props) => {
           }
         }}
         onInputChange={()=>{
-          if(props.selectedSupplier?.name.length !== 0){
+          if(props.selectedSupplier?.name?.length !== 0){
             props.handleSearchBarSelect({ name: "", phone: "" })
           }
           
