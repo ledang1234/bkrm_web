@@ -111,12 +111,16 @@ const AddSupplier = (props) => {
       //   store_uuid,
       //   bodyFormData
       // );
-      const rs = await supplierApi.createSupplier(
+      const response = await supplierApi.createSupplier(
         store_uuid,
         bodyFormData
       );
       dispatch(statusAction.successfulStatus("Tạo nhà cung cấp thành công"));
       props.onReload();
+      if(props.isImport){
+        props.setAddSupplier(response.data)
+      }
+
 
      
     } catch (err) {

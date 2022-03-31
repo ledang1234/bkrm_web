@@ -110,6 +110,7 @@ const SearchSupplier = (props) => {
                   size="small"
                   onClick={()=>{
                     props.handleSearchBarSelect({ name: "", phone: "" })
+                    props.setAddSupplier({ name: "", phone: "" })
                   }}
                   style={{ marginRight: -30 }}
                 >
@@ -139,6 +140,7 @@ const SearchSupplier = (props) => {
         onInputChange={()=>{
           if(props.selectedSupplier?.name?.length !== 0){
             props.handleSearchBarSelect({ name: "", phone: "" })
+            props.setAddSupplier({ name: "", phone: "" })
           }
           
         }}

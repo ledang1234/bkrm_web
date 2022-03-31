@@ -210,6 +210,11 @@ const AddCustomer = (props) => {
               dispatch(statusAction.successfulStatus("Tạo khách hàng thành công"));
               // handleCloseAndReset()
               props.onReload()
+              // props.handleSelectCustomer(response.data)
+              if(props.isCart){
+                props.setAddCustomer(response.data)
+              }
+              
             } catch (err) {
               // dispatch(statusAction.failedStatus("Số điện thoại đã được sử dụng"));
               setPhoneExist(true)
