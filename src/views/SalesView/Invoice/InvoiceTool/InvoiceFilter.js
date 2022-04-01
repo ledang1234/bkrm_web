@@ -40,6 +40,7 @@ const InvoiceFilter = (props) => {
     onSubmit: async values => {
       // console.log(values)
       // const res = await orderApi.searchOrder(store_uuid, branch_uuid, values)
+      handleToggleFilter()
       setQuery(values)
     },
   });

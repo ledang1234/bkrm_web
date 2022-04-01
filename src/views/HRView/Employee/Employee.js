@@ -13,6 +13,7 @@ import {
   Avatar,
   Tooltip,
   TableBody,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -252,7 +253,9 @@ const Employee = () => {
           })}
         </TableBody>
       </TableWrapper>:
-          <>{employeeList.map((row, index) => {
+          <>
+           <Box style={{minHeight:'60vh'}}>
+            {employeeList.map((row, index) => {
             return (
              
               <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
@@ -260,6 +263,7 @@ const Employee = () => {
               typePartner={"Nhân viên"}  />
             );
           })}
+           </Box>
           <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}         list={employeeList}/>
     
           </>}
