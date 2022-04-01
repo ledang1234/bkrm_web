@@ -15,6 +15,7 @@ import {
   TableBody,
   Dialog,
   DialogContent,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -303,6 +304,7 @@ const CheckHistory = () => {
         </TableBody>
       </TableWrapper>:
       <>
+       <Box style={{minHeight:'50vh'}}>
       {inventoryChecks.map((row, index) => {
         return (
           <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} 
@@ -315,6 +317,7 @@ const CheckHistory = () => {
 
         );
       })}
+      </Box>
       <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}       list={inventoryChecks}/>
 
       </>

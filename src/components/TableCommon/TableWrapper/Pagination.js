@@ -12,7 +12,7 @@ const Paginations = ({ pagingState, setPagingState, list}) => {
 
   return (
     <TablePagination
-        style={{marginTop:-25,marginBottom:60, marginLeft:-5}}
+        // style={{marginTop:-25,marginBottom:60, marginLeft:-5}}
         rowsPerPageOptions={[10, 25, 100]}
         rowsPerPage={10}
         labelRowsPerPage={"Dòng"}

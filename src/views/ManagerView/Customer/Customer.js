@@ -3,7 +3,7 @@ import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
+import {Typography,Card, Button,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody,Box} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useReactToPrint } from "react-to-print";
 //import api 
@@ -229,6 +229,7 @@ const Customer = () => {
             </TableBody>
         </TableWrapper>:
         <>
+          <Box style={{minHeight:'60vh'}}>
         {customerList?.map((row, index) => {
           return (
             <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
@@ -236,6 +237,7 @@ const Customer = () => {
             typePartner={"Khách hàng"}  />
           );
         })}
+        </Box>
         <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState} list={customerList}/>
   
         </>}
