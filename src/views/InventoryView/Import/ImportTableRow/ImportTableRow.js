@@ -100,7 +100,7 @@ export const ImportRow = (props) => {
 
 
 const findBranchQuantity = (id) => {
-  const rs = row.branch_inventories.find(x => x.uuid === id)?.quantity_available
+  const rs = row.branch_inventories?.find(x => x.uuid === id)?.quantity_available
   if(rs){return rs }
   else{ return 0}
 }

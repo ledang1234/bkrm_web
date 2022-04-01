@@ -25,7 +25,8 @@ import {
   Avatar,
   Tooltip,
   TextField,
-  Button
+  Button,
+  CircularProgress
 } from "@material-ui/core";
 
 //import constant
@@ -123,12 +124,10 @@ const Import = () => {
 
 
   useEffect(() => {
-    console.log("alo")
     window.localStorage.setItem(
       "importListData",
       JSON.stringify({ user_uuid: user_uuid, cartList: cartList })
     );
-    console.log("alo222")
   }, [cartList]);
 
   //// ----------II. FUNCTION
@@ -185,6 +184,7 @@ const Import = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  console.log("selectedIndex", selectedIndex)
   const handleCloseSnackBar = (event, reason) => {
     setOpenSnack(false);
   };
@@ -212,6 +212,9 @@ const Import = () => {
     setSelectedIndex(cartList.length);
     handleClose();
   };
+
+  
+
   const handleDelete = (index) => {
     // DELETE CART
     cartList.splice(index, 1);
@@ -401,7 +404,6 @@ const Import = () => {
     setCartList(newCartList);
   };
 
-  console.log("cartList[selectedIndex].supplier",cartList[selectedIndex].supplier)
 
   const handleConfirm = async (type) => {
     // type ===  1 là nhập , type ===  0 là đặt
@@ -496,7 +498,6 @@ const Import = () => {
   };
 
 
-  
 
   //print
   const componentRef = useRef();
@@ -528,11 +529,34 @@ const Import = () => {
       } catch (err) {
         console.log(err);
         openNotification('error', 'Không thể tạo gợi ý', '')
+        setLoadingOrderButton(false)
       }
     }
   }
   const [openRecommendOrderPopUp, setOpenRecommendOrderPopUp] = useState(false)
   const [dataRecommend, setDataRecommend] = useState(null)
+
+  const [loadingOrderButton, setLoadingOrderButton]  = useState(false)
+  const handleAddOrderReccomend = (newCartList,cartIndex) => {
+   
+    console.log("newCartList",newCartList)
+    console.log("cartIndex",cartIndex)
+    if(cartIndex !== null){
+       // ADD EXIST CART
+       let newCart  =[...cartList]
+       newCart[cartIndex].cartItem = [...newCart[cartIndex].cartItem ,...newCartList.cartItem ]
+
+       setCartList(newCart)
+       setSelectedIndex(cartIndex);
+    }else{
+       // ADD NEW CART
+      setCartList([
+        ...cartList,
+        newCartList,
+      ]);
+      setSelectedIndex(cartList.length);
+    }
+  };
 
   return (
     <Grid
@@ -646,24 +670,28 @@ const Import = () => {
                 </Grid>
               </Grid>
               {store_setting?.orderLowStock.status ?
-              <Button
+              <ButtonComponent 
                 variant="outlined"
                 color="primary"
                 size="small"
                 className={classes.button}
-                onClick={handleClickRecommend}
+                // onClick={handleClickRecommend}
                 style={{marginTop:-30}}
+                onClick={()=>{setLoadingOrderButton(true);handleClickRecommend()}} loading={loadingOrderButton}
+                title={" Gợi ý đặt hàng"}
               >
-                Gợi ý đặt hàng
-              </Button> :null}
-            
+                   Gợi ý đặt hàng
+            </ButtonComponent> :null}
+              
+
+              {openRecommendOrderPopUp?
               <DialogWrapper 
                 title={"Gợi ý đặt hàng"}
                 open={openRecommendOrderPopUp}   
                 handleClose={()=>setOpenRecommendOrderPopUp(false)}
               > 
-                  <ReccomendOrderPopUp dataRecommend={dataRecommend}  handleClose={()=>setOpenRecommendOrderPopUp(false)}  store_setting={store_setting}/>
-              </DialogWrapper>
+                  <ReccomendOrderPopUp setLoadingOrderButton={setLoadingOrderButton} handleAddOrderReccomend={handleAddOrderReccomend}dataRecommend={dataRecommend}  handleClose={()=>setOpenRecommendOrderPopUp(false)}  store_setting={store_setting} cartList={cartList} />
+              </DialogWrapper>:null}
 
               {/* 1.2 TABLE */}
               {!mode ? (
@@ -784,3 +812,22 @@ const Import = () => {
 };
 
 export default Import;
+
+
+
+function ButtonComponent(props) {
+  const { onClick, loading } = props;
+  // const theme = useTheme();
+
+  return (
+    <Button {...props} onClick={onClick} disabled={loading} >
+      {loading && 
+      <>
+      { props.title}
+      <CircularProgress style={{marginLeft:10}}size={14} />
+      </>
+      }
+      {!loading && props.title}
+    </Button>
+  );
+}

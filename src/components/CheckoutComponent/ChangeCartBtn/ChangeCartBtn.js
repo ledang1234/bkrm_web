@@ -17,7 +17,6 @@ const ChangeCartBtn = (props) => {
     let hardText = isCart ? "Khách lẻ" :"Nhà cung cấp lẻ";
 
     const getTitle = (cart) => {
-        console.log("cart",cart)
         if (isCart) {
             return cart.customer === null ||cart.customer?.name?.length === 0 ? hardText : cart.customer.name
         } else {
