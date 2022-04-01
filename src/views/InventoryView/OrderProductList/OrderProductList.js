@@ -147,6 +147,8 @@ const OrderProductList = () => {
     }
   }, [pagingState.page, pagingState.limit, branch_uuid, query, reload]);
 
+  const tableRef = React.createRef();
+
 
   return (
     <Card className={classes.root} >
@@ -213,6 +215,9 @@ const OrderProductList = () => {
           {/* 3. TABLE */}
           {!xsScreen?<TableWrapper
            pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+           list={customerOrders}
+           tableRef={tableRef}
+
           >
               <TableHeader
                 classes={classes}
@@ -239,7 +244,9 @@ const OrderProductList = () => {
               typeBill={"Đơn đặt hàng nhập"} />
             );
           })}
-          {/* <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/> */}
+          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+           list={customerOrders}
+           />
     
           </>}
           <div  style={{display:'none'}} >

@@ -172,6 +172,9 @@ const CheckHistory = () => {
     setOpenSnack(false);
   };
 
+  const tableRef = React.createRef();
+
+
   return (
     <Card className={classes.root}>
       <SnackBarGeneral
@@ -275,7 +278,10 @@ const CheckHistory = () => {
       />
 
       {/* 3. TABLE */}
-      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+      list={inventoryChecks}
+      tableRef={tableRef}
+      >
         <TableHeader
           classes={classes}
           order={order}
@@ -309,7 +315,7 @@ const CheckHistory = () => {
 
         );
       })}
-      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}       list={inventoryChecks}/>
 
       </>
       }

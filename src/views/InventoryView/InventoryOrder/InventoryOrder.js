@@ -143,6 +143,7 @@ const InventoryOrder = () => {
     message: "Kiểm kho thất bại",
   });
 
+  const tableRef = React.createRef();
 
   return (
     <Card className={classes.root}>
@@ -213,7 +214,10 @@ const InventoryOrder = () => {
       />
 
       {/* 3. TABLE */}
-      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+       list={purchaseOrders}
+       tableRef={tableRef}
+      >
         <TableHeader
           classes={classes}
           headerData={HeadCells.InventoryOrderHeadCells}
@@ -247,7 +251,8 @@ const InventoryOrder = () => {
 
         );
       })}
-      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+     />
 
       </>
        
@@ -256,7 +261,7 @@ const InventoryOrder = () => {
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ComponentToPrint purchaseOrders={purchaseOrders} classes={classes} />
+          <ComponentToPrint purchaseOrders={purchaseOrders} classes={classes}  list={purchaseOrders} />
         </div>
       </div>
     </Card>

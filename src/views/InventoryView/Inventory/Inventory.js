@@ -221,6 +221,7 @@ const Inventory = () => {
   //   }
   // }
 
+  const tableRef = React.createRef();
   return (
     <Card className={classes.root}>
       <ProductImportPopper
@@ -340,6 +341,8 @@ const Inventory = () => {
         <TableWrapper
           pagingState={{ ...pagingState, total_rows: totalRows }}
           setPagingState={setPagingState}
+          list={productList}
+          tableRef={tableRef}
         >
           <TableHeader
             classes={classes}
@@ -401,6 +404,8 @@ const Inventory = () => {
           <Pagination
             pagingState={{ ...pagingState, total_rows: totalRows }}
             setPagingState={setPagingState}
+            list={productList}
+            
           />
         </>
       )}

@@ -155,6 +155,8 @@ const Supplier = () => {
     
   }, [reload,pagingState.page, store_uuid, pagingState.limit, query]);
 
+  const tableRef = React.createRef();
+
 
   return (
     <Card className={classes.root}>
@@ -221,6 +223,8 @@ const Supplier = () => {
 
 
         setPagingState={setPagingState}
+        list={supplerList}
+        tableRef={tableRef}
       >
         <TableHeader
           classes={classes}
@@ -251,7 +255,7 @@ const Supplier = () => {
             typePartner={"Nhà cung cấp"}  />
         );
       })}
-      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}  list={supplerList}/>
 
       </>}
 
