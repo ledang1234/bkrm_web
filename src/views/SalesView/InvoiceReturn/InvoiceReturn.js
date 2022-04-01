@@ -144,6 +144,9 @@ function InvoiceReturn() {
     }
   }, [pagingState.page, pagingState.limit, store_uuid, branch_uuid, query]);
 
+  const tableRef = React.createRef();
+
+
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -178,7 +181,10 @@ function InvoiceReturn() {
         setRefunds={setRefunds}
       />
       {/* 3. TABLE */}
-      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState} 
+        list={refunds}
+        tableRef={tableRef}
+        >
         <TableHeader
           classes={classes}
           // order={order}
@@ -210,7 +216,7 @@ function InvoiceReturn() {
           typeBill={"Đơn trả"}/>
 
           ))}
-          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}         list={refunds}/>
     
           </>
           }

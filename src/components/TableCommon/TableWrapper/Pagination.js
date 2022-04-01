@@ -1,7 +1,15 @@
 import React from 'react'
-import {Table,TableContainer,FormControlLabel,Switch,Paper, TablePagination} from '@material-ui/core';
+import {Table,TableContainer,Box,Grid,FormControlLabel,Switch,Paper, TablePagination,Typography} from '@material-ui/core';
+import { Pagination } from 'antd';
 
-const Pagination = ({ pagingState, setPagingState}) => {
+const Paginations = ({ pagingState, setPagingState, list}) => {
+
+  React.useEffect(()=>{
+    window.scrollTo(0, 0);
+  },[list])
+
+
+
   return (
     <TablePagination
         style={{marginTop:-25,marginBottom:60, marginLeft:-5}}
@@ -15,7 +23,28 @@ const Pagination = ({ pagingState, setPagingState}) => {
         onPageChange={(e, page) => setPagingState({ ...pagingState, page: page })}
         onRowsPerPageChange={(e) => setPagingState({ ...pagingState, page: 0, limit: +e.target.value })}
     />
+    // <Box style={{width:500}}>
+    // <Pagination
+
+    //       style={{minWidth:500}}
+    //         size="small"
+    //         total={pagingState?.total_rows}
+    //         current={pagingState?.page +1}
+    //         onChange={(newCurrent, newPageSize) => {
+    //             const pageSizeChange = pagingState?.limit !== newPageSize;
+    //             if (!pageSizeChange) {
+    //                 setPagingState({ ...pagingState, page: newCurrent -1 })
+    //                 // tableRef.current && tableRef.current.scrollIntoView();
+    //             } else {
+    //                 setPagingState({ ...pagingState, page: 0, limit: newPageSize})
+    //                 // tableRef.current && tableRef.current.scrollIntoView();
+
+    //             }
+    //           }}
+    //           showSizeChanger={true}
+    //         />
+  // </Box>
   )
 }
 
-export default Pagination
+export default Paginations

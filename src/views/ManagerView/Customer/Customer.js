@@ -148,6 +148,11 @@ const Customer = () => {
         loadData();
       }
     }, [pagingState.page, pagingState.limit,reload,query]);
+
+
+    const tableRef = React.createRef();
+
+
     return (
 
     <Card className={classes.root} >
@@ -203,6 +208,8 @@ const Customer = () => {
         {!xsScreen? <TableWrapper
           pagingState={{...pagingState, total_rows: totalRows}}
           setPagingState={setPagingState}
+          list={customerList}
+          tableRef={tableRef}
         >
             <TableHeader
               classes={classes}
@@ -229,7 +236,7 @@ const Customer = () => {
             typePartner={"Khách hàng"}  />
           );
         })}
-        <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+        <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState} list={customerList}/>
   
         </>}
 

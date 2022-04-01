@@ -149,6 +149,8 @@ const Invoice = () => {
     }
   }, [pagingState.page, pagingState.limit, branch_uuid, query]);
 
+  const tableRef = React.createRef();
+
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -215,7 +217,10 @@ const Invoice = () => {
       />
 
       {/* 3. TABLE */}
-      {!xsScreen?<TableWrapper  pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
+      {!xsScreen?<TableWrapper  pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+      list={orders}
+      tableRef={tableRef}
+      >
         <TableHeader
           classes={classes}
           order={order}
@@ -252,7 +257,7 @@ const Invoice = () => {
              typeBill={"Hoá đơn"}/>
             );
           })}
-          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}  list={orders}/>
     
           </>
         }

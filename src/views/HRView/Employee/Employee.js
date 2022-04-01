@@ -161,6 +161,8 @@ const Employee = () => {
   };
 
   //3.3. loc cot
+  const tableRef = React.createRef();
+
 
   return (
     // <TableWrapper title="Nhân viên" dataTable={employeeList} headerData={HeadCells.EmployeeHeadCells} tableType={TableType.EMPLOYEE} reload={onReload}/>
@@ -226,6 +228,8 @@ const Employee = () => {
       {!xsScreen? <TableWrapper
         pagingState={{...pagingState, total_rows: totalRows}}
         setPagingState={setPagingState}
+        list={employeeList}
+        tableRef={tableRef}
       >
         <TableHeader
           classes={classes}
@@ -256,7 +260,7 @@ const Employee = () => {
               typePartner={"Nhân viên"}  />
             );
           })}
-          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}         list={employeeList}/>
     
           </>}
 

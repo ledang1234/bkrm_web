@@ -139,6 +139,7 @@ const InventoryReturnOrder = () => {
   };
 
   //3.3. loc cot
+  const tableRef = React.createRef();
 
   return (
     <Card className={classes.root}>
@@ -190,7 +191,10 @@ const InventoryReturnOrder = () => {
       />
 
       {/* 3. TABLE */}
-      {!xsScreen? <TableWrapper  pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}>
+      {!xsScreen? <TableWrapper  pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+       list={purchaseReturns}
+       tableRef={tableRef}
+      >
         <TableHeader
           classes={classes}
           order={order}
@@ -226,7 +230,7 @@ const InventoryReturnOrder = () => {
 
         );
       })}
-      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}/>
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState} list={purchaseReturns}/>
 
       </>
       }
