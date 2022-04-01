@@ -21,10 +21,12 @@ import React, {useState,useEffect} from 'react'
 import TableRowWithSelect from "./TableRowWithSelect"
 import * as _ from "lodash";
 
-const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,store_setting}) => {
+const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,store_setting,setLoadingOrderButton,cartList}) => {
     const theme = useTheme();
 
-
+    useEffect(()=>{
+        setLoadingOrderButton(false)
+    },[])
     const choiceQuantity = store_setting?.orderLowStock.choiceQuantity
     const selectQuantity= store_setting?.orderLowStock.selectQuantity
     const selectSuplier= store_setting?.orderLowStock.selectSuplier
@@ -110,7 +112,6 @@ const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,
     }
     
     const RecommendProductGroupBySupplier = () =>{
-     
         // let supplierGroup = processedData?  _.groupBy(processedData[2], 'supplier_uuid') :null;
         let supplierGroup = processedData?  _.groupBy(processedData.filter(data => data.supplier_uuid), 'supplier_uuid') :null;
         return (
@@ -120,7 +121,7 @@ const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,
                 return (
                 <Box style={{marginBottom:20, marginTop:10}}>
                     <Typography variant='h4'>{`${cartRowListBySupplier[0].supplier.name} (${cartRowListBySupplier[0].supplier.phone})`}</Typography>
-                    <TableRowWithSelect handleAddOrderReccomend={handleAddOrderReccomend} dataRecommend={supplierGroup[supplier]} hanđleChangeQuantity={hanđleChangeQuantity} handleClose={handleClose}/>
+                    <TableRowWithSelect handleAddOrderReccomend={handleAddOrderReccomend} dataRecommend={supplierGroup[supplier]} hanđleChangeQuantity={hanđleChangeQuantity} handleClose={handleClose} cartList={cartList}/>
                 </Box>
                 )
             })
@@ -134,7 +135,7 @@ const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,
             data?
             <Box style={{marginBottom:20, marginTop:40}}>
                     <Typography variant='h3' style={{marginBottom:20}}>{"Chưa xác định được NCC"}</Typography>
-                    <TableRowWithSelect handleAddOrderReccomend={handleAddOrderReccomend} dataRecommend={data}  hanđleChangeQuantity={hanđleChangeQuantity} handleClose={handleClose}/>
+                    <TableRowWithSelect handleAddOrderReccomend={handleAddOrderReccomend} dataRecommend={data}  hanđleChangeQuantity={hanđleChangeQuantity} handleClose={handleClose}  isNoSupplier={true} cartList={cartList}/>
                 </Box>
             :null
         )
@@ -157,12 +158,9 @@ const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,
         <>
         {processedData?
             <>
+                {/* <Box style={{display:'flex', justifyContent:"flex-end"}}  ><Button >Hello</Button></Box> */}
                 <RecommendProductGroupBySupplier/>
-                {/* <Box style={{marginBottom:20, marginTop:40}}>
-                    <Typography variant='h3' style={{marginBottom:20}}>{"Chưa xác định được NCC"}</Typography>
-                    <TableRowWithSelect  dataRecommend={processedData.filter(data => !data.supplier_uuid)}  hanđleChangeQuantity={hanđleChangeQuantity}/>
-                </Box> */}
-                {/* <RecommendProductGroupWithoutSupplier /> */}
+                <RecommendProductGroupWithoutSupplier />
 
            </>
         :null} 

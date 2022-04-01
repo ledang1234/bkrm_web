@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
-import {Table,Button, ListItem,Box} from '@material-ui/core';
+import {Table,Button, ListItem,Box,List, Grid,Modal,Dialog} from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import defaultProduct from "../../../../assets/img/product/default-product.png"
 import ButtonQuantity from "../../../../components/Button/ButtonQuantity";
+
+
 
 // 0. DATA
 
@@ -44,39 +46,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-// attribute_value: "[{\"name\":\"MÀU\",\"value\":\"M\"},{\"name\":\"SIZE\",\"value\":\"xanh\"},{\"name\":\"RAM\"}]"
-// bar_code: null
-// branch_id: 46
-// category_id: 5
-// created_at: "2022-02-26T07:54:05.000000Z"
-// description: ""
-// has_batches: 0
-// has_variance: 0
-// img_urls: null
-// list_price: 100000
-// max_order: 0
-// min_reorder_quantity: 0
-// name: "quan elfagha-M-xanh"
-// on_sale: 0
-// parent_product_code: "SP0060"
-// product_code: "SP0060-1"
-// product_id: 205
-// purchase_histories: []
-// quantity_available: "0"
-// quantity_per_unit: "cagia"
-// standard_price: 10000
-// status: "active"
-// updated_at: "2022-03-10T05:55:02.000000Z"
-// uuid: "5d14e928-4d76-42d1-b304-459ea135a9c3"
-
-///////// 2. TABLE HEAD
-// const headCells = [
-//   { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-//   { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-//   { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-//   { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-//   { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
-// ];
 const headCells = [
     { id: 'product_code', numeric: false, disablePadding: true, label: 'Mã SP', align:'left' },
     { id: 'name', numeric: false, disablePadding: true, label: 'Tên' ,align:'left' },
@@ -137,13 +106,13 @@ function EnhancedTableHead(props) {
 // 3. TOOL BAR
 
 const EnhancedTableToolbar = (props) => {
+
     const classes = useToolbarStyles();
-    const {rows,selected} = props;
-    const { numSelected ,handleAddOrderReccomend,handleClose} = props;
+    // const {rows,selected, cartList} = props;
+    const { numSelected ,isNoSupplier,setOpenChooseCart,handleAddToCart,handleClose,onlyOneCart} = props;
     if(numSelected  === 0 ){
         return null
     }
-   
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -154,48 +123,32 @@ const EnhancedTableToolbar = (props) => {
         <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
           Đã chọn: {numSelected} 
         </Typography>
-        <Button variant="contained" size='small' color='secondary' style={{width:170}} 
+        {/* {isNoSupplier? */}
+      <Button variant="contained" size='small' color='primary' style={{width:120, marginRight:15}} 
         onClick={()=>{
-            let selectRow = rows.filter(row  => selected.includes(row.uuid))
-            const cartItem = selectRow.map((row, index)=>{
-              let newCartItem = {
-                id: index + 1,
-                uuid: row.item.uuid,
-                quantity: row.quantity,
-                bar_code: row.item.bar_code,
-                product_code: row.item.product_code,
-                unit_price: row.item.standard_price,
-                img_url: row.item.img_url,
-                name: row.item.name,
-                has_batches: row.item.has_batches,
-                batches: [],
-                // CHƯA CÓ
-                branch_inventories:[]
-              };
-              return newCartItem
-            })
-
-            let newCartList = {
-              supplier: {name:rows[0].supplier.name, phone:rows[0].supplier.phone, uuid:rows[0].supplier_uuid},       
-              cartItem: cartItem,
-              // cartItem: [],
-              total_amount: 0,
-              paid_amount: 0,
-              discount: 0,
-              payment_method: "cash"
-            }
-            handleClose()
-            handleAddOrderReccomend(newCartList)
-
-
-            // handleAddOrderReccomend(
-
-            // )
+          if(onlyOneCart){ 
+            handleClose() ;
+            handleAddToCart(0)
+          }
+          else{setOpenChooseCart(true)}
         }}
-        
         >
-          Tạo đơn đặt
+         Bỏ vô giỏ 
       </Button>
+      {/* :null } */}
+        <Button variant="contained" size='small' color='secondary' style={{width:140}} 
+        onClick={()=>{
+            handleClose()
+            handleAddToCart()      
+        }}
+        >
+         Tạo đơn mới
+      </Button>
+
+
+
+
+      
     </Toolbar>
   );
 };
@@ -207,10 +160,11 @@ const EnhancedTableToolbar = (props) => {
 
 const TableRowWithSelect = (props) => {
   const classes = useStyles();
-  const {dataRecommend,hanđleChangeQuantity,handleAddOrderReccomend,handleClose} = props
+  const {dataRecommend,hanđleChangeQuantity,handleAddOrderReccomend,handleClose,isNoSupplier,cartList} = props
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('product_code');
   const [selected, setSelected] = React.useState([]);
+  const [openChooseCart, setOpenChooseCart] = useState(false)
 
   const rows = dataRecommend
 
@@ -250,10 +204,51 @@ const TableRowWithSelect = (props) => {
 
   const isSelected = (uuid) => selected.indexOf(uuid) !== -1;
 
+
+  const handleAddToCart = (cartIndex=null) =>{
+    // existOrder, newOrder
+    let selectRow = rows.filter(row  => selected.includes(row.uuid))
+    const cartItem = selectRow.map((row, index)=>{
+      let newCartItem = {
+        id: index ,
+        uuid: row.item.uuid,
+        quantity: row.quantity,
+        bar_code: row.item.bar_code,
+        product_code: row.item.product_code,
+        unit_price: row.item.standard_price,
+        img_url: row.item.img_url,
+        name: row.item.name,
+        has_batches: row.item.has_batches,
+        batches: [],
+        // branch_inventories:row.item.branch_inventories
+        branch_inventories:[]
+      };
+      return newCartItem
+    })
+
+    console.log("cartItemsssss",cartItem)
+    console.log("newCartList")
+    let newCartList = {
+      // supplier reccomend này ko đủ như searh trên kia nha .... ko biết có lỗi gì api ko
+      supplier: isNoSupplier?null: {name:rows[0].supplier.name, phone:rows[0].supplier.phone, uuid:rows[0].supplier_uuid},       
+      cartItem: cartItem,
+      total_amount: 0,
+      paid_amount: 0,
+      discount: 0,
+      payment_method: "cash"
+    }
+    // handleClose()
+    handleAddOrderReccomend(newCartList,cartIndex)
+  }
+
   if(!dataRecommend){return}
   return (
     <>
-        <EnhancedTableToolbar numSelected={selected.length} handleAddOrderReccomend={handleAddOrderReccomend} selected={selected} rows={rows}  handleClose={handleClose}   />
+        {openChooseCart ? <ChooseCartPopUp  cartList={cartList} handleAddToCart={handleAddToCart} open={openChooseCart} handleClose={()=>{setOpenChooseCart(false); }} closeAll={handleClose} />:null}
+
+        {/* <EnhancedTableToolbar  handleAddToCart={handleAddToCart} numSelected={selected.length} handleAddOrderReccomend={handleAddOrderReccomend} selected={selected} rows={rows}  handleClose={handleClose} isNoSupplier={isNoSupplier} cartList={cartList} setOpenChooseCart={setOpenChooseCart}/> */}
+        <EnhancedTableToolbar onlyOneCart={cartList.length === 1}  handleAddToCart={handleAddToCart} numSelected={selected.length}isNoSupplier={isNoSupplier}setOpenChooseCart={setOpenChooseCart} handleClose={handleClose}/>
+
         <TableContainer style={{maxHeight:550}} >
           <Table
           stickyHeader
@@ -333,11 +328,7 @@ const RowData = ({row, index,selected,hanđleChangeQuantity,handleClick}) =>{
         <TableCell align="right"  style={{minWidth:110}}>{row?.list_price.toLocaleString()}</TableCell>
         <TableCell align="right"  style={{minWidth:120}}>{row?.standard_price.toLocaleString()}</TableCell>
         
-        {/*                      
-        <TableCell align="right"  style={{minWidth:100}}>{row.quantity}</TableCell>
-        <TableCell align="right">{row.supplier.name}</TableCell> */}
-
-
+       
         <TableCell align="center"  style={{minWidth:100}}>
         <ButtonQuantity
             quantity={quantity}
@@ -351,11 +342,6 @@ const RowData = ({row, index,selected,hanđleChangeQuantity,handleClick}) =>{
     );
 }
 export default  TableRowWithSelect
-
-
-
-
-
 
 
 
@@ -416,3 +402,51 @@ const useToolbarStyles = makeStyles((theme) => ({
       },
     }));
   
+
+const ChooseCartPopUp = ({cartList,handleClose,open,closeAll,handleAddToCart}) => {
+  const getTitle = (cart) => {
+    return cart.supplier === null ||cart.supplier?.name?.length === 0  ? "Nhà cung cấp lẻ": cart.supplier.name
+  }
+  return (
+    <Dialog
+    open={open}
+    onClose={handleClose}
+    // fullWidth={true}
+    maxWidth={"xs"}
+    >
+    <Box style={{margin:20, marginBottom:0}}>
+      <Typography variant='h3' style={{marginBottom:10}}>Chọn giỏ hàng</Typography>
+      <div style={{width:300, marginRight:20}}>
+       
+        <List >
+       {cartList?.map((cart, index) => (
+          <ListItem
+              key={index}
+              style={{padding:0, margin:0, marginBottom:20}}
+              alignItems='center'
+          >
+          <Grid container direction="row" justifyContent="space-between"spacing={1} alignItems='center'>
+              <Grid container item item xs={10}  >
+                  <Box style={{marginRight:20, color:'#000', fontWeight:500, fontSize:17}}>#{index + 1}</Box>
+                  <Typography style={{color:'#000', fontWeight:400, fontSize:16}}>{getTitle(cart)}  </Typography>       
+              </Grid>
+              <Grid container xs={2} item >
+                  <Button color='primary' variant='contained' size="small" color='primary' 
+                  onClick={()=>{
+                    handleClose()
+                    closeAll()
+                    handleAddToCart( index)
+                  }} >
+                      Chọn
+                  </Button>
+              </Grid>
+          </Grid>
+          
+      </ListItem>
+      ))} 
+      </List>
+      </div>   
+    </Box>
+  </Dialog>
+  )
+}

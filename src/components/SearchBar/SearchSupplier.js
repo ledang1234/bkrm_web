@@ -134,15 +134,15 @@ const SearchSupplier = (props) => {
         getOptionLabel={getOptionLabel}
         onChange={(event, value) => {
           if (value) {
-            console.log("valuesssssss",value)
             // setSelectedOption(value);
-            // props.handleSearchBarSelect(value);
+            props.handleSearchBarSelect(value);
           }
         }}
         onInputChange={()=>{
-          if(props.selectedSupplier?.name?.length !== 0){
-            // props.handleSearchBarSelect({ name: "", phone: "" })
-            // props.setAddSupplier({ name: "", phone: "" })
+          // if(props.selectedSupplier?.name?.length !== 0){
+          if(props.selectedSupplier?.supplier_code){
+            props.handleSearchBarSelect({ name: "", phone: "" })
+            props.setAddSupplier({ name: "", phone: "" })
           }
           
         }}

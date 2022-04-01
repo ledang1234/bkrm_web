@@ -25,7 +25,8 @@ import {
   Avatar,
   Tooltip,
   TextField,
-  Button
+  Button,
+  CircularProgress
 } from "@material-ui/core";
 
 //import constant
@@ -183,6 +184,7 @@ const Import = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  console.log("selectedIndex", selectedIndex)
   const handleCloseSnackBar = (event, reason) => {
     setOpenSnack(false);
   };
@@ -527,48 +529,33 @@ const Import = () => {
       } catch (err) {
         console.log(err);
         openNotification('error', 'Không thể tạo gợi ý', '')
+        setLoadingOrderButton(false)
       }
     }
   }
   const [openRecommendOrderPopUp, setOpenRecommendOrderPopUp] = useState(false)
   const [dataRecommend, setDataRecommend] = useState(null)
 
-  console.log(" cartList[selectedIndex]sssss", cartList[selectedIndex])
-  const handleAddOrderReccomend = (newCartList) => {
-    // ADD CART
-    console.log("hihi",newCartList)
-    setCartList([
-      ...cartList,
-      newCartList,
-    ]);
-    console.log("helllllloo2222")
-    setSelectedIndex(cartList.length);
-    console.log("helllllloo33333")
-    // console.log("newCartList.supplier",newCarstList.supplier)
-    console.log("newCartList.supplier",newCartList.supplier)
-  //   handleSelectSupplier(
-  //   {
-  //     address: "3",
-  //     city: "",
-  //     company: "",
-  //     created_at: "2022-03-31T10:58:01.000000Z",
-  //     debt: 0,
-  //     email: null,
-  //     img_url: "",
-  //     job_title: "",
-  //     name: "đccxcđ",
-  //     payment_info: null,
-  //     phone: "1234567893",
-  //     province: "",
-  //     status: "active",
-  //     supplier_code: "NCC000130",
-  //     total_payment: 0,
-  //     type: "supplier",
-  //     updated_at: "2022-03-31T10:58:01.000000Z",
-  //     uuid: "213e31dc-7e44-43bd-950e-ae27c1eceeae",
-  //     ward: ""
-  // }
-    // )
+  const [loadingOrderButton, setLoadingOrderButton]  = useState(false)
+  const handleAddOrderReccomend = (newCartList,cartIndex) => {
+   
+    console.log("newCartList",newCartList)
+    console.log("cartIndex",cartIndex)
+    if(cartIndex !== null){
+       // ADD EXIST CART
+       let newCart  =[...cartList]
+       newCart[cartIndex].cartItem = [...newCart[cartIndex].cartItem ,...newCartList.cartItem ]
+
+       setCartList(newCart)
+       setSelectedIndex(cartIndex);
+    }else{
+       // ADD NEW CART
+      setCartList([
+        ...cartList,
+        newCartList,
+      ]);
+      setSelectedIndex(cartList.length);
+    }
   };
 
   return (
@@ -683,24 +670,28 @@ const Import = () => {
                 </Grid>
               </Grid>
               {store_setting?.orderLowStock.status ?
-              <Button
+              <ButtonComponent 
                 variant="outlined"
                 color="primary"
                 size="small"
                 className={classes.button}
-                onClick={handleClickRecommend}
+                // onClick={handleClickRecommend}
                 style={{marginTop:-30}}
+                onClick={()=>{setLoadingOrderButton(true);handleClickRecommend()}} loading={loadingOrderButton}
+                title={" Gợi ý đặt hàng"}
               >
-                Gợi ý đặt hàng
-              </Button> :null}
-            
+                   Gợi ý đặt hàng
+            </ButtonComponent> :null}
+              
+
+              {openRecommendOrderPopUp?
               <DialogWrapper 
                 title={"Gợi ý đặt hàng"}
                 open={openRecommendOrderPopUp}   
                 handleClose={()=>setOpenRecommendOrderPopUp(false)}
               > 
-                  <ReccomendOrderPopUp handleAddOrderReccomend={handleAddOrderReccomend}dataRecommend={dataRecommend}  handleClose={()=>setOpenRecommendOrderPopUp(false)}  store_setting={store_setting}/>
-              </DialogWrapper>
+                  <ReccomendOrderPopUp setLoadingOrderButton={setLoadingOrderButton} handleAddOrderReccomend={handleAddOrderReccomend}dataRecommend={dataRecommend}  handleClose={()=>setOpenRecommendOrderPopUp(false)}  store_setting={store_setting} cartList={cartList} />
+              </DialogWrapper>:null}
 
               {/* 1.2 TABLE */}
               {!mode ? (
@@ -821,3 +812,22 @@ const Import = () => {
 };
 
 export default Import;
+
+
+
+function ButtonComponent(props) {
+  const { onClick, loading } = props;
+  // const theme = useTheme();
+
+  return (
+    <Button {...props} onClick={onClick} disabled={loading} >
+      {loading && 
+      <>
+      { props.title}
+      <CircularProgress style={{marginLeft:10}}size={14} />
+      </>
+      }
+      {!loading && props.title}
+    </Button>
+  );
+}
