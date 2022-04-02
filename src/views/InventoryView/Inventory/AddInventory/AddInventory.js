@@ -54,6 +54,16 @@ import setting from "../../../../assets/constant/setting"
 import ReactQuill, {Quill} from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageResize from 'quill-image-resize-module-react';
+// import Tree from "../../../../components/Select/Tree"
+import { TreeSelect } from 'antd';
+import { StepBackwardOutlined } from "@ant-design/icons";
+import { DownCircleTwoTone } from '@ant-design/icons'
+
+
+import 'antd/dist/antd.css';
+// import "../../../../index.css"
+const { SHOW_PARENT } = TreeSelect;
+
 Quill.register('modules/imageResize', ImageResize);
 
 
@@ -455,14 +465,23 @@ const AddInventory = (props) => {
     }
   };
 
+  const [value, setValue] = useState(null)
+console.log("valssssue",value)
+console.log("productFormik.values.category",productFormik.values.category)
 const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
-  return (
+  
+const tProps = {
+ 
+};
+return (
     <Dialog
       open={open}
       onClose={handleCloseAndReset}
       aria-labelledby="form-dialog-title"
       maxWidth="md"
     >
+     
+      
       <Box className={classes.root}>
         <AddCategory
           open={openAddCategory}
@@ -564,11 +583,11 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
               onChange={productFormik.handleChange}
               value={productFormik.values.unit}
             />
-
             <Box className={`${classes.box} ${classes.margin}`}>
+             
               <FormControl required size="small" variant="outlined" fullWidth>
-                <InputLabel htmlFor="category">Danh mục</InputLabel>
-                <Select
+                {/* <InputLabel htmlFor="category">Danh mục</InputLabel> */}
+                {/* <Select
                   native
                   label="Danh mục"
                   id="category"
@@ -578,7 +597,20 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
                   onBlur={productFormik.handleBlur}
                 >
                   <CategorySelect categoryList={categoryList}/>
-                </Select>
+                </Select> */}
+                <TreeSelect
+                      id="category"
+                      name="category"  
+                      style={{ width: '100%'}}   
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
+                      treeData={categoryList}
+                      value={productFormik.values.category}
+                      onChange={(val)=>productFormik.setFieldValue("category",val )}
+                      treeDefaultExpandAll
+                      onBlur={productFormik.handleBlur}
+                      
+                    />
+                    
               </FormControl>
               <Tooltip title="Thêm danh mục">
                 <IconButton
@@ -867,8 +899,9 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
 
 
         </Card>
-
-
+        {/* <div>
+        <Tree />
+        </div> */}
 
         {/* Button */}
         <Grid
@@ -913,7 +946,9 @@ const store_setting = info.store.general_configuration? JSON.parse(info.store.ge
           </Button>
         </Grid>
       </Box>
+     
     </Dialog>
+  
   );
 };
 
@@ -951,3 +986,4 @@ const formats = [
   'list', 'bullet', 'indent',
   'link', 'image', 'video','color','background'
 ]
+

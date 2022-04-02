@@ -23,7 +23,7 @@ export function error(title, content) {
   Modal.error({
     title: title,
     content:content,
-    style:{zIndex:99999}
+
   });
 }
 

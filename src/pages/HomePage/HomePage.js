@@ -224,6 +224,7 @@ const HomePage = (props) => {
             })
           }
         >
+          
           <Switch>
             {permissions?.find((p) => p.name === "sales") && (
               <Route path={`${path}/sales`} component={SalesView} />
