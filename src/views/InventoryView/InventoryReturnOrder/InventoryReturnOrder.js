@@ -12,6 +12,7 @@ import {
   Avatar,
   Tooltip,
   TableBody,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -216,6 +217,7 @@ const InventoryReturnOrder = () => {
         </TableBody>
       </TableWrapper>:
       <>
+       <Box style={{minHeight:'50vh'}}>
       {purchaseReturns.map((row, index) => {
         return (
           // <InventoryReturnTableRow
@@ -230,6 +232,7 @@ const InventoryReturnOrder = () => {
 
         );
       })}
+      </Box>
       <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState} list={purchaseReturns}/>
 
       </>

@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  Drawer,TextField, Typography,Button,Grid,MenuItem,Select,InputLabel,FormControl
+  Drawer,TextField, Typography,Button,Grid,MenuItem,Select,InputLabel,FormControl,Box
 } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/styles";
@@ -34,6 +34,7 @@ const CheckHistoryFilter = (props) => {
     const formik = useFormik({
       initialValues: query,
       onSubmit: values => {
+        handleToggleFilter()
         setQuery(values)
       },
     });

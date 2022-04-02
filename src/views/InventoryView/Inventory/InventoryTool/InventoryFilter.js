@@ -36,6 +36,7 @@ const InventoryFilter = (props) => {
         // console.log(values)
         // const res = await purchaseOrderApi.searchPurchaseOrder(store_uuid, branch_uuid, values)
         // setPurchaseOrders(res.data)
+        handleToggleFilter()
         setQuery(values)
       },
     });
