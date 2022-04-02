@@ -127,3 +127,11 @@ video {
 li {
   list-style: none;
 }
+
+:root .ant-select-arrow{
+  display: block;
+  z-index: 1000000;
+  /* color:rgb(104, 0, 179); */
+  /* color:rgb(0, 0, 0); */
+} 
+

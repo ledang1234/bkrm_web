@@ -27,8 +27,8 @@ const TableWrapper = (props) => {
     <>
         <StyledPaper style={{width: '100%', marginBottom: theme.spacing(2)}}>
             {/* Chinh size tablw */}
-            {/* <TableContainer style={{maxHeight: '90vh',}}> */}
-            <TableContainer style={{maxHeight: '84vh'}}>
+            <TableContainer style={{maxHeight: '90vh',}}>
+            {/* <TableContainer style={{maxHeight: '84vh'}}> */}
                 <Table
                     ref={tableRef}
                     aria-labelledby="tableTitle"

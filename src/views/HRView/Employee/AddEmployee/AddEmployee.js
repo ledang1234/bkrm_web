@@ -35,6 +35,7 @@ import { useFormik } from "formik";
 import VNDInput from "../../../../components/TextField/NumberFormatCustom";
 import openNotification from "../../../../components/StatusPopup/StatusPopup";
 import { error } from "../../../../components/StatusModal/StatusModal";
+import CheckIcon from '@material-ui/icons/Check';
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -170,7 +171,9 @@ const AddEmployee = (props) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
 
-
+  function getColorSelected (selectedData,item  ){
+    return selectedData.includes(item) ?  theme.customization.primaryColor[50]:null 
+  }
 
   React.useEffect(() => {
     const loadBranches = async () => {
@@ -489,8 +492,11 @@ const AddEmployee = (props) => {
                   onBlur={formik.handleBlur}
                 >
                   {permissionChoices.map((branch) => (
-                    <MenuItem key={branch.name} value={branch.id}>
+                    <MenuItem key={branch.name} value={branch.id} style={{backgroundColor:getColorSelected(formik.values.permissions, branch.id) }}>
+                       <Grid container justifyContent='space-between'>
                       {branch.description}
+                    {  getColorSelected(formik.values.permissions, branch.id)? <CheckIcon color='primary'/> :null}
+                      </Grid >
                     </MenuItem>
                   ))}
                 </Select>
@@ -530,8 +536,11 @@ const AddEmployee = (props) => {
                   }
                 >
                   {branches.map((branch) => (
-                    <MenuItem key={branch.name} value={branch.id}>
+                    <MenuItem key={branch.name} value={branch.id} style={{backgroundColor:getColorSelected(formik.values.branches, branch.id) }}>
+                      <Grid container justifyContent='space-between'>
                       {branch.name}
+                      {  getColorSelected(formik.values.branches, branch.id)? <CheckIcon color='primary'/> :null}
+                      </Grid >
                     </MenuItem>
                   ))}
                 </Select>

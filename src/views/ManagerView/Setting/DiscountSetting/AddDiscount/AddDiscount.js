@@ -39,7 +39,10 @@ import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 import { ThousandSeperatedInput } from "../../../../../components/TextField/NumberFormatCustom";
 import SearchMultiple from "../../../../../components/SearchBar/SearchMultiple";
 import promotionCouponApi from "../../../../../api/promotionCouponApi";
+import { TreeSelect } from 'antd';
+import 'react-quill/dist/quill.snow.css';
 
+const { SHOW_PARENT } = TreeSelect;
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -369,6 +372,19 @@ const AddDiscount = (props) => {
           </div>
            <Divider classes={{root: classes.divider}} style={{marginLeft:10, marginRight:10}}/>      
        
+           {/* <TreeSelect
+                        name="category"  
+                        placeholder={ 'Danh mục"'}
+                        style={{ width: '100%' }}
+                        dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
+                        // treeData={categoryList}
+                        // value={productFormik.values.category}
+                        // onChange={(val)=>productFormik.setFieldValue("category",val )}
+                        treeCheckable={true}
+                        showCheckedStrategy={SHOW_PARENT}
+                        // onBlur={productFormik.handleBlur}   
+                    /> */}
+
        {/* List Khuyen mai */}
           {rowsInvoice.map((row, index) => {
               return (
