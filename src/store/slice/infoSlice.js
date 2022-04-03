@@ -35,7 +35,7 @@ const initialUserInfoSlice = {
     id: '',
   },
   role: "",
-  branchsOfStore:[]
+  // branchsOfStore:[]
 };
 const infoSlice = createSlice({
   name: "info",
@@ -53,9 +53,9 @@ const infoSlice = createSlice({
     setBranch(state, action) {
       state.branch = action.payload;
     },
-    setBranchsOfStore(state, action) {
-      state.branchsOfStore = action.payload;
-    },
+    // setBranchsOfStore(state, action) {
+    //   state.branchsOfStore = action.payload;
+    // },
   },
 });
 export default infoSlice;

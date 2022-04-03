@@ -28,7 +28,8 @@ import {
 
 const OrderManagement = ({web,setWeb,handleChangeOrderManagement,showOutOfStock}) => {
     const info = useSelector((state) => state.info);
-    const branches = info.branchsOfStore
+    // const branches = info.branchsOfStore
+    const branches = info.store.branches
 
     const handleChangeChecked= (e) => {
         var newWeb = { ...web };

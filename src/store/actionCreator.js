@@ -185,15 +185,15 @@ export const selectBranch = (uuid, name) => {
 //   }
 //   getBranches()   
 // }, []);
-export const loadBranches= (store_uuid) => {
-  return async (dispatch) => {
-    try {
-      const rs = await branchApi.getAllBranches(store_uuid);
-      if (rs) {
-        dispatch(infoActions.setBranchsOfStore(rs.data));  
-      } 
-    } catch (error) {
-      console.log(error)
-    }
-  };
-};
+// export const loadBranches= (store_uuid) => {
+//   return async (dispatch) => {
+//     try {
+//       const rs = await branchApi.getAllBranches(store_uuid);
+//       if (rs) {
+//         dispatch(infoActions.setBranchsOfStore(rs.data));  
+//       } 
+//     } catch (error) {
+//       console.log(error)
+//     }
+//   };
+// };
