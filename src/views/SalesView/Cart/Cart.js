@@ -517,6 +517,7 @@ const Cart = () => {
         shipping: "0",
         delivery: cart.delivery,
         is_customer_order: false,
+        points:cart.scores
       };
 
       try {

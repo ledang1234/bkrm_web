@@ -65,7 +65,6 @@ const Inventory = () => {
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
 
-
   const [openFilter, setOpenFilter] = React.useState(false);
   const dispatch = useDispatch();
   const handleToggleFilter = () => {
@@ -97,6 +96,9 @@ const Inventory = () => {
     setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid]);
 
+  useEffect(() => {
+    setPagingState({ ...pagingState, page: 0 });
+  }, []);
 
   const initialQuery = {
     orderBy: "products.created_at",
@@ -148,6 +150,7 @@ const Inventory = () => {
     }
   }, [pagingState.page, pagingState.limit, branch_uuid, reload, query]);
 
+  console.log("GIA LỆ")
   const theme = useTheme();
   const classes = useStyles(theme);
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
