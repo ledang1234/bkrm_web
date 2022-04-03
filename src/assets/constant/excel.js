@@ -43,3 +43,18 @@ export const header_product = [
   "urls",
   "description",
 ];
+
+export const excel_name_customer = "Excel_mẫu_khách_hàng";
+
+export const excel_data_customer = [
+  {
+    "name": "Nguyễn Văn A",
+    "phone": "0123456789",
+    "address": "268 Lý Thường Kiệt, Phường 14, Quận 10, Thành phố Hồ Chí Minh",
+    "email": "nguyenvana@gmail.com",
+    "payment_info": "Momo 0123456789",
+    "points": "100",
+    "total_payment": "1000000",
+    "debt": "0"
+  }
+];

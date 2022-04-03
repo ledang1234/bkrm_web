@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
+import CustomExcel from "./CustomExcel";
 //import lib
 import {
   Typography,
@@ -293,10 +294,11 @@ const Inventory = () => {
         handleSearchValueChange={setSearchValue}
         handleToggleFilter={handleToggleFilter}
         hasImport={true}
-        importProductByJSON={importProductByJSON}
+        importByJSON={importProductByJSON}
         excel_head={excel.header_product}
         excel_data={excel.excel_data_product}
         excel_name={excel.excel_name_product}
+        customExcel = {CustomExcel}
         columnsToKeep={[
           { dbName: "product_code", displayName: "Mã sản phẩm" },
           { dbName: "name", displayName: "Sản phẩm" },

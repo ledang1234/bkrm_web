@@ -31,6 +31,17 @@ const userAPi = {
   owenerChangePassword: (store_uuid, employee_uuid, body) => {
     const url = `/stores/${store_uuid}/employees/${employee_uuid}/updateEmployeePassword`
     return axiosClient.post(url, body)
+  },
+  confirmPassword: (store_uuid,body) =>{
+    const url = `/stores/${store_uuid}/confirmPassword`;
+    return axiosClient.post(url,body)
+  },
+  editProfile: (store_uuid,body) =>{
+    const url = `/stores/${store_uuid}/editProfile`;
+    const config = {
+      headers: { "content-type": "multipart/form-data" },
+    };
+    return axiosClient.post(url,body,config)
   }
 };
 export default userAPi;
