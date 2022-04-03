@@ -18,9 +18,9 @@ const ChangeCartBtn = (props) => {
 
     const getTitle = (cart) => {
         if (isCart) {
-            return cart.customer === null ||cart.customer?.name?.length === 0 ? hardText : cart.customer.name
+            return cart.customer === null ? hardText : cart.customer.name
         } else {
-            return cart.supplier === null ||cart.supplier?.name?.length === 0  ? hardText: cart.supplier.name
+            return cart.supplier === null  ? hardText: cart.supplier.name
         }
     }
 
