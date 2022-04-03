@@ -42,6 +42,7 @@ const InventoryReturnFilter = (props) => {
         // console.log(values)
         // const res = await purchaseReturnApi.searchPurchaseReturn(store_uuid, branch_uuid, values)
         setQuery(values)
+        handleToggleFilter()
       },
     });
 

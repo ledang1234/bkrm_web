@@ -48,6 +48,7 @@ const InvoiceReturnFilter = (props) => {
     },
     onSubmit: async values => {
       const res = await refundApi.searchRefund(store_uuid, branch_uuid, values)
+      handleToggleFilter()
       setRefunds(res.data)
     },
   });

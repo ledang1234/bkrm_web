@@ -13,6 +13,7 @@ import {
   Avatar,
   Tooltip,
   TableBody,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -243,6 +244,7 @@ const Invoice = () => {
         </TableBody>
       </TableWrapper>:
       <>
+       <Box style={{minHeight:'50vh'}}>
           {orders.map((row, index) => {
             return (
               // <InvoiceTableRow
@@ -257,6 +259,7 @@ const Invoice = () => {
              typeBill={"Hoá đơn"}/>
             );
           })}
+          </Box>
           <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}  list={orders}/>
     
           </>

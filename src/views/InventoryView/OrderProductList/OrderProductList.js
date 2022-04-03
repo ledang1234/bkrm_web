@@ -3,7 +3,7 @@ import {useTheme} from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody} from '@material-ui/core';
+import {Typography,Card,Divider ,Grid,ButtonBase,Avatar,Tooltip,TableBody,Box} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useReactToPrint } from "react-to-print";
 
@@ -236,6 +236,7 @@ const OrderProductList = () => {
               </TableBody>
           </TableWrapper>:
          <>
+          <Box style={{minHeight:'50vh'}}>
          { orderProductList.map((row, index) => {
             return (
               <BillMiniTableRow key={row.id} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  
@@ -244,6 +245,7 @@ const OrderProductList = () => {
               typeBill={"Đơn đặt hàng nhập"} />
             );
           })}
+          </Box>
           <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
            list={customerOrders}
            />

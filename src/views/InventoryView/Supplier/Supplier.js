@@ -13,6 +13,7 @@ import {
   Tooltip,
   TableBody,
   IconButton,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -248,6 +249,7 @@ const Supplier = () => {
         </TableBody>
       </TableWrapper>:
       <>
+        <Box style={{minHeight:'60vh'}}>
       {supplerList.map((row, index) => {
         return (
           <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
@@ -255,6 +257,7 @@ const Supplier = () => {
             typePartner={"Nhà cung cấp"}  />
         );
       })}
+      </Box>
       <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}  list={supplerList}/>
 
       </>}

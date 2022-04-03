@@ -13,6 +13,7 @@ import {
   Avatar,
   Tooltip,
   TableBody,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -54,7 +55,7 @@ import { infoActions } from "../../../store/slice/infoSlice";
 
 import defaultProduct from "../../../assets/img/product/default-product.png";
 import setting from "../../../assets/constant/setting"
-
+import empltyImage from "../../../assets/img/icon/empty-cart.png"
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);
@@ -369,10 +370,14 @@ const Inventory = () => {
                 />
               );
             })}
+
           </TableBody>
+          
+
         </TableWrapper>
       ) : (
         <>
+        <Box style={{minHeight:'50vh'}}>
           {productList.map((row, index) => {
             return (
               // <ProductMiniTableRow
@@ -404,6 +409,7 @@ const Inventory = () => {
               />
             );
           })}
+           </Box>
           <Pagination
             pagingState={{ ...pagingState, total_rows: totalRows }}
             setPagingState={setPagingState}

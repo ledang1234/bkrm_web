@@ -11,6 +11,7 @@ import {
   Avatar,
   Tooltip,
   TableBody,
+  Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useSelector } from "react-redux";
@@ -204,6 +205,7 @@ function InvoiceReturn() {
         </TableBody>
       </TableWrapper>:
           <>
+           <Box style={{minHeight:'50vh'}}>
           {refunds.map((row, index) => (
             // <InvoiceReturnTableRow
             //   key={row.uuid}
@@ -216,6 +218,7 @@ function InvoiceReturn() {
           typeBill={"Đơn trả"}/>
 
           ))}
+          </Box>
           <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}         list={refunds}/>
     
           </>
