@@ -152,6 +152,7 @@ const WebSetting = () => {
       if (response.data.web_configuration) {
         setWeb(JSON.parse(response.data.web_configuration));
         // setLogoStore(JSON.parse(response.data.store_configuration).img_url)
+        setDisplay(JSON.parse(response.data.banners ? response.data.banners : "[]"));
       }else{
         haveNotActiveBefore = true
       }
@@ -529,9 +530,10 @@ const WebSetting = () => {
             if(web.webAddress.length === 0) {
               error("Tên địa chỉ trang web trống"," Chưa cài đặt địa chỉ trang web. Cài đạt trang web và lưu thay đổi trước khi kích hoạt trang web");
             }else{
-              const response = storeApi.updateStoreInfo(store_uuid, {
-                web_configuration: JSON.stringify(web),
-              });
+              var bodyFormData = new FormData();
+              bodyFormData.append("web_configuration", web);
+              images.forEach((image) => bodyFormData.append("images[]", image));
+              const response = storeApi.updateStoreInfo(store_uuid, bodyFormData);
               // CHECK TÊN NÀY TỒN TẠI CHƯA
               openNotification("success", "Lưu cài đặt chung thành công");
               // setWebNameBeforeSave(web.webAddress)
