@@ -60,7 +60,9 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  console.log("branch_inventories",branch_inventories)
   const findBranchQuantity = (id) => {
+    // if(!branch_inventories){return -1}
     const rs = branch_inventories?.find(x => x.uuid === id)?.quantity_available
     if(rs){return rs.toLocaleString() }
     else{ return 0}

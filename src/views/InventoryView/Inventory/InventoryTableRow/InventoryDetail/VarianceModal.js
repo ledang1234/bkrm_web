@@ -119,6 +119,24 @@ const VarianceModal = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
+  console.log("rowwww",row)
+  console.log("productDetail",productDetail)
+  
+  // useEffect(() => {
+  //   const fetchProduct = async () => {
+  //     try {
+  //       const response = await productApi.getProduct(store_uuid, row.uuid, {
+  //         branch_uuid: branch_uuid,
+  //       });
+  //       setProductDetail(response.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+
+  //   fetchProduct();
+  // }, [store_uuid]);
+    
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -132,10 +150,11 @@ const VarianceModal = (props) => {
     };
 
     fetchProduct();
-  }, [store_uuid]);
+  }, []);
 
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
 
+  console.log("row.branch_inventories",productDetail.branch_inventories)
 
   return (
     // <ModalWrapperWithClose
@@ -296,16 +315,19 @@ const VarianceModal = (props) => {
                   </Grid>:null}
                   {openDetailInventory?
                   <BranchInventoryPopUp 
-                    branch_inventories={row.branch_inventories}branchs={branchs}open={openDetailInventory}
+                    branch_inventories={productDetail.branch_inventories}branchs={branchs}open={openDetailInventory}
                     onClose={()=>setOpenDetailInventory(false)}
                     setReload={setReload}
                     batches={batches}
-                    has_batches={has_batches}
+                    has_batches={productDetail.has_batches}
                    />
                    
                    :null}
                  
                   </Grid>
+                  {productDetail.has_batches ? <Typography variant='h6' style={{color:theme.customization.primaryColor[500]}}>* Sản phẩm quản lý theo lô *</Typography>:null}
+                {productDetail.has_batches ? <Typography variant='h6' style={{color:theme.customization.primaryColor[500], marginBottom:10}}>Thông báo hết HSD trước {productDetail.notification_period} ngày</Typography>:null}
+
 
                   <Grid container direction="row" justifyContent="flex-start">
                     <Grid item xs={3} sm={6}>

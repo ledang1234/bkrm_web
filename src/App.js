@@ -35,12 +35,12 @@ function App() {
     dispatch(verifyToken());
     dispatch(setCustomization(customization));
     setPath(sessionStorage.getItem("BKRMprev"));
-    dispatch(loadBranches(store_uuid));
+    // dispatch(loadBranches(store_uuid));
 
   }, [dispatch]);
-  useEffect(() => {
-    dispatch(loadBranches(store_uuid));
-  })
+  // useEffect(() => {
+  //   dispatch(loadBranches(store_uuid));
+  // })
   return (
     <ThemeProvider theme={themes(customization)}>
       <Box>

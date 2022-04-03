@@ -62,7 +62,8 @@ const WebSetting = () => {
   // redux 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-  const branches = info.branchsOfStore
+  // const branches = info.branchsOfStore
+  const branches = info.store.branches
 
   // api
   // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
@@ -74,9 +75,7 @@ const WebSetting = () => {
       branchOption:'default',
       branchDefault: branches?  branches[0]?.id:null,
       // branchDefault: null,
-
       orderWhenOutOfSctock:false,
-
     },
     mainColor: { r: "250", g: "140", b: "22", a: "1", hex: "#fa8c16" }, //#f2a5ae , //#fa8c16"       // mainColor: {  r: '242', g: '165', b: '174',  a: '1', hex:'#fa8c16'},
     bgColor: { r: "255", g: "255", b: "255", a: "1", hex: "#ffffff" },

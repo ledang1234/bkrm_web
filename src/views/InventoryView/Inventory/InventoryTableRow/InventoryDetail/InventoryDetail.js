@@ -122,7 +122,8 @@ const InventoryDetail = (props) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
-  const branchs = info.branchsOfStore
+  const branchs = info.store.branches
+ 
   // const [branchs, setBranchs] = useState(info.branchsOfStore);
 
   const [isOpenVarianceDetailModal, setIsOpenVariaceDetailModal] =
@@ -435,8 +436,9 @@ const InventoryDetail = (props) => {
                    
                    :null}
                 </Grid>
-                {row.has_batches ? <Typography variant='h6' style={{color:theme.customization.primaryColor[500], marginBottom:10}}>* Sản phẩm quản lý theo lô *</Typography>:null}
- 
+                {row.has_batches ? <Typography variant='h6' style={{color:theme.customization.primaryColor[500]}}>* Sản phẩm quản lý theo lô *</Typography>:null}
+                {row.has_batches ? <Typography variant='h6' style={{color:theme.customization.primaryColor[500], marginBottom:10}}>Thông báo hết HSD trước {row.notification_period} ngày</Typography>:null}
+
                 <Grid container direction="row" justifyContent="flex-start">
                   <Grid item xs={4} sm={6}>
                     <Typography variant="h5" gutterBottom component="div">

@@ -247,8 +247,8 @@ const DetailPage = (props) => {
         <Divider  style={{marginTop:20}}/>
         <Typography  style={{color:'#000', fontSize:18,fontWeight:500, marginTop:20,}}>Mô tả sản phẩm</Typography>
       
-                {/* <ReactQuill theme="bubble" value={} readOnly={true} /> */}
-                {detailProduct?.description}
+                <ReactQuill theme="bubble" value={detailProduct?.description} readOnly={true} />
+                {/* {detailProduct?.description} */}
 
     </div>
         

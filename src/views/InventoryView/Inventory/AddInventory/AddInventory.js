@@ -21,6 +21,7 @@ import {
   Card,
   CardHeader,
   Checkbox,
+  ListItem
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 //import project
@@ -121,7 +122,8 @@ const AddInventory = (props) => {
       has_batches: false,
       quantity:0,
       max_order:999999999,
-      description:""
+      description:"",
+      notification_period:7,
 
     },
     validationSchema: Yup.object({
@@ -142,7 +144,8 @@ const AddInventory = (props) => {
 
       quantity: Yup.number().moreThan(-1, "Tồn kho ban đầu không được âm"),
 
-      max_order: Yup.number().moreThan(-1, "Số lượng nhập hàng tối đa"),
+      max_order: Yup.number().moreThan(-1, "Số lượng nhập hàng tối đa không được âm"),
+      notification_period: Yup.number().moreThan(-1, "Số ngày không được âm"),
     }),
   });
 
@@ -212,6 +215,14 @@ const AddInventory = (props) => {
         productFormik.values.description.toString()
         // JSON.stringify(datas)
       );
+      bodyFormData.append(
+        "notification_period",
+        productFormik.values.notification_period.toString()
+        // JSON.stringify(datas)
+      );
+
+
+      
 
       bodyFormData.append("branch_uuid", branch_uuid);
       bodyFormData.append("img_url", imageURL);
@@ -425,6 +436,13 @@ const AddInventory = (props) => {
         productFormik.values.description.toString()
         // JSON.stringify(productFormik.values.description)
       );
+       bodyFormData.append(
+        "notification_period",
+        productFormik.values.notification_period.toString()
+        // JSON.stringify(productFormik.values.description)
+      );
+
+      
 
       for (var i = 0; i < relatedList.length; i++) {
         const values = relatedList[i].name.split("-");
@@ -466,13 +484,9 @@ const AddInventory = (props) => {
   };
 
   const [value, setValue] = useState(null)
-console.log("valssssue",value)
-console.log("productFormik.values.category",productFormik.values.category)
-const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
-  
-const tProps = {
- 
-};
+
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
 return (
     <Dialog
       open={open}
@@ -815,7 +829,38 @@ return (
         {/* {store_setting?.expiryDate.status  ? ( */}
 
         {store_setting?.expiryDate.status  &&store_setting?.inventory.status ? (
-          <div style={{ flexGrow: 1, textAlign: "right" }}>
+          // <div style={{ flexGrow: 1, textAlign: "right" , alignItems:'center'}}>
+             <Grid container alignItems="center" justifyContent='flex-end'>
+            {productFormik.values.has_batches?
+            < >
+             <Typography>Thông báo trước khi hết HSD </Typography>
+             <ThousandSeperatedInput
+            //  label="Thông báo trước khi hết HSD"
+              // variant="outlined"
+              // fullWidth
+              size="small"
+             style={{marginRight:10}}
+              name="notification_period"
+              value={productFormik.values.notification_period}
+              onChange={productFormik.handleChange}
+              error={
+                productFormik.touched.notification_period &&
+                productFormik.errors.notification_period
+              }
+              helperText={
+                productFormik.touched.notification_period
+                  ? productFormik.errors.notification_period
+                  : null
+              }
+              onBlur={productFormik.handleBlur}
+             />
+            <Typography style={{marginRight:10}}>ngày </Typography>
+          </>
+        
+             :null
+
+        }
+        
             <FormControlLabel
               control={
                 <Checkbox
@@ -828,8 +873,8 @@ return (
               }
               label="Lô, hạn sử dụng"
             />
-
-          </div>
+   </Grid>
+          /* </div> */
         ) : null}
 
         {store_setting?.variation.status ? (
