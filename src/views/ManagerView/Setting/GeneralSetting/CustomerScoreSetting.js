@@ -50,7 +50,7 @@ const handleCheckbox= (event) => {
                 <Typography> 1 điểm thưởng</Typography>
             </ListItem>
                 {Number(customerScore.value) <= 0 ? <Typography variant="h6" style={{ color: "red" }}>
-                Tiền quy đổi điểm không được nhỏ hơn hoặc bằng 0 
+                Tiền quy đổi điểm phải lớn hơn 0
                 </Typography>:null}
             
             </Grid>  

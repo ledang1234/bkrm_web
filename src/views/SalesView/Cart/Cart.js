@@ -481,7 +481,7 @@ const Cart = () => {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
     });
-    if(store_setting?.customerScore.status){
+    if(store_setting?.customerScore.status ){
         newCartList = update(newCartList, {
           [selectedIndex]: {
             scores: { $set: parseInt((total - cartList[selectedIndex].discount)/store_setting?.customerScore.value) },

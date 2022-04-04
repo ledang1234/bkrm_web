@@ -73,7 +73,7 @@ const ImportReturnSummary = ({
             <Typography variant="h5">Chi nhánh</Typography>
             <Typography variant="body2">
               {/* current branch */}
-              {data.branch.name}
+              {data.branch?.name}
             </Typography>
           </Grid>
 
@@ -124,7 +124,7 @@ const ImportReturnSummary = ({
             className={classes.marginBox}
             alignItems="center"
           >
-            <Typography variant="h5">{data.supplier.name}</Typography>
+            <Typography variant="h5">{data.supplier?.name}</Typography>
           </Grid>
         </Grid>
 
