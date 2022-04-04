@@ -44,10 +44,14 @@ const handleCheckbox= (event) => {
                 <ThousandSeperatedInput value={customerScore.value} onChange={handleChangeValue}/>
                 <Avatar variant="rounded"   style={{width: theme.spacing(5),height: theme.spacing(3), backgroundColor: theme.palette.primary.main , marginLeft:10, marginRight:20}} >
                     <Typography  style={{fontSize:13, fontWeight:500}} >VND</Typography>
+                   
                 </Avatar>     
                 <Typography style={{marginRight:15}}> = </Typography>
                 <Typography> 1 điểm thưởng</Typography>
             </ListItem>
+                {Number(customerScore.value) <= 0 ? <Typography variant="h6" style={{ color: "red" }}>
+                Tiền quy đổi điểm không được nhỏ hơn hoặc bằng 0 
+                </Typography>:null}
             
             </Grid>  
               
@@ -62,7 +66,7 @@ const handleCheckbox= (event) => {
      
      <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
           <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
-          <Button onClick={()=>handleSubmit(name,customerScore)} variant="contained" size="small" color="primary" >OK  </Button>
+          <Button onClick={()=>handleSubmit(name,customerScore)} variant="contained" size="small" color="primary" disabled={Number(customerScore.value) <= 0} >OK  </Button>
       </Grid>
     </>
 

@@ -117,13 +117,14 @@ console.log("selectedCustomer",props.selectedCustomer)
         autoComplete={false}
         freeSolo
         onKeyUp={(event) => {
-          if (event.key === "Enter") {
-            props.handleSearchCustomer(event.target.value) 
-          }
+          // if (event.key === "Enter") {
+          //   props.handleSearchCustomer(event.target.value) 
+          // }
           if(props.selectedCustomer && (event.key === "Delete" || event.key === "Backspace") ){
             props.handleSearchBarSelect(null)
           }
         }}
+        
        
         value={props.selectedCustomer}
         options={props.customers.filter(item => item.status ==='active')}

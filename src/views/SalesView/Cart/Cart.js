@@ -426,6 +426,13 @@ const Cart = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { discount: { $set: amount } },
     });
+    if(store_setting?.customerScore.status){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          scores: { $set: parseInt((cartList[selectedIndex].total_amount - amount) /store_setting?.customerScore.value) },
+      }});
+    }
+
     setCartList(newCartList);
   };
 
@@ -433,6 +440,7 @@ const Cart = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { delivery: { $set: delivery } },
     });
+    
     setCartList(newCartList);
   };
 
@@ -455,7 +463,7 @@ const Cart = () => {
     if(store_setting?.customerScore.status){
         newCartList = update(newCartList, {
           [selectedIndex]: {
-            scores: { $set: parseInt(total /store_setting?.customerScore.value) },
+            scores: { $set: parseInt((total - cartList[selectedIndex].discount)/store_setting?.customerScore.value) },
         }});
     }
   
