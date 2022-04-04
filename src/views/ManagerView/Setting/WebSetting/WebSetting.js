@@ -2,39 +2,26 @@ import React, { useEffect, useState } from "react";
 import {
   useTheme,
   withStyles,
-  makeStyles,
-  createStyles,
 } from "@material-ui/core/styles";
 import {
   Button,
   Typography,
-  InputAdornment,
-  FormControlLabel,
-  FormLabel,
   CardHeader,
   IconButton,
   Collapse,
-  FormControl,
-  RadioGroup,
   TextField,
-  Checkbox,
   Card,
-  Radio,
   Grid,
-  ButtonBase,
   Tooltip,
   Box,
   Switch,
   ListItem,
-  MenuItem,
-  Select
 } from "@material-ui/core";
 import ColorPicker from "../../../../components/ColorPicker/ColorPicker"
 import LanguageIcon from "@material-ui/icons/Language";
 import LinkIcon from "@material-ui/icons/Link";
 import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWithClose";
 import { grey } from "@material-ui/core/colors";
-import { SketchPicker } from "react-color";
 import clsx from "clsx";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 // import NavBar from "../../../../pages/CustomerPage/NavBar/"
@@ -48,12 +35,10 @@ import { useSelector ,useDispatch} from "react-redux";
 import storeApi from "../../../../api/storeApi";
 import openNotification from "../../../../components/StatusPopup/StatusPopup";
 import CartSetting from "./CartSetting"
-import AbousUsSetting from "./AbousUsSetting";
 import { Link } from "react-router-dom";
 import { customizeAction } from "../../../../store/slice/customizeSlice";
 import DetailSetting from "./DetailSetting"
-import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
-import { success ,error,warning, info} from '../../../../components/StatusModal/StatusModal';
+import { error } from '../../../../components/StatusModal/StatusModal';
 
 const WebSetting = () => {
   const theme = useTheme();
@@ -64,9 +49,6 @@ const WebSetting = () => {
   const store_uuid = info.store.uuid;
   // const branches = info.branchsOfStore
   const branches = info.store.branches
-
-  // api
-  // var logoStore =  "https://cdn.mykiot.vn/2021/11/c3fa6fc1ceef1d611cd9c7ed256db621e1814ba175dd832a37ffb6cc8e43bd6d.jpg";
 
   const webInfo = {
     webAddress: "",
@@ -127,15 +109,10 @@ const WebSetting = () => {
 
     }
   };
-
- 
   const [web, setWeb] = React.useState(webInfo);
   const [images, setImages] = useState([]);
   const [display, setDisplay] = useState([]);
   const [imageURL, setImageURL] = useState("");
-
-
-
   const [displayColorPicker, setDisplayColorPicker] = React.useState(false);
   const [displayColorPicker1, setDisplayColorPicker1] = React.useState(false);
   const [openLinkWarningPopup, seOpenLinkWarningPopup] = React.useState(false);
@@ -152,6 +129,13 @@ const WebSetting = () => {
       if (response.data.web_configuration) {
         setWeb(JSON.parse(response.data.web_configuration));
         // setLogoStore(JSON.parse(response.data.store_configuration).img_url)
+
+        const bannerUrls = JSON.parse(response.data.banners ? response.data.banners : "[]")?.map((url, i) => ({
+          index: i,
+          link: url,
+          isUrl: true,
+        }));
+        setDisplay(bannerUrls);
       }else{
         haveNotActiveBefore = true
       }
@@ -168,9 +152,12 @@ const WebSetting = () => {
     }
   }, [store_uuid]);
 
+  useEffect(() => {
+    console.log('banner iamge', images);
+    console.log('display', display)
+  }, [images, display])
 
   // 1.
-
   const handleWebAddress = (e) => {
     var newWeb = { ...web };
     newWeb.webAddress = e.target.value;
@@ -433,15 +420,10 @@ const WebSetting = () => {
         setExpanded={setExpandedMainPage}
       >
         <MainPageSetting
-          web={web}
-          handleChangeNavBar={handleChangeMainPage}
-          setWeb={setWeb}
+          web={web} handleChangeNavBar={handleChangeMainPage} setWeb={setWeb}
           images={images} setImages={setImages} display={display} setDisplay={setDisplay} imageURL={imageURL} setImageURL={setImageURL}
-
         />
       </SettingCollapse>
-
-
       {/*4. Danh sách sản phẩm */}
       <SettingCollapse
         title="Danh sách sản phẩm"
@@ -529,9 +511,11 @@ const WebSetting = () => {
             if(web.webAddress.length === 0) {
               error("Tên địa chỉ trang web trống"," Chưa cài đặt địa chỉ trang web. Cài đạt trang web và lưu thay đổi trước khi kích hoạt trang web");
             }else{
-              const response = storeApi.updateStoreInfo(store_uuid, {
-                web_configuration: JSON.stringify(web),
-              });
+              var bodyFormData = new FormData();
+              bodyFormData.append("web_configuration", JSON.stringify(web));
+              images.forEach((image) => bodyFormData.append("images[]", image));
+              display.filter(image => image.isUrl).forEach(image => bodyFormData.append("img_urls[]", image.link))
+              const response = storeApi.updateStoreInfo(store_uuid, bodyFormData);
               // CHECK TÊN NÀY TỒN TẠI CHƯA
               openNotification("success", "Lưu cài đặt chung thành công");
               // setWebNameBeforeSave(web.webAddress)

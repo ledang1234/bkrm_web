@@ -7,7 +7,9 @@ const storeApi = {
   },
   updateStoreInfo: (storeUuid, body) => {
     const url = `stores/${storeUuid}`;
-    return axiosClient.put(url, body); 
+    return axiosClient.post(url, body, {headers: {
+      "Content-Type": "multipart/form-data",
+    }}); 
   },
   
   getActivities: (storeUuid, branchUuid,  period) => {
@@ -45,7 +47,6 @@ const storeApi = {
       },
     });
   },
-
   getReportCaptital: (storeUuid, fromDate, toDate, unit) => {
     const url = `stores/${storeUuid}/report/statistic`;
     return axiosClient.get(url, {
@@ -57,7 +58,6 @@ const storeApi = {
       },
     });
   },
-
   getReportProfit: (storeUuid, fromDate, toDate, unit) => {
     const url = `stores/${storeUuid}/report/statistic`;
     return axiosClient.get(url, {
@@ -102,7 +102,9 @@ const storeApi = {
 
   updateStoreConfig: (storeUuid,body) =>{
     const url = `stores/${storeUuid}/updateStoreConfiguration`;
-    return axiosClient.post(url,body)
+    return axiosClient.post(url,body, {headers: {
+      "Content-Type": "multipart/form-data",
+    }})
   },
 };
 export default storeApi;

@@ -113,7 +113,7 @@ const CartSummary = (props) => {
   // so tien khach đưa
   const [customerMoney, setCustomerMoney] = React.useState("0");
   
-  console.log("currentCustomer",currentCustomer)
+  // console.log("currentCustomer",currentCustomer)
   // React.useEffect(() => {console.log(currentBranch)})
 
   // console.log("cartItem")
@@ -151,7 +151,7 @@ const CartSummary = (props) => {
 
   const [addCustomer, setAddCustomer] =  React.useState({ name: "", phone: "" });
   React.useEffect(()=>{
-    console.log("realod addCustomer",addCustomer)
+    // console.log("realod addCustomer",addCustomer)
     if(addCustomer?.name?.length !==  0){props.handleSelectCustomer(addCustomer);setAddCustomer({ name: "", phone: "" })}
   })
   console.log("currentCustomerrrrr",currentCustomer)
