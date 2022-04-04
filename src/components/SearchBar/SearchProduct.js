@@ -147,28 +147,12 @@ const SearchProduct = (props) => {
           padding: " 10px",
         },
       }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          
-          // increase if selected
-          if (selectedOption.name) {
-            props.handleSearchBarSelect(selectedOption);
-          } else {
-            setSelectedOption(options.length ? options[0] : {});
-          }
-        } else if (e.key === "Backspace") {
-          if (selectedOption?.name) {
-            // console.log("reset");
-            e.preventDefault();
-            e.stopPropagation();
-            setSelectedOption({});
-          }
-        }
-      }}
     />
   );
 
-  const getOptionLabel = (option) => (`${option.name}-${option.bar_code}-${option.product_code}`);
+  const getOptionLabel = (option) => {
+    return option.name ? `${option.name}-${option.bar_code}-${option.product_code}` : ""
+  };
 
   // just filter
   const filterOptions = (options, state) => options;
@@ -187,21 +171,32 @@ const SearchProduct = (props) => {
           autoComplete
           getOptionLabel={getOptionLabel}
           onChange={(event, value) => {
-            if (value) {
+            if (value?.name) {
               setSelectedOption(value);
+              props.handleSearchBarSelect(value);
             }
           }}
           renderInput={renderInput}
           renderOption={renderOption}
-          // filterOptions={filterOptions}
           value={selectedOption}
-          // onKeyDown={(e) => {
-          //   if (e.key === "Enter") {
-          //     e.stopPropagation();
-          //     e.preventDefault();
-          //   }
-          // }}
+          clearOnEscape={true}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              // increase if selected
+              if (selectedOption.name) {
+                props.handleSearchBarSelect(selectedOption);
+              }
+            } else if (e.key === "Backspace") {
+              if (selectedOption?.name) {
+                // console.log("reset");
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedOption({});
+              }
+            }
+          }}
           blurOnSelect={false}
+
         />
       </Tooltip>
     </div>

@@ -7,7 +7,9 @@ const storeApi = {
   },
   updateStoreInfo: (storeUuid, body) => {
     const url = `stores/${storeUuid}`;
-    return axiosClient.put(url, body); 
+    return axiosClient.post(url, body, {headers: {
+      "Content-Type": "multipart/form-data",
+    }}); 
   },
   
   getActivities: (storeUuid, branchUuid,  period) => {

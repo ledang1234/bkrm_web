@@ -61,6 +61,7 @@ import branchApi from "../../../api/branchApi";
 import setting from "../../../assets/constant/setting"
 import { infoActions } from "../../../store/slice/infoSlice";
 import productApi from "../../../api/productApi";
+import { statusAction } from "../../../store/slice/statusSlice";
 
 const Cart = () => {
   const theme = useTheme();
@@ -161,7 +162,7 @@ const Cart = () => {
 
   const [customers,setCustomers ] = useState([])
 
-
+  
   const handleSearchCustomer = async (searchKey) => {
     try {
       const response = await customerApi.getCustomers(store_uuid, {
@@ -172,11 +173,23 @@ const Cart = () => {
       console.log(err);
     }
   };
+
+  const updateCustomerVouchers = async (customerUuid, vouchers) => {
+    try {
+      const response = await customerApi.updateCustomerVouchers(customerUuid,  vouchers);
+      dispatch(statusAction.successfulStatus('Cập nhật voucher của khách thành công'))
+    } catch (err) {
+      console.log(err)
+      dispatch(statusAction.failedStatus('Cập nhật vouchers thất bại'))
+    }
+  }
+
   useEffect(() => {
     const loadCustomers = async () => {
       try {
         const response = await customerApi.getCustomers(store_uuid);
-        setCustomers(response.data);
+        const customers = response.data.map(cust => ({...cust, vouchers: JSON.parse(cust.vouchers ? cust.vouchers : '[]') }))
+        setCustomers(customers);
       } catch (err) {
         console.log(err);
       }
