@@ -154,6 +154,7 @@ const CartSummary = (props) => {
     // console.log("realod addCustomer",addCustomer)
     if(addCustomer?.name?.length !==  0){props.handleSelectCustomer(addCustomer);setAddCustomer({ name: "", phone: "" })}
   })
+  console.log("currentCustomerrrrr",currentCustomer)
 
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
