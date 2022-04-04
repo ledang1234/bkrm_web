@@ -316,8 +316,8 @@ const GeneralSetting = () => {
           name="inventory"
           statusChecked={checked.inventory.status}
           actionToggle={(e) => {
-            const res = storeApi.toggleInventory(store_uuid);
             handleToggle(e);
+            const res = storeApi.toggleInventory(store_uuid);
           }}
           title="Quản lý tồn kho"
           subTitle="Quản lý sản phẩm theo số lượng tồn kho"
