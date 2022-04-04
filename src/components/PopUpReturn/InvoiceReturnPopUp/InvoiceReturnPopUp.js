@@ -110,13 +110,16 @@ function InvoiceReturnPopUp(props) {
 
     let newRefund = update(refund, {
       total_amount: { $set: total },
+      // paid_amount:{ $set: total.toString() },
+      paid_amount: { $set: total },
+      scores: { $set:  store_setting?.customerScore.status  ? parseInt((total)/store_setting?.customerScore.value)  :'0'},
+      
     });
-
-    if(store_setting?.customerScore.status){
-      newRefund = update(refund, {
-        scores: { $set: parseInt((total)/store_setting?.customerScore.value) },
-      });
-    }
+    // newRefund = update(refund, {
+    //   paid_amount:{ $set: total },
+      
+    // });
+    
 
     setRefund(newRefund);
     

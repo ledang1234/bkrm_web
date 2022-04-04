@@ -57,6 +57,7 @@ function InvoiceReturnSummary({
 }) {
   const theme = useTheme();
   const classes = useStyles(theme);
+  console.log("dataaaaa",data)
 
   useEffect(() => {}, [data]);
 
@@ -217,7 +218,7 @@ function InvoiceReturnSummary({
             style={{ width: 90 }}
             size="small"
             inputProps={{ style: { textAlign: "right" } }}
-            defaultValue={data.total_amount}
+            value={data.paid_amount}
             onChange={(e) => handlePaidAmountChange(e.target.value)}
           />
         </Grid>
