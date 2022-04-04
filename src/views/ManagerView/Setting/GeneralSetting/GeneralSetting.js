@@ -45,6 +45,7 @@ import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import { grey } from "@material-ui/core/colors";
 import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWithClose";
+import {Modal} from 'antd';
 import CustomerScoreSetting from "./CustomerScoreSetting";
 import EmailSetting from "./EmailSetting";
 import NotifyDebtSetting from "./NotifyDebtSetting";
@@ -314,7 +315,10 @@ const GeneralSetting = () => {
         <SettingItem
           name="inventory"
           statusChecked={checked.inventory.status}
-          actionToggle={handleToggle}
+          actionToggle={(e) => {
+            const res = storeApi.toggleInventory(store_uuid);
+            handleToggle(e);
+          }}
           title="Quản lý tồn kho"
           subTitle="Quản lý sản phẩm theo số lượng tồn kho"
         >

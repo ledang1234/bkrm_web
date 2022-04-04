@@ -106,5 +106,9 @@ const storeApi = {
       "Content-Type": "multipart/form-data",
     }})
   },
+  toggleInventory: (storeUuid) =>{
+    const url = `stores/${storeUuid}/toggleInventory`;
+    return axiosClient.post(url)
+  },
 };
 export default storeApi;
