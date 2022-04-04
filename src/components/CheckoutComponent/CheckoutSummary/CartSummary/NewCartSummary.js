@@ -149,10 +149,10 @@ const CartSummary = (props) => {
   let haveDiscount = checkHaveDiscount();
   const [openDiscount, setOpenDiscount] = React.useState(false);
 
-  const [addCustomer, setAddCustomer] =  React.useState({name:'', phone:''});
+  const [addCustomer, setAddCustomer] =  React.useState({ name: "", phone: "" });
   React.useEffect(()=>{
     console.log("realod addCustomer",addCustomer)
-    if(addCustomer.name?.length !==  0){props.handleSelectCustomer(addCustomer)}
+    if(addCustomer?.name?.length !==  0){props.handleSelectCustomer(addCustomer);setAddCustomer({ name: "", phone: "" })}
   })
 
   return (
@@ -191,7 +191,8 @@ const CartSummary = (props) => {
             handleSearchCustomer={handleSearchCustomer}
             customers={customers}
             selectedCustomer={
-              currentCustomer ? currentCustomer : { name: "", phone: "" }
+              currentCustomer
+              // currentCustomer ? currentCustomer : { name: "", phone: "" }
             }
             handleSearchBarSelect={handleSelectCustomer}
             setAddCustomer={setAddCustomer}

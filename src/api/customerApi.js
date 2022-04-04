@@ -21,6 +21,12 @@ const customerApi = {
     const url = `/stores/${storeUuid}/customers/${customerUuid}`;
     return axiosClient.put(url,body);
   },
-  
+  importCustomerJson : (storeUuid, json) => {
+    const url = `stores/${storeUuid}/products/addCustomerByJson`;
+    return axiosClient.post(url, {
+      "json_data": json
+    });
+  },
+
 };
 export default customerApi;

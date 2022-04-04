@@ -120,7 +120,7 @@ const ImportSummary = (props) => {
   }
   const [addSupplier, setAddSupplier] =  React.useState({name:'', phone:''})
   React.useEffect(()=>{
-    if(addSupplier.name?.length !==  0){props.handleSelectSupplier(addSupplier)}
+    if(addSupplier?.name?.length !==  0){props.handleSelectSupplier(addSupplier); setAddSupplier({name:'', phone:''})}
   })
 
   return (
@@ -157,8 +157,8 @@ const ImportSummary = (props) => {
           <SearchSupplier
             suppliers={suppliers}
             handleClickOpen={handleClickOpen}
-            selectedSupplier={
-              currentSupplier ? currentSupplier : { name: "", phone: "" }
+            selectedSupplier={currentSupplier
+              // currentSupplier ? currentSupplier : { name: "", phone: "" }
             }
             handleSearchBarSelect={handleSelectSupplier}
             setAddSupplier={setAddSupplier}

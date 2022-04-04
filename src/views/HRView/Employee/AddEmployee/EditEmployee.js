@@ -24,13 +24,16 @@ import { useFormik } from "formik";
 import NumberFormatCustom from "../../../../components/TextField/NumberFormatCustom";
 import MultipleSelect from "../../../../components/MultipleSelect/MultipleSelect";
 import { EmailRounded, YouTube } from "@material-ui/icons";
+import { verifyToken} from "../../../../store/actionCreator";
 import branchApi from "../../../../api/branchApi";
 import VNDInput from "../../../../components/TextField/NumberFormatCustom";
 import * as Yup from "yup";
 // api
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import employeeApi from "../../../../api/employeeApi";
 import ConfirmPopup from "../../../../components/ConfirmPopUp/ConfirmPopUp"
+import userAPi from "../../../../api/userApi";
+import { statusAction } from "../../../../store/slice/statusSlice";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -66,7 +69,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
   const classes = useStyles(theme);
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-
+  const dispatch = useDispatch()
   // đổi thành state sau (price format)
   const [values, setValues] = React.useState({
     numberformat: "",
@@ -109,6 +112,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
       date_of_birth: employee.date_of_birth || "",
       address: employee.address || "",
       branches: employee.branches?.map((b) => b.id),
+      new_password: ""
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Bắt buộc!"),
@@ -161,8 +165,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
       }
     },
   });
-
-
   // const [branches, setBranches] = React.useState([]);
   
   React.useEffect(() => {
@@ -183,6 +185,45 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
   //     let permissions = selected.map((permission) => permission.key);
   //     setPermissions(permissions);
   //   };
+
+  console.log(employee)
+  const handleEditProfile = async (password) =>{
+    setConfirm(false)
+    handleClose();
+    try {
+      const rs = await userAPi.confirmPassword(info.store.uuid,{
+        user_name:info.user.user_name,
+        password:password,
+        role:info.role
+      })
+      if(rs.message ==="success"){
+        let formData = new FormData();
+        formData.append("date_of_birth",formik.values.date_of_birth)
+        formData.append("email",formik.values.email)
+        formData.append("phone",formik.values.phone) 
+        formData.append("gender",formik.values.gender) 
+        formData.append("id_card_num",formik.values.id_card_num) 
+        formData.append("address",formik.values.address)
+        formData.append("role",info.role)
+        if(formik.values.new_password != ""){
+          formData.append("new_password",formik.values.new_password) 
+        }
+        if (image) {
+          formData.append("image", image);
+        }
+        const rs_edit = await userAPi.editProfile(info.store.uuid,formData)
+        if(rs_edit.data === "Edit profile successfully"){
+          dispatch(statusAction.successfulStatus("Lưu thay đổi"))
+          dispatch(verifyToken())
+        }else{
+        }
+      }else{
+        dispatch(statusAction.failedStatus("Lưu thất bại"))
+      }
+    } catch (error) {
+      dispatch(statusAction.failedStatus("Sửa thất bại"))
+    }
+  }
   const [confirm,setConfirm] = React.useState(false);
   return (
     <Dialog
@@ -190,11 +231,11 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <ConfirmPopup open={confirm} handleClose={() => setConfirm(false)} passwordRequired={true} handleConfirm={formik.handleSubmit}
+      <ConfirmPopup open={confirm} handleClose={() => setConfirm(false)} passwordRequired={true} handleConfirm={handleEditProfile}
       message={
         <Typography>
           <b>Nhập mật khẩu để lưu thay đổi</b>
-        </Typography>
+        </Typography> 
       }
       />
       <DialogTitle id="form-dialog-title">
@@ -251,13 +292,14 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
               <TextField
                 id="name"
                 name="name"
-                label="Tên nhân viên"
+                label={fromAvatar ?"Họ tên" : "Tên nhân viên"}
                 value={formik.values.name}
                 variant="outlined"
                 fullWidth
                 size="small"
                 // name="name"
                 onChange={formik.handleChange}
+                disabled={fromAvatar}
               />
 
               {formik.errors.name && formik.touched.name && (
@@ -285,7 +327,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 name="date_of_birth"
                 label="Ngày sinh"
                 type="date"
-                defaultValue="" //null
+                defaultValue=""
                 variant="outlined"
                 size="small"
                 fullWidth
@@ -357,7 +399,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
 {formik.errors.email && formik.touched.email && (
                 <FormHelperText error>{formik.errors.email}</FormHelperText>
               )}
-
+              {info.role != "owner" && 
               <TextField
                 id="outlined-basic"
                 label="Địa chỉ"
@@ -367,19 +409,20 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
                 size="small"
                 onChange={formik.handleChange}
                 name="address"
-              />
+              />}
             </Grid>
             <Grid item xs={6}>
               {/* Select lưong */}
-              {/* <TextField
+              {fromAvatar&&<TextField
                 id="outlined-basic"
                 label="Mật khẩu mới"
                 variant="outlined"
                 fullWidth
                 size="small"
                 onChange={formik.handleChange}
-                name="newPassword"
-              /> */}
+                name="new_password"
+                type="password"
+              />}
               <FormControl
                 className={classes.formControl}
                 fullWidth

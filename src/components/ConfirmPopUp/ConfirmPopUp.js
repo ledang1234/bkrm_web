@@ -1,13 +1,15 @@
 import { Box, Button, Typography, TextField } from "@material-ui/core";
-import React from "react";
+import React,{useState} from "react";
 import ModalWrapper from "../Modal/ModalWrapper";
 const ConfirmPopUp = (props) => {
+  const [pwd,setPwd] = useState("")
   return (
     <ModalWrapper {...props}>
       <Box>
         <Typography>{props.message}</Typography>
         {props.passwordRequired ?
           <TextField
+          onChange = {(e) => setPwd(e.target.value)}
           style={{marginTop:20}}
             id="name"
             name="name"
@@ -41,7 +43,7 @@ const ConfirmPopUp = (props) => {
           size="small"
           variant="outlined"
           onClick={() => {
-            props.handleConfirm();
+            props.handleConfirm(pwd);
           }}
         >
           {" "}

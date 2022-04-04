@@ -46,7 +46,7 @@ const SearchCustomer = (props) => {
   useEffect(() => {
 
   }, [props.selectedCustomer]);
-
+console.log("selectedCustomer",props.selectedCustomer)
   const renderOption = (option) => {
     //display value in Popper elements
     return (
@@ -64,7 +64,8 @@ const SearchCustomer = (props) => {
       placeholder="Tìm khách hàng"
       margin="normal"
       InputProps={
-        props.selectedCustomer?.name.length === 0 
+        // props.selectedCustomer?.name.length === 0 
+        !props.selectedCustomer
           ? {
               ...params.InputProps,
               startAdornment: (
@@ -95,7 +96,7 @@ const SearchCustomer = (props) => {
                   aria-label="delete"
                   size="small"
                   onClick={()=>{
-                    props.handleSearchBarSelect({ name: "", phone: "" })
+                    props.handleSearchBarSelect(null)
                     props.setAddCustomer({ name: "", phone: "" })
                   }}
                   style={{ marginRight: -30 }}
@@ -108,7 +109,7 @@ const SearchCustomer = (props) => {
     />
   );
 
-  const getOptionLabel = (option) => (option.name ? option.name.concat(option.phone? `- ${option.phone}` :'') : "");
+  const getOptionLabel = (option) => (option.name ? option.name.concat(option.phone? ` - ${option.phone}` :'') : "");
 
   return (
     <div style={{ width: "100%" }}>
@@ -118,6 +119,9 @@ const SearchCustomer = (props) => {
         onKeyUp={(event) => {
           if (event.key === "Enter") {
             props.handleSearchCustomer(event.target.value) 
+          }
+          if(props.selectedCustomer && (event.key === "Delete" || event.key === "Backspace") ){
+            props.handleSearchBarSelect(null)
           }
         }}
        
@@ -130,13 +134,13 @@ const SearchCustomer = (props) => {
             props.handleSearchBarSelect(value);
           }
         }}
-        onInputChange={()=>{
-          if(props.selectedCustomer?.name.length !== 0){
-            props.handleSearchBarSelect({ name: "", phone: "" })
-            props.setAddCustomer({ name: "", phone: "" })
-          }
+        // onInputChange={()=>{
+        //   if(props.selectedCustomer?.name.length !== 0){
+        //     // props.handleSearchBarSelect(null)
+        //     props.setAddCustomer({ name: "", phone: "" })
+        //   }
           
-        }}
+        // }}
         renderInput={renderInput}
         renderOption={renderOption}
       />
