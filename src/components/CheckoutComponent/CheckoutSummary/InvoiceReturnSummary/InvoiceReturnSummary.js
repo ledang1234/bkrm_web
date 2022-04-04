@@ -17,6 +17,7 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  ListItem
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
@@ -27,6 +28,9 @@ import * as Input from "../../../TextField/NumberFormatCustom";
 import VNDInput from "../../../TextField/NumberFormatCustom";
 import ava from "../../../../assets/img/product/lyimg.jpeg";
 import {calculateTotalReturnQuantity} from "../../../TableCommon/util/sortUtil"
+import { useSelector, useDispatch } from 'react-redux';
+import setting from "../../../../assets/constant/setting"
+
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -55,6 +59,10 @@ function InvoiceReturnSummary({
   const classes = useStyles(theme);
 
   useEffect(() => {}, [data]);
+
+  const info = useSelector((state) => state.info);
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
 
   return (
     <Box style={{ padding: 30, minHeight: "75vh" }}>
@@ -159,6 +167,26 @@ function InvoiceReturnSummary({
           <Typography variant="h5">Tổng tiền trả</Typography>
           <Typography variant="body2"><Input.VNDFormat value={data.total_amount} /></Typography>
         </Grid>
+
+        {store_setting?.customerScore.status && data.customer.name !== "Khách lẻ"? <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              className={classes.marginRow}
+            >
+              <Typography variant="h5">Tích điểm</Typography>
+              <Typography variant="body2">
+                <ListItem style={{padding:0, margin:0}}>
+                <Input.ThousandFormat
+                  // style={{ color: "#2096f3", fontWeight: 500 }}
+                  value={-data.scores}
+                />
+               {data.customer?.points? <Typography>/{data.customer.points}</Typography> : null} 
+               </ListItem>
+              </Typography>
+            </Grid>:null}
+
+
         {/*
                 <Grid container direction="row" justifyContent="space-between"className={classes.marginRow}>
                     <Typography variant="h5">

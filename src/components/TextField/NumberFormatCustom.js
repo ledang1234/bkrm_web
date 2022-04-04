@@ -95,7 +95,8 @@ export function ThousandSeperatedInput(props) {
         inputComponent: NumberFormatCustom,
         inputProps: {
           style: { textAlign: "right" },
-          max: max? max:null
+          max: max? max:null,
+          min:0
         }
          
       }}

@@ -36,6 +36,8 @@ function InvoiceReturnPopUp(props) {
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
   const dispatch = useDispatch();
   // 2. Table sort
   // const [order, setOrder] = React.useState('desc');
@@ -71,6 +73,7 @@ function InvoiceReturnPopUp(props) {
     })),
     payment_method: 'cash',
     paid_amount: '0',
+    scores:'0'
   });
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
@@ -105,10 +108,18 @@ function InvoiceReturnPopUp(props) {
       total += item.returnPrice * item.returnQuantity;
     });
 
-    const newRefund = update(refund, {
+    let newRefund = update(refund, {
       total_amount: { $set: total },
     });
+
+    if(store_setting?.customerScore.status){
+      newRefund = update(refund, {
+        scores: { $set: parseInt((total)/store_setting?.customerScore.value) },
+      });
+    }
+
     setRefund(newRefund);
+    
   };
 
   const handleDeleteItem = (itemId) => {
@@ -173,6 +184,7 @@ function InvoiceReturnPopUp(props) {
       total_amount: refund.total_amount.toString(),
       payment_method: refund.payment_method,
       paid_amount: refund.paid_amount,
+      points:refund.scores,
       status:
       refund.paid_amount >= refund.total_amount
         ? 'closed'
@@ -198,6 +210,7 @@ function InvoiceReturnPopUp(props) {
         }),
       })),
       import_date,
+     
     };
 
     try {
