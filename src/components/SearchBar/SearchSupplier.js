@@ -77,7 +77,8 @@ const SearchSupplier = (props) => {
       placeholder="Tìm nhà cung cấp"
       margin="normal"
       InputProps={
-        props.selectedSupplier?.name?.length === 0 
+        // props.selectedSupplier?.name?.length === 0 
+        !props.selectedSupplier
           ? {
               ...params.InputProps,
               startAdornment: (
@@ -109,7 +110,7 @@ const SearchSupplier = (props) => {
                   aria-label="delete"
                   size="small"
                   onClick={()=>{
-                    props.handleSearchBarSelect({ name: "", phone: "" })
+                    props.handleSearchBarSelect(null)
                     props.setAddSupplier({ name: "", phone: "" })
                   }}
                   style={{ marginRight: -30 }}
@@ -132,20 +133,31 @@ const SearchSupplier = (props) => {
         value={props.selectedSupplier}
         options={props.suppliers.filter(item => item.status ==='active')}
         getOptionLabel={getOptionLabel}
+        onKeyUp={(event) => {
+          // if (event.key === "Enter") {
+          //   props.handleSearchCustomer(event.target.value) 
+          // }
+          if(props.selectedSupplier && (event.key === "Delete" || event.key === "Backspace") ){
+            props.handleSearchBarSelect(null)
+          }
+        }}
+        
+
         onChange={(event, value) => {
           if (value) {
             // setSelectedOption(value);
             props.handleSearchBarSelect(value);
           }
-        }}
-        onInputChange={()=>{
-          // if(props.selectedSupplier?.name?.length !== 0){
-          if(props.selectedSupplier?.supplier_code){
-            props.handleSearchBarSelect({ name: "", phone: "" })
-            props.setAddSupplier({ name: "", phone: "" })
-          }
           
         }}
+        // onInputChange={()=>{
+        //   // if(props.selectedSupplier?.name?.length !== 0){
+        //   if(props.selectedSupplier?.supplier_code){
+        //     props.handleSearchBarSelect({ name: "", phone: "" })
+        //     props.setAddSupplier({ name: "", phone: "" })
+        //   }
+          
+        // }}
         renderInput={renderInput}
         renderOption={renderOption}
       />

@@ -114,6 +114,7 @@ function InventoryReturnPopUp(props) {
 
     const newPurchaseReturn = update(purchaseReturn, {
       total_amount: { $set: total },
+      paid_amount: { $set: total },
     });
     setPurchaseReturn(newPurchaseReturn);
   };

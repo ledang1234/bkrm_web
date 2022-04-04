@@ -8,6 +8,8 @@ import styled from 'styled-components';
 import { useSelector } from "react-redux";
 import { VNDFormat } from "../TextField/NumberFormatCustom";
 import productApi from "../../api/productApi";
+import defaultProduct from "../../assets/img/product/default-product.png"
+import setting from "../../assets/constant/setting"
 
 
 import {
@@ -130,7 +132,7 @@ const Listbox = styled('ul')`
   max-height: 250px;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 2;
+  z-index: 200;
 `;
 export const FormatedImage = (props) => {
   return (
@@ -158,6 +160,7 @@ export default function SearchMultiple(props) {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   const loadingData = async (searchKey) => {
     // search product
@@ -199,14 +202,16 @@ export default function SearchMultiple(props) {
     return (
       <Grid fullWidth container direction="row"style={{padding:'3px 10px 3px 10px'}} onClick={()=>handleSelect(option)}  style={{ cursor: "pointer",padding:5,backgroundColor: selectedOption.findIndex( (item) => item.uuid === option.uuid)  === -1?null: theme.customization.primaryColor[50]}}>
         <Grid item xs={3}>
-          <FormatedImage url={option.img_url} />
+          <FormatedImage url={JSON.parse(option.img_urls ? option.img_urls : "[]").at(0) || defaultProduct} />
         </Grid>
         <Grid item xs={9} container direction="column">
           <Typography variant="h5">{`#${option.product_code}`}</Typography>
           <Typography variant="h5">{option.name}</Typography>
           <Grid container item direction="row" justifyContent="space-between">
             <Typography variant="body2">
-              Tồn kho: {option.branch_quantity}
+              {/* Tồn kho: {option.branch_quantity} */}
+              { store_setting?.inventory.status? `Tồn kho: ${option.branch_quantity}`  :null}
+
             </Typography>
             <Typography variant="body2">
               Giá bán: <VNDFormat value={option.list_price}></VNDFormat>

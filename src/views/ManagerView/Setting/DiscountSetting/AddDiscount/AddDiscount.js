@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import AddIcon from '@material-ui/icons/Add';
 import MultipleSelect from "../../../../../components/Select/MultipleSelect"
@@ -26,6 +26,7 @@ import {
   CardHeader,
   Input,
   Chip,
+  ListItem
   
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -41,6 +42,8 @@ import SearchMultiple from "../../../../../components/SearchBar/SearchMultiple";
 import promotionCouponApi from "../../../../../api/promotionCouponApi";
 import { TreeSelect } from 'antd';
 import 'react-quill/dist/quill.snow.css';
+import ListIcon from '@material-ui/icons/List';
+import productApi from "../../../../../api/productApi";
 
 const { SHOW_PARENT } = TreeSelect;
 const useStyles = makeStyles((theme) =>
@@ -92,21 +95,37 @@ const AddDiscount = (props) => {
   // const [phone, setPhone] = React.useState("");
   // const [address, setAddress] = React.useState("");
   // const [paymentInfo, setPaymentInfo] = React.useState("");
+  const [categoryList, setCategoryList] = useState([]);
 
+  useEffect(() => {
+    const fetchCategoryList = async () => {
+      try {
+        const response = await productApi.getNestedCategory(store_uuid);
+        setCategoryList(response.data);
+        // productFormik.setFieldValue("category", response.data[0].uuid);
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    };
+    fetchCategoryList();
+  }, []);
 
   //Khuyến mãi theo - Hình thức
   const [discountKey, setDiscountKey] = React.useState("invoice");   // invoice, product
+ 
+ 
   const handleChangeKey = (event) => {
     setDiscountKey(event.target.value);
     setDiscountType(event.target.value === "invoice" ? "discountInvoice": "sendGift")
     const d = new Date();
-    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" }])
+    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price",listGiftCategory:[],listBuyCategory:[] }])
   };
   const [discountType, setDiscountType] = React.useState("discountInvoice"); //discountInvoice , sendGift, sendVoucher,priceByQuantity
   const handleChangeType = (event) => {
     setDiscountType(event.target.value);
     const d = new Date();
-    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" }])
+    setRowsInvoice([{key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price",listGiftCategory:[],listBuyCategory:[] }])
   };
 
   // Khuyên mãi theo 
@@ -125,15 +144,35 @@ const AddDiscount = (props) => {
        //item
       numberBuyItem:1,
       listBuyItem:[],
-      typeDiscountItem:"price"
+      typeDiscountItem:"price",
 
-     
-
+      listGiftCategory:[],
+      listBuyCategory:[],
+      isGiftCategory:false,
+      isBuyCategory:false
     }]);
+
+    // // const checkIsValid = ()=>{
+    // //   for (let i =0; i < rowsInvoice.length ; i++){
+    // //       let row = rowsInvoice[i];
+    // //       if(discountKey ==="invoice"){
+    // //         console.log(" Number(totalCost)", Number(row.totalCost))
+    // //       }
+
+    // //   }
+    // // }
+    // checkIsValid()
+  
 
   const  handleChangeMoneyType = (index, value) => {
     let newArr = [...rowsInvoice];
     newArr[index].type = value;
+    setRowsInvoice(newArr);
+  }
+  const  handleChangeDiscountType = (index, value) => {
+    console.log("rowsInvoice",rowsInvoice)
+    let newArr = [...rowsInvoice];
+    newArr[index].typeDiscountItem = value;
     setRowsInvoice(newArr);
   }
 
@@ -143,6 +182,7 @@ const AddDiscount = (props) => {
     setRowsInvoice(newArr);
   }
   const  handleChangeValue = (event, index) => {
+    if(event.target.value === '-'){return}
     let newArr = [...rowsInvoice];
     newArr[index].discountValue = event.target.value;
     setRowsInvoice(newArr);
@@ -177,15 +217,34 @@ const AddDiscount = (props) => {
    
     setRowsInvoice(newArr);
   }
+  const  handleChangeIsBuyCategory = (index) => {
+    let newArr = [...rowsInvoice];
+    newArr[index].isBuyCategory = !newArr[index].isBuyCategory;
+    setRowsInvoice(newArr);
+  }
+  const  handleChangeListBuyCategory = (val,index) => {
+    let newArr = [...rowsInvoice];
+    newArr[index].listBuyCategory = val;
+    setRowsInvoice(newArr);
+  }
   
-  
-  
+  const  handleChangeIsGiftCategory = (index) => {
+    let newArr = [...rowsInvoice];
+    newArr[index].isGiftCategory = !newArr[index].isGiftCategory;
+    setRowsInvoice(newArr);
+  }
+  const  handleChangeListGiftCategory = (val,index) => {
+    let newArr = [...rowsInvoice];
+    newArr[index].listGiftCategory = val;
+    setRowsInvoice(newArr);
+  }
+
   
 
   const addConditionRow = () => {
     let newArr = [...rowsInvoice];
     const d = new Date();
-    newArr.push({key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price" })
+    newArr.push({key:d.toString(),  totalCost:0,  discountValue:0, numberGiftItem:1, listGiftItem:[], type:"VND" ,numberBuyItem:1, listBuyItem:[],typeDiscountItem:"price", listGiftCategory:[],listBuyCategory:[], })
     setRowsInvoice(newArr);
   }
 
@@ -333,7 +392,7 @@ const AddDiscount = (props) => {
                 <Typography className={clsx(classes.text,classes.weight)} >Tổng tiền hàng</Typography>
               </Grid>:null
               }
-              {discountKey ==="product" && discountType ==="sendGift" ?
+              {discountKey ==="product" && discountType ==="sendGift"|| discountType=="priceByQuantity" ?
               <>
               <Grid item style={{width:50, marginRight:50}}>
                   <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SL mua</Typography>
@@ -372,18 +431,7 @@ const AddDiscount = (props) => {
           </div>
            <Divider classes={{root: classes.divider}} style={{marginLeft:10, marginRight:10}}/>      
        
-           {/* <TreeSelect
-                        name="category"  
-                        placeholder={ 'Danh mục"'}
-                        style={{ width: '100%' }}
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
-                        // treeData={categoryList}
-                        // value={productFormik.values.category}
-                        // onChange={(val)=>productFormik.setFieldValue("category",val )}
-                        treeCheckable={true}
-                        showCheckedStrategy={SHOW_PARENT}
-                        // onBlur={productFormik.handleBlur}   
-                    /> */}
+   
 
        {/* List Khuyen mai */}
           {rowsInvoice.map((row, index) => {
@@ -398,22 +446,62 @@ const AddDiscount = (props) => {
                           <Grid item> <ThousandSeperatedInput  style={{width:100}} onChange={(event)=>handleChangeTotalCost(event, index)} value={row.totalCost} /> </Grid> 
                       </Grid>:null
                       }
-                      {discountKey ==="product" && discountType ==="sendGift" ?
+                      {discountKey ==="product" && discountType ==="sendGift"|| discountType ==='priceByQuantity' ?
                       <>
                       <Grid item style={{width:50,marginRight:30, height:40, marginTop:4}} >
                         <ThousandSeperatedInput  style={{width:50}} onChange={(event)=>handleChangeNumberBuyItem(event, index)} value={row.numberBuyItem} /> 
                       </Grid>
-                      <Grid item style={{ marginTop:4, marginRight:30}} >
-                          <SearchMultiple
-                            selectedOption={row.listBuyItem}
-                            handleSelectedOption={handleChangeListBuyItem}
-                            index={index}
-                          />
+                      <Grid  item style={{ marginTop:4, marginRight:30}} >
+                      {!row.isBuyCategory?
+                             <Grid  container direction='row'>
+                            <SearchMultiple
+                            
+                              selectedOption={row.listBuyItem}
+                              handleSelectedOption={handleChangeListBuyItem}
+                              index={index}
+                            />
+                             <Tooltip title={"Chọn danh mục"}>
+                              <ListIcon  onClick={()=>handleChangeIsBuyCategory(index )}/>
+                            </Tooltip>
+                            </Grid> :
+                            <Grid  container direction='row'>
+                            <TreeSelect
+                                name="category"  
+                                placeholder={ 'Danh mục"'}
+                                style={{ width: 280}}
+                                dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
+                                treeData={categoryList}
+                                value={row.listBuyCategory}
+                                onChange={(val)=>handleChangeListBuyCategory(val,index)}
+                                treeCheckable={true}
+                                showCheckedStrategy={SHOW_PARENT}
+                                // onBlur={productFormik.handleBlur}   
+                            />
+                             <Tooltip title={"Chọn danh mục"}>
+                              <ListIcon  onClick={()=>handleChangeIsBuyCategory(index )}/>
+                            </Tooltip>
+                            </Grid> }
                         </Grid> 
+
                       </>
                       :null }
+                      {
+                        discountType ==='priceByQuantity'? 
+                        <>
+                          <Grid item style={{width:50,marginRight:50, height:40, marginTop:4}} >
+                              <FormControl className={classes.formControl}>
+                                <Select value={row.typeDiscountItem}  onClick={(e) => handleChangeDiscountType(index, e.target.value)}>
+                                  <MenuItem value="price">Giá bán</MenuItem>
+                                  <MenuItem value="percent">Giảm giá</MenuItem>
+                                </Select>
+                              </FormControl>
+                          </Grid>
+                     
+                        </>
+                        :null
+                      }
                       {/* col 2 */}
-                      {discountType ==="discountInvoice"?
+                      {discountType ==="discountInvoice"  || discountType ==='priceByQuantity'?
                       <Grid item >
                         <Grid item  container direction="row" alignItems="center" style={{height:40}}>
                           {/*!! Nếu la % nhớ handle maximum change là 100% */}
@@ -448,22 +536,52 @@ const AddDiscount = (props) => {
                     }
                     {discountType ==="sendGift"?
                           <Grid item style={{ marginTop:4}} >
+                             {/* <ListItem style={{height:25,width:360, marginTop:4}}> */}
+                            {!row.isGiftCategory?
+                             <Grid  container direction='row'>
                             <SearchMultiple
                               selectedOption={row.listGiftItem}
                               handleSelectedOption={handleChangeListGiftItem}
                               index={index}
                             />
+                             <Tooltip title={"Chọn danh mục"}>
+                              <ListIcon  onClick={()=>handleChangeIsGiftCategory(index )}/>
+                            </Tooltip>
+                            </Grid> :
+                            <Grid  container direction='row'>
+                            <TreeSelect
+                                name="category"  
+                                placeholder={ 'Danh mục"'}
+                                style={{ width: 280}}
+                                dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
+                                treeData={categoryList}
+                                // value={productFormik.values.category}
+                                // onChange={(val)=>productFormik.setFieldValue("category",val )}
+                                value={row.listGiftCategory}
+                                onChange={(val)=>handleChangeListGiftCategory(val,index)}
+                                treeCheckable={true}
+                                showCheckedStrategy={SHOW_PARENT}
+                                // onBlur={productFormik.handleBlur}   
+                            />
+                             <Tooltip title={"Chọn danh mục"}>
+                              <ListIcon  onClick={()=>handleChangeIsGiftCategory(index )}/>
+                            </Tooltip>
+                            </Grid> }
+
+                          {/* </ListItem> */}
                           </Grid> :null
                     }
                     {discountType ==="sendVoucher"?
-    
                           <Grid item style={{ marginTop:4}} >
                             <SearchMultiple
-                              isVoucher={true}
+                            isVoucher={true}
                               selectedOption={row.listGiftItem}
                               handleSelectedOption={handleChangeListGiftItem}
                               index={index}
                             />
+                           
+
+                          {/* </ListItem> */}
                           </Grid> :null
                     }
                   

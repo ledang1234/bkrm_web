@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
   Grid,
-  Card,
   Box,
   Typography,
   TextField,
   InputAdornment,
-  IconButton,
-  Button,
-  Dialog,
-  FormControlLabel,
-  Checkbox,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  Radio,
   Tooltip,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -83,19 +73,8 @@ const SearchProduct = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  const products = info.products;
 
-  const loadingData = async (searchKey) => {
-    try {
-      const response = await productApi.searchBranchProduct(
-        store_uuid,
-        branch_uuid,
-        searchKey
-      );
-      setOptions(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const renderOption = (option) => {
     // console.log("option",option)
@@ -168,36 +147,12 @@ const SearchProduct = (props) => {
           padding: " 10px",
         },
       }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          e.stopPropagation();
-          // increase if selected
-          if (selectedOption.name) {
-            props.handleSearchBarSelect(selectedOption);
-          } else {
-            setSelectedOption(options.length ? options[0] : {});
-          }
-        } else if (e.key === "Backspace") {
-          if (selectedOption?.name) {
-            // console.log("reset");
-            e.preventDefault();
-            e.stopPropagation();
-            setSelectedOption({});
-          }
-        } else {
-          const timer = setTimeout(() => {
-            if (e.target.value) {
-              loadingData(e.target.value);
-            }
-          }, 1);
-          return () => clearTimeout(timer);
-        }
-      }}
     />
   );
 
-  const getOptionLabel = (option) => (option.name ? option.name : "");
+  const getOptionLabel = (option) => {
+    return option.name ? `${option.name}-${option.bar_code}-${option.product_code}` : ""
+  };
 
   // just filter
   const filterOptions = (options, state) => options;
@@ -207,30 +162,41 @@ const SearchProduct = (props) => {
         title={`Space: tìm kiếm, Tab để chọn lựa chọn đầu tiên và tăng số lượng, Delete để xóa lựa chọn hiện tại`}
       >
         <Autocomplete
-          options={selectedOption.name ? [selectedOption] : options}
-          freeSolo={true}
+          options={products}
+          freeSolo
           // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
           // inputValue={inputValue}
 
           // BỎ CÁI NÀY TỰ EMPTY
-          autoComplete={false}
+          autoComplete
           getOptionLabel={getOptionLabel}
           onChange={(event, value) => {
-            if (value) {
+            if (value?.name) {
               setSelectedOption(value);
+              props.handleSearchBarSelect(value);
             }
           }}
           renderInput={renderInput}
           renderOption={renderOption}
-          filterOptions={filterOptions}
           value={selectedOption}
-          // onKeyDown={(e) => {
-          //   if (e.key === "Enter") {
-          //     e.stopPropagation();
-          //     e.preventDefault();
-          //   }
-          // }}
+          clearOnEscape={true}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              // increase if selected
+              if (selectedOption.name) {
+                props.handleSearchBarSelect(selectedOption);
+              }
+            } else if (e.key === "Backspace") {
+              if (selectedOption?.name) {
+                // console.log("reset");
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedOption({});
+              }
+            }
+          }}
           blurOnSelect={false}
+
         />
       </Tooltip>
     </div>

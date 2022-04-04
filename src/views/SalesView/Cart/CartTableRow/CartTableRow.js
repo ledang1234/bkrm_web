@@ -62,7 +62,7 @@ export const CartRow = (props) => {
   const [selectedBatches, setSelectedBatches] = useState([]);
 
   useEffect(() => {
-    if (row.batches.length >= 1) {
+    if (row.batches?.length >= 1) {
       setSelectedBatches([{ ...row.batches[0], additional_quantity: 0 }]);
     }
   }, []);

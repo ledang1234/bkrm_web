@@ -27,7 +27,6 @@ const handleCheckbox= (event) => {
 };
 
   const handleChangeValue= (event) => {
-
     setNotifyDebt((prevState)=>{
       return {
        ...prevState,
@@ -43,6 +42,9 @@ const handleCheckbox= (event) => {
             label={<Typography style={{fontWeight:500, color:"#000"}}>Tổng tiền nợ</Typography>        } />
             <ThousandSeperatedInput name="debtAmount"value={notifyDebt.debtAmount} onChange={handleChangeValue}/>   
         </ListItem>
+        {Number(notifyDebt.debtAmount) <= 0 ? <Typography variant="h6" style={{ color: "red" }}>
+            Mức tiền nợ cảnh báo phải lớn hơn 0
+         </Typography>:null}
 
         <ListItem> 
             <FormControlLabel  style={{marginRight:40}}  control={<Checkbox name="checkNumberOfDay" color="primary" checked={notifyDebt.checkNumberOfDay} onChange={handleCheckbox}/>} 
@@ -66,7 +68,7 @@ const handleCheckbox= (event) => {
 
         <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
           <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
-          <Button onClick={()=>handleSubmit(name,notifyDebt)} variant="contained" size="small" color="primary" >OK  </Button>
+          <Button onClick={()=>handleSubmit(name,notifyDebt)} variant="contained" size="small" color="primary" disabled={Number(notifyDebt.debtAmount) <= 0} >OK  </Button>
       </Grid>
     
     </>

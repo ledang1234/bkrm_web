@@ -137,7 +137,7 @@ const InventoryOrder = () => {
       
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, branch_uuid, query]);
+  }, [pagingState.page, pagingState.limit, query]);
 
   const [snackStatus, setSnackStatus] = React.useState({
     style: "error",

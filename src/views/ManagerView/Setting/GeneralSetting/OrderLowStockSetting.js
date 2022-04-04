@@ -44,6 +44,9 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
               <ThousandSeperatedInput name="inputQuantity" style={{width:60,marginRight:15}} value={orderLowStock.inputQuantity}  onChange={handleChange} />   
               <Typography style={{color:"#000"}}> sản phẩm </Typography>
          </ListItem>
+         {Number(orderLowStock.inputQuantity) <= 0  && orderLowStock.choiceQuantity ==="number"? <Typography variant="h6" style={{ color: "red" }}>
+            Số lượng đặt laị phải lớn hơn 0
+           </Typography>:null}
     </RadioGroup>
 
     <ListItem>
@@ -51,6 +54,9 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
               <ThousandSeperatedInput name="noHistoryQuantity" style={{width:60,marginRight:15}} value={orderLowStock.noHistoryQuantity}  onChange={handleChange} />   
               <Typography style={{color:"#000"}}> sản phẩm </Typography>
          </ListItem>
+         {Number(orderLowStock.noHistoryQuantity) <= 0 ? <Typography variant="h6" style={{ color: "red" }}>
+            Số lượng đặt laị phải lớn hơn 0
+           </Typography>:null}
 
          
     </FormControl>
@@ -73,7 +79,7 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
 
       <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
           <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary" >  Huỷ </Button>
-          <Button onClick={()=>handleSubmit(name,orderLowStock)} variant="contained" size="small" color="primary" >OK  </Button>
+          <Button onClick={()=>handleSubmit(name,orderLowStock)} variant="contained" size="small" color="primary" disabled={Number(orderLowStock.noHistoryQuantity) <= 0 || (Number(orderLowStock.inputQuantity) <= 0  && orderLowStock.choiceQuantity ==="number") }>OK  </Button>
         </Grid>
     </>     
   )

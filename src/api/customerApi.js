@@ -27,6 +27,11 @@ const customerApi = {
       "json_data": json
     });
   },
-
+  updateCustomerVouchers: (storeUuid, customerUuid,vouchers) => {
+    const url = `stores/${storeUuid}/customer/${customerUuid}`;
+    return axiosClient.post(url, {
+      "vouchers": JSON.stringify(vouchers)
+    });
+  }
 };
 export default customerApi;

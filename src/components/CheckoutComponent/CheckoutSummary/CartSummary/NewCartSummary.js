@@ -113,7 +113,7 @@ const CartSummary = (props) => {
   // so tien khach đưa
   const [customerMoney, setCustomerMoney] = React.useState("0");
   
-  console.log("currentCustomer",currentCustomer)
+  // console.log("currentCustomer",currentCustomer)
   // React.useEffect(() => {console.log(currentBranch)})
 
   // console.log("cartItem")
@@ -149,11 +149,12 @@ const CartSummary = (props) => {
   let haveDiscount = checkHaveDiscount();
   const [openDiscount, setOpenDiscount] = React.useState(false);
 
-  const [addCustomer, setAddCustomer] =  React.useState({name:'', phone:''});
+  const [addCustomer, setAddCustomer] =  React.useState({ name: "", phone: "" });
   React.useEffect(()=>{
-    console.log("realod addCustomer",addCustomer)
-    if(addCustomer.name?.length !==  0){props.handleSelectCustomer(addCustomer)}
+    // console.log("realod addCustomer",addCustomer)
+    if(addCustomer?.name?.length !==  0){props.handleSelectCustomer(addCustomer);setAddCustomer({ name: "", phone: "" })}
   })
+  console.log("currentCustomerrrrr",currentCustomer)
 
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
@@ -191,7 +192,8 @@ const CartSummary = (props) => {
             handleSearchCustomer={handleSearchCustomer}
             customers={customers}
             selectedCustomer={
-              currentCustomer ? currentCustomer : { name: "", phone: "" }
+              currentCustomer
+              // currentCustomer ? currentCustomer : { name: "", phone: "" }
             }
             handleSearchBarSelect={handleSelectCustomer}
             setAddCustomer={setAddCustomer}

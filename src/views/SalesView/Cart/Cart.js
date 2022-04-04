@@ -51,7 +51,7 @@ import {
 import orderApi from "../../../api/orderApi";
 // update state
 import update from "immutability-helper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import customerApi from "../../../api/customerApi";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
@@ -59,6 +59,9 @@ import { calculateTotalQuantity } from "../../../components/TableCommon/util/sor
 import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import branchApi from "../../../api/branchApi";
 import setting from "../../../assets/constant/setting"
+import { infoActions } from "../../../store/slice/infoSlice";
+import productApi from "../../../api/productApi";
+import { statusAction } from "../../../store/slice/statusSlice";
 
 const Cart = () => {
   const theme = useTheme();
@@ -69,6 +72,7 @@ const Cart = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch = info.branch;
+  const branch_uuid = info.branch.uuid;
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   // const [customers, setCustomers] = useState([]);
@@ -91,7 +95,7 @@ const Cart = () => {
   // chú ý cartList id from 1 to ... dùng để edit + delete
   // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
   const user_uuid = useSelector((state) => state.info.user.uuid);
-
+  const dispatch = useDispatch();
   
   const loadLocalStorage = () => {
     if (window.localStorage.getItem("cartListData")) {
@@ -122,7 +126,6 @@ const Cart = () => {
     );
   }, [cartList]);
   
- 
   // const[branchs, setBranchs] = useState([])
 
   // useEffect (()=>{
@@ -159,7 +162,7 @@ const Cart = () => {
 
   const [customers,setCustomers ] = useState([])
 
-
+  
   const handleSearchCustomer = async (searchKey) => {
     try {
       const response = await customerApi.getCustomers(store_uuid, {
@@ -171,19 +174,37 @@ const Cart = () => {
     }
   };
 
+  const updateCustomerVouchers = async (customerUuid, vouchers) => {
+    try {
+      const response = await customerApi.updateCustomerVouchers(customerUuid,  vouchers);
+      dispatch(statusAction.successfulStatus('Cập nhật voucher của khách thành công'))
+    } catch (err) {
+      console.log(err)
+      dispatch(statusAction.failedStatus('Cập nhật vouchers thất bại'))
+    }
+  }
+
   useEffect(() => {
-    const loadingCustomer = async () => {
+    const loadCustomers = async () => {
       try {
         const response = await customerApi.getCustomers(store_uuid);
-        setCustomers(response.data);
+        const customers = response.data.map(cust => ({...cust, vouchers: JSON.parse(cust.vouchers ? cust.vouchers : '[]') }))
+        setCustomers(customers);
       } catch (err) {
         console.log(err);
       }
     };
-    if (store_uuid) {
-      loadingCustomer();
+    const loadProducts = async () => {
+      const response = await productApi.searchBranchProduct(store_uuid, branch_uuid, '')
+      dispatch(infoActions.setProducts(response.data))
     }
-  }, [store_uuid]);
+    if (store_uuid) {
+      loadCustomers();
+    }
+    if (store_uuid && branch_uuid) {
+      loadProducts()
+    }
+  }, [store_uuid, branch_uuid]);
   const [reloadCustomers, setReloadCustomers] = useState(false);
   useEffect(() => {
     const loadingCustomer = async () => {
@@ -426,6 +447,13 @@ const Cart = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { discount: { $set: amount } },
     });
+    if(store_setting?.customerScore.status){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          scores: { $set: parseInt((cartList[selectedIndex].total_amount - amount) /store_setting?.customerScore.value) },
+      }});
+    }
+
     setCartList(newCartList);
   };
 
@@ -433,6 +461,7 @@ const Cart = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { delivery: { $set: delivery } },
     });
+    
     setCartList(newCartList);
   };
 
@@ -452,10 +481,10 @@ const Cart = () => {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
     });
-    if(store_setting?.customerScore.status){
+    if(store_setting?.customerScore.status ){
         newCartList = update(newCartList, {
           [selectedIndex]: {
-            scores: { $set: parseInt(total /store_setting?.customerScore.value) },
+            scores: { $set: parseInt((total - cartList[selectedIndex].discount)/store_setting?.customerScore.value) },
         }});
     }
   
@@ -540,6 +569,7 @@ const Cart = () => {
         setOpenSnack(true);
         console.log(err);
       }
+      dispatch(infoActions.setReloadProduct());
     }
   };
   //print

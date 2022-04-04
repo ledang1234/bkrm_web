@@ -54,7 +54,6 @@ const MainPageSetting = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const {imageURL, setImageURL,images,setImages,display,setDisplay,web,setWeb} = props
-
     const handleChangeChecked = (event) => {
         const { name, checked } = event.target;
         setWeb((prevState) => {
