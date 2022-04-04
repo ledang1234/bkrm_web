@@ -211,6 +211,7 @@ const Customer = () => {
         customizable={true}
         excel_data={excel_data_customer}
         excel_name={excel_name_customer}
+        importByJSON={importCustomerByJSON}
         columnsToKeep={[
           { dbName: "name", displayName: "Tên khách hàng" },
           { dbName: "phone", displayName: "Số điện thoại" },

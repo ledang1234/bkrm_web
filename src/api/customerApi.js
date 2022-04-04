@@ -22,7 +22,7 @@ const customerApi = {
     return axiosClient.put(url,body);
   },
   importCustomerJson : (storeUuid, json) => {
-    const url = `stores/${storeUuid}/products/addCustomerByJson`;
+    const url = `stores/${storeUuid}/customers/addCustomersByJson`;
     return axiosClient.post(url, {
       "json_data": json
     });

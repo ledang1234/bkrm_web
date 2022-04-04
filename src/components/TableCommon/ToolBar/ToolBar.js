@@ -72,7 +72,6 @@ const useStyles = makeStyles((theme) =>
 );
 const exportExcel = (dataTable, tableType, columnsToKeep = []) => {
   const newData = []
-  debugger
   dataTable.map((row) => {
     let rowRs = {}
     columnsToKeep.map((cl) => {
@@ -177,7 +176,6 @@ const ToolBar = (props) => {
     e.preventDefault();
     if (e.target.files) {
       const reader = new FileReader();
-      debugger
       reader.onload = (e) => {
         const data = e.target.result;
         const workbook = xlsx.read(data, { type: "array" });
