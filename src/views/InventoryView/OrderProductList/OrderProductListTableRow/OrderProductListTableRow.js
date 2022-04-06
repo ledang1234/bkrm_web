@@ -19,7 +19,8 @@ const OrderProductListTableRow = (props) => {
             className={ clsx(classes.row,(openRow === row.id) ? classes.rowClicked : null)}
             >
                 <TableCell align="left" >{row.customer_order_code}</TableCell>
-                <TableCell align="left"className={classes.fontName}>{row.created_at}</TableCell>
+                {/* <TableCell align="left"className={classes.fontName}>{row.created_at}</TableCell> */}
+                <TableCell align="left"className={classes.fontName}>{row.created_at?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.created_at?.split(" ")[1].substr(0, 5)) }</TableCell>
                 <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.name}</TableCell>
                 <TableCell align="left">{row.phone}</TableCell>
                 <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_amount} /></TableCell>

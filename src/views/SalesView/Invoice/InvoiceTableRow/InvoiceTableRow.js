@@ -25,7 +25,9 @@ function InvoiceTableRow(props) {
       >
         <TableCell align="left">{row.order_code}</TableCell>
         <TableCell align="left" className={classes.fontName}>
-          {row.creation_date}
+          {/* {new Date(row.creation_date).toLocaleString()} */}
+          {row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }
+
         </TableCell>
         <TableCell
           align="left"
@@ -34,7 +36,7 @@ function InvoiceTableRow(props) {
         >
           {row.customer_name}
         </TableCell>
-        <TableCell align="left">{row.branch_name}</TableCell>
+        {/* <TableCell align="left">{row.branch_name}</TableCell> */}
         <TableCell align="left">
           {row.payment_method === "cash" ? "Tiền mặt" : "Thẻ"}
         </TableCell>

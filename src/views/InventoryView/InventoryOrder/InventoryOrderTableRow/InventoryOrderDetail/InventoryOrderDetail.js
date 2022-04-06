@@ -231,7 +231,8 @@ const InventoryOrderDetail = (props) => {
               </Grid>
               <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.creation_date}{" "}
+                  {/* {row.creation_date}{" "} */}
+                  {row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }
                 </Typography>
               </Grid>
             </Grid>

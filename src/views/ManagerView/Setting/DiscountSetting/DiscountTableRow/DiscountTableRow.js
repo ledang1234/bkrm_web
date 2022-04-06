@@ -16,7 +16,9 @@ const DiscountTableRow = (props) => {
     const classes = useRowStyles();
     const discountKey = row.promotion_condition.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
     var promotion_condition ={}
-    if(row.promotion_condition.length !== 0) {promotion_condition = JSON.parse(row.promotion_condition) }
+    if(row.promotion_condition?.length !== 0) {promotion_condition = JSON.parse(row.promotion_condition) }
+    var dateAdvanceSetting ={}
+    if(row.dateAdvanceSetting?.length !== 0) {dateAdvanceSetting = row.dateAdvanceSetting?JSON.parse(row.dateAdvanceSetting) :{} }
     const discountType = getDiscountType(promotion_condition?.discountKey,promotion_condition?.discountType )  
     const type = `${discountKey}  -  ${discountType}`  
     
@@ -41,7 +43,7 @@ const DiscountTableRow = (props) => {
             <TableRow>
               {/* colspan  => số cột trong collapse */}
               <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>           
-                    <DiscountDetail parentProps={props} promotion_condition={promotion_condition} type={type} />       
+                    <DiscountDetail parentProps={props} promotion_condition={promotion_condition}dateAdvanceSetting={dateAdvanceSetting} type={type} />       
               </TableCell>
        
             </TableRow>

@@ -211,6 +211,7 @@ const DiscountSetting = () => {
             newDiscountList?.map((row, index) => {
            
               if(row.promotion_condition.length !== 0) {var promotion_condition = JSON.parse(row.promotion_condition) }
+              if(row.dateAdvanceSetting?.length !== 0) {var dateAdvanceSetting = row.dateAdvanceSetting?JSON.parse(row.dateAdvanceSetting) :{}}
               const discountKey = row.promotion_condition.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
               const discountType = getDiscountType(promotion_condition?.discountKey,promotion_condition?.discountType )  
               const type = `${discountKey}  -  ${discountType}`  
@@ -218,7 +219,7 @@ const DiscountSetting = () => {
                 return (
                 <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
                   totalCost={row.promotion_code}id={row.name} partnerName={type} date={row.end_date} 
-                  promotion_condition={promotion_condition} type={type}
+                  promotion_condition={promotion_condition} dateAdvanceSetting={dateAdvanceSetting}type={type}
                   typeBill={"Khuyến mãi"} />         
              );})}
         

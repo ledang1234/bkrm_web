@@ -21,9 +21,11 @@ const InventoryOrderTableRow = (props) => {
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
                 <TableCell align="left" >{row.purchase_order_code}</TableCell>
-                <TableCell align="left" >{row.creation_date}</TableCell>
+                {/* <TableCell align="left" >{row.creation_date}</TableCell> */}
+                <TableCell align="left" className={classes.fontName}>{row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }</TableCell>
+
                 <TableCell align="left"className={classes.fontName}>{row.supplier_name}</TableCell>
-                <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.branch_name}</TableCell>
+                {/* <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.branch_name}</TableCell> */}
                 <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
                 <TableCell align="right"><VNDFormat value={row.total_amount  -row.discount}/></TableCell>
                 <TableCell align="center" className={classes.fontName}>
