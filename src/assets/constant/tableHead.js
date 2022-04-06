@@ -32,7 +32,7 @@ export const InventoryOrderHeadCells = [
     disablePadding: false,
     label: "Nhà cung cấp",
   },
-  { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
   {
     id: "payment",
     align: "left",
@@ -57,7 +57,7 @@ export const InventoryReturnOrderHeadCells = [
     disablePadding: false,
     label: "Nhà cung cấp",
   },
-  { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
   {
     id: "payment",
     align: "left",
@@ -101,7 +101,7 @@ export const InvoiceHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "date", align: "left", disablePadding: false, label: "Ngày bán" },
   { id: "customer", align: "left", disablePadding: false, label: "Khách hàng" },
-  { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
   {
     id: "payment",
     align: "left",
@@ -115,7 +115,7 @@ export const InvoiceReturnHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "date", align: "left", disablePadding: false, label: "Ngày trả" },
   { id: "customer", align: "left", disablePadding: false, label: "Khách hàng" },
-  { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
   {
     id: "payment",
     align: "left",
@@ -246,7 +246,7 @@ export const OrderListHeadCells = [
 export const CheckHistoryHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "date", align: "left", disablePadding: false, label: "Ngày kiểm" },
-  { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
   {
     id: "inventory",
     align: "right",

@@ -387,10 +387,6 @@ const DiscountDetail = (props) => {
             );
           })}
           
-
-
-
-
               {/* Button */}
               <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
                           <Button variant="contained" size="small" style={{marginLeft:15}}>Sửa</Button>
