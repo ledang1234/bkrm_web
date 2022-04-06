@@ -30,7 +30,7 @@ const handleCheckbox= (event) => {
     setNotifyDebt((prevState)=>{
       return {
        ...prevState,
-       [event.target.name]:event.target.value
+       [event.target.name]:Math.abs(event.target.value)
       }
      })
   };

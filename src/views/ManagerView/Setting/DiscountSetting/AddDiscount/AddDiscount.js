@@ -33,7 +33,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 //import project
 import customerApi from "../../../../../api/customerApi";
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 import MoreInfo from "../../../../../components/MoreInfo/MoreInfo"
 import clsx from "clsx"
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
@@ -44,7 +44,9 @@ import { TreeSelect } from 'antd';
 import 'react-quill/dist/quill.snow.css';
 import ListIcon from '@material-ui/icons/List';
 import productApi from "../../../../../api/productApi";
-
+import { statusAction } from "../../../../../store/slice/statusSlice";
+import 'antd/dist/antd.css';
+import "../../../../../index.css"
 const { SHOW_PARENT } = TreeSelect;
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -91,10 +93,6 @@ const AddDiscount = (props) => {
   const classes = useStyles(theme);
 
   const [name, setName] = React.useState("");
-  // const [email, setEmail] = React.useState("");
-  // const [phone, setPhone] = React.useState("");
-  // const [address, setAddress] = React.useState("");
-  // const [paymentInfo, setPaymentInfo] = React.useState("");
   const [categoryList, setCategoryList] = useState([]);
 
   useEffect(() => {
@@ -149,24 +147,77 @@ const AddDiscount = (props) => {
       listGiftCategory:[],
       listBuyCategory:[],
       isGiftCategory:false,
-      isBuyCategory:false
+      isBuyCategory:false,
+
+      giftIsTheSameBuy:false
     }]);
 
-    // // const checkIsValid = ()=>{
-    // //   for (let i =0; i < rowsInvoice.length ; i++){
-    // //       let row = rowsInvoice[i];
-    // //       if(discountKey ==="invoice"){
-    // //         console.log(" Number(totalCost)", Number(row.totalCost))
-    // //       }
+    function checkForDuplicates(array) {
+      return new Set(array).size !== array.length
+    }
+    const getInValidMesg = ()=>{
+      if(name.length===0) {  return "Chưa nhập tên chương trình khuyến mãi"}
+      
+      if(discountKey ==="invoice"){
+            let seen = new Set();
+            var hasDuplicates = rowsInvoice.some(function(currentObject) {
+                return seen.size === seen.add(currentObject.totalCost).size;
+            });
+            if(hasDuplicates)return "Có điều kiện khuyến mãi trùng nhau. Vui lòng kiểm tra lại"
+            // 
+            if(discountType ==="discountInvoice"){
+              const isInvalid = rowsInvoice.some(row => Number(row.discountValue) <= 0 );
+              if(isInvalid)return "Bạn chưa nhập giá trị giảm giá"
+            }
+            else if(discountType ==="sendGift"){
+              const isInvalidNumber = rowsInvoice.some(row => Number(row.numberGiftItem) <= 0 );
+              if(isInvalidNumber)return "Bạn chưa nhập SL hàng được tặng"
+              const isInvalid = rowsInvoice.some(row =>!row.isGiftCategory? row.listGiftItem.length <= 0  : row.listGiftCategory.length <= 0);
+              if(isInvalid)return "Bạn chưa nhập hàng/nhóm hàng được tặng"
+              
+            }
+            else if(discountType ==="sendVoucher"){
+              const isInvalidNumber = rowsInvoice.some(row => Number(row.numberGiftItem) <= 0 );
+              if(isInvalidNumber)return "Bạn chưa nhập SL voucher được tặng"
+              const isInvalid = rowsInvoice.some(row => row.listGiftItem.length <= 0 );
+              if(isInvalid)return "Bạn chưa nhập voucher được tặng" 
+            }
+      }
+      else if(discountKey ==="product") {
+            const isInvalidNumber = rowsInvoice.some(row => Number(row.numberBuyItem) <= 0 );
+            if(isInvalidNumber)return "Bạn chưa nhập SL hàng mua"
+            const isInvalid = rowsInvoice.some(row => !row.isBuyCategory? row.listBuyItem.length <= 0  : row.listBuyCategory.length <= 0);
+            if(isInvalid) return "Bạn chưa nhập hàng/nhóm hàng mua" 
+          
+            if(discountType === "sendGift"){
+              const isInvalidNumber = rowsInvoice.some(row => Number(row.numberGiftItem) <= 0 );
+              if(isInvalidNumber)return "Bạn chưa nhập SL hàng được tặng"
+              const isInvalid = rowsInvoice.some(row =>!row.isGiftCategory? row.listGiftItem.length <= 0  : row.listGiftCategory.length <= 0);
+              if(isInvalid)return "Bạn chưa nhập hàng/nhóm hàng được tặng"
+              
 
-    // //   }
-    // // }
-    // checkIsValid()
+            }else if (discountType === "priceByQuantity"){
+
+            }
+
+            let listBuyItem =rowsInvoice.reduce((set, a) =>set.concat(a.listBuyItem) ,[])
+            const unique = [...new Set(listBuyItem.map(item => item.uuid))]; 
+            let totalLength = rowsInvoice.reduce((sum, a) => sum + a.listBuyItem.length, 0)
+            if (unique.length !== totalLength){return "Có điều kiện khuyến mãi trùng nhau. Vui lòng kiểm tra lại"}    
+           
+      }
+
+
+
+      return null
+  }
+
   
 
   const  handleChangeMoneyType = (index, value) => {
     let newArr = [...rowsInvoice];
     newArr[index].type = value;
+    newArr[index].discountValue = Number(newArr[index].discountValue) > 100  &&  value ==="%" ?  100: newArr[index].discountValue
     setRowsInvoice(newArr);
   }
   const  handleChangeDiscountType = (index, value) => {
@@ -178,18 +229,17 @@ const AddDiscount = (props) => {
 
   const  handleChangeTotalCost = (event, index) => {
     let newArr = [...rowsInvoice];
-    newArr[index].totalCost = event.target.value;
+    newArr[index].totalCost =  Math.abs(event.target.value)
     setRowsInvoice(newArr);
   }
   const  handleChangeValue = (event, index) => {
-    if(event.target.value === '-'){return}
     let newArr = [...rowsInvoice];
-    newArr[index].discountValue = event.target.value;
+    newArr[index].discountValue = Number(event.target.value) >= 100  &&  newArr[index].type ==="%" ? 100 : Math.abs(event.target.value);
     setRowsInvoice(newArr);
   }
   const  handleChangeNumberGiftItem = (event, index) => {
     let newArr = [...rowsInvoice];
-    newArr[index].numberGiftItem = event.target.value;
+    newArr[index].numberGiftItem =  Math.abs(event.target.value);
     setRowsInvoice(newArr);
   }
   const  handleChangeListGiftItem = (option, index,typeChange) => {
@@ -204,7 +254,7 @@ const AddDiscount = (props) => {
   }
   const  handleChangeNumberBuyItem = (event, index) => {
     let newArr = [...rowsInvoice];
-    newArr[index].numberBuyItem = event.target.value;
+    newArr[index].numberBuyItem = Math.abs(event.target.value);
     setRowsInvoice(newArr);
   }
   const  handleChangeListBuyItem = (option, index,typeChange) => {
@@ -238,6 +288,13 @@ const AddDiscount = (props) => {
     newArr[index].listGiftCategory = val;
     setRowsInvoice(newArr);
   }
+
+  const  handleCheckedGiftIsTheSameBuy = (index) => {
+    let newArr = [...rowsInvoice];
+    newArr[index].giftIsTheSameBuy = !newArr[index].giftIsTheSameBuy;
+    setRowsInvoice(newArr);
+  }
+  
 
   
 
@@ -294,13 +351,16 @@ const AddDiscount = (props) => {
   const handleCheckedBirthday = (event) => {
     setCheckedBirthday(event.target.checked);
   };
-  
 
-  const [startDate, setStartDate] = React.useState()
-  const [endDate, setEndDate] = React.useState()
+    
+  const currentDate =  new Date()
+
+  const [startDate, setStartDate] = React.useState(currentDate.toISOString().slice(0,10))
+  const [endDate, setEndDate] = React.useState( new Date(currentDate.setMonth(currentDate.getMonth()+6)).toISOString().slice(0,10) )
 
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
+  const dispatch = useDispatch();
 
   return (
  
@@ -535,10 +595,13 @@ const AddDiscount = (props) => {
                     </Grid>:null
                     }
                     {discountType ==="sendGift"?
+                          !row.giftIsTheSameBuy ?
                           <Grid item style={{ marginTop:4}} >
                              {/* <ListItem style={{height:25,width:360, marginTop:4}}> */}
-                            {!row.isGiftCategory?
+                          
                              <Grid  container direction='row'>
+                            {!row.isGiftCategory ?
+                               <>
                             <SearchMultiple
                               selectedOption={row.listGiftItem}
                               handleSelectedOption={handleChangeListGiftItem}
@@ -547,8 +610,8 @@ const AddDiscount = (props) => {
                              <Tooltip title={"Chọn danh mục"}>
                               <ListIcon  onClick={()=>handleChangeIsGiftCategory(index )}/>
                             </Tooltip>
-                            </Grid> :
-                            <Grid  container direction='row'>
+                            </>:
+                            <>
                             <TreeSelect
                                 name="category"  
                                 placeholder={ 'Danh mục"'}
@@ -566,10 +629,19 @@ const AddDiscount = (props) => {
                              <Tooltip title={"Chọn danh mục"}>
                               <ListIcon  onClick={()=>handleChangeIsGiftCategory(index )}/>
                             </Tooltip>
-                            </Grid> }
-
+                            </>}
+                         
+                            
+                            </Grid>
                           {/* </ListItem> */}
-                          </Grid> :null
+                          </Grid>
+                         :  <FormControlLabel
+                         control={<Checkbox  color="primary" checked={row.giftIsTheSameBuy} onChange={()=>handleCheckedGiftIsTheSameBuy(index)}  />}
+                         label={"Hàng được tặng là hàng mua"}
+                         
+     
+                        />
+                          :null
                     }
                     {discountType ==="sendVoucher"?
                           <Grid item style={{ marginTop:4}} >
@@ -589,11 +661,19 @@ const AddDiscount = (props) => {
                           <DeleteForeverTwoToneIcon style={{marginTop:-30}} onClick={() => {deleteAttr(row.key)}} />
                       </Grid>
                 </Grid>
+                {discountType ==="sendGift" && discountKey ==="product" && !row.giftIsTheSameBuy?
+                  <FormControlLabel
+                  control={<Checkbox  color="primary" checked={row.giftIsTheSameBuy} onChange={()=>handleCheckedGiftIsTheSameBuy(index)}  />}
+                  label={"Hàng được tặng là hàng mua"}
+                  style={{marginLeft:480, marginTop:-10}}
+                />
+                :null}
                 </div>
                 
                 <Divider classes={{root: classes.divider}} style={{marginLeft:10, marginRight:10}}/>
                   </>
               );
+
           })}
 
           <Button variant="outlined" size="small" color="primary" style={{ marginLeft: 20,marginBottom:15, marginTop: 10, textTransform: "none" }}
@@ -689,11 +769,19 @@ const AddDiscount = (props) => {
             };
 
             try {
-              const response = await promotionCouponApi.createPromotion(store_uuid, body)
-              handleClose("Success")
+              
+              const invalidMesg = getInValidMesg()
+                if(invalidMesg){
+                  dispatch(statusAction.failedStatus(invalidMesg));
+                  return
+                }else{
+                  // const response = await promotionCouponApi.createPromotion(store_uuid, body)
+                  // handleClose("Success")
+                }
+              
 
             } catch (err) {
-              handleClose("Failed");
+              // handleClose("Failed");
             }
 
           }}

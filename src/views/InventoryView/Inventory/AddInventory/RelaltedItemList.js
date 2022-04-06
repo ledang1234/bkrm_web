@@ -95,7 +95,7 @@ const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_pri
                               handleChangeProperties(
                                 row.name,
                                 "quantity",
-                                e.target.value
+                                Math.abs(e.target.value)
                               )}
                             }
                           />
@@ -108,7 +108,7 @@ const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_pri
                               handleChangeProperties(
                                 row.name,
                                 "standard_price",
-                                e.target.value
+                                Math.abs(e.target.value)
                               )}
                             }
                           />
@@ -120,7 +120,7 @@ const RelaltedItemList = ({relatedList, setRelatedList , list_price,standard_pri
                                 handleChangeProperties(
                                   row.name,
                                   "list_price",
-                                  e.target.value
+                                  Math.abs( e.target.value)
                                 )
                             }
                             }

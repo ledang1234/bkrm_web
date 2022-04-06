@@ -15,7 +15,7 @@ export const ReturnLimitSetting = ({checked,handleClose,handleSubmit,name}) => {
         <>
         <ListItem style={{paddingLeft:0, marginTop:15}}>
           <Typography style={{fontWeight:500, color:"#000", marginRight:20}}>Không cho phép trả hàng sau: </Typography>
-          <ThousandSeperatedInput style={{width:50,marginRight:20}} value={returnLimit.day} onChange={(e)=>setReturnLimit({status:true, day:e.target.value})} />
+          <ThousandSeperatedInput style={{width:50,marginRight:20}} value={returnLimit.day} onChange={(e)=>setReturnLimit({status:true, day:Math.abs(e.target.value)})} />
           <Typography >ngày </Typography>
         </ListItem>
          <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
