@@ -21,11 +21,16 @@ import { useSelector } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { render } from "sass";
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import PersonIcon from '@material-ui/icons/Person';
 const useStyles = makeStyles((theme) =>
   createStyles({
     input: {
       borderRadius: "20px",
     },
+    multilineColor:{
+      color:theme.customization.primaryColor[500],
+      marginRight:-20
+  }
   })
 );
 
@@ -99,9 +104,12 @@ const SearchSupplier = (props) => {
             }
           : {
               ...params.InputProps,
+              classes: { input: classes.multilineColor },
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon style={{ color: grey[500] }} />
+                  {/* <SearchIcon style={{ color: grey[500] }} /> */}
+                  <PersonIcon style={{ color: theme.customization.primaryColor[500] }} /> 
+                  
                 </InputAdornment>
               ),
 
@@ -118,6 +126,8 @@ const SearchSupplier = (props) => {
                   <ClearOutlinedIcon fontSize="small" />
                 </IconButton>
               ),
+              
+
             }
       }
     />

@@ -37,6 +37,7 @@ export default function ModalWrapperWithClose(props) {
         open={open}
         onClose={handleClose}
         className={classes.modal}
+  
 
       >
         <React.Fragment>

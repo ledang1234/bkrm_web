@@ -34,14 +34,14 @@ const images=[
 ]
 
 const MainPage = (props) => {
-    const {storeInfo} = props;
     const {mainColor} = props.webInfo;
     const {priceStyle,btnStyle,isMargin,border,alignCenter,nameStyle,isBox,marginContainer,boxDistance}=props.webInfo.listProduct;
 
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    const {products} = useSelector(state => state.customerPage);
+    const {products, storeInfo} = useSelector(state => state.customerPage);
+    const banners = JSON.parse(storeInfo.banners ? storeInfo.banners : '[]');
     return (
 <>
     {/* // 1. CAROUSE */}
@@ -57,7 +57,7 @@ const MainPage = (props) => {
         renderArrowPrev={(onClickHandler) =><IconButton className={classes.arrow} onClick={onClickHandler} ><ArrowBackIosIcon  /></IconButton>}
         renderArrowNext={(onClickHandler) =><IconButton className={clsx(classes.arrow, classes.arrowRight)} onClick={onClickHandler} ><ArrowForwardIosIcon  /></IconButton>}
     >
-        {images.map((img)=><img  src={img} />)}
+        {banners.map((img)=><img  src={img} />)}
     
     </Carousel>
 

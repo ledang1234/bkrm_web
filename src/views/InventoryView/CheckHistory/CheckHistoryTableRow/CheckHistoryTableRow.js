@@ -33,9 +33,11 @@ const CheckHistoryTableRow = (props) => {
         >
           <TableCell align="left">{row.inventory_check_code}</TableCell>
           <TableCell align="left" className={classes.fontName}>
-            {row.created_at}
+            {/* {row.created_at} */}
+            {row.created_at?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.created_at?.split(" ")[1].substr(0, 5)) }
+
           </TableCell>
-          <TableCell align="left">{row.branch_name}</TableCell>
+          {/* <TableCell align="left">{row.branch_name}</TableCell> */}
           <TableCell align="right" className={classes.fontName}>
            <ThousandFormat style={{fontWeight:700,color:quantityDifference >0 ?"green" :"red"}}value={quantityDifference} />
           </TableCell>

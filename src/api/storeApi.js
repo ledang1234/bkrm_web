@@ -1,5 +1,6 @@
 import axios from "axios";
 import axiosClient from "./axiosClient";
+import moment from 'moment';
 const storeApi = {
   getStoreInfo: (storeUuid) => {
     const url = `stores/${storeUuid}`;
@@ -110,5 +111,27 @@ const storeApi = {
     const url = `stores/${storeUuid}/toggleInventory`;
     return axiosClient.post(url)
   },
+  sendEmail: (storeUuid, email, name, subject, content) => {
+    const url = `stores/${storeUuid}/sendEmail`;
+    return axiosClient.post(url, {
+      email,
+      name, 
+      subject,
+      content
+    })
+  },
+  getNotification: (storeUuid, branchUuid) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/getNotification`;
+    let d = moment.now() / 1000;
+
+    let currentDate = moment
+      .unix(d)
+      .format("YYYY-MM-DD", { trim: false });
+    return axiosClient.get(url, {
+      params: {
+        current_date: currentDate,
+      },
+    });
+  }
 };
 export default storeApi;

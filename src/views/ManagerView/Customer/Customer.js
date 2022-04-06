@@ -8,6 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { useReactToPrint } from "react-to-print";
 //import api 
 import customerApi from '../../../api/customerApi'
+import storeApi from '../../../api/storeApi';
 import { useSelector } from 'react-redux'
 
 //import constant
@@ -32,7 +33,7 @@ import { PartnerMiniTableRow } from "../../../components/MiniTableRow/MiniTableR
 import ava from '../../../assets/img/product/lyimg.jpeg';
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { excel_name_customer, excel_data_customer } from "../../../assets/constant/excel"
-
+import CustomerRegisterEmail from '../../../components/Email/CustomerRegisterEmail';
 const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -75,7 +76,7 @@ const Customer = () => {
   };
 
   //// 2. Table
-
+console.log(info.store.general_configuration)
   //collapse
   const [openRow, setRowOpen] = React.useState(null);
   const handleOpenRow = (row) => {

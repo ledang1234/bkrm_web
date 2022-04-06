@@ -239,6 +239,7 @@ const GeneralSetting = () => {
     orderLowStock: false,
     canFixPriceSell: false,
     printReceiptWhenSell: false,
+    inventory:false
   });
 
   const handleTogglePopup = (event, name) => {
@@ -312,12 +313,50 @@ const GeneralSetting = () => {
         subheader={<ListSubheader>Hàng hoá</ListSubheader>}
         className={classes.root}
       >
-        <SettingItem
+        {/* <SettingItem
           name="inventory"
           statusChecked={checked.inventory.status}
           actionToggle={(e) => {
             handleToggle(e);
             const res = storeApi.toggleInventory(store_uuid);
+          }}
+          title="Quản lý tồn kho"
+          subTitle="Quản lý sản phẩm theo số lượng tồn kho"
+        >
+          <AccountTreeIcon
+            style={{
+              fill: checked.inventory.status
+                ? theme.customization.secondaryColor[500]
+                : null,
+            }}
+          />
+        </SettingItem> */}
+        <SettingItem
+          name="inventory"
+          statusChecked={checked.inventory.status}
+          // detail={true}
+          setOpen={setOpen}
+          actionToggle={(e) => {
+            // handleTogglePopup(e, "inventory");
+            if (!e.target.checked) {
+              setOpen((prevState) => {
+                return {
+                  ...prevState,
+                  inventory: true,
+                };
+              });
+            }else{
+              setChecked((prevState) => {
+                return {
+                  ...prevState,
+                  inventory: {
+                    status: true,
+                  },
+                };
+              });
+            
+              setChange(true)
+            }
           }}
           title="Quản lý tồn kho"
           subTitle="Quản lý sản phẩm theo số lượng tồn kho"
@@ -754,6 +793,37 @@ const GeneralSetting = () => {
           />
         </ModalWrapperWithClose>
       ) : null}
+
+      {open.inventory ? (
+        <ModalWrapperWithClose
+          title="Cảnh báo"
+          open={open.inventory}
+          handleClose={handleClosePopup}
+          
+        >
+         <Typography style={{color:'#000', fontSize:16, marginTop:10}}> Nếu tắt chế độ quản lý tồn kho thì những sản phẩm  </Typography>
+         <Typography style={{color:'#000', fontSize:16, marginBottom:20}}>  đang có tồn kho sẽ được <b style={{color:theme.customization.secondaryColor[500]}}>cập nhật về 0. </b> </Typography>
+         <Typography style={{color:theme.customization.primaryColor[500], fontWeight:600,fontSize:16}}> Bạn có chắc muốn tắt chế độ này không ?</Typography>
+         <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
+            <Button onClick={handleClosePopup} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
+            <Button onClick={()=>{
+                handleClosePopup();
+                setChecked((prevState) => {
+                  return {
+                    ...prevState,
+                    inventory: {
+                      status: false,
+                    },
+                  };
+                });
+                setChange(true)
+
+            }} variant="contained" size="small" color="primary" >OK  </Button>
+        </Grid>
+        
+        </ModalWrapperWithClose>
+      ) : null}
+
       {/* <Button
         onClick={async () => {
           try {

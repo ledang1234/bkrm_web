@@ -18,12 +18,17 @@ import AddIcon from "@material-ui/icons/Add";
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     input: {
       borderRadius: "20px",       
     },
+    multilineColor:{
+      color:theme.customization.primaryColor[500],
+      marginRight:-20
+  }
   })
 );
 
@@ -63,6 +68,7 @@ console.log("selectedCustomer",props.selectedCustomer)
       fullWidth
       placeholder="Tìm khách hàng"
       margin="normal"
+      // onClick={()=>props.selectedCustomer? console.log("hello"):null}
       InputProps={
         // props.selectedCustomer?.name.length === 0 
         !props.selectedCustomer
@@ -86,9 +92,12 @@ console.log("selectedCustomer",props.selectedCustomer)
             }
           : {
               ...params.InputProps,
+              classes: { input: classes.multilineColor },
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon style={{ color: grey[500] }} />
+                  {/* <SearchIcon style={{ color: grey[500] }} /> */}
+                  <PersonIcon style={{ color: theme.customization.primaryColor[500] }} /> 
+
                 </InputAdornment>
               ),
               endAdornment: (

@@ -13,9 +13,10 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
 
   const handleChange = (event) => {
     setOrderLowStock((prevState)=>{
+      
       return {
           ...prevState,
-          [event.target.name]:event.target.value
+          [event.target.name]:Number(event.target.value) ? Math.abs(event.target.value):event.target.value
       }
   })
   };

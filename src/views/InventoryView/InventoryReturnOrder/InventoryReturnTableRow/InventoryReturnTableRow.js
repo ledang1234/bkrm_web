@@ -21,9 +21,11 @@ const InventoryReturnTableRow = (props) => {
                 className={clsx(classes.row, (openRow === row.uuid) ? classes.rowClicked : null)}
             >
                 <TableCell align="left" >{row.purchase_return_code}</TableCell>
-                <TableCell align="left" className={classes.fontName}>{row.creation_date}</TableCell>
+                {/* <TableCell align="left" className={classes.fontName}>{row.creation_date}</TableCell> */}
+                <TableCell align="left" className={classes.fontName}>{row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }</TableCell>
+
                 <TableCell align="left" className={classes.fontName} style={{ minWidth: 150 }}>{row.supplier_name}</TableCell>
-                <TableCell align="left">{row.branch_name}</TableCell>
+                {/* <TableCell align="left">{row.branch_name}</TableCell> */}
                 <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
                 <TableCell align="center" className={classes.fontName}><VNDFormat value={row.total_amount} /></TableCell>
                 {/* <TableCell align="center" className={classes.fontName}>

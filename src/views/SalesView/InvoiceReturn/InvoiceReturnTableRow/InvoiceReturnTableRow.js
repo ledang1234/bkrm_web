@@ -19,9 +19,11 @@ function InvoiceReturnTableRow(props) {
         className={clsx(classes.row, (openRow === row.uuid) ? classes.rowClicked : null)}
       >
         <TableCell align="left">{row.refund_code}</TableCell>
-        <TableCell align="left" className={classes.fontName}>{row.created_at}</TableCell>
+        {/* <TableCell align="left" className={classes.fontName}>{row.created_at}</TableCell> */}
+        <TableCell align="left" className={classes.fontName}>{row.created_at?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.created_at?.split(" ")[1].substr(0, 5)) }</TableCell>
+
         <TableCell align="left" style={{ minWidth: 100 }} className={classes.fontName}>{row.customer_name}</TableCell>
-        <TableCell align="left">{row.branch_name}</TableCell>
+        {/* <TableCell align="left">{row.branch_name}</TableCell> */}
         <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
         <TableCell align="center" className={classes.fontName}><VNDFormat value={row.total_amount}/></TableCell>
         {/* <TableCell align="right" ></TableCell>

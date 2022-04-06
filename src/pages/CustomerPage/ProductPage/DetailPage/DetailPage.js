@@ -202,7 +202,9 @@ const DetailPage = (props) => {
               {( detailProduct?.has_variance && selectedProduct) ||( !detailProduct?.has_variance && getStockQuantity(detailProduct)) >0 ?null:
               <Box style={{paddingTop:2,marginBottom:10, marginTop:-10 }}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:65, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:14}}>Hết hàng</Box></Box>}
               <Typography variant="h1" style={{marginBottom:25,color:nameStyle[0] === "0" ? "#000": mainColor , fontWeight:nameStyle[2], fontSize: Number(nameStyle[1])}}>{detailProduct?.name}</Typography>
-              <Typography variant="h2" style={{color:priceStyle[0] === "0" ? "#000": mainColor , fontWeight:priceStyle[2], fontSize: Number(priceStyle[1])}}>{detailProduct?.list_price.toLocaleString()} đ</Typography>
+              {/* <Typography variant="h2" style={{color:priceStyle[0] === "0" ? "#000": mainColor , fontWeight:priceStyle[2], fontSize: Number(priceStyle[1])}}>{detailProduct?.list_price.toLocaleString()} đ</Typography> */}
+              <Typography variant="h2" style={{color:priceStyle[0] === "0" ? "#000": mainColor , fontWeight:priceStyle[2], fontSize: Number(priceStyle[1])}}>{selectedProduct?.list_price.toLocaleString()} đ</Typography>
+
               <Typography variant="h5" style={{marginTop:40, marginBottom:10}}>Số lượng :</Typography>
               
               <ButtonGroup disableElevation variant="contained" style={{marginBottom:50}}  >
