@@ -117,21 +117,22 @@ const ToolBar = (props) => {
   const [openImport, setOpenImport] = useState(false);
   const [custom, setCustom] = useState(false)
   const [customCl, setCustomCl] = useState({
-    product_code: "Mã hàng",
+    product_code: "Mã sản phẩm",
+    name: "Sản phẩm",
     bar_code: "Mã vạch",
-    name: "Tên",
     category_id: "Danh mục",
     list_price: "Giá bán",
     standard_price: "Giá vốn",
     quantity_per_unit: "Đơn vị",
-    min_reorder_quantity: "Tồn kho nhỏ nhất",
-    max_quantity: "Tồn kho lớn nhất",
-    urls: "Hình ảnh (url1, url2,...)",
-    description: "Mô tả",
+    quantity_available:"Tồn kho",
+    min_reorder_quantity: "Điểm đặt hàng lại",
+    max_order: "Đặt hàng tối đa",
+    img_urls: "Hình ảnh",
   })
   // const [json, setJson] = useState(null);
 
   const readUploadFile = (e, setJsonData) => {
+    debugger
     e.preventDefault();
     if (e.target.files) {
       const reader = new FileReader();
@@ -144,16 +145,16 @@ const ToolBar = (props) => {
         const json = []
         myJson.map((product) => {
           json.push({
-            product_code: product[customCl.product_code],
-            bar_code: product[customCl.bar_code].toString(),
-            name: product[customCl.name],
-            category_id: product[customCl.category_id],
-            list_price: product[customCl.list_price],
-            standard_price: product[customCl.standard_price],
-            quantity_per_unit: product[customCl.quantity_per_unit],
-            min_reorder_quantity: product[customCl.min_reorder_quantity],
-            max_quantity: product[customCl.max_quantity],
-            urls: product[customCl.urls].split(","),
+            product_code: product[customCl.product_code]?.toString(),
+            bar_code: product[customCl.bar_code]?.toString(),
+            name: product[customCl.name]?.toString(),
+            category_id: product[customCl.category_id]?.toString(),
+            list_price: product[customCl.list_price]?.toString(),
+            standard_price: product[customCl.standard_price]?.toString(),
+            quantity_per_unit: product[customCl.quantity_per_unit]?.toString(),
+            min_reorder_quantity: product[customCl.min_reorder_quantity]?.toString(),
+            max_quantity: product[customCl.max_quantity]?.toString(),
+            urls: product[customCl.urls]?.split(","),
             description: product[customCl.description]
           })
         })
@@ -182,11 +183,11 @@ const ToolBar = (props) => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const excelLines = xlsx.utils.sheet_to_json(worksheet)
-        const json = excelLines.map((line)=>({
+        const json = excelLines.map((line) => ({
           name: line["Tên khách hàng"],
           phone: line["Số điện thoại"],
           address: line["Địa chỉ"],
-          email:line["Email"],
+          email: line["Email"],
           payment_info: line["Thông tin thanh toán"],
           points: line["Tích điểm"],
           total_payment: line["Tổng tiền mua"],
@@ -341,12 +342,12 @@ const ToolBar = (props) => {
             <a
               style={{ color: "blue", cursor: "pointer" }}
               onClick={() => {
-                exportExcel(excel_data, excel_name,columnsToKeep);
+                exportExcel(excel_data, excel_name, columnsToKeep);
                 setCustom(false)
               }}
             >
               Excel mẫu
-            </a> 
+            </a> hoặc <a style={{ color: "blue", cursor: "pointer" }} onClick={() => setCustom(!custom)}> tùy chỉnh </a>
             )
           </Typography> :
           <Typography style={{ marginBottom: 15 }}>
@@ -354,14 +355,15 @@ const ToolBar = (props) => {
             <a
               style={{ color: "blue", cursor: "pointer" }}
               onClick={() => {
-                exportExcel(excel_data, excel_name,columnsToKeep);
+                exportExcel(excel_data, excel_name, columnsToKeep);
                 setCustom(false)
               }}
             >
               Excel mẫu
-            </a> hoặc <a style={{ color: "blue", cursor: "pointer" }} onClick={() => setCustom(!custom)}> tùy chỉnh </a>
+            </a>
             )
-          </Typography>}
+          </Typography>
+        }
 
 
         {
@@ -442,10 +444,10 @@ const ToolBar = (props) => {
             name="upload"
             id="upload"
             onChange={(e) => {
-              if(custom){
+              if (customizable) {
                 readUploadFile(e, setJsonData);
-              }else{
-                readCustomerUploadFile(e,setJsonData);
+              } else {
+                readCustomerUploadFile(e, setJsonData);
               }
             }}
           />

@@ -298,18 +298,22 @@ const Inventory = () => {
         handleToggleFilter={handleToggleFilter}
         hasImport={true}
         importByJSON={importProductByJSON}
-        excel_head={excel.header_product}
         excel_data={excel.excel_data_product}
         excel_name={excel.excel_name_product}
+        customizable={true}
         customExcel = {CustomExcel}
         columnsToKeep={[
           { dbName: "product_code", displayName: "Mã sản phẩm" },
           { dbName: "name", displayName: "Sản phẩm" },
           { dbName: "bar_code", displayName: "Mã vạch" },
           { dbName: "list_price", displayName: "Giá bán" },
-          { dbName: "standard_price", displayName: "Giá nhập" },
+          { dbName: "standard_price", displayName: "Giá vốn"},
+          {dbName: "quantity_per_unit", displayName:"Đơn vị"},
           { dbName: "quantity_available", displayName: "Tồn kho" },
           { dbName: "min_reorder_quantity", displayName: "Điểm đặt hàng lại" },
+          { dbName: "img_urls", displayName: "Hình ảnh" },
+          {dbName: "category_id",displayName:"Danh mục"},
+          {dbName:"max_order",displayName:"Đặt hàng tối đa"}
         ]}
         orderByOptions={
           store_setting?.inventory.status ?

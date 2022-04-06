@@ -208,7 +208,7 @@ const Customer = () => {
         isOnlySearch={true}
         handleRemoveFilter={handleRemoveFilter}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({ ...query, searchKey: value })}
-        customizable={true}
+        customizable={false}
         excel_data={excel_data_customer}
         excel_name={excel_name_customer}
         importByJSON={importCustomerByJSON}
