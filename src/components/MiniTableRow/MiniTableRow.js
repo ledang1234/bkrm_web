@@ -96,7 +96,7 @@ export const BillMiniTableRow = (props) =>{
     const { row, handleOpenRow, openRow, onReload } = props;
 
     const {totalCost, id,partnerName ,date, typeBill } = props;
-    const{promotion_condition, type} = props;
+    const{promotion_condition,dateAdvanceSetting, type} = props;
     const classes = useStyles(); 
     const theme = useTheme();
 
@@ -151,7 +151,7 @@ export const BillMiniTableRow = (props) =>{
             {typeBill === "Đơn kiểm kho"? <CheckHistoryDetail parentProps={props}  isMini={true}/>:null}
             {/* {typeBill === "Khuyến mãi"? <DiscountDetail parentProps={props}  isMini={true} promotion_condition={promotion_condition} type={type}/>:null} */}
             {typeBill === "Voucher"? <VoucherDetail parentProps={props}  isMini={true}/>:null}
-            {typeBill === "Khuyến mãi"?  <DiscountDetail parentProps={props} promotion_condition={promotion_condition} type={type} />       :null}
+            {typeBill === "Khuyến mãi"?  <DiscountDetail isMini={true}parentProps={props} promotion_condition={promotion_condition}dateAdvanceSetting={dateAdvanceSetting} type={type} />       :null}
 
         </Dialog>
         </div>

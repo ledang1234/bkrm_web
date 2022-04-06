@@ -11,7 +11,8 @@ import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
 import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
 
 //import image
-import avaUpload from '../../../../../assets/img/product/lyimg.jpeg';
+// import avaUpload from '../../../../../assets/img/product/lyimg.jpeg';
+import avaUpload from '../../../../../assets/img/ava/avaa.jpeg';
 
 //import project 
 import { StyledMenu, StyledMenuItem } from '../../../../../components/Button/MenuButton'

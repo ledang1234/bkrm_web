@@ -76,9 +76,10 @@ const UploadImage  = () => {
 }
 const DiscountDetail = (props) => {
     const {row,openRow }= props.parentProps;
-    const {promotion_condition,type} = props;
+    const {promotion_condition,dateAdvanceSetting,type,isMini} = props;
 
     const {rowsInvoice } = props.promotion_condition;
+
 
     const discountKey= promotion_condition?.discountKey;// invoice, product
     const discountType = promotion_condition?.discountType; //discountInvoice , sendGift, sendVoucher,priceByQuantity
@@ -143,19 +144,19 @@ const DiscountDetail = (props) => {
 
 
     return (
-        <Collapse in={ openRow === row.id } timeout="auto" unmountOnExit>
+        <Collapse in={ isMini ? true :openRow === row.id } timeout="auto" unmountOnExit>
              <Box margin={1}>
                 <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
                  {row.name}
                </Typography>
 
               <Grid  container direction="row" justifyContent="flex-start">
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                       <Grid container direction="row" justifyContent="flex-start" > 
                         <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Mã khuyến mãi </Typography>    
                         </Grid>
-                        <Grid item sm={4} >
+                        <Grid item  >
                           <Typography variant="body1" gutterBottom component="div">{row.promotion_code} </Typography>
                         </Grid>
                       </Grid>
@@ -163,7 +164,7 @@ const DiscountDetail = (props) => {
                         <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Tên khuyến mãi </Typography>    
                         </Grid>
-                        <Grid item sm={4} >
+                        <Grid item>
                           <Typography variant="body1" gutterBottom component="div">{row.name} </Typography>
                         </Grid>
                       </Grid>
@@ -171,7 +172,7 @@ const DiscountDetail = (props) => {
                           <Grid item xs={3} sm={4} >
                             <Typography variant="h5" gutterBottom component="div">Hình thức</Typography>    
                           </Grid>
-                          <Grid item sm={4} >
+                          <Grid item  >
                             <Typography variant="body1" gutterBottom component="div">{type}</Typography>
                           </Grid>
                       </Grid>
@@ -179,12 +180,12 @@ const DiscountDetail = (props) => {
                   </Grid>
 
 
-                <Grid item xs={12} sm={5}>
+                <Grid item xs={12} sm={6}>
                     <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={2} >
                           <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
                         </Grid>
-                        <Grid item sm={4} >
+                        <Grid item  >
                           <Typography variant="body1" gutterBottom component="div">{row.status}</Typography>
                         </Grid>
                     </Grid>
@@ -193,23 +194,23 @@ const DiscountDetail = (props) => {
                         <Grid item xs={3} sm={2} >
                           <Typography variant="h5" gutterBottom component="div">Thời gian</Typography>    
                         </Grid>
-                        <Grid item sm={4} >
+                        <Grid item >
                           <Typography variant="body1" gutterBottom component="div">Từ {row.start_date} -  Đến {row.end_date}</Typography>
                         </Grid>
                     </Grid>
 
                     {/* Thay TRUE thành nếu list theo thứ ngày tháng,.. ko empty thì show */}
-                    {row.byMonth?
+                    {dateAdvanceSetting.byMonth?
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo tháng</Typography>    
                         </Grid>
-                        <Grid item sm={4}>
+                        <Grid item>
                           <Typography variant="body1" gutterBottom component="div">{row.byMonth?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }
-                    {row.byDay?
+                    {dateAdvanceSetting.byDay?
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo ngày</Typography>    
@@ -219,7 +220,7 @@ const DiscountDetail = (props) => {
                         </Grid>
                     </Grid> : null
                     }
-                    {row.byDate?
+                    {dateAdvanceSetting.byDate?
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={4}>
                           <Typography variant="h5" gutterBottom component="div">Theo thứ</Typography>    
@@ -229,7 +230,7 @@ const DiscountDetail = (props) => {
                         </Grid>
                     </Grid> : null
                     }
-                    {row.byTime?
+                    {dateAdvanceSetting.byTime?
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo giờ</Typography>    
