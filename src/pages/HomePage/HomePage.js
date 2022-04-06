@@ -38,10 +38,11 @@ import EditEmployee from "../../views/HRView/Employee/AddEmployee/EditEmployee"
 import { customizeAction } from "../../store/slice/customizeSlice";
 
 import PersonIcon from "@material-ui/icons/Person";
+import { Notifications } from "@material-ui/icons";
 import DeliveryView from "../../views/DeliveryView/DeliveryView";
 import branchApi from "../../api/branchApi"
 import { infoActions } from "../../store/slice/infoSlice";
-
+import storeApi from "../../api/storeApi";
 const drawerWidth = 240;
 
 const HomePage = (props) => {
@@ -76,6 +77,9 @@ const HomePage = (props) => {
 
 
 
+  const info = useSelector(state => state.info)
+  const store_uuid = info.store.uuid
+  const branch_uuid = info.branch.uuid
 
   const divLogo = () => {
     if (!smallScreen)
@@ -131,6 +135,17 @@ const HomePage = (props) => {
 
   };
 
+  const getNotification = async () => {
+    try {
+      if (store_uuid && branch_uuid) {
+        const res = await storeApi.getNotification(store_uuid, branch_uuid);
+        alert(JSON.stringify(res.data))
+      }
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
   const [openUserInfo, setOpenUserInfo] = useState(false)
   return (
     <div className={classes.root}>
@@ -176,8 +191,12 @@ const HomePage = (props) => {
                 </Typography>
               </Box>
 
+              <IconButton color="primary" onClick={getNotification} >
+                <Notifications />
+              </IconButton>
+
               <Button color="primary" onClick={() => logOutHandler()}>
-                Logout
+                Đăng xuất
               </Button>
             </Box>
             {/* <Box style={{marginRight:10}}>

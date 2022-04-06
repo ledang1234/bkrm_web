@@ -21,6 +21,8 @@ import {useDispatch, useSelector} from 'react-redux'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { statusAction } from "../../../../store/slice/statusSlice";
+import storeApi from "../../../../api/storeApi";
+import CustomerRegisterEmail from "../../../../components/Email/CustomerRegisterEmail";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -205,11 +207,20 @@ const AddCustomer = (props) => {
             };
 
             try {
-              const response = await customerApi.createCustomer(store_uuid, body)
+              const response = await customerApi.createCustomer(store_uuid, body);
+              if (customerFormik.values.email) {
+                const customer = response.data;
+                if (customer) {
+                  const emailRes = await storeApi.sendEmail(
+                    store_uuid, customer.email, customer.name, "Chúc mừng khách hàng mới", CustomerRegisterEmail("", "", customer, info.store) )
+                }
+              }
               handleClose()  
               dispatch(statusAction.successfulStatus("Tạo khách hàng thành công"));
               // handleCloseAndReset()
+             
               props.onReload()
+              
               // props.handleSelectCustomer(response.data)
               if(props.isCart){
                 props.setAddCustomer(response.data)
@@ -219,6 +230,7 @@ const AddCustomer = (props) => {
               // dispatch(statusAction.failedStatus("Số điện thoại đã được sử dụng"));
               setPhoneExist(true)
               setClicked(false)
+              console.log(err)
             }
 
           }}

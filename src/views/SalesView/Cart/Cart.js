@@ -585,7 +585,6 @@ const Cart = () => {
   const handleSwitchChange = () => {
     setBarcodeChecked(!barcodeChecked);
   };
-
   
   return (
     <Grid
