@@ -3,6 +3,7 @@
 // Sales
 export const INVOICE = "Hoá_đơn";
 export const INVOICE_RETURN = "Đơn_trả";
+export const CUSTOMER_ORDER = "Đơn_đặt_hàng";
 
 // inventory
 export const INVENTORY = "Kho_hàng";

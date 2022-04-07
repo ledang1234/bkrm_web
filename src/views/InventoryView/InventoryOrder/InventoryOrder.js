@@ -215,7 +215,9 @@ const InventoryOrder = () => {
           {dbName:"total_amount",displayName:"Tổng tiền nhập"}, 
           {dbName:"paid_amount",displayName:"Tiền đã trả"}, 
           {dbName:"branch_name",displayName:"Chi nhánh thực hiện"},
-          {dbName:"payment_method",displayName:"Phương thức thanh toán"}
+          {dbName:"payment_method",displayName:"Phương thức thanh toán"},
+          {dbName:"created_user_type",displayName:"Tài khoản thực hiện"},
+          {dbName:"created_user_name",displayName:"Tên người thực hiện"},
         ]}
       />
 

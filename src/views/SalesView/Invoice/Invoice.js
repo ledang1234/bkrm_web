@@ -223,6 +223,8 @@ const Invoice = () => {
           {dbName:"paid_amount",displayName:"Tiền khách đã trả"},
           {dbName:"status",displayName:"Trạng thái"},
           {dbName:"payment_method",displayName:"Phương thức thanh toán"},
+          {dbName:"created_user_type",displayName:"Tài khoản thực hiện"},
+          {dbName:"created_user_name",displayName:"Tên người thực hiện"},
         ]}
       />
       <InvoiceFilter

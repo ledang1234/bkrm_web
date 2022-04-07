@@ -189,6 +189,17 @@ function InvoiceReturn() {
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
         handleRemoveFilter={handleRemoveFilter}
         getDataExport={getDataExport}
+        columnsToKeep = {[
+          {dbName:"refund_code",displayName:"Mã đơn trả"},
+          {dbName:"creation_date",displayName:"Ngày nhập"},
+          {dbName:"customer_name",displayName:"Nhà cung cấp"},
+          {dbName:"total_amount",displayName:"Tổng tiền nhập"}, 
+          {dbName:"paid_amount",displayName:"Tổng tiền đã thu"}, 
+          {dbName:"branch_name",displayName:"Chi nhánh thực hiện"},
+          {dbName:"payment_method",displayName:"Phương thức thanh toán"},
+          {dbName:"created_user_type",displayName:"Tài khoản thực hiện"},
+          {dbName:"created_user_name",displayName:"Tên người thực hiện"},
+        ]}
       />
       <InvoiceReturnFilter
         openFilter={openFilter}

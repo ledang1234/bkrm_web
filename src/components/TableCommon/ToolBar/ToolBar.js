@@ -71,24 +71,28 @@ const useStyles = makeStyles((theme) =>
   })
 );
 const exportExcel = (dataTable, tableType, columnsToKeep = []) => {
-  const newData = []
-  dataTable.map((row) => {
-    let rowRs = {}
-    columnsToKeep.map((cl) => {
-      rowRs = { ...rowRs, [cl.displayName]: row[cl.dbName] }
+  try {
+    const newData = []
+    dataTable.map((row) => {
+      let rowRs = {}
+      columnsToKeep.map((cl) => {
+        rowRs = { ...rowRs, [cl.displayName]: row[cl.dbName] }
+      })
+      newData.push(rowRs)
     })
-    newData.push(rowRs)
-  })
-  const workSheet = xlsx.utils.json_to_sheet(newData);
-  const workBook = xlsx.utils.book_new();
-
-  xlsx.utils.book_append_sheet(workBook, workSheet, tableType);
-  //Buffer
-  //let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
-  //Binary string
-  xlsx.write(workBook, { bookType: "xlsx", type: "binary" });
-  //Download
-  xlsx.writeFile(workBook, `${tableType}.xlsx`);
+    const workSheet = xlsx.utils.json_to_sheet(newData);
+    const workBook = xlsx.utils.book_new();
+  
+    xlsx.utils.book_append_sheet(workBook, workSheet, tableType);
+    //Buffer
+    //let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
+    //Binary string
+    xlsx.write(workBook, { bookType: "xlsx", type: "binary" });
+    //Download
+    xlsx.writeFile(workBook, `${tableType}.xlsx`);
+  } catch(err) {
+    console.log(err)
+  }
 };
 
 const ToolBar = (props) => {

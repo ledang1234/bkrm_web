@@ -270,6 +270,8 @@ const CheckHistory = () => {
           {dbName:"created_at",displayName:"Ngày kiểm"},
           {dbName:"total_amount",displayName:"Tổng giá trị lệch"},
           {dbName:"branch_name",displayName:"Tên chi nhánh"},
+          {dbName:"created_user_type",displayName:"Tài khoản thực hiện"},
+          {dbName:"created_user_name",displayName:"Tên người thực hiện"},
         ]}
 
 

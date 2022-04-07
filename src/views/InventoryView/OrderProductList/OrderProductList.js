@@ -36,7 +36,7 @@ import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 import orderApi from '../../../api/orderApi';
-
+import { statusAction } from "../../../store/slice/statusSlice";
 
 
 const OrderProductList = () => {
@@ -149,6 +149,19 @@ const OrderProductList = () => {
 
   const tableRef = React.createRef();
 
+  const getDataExport = async () => {
+    try {
+      const response = await orderApi.searchCustomerOrder(
+        store_uuid,
+        branch_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus("Không thể lấy dữ liệu!"));
+      console.log(error);
+    }
+  }
 
   return (
     <Card className={classes.root} >
@@ -193,17 +206,15 @@ const OrderProductList = () => {
           orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
           sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
           searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
-          
           handleRemoveFilter={handleRemoveFilter}
-  
+          getDataExport={getDataExport}
           columnsToKeep = {[
-            {dbName:"purchase_order_code",displayName:"Mã đơn nhập"},
-            {dbName:"payment_date",displayName:"Ngày nhập"},
-            {dbName:"supplier_name",displayName:"Nhà cung cấp"},
-            {dbName:"total_amount",displayName:"Tổng tiền nhập"}, 
-            {dbName:"paid_amount",displayName:"Tiền đã trả"}, 
-            {dbName:"branch_name",displayName:"Chi nhánh thực hiện"},
-            {dbName:"payment_method",displayName:"Phương thức thanh toán"}
+            {dbName:"customer_order_code",displayName:"Mã đơn đặt"},
+            {dbName:"name",displayName:"Tên khách"},
+            {dbName:"phone",displayName:"Số điện thoại"},
+            {dbName:"total_amount",displayName:"Tổng tiền"}, 
+            {dbName:"status",displayName:"Trạng thái"}, 
+            {dbName:"description",displayName:"Ghi chú"},
           ]}
            
            /> 
