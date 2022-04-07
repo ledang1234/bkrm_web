@@ -14,7 +14,7 @@ import {
   Box
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 // import lib
 import { useReactToPrint } from "react-to-print";
@@ -37,7 +37,7 @@ import refundApi from "../../../api/refundApi";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
-
+import { statusAction } from "../../../store/slice/statusSlice";
 function InvoiceReturn() {
   // fetch data here
   const invoiceReturnList = [];
@@ -46,6 +46,7 @@ function InvoiceReturn() {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const dispatch = useDispatch();
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -144,7 +145,19 @@ function InvoiceReturn() {
       loadData();
     }
   }, [pagingState.page, pagingState.limit, store_uuid, branch_uuid, query]);
-
+  const getDataExport = async () => {
+    try {
+      const response = await refundApi.getAllOfBranch(
+        store_uuid,
+        branch_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus('Không thể lấy dữ liệu'))
+      console.log(error);
+    }
+  }
   const tableRef = React.createRef();
 
 
@@ -175,6 +188,7 @@ function InvoiceReturn() {
         sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
         handleRemoveFilter={handleRemoveFilter}
+        getDataExport={getDataExport}
       />
       <InvoiceReturnFilter
         openFilter={openFilter}

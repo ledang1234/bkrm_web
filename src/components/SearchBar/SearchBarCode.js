@@ -16,27 +16,41 @@ const SearchBarCode = (props) => {
     const info = useSelector((state) => state.info);
     const store_uuid = info.store.uuid;
     const branch_uuid = info.branch.uuid;
+    const products = info.products;
+
 
     const [barcode,setBarcode] = useState("")
 
     const dispatch = useDispatch();
     const onEnter = async (e) =>{
-        if(e.key === "Enter" && barcode != ""){
-            try {
-                const response = await productApi.searchBranchProduct(
-                    store_uuid,
-                    branch_uuid,
-                    barcode
-                  );
-                  if (response.data.length > 0){
-                    props.handleSearchBarSelect(response.data[0]);
-                    setBarcode("")
-                    dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
-                  }
-            } catch (error) {
-                console.log(error)
-                dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
-            }
+        // if(e.key === "Enter" && barcode != ""){
+        //     try {
+        //         const response = await productApi.searchBranchProduct(
+        //             store_uuid,
+        //             branch_uuid,
+        //             barcode
+        //           );
+        //           if (response.data.length > 0){
+        //             props.handleSearchBarSelect(response.data[0]);
+        //             setBarcode("")
+        //             dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
+        //           }
+        //     } catch (error) {
+        //         console.log(error)
+        //         dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
+        //     }
+        // }
+        if (e.key === "Enter" && barcode != "") {
+          const product = props.products.find(
+            (product) => product.bar_code === barcode
+          );
+          if (product) {
+            props.handleSearchBarSelect(product);
+            setBarcode("");
+            dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
+          } else {
+            dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
+          }
         }
     }
     return <CustomTextField

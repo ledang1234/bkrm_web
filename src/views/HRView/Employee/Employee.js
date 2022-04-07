@@ -19,7 +19,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
 //import api
 import employeeApi from "../../../api/employeeApi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -39,7 +39,7 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
-
+import { statusAction } from '../../../store/slice/statusSlice';
 
 const Employee = () => {
   const [employeeList, setEmployeeList] = useState([]);
@@ -51,7 +51,7 @@ const Employee = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
-
+  const dispatch = useDispatch();
 
 
   // paging
@@ -95,7 +95,18 @@ const Employee = () => {
       loadData();
     }
   }, [pagingState.page, pagingState.limit, reload, store_uuid, query]);
-
+  const getDataExport = async () => {
+    try {
+      const response = await employeeApi.getEmployees(
+        store_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus('Không thể lấy dữ liệu'))
+      console.log(error);
+    }
+  }
 
   //// 1. Add pop up + noti
   //add
@@ -206,6 +217,7 @@ const Employee = () => {
         } /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
+        getDataExport={getDataExport}
         columnsToKeep = {[
           {dbName:"name",displayName:"Tên nhân viên"},
           {dbName:"phone",displayName:"Số điện thoại"},

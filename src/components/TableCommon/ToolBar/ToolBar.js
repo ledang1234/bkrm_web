@@ -109,6 +109,7 @@ const ToolBar = (props) => {
     handleRemoveFilter,
     sort, setSort,
     isOnlySearch,
+    getDataExport,
     customizable
   } = props;
   const theme = useTheme();
@@ -294,8 +295,9 @@ const ToolBar = (props) => {
             <Tooltip title="Xuất excel">
               <IconButton
                 aria-label="filter list"
-                onClick={() => {
-                  exportExcel(dataTable, tableType, columnsToKeep);
+                onClick={async () => {
+                  const dataTableFull = await getDataExport();
+                  exportExcel(dataTableFull, tableType, columnsToKeep);
                 }}
               >
                 <GetAppTwoToneIcon className={classes.icon} />

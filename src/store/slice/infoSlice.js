@@ -36,6 +36,7 @@ const initialUserInfoSlice = {
   },
   role: "",
   products: [],
+  searchBarState: 'barcode',
   // branchsOfStore:[]
 };
 const infoSlice = createSlice({
@@ -56,6 +57,9 @@ const infoSlice = createSlice({
     },
     setProducts(state, action) {
       state.products = action.payload;
+    },
+    setSearchBarState(state, action) {
+      state.searchBarState = action.payload;
     }
     // setBranchsOfStore(state, action) {
     //   state.branchsOfStore = action.payload;

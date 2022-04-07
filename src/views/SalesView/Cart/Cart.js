@@ -56,13 +56,14 @@ import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import customerApi from "../../../api/customerApi";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 import { calculateTotalQuantity } from "../../../components/TableCommon/util/sortUtil";
-import { CartMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
+import { CartMiniTableRow, VarianceProductMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow";
 import branchApi from "../../../api/branchApi";
-import setting from "../../../assets/constant/setting"
+import setting from "../../../assets/constant/setting";
 import { infoActions } from "../../../store/slice/infoSlice";
 import productApi from "../../../api/productApi";
 import { statusAction } from "../../../store/slice/statusSlice";
 import promotionCouponApi from '../../../api/promotionCouponApi';
+import { loadingActions } from "../../../store/slice/loadingSlice";
 
 const Cart = () => {
   const theme = useTheme();
@@ -71,13 +72,16 @@ const Cart = () => {
 
   // redux
   const info = useSelector((state) => state.info);
+  const searchBarState = info.searchBarState;
   const store_uuid = info.store.uuid;
   const branch = info.branch;
   const branch_uuid = info.branch.uuid;
-  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  const store_setting = info.store.general_configuration
+    ? JSON.parse(info.store.general_configuration)
+    : setting;
 
   const [discountList, setDiscountList] = useState([]);
-
+ 
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -122,8 +126,8 @@ const Cart = () => {
   // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const dispatch = useDispatch();
-  
-  const loadLocalStorage = () => {
+
+  const loadCartLocalStorage = () => {
     if (window.localStorage.getItem("cartListData")) {
       const data = JSON.parse(window.localStorage.getItem("cartListData"));
       if (data.user_uuid === user_uuid) {
@@ -139,19 +143,45 @@ const Cart = () => {
         discount: "0",
         payment_method: "cash",
         delivery: false,
-        scores:"0"
+        scores: "0",
       },
     ];
   };
 
-  const [cartList, setCartList] = React.useState(loadLocalStorage());
+
+
+  const [cartList, setCartList] = React.useState(loadCartLocalStorage());
+  const [products, setProducts] = useState([]);
+
   useEffect(() => {
     window.localStorage.setItem(
       "cartListData",
       JSON.stringify({ user_uuid: user_uuid, cartList: cartList })
     );
   }, [cartList]);
-  
+
+  useEffect(() => {
+    if (products.length) {
+      window.localStorage.setItem(
+        "products",
+        JSON.stringify({ 
+          store_uuid: store_uuid, 
+          branch_uuid: branch_uuid, 
+          data: products })
+      );
+    }
+  }, [products]);
+
+  useEffect(() => {
+    if (window.localStorage.getItem("products")) {
+      const products = JSON.parse(window.localStorage.getItem("products"));
+      if (products.store_uuid === store_uuid && products.branch_uuid === branch_uuid ) {
+        console.log(products.data)
+        setProducts(products.data);
+      }
+    }
+  }, [store_uuid, branch_uuid])
+
   // const[branchs, setBranchs] = useState([])
 
   // useEffect (()=>{
@@ -186,9 +216,8 @@ const Cart = () => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
 
-  const [customers,setCustomers ] = useState([])
+  const [customers, setCustomers] = useState([]);
 
-  
   const handleSearchCustomer = async (searchKey) => {
     try {
       const response = await customerApi.getCustomers(store_uuid, {
@@ -202,34 +231,55 @@ const Cart = () => {
 
   const updateCustomerVouchers = async (customerUuid, vouchers) => {
     try {
-      const response = await customerApi.updateCustomerVouchers(customerUuid,  vouchers);
-      dispatch(statusAction.successfulStatus('Cập nhật voucher của khách thành công'))
+      const response = await customerApi.updateCustomerVouchers(
+        customerUuid,
+        vouchers
+      );
+      dispatch(
+        statusAction.successfulStatus("Cập nhật voucher của khách thành công")
+      );
     } catch (err) {
-      console.log(err)
-      dispatch(statusAction.failedStatus('Cập nhật vouchers thất bại'))
+      console.log(err);
+      dispatch(statusAction.failedStatus("Cập nhật vouchers thất bại"));
     }
-  }
+  };
 
   useEffect(() => {
     const loadCustomers = async () => {
       try {
         const response = await customerApi.getCustomers(store_uuid);
-        const customers = response.data.map(cust => ({...cust, vouchers: JSON.parse(cust.vouchers ? cust.vouchers : '[]') }))
+        const customers = response.data.map((cust) => ({
+          ...cust,
+          vouchers: JSON.parse(cust.vouchers ? cust.vouchers : "[]"),
+        }));
         setCustomers(customers);
       } catch (err) {
         console.log(err);
       }
     };
     const loadProducts = async () => {
-      const response = await productApi.searchBranchProduct(store_uuid, branch_uuid, '')
-      dispatch(infoActions.setProducts(response.data))
-    }
+      const response = await productApi.searchBranchProduct(
+        store_uuid,
+        branch_uuid,
+        ""
+      );
+      setProducts(response.data)
+      // dispatch(infoActions.setProducts(response.data));
+    };
+
+    const loadPromotionCoupons = async () => {
+      const response = await promotionCouponApi.getActivePromotionVoucher(store_uuid)
+      console.log(response)
+    } 
     if (store_uuid) {
       loadCustomers();
+      loadPromotionCoupons()
     }
     if (store_uuid && branch_uuid) {
-      loadProducts()
+      loadProducts();
     }
+
+    //  loadingActions.finishLoad();
   }, [store_uuid, branch_uuid]);
   const [reloadCustomers, setReloadCustomers] = useState(false);
   useEffect(() => {
@@ -286,7 +336,7 @@ const Cart = () => {
         payment_method: "cash",
         discount: "0",
         delivery: false,
-        scores:'0'
+        scores: "0",
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -305,7 +355,7 @@ const Cart = () => {
           discount: "0",
           payment_method: "cash",
           delivery: false,
-          scores:'0'
+          scores: "0",
         },
       ]);
     } else {
@@ -360,7 +410,7 @@ const Cart = () => {
         branch_quantity: Number(selectedOption.branch_quantity),
         has_batches: selectedOption.has_batches,
         batches: selectedOption.batches,
-        branch_inventories:selectedOption.branch_inventories
+        branch_inventories: selectedOption.branch_inventories,
       };
 
       let newCartList = update(cartList, {
@@ -473,11 +523,17 @@ const Cart = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { discount: { $set: amount } },
     });
-    if(store_setting?.customerScore.status){
+    if (store_setting?.customerScore.status) {
       newCartList = update(newCartList, {
         [selectedIndex]: {
-          scores: { $set: parseInt((cartList[selectedIndex].total_amount - amount) /store_setting?.customerScore.value) },
-      }});
+          scores: {
+            $set: parseInt(
+              (cartList[selectedIndex].total_amount - amount) /
+                store_setting?.customerScore.value
+            ),
+          },
+        },
+      });
     }
 
     setCartList(newCartList);
@@ -487,11 +543,10 @@ const Cart = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { delivery: { $set: delivery } },
     });
-    
+
     setCartList(newCartList);
   };
 
-  
   const updateTotalAmount = () => {
     let total = 0;
     cartList[selectedIndex].cartItem.forEach((item) => {
@@ -507,31 +562,41 @@ const Cart = () => {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
     });
-    if(store_setting?.customerScore.status ){
-        newCartList = update(newCartList, {
-          [selectedIndex]: {
-            scores: { $set: parseInt((total - cartList[selectedIndex].discount)/store_setting?.customerScore.value) },
-        }});
+    if (store_setting?.customerScore.status) {
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          scores: {
+            $set: parseInt(
+              (total - cartList[selectedIndex].discount) /
+                store_setting?.customerScore.value
+            ),
+          },
+        },
+      });
     }
-  
+
     setCartList(newCartList);
   };
 
-  console.log("cartList[selectedIndex].customer",cartList[selectedIndex].customer)
+  console.log(
+    "cartList[selectedIndex].customer",
+    cartList[selectedIndex].customer
+  );
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
-    
+
     var emptyCart = cart.cartItem.length === 0;
-    const printReceiptWhenSell=store_setting?.printReceiptWhenSell
+    const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
     // var correctQuantity = cart.cartItem.every(function (element, index) {
     //   if (element.quantity > element.branch_quantity) return false;
     //   else return true;
     // });
-    var correctQuantity =store_setting?.inventory.status ?
-    cart.cartItem.every(function (element, index) {
-     if (element.quantity > element.branch_quantity) return false;
-     else return true;
-    }) : true
+    var correctQuantity = store_setting?.inventory.status
+      ? cart.cartItem.every(function (element, index) {
+          if (element.quantity > element.branch_quantity) return false;
+          else return true;
+        })
+      : true;
 
     if (emptyCart || !correctQuantity) {
       setOpenSnack(true);
@@ -572,7 +637,7 @@ const Cart = () => {
         shipping: "0",
         delivery: cart.delivery,
         is_customer_order: false,
-        points:cart.scores
+        points: cart.scores,
       };
 
       try {
@@ -583,8 +648,8 @@ const Cart = () => {
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
         });
         setOpenSnack(true);
-        if(printReceiptWhenSell.status && printReceiptWhenSell.cart){
-          handlePrint()    
+        if (printReceiptWhenSell.status && printReceiptWhenSell.cart) {
+          handlePrint();
         }
         handleDelete(selectedIndex);
       } catch (err) {
@@ -611,7 +676,7 @@ const Cart = () => {
   const handleSwitchChange = () => {
     setBarcodeChecked(!barcodeChecked);
   };
-  
+
   return (
     <Grid
       container
@@ -679,8 +744,10 @@ const Cart = () => {
                       <FormControlLabel
                         control={
                           <Switch
-                            checked={barcodeChecked}
-                            onChange={handleSwitchChange}
+                            checked={searchBarState === 'barcode'}
+                            onChange={(e, checked) => {
+                              dispatch(infoActions.setSearchBarState(checked ? 'barcode' : 'search'))
+                            }}
                             color="primary"
                           />
                         }
@@ -688,12 +755,14 @@ const Cart = () => {
                       />
                     </Grid>
                     <Grid item>
-                      {barcodeChecked ? (
+                      {searchBarState === 'barcode' ? (
                         <SearchBarCode
+                          products={products} 
                           handleSearchBarSelect={handleSearchBarSelect}
                         />
                       ) : (
                         <SearchProduct
+                          products={products} 
                           handleSearchBarSelect={handleSearchBarSelect}
                           isCart={true}
                         />
@@ -733,7 +802,6 @@ const Cart = () => {
                             discountData={discountData.filter(
                               (discount) => discount.discountKey === "product"
                             )}
-
                           />
                         );
                       })}

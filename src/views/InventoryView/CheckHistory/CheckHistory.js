@@ -47,7 +47,7 @@ import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
-
+import { statusAction } from "../../../store/slice/statusSlice";
 
 const CheckHistory = () => {
   // fetch data here
@@ -107,6 +107,19 @@ const CheckHistory = () => {
     };
     loadData();
   }, [pagingState.page, pagingState.limit, branch_uuid, store_uuid, reload, query]);
+  const getDataExport = async () => {
+    try {
+      const response = await inventoryCheckApi.getAllOfBranch(
+        store_uuid,
+        branch_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus('Không thể lấy dữ liệu'))
+      console.log(error);
+    }
+  }
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -264,6 +277,7 @@ const CheckHistory = () => {
           {value: 'inventory_checks.created_at', label: 'Ngày kiểm'},
           {value: 'inventory_checks.total_amount', label: 'Tổng tiền lệch'},
         ]}
+        getDataExport={getDataExport}
         orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
         sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}

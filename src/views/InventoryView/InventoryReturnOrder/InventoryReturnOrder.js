@@ -8,13 +8,9 @@ import {
   Card,
   Divider,
   Grid,
-  ButtonBase,
-  Avatar,
-  Tooltip,
   TableBody,
   Box
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
 
 //import api
@@ -34,13 +30,13 @@ import ToolBar from "../../../components/TableCommon/ToolBar/ToolBar";
 import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrapper";
 
 import JSONdata from "../../../assets/JsonData/inventoryReturn.json";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import purchaseReturnApi from "../../../api/purchaseReturnApi";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
-
+import { statusAction } from "../../../store/slice/statusSlice";
 const InventoryReturnOrder = () => {
   const [purchaseReturns, setPurchaseReturns] = useState([]);
   const [openRow, setRowOpen] = React.useState(null);
@@ -48,6 +44,7 @@ const InventoryReturnOrder = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const dispatch = useDispatch();
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -105,7 +102,19 @@ const InventoryReturnOrder = () => {
       loadData();
     }
   }, [pagingState.page, pagingState.limit, branch_uuid, query]);
-
+  const getDataExport = async () => {
+    try {
+      const response = await purchaseReturnApi.getAllOfBranch(
+        store_uuid,
+        branch_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus('Không thể lấy dữ liệu'))
+      console.log(error);
+    }
+  }
   const handleOpenRow = (row) => {
     if (row !== openRow) {
       setRowOpen(row);
@@ -170,7 +179,7 @@ const InventoryReturnOrder = () => {
         sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
         handleRemoveFilter={handleRemoveFilter}
-
+        getDataExport={getDataExport}
         columnsToKeep = {[
           {dbName:"purchase_return_code",displayName:"Mã trả hàng nhập"},
           {dbName:"purchase_order_code",displayName:"Mã đơn nhập"},

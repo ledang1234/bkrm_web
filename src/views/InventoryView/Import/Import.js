@@ -51,7 +51,7 @@ import {
 import purchaseOrderApi from "../../../api/purchaseOrderApi";
 // update state
 import update from "immutability-helper";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import SnackBarGeneral from "../../../components/SnackBar/SnackBarGeneral";
 import moment from "moment";
 import AddInventory from "../Inventory/AddInventory/AddInventory";
@@ -62,7 +62,8 @@ import setting from "../../../assets/constant/setting"
 import productApi from "../../../api/productApi";
 import openNotification from "../../../components/StatusPopup/StatusPopup";
 import DialogWrapper from "../../../components/Modal/DialogWrapper";
-import ReccomendOrderPopUp from "./RecommendOrderPopUp/RecommendOrderPopUp"
+import ReccomendOrderPopUp from "./RecommendOrderPopUp/RecommendOrderPopUp";
+import { infoActions } from "../../../store/slice/infoSlice";
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
@@ -75,6 +76,8 @@ const Import = () => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const searchBarState = info.searchBarState;
+  const dispatch = useDispatch();
 
   const branch = info.branch;
   const user_uuid = useSelector((state) => state.info.user.uuid);
@@ -99,7 +102,7 @@ const Import = () => {
   // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
 
   // local storage
-  const loadLocalStorage = () => {
+  const loadLocalImportListStorage = () => {
     if (window.localStorage.getItem("importListData")) {
       const data = JSON.parse(window.localStorage.getItem("importListData"));
       console.log("data",data)
@@ -120,8 +123,17 @@ const Import = () => {
       },
     ];
   };
-  const [cartList, setCartList] = React.useState(loadLocalStorage());
-
+  const [cartList, setCartList] = React.useState(loadLocalImportListStorage());
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    if (window.localStorage.getItem("products")) {
+      const products = JSON.parse(window.localStorage.getItem("products"));
+      if (products.store_uuid === store_uuid && products.branch_uuid === branch_uuid ) {
+        console.log(products.data)
+        setProducts(products.data);
+      }
+    }
+  }, [store_uuid, branch_uuid])
 
   useEffect(() => {
     window.localStorage.setItem(
@@ -154,8 +166,35 @@ const Import = () => {
       setSuppliers(response.data);
     };
 
-    fetchSupplier();
+    const loadProducts = async () => {
+      const response = await productApi.searchBranchProduct(
+        store_uuid,
+        branch_uuid,
+        ""
+      );
+      setProducts(response.data)
+      // dispatch(infoActions.setProducts(response.data));
+    };
+
+    if (store_uuid) {
+      fetchSupplier();
+    }
+    if (store_uuid && branch_uuid) {
+      loadProducts();
+    }
   }, []);
+
+  useEffect(() => {
+    if (products.length) {
+      window.localStorage.setItem(
+        "products",
+        JSON.stringify({ 
+          store_uuid: store_uuid, 
+          branch_uuid: branch_uuid, 
+          data: products })
+      );
+    }
+  }, [products]);
 
   const [reloadSupplier, setReloadSupplier] = useState(false);
   useEffect(() => {
@@ -630,8 +669,10 @@ const Import = () => {
                       <FormControlLabel
                         control={
                           <Switch
-                            checked={barcodeChecked}
-                            onChange={handleSwitchChange}
+                            checked={searchBarState === 'barcode'}
+                            onChange={(e, checked) => {
+                              dispatch(infoActions.setSearchBarState(checked ? 'barcode' : 'search'))
+                            }}
                             color="primary"
                           />
                         }
@@ -639,12 +680,14 @@ const Import = () => {
                       />
                     </Grid>
                     <Grid item>
-                      {barcodeChecked ? (
+                      {searchBarState === 'barcode' ? (
                         <SearchBarCode
+                          products={products} 
                           handleSearchBarSelect={handleSearchBarSelect}
                         />
                       ) : (
                         <SearchProduct
+                          products={products}
                           handleSearchBarSelect={handleSearchBarSelect}
                         />
                       )}

@@ -9,7 +9,7 @@ import { useReactToPrint } from "react-to-print";
 //import api 
 import customerApi from '../../../api/customerApi'
 import storeApi from '../../../api/storeApi';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 //import constant
 import * as HeadCells from '../../../assets/constant/tableHead'
@@ -34,6 +34,7 @@ import ava from '../../../assets/img/product/lyimg.jpeg';
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { excel_name_customer, excel_data_customer } from "../../../assets/constant/excel"
 import CustomerRegisterEmail from '../../../components/Email/CustomerRegisterEmail';
+import { statusAction } from '../../../store/slice/statusSlice';
 const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -42,6 +43,7 @@ const Customer = () => {
 
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
+  const dispatch = useDispatch();
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -148,18 +150,29 @@ console.log(info.store.general_configuration)
     if (store_uuid) {
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, reload, query]);
-
+  }, [pagingState.page, pagingState.limit, reload, query, store_uuid]);
+  const getDataExport = async () => {
+    try {
+      const response = await customerApi.getCustomers(
+        store_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus('Không thể lấy dữ liệu'))
+      console.log(error);
+    }
+  }
 
   const tableRef = React.createRef();
 
   const importCustomerByJSON  = async (jsonData) => {
     try {
-      await customerApi.importCustomerJson(store_uuid,jsonData)
+      await customerApi.importCustomerJson(store_uuid,jsonData);
     }catch(error){
-      
     }
   }
+
   return (
 
     <Card className={classes.root} >
@@ -210,6 +223,7 @@ console.log(info.store.general_configuration)
         handleRemoveFilter={handleRemoveFilter}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({ ...query, searchKey: value })}
         customizable={false}
+        getDataExport={getDataExport}
         excel_data={excel_data_customer}
         excel_name={excel_name_customer}
         importByJSON={importCustomerByJSON}
@@ -269,7 +283,6 @@ console.log(info.store.general_configuration)
         <div ref={componentRef}  >
           <ComponentToPrint customerList={customerList} classes={classes} />
         </div>
-
       </div>
     </Card>
   )

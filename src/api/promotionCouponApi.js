@@ -1,5 +1,5 @@
 import axiosClient from "./axiosClient";
-
+import moment from "moment";
 const promotionCouponApi = {
   createPromotion: (storeUuid, body) => {
     const url = `stores/${storeUuid}/createPromotion`;
@@ -18,11 +18,16 @@ const promotionCouponApi = {
     const url = `stores/${storeUuid}/updatePromotion`;
     return axiosClient.put(url, body);
   },
-  getActivePromotionVoucher: (storeUuid, date) => {
+  getActivePromotionVoucher: (storeUuid) => {
+    let d = moment.now() / 1000;
+
+    let currentDate = moment
+      .unix(d)
+      .format("YYYY-MM-DD", { trim: false });
     const url = `stores/${storeUuid}/getActivePromotionVoucher`;
     return axiosClient.get(url, {
       params: {
-        date: date,
+        date: currentDate,
       },
     });
   },

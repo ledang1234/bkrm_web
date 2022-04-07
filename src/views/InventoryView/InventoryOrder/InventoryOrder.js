@@ -38,6 +38,7 @@ import purchaseOrderApi from "../../../api/purchaseOrderApi";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+import { statusAction } from "../../../store/slice/statusSlice";
 const InventoryOrder = () => {
   // fetch data here
   const [purchaseOrders, setPurchaseOrders] = useState([]);
@@ -143,7 +144,19 @@ const InventoryOrder = () => {
     style: "error",
     message: "Kiểm kho thất bại",
   });
-
+  const getDataExport = async () => {
+    try {
+      const response = await purchaseOrderApi.getAllOfBranch(
+        store_uuid,
+        branch_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus('Không thể lấy dữ liệu'))
+      console.log(error);
+    }
+  }
   const tableRef = React.createRef();
 
   return (
@@ -194,7 +207,7 @@ const InventoryOrder = () => {
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
         
         handleRemoveFilter={handleRemoveFilter}
-
+        getDataExport={getDataExport}
         columnsToKeep = {[
           {dbName:"purchase_order_code",displayName:"Mã đơn nhập"},
           {dbName:"payment_date",displayName:"Ngày nhập"},

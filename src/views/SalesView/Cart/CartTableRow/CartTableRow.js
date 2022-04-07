@@ -13,7 +13,7 @@ import {
   Chip,
   Button,
   Typography,
-  Grid
+  Grid,
 } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
@@ -24,14 +24,13 @@ import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 import DiscountPopUp from "../DiscountPopup/DiscountPopup";
 import icon from "../../../../assets/img/product/tch.jpeg";
 import SelectBatch from "../../../../components/SelectBatch/SelectBatch";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import MoreInfo from "../../../../components/MoreInfo/MoreInfo"
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { List } from "@mui/material";
+import MoreInfo from "../../../../components/MoreInfo/MoreInfo";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
-import defaultProduct from '../../../../assets/img/product/default-product.png'
-import setting from "../../../../assets/constant/setting"
+import defaultProduct from "../../../../assets/img/product/default-product.png";
+import setting from "../../../../assets/constant/setting";
 
 export const CartRow = (props) => {
   const classes = useStyles();
@@ -104,21 +103,32 @@ export const CartRow = (props) => {
     setSelectedBatches(newBatches);
   };
 
-  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  const store_setting = info.store.general_configuration
+    ? JSON.parse(info.store.general_configuration)
+    : setting;
 
-const canFixPriceSell= store_setting?.canFixPriceSell
+  const canFixPriceSell = store_setting?.canFixPriceSell;
 
-const [show, setShow] = React.useState(false);
+  const [show, setShow] = React.useState(false);
 
-
-const findBranchQuantity = (id) => {
-  const rs = row.branch_inventories.find(x => x.uuid === id)?.quantity_available
-  if(rs){return rs }
-  else{ return 0}
-}
-return (
+  const findBranchQuantity = (id) => {
+    const rs = row.branch_inventories.find(
+      (x) => x.uuid === id
+    )?.quantity_available;
+    if (rs) {
+      return rs;
+    } else {
+      return 0;
+    }
+  };
+  return (
     <>
-      <TableRow hover key={props.row.uuid} onMouseOver={()=>  setShow(true)}  onMouseLeave={()=> setShow(false)} >
+      <TableRow
+        hover
+        key={props.row.uuid}
+        onMouseOver={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+      >
         <TableCell align="left">{row.id + 1}</TableCell>
         {/* Sửa lại thành product_code */}
         <TableCell align="left" style={{ width: 5 }}>
@@ -127,36 +137,43 @@ return (
         <TableCell align="left" style={{ minWidth: 200 }}>
           <ListItem
             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
-           alignItems='center'
+            alignItems="center"
           >
             <Box
               component="img"
               sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
-
-              src={JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) || defaultProduct}
-
+              src={
+                JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) ||
+                defaultProduct
+              }
             />
-            <Typography  style={{marginRight:5}} 
-             >{row.name}</Typography>
-            {show && store_setting?.inventory.status? 
-             <MoreInfo  >     
-              <ListItem >
-                  <Typography style={{width:180}}></Typography>
-                  <Typography style={{fontWeight:700}}>Tồn</Typography>
+            <Typography style={{ marginRight: 5 }}>{row.name}</Typography>
+            {show && store_setting?.inventory.status ? (
+              <MoreInfo>
+                <ListItem>
+                  <Typography style={{ width: 180 }}></Typography>
+                  <Typography style={{ fontWeight: 700 }}>Tồn</Typography>
                 </ListItem>
                 {branchs.map((item) => {
-                  return(
-                  <ListItem >
-                      <ListItem style={{width:180, margin:0, padding:0}}>
-                          <Typography style={{fontWeight:700, marginRight:10}}>{item.name}</Typography>
-                          {item.uuid === branch.uuid ? <CheckCircleIcon fontSize="small" color='primary'/> :null} 
+                  return (
+                    <ListItem>
+                      <ListItem style={{ width: 180, margin: 0, padding: 0 }}>
+                        <Typography
+                          style={{ fontWeight: 700, marginRight: 10 }}
+                        >
+                          {item.name}
+                        </Typography>
+                        {item.uuid === branch.uuid ? (
+                          <CheckCircleIcon fontSize="small" color="primary" />
+                        ) : null}
                       </ListItem>
-                      <Grid justifyContent='flex-end'>
-                      <Typography >{findBranchQuantity(item.uuid)}</Typography>
-                    </Grid>
-                </ListItem>
-                 ) })}
-               {/* {row.branch_inventories.map(item =>(
+                      <Grid justifyContent="flex-end">
+                        <Typography>{findBranchQuantity(item.uuid)}</Typography>
+                      </Grid>
+                    </ListItem>
+                  );
+                })}
+                {/* {row.branch_inventories.map(item =>(
                    <ListItem >
                       <ListItem style={{width:280, margin:0, padding:0}}>
                           <Typography style={{fontWeight:700, marginRight:10}}>{item.name}</Typography>
@@ -165,9 +182,8 @@ return (
                       <Typography>{item.quantity_available}</Typography>
                     </ListItem>
                 ))}   */}
-            </MoreInfo>
-    
-           :null}
+              </MoreInfo>
+            ) : null}
             {haveDiscount ? (
               <img
                 id="gift"
@@ -189,21 +205,23 @@ return (
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
         <TableCell align="right">
-          {canFixPriceSell.status && canFixPriceSell.cart ?
-          <Input.ThousandSeperatedInput
-            id="standard-basic"
-            style={{ width: 72 }}
-            size="small"
-            inputProps={{ style: { textAlign: "right" } }}
-            defaultPrice={row.unit_price}
-            value={row.unit_price}
-            onChange={(e) =>
-              handleChangeItemPrice(props.row.uuid, e.target.value)
-            }
-          />
-          :
-          <Input.ThousandFormat  value={row.unit_price} > </Input.ThousandFormat>
-        }
+          {canFixPriceSell.status && canFixPriceSell.cart ? (
+            <Input.ThousandSeperatedInput
+              id="standard-basic"
+              style={{ width: 72 }}
+              size="small"
+              inputProps={{ style: { textAlign: "right" } }}
+              defaultPrice={row.unit_price}
+              value={row.unit_price}
+              onChange={(e) =>
+                handleChangeItemPrice(props.row.uuid, e.target.value)
+              }
+            />
+          ) : (
+            <Input.ThousandFormat value={row.unit_price}>
+              {" "}
+            </Input.ThousandFormat>
+          )}
         </TableCell>
         {row.has_batches ? (
           <TableCell align="center" padding="none">

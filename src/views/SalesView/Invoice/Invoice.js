@@ -42,6 +42,7 @@ import orderApi from "../../../api/orderApi";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+import { statusAction } from "../../../store/slice/statusSlice";
 
 const Invoice = () => {
   // fetch data here
@@ -152,6 +153,21 @@ const Invoice = () => {
 
   const tableRef = React.createRef();
 
+
+  const getDataExport = async () => {
+    try {
+      const response = await orderApi.getAllOfBranch(
+        store_uuid,
+        branch_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus("Không thể lấy dữ liệu!"));
+      console.log(error);
+    }
+  }
+
   return (
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -189,7 +205,7 @@ const Invoice = () => {
         textSearch={"#, Khách, Người bán,...  "} /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
-        
+        getDataExport={getDataExport}
         orderByOptions={[
           {value: 'orders.created_at', label: 'Ngày bán'},
           {value: 'total_amount', label: 'Tổng tiền bán'},
@@ -198,7 +214,7 @@ const Invoice = () => {
         sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
         handleRemoveFilter={handleRemoveFilter}
-
+        
         columnsToKeep = {[
           {dbName:"order_code",displayName:"Mã hoá đơn"},
           {dbName:"customer_name",displayName:"Khách hàng"},

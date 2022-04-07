@@ -19,7 +19,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
 //import api
 import supplierApi from "../../../api/supplierApi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -40,7 +40,7 @@ import TableWrapper from "../../../components/TableCommon/TableWrapper/TableWrap
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
-
+import { statusAction } from '../../../store/slice/statusSlice';
 
 const Supplier = () => {
   const [supplerList, setSupplierList] = useState([]);
@@ -50,6 +50,7 @@ const Supplier = () => {
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const dispatch = useDispatch();
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -155,7 +156,18 @@ const Supplier = () => {
     }
     
   }, [reload,pagingState.page, store_uuid, pagingState.limit, query]);
-
+  const getDataExport = async () => {
+    try {
+      const response = await supplierApi.getSuppliers(
+        store_uuid,
+        query,
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(statusAction.failedStatus('Không thể lấy dữ liệu'))
+      console.log(error);
+    }
+  }
   const tableRef = React.createRef();
 
 
@@ -208,6 +220,7 @@ const Supplier = () => {
           {dbName:"payment_info",displayName:"Thông tin thanh toán"},
         ]}
         isOnlySearch={true}
+        getDataExport={getDataExport}
         handleRemoveFilter={handleRemoveFilter}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
       />
