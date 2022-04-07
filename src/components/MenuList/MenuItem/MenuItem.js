@@ -66,7 +66,7 @@ const MenuItem = (props) => {
   const Icon = item.icon1;
   const Icon1 = item.icon2;
 
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("md")) ;
   const info = useSelector((state) => state.info);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 

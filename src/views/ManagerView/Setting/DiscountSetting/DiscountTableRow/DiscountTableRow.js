@@ -14,14 +14,22 @@ import DiscountDetail from './DiscountDetail/DiscountDetail'
 const DiscountTableRow = (props) => {
     const { row, handleOpenRow,openRow} = props;
     const classes = useRowStyles();
-    const discountKey = row.promotion_condition.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
+    // const discountKey = row.promotion_condition.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
+    const discountKey = row.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
+
     var promotion_condition ={}
     if(row.promotion_condition?.length !== 0) {promotion_condition = JSON.parse(row.promotion_condition) }
     var dateAdvanceSetting ={}
     if(row.dateAdvanceSetting?.length !== 0) {dateAdvanceSetting = row.dateAdvanceSetting?JSON.parse(row.dateAdvanceSetting) :{} }
-    const discountType = getDiscountType(promotion_condition?.discountKey,promotion_condition?.discountType )  
+    // const discountType = getDiscountType(promotion_condition?.discountKey,promotion_condition?.discountType )  
+    const discountType = getDiscountType(row.discountKey,row.discountType )  
+
     const type = `${discountKey}  -  ${discountType}`  
     
+    const isActive =  (startDay, endDay) =>{
+        const current   = new Date() 
+        return (startDay !== "0000-00-00" ?new Date(startDay) <= current : true) && ( endDay !== "0000-00-00" ?current <= new Date(endDay) :true)
+    }
     return (
         <>
         {/* ROW */}
@@ -32,10 +40,10 @@ const DiscountTableRow = (props) => {
             >
                 <TableCell align="left">{row.promotion_code}</TableCell>
                 <TableCell align="left">{row.name}</TableCell>
-                <TableCell align="left">{row.start_date}</TableCell>
-                <TableCell align="left">{row.end_date}</TableCell>
+                <TableCell align="left">{row.start_date !== "0000-00-00"? row.start_date?.split('-').reverse().join('/') :"- - /  - -  / - - - - "}</TableCell>
+                <TableCell align="left">{row.end_date !== "0000-00-00"?row.end_date?.split('-').reverse().join('/'):"Không giới hạn"}</TableCell>
                 <TableCell align="left">{type}</TableCell>
-                <TableCell align="left">{row.status}</TableCell>
+                <TableCell align="left">{row.status ==='active' && isActive(row.start_date,row.end_date)? "Hoạt động" : 'Chưa hoạt động' }</TableCell>
 
             </TableRow>
 

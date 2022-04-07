@@ -38,11 +38,10 @@ export const CartRow = (props) => {
   const haveDiscount = true;
   const info = useSelector((state) => state.info);
   const branch = info.branch;
-
-
+  const branchs = info.store.branches
   const {
     row,
-    branchs,
+    // branchs,
     discountData,
     handleDeleteItemCart,
     handleChangeItemQuantity,

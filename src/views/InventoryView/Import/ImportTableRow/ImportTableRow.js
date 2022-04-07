@@ -34,7 +34,7 @@ export const ImportRow = (props) => {
   const classes = useStyles();
   const {
     row,
-    branchs,
+    // branchs,
     handleDeleteItemCart,
     handleChangeItemQuantity,
     handleChangeItemPrice,
@@ -42,6 +42,7 @@ export const ImportRow = (props) => {
   } = props;
   const info = useSelector((state) => state.info);
   const branch = info.branch;
+  const branchs = info.store.branches
 
   const updateQuantity = (newQuantity) => {
     handleChangeItemQuantity(row.uuid, newQuantity);
