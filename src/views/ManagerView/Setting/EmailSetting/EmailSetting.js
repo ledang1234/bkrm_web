@@ -111,7 +111,7 @@ const EmailSetting = () => {
 
 
   const [value, setValue] = useState('');
-
+console.log("valueeeee",value)
   return (
     <Card className={classes.root}>
        <Typography className={classes.headerTitle} variant="h3">

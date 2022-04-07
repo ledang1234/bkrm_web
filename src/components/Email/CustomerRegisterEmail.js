@@ -1,6 +1,7 @@
 import { renderToString } from 'react-dom/server'
 
 const CustomerRegisterEmail = (header, footer, customer, store) => {
+    
     return renderToString(
         <>
         {header}

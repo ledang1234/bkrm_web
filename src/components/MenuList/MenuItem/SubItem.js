@@ -48,7 +48,7 @@ const SubItem = (props) => {
     const customization = useSelector((state) => state.customize);
     
     const itemMenuOpen = customization.itemMenuOpen;
-    const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+    const xsScreen = useMediaQuery(theme.breakpoints.down("md")) ;
 
   
     function handleOnClick(id){

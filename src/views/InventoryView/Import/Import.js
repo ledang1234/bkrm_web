@@ -167,18 +167,18 @@ const Import = () => {
     fetchSupplier();
   }, [reloadSupplier]);
 
-  const [branchs, setBranchs] = useState([]);
-  useEffect(() => {
-    const loading = async () => {
-      try {
-        const response = await branchApi.getAllBranches(store_uuid);
-        setBranchs(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    loading()
-  }, []);
+  // const [branchs, setBranchs] = useState([]);
+  // useEffect(() => {
+  //   const loading = async () => {
+  //     try {
+  //       const response = await branchApi.getAllBranches(store_uuid);
+  //       setBranchs(response.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   loading()
+  // }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -719,7 +719,7 @@ const Import = () => {
                             handleChangeItemPrice={handleChangeItemPrice}
                             handleChangeItemQuantity={handleChangeItemQuantity}
                             handleUpdateBatches={handleUpdateBatches}
-                            branchs={branchs}
+                            // branchs={branchs}
                           />
                         );
                       })}

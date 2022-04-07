@@ -70,6 +70,7 @@ const DiscountSetting = () => {
       }
     }, [pagingState.page, pagingState.limit, reload]);
 
+   
     // useEffect(() => {
     //     customerApi.getCustomers(store_uuid)
     //     .then(response => response.data, err => console.log(err))
@@ -147,12 +148,8 @@ const DiscountSetting = () => {
     };
 
     //3.3. loc cot
-
-
-
-
+    console.log("newDiscountList",newDiscountList)
     return (
-
     <Card className={classes.root} >
     
         <Grid container direction="row" alignItems="center">
@@ -212,8 +209,10 @@ const DiscountSetting = () => {
            
               if(row.promotion_condition.length !== 0) {var promotion_condition = JSON.parse(row.promotion_condition) }
               if(row.dateAdvanceSetting?.length !== 0) {var dateAdvanceSetting = row.dateAdvanceSetting?JSON.parse(row.dateAdvanceSetting) :{}}
-              const discountKey = row.promotion_condition.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
-              const discountType = getDiscountType(promotion_condition?.discountKey,promotion_condition?.discountType )  
+              // const discountKey = row.promotion_condition.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
+              // const discountType = getDiscountType(promotion_condition?.discountKey,promotion_condition?.discountType )  
+              const discountKey = row.discountKey === "invoice" ?"Hoá đơn" :"Sản phẩm"
+              const discountType = getDiscountType(row.discountKey,row.discountType )  
               const type = `${discountKey}  -  ${discountType}`  
 
                 return (

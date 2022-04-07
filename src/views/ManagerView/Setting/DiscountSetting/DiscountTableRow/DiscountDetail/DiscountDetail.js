@@ -78,50 +78,19 @@ const DiscountDetail = (props) => {
     const {row,openRow }= props.parentProps;
     const {promotion_condition,dateAdvanceSetting,type,isMini} = props;
 
-    const {rowsInvoice } = props.promotion_condition;
+    const rowsInvoice  = props.promotion_condition;
+    console.log("rowsInvoice",props.promotion_condition)
+    // const rowsInvoice = props.promotion_condition;
 
+    
+    // const discountKey= promotion_condition?.discountKey;// invoice, product
+    // const discountType = promotion_condition?.discountType; //discountInvoice , sendGift, sendVoucher,priceByQuantity
 
-    const discountKey= promotion_condition?.discountKey;// invoice, product
-    const discountType = promotion_condition?.discountType; //discountInvoice , sendGift, sendVoucher,priceByQuantity
-
+    const discountKey= row.discountKey;// invoice, product
+    const discountType = row.discountType; //discountInvoice , sendGift, sendVoucher,priceByQuantity
 
 
     // CALL APII (đổi thanhd api)
- 
-    const discountData = 
-      [
-        {
-          key:"1", //  ID dung để delete row , ko liên quan database
-          totalCost:1000, 
-          type:"VND" ,// "%"
-          discountValue:20000,
-    
-          numberGiftItem:1,
-          listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-  
-          numberBuyItem:1,
-          listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-          typeDiscountItem:"percent",
-          listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-          listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        },
-        {
-          key:"1", //  ID dung để delete row , ko liên quan database
-          totalCost:1000, 
-          type:"VND" ,// "%"
-          discountValue:20000,
-    
-          numberGiftItem:1,
-          listGiftItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-  
-          numberBuyItem:1,
-          listBuyItem:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-          typeDiscountItem:"percent",
-          listGiftCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-          listBuyCategory:[{product_code:"SP10002",name:"Áo dài"},{product_code:"SP10005",name:"Quần dài"}],
-        }
-      ]
-    // ======================
 
 
 
@@ -142,7 +111,10 @@ const DiscountDetail = (props) => {
       setAnchorEl(null);
     };
 
-
+    const isActive =  (startDay, endDay) =>{
+      const current   = new Date() 
+      return (startDay !== "0000-00-00" ?new Date(startDay) <= current : true) && ( endDay !== "0000-00-00" ?current <= new Date(endDay) :true)
+  }
     return (
         <Collapse in={ isMini ? true :openRow === row.id } timeout="auto" unmountOnExit>
              <Box margin={1}>
@@ -186,7 +158,7 @@ const DiscountDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Trạng thái</Typography>    
                         </Grid>
                         <Grid item  >
-                          <Typography variant="body1" gutterBottom component="div">{row.status}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{row.status ==='active' && isActive(row.start_date,row.end_date)? "Hoạt động" : 'Chưa hoạt động' }</Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="flex-start">
@@ -195,48 +167,48 @@ const DiscountDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Thời gian</Typography>    
                         </Grid>
                         <Grid item >
-                          <Typography variant="body1" gutterBottom component="div">Từ {row.start_date} -  Đến {row.end_date}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">Từ {row.start_date?.split('-').reverse().join('/')}  {row.end_date !== '0000-00-00'? `-  Đến ${row.end_date?.split('-').reverse().join('/')}` :"(Không giới hạn)"}</Typography>
                         </Grid>
                     </Grid>
 
                     {/* Thay TRUE thành nếu list theo thứ ngày tháng,.. ko empty thì show */}
-                    {dateAdvanceSetting.byMonth?
+                    {dateAdvanceSetting.byMonth?.length !== 0 ?
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo tháng</Typography>    
                         </Grid>
                         <Grid item>
-                          <Typography variant="body1" gutterBottom component="div">{row.byMonth?.toString()}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{dateAdvanceSetting.byMonth?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }
-                    {dateAdvanceSetting.byDay?
+                    {dateAdvanceSetting.byMonth?.length !== 0 ?
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo ngày</Typography>    
                         </Grid>
                         <Grid item sm={4} >
-                          <Typography variant="body1" gutterBottom component="div">{row.byDay?.toString()}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{dateAdvanceSetting.byDay?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }
-                    {dateAdvanceSetting.byDate?
+                    {dateAdvanceSetting.byMonth?.length !== 0 ?
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={4}>
                           <Typography variant="h5" gutterBottom component="div">Theo thứ</Typography>    
                         </Grid>
                         <Grid item sm={4} >
-                          <Typography variant="body1" gutterBottom component="div">{row.byDate?.toString()}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{dateAdvanceSetting.byDate?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }
-                    {dateAdvanceSetting.byTime?
+                    {dateAdvanceSetting.byMonth?.length !== 0 ?
                       <Grid container direction="row" justifyContent="flex-start">
                         <Grid item xs={3} sm={4} >
                           <Typography variant="h5" gutterBottom component="div">Theo giờ</Typography>    
                         </Grid>
                         <Grid item sm={4} >
-                          <Typography variant="body1" gutterBottom component="div">{row.byTime?.toString()}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{dateAdvanceSetting.byTime?.toString()}</Typography>
                         </Grid>
                     </Grid> : null
                     }

@@ -62,6 +62,7 @@ import setting from "../../../assets/constant/setting"
 import { infoActions } from "../../../store/slice/infoSlice";
 import productApi from "../../../api/productApi";
 import { statusAction } from "../../../store/slice/statusSlice";
+import promotionCouponApi from '../../../api/promotionCouponApi';
 
 const Cart = () => {
   const theme = useTheme();
@@ -75,6 +76,31 @@ const Cart = () => {
   const branch_uuid = info.branch.uuid;
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
+  const [discountList, setDiscountList] = useState([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await promotionCouponApi.getAllPromotions(
+          store_uuid,
+          {
+            page: 0,
+            limit: 10,
+          }
+        );
+        setDiscountList(response.promotions);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (store_uuid) {
+      loadData();
+    }
+  }, []);
+  console.log("discountListttttt",discountList)
+  const handlePromotion  = () => {
+      
+  }
   // const [customers, setCustomers] = useState([]);
 
   ////------------ I. DATA (useState) ----------------
@@ -220,18 +246,18 @@ const Cart = () => {
     }
   }, [reloadCustomers]);
 
-  const [branchs, setBranchs] = useState([]);
-  useEffect(() => {
-    const loading = async () => {
-      try {
-        const response = await branchApi.getAllBranches(store_uuid);
-        setBranchs(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    loading()
-  }, []);
+  // const [branchs, setBranchs] = useState([]);
+  // useEffect(() => {
+  //   const loading = async () => {
+  //     try {
+  //       const response = await branchApi.getAllBranches(store_uuid);
+  //       setBranchs(response.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   loading()
+  // }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -569,7 +595,7 @@ const Cart = () => {
         setOpenSnack(true);
         console.log(err);
       }
-      dispatch(infoActions.setReloadProduct());
+      // dispatch(infoActions.setReloadProduct());
     }
   };
   //print
@@ -699,7 +725,7 @@ const Cart = () => {
                         return (
                           <CartRow
                             row={row}
-                            branchs={branchs}
+                            // branchs={branchs}
                             handleUpdateBatches={handleUpdateBatches}
                             handleDeleteItemCart={handleDeleteItemCart}
                             handleChangeItemPrice={handleChangeItemPrice}

@@ -28,6 +28,7 @@ import { render } from "sass";
 import { VNDFormat } from "../TextField/NumberFormatCustom";
 import defaultProduct from "../../assets/img/product/default-product.png"
 import setting from "../../assets/constant/setting"
+import { createFilterOptions } from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -84,11 +85,11 @@ const SearchProduct = (props) => {
         fullWidth
         container
         direction="row"
-        style={{
-          backgroundColor: selectedOption.name
-            ? "rgba(164,247,247,0.3)"
-            : "rgba(0,0,0,0)",
-        }}
+        // style={{
+        //   backgroundColor: selectedOption.name
+        //     ? "rgba(164,247,247,0.3)"
+        //     : "rgba(0,0,0,0)",
+        // }}
       >
         <Grid item xs={3}>
           <FormatedImage url={JSON.parse(option.img_urls ? option.img_urls : "[]").at(0) || defaultProduct} />
@@ -150,8 +151,13 @@ const SearchProduct = (props) => {
     />
   );
 
+  const filter = createFilterOptions({
+    stringify: option => `${option.product_code} - ${option.name}  - ${option.bar_code}`,
+  });
   const getOptionLabel = (option) => {
-    return option.name ? `${option.name}-${option.bar_code}-${option.product_code}` : ""
+    // return option.name ? `${option.name}-${option.bar_code}-${option.product_code}` : ""
+    // return option.name ? `${option.product_code} (${option.name})  ${option.bar_code}` : ""
+    return option.name ? option.name: ""
   };
 
   // just filter
@@ -162,8 +168,9 @@ const SearchProduct = (props) => {
         title={`Space: tìm kiếm, Tab để chọn lựa chọn đầu tiên và tăng số lượng, Delete để xóa lựa chọn hiện tại`}
       >
         <Autocomplete
+        filterOptions={filter}
           options={products}
-          freeSolo
+          // freeSolo
           // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
           // inputValue={inputValue}
 

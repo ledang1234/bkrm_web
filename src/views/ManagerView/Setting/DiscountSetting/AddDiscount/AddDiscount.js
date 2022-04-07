@@ -45,8 +45,12 @@ import 'react-quill/dist/quill.snow.css';
 import ListIcon from '@material-ui/icons/List';
 import productApi from "../../../../../api/productApi";
 import { statusAction } from "../../../../../store/slice/statusSlice";
+import { infoActions } from "../../../../../store/slice/infoSlice";
+
 import 'antd/dist/antd.css';
 import "../../../../../index.css"
+// import productApi from "../../../../../api/productApi";
+
 import RemoveIcon from '@material-ui/icons/Remove';
 import IndeterminateCheckBoxOutlinedIcon from '@material-ui/icons/IndeterminateCheckBoxOutlined';
 const { SHOW_PARENT } = TreeSelect;
@@ -93,9 +97,25 @@ const AddDiscount = (props) => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
+  const info = useSelector(state => state.info)
+  const store_uuid = info.store.uuid
+  const branch_uuid = info.branch.uuid;
+  const products = info.products;
+  const dispatch = useDispatch();
 
   const [name, setName] = React.useState("");
   const [categoryList, setCategoryList] = useState([]);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const response = await productApi.searchBranchProduct(store_uuid, branch_uuid, '')
+      dispatch(infoActions.setProducts(response.data))
+    }
+    if (store_uuid && branch_uuid) {
+      loadProducts()
+    }
+  }, [store_uuid, branch_uuid]);
+
 
   useEffect(() => {
     const fetchCategoryList = async () => {
@@ -267,13 +287,24 @@ const AddDiscount = (props) => {
     newArr[index].numberGiftItem =  Math.abs(event.target.value);
     setRowsInvoice(newArr);
   }
-  const  handleChangeListGiftItem = (option, index,typeChange) => {
+  // const  handleChangeListGiftItem = (option, index,typeChange) => {
+  //   let newArr = [...rowsInvoice];
+  //   if (typeChange === "delete"){
+  //     newArr[index].listGiftItem = newArr[index].listGiftItem.filter(item => item.uuid !== option.uuid)
+  //   }else{
+  //     newArr[index].listGiftItem.push(option)
+  //   }
+   
+  //   setRowsInvoice(newArr);
+  // }
+  const  handleChangeListGiftItem = (value, index) => {
     let newArr = [...rowsInvoice];
-    if (typeChange === "delete"){
-      newArr[index].listGiftItem = newArr[index].listGiftItem.filter(item => item.uuid !== option.uuid)
-    }else{
-      newArr[index].listGiftItem.push(option)
-    }
+    // if (typeChange === "delete"){
+    //   newArr[index].listGiftItem = newArr[index].listGiftItem.filter(item => item.uuid !== option.uuid)
+    // }else{
+    //   newArr[index].listGiftItem.push(option)
+    // }
+    newArr[index].listGiftItem = value
    
     setRowsInvoice(newArr);
   }
@@ -282,13 +313,24 @@ const AddDiscount = (props) => {
     newArr[index].numberBuyItem = Math.abs(event.target.value);
     setRowsInvoice(newArr);
   }
-  const  handleChangeListBuyItem = (option, index,typeChange) => {
+  // const  handleChangeListBuyItem = (option, index,typeChange) => {
+  //   let newArr = [...rowsInvoice];
+  //   if (typeChange === "delete"){
+  //     newArr[index].listBuyItem = newArr[index].listBuyItem.filter(item => item.uuid !== option.uuid)
+  //   }else{
+  //     newArr[index].listBuyItem.push(option)
+  //   }
+   
+  //   setRowsInvoice(newArr);
+  // }
+    const  handleChangeListBuyItem = (value, index) => {
     let newArr = [...rowsInvoice];
-    if (typeChange === "delete"){
-      newArr[index].listBuyItem = newArr[index].listBuyItem.filter(item => item.uuid !== option.uuid)
-    }else{
-      newArr[index].listBuyItem.push(option)
-    }
+    // if (typeChange === "delete"){
+    //   newArr[index].listBuyItem = newArr[index].listBuyItem.filter(item => item.uuid !== option.uuid)
+    // }else{
+    //   newArr[index].listBuyItem.push(option)
+    // }
+    newArr[index].listBuyItem  = value
    
     setRowsInvoice(newArr);
   }
@@ -427,9 +469,7 @@ const AddDiscount = (props) => {
 
   // const [endDate, setEndDate] = React.useState( new Date(currentDate.setMonth(currentDate.getMonth()+6)).toISOString().slice(0,10) )
 
-  const info = useSelector(state => state.info)
-  const store_uuid = info.store.uuid
-  const dispatch = useDispatch();
+
 
   return (
  
@@ -761,21 +801,23 @@ const AddDiscount = (props) => {
               name: name,
               start_date: startDate,
               end_date: endDate,
+              discountKey: discountKey,
+              discountType: discountType,
 
-              promotion_condition: JSON.stringify({
-                discountKey: discountKey,
-                discountType: discountType,
-                rowsInvoice: rowsInvoice,
+              // promotion_condition: JSON.stringify({
+                
+              //   rowsInvoice: rowsInvoice,
               
-              }),
+              // }),
+              promotion_condition: JSON.stringify(rowsInvoice),
               customer_birth: checkedBirthday,
               // Thêm cái này nữa Hải ơi
-              // dateAdvanceSetting: JSON.stringify({
-              //   byDay:byDay,
-              //   byMonth:byMonth,
-              //   byDate:byDate,
-              //   byTime:byTime
-              // }),
+              dateAdvanceSetting: JSON.stringify({
+                byDay:byDay,
+                byMonth:byMonth,
+                byDate:byDate,
+                byTime:byTime
+              }),
 
             };
 
