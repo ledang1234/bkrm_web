@@ -13,9 +13,14 @@ import {
   FormControl,
   RadioGroup,
   Radio,
-  ListItem
+  ListItem,
+  Paper,
+  ButtonBase,
+  Avatar,
+  Popover
 } from "@material-ui/core";
 import {calculateTotalQuantity} from "../../../../components/TableCommon/util/sortUtil"
+import Popper from '@material-ui/core/Popper';
 
 import AddCustomer from "../../../../views/ManagerView/Customer/AddCustomer/AddCustomer";
 import giftBox from "../../../../assets/img/icon/giftbox.png";
@@ -52,6 +57,7 @@ const useStyles = makeStyles((theme) =>
     headerTitle: {
       fontSize: "1.125rem",
     },
+    popup: { borderColor: theme.customization.primaryColor[500], padding: 5, paddingLeft:12, boxShadow: "0px 5px 10px 0px rgba(0, 0, 0, 0.5)" }
   })
 );
 const CartSummary = (props) => {
@@ -82,15 +88,7 @@ const CartSummary = (props) => {
     setOpen(true);
   };
   const dispatch = useDispatch();
-  // const handleClose = (status) => {
-  //   if ((status = "Success")) {
-  //     setOpen(false);
-  //     reloadCustomers();
-  //     dispatch(statusAction.successfulStatus("Thêm khách hàng thành công"));
-  //   } else {
-  //     dispatch(statusAction.failedStatus("Thêm khách hàng thất bại"));
-  //   }
-  // };
+
 
   //mode 2: popup
   const [openPopUp, setOpenPopUp] = React.useState(false);
@@ -112,41 +110,27 @@ const CartSummary = (props) => {
 
   // so tien khach đưa
   const [customerMoney, setCustomerMoney] = React.useState("0");
-  
-  // console.log("currentCustomer",currentCustomer)
-  // React.useEffect(() => {console.log(currentBranch)})
-
-  // console.log("cartItem")
-  // console.log(cartData.cartItem)
-  // var emptyCart =  cartData.cartItem.length === 0;
-
-  // var correctQuantity = cartData.cartItem.every(function(element, index) {
-  //     console.log(element);
-  //     if(element.quantity > element.branch_quantity)
-  //         return false;
-  //     else
-  //         return true;
-  // });
-  // console.log("correctQuantity")
-  // console.log(correctQuantity)
-  // console.log("emptyCart")
-  // console.log(emptyCart)
 
 
-  // Discount
-  // let haveDiscount = discountData.every(row => row.detail.totalCost > parseInt(cartData.total_amount))
-  // let haveDiscount = discountData.some(row => row.detail.map((i)=> i.totalCost) < parseInt(cartData.total_amount))
-  function checkHaveDiscount  () {
-        for (let i = 0; i < discountData.length; i++) {
-            for (let j = 0; j < discountData[i]?.detail.length; j++) {
-                if( discountData[i].detail[j].totalCost < parseInt(cartData.total_amount)){
-                  return true;
-                }
-            }         
+  const handlePromotion = () =>{ 
+    if(discountData.length !==0 ){ 
+      let arr = []
+       discountData?.map(( pro) => {
+        const sortedRow = JSON.parse(pro.promotion_condition).sort((a, b) => {return b.totalCost - a.totalCost})
+        for ( let i = 0; i <sortedRow.length ; i++){
+          if(Number(cartData.total_amount) >= Number(sortedRow[i].totalCost)){
+             arr.push({...sortedRow[i], name:pro.name , discountKey:pro.discountKey,discountType:pro.discountType, id:pro.id})
+             return 
+          }
         }
-        return false
+      })
+      return arr
+    }
+    return []
   }
-  let haveDiscount = checkHaveDiscount();
+  let filteredPromotion = handlePromotion()
+
+  const [selectedPromotion, setSelectedPromotion] = React.useState(null);
   const [openDiscount, setOpenDiscount] = React.useState(false);
 
   const [addCustomer, setAddCustomer] =  React.useState({ name: "", phone: "" });
@@ -155,6 +139,17 @@ const CartSummary = (props) => {
     if(addCustomer?.name?.length !==  0){props.handleSelectCustomer(addCustomer);setAddCustomer({ name: "", phone: "" })}
   })
   console.log("currentCustomerrrrr",currentCustomer)
+
+
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openDiscountDetail = Boolean(anchorEl);
+  const [moneyDiscountType, setMoneyDiscountType]=React.useState("VND");
+  const [value, setValue] = React.useState(cartData.discount)
+
+  const handleClick = (event) => {
+      setAnchorEl(anchorEl ? null : event.currentTarget);
+    };
 
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
@@ -238,17 +233,16 @@ const CartSummary = (props) => {
               <div>
                 <ListItem style={{padding: 0,margin:0}}>
                 <Typography variant="h5">Tổng tiền hàng</Typography>
-                {haveDiscount ? 
+                { filteredPromotion.length > 0   ? 
                 <div onClick={()=>{setOpenDiscount(!openDiscount)}}>
                     <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} />
-
                 </div>
                 :null}
                 
                 </ListItem>
               
               </div>
-              {openDiscount && <DiscountPopUp open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}}/>}
+              {openDiscount && <DiscountPopUp setSelectedPromotion={setSelectedPromotion} selectedPromotion={selectedPromotion} filteredPromotion={filteredPromotion} open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}}/>}
 
               
               <Typography variant="body2">
@@ -263,13 +257,32 @@ const CartSummary = (props) => {
               justifyContent="space-between"
               className={classes.marginRow}
             >
-              <Typography variant="h5">Giảm giá</Typography>
+          
+               <div>
+                <ListItem style={{padding: 0,margin:0}}>
+                <Typography variant="h5">Giảm giá {selectedPromotion?.type ==="%" ? <b style={{color:'red'}} >({selectedPromotion.discountValue}%)</b>:""}</Typography>
+                { selectedPromotion    ? 
+                <div >
+                      <Box style={{backgroundColor:"red",color:"#fff",fontSize:12,fontWeight:500,borderRadius:5, paddingLeft:5,paddingRight:5, marginLeft:10}}>KM</Box>
+                      {/* <img  src={require('../../../../assets/img/icon/tag (1).png').default} style={{height:22,width:22, marginLeft:10, marginTop:-3}} /> */}
+                </div>
+                :null}
+                <Popper  placement="left-start" open={openDiscountDetail} anchorEl={anchorEl} onClose={()=>setAnchorEl(null)}   style={{zIndex:1000000}} >   
+                    <DiscountInputDetail value={value}setValue={setValue}cartData={cartData}handleUpdateDiscount={handleUpdateDiscount} setAnchorEl={setAnchorEl} setMoneyDiscountType={setMoneyDiscountType} moneyDiscountType={moneyDiscountType}/>
+                </Popper>
+                </ListItem>
+              
+              </div>
+     
+
               <VNDInput
                 id="standard-basic"
                 style={{ width: 90 }}
                 size="small"
+                value={cartData.discount}
                 inputProps={{ style: { textAlign: "right" } }}
-                onChange={(e) => handleUpdateDiscount(e.target.value)}
+                // onChange={(e) => handleUpdateDiscount(e.target.value)}
+                onClick={handleClick}
               />
             </Grid>
 
@@ -560,3 +573,80 @@ const CheckoutPopUp = (props) => {
     </>
   );
 };
+
+
+const DiscountInputDetail = ({handleUpdateDiscount,cartData,setMoneyDiscountType,moneyDiscountType,value,setValue}) =>{
+  const theme = useTheme();
+  const classes = useStyles(theme);
+  
+  const handleChangeValue = (e) =>{
+    if(moneyDiscountType === "%"){
+      if(Number(e.target.value) > 100){ 
+        setValue(100)
+        handleUpdateDiscount(cartData.total_amount)
+      }
+      else{  
+        setValue(e.target.value)
+        handleUpdateDiscount((Number(e.target.value)*Number(cartData.total_amount)/100).toString())
+      }
+    }
+    else{
+      if(Number(e.target.value) > Number(cartData.total_amount)){ 
+        setValue(cartData.total_amount)
+        handleUpdateDiscount(cartData.total_amount)
+      }
+      else{ 
+        setValue(e.target.value)
+        handleUpdateDiscount(e.target.value.toString())
+      }
+    }
+   
+  }
+  const handleChangeType = (type) =>{
+    if(type === "%") {
+      setValue((Number(value) / Number(cartData.total_amount)*100).toFixed(2).toString())
+      // handleUpdateDiscount((Number(value) / Number(cartData.total_amount)*100).toString())
+    }else{
+      setValue(((Number(value) *Number(cartData.total_amount)/100 / 100).toFixed() * 100).toString())
+      // handleUpdateDiscount(((Number(value) *Number(cartData.total_amount)/100 / 1000).toFixed() * 1000).toString())
+    }
+    setMoneyDiscountType(type)
+  }
+
+  return(
+      <Paper  variant="outlined" className={classes.popup}  >
+         <Grid  container alignItems='center' spacing={2} >
+                <Grid item><Typography variant="h5" >Giảm giá </Typography></Grid>
+                <Grid item>
+                <ListItem>
+                  <Input.ThousandSeperatedInput style={{color:"#000", marginRight:10, width:90}} 
+                   value={value}
+                   onChange={handleChangeValue}
+                  /> 
+                  <Grid item style={{ marginRight:5}}> 
+                      <ButtonBase sx={{ borderRadius: '16px', }} 
+                          onClick={()=>handleChangeType("VND")}
+                          // onClick={handleChangeMoneyTypeToVND}
+                        >
+                        <Avatar variant="rounded"   style={{width: theme.spacing(4),height: theme.spacing(3), background:moneyDiscountType ==="VND"?  theme.palette.primary.main :null,}} >
+                            <Typography  style={{fontSize:13, fontWeight:500}} >VND</Typography>
+                        </Avatar>     
+                    </ButtonBase>
+                    </Grid> 
+                    <Grid item> 
+                      <ButtonBase sx={{ borderRadius: '16px' }} 
+                          onClick={()=>handleChangeType("%")}
+                          // onClick={handleChangeMoneyTypeToPercent}
+                        >
+                        <Avatar variant="rounded"   style={{width: theme.spacing(4),height: theme.spacing(3), background:moneyDiscountType ==="%"?theme.palette.primary.main :null,}} >
+                            <Typography  style={{fontSize:13, fontWeight:500}} >%</Typography>
+                        </Avatar>    
+                    </ButtonBase>
+                  </Grid> 
+                  </ListItem> 
+                </Grid>
+             </Grid>
+
+    </Paper>
+  )
+}

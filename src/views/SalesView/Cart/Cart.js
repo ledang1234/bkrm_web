@@ -80,50 +80,29 @@ const Cart = () => {
     ? JSON.parse(info.store.general_configuration)
     : setting;
 
-  const [discountList, setDiscountList] = useState([]);
- 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await promotionCouponApi.getAllPromotions(
-          store_uuid,
-          {
-            page: 0,
-            limit: 10,
-          }
-        );
-        setDiscountList(response.promotions);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (store_uuid) {
-      loadData();
-    }
-  }, []);
-  console.log("discountListttttt",discountList)
-  const handlePromotion  = () => {
-      
-  }
-  // const [customers, setCustomers] = useState([]);
 
-  ////------------ I. DATA (useState) ----------------
-  // Cart data get from search_product component
-  // const cartData = [
-  //     // QUANTITY có thể edit ->  truyền quatity edit ngược về cartData ??
-  //     //dựa vào id của text field quatity ??
+  const [discountData, setDiscountData] = useState([]);
 
-  //     //còn bị lỗi sort // tự generate stt
-  //     { stt: 1, id: 123, name:"Áo dài Việt Nam Việt Nam", quantity:2, price:200 },
-  //     { stt: 2, id: 12,  name:"Quan", quantity:1, price:220 },
-  //     { stt: 3, id: 134,  name:"Bánh", quantity:3, price:240 },
-  //     { stt: 1, id: 123, name:"Áo dài Việt Nam Việt Nam", quantity:2, price:200 },
-  //     { stt: 2, id: 12,  name:"Quan", quantity:1, price:220 },
-  //     { stt: 3, id: 134,  name:"Bánh", quantity:3, price:240 },
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     try {
+  //       const response = await promotionCouponApi.getAllPromotions(
+  //         store_uuid,
+  //         {
+  //           page: 0,
+  //           limit: 10,
+  //         }
+  //       );
+  //       setDiscountData(response.promotions);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   if (store_uuid) {
+  //     loadData();
+  //   }
+  // }, []);
 
-  // ];
-  // chú ý cartList id from 1 to ... dùng để edit + delete
-  // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const dispatch = useDispatch();
 
@@ -160,6 +139,7 @@ const Cart = () => {
     );
   }, [cartList]);
 
+
   useEffect(() => {
     if (products.length) {
       window.localStorage.setItem(
@@ -182,20 +162,6 @@ const Cart = () => {
     }
   }, [store_uuid, branch_uuid])
 
-  // const[branchs, setBranchs] = useState([])
-
-  // useEffect (()=>{
-  //   const loadData = async () => {
-  //     try {
-  //       const response = await branchApi.getAllBranches( store_uuid );
-  //       setBranchs(response.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   loadData()
-  // },[])
-  // console.log("branchs",branchs)
 
   //// ----------II. FUNCTION
   // 1.Cart
@@ -269,7 +235,8 @@ const Cart = () => {
 
     const loadPromotionCoupons = async () => {
       const response = await promotionCouponApi.getActivePromotionVoucher(store_uuid)
-      console.log(response)
+      console.log("response",response)
+      setDiscountData(response.promotions);
     } 
     if (store_uuid) {
       loadCustomers();
@@ -296,18 +263,7 @@ const Cart = () => {
     }
   }, [reloadCustomers]);
 
-  // const [branchs, setBranchs] = useState([]);
-  // useEffect(() => {
-  //   const loading = async () => {
-  //     try {
-  //       const response = await branchApi.getAllBranches(store_uuid);
-  //       setBranchs(response.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   loading()
-  // }, []);
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -521,8 +477,11 @@ const Cart = () => {
 
   const handleUpdateDiscount = (amount) => {
     let newCartList = update(cartList, {
-      [selectedIndex]: { discount: { $set: amount } },
+      // [selectedIndex]: { discount: { $set: amount } },
+
+      [selectedIndex]: { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  },
     });
+
     if (store_setting?.customerScore.status) {
       newCartList = update(newCartList, {
         [selectedIndex]: {
@@ -578,10 +537,7 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
-  console.log(
-    "cartList[selectedIndex].customer",
-    cartList[selectedIndex].customer
-  );
+
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
 
@@ -794,7 +750,6 @@ const Cart = () => {
                         return (
                           <CartRow
                             row={row}
-                            // branchs={branchs}
                             handleUpdateBatches={handleUpdateBatches}
                             handleDeleteItemCart={handleDeleteItemCart}
                             handleChangeItemPrice={handleChangeItemPrice}
@@ -916,129 +871,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-const discountData = [
-  {
-    name: "Discount Invoice",
-    discountKey: "invoice",
-    discountType: "discountInvoice", //discountInvoice , sendGift, sendVoucher,priceByQuantity
-    detail: [
-      {
-        key: "1", //  ID dung để delete row , ko liên quan database
-        totalCost: 1000,
-        type: "VND", // "%"
-        discountValue: 20000,
-
-        numberGiftItem: 1,
-        listGiftItem: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-
-        numberBuyItem: 1,
-        listBuyItem: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-        typeDiscountItem: "percent",
-        listGiftCategory: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-        listBuyCategory: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-      },
-      {
-        key: "2", //  ID dung để delete row , ko liên quan database
-        totalCost: 1000,
-        type: "VND", // "%"
-        discountValue: 20000,
-
-        numberGiftItem: 1,
-        listGiftItem: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-
-        numberBuyItem: 1,
-        listBuyItem: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-        typeDiscountItem: "percent",
-        listGiftCategory: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-        listBuyCategory: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-      },
-    ],
-  },
-  //2
-  {
-    name: "Product Send Gift",
-    discountKey: "product",
-    discountType: "sendGift", //discountInvoice , sendGift, sendVoucher,priceByQuantity
-    detail: [
-      {
-        key: "3", //  ID dung để delete row , ko liên quan database
-        totalCost: 1000,
-        type: "VND", // "%"
-        discountValue: 20000,
-
-        numberGiftItem: 1,
-        listGiftItem: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-
-        numberBuyItem: 1,
-        listBuyItem: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-        typeDiscountItem: "percent",
-        listGiftCategory: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-        listBuyCategory: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-      },
-      {
-        key: "4", //  ID dung để delete row , ko liên quan database
-        totalCost: 1000,
-        type: "VND", // "%"
-        discountValue: 20000,
-
-        numberGiftItem: 1,
-        listGiftItem: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-
-        numberBuyItem: 1,
-        listBuyItem: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-        typeDiscountItem: "percent",
-        listGiftCategory: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-        listBuyCategory: [
-          { product_code: "SP10002", name: "Áo dài" },
-          { product_code: "SP10005", name: "Quần dài" },
-        ],
-      },
-    ],
-  },
-];
