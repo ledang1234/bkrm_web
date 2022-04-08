@@ -149,7 +149,7 @@ const Invoice = () => {
     if (store_uuid && branch_uuid) {
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, branch_uuid, query]);
+  }, [pagingState.page, pagingState.limit, branch_uuid, query, reload]);
 
   const tableRef = React.createRef();
 

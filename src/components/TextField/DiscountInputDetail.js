@@ -33,7 +33,7 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
     const classes = useStyles(theme);
     
     const handleChangeValue = (e) =>{
-      if(cartData.discountDetail.type === "%"){
+      if(cartData.discountDetail?.type === "%"){
         if(Number(e.target.value) > 100){ 
           handleUpdateDiscountDetail({value:'100', type:'%'})
         }
@@ -53,9 +53,9 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
     }
     const handleChangeType = (type) =>{
       if(type === "%") {
-        handleUpdateDiscountDetail({type:'%',value:(Number(cartData.discountDetail.value) / Number(cartData.total_amount)*100).toFixed(2).toString()})
+        handleUpdateDiscountDetail({type:'%',value:(Number(cartData.discountDetail?.value) / Number(cartData.total_amount)*100).toFixed(2).toString()})
       }else{
-        handleUpdateDiscountDetail({type:'VND',value:((Number(cartData.discountDetail.value) *Number(cartData.total_amount)/100 / 100).toFixed() * 100).toString()})
+        handleUpdateDiscountDetail({type:'VND',value:((Number(cartData.discountDetail?.value) *Number(cartData.total_amount)/100 / 100).toFixed() * 100).toString()})
       }
     }
   
@@ -67,7 +67,7 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
                   <Grid item>
                   <ListItem>
                     <Input.ThousandSeperatedInput style={{color:"#000", marginRight:10, width:90}} 
-                     value={cartData.discountDetail.value}
+                     value={cartData.discountDetail?.value}
                      onChange={handleChangeValue}
                     /> 
                     <Grid item style={{ marginRight:5}}> 
@@ -75,7 +75,7 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
                             onClick={()=>handleChangeType("VND")}
                             // onClick={handleChangeMoneyTypeToVND}
                           >
-                          <Avatar variant="rounded"   style={{width: theme.spacing(4),height: theme.spacing(3), background:cartData.discountDetail.type ==="VND"?  theme.palette.primary.main :null,}} >
+                          <Avatar variant="rounded"   style={{width: theme.spacing(4),height: theme.spacing(3), background:cartData.discountDetail?.type ==="VND"?  theme.palette.primary.main :null,}} >
                               <Typography  style={{fontSize:13, fontWeight:500}} >VND</Typography>
                           </Avatar>     
                       </ButtonBase>
@@ -85,7 +85,7 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
                             onClick={()=>handleChangeType("%")}
                             // onClick={handleChangeMoneyTypeToPercent}
                           >
-                          <Avatar variant="rounded"   style={{width: theme.spacing(4),height: theme.spacing(3), background:cartData.discountDetail.type ==="%"?theme.palette.primary.main :null,}} >
+                          <Avatar variant="rounded"   style={{width: theme.spacing(4),height: theme.spacing(3), background:cartData.discountDetail?.type ==="%"?theme.palette.primary.main :null,}} >
                               <Typography  style={{fontSize:13, fontWeight:500}} >%</Typography>
                           </Avatar>    
                       </ButtonBase>

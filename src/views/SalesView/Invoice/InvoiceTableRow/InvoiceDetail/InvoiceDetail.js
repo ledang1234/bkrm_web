@@ -157,7 +157,7 @@ function InvoiceDetail(props) {
       loadData();
     }
   }, [props.parentProps.openRow, reload]);
-  const debtAmount = order.total_amount - order.paid_amount;
+  const debtAmount = order.total_amount - order.discount - order.paid_amount;
   const [openPayRemaining, setOpenPayRemaining] = useState(false);
   const editInventoryOrderApiCall = async (
     store_uuid,
@@ -307,7 +307,7 @@ function InvoiceDetail(props) {
               </Grid>
               <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  <VNDFormat value={order.total_amount} />
+                  <VNDFormat value={order.total_amount - order.discount} />
                 </Typography>
               </Grid>
             </Grid>

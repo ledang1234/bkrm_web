@@ -469,6 +469,9 @@ const Cart = () => {
   };
 
   const handleUpdateDiscount = (amount) => {
+    // if (amount > cartList[selectedIndex].total_amount) {
+    //   return;
+    // }
     let newCartList = update(cartList, {
       // [selectedIndex]: { discount: { $set: amount } },
 
@@ -573,7 +576,7 @@ const Cart = () => {
         customer_uuid: cart.customer ? cart.customer.uuid : "",
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
-        paid_amount: cart.paid_amount,
+        paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
         discount: cart.discount,
         status:
           cart.paid_amount < cart.total_amount - cart.discount
