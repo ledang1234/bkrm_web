@@ -120,6 +120,7 @@ const Import = () => {
         paid_amount: 0,
         discount: 0,
         payment_method: "cash",
+        discountDetail:{value:'0', type:'VND' }
       },
     ];
   };
@@ -246,6 +247,7 @@ const Import = () => {
         paid_amount: 0,
         discount: 0,
         payment_method: "cash",
+        discountDetail:{value:'0', type:'VND' }
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -266,6 +268,7 @@ const Import = () => {
           paid_amount: "0",
           discount: "0",
           payment_method: "cash",
+          discountDetail:{value:'0', type:'VND' }
         },
       ]);
       setSelectedIndex(0);
@@ -417,6 +420,15 @@ const Import = () => {
     });
     setCartList(newCartList);
   };
+  const handleUpdateDiscountDetail = (obj) => {
+    let discountUpdate =  obj.type === '%'?( (Number(obj.value) * Number(cartList[selectedIndex].total_amount)/100/100).toFixed() * 100).toString() : obj.value 
+    let newCartList = update(cartList, {
+      [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
+    });
+  
+    setCartList(newCartList);
+  };
+
 
   const handleUpdateDiscount = (amount) => {
     let newCartList = update(cartList, {
@@ -821,6 +833,8 @@ const Import = () => {
                 currentBranch={branch}
                 suppliers={suppliers}
                 reloadSuppliers={() => setReloadSupplier(!reloadSupplier)}
+                handleUpdateDiscountDetail={handleUpdateDiscountDetail}
+
               />
             ) : (
               <ImportSummary
