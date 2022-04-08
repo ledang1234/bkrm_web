@@ -83,26 +83,6 @@ const Cart = () => {
 
   const [discountData, setDiscountData] = useState([]);
 
-  // useEffect(() => {
-  //   const loadData = async () => {
-  //     try {
-  //       const response = await promotionCouponApi.getAllPromotions(
-  //         store_uuid,
-  //         {
-  //           page: 0,
-  //           limit: 10,
-  //         }
-  //       );
-  //       setDiscountData(response.promotions);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   if (store_uuid) {
-  //     loadData();
-  //   }
-  // }, []);
-
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const dispatch = useDispatch();
 
@@ -123,6 +103,7 @@ const Cart = () => {
         payment_method: "cash",
         delivery: false,
         scores: "0",
+        discountDetail:{value:'0', type:'VND' }
       },
     ];
   };
@@ -293,6 +274,8 @@ const Cart = () => {
         discount: "0",
         delivery: false,
         scores: "0",
+        discountDetail:{value:'0', type:'VND' }
+
       },
     ]);
     setSelectedIndex(cartList.length);
@@ -312,6 +295,8 @@ const Cart = () => {
           payment_method: "cash",
           delivery: false,
           scores: "0",
+          discountDetail:{value:'0', type:'VND' }
+
         },
       ]);
     } else {
@@ -472,6 +457,14 @@ const Cart = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { payment_method: { $set: method } },
     });
+    setCartList(newCartList);
+  };
+  const handleUpdateDiscountDetail = (obj) => {
+    let discountUpdate =  obj.type === '%'?( (Number(obj.value) * Number(cartList[selectedIndex].total_amount)/100/100).toFixed() * 100).toString() : obj.value 
+    let newCartList = update(cartList, {
+      [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
+    });
+  
     setCartList(newCartList);
   };
 
@@ -833,6 +826,7 @@ const Cart = () => {
                   (discount) => discount.discountKey === "invoice"
                 )}
                 isScore={store_setting?.customerScore.status}
+                handleUpdateDiscountDetail={handleUpdateDiscountDetail}
               />
             ) : (
               <CartSummary

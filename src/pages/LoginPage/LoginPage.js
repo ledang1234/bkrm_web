@@ -76,16 +76,22 @@ export default function SignIn() {
                 helperText={loginFormik.touched.password ? loginFormik.errors.password : null}
                 onBlur={loginFormik.handleBlur}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value={isOwner}
-                    color="primary"
-                    onChange={(e, checked) => setIsOwner(checked)}
+              {/* <Grid justifyContent="flex-end"> */}
+              <Box style={{display:'flex',justifyContent:"flex-end" }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        value={isOwner}
+                        color="primary"
+                        onChange={(e, checked) => setIsOwner(!checked)}
+                      />
+                    }
+                    label="Nhân viên"
+                    labelPlacement="start"
+
                   />
-                }
-                label="Chủ cửa hàng"
-              />
+               </Box>
+               {/* </Grid> */}
               <Button
                 type="submit"
                 fullWidth

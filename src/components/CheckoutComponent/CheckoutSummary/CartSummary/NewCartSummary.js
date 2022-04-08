@@ -17,10 +17,12 @@ import {
   Paper,
   ButtonBase,
   Avatar,
-  Popover
+  Popover,
+  Divider
 } from "@material-ui/core";
 import {calculateTotalQuantity} from "../../../../components/TableCommon/util/sortUtil"
 import Popper from '@material-ui/core/Popper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import AddCustomer from "../../../../views/ManagerView/Customer/AddCustomer/AddCustomer";
 import giftBox from "../../../../assets/img/icon/giftbox.png";
@@ -43,6 +45,7 @@ import {
 import { useDispatch } from "react-redux";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import DiscountPopUp from "../../../../views/SalesView/Cart/DiscountPopup/DiscountPopup"
+import DiscountInputDetail from "../../../TextField/DiscountInputDetail";
 const useStyles = makeStyles((theme) =>
   createStyles({
     marginBox: {
@@ -57,7 +60,7 @@ const useStyles = makeStyles((theme) =>
     headerTitle: {
       fontSize: "1.125rem",
     },
-    popup: { borderColor: theme.customization.primaryColor[500], padding: 5, paddingLeft:12, boxShadow: "0px 5px 10px 0px rgba(0, 0, 0, 0.5)" }
+    popup: { borderColor: theme.customization.primaryColor[500], padding: 5, paddingLeft:12, boxShadow: "0px 5px 10px 0px rgba(0, 0, 0, 0.5)" },
   })
 );
 const CartSummary = (props) => {
@@ -78,7 +81,8 @@ const CartSummary = (props) => {
     mode,
     reloadCustomers,
     discountData,
-    isScore
+    isScore,
+    handleUpdateDiscountDetail
   } = props;
 
   const theme = useTheme();
@@ -144,8 +148,6 @@ const CartSummary = (props) => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openDiscountDetail = Boolean(anchorEl);
-  const [moneyDiscountType, setMoneyDiscountType]=React.useState("VND");
-  const [value, setValue] = React.useState(cartData.discount)
 
   const handleClick = (event) => {
       setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -268,22 +270,27 @@ const CartSummary = (props) => {
                 </div>
                 :null}
                 <Popper  placement="left-start" open={openDiscountDetail} anchorEl={anchorEl} onClose={()=>setAnchorEl(null)}   style={{zIndex:1000000}} >   
-                    <DiscountInputDetail value={value}setValue={setValue}cartData={cartData}handleUpdateDiscount={handleUpdateDiscount} setAnchorEl={setAnchorEl} setMoneyDiscountType={setMoneyDiscountType} moneyDiscountType={moneyDiscountType}/>
+                    <DiscountInputDetail handleUpdateDiscountDetail={handleUpdateDiscountDetail} cartData={cartData} setAnchorEl={setAnchorEl} />
                 </Popper>
                 </ListItem>
               
               </div>
-     
-
-              <VNDInput
+              <Box  onClick={handleClick} style={{ width: 90 ,color:'#616161',textAlign: "right"}}>
+                <VNDFormat value={cartData.discount}/>
+                <Divider style={{ background: anchorEl?theme.customization.primaryColor[500]:'#616161' }} />
+              </Box>
+              {/* style={{color:anchorEl?theme.customization.primaryColor[500]:'#616161'}} */}
+              {/* <VNDInput
+              // disabled
                 id="standard-basic"
                 style={{ width: 90 }}
                 size="small"
+                // defaultValue={cartData.discount}
                 value={cartData.discount}
-                inputProps={{ style: { textAlign: "right" } }}
+                inputProps={{ style: { textAlign: "right"} }}
                 // onChange={(e) => handleUpdateDiscount(e.target.value)}
                 onClick={handleClick}
-              />
+              /> */}
             </Grid>
 
 
@@ -320,7 +327,7 @@ const CartSummary = (props) => {
               </Typography>
             </Grid>:null}
 
-            <Grid
+            {cartData.total_amount - cartData.discount  !== 0?<Grid
               container
               direction="row"
               justifyContent="space-between"
@@ -338,7 +345,7 @@ const CartSummary = (props) => {
                 inputProps={{ style: { textAlign: "right" } }}
                 onChange={(e) => handleUpdatePaidAmount(e.target.value)}
               />
-            </Grid>
+            </Grid>:null}
 
 
             <Grid
@@ -574,79 +581,3 @@ const CheckoutPopUp = (props) => {
   );
 };
 
-
-const DiscountInputDetail = ({handleUpdateDiscount,cartData,setMoneyDiscountType,moneyDiscountType,value,setValue}) =>{
-  const theme = useTheme();
-  const classes = useStyles(theme);
-  
-  const handleChangeValue = (e) =>{
-    if(moneyDiscountType === "%"){
-      if(Number(e.target.value) > 100){ 
-        setValue(100)
-        handleUpdateDiscount(cartData.total_amount)
-      }
-      else{  
-        setValue(e.target.value)
-        handleUpdateDiscount((Number(e.target.value)*Number(cartData.total_amount)/100).toString())
-      }
-    }
-    else{
-      if(Number(e.target.value) > Number(cartData.total_amount)){ 
-        setValue(cartData.total_amount)
-        handleUpdateDiscount(cartData.total_amount)
-      }
-      else{ 
-        setValue(e.target.value)
-        handleUpdateDiscount(e.target.value.toString())
-      }
-    }
-   
-  }
-  const handleChangeType = (type) =>{
-    if(type === "%") {
-      setValue((Number(value) / Number(cartData.total_amount)*100).toFixed(2).toString())
-      // handleUpdateDiscount((Number(value) / Number(cartData.total_amount)*100).toString())
-    }else{
-      setValue(((Number(value) *Number(cartData.total_amount)/100 / 100).toFixed() * 100).toString())
-      // handleUpdateDiscount(((Number(value) *Number(cartData.total_amount)/100 / 1000).toFixed() * 1000).toString())
-    }
-    setMoneyDiscountType(type)
-  }
-
-  return(
-      <Paper  variant="outlined" className={classes.popup}  >
-         <Grid  container alignItems='center' spacing={2} >
-                <Grid item><Typography variant="h5" >Giảm giá </Typography></Grid>
-                <Grid item>
-                <ListItem>
-                  <Input.ThousandSeperatedInput style={{color:"#000", marginRight:10, width:90}} 
-                   value={value}
-                   onChange={handleChangeValue}
-                  /> 
-                  <Grid item style={{ marginRight:5}}> 
-                      <ButtonBase sx={{ borderRadius: '16px', }} 
-                          onClick={()=>handleChangeType("VND")}
-                          // onClick={handleChangeMoneyTypeToVND}
-                        >
-                        <Avatar variant="rounded"   style={{width: theme.spacing(4),height: theme.spacing(3), background:moneyDiscountType ==="VND"?  theme.palette.primary.main :null,}} >
-                            <Typography  style={{fontSize:13, fontWeight:500}} >VND</Typography>
-                        </Avatar>     
-                    </ButtonBase>
-                    </Grid> 
-                    <Grid item> 
-                      <ButtonBase sx={{ borderRadius: '16px' }} 
-                          onClick={()=>handleChangeType("%")}
-                          // onClick={handleChangeMoneyTypeToPercent}
-                        >
-                        <Avatar variant="rounded"   style={{width: theme.spacing(4),height: theme.spacing(3), background:moneyDiscountType ==="%"?theme.palette.primary.main :null,}} >
-                            <Typography  style={{fontSize:13, fontWeight:500}} >%</Typography>
-                        </Avatar>    
-                    </ButtonBase>
-                  </Grid> 
-                  </ListItem> 
-                </Grid>
-             </Grid>
-
-    </Paper>
-  )
-}

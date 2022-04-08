@@ -18,7 +18,9 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
-  ListItem
+  ListItem,
+  Divider,
+  Popper
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
@@ -44,6 +46,7 @@ import moment from "moment";
 import update from "immutability-helper";
 import { useDispatch } from "react-redux";
 import { statusAction } from "../../../../store/slice/statusSlice";
+import DiscountInputDetail from "../../../TextField/DiscountInputDetail";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -74,6 +77,7 @@ const ImportSummary = (props) => {
     suppliers,
     mode,
     reloadSuppliers,
+    handleUpdateDiscountDetail
   } = props;
 
   const theme = useTheme();
@@ -122,6 +126,13 @@ const ImportSummary = (props) => {
   React.useEffect(()=>{
     if(addSupplier?.name?.length !==  0){props.handleSelectSupplier(addSupplier); setAddSupplier({name:'', phone:''})}
   })
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openDiscountDetail = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+      setAnchorEl(anchorEl ? null : event.currentTarget);
+    };
 
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
@@ -216,14 +227,22 @@ const ImportSummary = (props) => {
               className={classes.marginRow}
             >
               <Typography variant="h5">Giảm giá</Typography>
-              <VNDInput
+              <Popper  placement="left-start" open={openDiscountDetail} anchorEl={anchorEl} onClose={()=>setAnchorEl(null)}   style={{zIndex:1000000}} >   
+                    <DiscountInputDetail handleUpdateDiscountDetail={handleUpdateDiscountDetail} cartData={cartData} setAnchorEl={setAnchorEl} />
+                </Popper>
+              
+              <Box  onClick={handleClick} style={{ width: 90 ,color:'#616161',textAlign: "right"}}>
+                <VNDFormat value={cartData.discount}/>
+                <Divider style={{ background: anchorEl?theme.customization.primaryColor[500]:'#616161' }} />
+              </Box>
+              {/* <VNDInput
                 id="standard-basic"
                 style={{ width: 90 }}
                 value={cartData.discount}
                 size="small"
                 inputProps={{ style: { textAlign: "right" } }}
                 onChange={(e) => handleUpdateDiscount(e.target.value)}
-              />
+              /> */}
             </Grid>
 
             <Grid
@@ -241,6 +260,7 @@ const ImportSummary = (props) => {
               </Typography>
             </Grid>
 
+            {cartData.total_amount - cartData.discount  !== 0?
             <Grid
               container
               direction="row"
@@ -259,10 +279,12 @@ const ImportSummary = (props) => {
                 inputProps={{ style: { textAlign: "right" } }}
                 onChange={(e) => handleUpdatePaidAmount(e.target.value)}
               />
-            </Grid>
+            </Grid> :null}
+{/* 
             { cartData.total_amount -
                   cartData.discount -
-                  cartData.paid_amount > 0?<Grid
+                  cartData.paid_amount > 0? */}
+                  <Grid
               container
               direction="row"
               justifyContent="space-between"
@@ -284,7 +306,8 @@ const ImportSummary = (props) => {
                   cartData.paid_amount
                 }
               />
-            </Grid>:null}
+            </Grid>
+            {/* :null} */}
 
             <Grid
               container
