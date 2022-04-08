@@ -420,7 +420,9 @@ const Import = () => {
 
   const handleUpdateDiscount = (amount) => {
     let newCartList = update(cartList, {
-      [selectedIndex]: { discount: { $set: amount } },
+      // [selectedIndex]: { discount: { $set: amount } },
+      [selectedIndex]: { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  },
+
     });
     setCartList(newCartList);
   };
