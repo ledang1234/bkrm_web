@@ -447,7 +447,7 @@ const InventoryDetail = (props) => {
                   </Grid>
                   <Grid item sm={6}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {row.min_reorder_quantity.toLocaleString()}{" "}
+                      {row.min_reorder_quantity?.toLocaleString()}{" "}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -460,7 +460,7 @@ const InventoryDetail = (props) => {
                   </Grid>
                   <Grid item sm={5}>
                     <Typography variant="body1" gutterBottom component="div">
-                      {row.max_order.toLocaleString()}{" "}
+                      {row.max_order?.toLocaleString()}{" "}
                     </Typography>
                   </Grid>
                 </Grid>

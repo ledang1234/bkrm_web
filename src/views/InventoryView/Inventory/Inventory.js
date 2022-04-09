@@ -76,7 +76,7 @@ const Inventory = () => {
     try {
       setOpenProductImportPopper(true);
       setIsLoadingProduct(true);
-      const res = await storeApi.importProductJSON(store_uuid, jsonData);
+      const res = await storeApi.importProductJSON(store_uuid, branch_uuid, jsonData);
       if (res.status === "error") {
         setIsLoadingProduct(false);
         setProductErrors(res.data);
