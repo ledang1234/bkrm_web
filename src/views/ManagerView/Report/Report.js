@@ -108,7 +108,8 @@ const Report = () => {
   const [categoryId, setCategoryId] = useState(4);
 
   // response data state
-  const [overview, setOverview] = useState({})
+  const [overview, setOverview] = useState({});
+  const [statistic, setStatistic] = useState({});
   const [topItemByCategory, setTopItemByCategory] = useState([])
   
   const [revenue, setRevenue] = useState({})
@@ -122,45 +123,24 @@ const Report = () => {
     const fetchReports = async () => {
 
       // overview: number of employees, customers, suppliers, in money, out money
-      const overViewRes = await storeApi.getReportOverview(store_uuid, fromDate, toDate);
+      const overViewRes = await storeApi.getReportOverview(store_uuid,branch_uuid, fromDate, toDate);
       setOverview(overViewRes.data)
+      console.log("overview", overViewRes.data)
 
       // top 'limit' of items by category
       const topItemByCategoryRes = await storeApi.getReportProduct(store_uuid, fromDate, toDate, limit, categoryId);
       setTopItemByCategory(topItemByCategoryRes);
-
-      // revenue, captital, profit, purchase data by 'unit'
-      const revenueRes = await storeApi.getReportRevenue(
+      console.log("topItemByCate", topItemByCategoryRes)
+      const statisticRes = await storeApi.getReportStatistic( 
         store_uuid,
+        branch_uuid,
         fromDate,
         toDate,
         unit
       );
-      setRevenue(revenueRes)
 
-      const captitalRes = await storeApi.getReportCaptital(
-        store_uuid,
-        fromDate,
-        toDate,
-        unit
-      );
-      setCapital(captitalRes)
-
-      const profitRes = await storeApi.getReportProfit(
-        store_uuid,
-        fromDate,
-        toDate,
-        unit
-      );
-      setProfit(profitRes);
-
-      const purchaseRes = await storeApi.getReportPurchase(
-        store_uuid,
-        fromDate,
-        toDate,
-        unit
-      );
-      setPurchase(purchaseRes);
+      setStatistic(statisticRes);
+      console.log("statistic", statisticRes);
 
       // top employees, customers, products, suppliers,...
       const topDataRes = await storeApi.getReportTop(
@@ -169,47 +149,46 @@ const Report = () => {
         toDate,
         limit
       );
+
       setTopData(topDataRes)
+      console.log("topData", topDataRes)
       // uncomment here
       setIsLoaded(true)
     }
-    console.log("overview")
-    console.log(overview)
-    console.log(topItemByCategory)
-    console.log(revenue)
-    console.log(topData)
-
-    fetchReports()
     
-  }, [])
+    if (store_uuid && branch_uuid ) {
+      fetchReports()
+    }
+    
+  }, [store_uuid, branch_uuid])
   
 
-    useEffect(() => {
-      customerApi.getCustomers(store_uuid)
-      .then(response => response.data, err => console.log(err))
-      .then(data => {
-          setCustomerList(data)
-      })
+  //   useEffect(() => {
+  //     customerApi.getCustomers(store_uuid)
+  //     .then(response => response.data, err => console.log(err))
+  //     .then(data => {
+  //         setCustomerList(data)
+  //     })
 
-  }, [reload, store_uuid]);
+  // }, [reload, store_uuid]);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await productApi.getProductsOfBranch(
-          store_uuid,
-          branch_uuid
-        );
-        setProductList(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (reload) {
-      fetchProducts();
-      setReload(false);
-    }
-  }, [reload, store_uuid, branch_uuid]);
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     try {
+  //       const response = await productApi.getProductsOfBranch(
+  //         store_uuid,
+  //         branch_uuid
+  //       );
+  //       setProductList(response.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (reload) {
+  //     fetchProducts();
+  //     setReload(false);
+  //   }
+  // }, [reload, store_uuid, branch_uuid]);
 
 
 

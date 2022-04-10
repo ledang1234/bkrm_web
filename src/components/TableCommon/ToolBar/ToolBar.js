@@ -300,8 +300,13 @@ const ToolBar = (props) => {
               <IconButton
                 aria-label="filter list"
                 onClick={async () => {
-                  const dataTableFull = await getDataExport();
-                  exportExcel(dataTableFull, tableType, columnsToKeep);
+                  if (getDataExport) {
+                    const dataTableFull = await getDataExport();
+                    exportExcel(dataTableFull, tableType, columnsToKeep);
+                  } else {
+                    exportExcel(dataTable, tableType, columnsToKeep);
+                  }
+                 
                 }}
               >
                 <GetAppTwoToneIcon className={classes.icon} />
@@ -376,12 +381,6 @@ const ToolBar = (props) => {
           custom &&
           <Grid container spacing={2} style={{ marginBottom: 15, width: 600, maxWidth: "90vw" }} direction="row" justifyContent="center" alignItems="center">
             <Grid item sm={6} xs={12}>
-              <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center" >
-                <Typography><b>Mã hàng</b></Typography>
-                <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.product_code} onChange={(e) => { setCustomCl({ ...customCl, product_code: e.target.value }) }}></TextField>
-              </Box>
-            </Grid>
-            <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
                 <Typography><b>Mã vạch</b></Typography>
                 <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.bar_code} onChange={(e) => { setCustomCl({ ...customCl, bar_code: e.target.value }) }}></TextField>
@@ -396,7 +395,7 @@ const ToolBar = (props) => {
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
                 <Typography><b>Danh mục</b></Typography>
-                <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.category_id} onChange={(e) => { setCustomCl({ ...customCl, category_id: e.target.value }) }}></TextField>
+                <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.category_name} onChange={(e) => { setCustomCl({ ...customCl, category_name: e.target.value }) }}></TextField>
               </Box>
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -426,13 +425,13 @@ const ToolBar = (props) => {
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
                 <Typography><b>Tồn kho lớn</b></Typography>
-                <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.max_quantity} onChange={(e) => { setCustomCl({ ...customCl, max_quantity: e.target.value }) }}></TextField>
+                <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.max_quantity} onChange={(e) => { setCustomCl({ ...customCl, max_order: e.target.value }) }}></TextField>
               </Box>
             </Grid>
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
                 <Typography><b>Hình ảnh</b></Typography>
-                <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.urls} onChange={(e) => { setCustomCl({ ...customCl, urls: e.target.value }) }}></TextField>
+                <TextField label="Tên tùy chỉnh" size="small" variant="outlined" value={customCl.image_urls} onChange={(e) => { setCustomCl({ ...customCl, image_urls: e.target.value }) }}></TextField>
               </Box>
             </Grid>
             <Grid item sm={6} xs={12}>
