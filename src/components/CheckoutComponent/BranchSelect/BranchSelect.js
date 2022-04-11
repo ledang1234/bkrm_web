@@ -20,12 +20,19 @@ export default function BranchSelect(props) {
   };
 
   const loadingData = async () => {
-    let response = await branchApi.getBranches(store_uuid);
-    setBranches(response.data);
-    setSelectedBranch(response.data.filter(branch => branch.uuid === current_branch_uuid)[0]);
+    try {
+
+      let response = await branchApi.getBranches(store_uuid);
+      setBranches(response.data);
+      setSelectedBranch(response.data.filter(branch => branch.uuid === current_branch_uuid)[0]);
+    } catch (err) {
+      console.log(err)
+    }
   }
   React.useEffect(() => {
-    loadingData()
+    if (store_uuid) {
+      loadingData()
+    }
   }, [])
   const renderMenuItem = () => {
     return branches.map(branch => {

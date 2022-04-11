@@ -18,8 +18,8 @@ const storeApi = {
     return axiosClient.get(url, { params: { period: period } });
   },
 
-  getReportOverview: (storeUuid, fromDate, toDate) => {
-    const url = `stores/${storeUuid}/report/overview`;
+  getReportOverview: (storeUuid, branchUuid, fromDate, toDate) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/report/overview`;
     return axiosClient.get(url, {
       params: { from_date: fromDate, to_date: toDate },
     });
@@ -36,9 +36,18 @@ const storeApi = {
       },
     });
   },
-
-  getReportRevenue: (storeUuid, fromDate, toDate, unit) => {
-    const url = `stores/${storeUuid}/report/statistic`;
+  getReportStatistic: (storeUuid,branchUuid, fromDate, toDate, unit) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/report/statistic`;
+    return axiosClient.get(url, {
+      params: {
+        from_date: fromDate,
+        to_date: toDate,
+        unit: unit,
+      },
+    });
+  },
+  getReportRevenue: (storeUuid,branchUuid, fromDate, toDate, unit) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/report/statistic`;
     return axiosClient.get(url, {
       params: {
         from_date: fromDate,
@@ -48,19 +57,19 @@ const storeApi = {
       },
     });
   },
-  getReportCaptital: (storeUuid, fromDate, toDate, unit) => {
-    const url = `stores/${storeUuid}/report/statistic`;
+  getReportCaptital: (storeUuid,branchUuid, fromDate, toDate, unit) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/report/statistic`;
     return axiosClient.get(url, {
       params: {
         from_date: fromDate,
         to_date: toDate,
         unit: unit,
-        captital: 1,
+        capital: 1,
       },
     });
   },
-  getReportProfit: (storeUuid, fromDate, toDate, unit) => {
-    const url = `stores/${storeUuid}/report/statistic`;
+  getReportProfit: (storeUuid,branchUuid, fromDate, toDate, unit) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/report/statistic`;
     return axiosClient.get(url, {
       params: {
         from_date: fromDate,
@@ -71,8 +80,8 @@ const storeApi = {
     });
   },
 
-  getReportPurchase: (storeUuid, fromDate, toDate, unit) => {
-    const url = `stores/${storeUuid}/report/statistic`;
+  getReportPurchase: (storeUuid,branchUuid, fromDate, toDate, unit) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/report/statistic`;
     return axiosClient.get(url, {
       params: {
         from_date: fromDate,

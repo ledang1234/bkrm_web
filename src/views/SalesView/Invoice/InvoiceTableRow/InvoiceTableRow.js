@@ -42,7 +42,7 @@ function InvoiceTableRow(props) {
         </TableCell>
         <TableCell align="right" className={classes.fontName}>
           {" "}
-          <VNDFormat value={row.total_amount} />
+          <VNDFormat value={Number(row.total_amount) - Number(row.discount)} />
         </TableCell>
         <TableCell align="center">
           <FormatedStatus debt={row.status === "debt" ? 1 : 0} />

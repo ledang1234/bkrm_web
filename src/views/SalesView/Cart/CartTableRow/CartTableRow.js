@@ -47,7 +47,7 @@ export const CartRow = (props) => {
     handleUpdateBatches,
     handleChangeItemPrice,
   } = props;
-
+  console.log("cart table row", row)
   const updateQuantity = (newQuantity) => {
     handleChangeItemQuantity(row.uuid, newQuantity);
   };

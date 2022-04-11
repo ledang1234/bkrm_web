@@ -12,7 +12,7 @@ import { Pagination } from 'antd';
 const TableWrapper = (props) => {
     const {isCart, isReport, pagingState, setPagingState,list,tableRef} = props;
 
-    console.log("pagingState",pagingState)
+    // console.log("pagingState",pagingState)
     const theme = useTheme();
     // const classes = useStyles(theme);
     // table

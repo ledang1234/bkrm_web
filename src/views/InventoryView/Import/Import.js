@@ -83,6 +83,29 @@ const Import = () => {
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
+  const loadLocalImportListStorage = () => {
+    if (window.localStorage.getItem("importListData")) {
+      const data = JSON.parse(window.localStorage.getItem("importListData"));
+      console.log("data",data)
+      if (data.user_uuid === user_uuid) {
+        return data.cartList;
+      }
+    }
+    return [
+      {
+        supplier: null,
+        cartItem: [],
+        total_amount: 0,
+        paid_amount: 0,
+        discount: 0,
+        payment_method: "cash",
+        discountDetail:{value:'0', type:'VND' }
+      },
+    ];
+  };
+  const [cartList, setCartList] = React.useState(loadLocalImportListStorage());
+  const [products, setProducts] = useState([]);
+  const [suppliers, setSuppliers] = React.useState([]);
   ////------------ I. DATA (useState) ----------------
   // Cart data get from search_product component
   // const cartData = [
@@ -102,40 +125,44 @@ const Import = () => {
   // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
 
   // local storage
-  const loadLocalImportListStorage = () => {
-    if (window.localStorage.getItem("importListData")) {
-      const data = JSON.parse(window.localStorage.getItem("importListData"));
-      console.log("data",data)
-
-      if (data.user_uuid === user_uuid) {
-        return data.cartList;
-      }
-    }
-
-    return [
-      {
-        supplier: null,
-        cartItem: [],
-        total_amount: 0,
-        paid_amount: 0,
-        discount: 0,
-        payment_method: "cash",
-        discountDetail:{value:'0', type:'VND' }
-      },
-    ];
-  };
-  const [cartList, setCartList] = React.useState(loadLocalImportListStorage());
-  const [products, setProducts] = useState([]);
+  // fetch localstorage
   useEffect(() => {
     if (window.localStorage.getItem("products")) {
       const products = JSON.parse(window.localStorage.getItem("products"));
       if (products.store_uuid === store_uuid && products.branch_uuid === branch_uuid ) {
-        console.log(products.data)
         setProducts(products.data);
+      }
+    }
+    if (window.localStorage.getItem("suppliers")) {
+      const suppliers = JSON.parse(window.localStorage.getItem("suppliers"));
+      if (suppliers.store_uuid === store_uuid ) {
+        setSuppliers(suppliers.data);
       }
     }
   }, [store_uuid, branch_uuid])
 
+  // update localstorage
+  useEffect(() => {
+    if (suppliers.length) {
+      window.localStorage.setItem(
+        "suppliers",
+        JSON.stringify({ 
+          store_uuid: store_uuid, 
+          data: suppliers })
+      );
+    }
+  }, [suppliers]);
+  useEffect(() => {
+    if (products.length) {
+      window.localStorage.setItem(
+        "products",
+        JSON.stringify({ 
+          store_uuid: store_uuid, 
+          branch_uuid: branch_uuid, 
+          data: products })
+      );
+    }
+  }, [products]);
   useEffect(() => {
     window.localStorage.setItem(
       "importListData",
@@ -143,24 +170,8 @@ const Import = () => {
     );
   }, [cartList]);
 
-  //// ----------II. FUNCTION
-  // 1.Cart
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [addProduct, setAddProduct] = useState(false);
-  const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
-  const [suppliers, setSuppliers] = React.useState([]);
 
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const [snackStatus, setSnackStatus] = React.useState({
-    style: "error",
-    message: "Nhập hàng thất bại",
-  });
-
-  useEffect(() => {
-    updateTotalAmount();
-  }, [isUpdateTotalAmount]);
-
+  // call API
   useEffect(() => {
     const fetchSupplier = async () => {
       const response = await supplierApi.getSuppliers(store_uuid);
@@ -183,19 +194,28 @@ const Import = () => {
     if (store_uuid && branch_uuid) {
       loadProducts();
     }
-  }, []);
+  }, [store_uuid, branch_uuid]);
+
+  //// ----------II. FUNCTION
+  // 1.Cart
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [addProduct, setAddProduct] = useState(false);
+  const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
+ 
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [snackStatus, setSnackStatus] = React.useState({
+    style: "error",
+    message: "Nhập hàng thất bại",
+  });
 
   useEffect(() => {
-    if (products.length) {
-      window.localStorage.setItem(
-        "products",
-        JSON.stringify({ 
-          store_uuid: store_uuid, 
-          branch_uuid: branch_uuid, 
-          data: products })
-      );
-    }
-  }, [products]);
+    updateTotalAmount();
+  }, [isUpdateTotalAmount]);
+
+
+
+  
 
   const [reloadSupplier, setReloadSupplier] = useState(false);
   useEffect(() => {
@@ -320,7 +340,7 @@ const Import = () => {
         bar_code: selectedOption.bar_code,
         product_code: selectedOption.product_code,
         unit_price: selectedOption.standard_price,
-        img_url: selectedOption.img_url,
+        img_urls: selectedOption.img_urls,
         name: selectedOption.name,
         has_batches: selectedOption.has_batches,
         batches: selectedOption.batches,
