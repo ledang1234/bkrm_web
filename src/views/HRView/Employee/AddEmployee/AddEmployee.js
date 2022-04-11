@@ -184,7 +184,10 @@ const AddEmployee = (props) => {
         console.log(err);
       }
     };
-    loadBranches();
+    if (store_uuid) {
+
+      loadBranches();
+    }
   }, [store_uuid]);
 
     useEffect(() =>{

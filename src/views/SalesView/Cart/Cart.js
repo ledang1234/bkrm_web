@@ -112,6 +112,7 @@ const Cart = () => {
 
   const [cartList, setCartList] = React.useState(loadCartLocalStorage());
   const [products, setProducts] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
     window.localStorage.setItem(
@@ -134,11 +135,28 @@ const Cart = () => {
   }, [products]);
 
   useEffect(() => {
+    if (customers.length) {
+      window.localStorage.setItem(
+        "customers",
+        JSON.stringify({ 
+          store_uuid: store_uuid, 
+          data: customers })
+      );
+    }
+  }, [customers]);
+
+  useEffect(() => {
     if (window.localStorage.getItem("products")) {
       const products = JSON.parse(window.localStorage.getItem("products"));
       if (products.store_uuid === store_uuid && products.branch_uuid === branch_uuid ) {
         console.log(products.data)
         setProducts(products.data);
+      }
+    }
+    if (window.localStorage.getItem("customers")) {
+      const customers = JSON.parse(window.localStorage.getItem("customers"));
+      if (customers.store_uuid === store_uuid ) {
+        setCustomers(customers.data);
       }
     }
   }, [store_uuid, branch_uuid])
@@ -163,7 +181,6 @@ const Cart = () => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
 
-  const [customers, setCustomers] = useState([]);
 
   const handleSearchCustomer = async (searchKey) => {
     try {
@@ -228,6 +245,16 @@ const Cart = () => {
     }
 
     //  loadingActions.finishLoad();
+
+    const intervalID = setInterval(() => {
+      if (store_uuid && branch_uuid) {
+        loadProducts();
+      }
+    }, 60000 * 5);
+
+    return () => {
+      clearInterval(intervalID)
+    }
   }, [store_uuid, branch_uuid]);
   const [reloadCustomers, setReloadCustomers] = useState(false);
   useEffect(() => {
@@ -346,7 +373,7 @@ const Cart = () => {
         product_code: selectedOption.product_code,
         bar_code: selectedOption.bar_code,
         unit_price: selectedOption.list_price,
-        img_url: selectedOption.img_url,
+        img_urls: selectedOption.img_urls,
         name: selectedOption.name,
         branch_quantity: Number(selectedOption.branch_quantity),
         has_batches: selectedOption.has_batches,

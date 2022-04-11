@@ -22,6 +22,9 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { render } from "sass";
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import PersonIcon from '@material-ui/icons/Person';
+import { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { removeAccents } from "../../utils";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     input: {
@@ -134,7 +137,9 @@ const SearchSupplier = (props) => {
   );
 
   const getOptionLabel = (option) => (option.name ? option.name.concat(option.phone? ` - ${option.phone}` :'') : "");
-
+  const filter = createFilterOptions({
+    stringify: option => `${removeAccents(option.name)}  - ${option.phone}`,
+  });
   console.log("selectedSupplier",props.selectedSupplier)
   return (
     <div style={{ width: "100%" }}>
@@ -151,7 +156,7 @@ const SearchSupplier = (props) => {
             props.handleSearchBarSelect(null)
           }
         }}
-        
+        filterOptions={filter}
 
         onChange={(event, value) => {
           if (value) {

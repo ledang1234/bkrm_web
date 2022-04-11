@@ -23,20 +23,26 @@ export default function BranchSelectAppBar({ store_uuid }) {
   };
 
   const loadingData = async () => {
-    let response = await branchApi.getBranches(store_uuid);
-    setBranches(response.data);
-    setSelectedBranch(response.data[0]);
-    dispatch(
-      infoActions.setBranch({
-        uuid: response.data[0].uuid,
-        name: response.data[0].name,
-        id: response.data[0].id,
-      })
-    );
+    try {
+      let response = await branchApi.getBranches(store_uuid);
+      setBranches(response.data);
+      setSelectedBranch(response.data[0]);
+      dispatch(
+        infoActions.setBranch({
+          uuid: response.data[0].uuid,
+          name: response.data[0].name,
+          id: response.data[0].id,
+        })
+      );
+    } catch(err) {
+      console.log(err)
+    }
   };
 
   React.useEffect(() => {
-    loadingData();
+    if (store_uuid) {
+      loadingData();
+    }
   }, [store_uuid]);
 
   const renderMenuItem = () => {

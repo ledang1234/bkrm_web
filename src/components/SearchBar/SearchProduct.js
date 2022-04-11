@@ -29,6 +29,7 @@ import { VNDFormat } from "../TextField/NumberFormatCustom";
 import defaultProduct from "../../assets/img/product/default-product.png"
 import setting from "../../assets/constant/setting"
 import { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { removeAccents } from "../../utils";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -152,7 +153,7 @@ const SearchProduct = (props) => {
   );
 
   const filter = createFilterOptions({
-    stringify: option => `${option.product_code} - ${option.name}  - ${option.bar_code}`,
+    stringify: option => `${option.product_code} - ${removeAccents(option.name)}  - ${option.bar_code}`,
   });
   const getOptionLabel = (option) => {
     // return option.name ? `${option.name}-${option.bar_code}-${option.product_code}` : ""
@@ -160,15 +161,13 @@ const SearchProduct = (props) => {
     return option.name ? option.name: ""
   };
 
-  // just filter
-  const filterOptions = (options, state) => options;
   return (
     <div style={{ width: 320, paddingLeft: 20 }}>
       <Tooltip
         title={`Space: tìm kiếm, Tab để chọn lựa chọn đầu tiên và tăng số lượng, Delete để xóa lựa chọn hiện tại`}
       >
         <Autocomplete
-        filterOptions={filter}
+          filterOptions={filter}
           options={props.products}
           // freeSolo
           // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
@@ -203,7 +202,7 @@ const SearchProduct = (props) => {
             }
           }}
           blurOnSelect={false}
-
+          autoHighlight
         />
       </Tooltip>
     </div>
