@@ -161,6 +161,7 @@ const ToolBar = (props) => {
             has_batches: product[customCl.has_batches]?.toString(),
             max_order: product[customCl.max_order]?.toString(),
             img_urls: product[customCl.img_urls]?.toString().split(","),
+            quantity: product[customCl.quantity]?.toString()
           }))
           setJsonData(json);
         } catch (err) {
