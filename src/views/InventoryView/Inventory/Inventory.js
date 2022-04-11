@@ -313,7 +313,8 @@ const Inventory = () => {
           { dbName: "min_reorder_quantity", displayName: "Điểm đặt hàng lại" },
           { dbName: "img_urls", displayName: "Hình ảnh" },
           {dbName: "category_id",displayName:"Danh mục"},
-          {dbName:"max_order",displayName:"Đặt hàng tối đa"}
+          {dbName:"max_order",displayName:"Đặt hàng tối đa"},
+          {dbName:"has_batches",displayName:"Lô"}
         ]}
         orderByOptions={
           store_setting?.inventory.status ?

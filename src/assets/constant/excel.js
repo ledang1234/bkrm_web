@@ -45,3 +45,22 @@ export const excel_data_customer = [
     "debt": "0"
   }
 ];
+
+const test = {
+  "json_data": [
+      {
+          "name": "Hải sản tươi sống",
+          "list_price": 123254,
+          "standard_price": 12254525,
+          "category_name": "Ăn uống",
+          "bar_code": "",
+          "quantity_per_unit": "đĩa",
+          "min_reorder_quantity": "",
+          "max_order": "",
+          "description": "",
+          "has_batches": "",
+          "quantity": 10,
+          "image_urls": ["https://media.istockphoto.com/photos/enjoying-lunch-with-friends-picture-id1125733916?k=20&m=1125733916&s=612x612&w=0&h=pstBz6EVuXg9-17_MCYy2CMkXvntwivQycNsIUfFvyA="]
+      }
+  ]
+}
