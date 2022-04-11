@@ -468,11 +468,15 @@ const VarianceModal = (props) => {
           </Grid>
         </Box>
       </div>
-      <UpdateInventory
+      {isOpenUpdate && <UpdateInventory
         open={isOpenUpdate}
         handleClose={handleCloseUpdate}
         productInfo={productDetail}
-      />
+        setReload={() => {
+          props.setReload();
+          props.handleClose()
+        }}
+      />}
       <ConfirmPopUp
         open={deleteConfirm}
         handleClose={handleCloseDelete}

@@ -100,8 +100,8 @@ const UpdateInventory = (props) => {
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", productFormik.values.name.toString());
-      bodyFormData.append("list_price", productFormik.values.importedPrice.toString());
-      bodyFormData.append("standard_price",productFormik.values.salesPrice.toString());
+      bodyFormData.append("list_price", productFormik.values.salesPrice.toString());
+      bodyFormData.append("standard_price",productFormik.values.importedPrice.toString());
       bodyFormData.append("bar_code", productFormik.values.barcode.toString());
       bodyFormData.append("product_code", productFormik.values.product_code.toString());
       bodyFormData.append("quantity_per_unit", productFormik.values.unit.toString());
