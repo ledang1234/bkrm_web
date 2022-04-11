@@ -408,19 +408,6 @@ const ToolBar = (props) => {
           custom && listCl.length > 0 && excel &&
           <Grid container spacing={2} style={{ marginBottom: 15, width: 600, maxWidth: "90vw" }} direction="row" justifyContent="center" alignItems="center">
             <Grid item sm={6} xs={12}>
-              <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center" >
-                <Typography><b>Mã hàng</b></Typography>
-                <TextField label="Tên tùy chỉnh" value={customCl.product_code} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, product_code: e.target.value })}>
-                  <option value="" />
-                  {listCl.map((cl) => (
-                    <option key={cl} value={cl}>
-                      {cl}
-                    </option>
-                  ))}
-                </TextField>
-              </Box>
-            </Grid>
-            <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
                 <Typography><b>Mã vạch</b></Typography>
                 <TextField label="Tên tùy chỉnh" value={customCl.bar_code} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, bar_code: e.target.value })}>
