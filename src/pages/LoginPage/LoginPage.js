@@ -16,7 +16,7 @@ import { logInHandler, empLogInHandler } from "../../store/actionCreator";
 import { useFormik  } from "formik";
 import * as Yup from "yup";
 export default function SignIn() {
-  const [isOwner, setIsOwner] = useState(false);
+  const [isOwner, setIsOwner] = useState(true);
   const loginFormik = useFormik({
     initialValues: {
       phone: "",
@@ -83,7 +83,7 @@ export default function SignIn() {
                       <Checkbox
                         value={isOwner}
                         color="primary"
-                        onChange={(e, checked) => setIsOwner(!checked)}
+                        onChange={(e, checked) => setIsOwner(checked)}
                       />
                     }
                     label="Nhân viên"
@@ -98,7 +98,8 @@ export default function SignIn() {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                disabled = {!(loginFormik.isValid && Object.keys(loginFormik.touched).length > 0)}
+                // && Object.keys(loginFormik.touched).length > 0
+                disabled = {!(loginFormik.isValid )}
                 onClick={() => {
                   if (isOwner) {
                     dispatch(logInHandler(loginFormik.values.user_name, loginFormik.values.password));

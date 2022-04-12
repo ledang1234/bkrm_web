@@ -113,8 +113,10 @@ const DiscountDetail = (props) => {
 
     const isActive =  (startDay, endDay) =>{
       const current   = new Date() 
-      return (startDay !== "0000-00-00" ?new Date(startDay) <= current : true) && ( endDay !== "0000-00-00" ?current <= new Date(endDay) :true)
-  }
+      // return (startDay !== "0000-00-00" ?new Date(startDay) <= current : true) && ( endDay !== "0000-00-00" ?current <= new Date(endDay) :true)
+      return (startDay   ?new Date(startDay) <= current : true) && ( endDay  ?current <= new Date(endDay) :true)
+
+    }
     return (
         <Collapse in={ isMini ? true :openRow === row.id } timeout="auto" unmountOnExit>
              <Box margin={1}>
@@ -167,7 +169,7 @@ const DiscountDetail = (props) => {
                           <Typography variant="h5" gutterBottom component="div">Thời gian</Typography>    
                         </Grid>
                         <Grid item >
-                          <Typography variant="body1" gutterBottom component="div">Từ {row.start_date?.split('-').reverse().join('/')}  {row.end_date !== '0000-00-00'? `-  Đến ${row.end_date?.split('-').reverse().join('/')}` :"(Không giới hạn)"}</Typography>
+                          <Typography variant="body1" gutterBottom component="div">{row.start_date ? `Từ ${row.start_date?.split('-').reverse().join('/')}` : null}  {row.end_date ? `-  Đến ${row.end_date?.split('-').reverse().join('/')}` :"(Không giới hạn)"}</Typography>
                         </Grid>
                     </Grid>
 

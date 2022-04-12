@@ -103,7 +103,8 @@ const Cart = () => {
         payment_method: "cash",
         delivery: false,
         scores: "0",
-        discountDetail:{value:'0', type:'VND' }
+        discountDetail:{value:'0', type:'VND' },
+        selectedPromotion:null
       },
     ];
   };
@@ -216,7 +217,7 @@ const Cart = () => {
 
     const loadPromotionCoupons = async () => {
       const response = await promotionCouponApi.getActivePromotionVoucher(store_uuid)
-      console.log("response",response)
+      console.log("eeeeee",response)
       setDiscountData(response.promotions);
     } 
     if (store_uuid) {
@@ -274,7 +275,8 @@ const Cart = () => {
         discount: "0",
         delivery: false,
         scores: "0",
-        discountDetail:{value:'0', type:'VND' }
+        discountDetail:{value:'0', type:'VND' },
+        selectedPromotion:null
 
       },
     ]);
@@ -295,7 +297,8 @@ const Cart = () => {
           payment_method: "cash",
           delivery: false,
           scores: "0",
-          discountDetail:{value:'0', type:'VND' }
+          discountDetail:{value:'0', type:'VND' },
+          selectedPromotion:null
 
         },
       ]);
@@ -452,6 +455,12 @@ const Cart = () => {
     });
     setCartList(newCartList);
   };
+  const handleUpdateSelectedPromotion = (selectedPromotion) => {
+    let newCartList = update(cartList, {
+      [selectedIndex]: { selectedPromotion: { $set: selectedPromotion } },
+    });
+    setCartList(newCartList);
+  };
 
   const handleUpdatePaymentMethod = (method) => {
     let newCartList = update(cartList, {
@@ -533,6 +542,7 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
+  const[code,setCode] =React.useState("")
 
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
@@ -594,13 +604,14 @@ const Cart = () => {
 
       try {
         let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
-
+        
         setSnackStatus({
           style: "success",
           message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
         });
         setOpenSnack(true);
         if (printReceiptWhenSell.status && printReceiptWhenSell.cart) {
+          setCode(res.data.order.order_code)
           handlePrint();
         }
         handleDelete(selectedIndex);
@@ -830,6 +841,7 @@ const Cart = () => {
                 )}
                 isScore={store_setting?.customerScore.status}
                 handleUpdateDiscountDetail={handleUpdateDiscountDetail}
+                handleUpdateSelectedPromotion={handleUpdateSelectedPromotion}
               />
             ) : (
               <CartSummary
@@ -860,7 +872,7 @@ const Cart = () => {
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ReceiptPrinter cart={cartList[selectedIndex]} />
+          <ReceiptPrinter cart={cartList[selectedIndex]} code={code} />
         </div>
       </div>
     </Grid>
