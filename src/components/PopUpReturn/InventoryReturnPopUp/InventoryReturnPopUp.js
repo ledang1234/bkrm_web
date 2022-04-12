@@ -192,7 +192,7 @@ function InventoryReturnPopUp(props) {
       supplier_id: purchaseReturn.supplier_id,
       total_amount: purchaseReturn.total_amount.toString(),
       payment_method: purchaseReturn.payment_method,
-      paid_amount: purchaseReturn.paid_amount,
+      paid_amount: purchaseReturn.paid_amount.toString(),
       status:
         purchaseReturn.paid_amount >= purchaseReturn.total_amount
           ? "closed"

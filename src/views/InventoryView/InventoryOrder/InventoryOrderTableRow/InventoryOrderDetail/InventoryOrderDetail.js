@@ -543,6 +543,7 @@ const InventoryOrderDetail = (props) => {
             size="small"
             style={{ marginLeft: 15 }}
             onClick={handleClickOpen}
+            disabled={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0}
           >
             Trả hàng
           </Button>

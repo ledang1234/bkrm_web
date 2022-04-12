@@ -142,7 +142,7 @@ const ToolBar = (props) => {
     if (e.target.files) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        debugger
+        // debugger
         const data = e.target.result;
         const workbook = xlsx.read(data, { type: "array" });
         const sheetName = workbook.SheetNames[0];
@@ -158,10 +158,10 @@ const ToolBar = (props) => {
             quantity_per_unit: product[customCl.quantity_per_unit]?.toString()?product[customCl.quantity_per_unit]?.toString() : "",
             min_reorder_quantity: product[customCl.min_reorder_quantity]?.toString() ?  product[customCl.min_reorder_quantity]?.toString() : "",
             description: product[customCl.description]?.toString() ? product[customCl.description]?.toString(): "",
-            has_batches: product[customCl.has_batches]?.toString() ? product[customCl.has_batches]?.toString() : "",
+            has_batches: product[customCl.has_batches]?.toString() ? product[customCl.has_batches]?.toString() : 0,
             max_order: product[customCl.max_order]?.toString() ? product[customCl.max_order]?.toString() : "",
             img_urls: product[customCl.img_urls]?.toString().split(",") ? product[customCl.img_urls]?.toString().split(",") : "",
-            quantity: product[customCl.quantity]?.toString() ? product[customCl.quantity]?.toString()  : ""
+            quantity: product[customCl.quantity]?.toString() ? product[customCl.quantity]?.toString()  : "0"
           }))
           setJsonData(json);
         } catch (err) {
@@ -200,7 +200,6 @@ const ToolBar = (props) => {
   const handleImport = () => {
     setOpenImport(false);
     if (custom) {
-      debugger
       console.log(customCl)
       setListCl([])
       const json = excel.map((product) => ({
@@ -212,10 +211,10 @@ const ToolBar = (props) => {
         quantity_per_unit: product[customCl.quantity_per_unit]?.toString()?product[customCl.quantity_per_unit]?.toString() : "",
         min_reorder_quantity: product[customCl.min_reorder_quantity]?.toString() ?  product[customCl.min_reorder_quantity]?.toString() : "",
         description: product[customCl.description]?.toString() ? product[customCl.description]?.toString(): "",
-        has_batches: product[customCl.has_batches]?.toString() ? product[customCl.has_batches]?.toString() : "",
+        has_batches: product[customCl.has_batches]?.toString() ? product[customCl.has_batches]?.toString() : 0,
         max_order: product[customCl.max_order]?.toString() ? product[customCl.max_order]?.toString() : "",
         img_urls: product[customCl.img_urls]?.toString().split(",") ? product[customCl.img_urls]?.toString().split(",") : "",
-        quantity: product[customCl.quantity]?.toString() ? product[customCl.quantity]?.toString()  : ""
+        quantity: product[customCl.quantity]?.toString() ? product[customCl.quantity]?.toString()  : "0"
       }))
       importByJSON(json);
     } else {
@@ -228,19 +227,24 @@ const ToolBar = (props) => {
 
   const readCustomizedProduct = (e) => {
     e.preventDefault();
-    if (e.target.files) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = e.target.result;
-        const workbook = xlsx.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelLines = xlsx.utils.sheet_to_json(worksheet)
-        setExcel(excelLines)
-        setListCl(Object.keys(excelLines[0]))
-      };
-      reader.readAsArrayBuffer(e.target.files[0]);
+    try {
+      if (e.target.files) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = e.target.result;
+          const workbook = xlsx.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const excelLines = xlsx.utils.sheet_to_json(worksheet)
+          setExcel(excelLines)
+          setListCl(Object.keys(excelLines[0]))
+        };
+        reader.readAsArrayBuffer(e.target.files[0]);
+      }
+    } catch(err) {
+      console.log(err)
     }
+    
   };
   return (
 
@@ -334,8 +338,13 @@ const ToolBar = (props) => {
               <IconButton
                 aria-label="filter list"
                 onClick={async () => {
-                  const dataTableFull = await getDataExport();
-                  exportExcel(dataTableFull, tableType, columnsToKeep);
+                  if (getDataExport) {
+                    const dataTableFull = await getDataExport();
+                    exportExcel(dataTableFull, tableType, columnsToKeep);
+                  } else {
+                    exportExcel(dataTable, tableType, columnsToKeep);
+                  }
+                 
                 }}
               >
                 <GetAppTwoToneIcon className={classes.icon} />
@@ -370,7 +379,7 @@ const ToolBar = (props) => {
         </Grid>
       </Grid>
 
-      <ModalWrapperWithClose
+      {openImport && <ModalWrapperWithClose
         open={openImport}
         handleClose={() => setOpenImport(false)}
         title="Nhập dữ liệu từ file excel"
@@ -569,7 +578,7 @@ const ToolBar = (props) => {
         }
         {custom ?
           <form>
-            <label htmlFor="upload">Chọn file của bạn: </label>
+            <label htmlFor="upload">Chọn file <strong>của bạn</strong>: </label>
             <input
               type="file"
               name="upload"
@@ -604,7 +613,7 @@ const ToolBar = (props) => {
         >
           Nhập
         </Button>
-      </ModalWrapperWithClose>
+      </ModalWrapperWithClose>}
     </>
 
   );

@@ -213,14 +213,15 @@ function InvoiceReturnSummary({
           className={classes.marginRow}
         >
           <Typography variant="h5">Đã trả khách</Typography>
-          <VNDInput
+          <Typography variant="body2"><Input.VNDFormat value={data.paid_amount} /></Typography>
+          {/* <VNDInput
             id="standard-basic"
             style={{ width: 90 }}
             size="small"
             inputProps={{ style: { textAlign: "right" } }}
             value={data.paid_amount}
-            onChange={(e) => handlePaidAmountChange(e.target.value)}
-          />
+            onChange={(e) => {return;}}
+          /> */}
         </Grid>
         <Grid
           container

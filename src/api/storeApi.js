@@ -18,10 +18,10 @@ const storeApi = {
     return axiosClient.get(url, { params: { period: period } });
   },
 
-  getReportOverview: (storeUuid, branchUuid, fromDate, toDate) => {
-    const url = `stores/${storeUuid}/branches/${branchUuid}/report/overview`;
+  getReportOverview: (storeUuid, branchId, fromDate, toDate) => {
+    const url = `stores/${storeUuid}/report/overview`;
     return axiosClient.get(url, {
-      params: { from_date: fromDate, to_date: toDate },
+      params: { from_date: fromDate, to_date: toDate, branch_id: branchId },
     });
   },
 
@@ -36,10 +36,11 @@ const storeApi = {
       },
     });
   },
-  getReportStatistic: (storeUuid,branchUuid, fromDate, toDate, unit) => {
-    const url = `stores/${storeUuid}/branches/${branchUuid}/report/statistic`;
+  getReportStatistic: (storeUuid,branchId, fromDate, toDate, unit) => {
+    const url = `stores/${storeUuid}/report/statistic`;
     return axiosClient.get(url, {
       params: {
+        branch_id: branchId,
         from_date: fromDate,
         to_date: toDate,
         unit: unit,
@@ -92,10 +93,11 @@ const storeApi = {
     });
   },
 
-  getReportTop: (storeUuid, fromDate, toDate, limit) => {
+  getReportTop: (storeUuid, branchId, fromDate, toDate, limit) => {
     const url = `stores/${storeUuid}/report/top`;
     return axiosClient.get(url, {
       params: {
+        branch_id: branchId,
         from_date: fromDate,
         to_date: toDate,
         limit: limit

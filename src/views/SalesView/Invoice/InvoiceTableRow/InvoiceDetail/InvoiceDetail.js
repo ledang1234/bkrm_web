@@ -530,14 +530,17 @@ function InvoiceDetail(props) {
             </>
           ) : null}
         {returnLimit.status === false || returnLimit.status === true && (getDifferenceInDays(new Date(),new Date(row.creation_date)) < returnLimit.day) ?
-          <Button
-            variant="contained"
-            size="small"
-            style={{ marginLeft: 15 }}
-            onClick={handleClickOpen}
-          >
-            Trả hàng
+          <Tooltip title={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0 ? "Không thể trả hàng cho hóa đơn còn nợ" : "Trả hàng"}>
+            <Button
+              variant="contained"
+              size="small"
+              disabled={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0}
+              style={{ marginLeft: 15 }}
+              onClick={handleClickOpen}
+            >
+              Trả hàng
           </Button>
+          </Tooltip>
         :null}
           <IconButton
             aria-label="more"

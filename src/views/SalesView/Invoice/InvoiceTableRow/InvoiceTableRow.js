@@ -45,7 +45,7 @@ function InvoiceTableRow(props) {
           <VNDFormat value={Number(row.total_amount) - Number(row.discount)} />
         </TableCell>
         <TableCell align="center">
-          <FormatedStatus debt={row.status === "debt" ? 1 : 0} />
+          <FormatedStatus debt={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0 ? 1 : 0} />
         </TableCell>
       </TableRow>
 

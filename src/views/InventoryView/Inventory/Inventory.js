@@ -57,6 +57,7 @@ import { infoActions } from "../../../store/slice/infoSlice";
 import defaultProduct from "../../../assets/img/product/default-product.png";
 import setting from "../../../assets/constant/setting"
 import empltyImage from "../../../assets/img/icon/empty-cart.png"
+import { statusAction } from "../../../store/slice/statusSlice";
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);
@@ -85,7 +86,7 @@ const Inventory = () => {
         setOpenProductImportPopper(false);
         setReload(!reload);
       }
-
+      dispatch(statusAction.successfulStatus("Nhập hàng thành công"))
       // setOpen(true);
     } catch (err) {
       console.log(err);

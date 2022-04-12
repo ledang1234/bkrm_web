@@ -524,7 +524,7 @@ const Import = () => {
         supplier_uuid: cart.supplier ? cart.supplier.uuid : "",
         total_amount: cart.total_amount.toString(),
         payment_method: cart.payment_method,
-        paid_amount: cart.paid_amount,
+        paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
         discount: cart.discount.toString(),
         // CHECK NẾU TYPE BẰNG 0  thì status là chờ hàng
         status:

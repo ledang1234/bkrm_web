@@ -29,7 +29,7 @@ const InventoryOrderTableRow = (props) => {
                 <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
                 <TableCell align="right"><VNDFormat value={row.total_amount  -row.discount}/></TableCell>
                 <TableCell align="center" className={classes.fontName}>
-                    <FormatedStatus debt={Number(row.total_amount) - Number( row.discount)  - Number(row.paid_amount) > 0? 0 : 1}/>
+                    <FormatedStatus debt={Number(row.total_amount) - Number( row.discount)  - Number(row.paid_amount) > 0 ? 1 : 0}/>
                 </TableCell>
                
             </TableRow>

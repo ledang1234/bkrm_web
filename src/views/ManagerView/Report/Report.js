@@ -88,7 +88,7 @@ const Report = () => {
     
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
-  const branch_uuid = info.branch.uuid;
+  const branch_id = info.branch.id;
 
   // report apis call here 
   const [isLoaded, setIsLoaded] = useState(false)
@@ -122,18 +122,19 @@ const Report = () => {
   useEffect(() => {
     const fetchReports = async () => {
 
+      // branchId => all: branchId: ""
       // overview: number of employees, customers, suppliers, in money, out money
-      const overViewRes = await storeApi.getReportOverview(store_uuid,branch_uuid, fromDate, toDate);
+      const overViewRes = await storeApi.getReportOverview(store_uuid, "", fromDate, toDate);
       setOverview(overViewRes.data)
       console.log("overview", overViewRes.data)
 
       // top 'limit' of items by category
-      const topItemByCategoryRes = await storeApi.getReportProduct(store_uuid, fromDate, toDate, limit, categoryId);
-      setTopItemByCategory(topItemByCategoryRes);
-      console.log("topItemByCate", topItemByCategoryRes)
+      // const topItemByCategoryRes = await storeApi.getReportProduct(store_uuid, fromDate, toDate, limit, categoryId);
+      // setTopItemByCategory(topItemByCategoryRes);
+      // console.log("topItemByCate", topItemByCategoryRes)
       const statisticRes = await storeApi.getReportStatistic( 
         store_uuid,
-        branch_uuid,
+        "",
         fromDate,
         toDate,
         unit
@@ -145,6 +146,7 @@ const Report = () => {
       // top employees, customers, products, suppliers,...
       const topDataRes = await storeApi.getReportTop(
         store_uuid,
+        "",
         fromDate,
         toDate,
         limit
@@ -156,11 +158,11 @@ const Report = () => {
       setIsLoaded(true)
     }
     
-    if (store_uuid && branch_uuid ) {
+    if (store_uuid && branch_id ) {
       fetchReports()
     }
     
-  }, [store_uuid, branch_uuid])
+  }, [store_uuid, branch_id])
   
 
   //   useEffect(() => {
