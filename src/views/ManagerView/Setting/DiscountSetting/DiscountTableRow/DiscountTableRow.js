@@ -28,7 +28,9 @@ const DiscountTableRow = (props) => {
     
     const isActive =  (startDay, endDay) =>{
         const current   = new Date() 
-        return (startDay !== "0000-00-00" ?new Date(startDay) <= current : true) && ( endDay !== "0000-00-00" ?current <= new Date(endDay) :true)
+        // return (startDay !== "0000-00-00" ?new Date(startDay) <= current : true) && ( endDay !== "0000-00-00" ?current <= new Date(endDay) :true)
+        return (startDay  ? new Date(startDay) <= current : true) && ( endDay  ?current <= new Date(endDay) :true)
+
     }
     return (
         <>
@@ -40,8 +42,8 @@ const DiscountTableRow = (props) => {
             >
                 <TableCell align="left">{row.promotion_code}</TableCell>
                 <TableCell align="left">{row.name}</TableCell>
-                <TableCell align="left">{row.start_date !== "0000-00-00"? row.start_date?.split('-').reverse().join('/') :"- - /  - -  / - - - - "}</TableCell>
-                <TableCell align="left">{row.end_date !== "0000-00-00"?row.end_date?.split('-').reverse().join('/'):"Không giới hạn"}</TableCell>
+                <TableCell align="left">{row.start_date ? row.start_date?.split('-').reverse().join('/') :"- - /  - -  / - - - - "}</TableCell>
+                <TableCell align="left">{row.end_date ?row.end_date?.split('-').reverse().join('/'):"Không giới hạn"}</TableCell>
                 <TableCell align="left">{type}</TableCell>
                 <TableCell align="left">{row.status ==='active' && isActive(row.start_date,row.end_date)? "Hoạt động" : 'Chưa hoạt động' }</TableCell>
 

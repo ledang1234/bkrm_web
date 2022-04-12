@@ -188,7 +188,7 @@ const AddDiscount = (props) => {
 
     const getInValidMesg = ()=>{
       if(name.length===0) {  return "Chưa nhập tên chương trình khuyến mãi"}
-      
+      if(startDate && endDate && new Date(startDate) > new Date(endDate)) { return "Cài đặt thời gian không hợp lệ. Ngày bắt đầu đang sau ngày kết thúc."}
       if(discountKey ==="invoice"){
             let seen = new Set();
             var hasDuplicates = rowsInvoice.some(function(currentObject) {
@@ -747,7 +747,7 @@ const AddDiscount = (props) => {
                       name="startDate"
                       variant="outlined" size="small" fullWidth 
                       className={classes.textField} 
-                      InputLabelProps={{ shrink: true }} 
+                      InputLabelProps={{ shrink: true}} 
                       value={startDate} 
                       onChange={e => setStartDate(e.target.value)}
                     />
@@ -759,7 +759,7 @@ const AddDiscount = (props) => {
                   defaultValue={new Date().toDateString()} 
                   variant="outlined" size="small" 
                   fullWidth className={classes.textField} 
-                  InputLabelProps={{ shrink: true }} 
+                  InputLabelProps={{ shrink: true ,inputProps: { min:startDate}}} 
                   value={endDate}  
                   onChange={e => setEndDate(e.target.value)}
                 />

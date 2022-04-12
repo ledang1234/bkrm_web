@@ -11,7 +11,13 @@ import Customer from "./Customer/Customer";
 import Report from "./Report/Report";
 import { useSelector } from "react-redux";
 import AbousUsSetting from "./Setting/WebSetting/AbousUsSetting";
-
+import EndDateStatistics from "./Statistics/EndDateStatistics/EndDateStatistics";
+import ProductStatistics from "./Statistics/ProductStatistics/ProductStatistics"
+import CustomerStatistics from "./Statistics/CustomerStatistics/CustomerStatistics"
+import EmployeeStatistics from "./Statistics/EmployeeStatistic/EmployeeStatistics"
+import SupplierStatistics from "./Statistics/SupplierStatistics/SupplierStatistics"
+import GeneralStatistics from "./Statistics/GeneralStatistics/GeneralStatistics"
+import IncomeStatistics from "./Statistics/IncomeStatistics/IncomeStatistics"
 const ManagerView = (props) => {
   
   const { path } = useRouteMatch();
@@ -26,7 +32,26 @@ const ManagerView = (props) => {
       
       <Route path={`${path}/customer`} component={Customer} />
       <Route path={`${path}/report`} component={Report} />
-      <Route path={`${path}/report-date`} component={GeneralSetting} />
+
+
+      <Route path={`${path}/general-report`} component={GeneralStatistics} />
+
+      <Route path={`${path}/income-report`} component={IncomeStatistics} />
+      <Route path={`${path}/product-report`} component={ProductStatistics} />
+      <Route path={`${path}/customer-report`} component={CustomerStatistics} />
+      <Route path={`${path}/employee-report`} component={EmployeeStatistics} />
+      <Route path={`${path}/supplier-report`} component={SupplierStatistics} />
+      
+
+      <Route path={`${path}/end-date-report`} component={EndDateStatistics} />
+     
+      
+
+      {/* <Route path={`${path}/report-date`} component={GeneralSetting} /> */}
+
+
+
+
 
       <Route path={`${path}/setting`} component={GeneralSetting} />
       <Route path={`${path}/setting-discount`} component={DiscountSetting} />

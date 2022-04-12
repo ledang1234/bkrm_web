@@ -35,7 +35,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UpdateInventory from "./UpdateInventory/UpdateInventory";
 import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
 import { statusAction } from "../../../../../store/slice/statusSlice";
-import { VNDFormat } from "../../../../../components/TextField/NumberFormatCustom";
+import { ThousandFormat, VNDFormat } from "../../../../../components/TextField/NumberFormatCustom";
 import { TableCell, TableRow, Avatar, ListItem, Chip } from "@material-ui/core";
 import clsx from "clsx";
 
@@ -413,9 +413,10 @@ const InventoryDetail = (props) => {
                     </Typography>
                   </Grid>
                   <Grid item sm={2}>
-                    <Typography variant="body1" gutterBottom component="div">
-                      {row.branch_quantity.toLocaleString()}{" "}
-                    </Typography>
+                    {/* <Typography variant="body1" gutterBottom component="div">
+                      {row.branch_quantity}{" "}
+                    </Typography> */}
+                    <ThousandFormat value={row.branch_quantity} />
                   </Grid>
                   {branchs.length >1 || row.has_batches?
                    <Grid item sm={4} style={{marginTop:-5, marginBottom:5}}>
@@ -446,9 +447,12 @@ const InventoryDetail = (props) => {
                     </Typography>
                   </Grid>
                   <Grid item sm={6}>
-                    <Typography variant="body1" gutterBottom component="div">
-                      {row.min_reorder_quantity?.toLocaleString()}{" "}
-                    </Typography>
+
+                    {/* <Typography variant="body1" gutterBottom component="div">
+                      {row.min_reorder_quantity}{" "}
+                    </Typography> */}
+                    <ThousandFormat value={row.min_reorder_quantity} />
+
                   </Grid>
                 </Grid>
 
@@ -459,9 +463,12 @@ const InventoryDetail = (props) => {
                     </Typography>
                   </Grid>
                   <Grid item sm={5}>
-                    <Typography variant="body1" gutterBottom component="div">
-                      {row.max_order?.toLocaleString()}{" "}
-                    </Typography>
+
+                    {/* <Typography variant="body1" gutterBottom component="div">
+                      {row.max_order}{" "}
+                    </Typography> */}
+                    <ThousandFormat value={row.max_order} />
+
                   </Grid>
                 </Grid>
                 </>:null

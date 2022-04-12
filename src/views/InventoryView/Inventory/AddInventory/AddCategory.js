@@ -13,6 +13,9 @@ import productApi from "../../../../api/productApi";
 import { useSelector, useDispatch } from "react-redux";
 import { statusAction } from "../../../../store/slice/statusSlice"
 import CategorySelect from "../../../../components/Category/CategorySelect";
+import { TreeSelect } from 'antd';
+
+
 const AddCategory = (props) => {
   const [categoryList, setCategoryList] = useState([]);
   const [categoryInfo, setCategoryInfo] = useState({
@@ -21,6 +24,7 @@ const AddCategory = (props) => {
   });
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  
   useEffect(() => {
     const fetchAllCategory = async () => {
       try {
@@ -55,6 +59,7 @@ const AddCategory = (props) => {
       parent_category_uuid: "",
     })
   }
+  console.log("categoryInfo",categoryInfo)
   return (
     <ModalWrapper {...props}>
       <Typography variant="h4" gutterBottom>
@@ -74,7 +79,7 @@ const AddCategory = (props) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <FormControl size="small" variant="outlined" fullWidth>
+          {/* <FormControl size="small" variant="outlined" fullWidth>
             <InputLabel htmlFor="category">Danh mục cha</InputLabel>
             <Select
               native
@@ -90,8 +95,24 @@ const AddCategory = (props) => {
             >
               <option aria-label="None" value="" />
               <CategorySelect categoryList={categoryList}/>
+              
             </Select>
-          </FormControl>
+          </FormControl> */}
+            <TreeSelect
+                  id="category"
+                  name="category"  
+                  style={{ width: '100%'}}   
+                  dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
+                  treeData={categoryList}
+                  value={categoryInfo.uuid}
+                  onChange={(val)=>
+                    setCategoryInfo({
+                    ...categoryInfo,
+                    parent_category_uuid: val,
+                  })}
+                  treeDefaultExpandAll
+                  
+                />
         </Grid>
         <Grid
           item

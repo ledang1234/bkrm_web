@@ -139,7 +139,6 @@ const CartSummary = (props) => {
 
   const [addCustomer, setAddCustomer] =  React.useState({ name: "", phone: "" });
   React.useEffect(()=>{
-    // console.log("realod addCustomer",addCustomer)
     if(addCustomer?.name?.length !==  0){props.handleSelectCustomer(addCustomer);setAddCustomer({ name: "", phone: "" })}
   })
   console.log("currentCustomer",currentCustomer)
@@ -322,7 +321,7 @@ const CartSummary = (props) => {
                   // style={{ color: "#2096f3", fontWeight: 500 }}
                   value={cartData.scores}
                 />
-               {currentCustomer?.points? <Typography>/{currentCustomer.points}</Typography> : null} 
+               {currentCustomer?.points? <Typography>/{currentCustomer.points + cartData.scores}</Typography> : null} 
                </ListItem>
               </Typography>
             </Grid>:null}

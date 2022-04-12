@@ -94,7 +94,7 @@ let orderTime = moment
 var QRCode = require('qrcode.react');
 
 
-export const ReceiptPrinter = ({cart, date}) => {
+export const ReceiptPrinter = ({cart, date,code}) => {
     const info = useSelector((state) => state.info);
     // var link = "https://www.facebook.com/GiaLePhuongg/";
     // var logo ="https://newstatic2.clingme.vn/resized/images/default/cms-images/place/0/0/17/1550914926_557320_w600.jpg"
@@ -102,13 +102,14 @@ export const ReceiptPrinter = ({cart, date}) => {
 
     var link = store_setting?.custom_web;
     var logo  = store_setting?.img_url ;
+    console.log("logo", logo)
     const theme = useTheme();
     const classes = useStyles(theme);
 
     const item = cart.cartItem? cart.cartItem :cart.details
 
     return (
-        <div >
+        <div style={{padding:20}} >
             {/* Logo */}
            {logo? 
             <div className={classes.centerQR} style={{marginBottom:10}}  >
@@ -132,15 +133,15 @@ export const ReceiptPrinter = ({cart, date}) => {
 
             {/*  */}
             <Typography className={classes.title}>HOÁ ĐƠN BÁN HÀNG</Typography>
-            <Typography className={classes.center}>Mã HĐ: {}</Typography>
+            <Typography className={classes.center}>Mã HĐ: {code}</Typography>
             <Typography className={classes.center} style={{marginBottom:10}}>Thời gian: {date? date: orderTime}</Typography>
            
-
+            <Box style={{marginBottom:20}}>
             <Typography className={classes.text} >Thu ngân: {cart.created_by_user? cart.created_by_user.name: info.user.name}</Typography>
-            <Typography className={classes.text} style={{marginBottom:20}}>Khách hàng: {cart.customer?.name} </Typography>
-           
+            {cart.customer? <Typography className={classes.text} >Khách hàng: {cart.customer?.name} </Typography> :null}
+           </Box>
             {/* List */}
-                <Divider classes={{root: classes.divider}}/>
+                {/* <Divider classes={{root: classes.divider}}/>
                     <Grid container direction="row" justifyContent="space-between">
                         <Grid item xs={5}>
                         <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
@@ -172,14 +173,87 @@ export const ReceiptPrinter = ({cart, date}) => {
                         <Divider classes={{root: classes.divider}}/>
                         </>
                     );
-                })}
-                {/* </TableBody> */}
+                })} */}
+                {/* NHỎ */}
+                 {/* <Divider classes={{root: classes.divider}}/>
+                    <Grid container direction="row" justifyContent="space-between">
+                        <Grid item xs={7}>
+                        <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
+                        </Grid>
+                        <Grid item xs={5}>
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>T.Tiền</Typography>
+                        </Grid>
+                    </Grid>
+                    <Divider classes={{root: classes.divider}}/>      
+                
+                    {item.map((row, index) => {
+                    return (
+                        <>
+                          <Grid container direction="row" justifyContent="space-between">
+                            <Grid item xs={7}>
+                              <Typography className={classes.text} >{row.name}</Typography>
+                              <ListItem style={{padding:0, margin:0}}>
+                             <Typography className={classes.text} ><ThousandFormat value={row.quantity}/> x <ThousandFormat value={row.unit_price}/></Typography>
+                              </ListItem>
+                            </Grid>
+                            <Grid item xs={5}>
+                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
+                            </Grid>
+                        </Grid>
+                        <Divider classes={{root: classes.divider}}/>
+                        </>
+                     );
+                  })} */}
+
+
+              <Divider classes={{root: classes.divider}}/>
+                    <Grid container direction="row" justifyContent="space-between">
+                        <Grid item xs={4}>
+                        <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>Đơn giá</Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SL</Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>T.Tiền</Typography>
+                        </Grid>
+                    </Grid>
+                    <Divider classes={{root: classes.divider}}/>      
+                
+                    {item.map((row, index) => {
+                    return (
+                        <>
+                          <Grid container direction="row" justifyContent="space-between">
+                            <Grid item xs={4}>
+                          <   Typography className={classes.text} >{row.name}</Typography>
+                            </Grid>
+                            <Grid item xs={3}>
+                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.unit_price}/></Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity}/></Typography>
+                            </Grid>
+                            <Grid item xs={3}>
+                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
+                            </Grid>
+                        </Grid>
+                        <Divider classes={{root: classes.divider}}/>
+                        </>
+                    );
+                })} 
               
 
             <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}>
               <Grid item xs={5}>
-                <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
-                <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
+                {Number(cart.discount) > 0?
+                  <>
+                  <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
+                  <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
+                  </>
+                :null}
                 <Typography className={clsx(classes.text,classes.weight)}>
                 Tổng cộng:{" "} 
                 </Typography>
@@ -191,10 +265,14 @@ export const ReceiptPrinter = ({cart, date}) => {
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount} /></Typography>
-                <Typography >
-                  <ThousandFormat className={clsx(classes.text,classes.weight)} value={cart.discount} />
-                </Typography>
+                {Number(cart.discount) > 0?
+                  <>
+                    <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount} /></Typography>
+                    <Typography >
+                      <ThousandFormat className={clsx(classes.text,classes.weight)} value={cart.discount} />
+                    </Typography>
+                 </>
+                :null}
                 <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount}/></Typography>
                 <Typography className={clsx(classes.text,classes.weight)}> <ThousandFormat value={cart.paid_amount} /></Typography>
                 <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount- cart.discount)} /></Typography>
@@ -216,7 +294,7 @@ export const ReceiptPrinter = ({cart, date}) => {
                 </div> 
                 </>
             : null}
-            <Typography className={classes.center}>Xin cảm ơn và hẹn gặp lại !</Typography> 
+            <Typography className={classes.center}>Cảm ơn và hẹn gặp lại !</Typography> 
         </div>
     )
 }

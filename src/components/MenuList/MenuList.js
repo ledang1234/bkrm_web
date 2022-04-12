@@ -341,7 +341,16 @@ const reportModule = {
       children: [
         { id: 20.1, title: "Tổng quan", url: "/home/manager/report" },
         { id: 20.2, title: "Sổ quỹ", url: "/home/manager/report" },
-        { id: 20.3, title: "Báo cáo cuối ngày", url: "/home/manager/report" },
+
+        { id: 20.8, title: "Tổng quan", url: "/home/manager/general-report" },
+        { id: 20.3, title: "Báo cáo cuối ngày", url: "/home/manager/end-date-report" },
+        { id: 20.9, title: "Doanh thu", url: "/home/manager/income-report" },
+        { id: 20.4, title: "Sản phẩm", url: "/home/manager/product-report" },
+        { id: 20.5, title: "Khách hàng", url: "/home/manager/customer-report" },
+        { id: 20.6, title: "Nhân viên", url: "/home/manager/employee-report" },
+        { id: 20.7, title: "Nhà cung cấp", url: "/home/manager/supplier-report" },
+        
+
       ],
     },
   ],
