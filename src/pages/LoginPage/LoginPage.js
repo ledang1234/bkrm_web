@@ -16,7 +16,7 @@ import { logInHandler, empLogInHandler } from "../../store/actionCreator";
 import { useFormik  } from "formik";
 import * as Yup from "yup";
 export default function SignIn() {
-  const [isOwner, setIsOwner] = useState(false);
+  const [isOwner, setIsOwner] = useState(true);
   const loginFormik = useFormik({
     initialValues: {
       phone: "",
