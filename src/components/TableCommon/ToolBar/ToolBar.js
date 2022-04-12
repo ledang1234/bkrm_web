@@ -150,18 +150,18 @@ const ToolBar = (props) => {
         const myJson = xlsx.utils.sheet_to_json(worksheet)
         try {
           const json = myJson.map((product) => ({
-            name: product[customCl.name]?.toString(),
-            list_price: product[customCl.list_price]?.toString(),
-            standard_price: product[customCl.standard_price]?.toString(),
-            category_name: product[customCl.category_id]?.toString(),
-            bar_code: product[customCl.bar_code]?.toString(),
-            quantity_per_unit: product[customCl.quantity_per_unit]?.toString(),
-            min_reorder_quantity: product[customCl.min_reorder_quantity]?.toString(),
-            description: product[customCl.description]?.toString(),
-            has_batches: product[customCl.has_batches]?.toString(),
-            max_order: product[customCl.max_order]?.toString(),
-            img_urls: product[customCl.img_urls]?.toString().split(","),
-            quantity: product[customCl.quantity]?.toString()
+            name: product[customCl.name]?.toString()? product[customCl.name]?.toString(): "",
+            list_price: product[customCl.list_price]?.toString()? product[customCl.list_price]?.toString(): "",
+            standard_price: product[customCl.standard_price]?.toString()?product[customCl.standard_price]?.toString() : "",
+            category_name: product[customCl.category_id]?.toString()? product[customCl.category_id]?.toString(): "",
+            bar_code: product[customCl.bar_code]?.toString()?product[customCl.bar_code]?.toString() : "",
+            quantity_per_unit: product[customCl.quantity_per_unit]?.toString()?product[customCl.quantity_per_unit]?.toString() : "",
+            min_reorder_quantity: product[customCl.min_reorder_quantity]?.toString() ?  product[customCl.min_reorder_quantity]?.toString() : "",
+            description: product[customCl.description]?.toString() ? product[customCl.description]?.toString(): "",
+            has_batches: product[customCl.has_batches]?.toString() ? product[customCl.has_batches]?.toString() : "",
+            max_order: product[customCl.max_order]?.toString() ? product[customCl.max_order]?.toString() : "",
+            img_urls: product[customCl.img_urls]?.toString().split(",") ? product[customCl.img_urls]?.toString().split(",") : "",
+            quantity: product[customCl.quantity]?.toString() ? product[customCl.quantity]?.toString()  : ""
           }))
           setJsonData(json);
         } catch (err) {
@@ -204,18 +204,18 @@ const ToolBar = (props) => {
       console.log(customCl)
       setListCl([])
       const json = excel.map((product) => ({
-        name: product[customCl.name]?.toString(),
-        list_price: product[customCl.list_price]?.toString(),
-        standard_price: product[customCl.standard_price]?.toString(),
-        category_name: product[customCl.category_id]?.toString(),
-        bar_code: product[customCl.bar_code]?.toString(),
-        quantity_per_unit: product[customCl.quantity_per_unit]?.toString(),
-        min_reorder_quantity: product[customCl.min_reorder_quantity]?.toString(),
-        description: product[customCl.description]?.toString(),
-        has_batches: product[customCl.has_batches]?.toString(),
-        max_order: product[customCl.max_order]?.toString(),
-        img_urls: product[customCl.img_urls]?.toString().split(","),
-        quantity: product[customCl.quantity]?.toString()
+        name: product[customCl.name]?.toString()? product[customCl.name]?.toString(): "",
+        list_price: product[customCl.list_price]?.toString()? product[customCl.list_price]?.toString(): "",
+        standard_price: product[customCl.standard_price]?.toString()?product[customCl.standard_price]?.toString() : "",
+        category_name: product[customCl.category_id]?.toString()? product[customCl.category_id]?.toString(): "",
+        bar_code: product[customCl.bar_code]?.toString()?product[customCl.bar_code]?.toString() : "",
+        quantity_per_unit: product[customCl.quantity_per_unit]?.toString()?product[customCl.quantity_per_unit]?.toString() : "",
+        min_reorder_quantity: product[customCl.min_reorder_quantity]?.toString() ?  product[customCl.min_reorder_quantity]?.toString() : "",
+        description: product[customCl.description]?.toString() ? product[customCl.description]?.toString(): "",
+        has_batches: product[customCl.has_batches]?.toString() ? product[customCl.has_batches]?.toString() : "",
+        max_order: product[customCl.max_order]?.toString() ? product[customCl.max_order]?.toString() : "",
+        img_urls: product[customCl.img_urls]?.toString().split(",") ? product[customCl.img_urls]?.toString().split(",") : "",
+        quantity: product[customCl.quantity]?.toString() ? product[customCl.quantity]?.toString()  : ""
       }))
       importByJSON(json);
     } else {
@@ -543,6 +543,19 @@ const ToolBar = (props) => {
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
                 <Typography><b>Tồn kho</b></Typography>
                 <TextField label="Tên tùy chỉnh" value={customCl.quantity} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => { setCustomCl({ ...customCl, quantity: e.target.value }) }}>
+                  <option value="" />
+                  {listCl.map((cl) => (
+                    <option key={cl} value={cl}>
+                      {cl}
+                    </option>
+                  ))}
+                </TextField>
+              </Box>
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                <Typography><b>Lô (Có hoặc không)</b></Typography>
+                <TextField label="Tên tùy chỉnh" value={customCl.has_batches} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => { setCustomCl({ ...customCl, has_batches: e.target.value }) }}>
                   <option value="" />
                   {listCl.map((cl) => (
                     <option key={cl} value={cl}>
