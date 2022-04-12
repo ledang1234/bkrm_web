@@ -392,7 +392,7 @@ const AddInventory = (props) => {
         }
       }
     }
-    handleCloseAndReset();
+    // handleCloseAndReset();
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", productFormik.values.name.toString());
@@ -443,7 +443,8 @@ const AddInventory = (props) => {
       );
 
       
-
+      bodyFormData.append("branch_uuid", branch_uuid);
+      bodyFormData.append("quantity", 0);
       for (var i = 0; i < relatedList.length; i++) {
         const values = relatedList[i].name.split("-");
         const attributeValues = [];
@@ -475,7 +476,7 @@ const AddInventory = (props) => {
 
       await productApi.addProductWithVaration(store_uuid, bodyFormData);
       dispatch(statusAction.successfulStatus("Tạo sản phẩm thành công"));
-      handleClose();
+      // handleClose();
       props.setReload(true);
     } catch (error) {
       console.log(error);

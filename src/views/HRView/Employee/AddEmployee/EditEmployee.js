@@ -93,7 +93,10 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
         console.log(err);
       }
     };
-    loadBranches();
+
+    if (store_uuid) {
+      loadBranches();
+    }
   }, [store_uuid]);
   const [imageToShow, setImageToShow] = React.useState(employee.img_url);
   const [image, setImage] = React.useState(null);
@@ -176,7 +179,9 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
         console.log(err);
       }
     };
-    loadBranches();
+    if (store_uuid) {
+      loadBranches();
+    }
   }, [store_uuid]);
 
   // redux

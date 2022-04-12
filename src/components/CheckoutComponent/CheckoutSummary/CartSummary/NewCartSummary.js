@@ -141,7 +141,7 @@ const CartSummary = (props) => {
   React.useEffect(()=>{
     if(addCustomer?.name?.length !==  0){props.handleSelectCustomer(addCustomer);setAddCustomer({ name: "", phone: "" })}
   })
-  console.log("currentCustomerrrrr",currentCustomer)
+  console.log("currentCustomer",currentCustomer)
 
 
 

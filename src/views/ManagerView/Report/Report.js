@@ -94,8 +94,8 @@ const Report = () => {
   const [isLoaded, setIsLoaded] = useState(false)
 
   // must be in format
-  const [fromDate, setFromDate] = useState('2021-12-20');
-  const [toDate, setToDate] = useState("2022-01-31");
+  const [fromDate, setFromDate] = useState('2022-04-09');
+  const [toDate, setToDate] = useState("2022-04-10");
 
   // top 10, 20
   const [limit, setLimit] = useState(10);

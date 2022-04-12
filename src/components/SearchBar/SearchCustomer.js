@@ -19,6 +19,8 @@ import AddIcon from "@material-ui/icons/Add";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import PersonIcon from '@material-ui/icons/Person';
+import { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { removeAccents } from "../../utils";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -51,7 +53,7 @@ const SearchCustomer = (props) => {
   useEffect(() => {
 
   }, [props.selectedCustomer]);
-console.log("selectedCustomer",props.selectedCustomer)
+  // console.log("selectedCustomer",props.selectedCustomer)
   const renderOption = (option) => {
     //display value in Popper elements
     return (
@@ -119,10 +121,13 @@ console.log("selectedCustomer",props.selectedCustomer)
   );
 
   const getOptionLabel = (option) => (option.name ? option.name.concat(option.phone? ` - ${option.phone}` :'') : "");
-
+  const filter = createFilterOptions({
+    stringify: option => `${removeAccents(option.name)}  - ${option.phone}`,
+  });
   return (
     <div style={{ width: "100%" }}>
       <Autocomplete
+        filterOptions={filter}
         autoComplete={false}
         freeSolo
         onKeyUp={(event) => {
@@ -133,8 +138,6 @@ console.log("selectedCustomer",props.selectedCustomer)
             props.handleSearchBarSelect(null)
           }
         }}
-        
-       
         value={props.selectedCustomer}
         options={props.customers.filter(item => item.status ==='active')}
         getOptionLabel={getOptionLabel}
