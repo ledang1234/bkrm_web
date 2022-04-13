@@ -509,7 +509,7 @@ function InventoryCheckTableRow({
         <TableCell align="right">
           {" "}
           <ThousandFormat value={detail.branch_quantity} />
-          {detail.has_batches && (
+          {detail.has_batches ? (
             <>
               <div>
                 {batches
@@ -533,7 +533,7 @@ function InventoryCheckTableRow({
                   ))}
               </div>
             </>
-          )}
+          ) : null }
         </TableCell>
 
         <TableCell align="left" padding="none">
