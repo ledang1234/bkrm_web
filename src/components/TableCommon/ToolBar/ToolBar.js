@@ -120,7 +120,7 @@ const ToolBar = (props) => {
   const classes = useStyles(theme);
 
   const [openImport, setOpenImport] = useState(false);
-  const [custom, setCustom] = useState(false)
+  const [custom, setCustom] = useState(true)
   const [customCl, setCustomCl] = useState({
     name: "Sản phẩm",
     bar_code: "Mã vạch",
@@ -174,27 +174,31 @@ const ToolBar = (props) => {
   const [excel, setExcel] = useState([])
   const readCustomerUploadFile = (e, setJsonData) => {
     e.preventDefault();
-    if (e.target.files) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = e.target.result;
-        const workbook = xlsx.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelLines = xlsx.utils.sheet_to_json(worksheet)
-        const json = excelLines.map((line) => ({
-          name: line["Tên khách hàng"],
-          phone: line["Số điện thoại"],
-          address: line["Địa chỉ"],
-          email: line["Email"],
-          payment_info: line["Thông tin thanh toán"],
-          points: line["Tích điểm"],
-          total_payment: line["Tổng tiền mua"],
-          debt: line["Còn nợ"],
-        }))
-        setJsonData(json);
-      };
-      reader.readAsArrayBuffer(e.target.files[0]);
+    try {
+      if (e.target.files) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = e.target.result;
+          const workbook = xlsx.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const excelLines = xlsx.utils.sheet_to_json(worksheet)
+          const json = excelLines.map((line) => ({
+            name: line["Tên khách hàng"],
+            phone: line["Số điện thoại"],
+            address: line["Địa chỉ"],
+            email: line["Email"],
+            payment_info: line["Thông tin thanh toán"],
+            points: line["Tích điểm"],
+            total_payment: line["Tổng tiền mua"],
+            debt: line["Còn nợ"],
+          }))
+          setJsonData(json);
+        };
+        reader.readAsArrayBuffer(e.target.files[0]);
+      }
+    } catch (error) {
+      console.log(error)
     }
   };
   const handleImport = () => {
@@ -391,12 +395,11 @@ const ToolBar = (props) => {
             <a
               style={{ color: "blue", cursor: "pointer" }}
               onClick={() => {
-                exportExcel(excel_data, excel_name, columnsToKeep);
-                setCustom(false)
+                exportExcel(excel_data, excel_name, columnsToKeep.filter(cl => cl.dbName != "product_code"));
               }}
             >
               Excel mẫu
-            </a> hoặc <a style={{ color: "blue", cursor: "pointer" }} onClick={() => setCustom(!custom)}> tùy chỉnh </a>
+            </a> hoặc <a style={{ color: "blue", cursor: "pointer" }}> tùy chỉnh </a>
             )
           </Typography> :
           <Typography style={{ marginBottom: 15 }}>
@@ -405,7 +408,6 @@ const ToolBar = (props) => {
               style={{ color: "blue", cursor: "pointer" }}
               onClick={() => {
                 exportExcel(excel_data, excel_name, columnsToKeep);
-                setCustom(false)
               }}
             >
               Excel mẫu
@@ -418,10 +420,11 @@ const ToolBar = (props) => {
         {
           custom && listCl.length > 0 && excel &&
           <Grid container spacing={2} style={{ marginBottom: 15, width: 600, maxWidth: "90vw" }} direction="row" justifyContent="center" alignItems="center">
+
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
-                <Typography><b>Mã vạch</b></Typography>
-                <TextField label="Tên tùy chỉnh" value={customCl.bar_code} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, bar_code: e.target.value })}>
+                <Typography><b>Tên sản phẩm</b></Typography>
+                <TextField label="Tên tùy chỉnh" required value={customCl.name} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, name: e.target.value })}>
                   <option value="" />
                   {listCl.map((cl) => (
                     <option key={cl} value={cl}>
@@ -433,8 +436,21 @@ const ToolBar = (props) => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
-                <Typography><b>Tên sản phẩm</b></Typography>
-                <TextField label="Tên tùy chỉnh" value={customCl.name} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, name: e.target.value })}>
+                <Typography><b>Giá bán</b></Typography>
+                <TextField label="Tên tùy chỉnh" required value={customCl.list_price} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, list_price: e.target.value })}>
+                  <option value="" />
+                  {listCl.map((cl) => (
+                    <option key={cl} value={cl}>
+                      {cl}
+                    </option>
+                  ))}
+                </TextField>
+              </Box>
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
+                <Typography><b>Giá vốn</b></Typography>
+                <TextField label="Tên tùy chỉnh" required value={customCl.standard_price} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, standard_price: e.target.value })}>
                   <option value="" />
                   {listCl.map((cl) => (
                     <option key={cl} value={cl}>
@@ -456,24 +472,11 @@ const ToolBar = (props) => {
                   ))}
                 </TextField>
               </Box>
-            </Grid>
+            </Grid>            
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
-                <Typography><b>Giá bán</b></Typography>
-                <TextField label="Tên tùy chỉnh" value={customCl.list_price} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, list_price: e.target.value })}>
-                  <option value="" />
-                  {listCl.map((cl) => (
-                    <option key={cl} value={cl}>
-                      {cl}
-                    </option>
-                  ))}
-                </TextField>
-              </Box>
-            </Grid>
-            <Grid item sm={6} xs={12}>
-              <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
-                <Typography><b>Giá vốn</b></Typography>
-                <TextField label="Tên tùy chỉnh" value={customCl.standard_price} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, standard_price: e.target.value })}>
+                <Typography><b>Mã vạch</b></Typography>
+                <TextField label="Tên tùy chỉnh" value={customCl.bar_code} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, bar_code: e.target.value })}>
                   <option value="" />
                   {listCl.map((cl) => (
                     <option key={cl} value={cl}>
