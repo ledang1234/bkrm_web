@@ -7,6 +7,8 @@ import moment from "moment";
 import { useReactToPrint } from "react-to-print";
 import { ReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
 import { CartBottom } from "../../../components/Button/CartButton";
+import AddInventory from "../../InventoryView/Inventory/AddInventory/AddInventory";
+import AddIcon from "@material-ui/icons/Add";
 
 //import library
 import {
@@ -27,6 +29,10 @@ import {
   IconButton,
   TableBody,
   Typography,
+  ButtonBase,
+  AvatarTypeMap,
+  Tooltip,
+  Avatar
 } from "@material-ui/core";
 import SearchBarCode from "../../../components/SearchBar/SearchBarCode";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -168,6 +174,7 @@ const Cart = () => {
   // 1.Cart
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [addProduct, setAddProduct] = useState(false);
 
   const [isUpdateTotalAmount, setIsUpdateTotalAmount] = React.useState(false);
 
@@ -583,7 +590,7 @@ const Cart = () => {
     //   if (element.quantity > element.branch_quantity) return false;
     //   else return true;
     // });
-   
+
     var correctQuantity = store_setting?.inventory.status && !canSellWhenNegativeQuantity.status
       ? cart.cartItem.every(function (element, index) {
           if (element.quantity > element.branch_quantity) return false;
@@ -684,11 +691,11 @@ const Cart = () => {
       alignItems="center"
       spacing={2}
     >
-      {/* <AddInventory
+      <AddInventory
         open={addProduct}
         handleClose={() => setAddProduct(false)}
         setReload={() => {}}
-      />{" "} */}
+      />{" "}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
         open={openSnack}
@@ -772,6 +779,25 @@ const Cart = () => {
                         />
                       )}
                     </Grid>
+                    {info.role === 'owner'?
+                    <Grid item>
+                      <ButtonBase
+                        sx={{ borderRadius: "1px" }}
+                        onClick={() => {
+                          setAddProduct(true);
+                        }}
+                        style={{ marginLeft: 10 }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          className={classes.headerAvatar}
+                        >
+                          <Tooltip title="Thêm sản phẩm">
+                            <AddIcon stroke={1.5} size="1.3rem" />
+                          </Tooltip>
+                        </Avatar>
+                      </ButtonBase>
+                    </Grid>:null}
                   </Grid>
                 </Grid>
               </Grid>
