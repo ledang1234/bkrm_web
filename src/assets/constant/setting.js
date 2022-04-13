@@ -50,6 +50,15 @@ const setting = {
       order: false,
       checkInventroy: false,
     },
+    alowDebt: {
+      status: true,
+    },
+    canSellWhenNegativeQuantity: {
+      status: true,
+    },
+    canEnterDiscountWhenSell:{
+      status: true,
+    },
     discount: {
       status: true,
       applyMultiple: false,

@@ -7,6 +7,7 @@ import moment from "moment";
 import { useReactToPrint } from "react-to-print";
 import { ReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
 import { CartBottom } from "../../../components/Button/CartButton";
+
 //import library
 import {
   Grid,
@@ -576,28 +577,36 @@ const Cart = () => {
 
     var emptyCart = cart.cartItem.length === 0;
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
+    const canSellWhenNegativeQuantity = store_setting?.canSellWhenNegativeQuantity;
+    const alowDebt =  store_setting?.alowDebt;
     // var correctQuantity = cart.cartItem.every(function (element, index) {
     //   if (element.quantity > element.branch_quantity) return false;
     //   else return true;
     // });
-    var correctQuantity = store_setting?.inventory.status
+   
+    var correctQuantity = store_setting?.inventory.status && !canSellWhenNegativeQuantity.status
       ? cart.cartItem.every(function (element, index) {
           if (element.quantity > element.branch_quantity) return false;
           else return true;
         })
       : true;
-
-    if (emptyCart || !correctQuantity) {
+     
+    if (emptyCart || !correctQuantity || (!alowDebt.status && Number(cart.paid_amount) < Number(cart.total_amount) - Number(cart.discount) )) {
       setOpenSnack(true);
       if (emptyCart) {
         setSnackStatus({
           style: "error",
           message: "Giỏ hàng trống",
         });
-      } else {
+      } else if ( !correctQuantity ) {
         setSnackStatus({
           style: "error",
           message: "Giỏ hàng bị vượt tồn kho",
+        });
+      }else{
+        setSnackStatus({
+          style: "error",
+          message: "Không cho phép khách hàng nợ",
         });
       }
     } else {
@@ -675,6 +684,11 @@ const Cart = () => {
       alignItems="center"
       spacing={2}
     >
+      {/* <AddInventory
+        open={addProduct}
+        handleClose={() => setAddProduct(false)}
+        setReload={() => {}}
+      />{" "} */}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
         open={openSnack}

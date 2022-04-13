@@ -349,6 +349,8 @@ const reportModule = {
         { id: 20.5, title: "Khách hàng", url: "/home/manager/customer-report" },
         { id: 20.6, title: "Nhân viên", url: "/home/manager/employee-report" },
         { id: 20.7, title: "Nhà cung cấp", url: "/home/manager/supplier-report" },
+        { id: 20.10, title: "Chi nhánh", url: "/home/manager/branch-report" },
+
         
 
       ],

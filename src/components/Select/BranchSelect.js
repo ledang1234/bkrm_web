@@ -22,7 +22,7 @@ import {
     };
   }
 
-const BranchSelect = ({selectedBranches,setSelectedBranches}) => {
+const BranchSelect = ({selectedBranches,setSelectedBranches, isMultiple, haveAllOption}) => {
   const theme = useTheme();
     // const classes = useStyles(theme);
 
@@ -39,32 +39,27 @@ const BranchSelect = ({selectedBranches,setSelectedBranches}) => {
         },
       },
     };
-    console.log("selectedBranches",selectedBranches)
 
   return (
     <Box style={{marginLeft:10}}>
     <FormControl  variant="outlined" size="small" sx={{ m: 1 }} fullWidth>
-      <Select multiple   value={selectedBranches} onChange={(e)=>setSelectedBranches(e.target.value)}  MenuProps={MenuProps}
-        // renderValue={(selected) => {
-        //   // if(selected.length === branches.length ) { return <div >Tất cả chi nhánh</div>}
-        //   if(false ) { return <div >Tất cả chi nhánh</div>}
-        //   return (
-        //     <div >
-        //       {/* {selected.map((value, index) => {
-        //         if(index === 0){return value.name }
-        //         return " , " + value.name 
-        //       })} */}
-        //     </div>
-        //     // <></>
-        //   )  
+      <Select multiple={isMultiple?isMultiple:false}   value={selectedBranches} onChange={(e)=>setSelectedBranches(e.target.value)}  MenuProps={MenuProps}
+        renderValue={(selected) =>{ 
+          if(!isMultiple) {if(selected === 'all'){return "Tất cả chi nhánh"}else{return selected.name}}
+          else{
+            if(selected.length === branches.length) {return "Tất cả chi nhánh"} return  selected.map(((item, index) =>  index === 0 ? item.name : " , "+ item.name))
 
-        
-        // }}
-        renderValue={(selected) =>{ if(selected.length === branches.length) {return "Tất cả chi nhánh"} return  selected.map(((item, index) =>  index === 0 ? item.name : " , "+ item.name))}}
+          }
+        }}
       >
+        {haveAllOption? 
+          <MenuItem  key={"all"}value={"all"} style={getStyles(branches, "all", theme)}>Tất cả chi nhánh</MenuItem>:null
+        }
         {branches?.map(branch => {
             return (<MenuItem  key={branch.id}value={branch} style={getStyles(branches, branch.name, theme)}>{branch.name}</MenuItem>)
         })}
+      
+
     </Select>
   </FormControl>
   </Box>

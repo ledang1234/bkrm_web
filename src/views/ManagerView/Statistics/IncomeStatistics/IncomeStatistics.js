@@ -28,7 +28,8 @@ const IncomeStatistics = () => {
         toDate: new Date().toISOString().split('T')[0],
     });
      //branch
-    const [selectedBranches, setSelectedBranches] = useState(branches?branches:[]);
+    // const [selectedBranches, setSelectedBranches] = useState(branches?branches:[]);
+    const [selectedBranches, setSelectedBranches] = useState('all');
     // unit used for chart data split by day/ month/ year
     const [unit, setUnit] = useState("day");
 
@@ -36,11 +37,13 @@ const IncomeStatistics = () => {
     const [overview, setOverview] = useState({})
    
     const fetchStatistic = async () => {
-        const statisticRes = await storeApi.getReportStatistic(  store_uuid, branch_uuid, dayQuery.fromDate,   dayQuery.toDate, unit );
+        const branchId = selectedBranches ==='all'?'':selectedBranches.id
+        const statisticRes = await storeApi.getReportStatistic(  store_uuid, branchId, dayQuery.fromDate,   dayQuery.toDate, unit );
         setStatistics(statisticRes)
     }
     const fetchOverview = async () =>{
-        const overViewRes = await storeApi.getReportOverview(store_uuid,branch_uuid, dayQuery.fromDate,   dayQuery.toDate);
+        const branchId = selectedBranches ==='all'?'':selectedBranches.id
+        const overViewRes = await storeApi.getReportOverview(store_uuid,branchId, dayQuery.fromDate,   dayQuery.toDate);
         setOverview(overViewRes.data)
     }
 
@@ -55,7 +58,7 @@ const IncomeStatistics = () => {
     useEffect(() => { 
         fetchStatistic()
         fetchOverview()
-    }, [store_uuid,unit,dayQuery])
+    }, [store_uuid,unit,dayQuery,selectedBranches])
 
     const formatXLabel = (value, isFull=false) =>{
         if (!value || !isNaN(value) ){return 0}
@@ -194,7 +197,7 @@ const IncomeStatistics = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                    {branches?.length === 1?null: <BranchSelect selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>}
+                    {branches?.length === 1?null: <BranchSelect haveAllOption={true} selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>}
                     <DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery}/>
                 </ListItem>
             }   

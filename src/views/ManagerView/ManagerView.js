@@ -18,6 +18,7 @@ import EmployeeStatistics from "./Statistics/EmployeeStatistic/EmployeeStatistic
 import SupplierStatistics from "./Statistics/SupplierStatistics/SupplierStatistics"
 import GeneralStatistics from "./Statistics/GeneralStatistics/GeneralStatistics"
 import IncomeStatistics from "./Statistics/IncomeStatistics/IncomeStatistics"
+import BranchStatistics from "./Statistics/BranchStatistics/BranchStatistics"
 const ManagerView = (props) => {
   
   const { path } = useRouteMatch();
@@ -41,7 +42,8 @@ const ManagerView = (props) => {
       <Route path={`${path}/customer-report`} component={CustomerStatistics} />
       <Route path={`${path}/employee-report`} component={EmployeeStatistics} />
       <Route path={`${path}/supplier-report`} component={SupplierStatistics} />
-      
+      <Route path={`${path}/branch-report`} component={BranchStatistics} />
+
 
       <Route path={`${path}/end-date-report`} component={EndDateStatistics} />
      

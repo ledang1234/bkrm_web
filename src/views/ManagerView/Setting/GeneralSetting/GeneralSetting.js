@@ -25,6 +25,7 @@ import {
   Tooltip,
   Box,
   IconButton,
+  Modal
 } from "@material-ui/core";
 import ImageIcon from "@material-ui/icons/Image";
 import WifiIcon from "@material-ui/icons/Wifi";
@@ -45,7 +46,6 @@ import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import { grey } from "@material-ui/core/colors";
 import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWithClose";
-import {Modal} from 'antd';
 import CustomerScoreSetting from "./CustomerScoreSetting";
 import EmailSetting from "./EmailSetting";
 import NotifyDebtSetting from "./NotifyDebtSetting";
@@ -70,9 +70,10 @@ import SettingItem from "./SettingItem";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { infoActions } from "../../../../store/slice/infoSlice";
-
+import LoyaltyIcon from '@material-ui/icons/Loyalty';
 import setting from "../../../../assets/constant/setting"
-
+import ExposureIcon from '@material-ui/icons/Exposure';
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -166,6 +167,15 @@ const GeneralSetting = () => {
   //     returnImport: false,
   //     order: false,
   //     checkInventroy: false,
+  //   },
+  //   alowDebt: {
+  //     status: true,
+  //   },
+  //   canSellWhenNegativeQuantity: {
+  //     status: true,
+  //   },
+  //   canEnterDiscountWhenSell:{
+  //     status: true,
   //   },
   //   discount: {
   //     status: true,
@@ -406,7 +416,7 @@ const GeneralSetting = () => {
           name="expiryDate"
           statusChecked={checked.expiryDate.status}
           actionToggle={handleToggle}
-          title="Quản lý tồn kho theo Lô/Date"
+          title="Quản lý tồn kho theo Lô/Hạn sử dụng"
           subTitle="Quản lý hạn sử dụng của sản phẩm, thông báo khi sản phẩm sắp hết hạn sử dụng"
         >
           <EventAvailableIcon
@@ -543,6 +553,54 @@ const GeneralSetting = () => {
           <PrintIcon
             style={{
               fill: checked.printReceiptWhenSell.status
+                ? theme.customization.secondaryColor[500]
+                : null,
+            }}
+          />
+        </SettingItem>
+
+        <SettingItem
+          name="canSellWhenNegativeQuantity"
+          statusChecked={checked.canSellWhenNegativeQuantity.status}
+          actionToggle={handleToggle}
+          title="Cho phép bán hàng khi hết hàng tồn kho"
+          subTitle="Khi tồn kho bằng 0 vẫn có thể bán hàng, hệ thống sẽ ghi nhận giá trị âm" 
+        >
+          <ExposureIcon
+            style={{
+              fill: checked.canSellWhenNegativeQuantity.status
+                ? theme.customization.secondaryColor[500]
+                : null,
+            }}
+          />
+        </SettingItem>
+
+        <SettingItem
+          name="alowDebt"
+          statusChecked={checked.alowDebt.status}
+          actionToggle={handleToggle}
+          title="Cho phép khách hàng nợ khi mua hàng"
+          subTitle="Tiền khách hàng thanh toán không được nhỏ hơn tổng tiền hoá đơn" 
+        >
+          <DescriptionOutlinedIcon
+            style={{
+              fill: checked.alowDebt.status
+                ? theme.customization.secondaryColor[500]
+                : null,
+            }}
+          />
+        </SettingItem>
+
+        <SettingItem
+          name="canEnterDiscountWhenSell"
+          statusChecked={checked.canEnterDiscountWhenSell.status}
+          actionToggle={handleToggle}
+          title="Cho phép nhập giảm giá"
+          subTitle="Cho phép nhân viên sửa giảm giá chiết khấu hoá đơn" 
+        >
+          <LoyaltyIcon
+            style={{
+              fill: checked.canEnterDiscountWhenSell.status
                 ? theme.customization.secondaryColor[500]
                 : null,
             }}
