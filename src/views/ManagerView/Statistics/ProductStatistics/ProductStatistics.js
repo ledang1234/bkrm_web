@@ -29,30 +29,60 @@ const ProductStatistics = () => {
     const store_uuid = info.store.uuid;
     const branch_uuid = info.branch.uuid;
     const branches = info.store.branches 
-
+  console.log("branches",branches)
   // category id to view to item by root category
   // should be selected by a drop down and pass as category_id=> category uuid đc ko
-  const [categoryId, setCategoryId] = useState();
-  
-  const [topItemByCategory, setTopItemByCategory] = useState([])
-  const [topData, setTopData] = useState({})
+  const [categoryId, setCategoryId] = useState('all');
+  const [topData, setTopData] = useState([])
+  const [saveTopData, setSaveTopData] = useState([])
 
   const [categoryList, setCategoryList] = useState([]);
+  console.log("categoryList",categoryList)
+
+  const recursiveSearchTree = (category) => {
+    const findedCategory=category.find(e => e.uuid === categoryId);
+    if(findedCategory){return findedCategory}
+    for(let i = 0; i< category.length ; i++){
+      if(category[i].children.length > 0){return recursiveSearchTree(category[i].children)}
+    } 
+  };
+  const getAllChild  =(cat) => {
+    if(!cat){return}
+    if(cat.children.length === 0){return cat.uuid}
+    return cat.children.map((child)=>{
+      return getAllChild(child)
+    })
+  }
+  const filterCategory = () =>{
+    if(categoryId === 'all') {
+      setTopData(saveTopData)
+    }else{
+      let cat =  recursiveSearchTree(categoryList)
+      let allChild = cat?.children?.length !== 0? getAllChild(cat) : []
+      allChild =  [].concat.apply([], allChild)
+      let allCat =  allChild ?[... allChild, cat?.uuid]: allChild
+      setTopData(saveTopData.filter(data =>  allCat?.includes(data.category_uuid ) ))
+    }
+  }
+
+
   
+
   const fetchAllCategory = async () => {
     try {
       const response = await productApi.getNestedCategory(store_uuid);
       setCategoryList(response.data);
     } catch (error) { }
   };
+ 
 
-  const fetchItemByCategoryRes = async () =>{
-    const topItemByCategoryRes = await storeApi.getReportProduct(store_uuid, dayQuery.fromDate, dayQuery.toDate, limit, categoryId);
-    setTopItemByCategory(topItemByCategoryRes);
-  }
+
   const fetchTopData = async () =>{
-    const topDataRes = await storeApi.getReportTop( store_uuid,  dayQuery.fromDate, dayQuery.toDate );
-    setTopData(topDataRes)
+    const branchId = selectedBranches ==='all'?'':selectedBranches.id
+    const topDataRes = await storeApi.getReportTop( store_uuid,branchId, dayQuery.fromDate, dayQuery.toDate );
+    setTopData(topDataRes.top_product)
+    setSaveTopData(topDataRes.top_product)
+
   }
    // 
    const today = new Date()
@@ -61,7 +91,8 @@ const ProductStatistics = () => {
      toDate: new Date().toISOString().split('T')[0],
    });
 
-   const [selectedBranches, setSelectedBranches] = useState(branches?branches:[]);
+  //  const [selectedBranches, setSelectedBranches] = useState(branches?branches:[]);
+  const [selectedBranches, setSelectedBranches] = useState('all');
    const [limit, setLimit] = useState({bestSeller:10, revenue:10, profit:10 });
    const handleChangeLimit =  (event) => {
      const { name,value } = event.target;
@@ -71,32 +102,28 @@ const ProductStatistics = () => {
 
   useEffect(() => {
       if (store_uuid && branch_uuid ) {
-        fetchItemByCategoryRes()
         fetchTopData()
         fetchAllCategory();
-
       }   
   }, [])
     useEffect(() => {
       if (store_uuid && branch_uuid ) {
-        fetchItemByCategoryRes()
         fetchTopData()
-        }   
-  }, [store_uuid,dayQuery])
-  console.log("topItemByCategory",topItemByCategory)
-  console.log("categoryList",categoryList)
+      }   
+  }, [store_uuid,dayQuery,selectedBranches])
 
-  
-
+  useEffect(()=>{
+    if(categoryList&& topData) {filterCategory()}
+  },[categoryId])
    
-    let topSortedRevenue = topData?.top_product ? [...topData?.top_product] :[]
-    topSortedRevenue.sort((a, b) => b.total_sell_price - a.total_sell_price ) 
+    let topSortedRevenue = topData ? [...topData] :[]
+    topSortedRevenue.sort((a, b) => Number(b.total_sell_price) - Number(a.total_sell_price) ) 
 
-    let topProfit = topData?.top_product ? [...topData?.top_product] :[]
-    topProfit.sort((a, b) => b.total_sell_price - a.total_sell_price ) 
+    let topProfit = topData ? [...topData] :[]
+    topProfit.sort((a, b) => Number(b.total_sell_price) - Number(a.total_sell_price) ) 
 
-    let topBestSeller = topData?.top_product ? [...topData?.top_product] :[]
-    topBestSeller.sort((a, b) => b.total_quantity - a.total_quantity ) 
+    let topBestSeller = topData ? [...topData] :[]
+    topBestSeller.sort((a, b) => Number(b.total_quantity )- Number(a.total_quantity) ) 
 
     var dataRevenue= {   
       series: [{
@@ -116,13 +143,13 @@ const ProductStatistics = () => {
     var dataProfit= {   
       series: [{
         name: 'Tổng lợi nhuận',
-        data: topData?.top_product ? topData?.top_product.map((item) =>item.total_quantity).slice(0, limit.profit) :[]
+        data: topData ? topData.map((item) =>item.total_quantity).slice(0, limit.profit) :[]
       }],
       options: {
         ...data.options,
         xaxis:{
           ...data.options.xaxis,
-          categories:   topData?.top_product ? topData?.top_product.map((item) =>item.name).slice(0, limit.profit) :[],
+          categories:   topData ? topData.map((item) =>item.name).slice(0, limit.profit) :[],
         }
       },
     };
@@ -177,6 +204,7 @@ const ProductStatistics = () => {
     }
 
   
+    console.log("topData",topData)
     const sumAllValue = categoryData.value.reduce((a, b) => a + b, 0)
     const [type,setType] = useState("revenue")
   return (
@@ -190,14 +218,14 @@ const ProductStatistics = () => {
           name="category"  
           style={{ width: 220}}   
           dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
-          treeData={categoryList}
+          treeData={[{ title:'Tất cả danh mục',value:'all'},...categoryList]}
           value={categoryId}
           onChange={(val)=>setCategoryId(val )}
           treeDefaultExpandAll
-          placeholder="Tất cả danh mục"
+          placeholder="Danh mục"
           
         />
-        {branches?.length === 1?null: <BranchSelect selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>}
+        {branches?.length === 1?null: <BranchSelect haveAllOption={true}selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>}
         <DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery}/>
       </ListItem>
       }
@@ -231,9 +259,12 @@ const ProductStatistics = () => {
                   return(
                   <Box key={index}style={{marginBottom:10}}>
                     <Grid container justifyContent='space-between' alignItems='center' style={{marginBottom:10}} >
-                        <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{index + 1}</Typography></Grid>
+                        {/* <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{index + 1}</Typography></Grid> */}
                         <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{categoryData.title[index]}</Typography></Grid>
-                        <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{value}{` / `}{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid>
+                        <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{value}</Typography></Grid>
+                        <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid>
+
+                        {/* <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{value}{` / `}{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid> */}
                     </Grid>
                     <Divider />
                   </Box>
@@ -247,7 +278,7 @@ const ProductStatistics = () => {
 
 
       
-    <DetailStatisticProduct data={topData.top_product}/>
+    <DetailStatisticProduct data={topData}/>
     
 
 </Card>
@@ -265,9 +296,10 @@ const DetailStatisticProduct = (props) =>{
   const {data} = props
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [productData , setProductData] = useState(data? data:[])
+  const [productData , setProductData] = useState(data? data.sort((a, b) => Number(b.total_quantity) - Number(a.total_quantity)):[])
 
   useEffect(() => {
+    setType("best-seller")
     setProductData(data)
 }, [data])
 
@@ -282,13 +314,16 @@ const DetailStatisticProduct = (props) =>{
   const handleChangeType = (e)  =>{
     setType(e.target.value)
     console.log("e.target.value",e.target.value)
+    let newProductData = [...productData] ;
     if(e.target.value.includes("best-seller")){
-      setProductData( productData.sort((a, b) => b.total_quantity - a.total_quantity ) )
+      newProductData.sort((a, b) => Number(b.total_quantity) - Number(a.total_quantity) )
+      setProductData( newProductData)
     }else if (e.target.value.includes("revenue")) {
-      setProductData( productData.sort((a, b) => b.total_sell_price - a.total_sell_price ) )
+      newProductData.sort((a, b) => Number(b.total_sell_price) - Number(a.total_sell_price) )
     }else{
-      setProductData( productData.sort((a, b) => b.total_sell_price - a.total_sell_price ) )
+      newProductData.sort((a, b) => Number(b.total_quantity) - Number(a.total_quantity) )
     }
+    setProductData( newProductData)
   }
   return(
     <ReportCard  title={`Báo cáo chi tiết`}  
@@ -324,13 +359,15 @@ const DetailStatisticProduct = (props) =>{
 
         <Divider style={{marginTop:15, marginBottom:10}} />
         {productData?.map((item)=>{
+          const img_urls = item.img_urls ? JSON.parse(item.img_urls).at(0):null
+          // img_urls
             return(
             <Box key={item.uuid}style={{marginBottom:10}}>
             <Grid container justifyContent='space-between' alignItems='center' style={{marginBottom:10}} >
                <Grid item xs={4}>
                   <Box style={{}}>
                       <ListItem style={{ margin:0, padding:0 }}  >
-                          <Box  component="img"  sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}  src={item.url ?item.url :defaultProduct } />
+                          <Box  component="img"  sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}  src={img_urls ?img_urls :defaultProduct } />
                           <Typography style={{color:"#000", fontSize:16, fontWeight:500}} >{item.name}</Typography>
                       </ListItem>
                   </Box>

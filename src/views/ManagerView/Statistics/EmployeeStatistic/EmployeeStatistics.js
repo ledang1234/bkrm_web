@@ -32,11 +32,13 @@ const EmployeeStatistics = () => {
   // category id to view to item by root category
   // should be selected by a drop down and pass as category_id=> category uuid đc ko
   
-  const [topData, setTopData] = useState({})
+  const [topData, setTopData] = useState([])
  
   const fetchTopData = async () =>{
-    const topDataRes = await storeApi.getReportTop( store_uuid,  dayQuery.fromDate, dayQuery.toDate );
-    setTopData(topDataRes)
+    const branchId = selectedBranches ==='all'?'':selectedBranches.id
+
+    const topDataRes = await storeApi.getReportTop( store_uuid,branchId,  dayQuery.fromDate, dayQuery.toDate );
+    setTopData(topDataRes.top_employee)
   }
    // 
    const today = new Date()
@@ -45,7 +47,10 @@ const EmployeeStatistics = () => {
      toDate: new Date().toISOString().split('T')[0],
    });
 
-   const [selectedBranches, setSelectedBranches] = useState(branches?branches:[]);
+  //  const [selectedBranches, setSelectedBranches] = useState(branches?branches:[]);
+   const [selectedBranches, setSelectedBranches] = useState('all');
+
+
    const [limit, setLimit] = useState(10);
   //  const handleChangeLimit =  (event) => {
   //    const { name,value } = event.target;
@@ -62,23 +67,23 @@ const EmployeeStatistics = () => {
       if (store_uuid && branch_uuid ) {
         fetchTopData()
         }   
-  }, [store_uuid,dayQuery])
+  }, [store_uuid,dayQuery,selectedBranches])
 
-    let topSortedRevenue = topData?.top_product ? [...topData?.top_product] :[]
-    topSortedRevenue.sort((a, b) => b.total_sell_price - a.total_sell_price ) 
+    let topSortedRevenue = topData ? [...topData] :[]
+    topSortedRevenue.sort((a, b) => b.total_sale - a.total_sale ) 
 
-    let topProfit = topData?.top_product ? [...topData?.top_product] :[]
+    let topProfit = topData ? [...topData] :[]
     topProfit.sort((a, b) => b.total_sell_price - a.total_sell_price ) 
 
-    let topBestSeller = topData?.top_product ? [...topData?.top_product] :[]
-    topBestSeller.sort((a, b) => b.total_quantity - a.total_quantity ) 
+    let topBestSeller = topData ? [...topData] :[]
+    topBestSeller.sort((a, b) => b.number_of_orders - a.number_of_orders ) 
 
     console.log("topData",topData)
 
     var dataRevenue= {   
       series: [{
         name: 'Tổng doanh thu',
-        data: topSortedRevenue ? topSortedRevenue.map((item) =>item.total_sell_price).slice(0, limit) :[],
+        data: topSortedRevenue ? topSortedRevenue.map((item) =>item.total_sale).slice(0, limit) :[],
       }],
       options: {
         ...data.options,
@@ -93,13 +98,13 @@ const EmployeeStatistics = () => {
     var dataProfit= {   
       series: [{
         name: 'Tổng lợi nhuận',
-        data: topData?.top_product ? topData?.top_product.map((item) =>item.total_quantity).slice(0, limit) :[]
+        data: topData ? topData.map((item) =>item.number_of_orders).slice(0, limit) :[]
       }],
       options: {
         ...data.options,
         xaxis:{
           ...data.options.xaxis,
-          categories:   topData?.top_product ? topData?.top_product.map((item) =>item.name).slice(0, limit) :[],
+          categories:   topData ? topData.map((item) =>item.name).slice(0, limit) :[],
         }
       },
     };
@@ -108,7 +113,7 @@ const EmployeeStatistics = () => {
     var dataBestSeller= {   
       series: [{
         name: 'Số lượng đơn',
-        data: topBestSeller ? topBestSeller.map((item) =>item.total_quantity).slice(0, limit) :[]
+        data: topBestSeller ? topBestSeller.map((item) =>item.number_of_orders).slice(0, limit) :[]
 
       }],
       options: {
@@ -139,7 +144,7 @@ const EmployeeStatistics = () => {
     <ReportCard  title={"Báo cáo nhân viên"} 
     ToolBar={
       <ListItem  style={{margin:0, padding:0}}>
-        {branches?.length === 1?null: <BranchSelect selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>}
+        {branches?.length === 1?null: <BranchSelect    haveAllOption={true}selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>}
         <DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery}/>
       </ListItem>
       }
@@ -159,7 +164,7 @@ const EmployeeStatistics = () => {
         <ReactApexChart options={returnData().options} series={returnData().series} type="bar" height={350} />
     </ReportCard> 
 
-    <DetailStatistic data={topData.top_product}/>
+    <DetailStatistic data={topData}/>
     
 
 </Card>
@@ -175,9 +180,10 @@ const DetailStatistic= (props) =>{
   const {data} = props
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [productData , setProductData] = useState(data? data:[])
+  const [productData , setProductData] = useState(data? data.sort((a, b) => Number(b.total_sale) - Number(a.total_sale)):[])
 
   useEffect(() => {
+    setType("revenue")
     setProductData(data)
 }, [data])
 
@@ -192,21 +198,25 @@ const DetailStatistic= (props) =>{
   const handleChangeType = (e)  =>{
     setType(e.target.value)
     console.log("e.target.value",e.target.value)
+    let newProductData = [...productData] ;
     if(e.target.value.includes("best-seller")){
-      setProductData( productData.sort((a, b) => b.total_quantity - a.total_quantity ) )
+      newProductData.sort((a, b) => Number(b.number_of_orders) - Number(a.number_of_orders) )
+      setProductData( newProductData)
     }else if (e.target.value.includes("revenue")) {
-      setProductData( productData.sort((a, b) => b.total_sell_price - a.total_sell_price ) )
+      newProductData.sort((a, b) => Number(b.total_sale) - Number(a.total_sale) )
     }else{
-      setProductData( productData.sort((a, b) => b.total_sell_price - a.total_sell_price ) )
+      newProductData.sort((a, b) => Number(b.total_buy_price) - Number(a.total_buy_price) )
     }
+    setProductData( newProductData)
   }
+
   return(
     <ReportCard  title={`Báo cáo chi tiết`}  
         ToolBar={
           <ListItem style={{padding:0, margin:0}}>
           <TypeReportSelect  type={type} handleChangeType={handleChangeType} title={title} label="Sắp xếp theo"/>
           
-          <TextField  style={{  marginLeft: 10 }}  variant="outlined"    placeholder={"Tìm khách hàng..."} 
+          <TextField  style={{  marginLeft: 10 }}  variant="outlined"    placeholder={"Tìm nhân viên..."} 
               InputProps={{ 
                 startAdornment: (  <InputAdornment position="start">  <SearchTwoToneIcon className={classes.icon} /> </InputAdornment> ),
                 endAdornment: (<InputAdornment position="end">  <Box   component="img"    sx={{ height: 23, width: 23 }}  src={barcodeIcon} />  </InputAdornment> ),
@@ -245,8 +255,8 @@ const DetailStatistic= (props) =>{
                       </ListItem>
                   </Box>
                 </Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{item.total_quantity ? item.total_quantity.toLocaleString() :0}</Typography></Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{ item.total_sell_price ? item.total_sell_price.toLocaleString() :0}</Typography></Grid>
+                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{item.number_of_orders ? Number(item.number_of_orders).toLocaleString() :0}</Typography></Grid>
+                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{ item.total_sale ? Number(item.total_sale).toLocaleString() :0}</Typography></Grid>
                 <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>Tổng lợi nhuận</Typography></Grid>
             </Grid>
             <Divider />

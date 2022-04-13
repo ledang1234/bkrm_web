@@ -146,7 +146,7 @@ const Report = () => {
       // top employees, customers, products, suppliers,...
       const topDataRes = await storeApi.getReportTop(
         store_uuid,
-        "",
+        46,
         fromDate,
         toDate,
         limit
