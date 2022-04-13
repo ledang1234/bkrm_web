@@ -345,12 +345,12 @@ const ImportSummary = (props) => {
               variant="contained"
               fullWidth
               color="primary"
-              style={{ marginTop: 40 }}
+              style={{ marginTop: 80 }}
               onClick={()=>handleConfirm(1)}
             >
               Nhập hàng
             </Button>
-           
+{/*            
             <Button
               variant="contained"
               fullWidth
@@ -359,7 +359,7 @@ const ImportSummary = (props) => {
               onClick={()=>handleConfirm(0)}
             >
               Đặt hàng NCC
-            </Button>
+            </Button> */}
            
           </>
         ) : (

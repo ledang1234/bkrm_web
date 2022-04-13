@@ -418,7 +418,7 @@ const InventoryReturnDetail = (props) => {
             </>
           ) : null} */}
 
-          <IconButton
+          {/* <IconButton
             aria-label="more"
             aria-controls="long-menu"
             aria-haspopup="true"
@@ -449,7 +449,7 @@ const InventoryReturnDetail = (props) => {
               </ListItemIcon>
               <ListItemText primary="Xuất excel" />
             </StyledMenuItem>
-          </StyledMenu>
+          </StyledMenu> */}
         </Grid>
       </Box>
 

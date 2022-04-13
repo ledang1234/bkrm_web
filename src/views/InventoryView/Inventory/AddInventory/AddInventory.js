@@ -221,9 +221,6 @@ const AddInventory = (props) => {
         // JSON.stringify(datas)
       );
 
-
-      
-
       bodyFormData.append("branch_uuid", branch_uuid);
       bodyFormData.append("img_url", imageURL);
 

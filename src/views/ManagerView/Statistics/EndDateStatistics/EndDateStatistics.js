@@ -107,7 +107,7 @@ const EndDateStatistic = () => {
             </Grid>
         </Grid>
         <Grid container spacing={2} > 
-            <Grid   item md={6} xs={12}style={{marginTop:20}}  >
+            <Grid   item md={12} xs={12}style={{marginTop:20}}  >
             <ReportCard  title={`Thống kê sản phẩm`}  >
                 {/* <Typography style={{marginBottom:30,color:"#000", fontSize:22}} variant="h5">Thống kê sản phẩm</Typography>  */}
                     <Grid container justifyContent='space-between' alignItems='center'  >
@@ -138,10 +138,10 @@ const EndDateStatistic = () => {
                 </ReportCard>
             </Grid>
             <Grid  item md={6} xs={12} >
-                <Card className={classes.hoverCard} style={{padding:25, marginTop:20}}>
+                {/* <Card className={classes.hoverCard} style={{padding:25, marginTop:20}}>
                     <Typography style={{marginBottom:20,color:"#000", fontSize:22}} variant="h5">Thống kê bán hàng </Typography> 
 
-                </Card>
+                </Card> */}
             </Grid>
         </Grid>
     </div>

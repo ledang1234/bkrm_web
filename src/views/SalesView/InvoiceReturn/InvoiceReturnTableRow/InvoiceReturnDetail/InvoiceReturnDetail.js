@@ -338,7 +338,7 @@ function InvoiceReturnDetail(props) {
             )
             : null}
 
-          <IconButton
+          {/* <IconButton
             aria-label="more"
             aria-controls="long-menu"
             aria-haspopup="true"
@@ -369,7 +369,7 @@ function InvoiceReturnDetail(props) {
               </ListItemIcon>
               <ListItemText primary="Xuất excel" />
             </StyledMenuItem>
-          </StyledMenu>
+          </StyledMenu> */}
 
         </Grid>
 

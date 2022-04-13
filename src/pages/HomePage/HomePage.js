@@ -182,7 +182,7 @@ const HomePage = (props) => {
             {/* <SearchProduct /> */}
 
             <Box display="flex" flexDirection="row" alignItems="center">
-              <BranchSelectAppBar store_uuid={infoDetail.store.uuid} />
+              {infoDetail.store?.branches?.length > 1 ?<BranchSelectAppBar store_uuid={infoDetail.store.uuid} />:null}
               <IconButton color="primary" size="small" onClick={() => { setOpenUserInfo(true); }} >
                 <PersonIcon fontSize="large" />
               </IconButton>
@@ -190,7 +190,7 @@ const HomePage = (props) => {
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
-                style={{ width: 200, marginLeft: 10, marginRight: 5 }}
+                style={{marginLeft: 10, marginRight: 5 }}
               >
                 <Typography variant="h6" style={{ fontWeight: 700, fontSize: 13 }}>{roleUser}</Typography>
                 <Typography variant="h6" noWrap>
@@ -198,11 +198,11 @@ const HomePage = (props) => {
                 </Typography>
               </Box>
 
-              <IconButton color="primary" onClick={getNotification} >
+              {/* <IconButton color="primary" onClick={getNotification} >
                 <Notifications />
-              </IconButton>
+              </IconButton> */}
 
-              <Button color="primary" onClick={() => logOutHandler()}>
+              <Button color="primary" style={{ marginRight:10, marginLeft:10}} onClick={() => logOutHandler()}>
                 Đăng xuất
               </Button>
             </Box>

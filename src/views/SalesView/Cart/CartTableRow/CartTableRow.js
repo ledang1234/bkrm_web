@@ -184,14 +184,14 @@ export const CartRow = (props) => {
                 ))}   */}
               </MoreInfo>
             ) : null}
-            {haveDiscount ? (
+            {/* {haveDiscount ? (
               <img
                 id="gift"
                 src={require("../../../../assets/img/icon/giftbox.png").default}
                 style={{ height: 16, width: 16, marginLeft: 10, marginTop: -3 }}
                 onClick={() => setOpenDiscount(true)}
               />
-            ) : null}
+            ) : null} */}
           </ListItem>
           {openDiscount && (
             <DiscountPopUp
@@ -205,7 +205,7 @@ export const CartRow = (props) => {
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
         <TableCell align="right">
-          {canFixPriceSell.status && canFixPriceSell.cart ? (
+          {canFixPriceSell.status && canFixPriceSell.cart || info?.role === 'owner'? (
             <Input.ThousandSeperatedInput
               id="standard-basic"
               style={{ width: 72 }}

@@ -11,7 +11,9 @@ import {
   Box,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
-import icon1 from "../../../assets/img/product/lyimg.jpeg";
+// import icon1 from "../../../assets/img/product/lyimg.jpeg";
+import icon1 from "../../../assets/img/store.JPG";
+
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) =>

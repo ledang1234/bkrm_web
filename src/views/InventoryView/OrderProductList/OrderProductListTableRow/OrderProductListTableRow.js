@@ -27,7 +27,7 @@ const OrderProductListTableRow = (props) => {
                 <TableCell align="center">
                     <FormatedStatusOrder status={row.status}/>
                 </TableCell>
-                <TableCell align="left">{row.address}</TableCell>
+                {/* <TableCell align="left">{row.address}</TableCell> */}
             </TableRow>
 
         {/* DETAIL */}

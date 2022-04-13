@@ -361,7 +361,7 @@ const CheckHistoryDetail = (props) => {
             </Grid>
           </Box>
 
-          <Grid
+          {/* <Grid
             container
             direction="row"
             justifyContent={"flex-end"}
@@ -399,7 +399,7 @@ const CheckHistoryDetail = (props) => {
                 <ListItemText primary="Xuất excel" />
               </StyledMenuItem>
             </StyledMenu>
-          </Grid>
+          </Grid> */}
         </Box>
       </Collapse>
     );

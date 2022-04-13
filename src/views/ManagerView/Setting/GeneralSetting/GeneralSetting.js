@@ -98,9 +98,12 @@ const GeneralSetting = () => {
   // redux
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  // useEffect(()=>{
+
+  // })
 
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
-
+  // store_setting
   const [checked, setChecked] = React.useState(store_setting)
   const [change, setChange] = useState(false)
 
@@ -201,6 +204,8 @@ const GeneralSetting = () => {
   //   autoApplyDiscount: { status: true },
   // });
 
+  console.log("store_setting",store_setting)
+
   useEffect(() =>{
     if(change){
       callApi()
@@ -214,6 +219,7 @@ const GeneralSetting = () => {
         general_configuration: JSON.stringify(checked),
       });
       openNotification("success", "Lưu cài đặt chung thành công");
+      console.log("checked",checked)
       dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
       
     } catch (err) {
@@ -346,7 +352,7 @@ const GeneralSetting = () => {
         </SettingItem> */}
         <SettingItem
           name="inventory"
-          statusChecked={checked.inventory.status}
+          statusChecked={checked?.inventory?.status}
           // detail={true}
           setOpen={setOpen}
           actionToggle={(e) => {
@@ -376,7 +382,7 @@ const GeneralSetting = () => {
         >
           <AccountTreeIcon
             style={{
-              fill: checked.inventory.status
+              fill: checked?.inventory?.status
                 ? theme.customization.secondaryColor[500]
                 : null,
             }}
@@ -385,14 +391,14 @@ const GeneralSetting = () => {
 
         <SettingItem
           name="recommendedProduct"
-          statusChecked={checked.recommendedProduct.status}
+          statusChecked={checked?.recommendedProduct?.status}
           actionToggle={handleToggle}
           title="Tự động gợi ý thông tin hàng hoá"
           subTitle="Cho phép tự động gợi ý tên, mã, mô tả, hình ảnh hàng hóa khi thêm mới"
         >
           <NotificationImportantIcon
             style={{
-              fill: checked.recommendedProduct.status
+              fill: checked?.recommendedProduct?.status
                 ? theme.customization.secondaryColor[500]
                 : null,
             }}
@@ -535,7 +541,7 @@ const GeneralSetting = () => {
         >
           <MoneyOffIcon
             style={{
-              fill: checked.canFixPriceSell.status
+              fill: checked.canFixPriceSell?.status
                 ? theme.customization.secondaryColor[500]
                 : null,
             }}
@@ -546,7 +552,7 @@ const GeneralSetting = () => {
           name="printReceiptWhenSell"
           detail={true}
           setOpen={setOpen}
-          statusChecked={checked.printReceiptWhenSell.status}
+          statusChecked={checked.printReceiptWhenSell?.status}
           actionToggle={(e) => {
             handleTogglePopup(e, "printReceiptWhenSell");
           }}
@@ -555,7 +561,7 @@ const GeneralSetting = () => {
         >
           <PrintIcon
             style={{
-              fill: checked.printReceiptWhenSell.status
+              fill: checked?.printReceiptWhenSell?.status
                 ? theme.customization.secondaryColor[500]
                 : null,
             }}
@@ -564,14 +570,14 @@ const GeneralSetting = () => {
 
         <SettingItem
           name="canSellWhenNegativeQuantity"
-          statusChecked={checked.canSellWhenNegativeQuantity.status}
+          statusChecked={checked?.canSellWhenNegativeQuantity?.status}
           actionToggle={handleToggle}
           title="Cho phép bán hàng khi hết hàng tồn kho"
           subTitle="Khi tồn kho bằng 0 vẫn có thể bán hàng, hệ thống sẽ ghi nhận giá trị âm" 
         >
           <ExposureIcon
             style={{
-              fill: checked.canSellWhenNegativeQuantity.status
+              fill: checked?.canSellWhenNegativeQuantity?.status
                 ? theme.customization.secondaryColor[500]
                 : null,
             }}
@@ -580,14 +586,14 @@ const GeneralSetting = () => {
 
         <SettingItem
           name="alowDebt"
-          statusChecked={checked.alowDebt.status}
+          statusChecked={checked?.alowDebt?.status}
           actionToggle={handleToggle}
           title="Cho phép khách hàng nợ khi mua hàng"
           subTitle="Tiền khách hàng thanh toán không được nhỏ hơn tổng tiền hoá đơn" 
         >
           <DescriptionOutlinedIcon
             style={{
-              fill: checked.alowDebt.status
+              fill: checked?.alowDebt?.status
                 ? theme.customization.secondaryColor[500]
                 : null,
             }}
@@ -596,14 +602,14 @@ const GeneralSetting = () => {
 
         <SettingItem
           name="canEnterDiscountWhenSell"
-          statusChecked={checked.canEnterDiscountWhenSell.status}
+          statusChecked={checked?.canEnterDiscountWhenSell?.status}
           actionToggle={handleToggle}
           title="Cho phép nhập giảm giá"
           subTitle="Cho phép nhân viên sửa giảm giá chiết khấu hoá đơn" 
         >
           <LoyaltyIcon
             style={{
-              fill: checked.canEnterDiscountWhenSell.status
+              fill: checked?.canEnterDiscountWhenSell?.status
                 ? theme.customization.secondaryColor[500]
                 : null,
             }}

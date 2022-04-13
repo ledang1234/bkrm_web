@@ -351,7 +351,7 @@ function InvoiceDetail(props) {
             <TableRow>
               <TableCell>Mã SP</TableCell>
               <TableCell>Sản phẩm</TableCell>
-              <TableCell>Mã vạch</TableCell>
+              {/* <TableCell>Mã vạch</TableCell> */}
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá bán</TableCell>
@@ -365,7 +365,7 @@ function InvoiceDetail(props) {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                <TableCell>{detail.bar_code}</TableCell>
+                {/* <TableCell>{detail.bar_code}</TableCell> */}
                 <TableCell align="right">
                   <div>
                     {detail.quantity}
@@ -567,12 +567,12 @@ function InvoiceDetail(props) {
               <ListItemText primary="In hoá đơn" />
             </StyledMenuItem>
 
-            <StyledMenuItem>
+            {/* <StyledMenuItem>
               <ListItemIcon style={{ marginRight: -15 }}>
                 <GetAppTwoToneIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Xuất excel" />
-            </StyledMenuItem>
+            </StyledMenuItem> */}
           </StyledMenu>
         </Grid>
       </Box>

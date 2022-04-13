@@ -248,16 +248,16 @@ const CartSummary = (props) => {
               <div>
                 <ListItem style={{padding: 0,margin:0}}>
                 <Typography variant="h5">Tổng tiền hàng</Typography>
-                { filteredPromotion.length > 0   ? 
+                {/* { filteredPromotion.length > 0   ? 
                 <div onClick={()=>{setOpenDiscount(!openDiscount)}}>
                     <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} />
                 </div>
-                :null}
+                :null} */}
                 
                 </ListItem>
               
               </div>
-              {openDiscount && <DiscountPopUp setSelectedPromotion={setSelectedPromotion} selectedPromotion={selectedPromotion} filteredPromotion={filteredPromotion} open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}}/>}
+              {/* {openDiscount && <DiscountPopUp setSelectedPromotion={setSelectedPromotion} selectedPromotion={selectedPromotion} filteredPromotion={filteredPromotion} open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}}/>} */}
 
               
               <Typography variant="body2">
@@ -416,7 +416,7 @@ const CartSummary = (props) => {
               </FormControl>
             </Grid>
 
-            <Grid
+            {/* <Grid
               container
               direction="row"
               justifyContent="flex-end"
@@ -429,12 +429,12 @@ const CartSummary = (props) => {
                 }
                 label="Giao hàng"
               />
-            </Grid>
+            </Grid> */}
             <Button
               variant="contained"
               fullWidth
               color="primary"
-              style={{ marginTop: 40 }}
+              style={{ marginTop: 60 }}
               onClick={handleConfirm}
             >
               Thanh toán
