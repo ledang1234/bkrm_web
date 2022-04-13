@@ -66,27 +66,32 @@ const CustomerPage = () => {
           dispatch(customerPageActions.setProducts(data.products))
       }
     const fetchStore = async () => {
-      const res = await customerPageApi.storeInfo(storeWebPage);
-      setWebInfo(JSON.parse(res.data.web_configuration))
-      dispatch(customerPageActions.setStoreInfo(res.data))
-      const data = await Promise.all([customerPageApi.storeCategroies(res.data.uuid), 
-        customerPageApi.storeProducts(res.data.uuid)]
-      )
-      dispatch(customerPageActions.setCategories(data[0].data ? data[0].data : []));
-      dispatch(customerPageActions.setProducts(data[1].data ? data[1].data : []));
-
-      const  webSetting = JSON.parse(res.data.web_configuration)
-
-      if(webSetting.orderManagement.branchOption==='choose'&& res.data.branches.length > 1 && !webSetting.orderManagement.orderWhenOutOfSctock && !localStorage.getItem(res.data.uuid)){
-          setOpenPopUpChooseBranch(true)
+      try {
+        const res = await customerPageApi.storeInfo(storeWebPage);
+        setWebInfo(JSON.parse(res.data.web_configuration))
+        dispatch(customerPageActions.setStoreInfo(res.data))
+        const data = await Promise.all([customerPageApi.storeCategroies(res.data.uuid), 
+          customerPageApi.storeProducts(res.data.uuid)]
+        )
+        dispatch(customerPageActions.setCategories(data[0].data ? data[0].data : []));
+        dispatch(customerPageActions.setProducts(data[1].data ? data[1].data : []));
+  
+        const  webSetting = JSON.parse(res.data.web_configuration)
+  
+        if(webSetting.orderManagement.branchOption==='choose'&& res.data.branches.length > 1 && !webSetting.orderManagement.orderWhenOutOfSctock && !localStorage.getItem(res.data.uuid)){
+            setOpenPopUpChooseBranch(true)
+        }
+        localStorage.setItem(storeWebPage,JSON.stringify({
+          storeInfo:res.data,
+          products:data[1].data ? data[1].data : [],
+          order:localStorage.getItem(storeWebPage) ?localStorage.getItem(storeWebPage).order :  { name: "", phone: "", address: "", cartItem: [], branch_id: 57},
+          categories:data[0].data ? data[0].data : []
+        }));
+      } catch (err) {
+        alert("Trang web chưa được kích hoạt");
+        localStorage.removeItem(storeWebPage);
       }
-      localStorage.setItem(storeWebPage,JSON.stringify({
-        storeInfo:res.data,
-        products:data[1].data ? data[1].data : [],
-        order:localStorage.getItem(storeWebPage) ?localStorage.getItem(storeWebPage).order :  { name: "", phone: "", address: "", cartItem: [], branch_id: 57},
-        categories:data[0].data ? data[0].data : []
-      }));
-
+ 
     };
     fetchStore();
   }, []);

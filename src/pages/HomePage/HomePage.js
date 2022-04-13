@@ -81,6 +81,8 @@ const HomePage = (props) => {
   const store_uuid = info.store.uuid
   const branch_uuid = info.branch.uuid
 
+  console.log(permissions)
+
   const divLogo = () => {
     if (!smallScreen)
       return (

@@ -43,7 +43,7 @@ import { error } from '../../../../components/StatusModal/StatusModal';
 const WebSetting = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const domainName = "http://localhost:3000/#/store/";
+  const domainName ="https://www.cuahangcuatoi.net/#/store/";
   // redux 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;

@@ -21,10 +21,10 @@ export const verifyToken = () => {
   
     try {
       const rs = await verifyToken();
-   
+      console.log(rs)
       if (rs) {
         dispatch(authActions.logIn());
-        if (rs.role == "owner") {
+        if (rs.role === "owner") {
           dispatch(
             infoActions.setUser({
               ...rs.user,
@@ -39,7 +39,7 @@ export const verifyToken = () => {
           );
         } else {
           dispatch(
-            infoActions.setUser({ ...rs.user, permissions: rs.permissions })
+            infoActions.setUser({ ...rs.user, permissions: rs.permission })
           );
         }
         dispatch(infoActions.setStore(rs.store));
