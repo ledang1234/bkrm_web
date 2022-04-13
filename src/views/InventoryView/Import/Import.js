@@ -170,6 +170,15 @@ const Import = () => {
     );
   }, [cartList]);
 
+  const loadProducts = async () => {
+    const response = await productApi.searchBranchProduct(
+      store_uuid,
+      branch_uuid,
+      ""
+    );
+    setProducts(response.data)
+    // dispatch(infoActions.setProducts(response.data));
+  };
 
   // call API
   useEffect(() => {
@@ -178,21 +187,21 @@ const Import = () => {
       setSuppliers(response.data);
     };
 
-    const loadProducts = async () => {
-      const response = await productApi.searchBranchProduct(
-        store_uuid,
-        branch_uuid,
-        ""
-      );
-      setProducts(response.data)
-      // dispatch(infoActions.setProducts(response.data));
-    };
-
     if (store_uuid) {
       fetchSupplier();
     }
     if (store_uuid && branch_uuid) {
       loadProducts();
+    }
+
+    const intervalID = setInterval(() => {
+      if (store_uuid && branch_uuid) {
+        loadProducts();
+      }
+    }, 60000 * 5);
+
+    return () => {
+      clearInterval(intervalID)
     }
   }, [store_uuid, branch_uuid]);
 
@@ -218,6 +227,12 @@ const Import = () => {
   
 
   const [reloadSupplier, setReloadSupplier] = useState(false);
+  const [reloadProduct, setReloadProduct] = useState(false);
+
+  useEffect(() => {
+    loadProducts()
+  }, [reloadProduct])
+
   useEffect(() => {
     const fetchSupplier = async () => {
       const response = await supplierApi.getSuppliers(store_uuid);
@@ -568,6 +583,7 @@ const Import = () => {
         setOpenSnack(true);
         console.log(err);
       }
+      loadProducts();
     }
   };
 
@@ -640,11 +656,15 @@ const Import = () => {
       alignItems="center"
       spacing={2}
     >
-      <AddInventory
+      {addProduct && <AddInventory
         open={addProduct}
-        handleClose={() => setAddProduct(false)}
-        setReload={() => {}}
-      />{" "}
+        handleClose={() => {
+          setReloadProduct(!reloadProduct);
+          setAddProduct(false)
+        }}
+        setReload={() => {
+        }}
+      />}{" "}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
         open={openSnack}

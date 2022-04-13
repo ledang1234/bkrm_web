@@ -282,6 +282,9 @@ const GeneralSetting = () => {
 
   const handleSubmit = (name, customerScore) => {
     // close pop up && set switch
+    if (name === "inventory") {
+      const res = storeApi.toggleInventory(store_uuid);
+    }
     handleClosePopup();
     setChecked((prevState) => {
       return {
@@ -364,7 +367,7 @@ const GeneralSetting = () => {
                   },
                 };
               });
-            
+              const res = storeApi.toggleInventory(store_uuid);
               setChange(true)
             }
           }}

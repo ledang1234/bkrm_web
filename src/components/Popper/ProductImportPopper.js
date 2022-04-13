@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-
+import _ from "lodash"
 const useStyles = makeStyles((theme) => ({
   paper: {
     border: "1px solid",
@@ -30,11 +30,13 @@ const errorHeadings = {
   list_price: "Giá bán",
   standard_price: "Giá nhập",
   min_reorder_quantity: "Tồn kho tối thiểu",
-  max_quantity: "Tồn kho tối đa",
-  urls: "Link ảnh",
+  max_order: "Tồn kho tối đa",
+  img_urls: "Link ảnh",
   description: "Mô tả",
   quantity_per_unit: "Đơn vị",
-  code: "Mã sản phẩm, barcode",
+  bar_code: "Mã sản phẩm, barcode",
+  quantity: "Tồn kho ban đầu",
+  category_name: "Tên danh mục",
 };
 
 const ProductImportPopper = ({ open, loading, errors, handleClose }) => {
@@ -43,22 +45,23 @@ const ProductImportPopper = ({ open, loading, errors, handleClose }) => {
 
   const errorMessages = (error) => {
     const message = [];
-    for (let errField in error) {
-      message.push(`${errorHeadings[errField]}: ${error[errField]}`);
+    try {
+      for (let errField in error) {
+        message.push(`${errorHeadings[errField]}: ${error[errField]}`);
+      }
+      return message;
+    } catch (err) {
+      handleClose();
     }
-    return message;
   };
 
   useEffect(() => {
     const mappedData = [];
-    console.log(errors);
+    console.log("IMPORT PRODUCT EXCEL ERRORS", errors);
     errors.forEach((error) => {
       mappedData.push({
         id: `Dòng ${error.row + 1}`,
-        product_name: error.product.name,
-        bar_code: error.product.bar_code,
-        product_code: error.product.product_code,
-        error: errorMessages(error.error),
+        error: errorMessages(_.omit(error, "row")),
       });
     });
 

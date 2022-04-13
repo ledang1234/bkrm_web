@@ -92,6 +92,7 @@ const Cart = () => {
 
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const dispatch = useDispatch();
+  const [reloadProduct, setReloadProduct] = useState(false);
 
   const loadCartLocalStorage = () => {
     if (window.localStorage.getItem("cartListData")) {
@@ -217,6 +218,25 @@ const Cart = () => {
     }
   };
 
+  const loadProducts = async () => {
+    try {
+      const response = await productApi.searchBranchProduct(
+        store_uuid,
+        branch_uuid,
+        ""
+      );
+      setProducts(response.data)
+
+    } catch (err) {
+      console.log(err)
+    }
+    // dispatch(infoActions.setProducts(response.data));
+  };
+
+  useEffect(() => {
+    loadProducts();
+  }, [reloadProduct])
+
   useEffect(() => {
     const loadCustomers = async () => {
       try {
@@ -230,16 +250,6 @@ const Cart = () => {
         console.log(err);
       }
     };
-    const loadProducts = async () => {
-      const response = await productApi.searchBranchProduct(
-        store_uuid,
-        branch_uuid,
-        ""
-      );
-      setProducts(response.data)
-      // dispatch(infoActions.setProducts(response.data));
-    };
-
     const loadPromotionCoupons = async () => {
       const response = await promotionCouponApi.getActivePromotionVoucher(store_uuid)
       console.log("eeeeee",response)
@@ -666,7 +676,7 @@ const Cart = () => {
         setOpenSnack(true);
         console.log(err);
       }
-      // dispatch(infoActions.setReloadProduct());
+      loadProducts()
     }
   };
   //print
@@ -691,11 +701,15 @@ const Cart = () => {
       alignItems="center"
       spacing={2}
     >
-      <AddInventory
+      {addProduct && <AddInventory
         open={addProduct}
-        handleClose={() => setAddProduct(false)}
-        setReload={() => {}}
-      />{" "}
+        handleClose={() => {
+          setReloadProduct(!reloadProduct)
+          setAddProduct(false)
+        }}
+        setReload={() => {
+        }}
+      />}{" "}
       <SnackBarGeneral
         handleClose={handleCloseSnackBar}
         open={openSnack}

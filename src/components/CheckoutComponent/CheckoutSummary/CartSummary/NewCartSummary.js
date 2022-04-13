@@ -157,7 +157,7 @@ const CartSummary = (props) => {
    const store_setting = info.store.general_configuration
   ? JSON.parse(info.store.general_configuration)
   : setting;
-  const canEnterDiscountWhenSell = store_setting?.canEnterDiscountWhenSell.status
+  const canEnterDiscountWhenSell = store_setting?.canEnterDiscountWhenSell?.status
   const handleClick = (event) => {
       if(canEnterDiscountWhenSell || info.role === 'owner'){
         setAnchorEl(anchorEl ? null : event.currentTarget);

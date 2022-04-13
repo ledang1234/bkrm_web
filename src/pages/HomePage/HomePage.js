@@ -130,6 +130,11 @@ const HomePage = (props) => {
   const logOutHandler = () => {
     dispatch(authActions.logOut());
     localStorage.removeItem("token");
+    localStorage.removeItem("customer");
+    localStorage.removeItem("cartListData");
+    localStorage.removeItem("suppliers");
+    localStorage.removeItem("importListData");
+    localStorage.removeItem("products");
     sessionStorage.removeItem("BKRMprev");
     sessionStorage.removeItem("BKRMopening");
 
