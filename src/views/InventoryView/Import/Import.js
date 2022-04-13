@@ -659,10 +659,10 @@ const Import = () => {
       {addProduct && <AddInventory
         open={addProduct}
         handleClose={() => {
-          setReloadProduct(!reloadProduct);
           setAddProduct(false)
         }}
         setReload={() => {
+          setReloadProduct(!reloadProduct);
         }}
       />}{" "}
       <SnackBarGeneral

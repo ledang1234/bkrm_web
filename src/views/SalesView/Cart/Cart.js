@@ -234,6 +234,7 @@ const Cart = () => {
   };
 
   useEffect(() => {
+    console.log("reload heer")
     loadProducts();
   }, [reloadProduct])
 
@@ -704,10 +705,10 @@ const Cart = () => {
       {addProduct && <AddInventory
         open={addProduct}
         handleClose={() => {
-          setReloadProduct(!reloadProduct)
           setAddProduct(false)
         }}
         setReload={() => {
+          setReloadProduct(!reloadProduct)
         }}
       />}{" "}
       <SnackBarGeneral
