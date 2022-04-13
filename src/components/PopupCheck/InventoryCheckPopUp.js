@@ -50,7 +50,7 @@ import ButtonQuantity from "../Button/ButtonQuantity";
 import { CheckMiniTableRow } from "../../components/MiniTableRow/MiniTableRow";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
+import productApi from "../../api/productApi";
 function InventoryCheckPopUp({
   classes,
   setReload,
@@ -85,6 +85,40 @@ function InventoryCheckPopUp({
     details: [],
     note: "",
   });
+
+  const [products, setProducts] = useState([]);
+  const [reloadProduct, setReloadProduct] = useState(false);
+
+  const loadProducts = async () => {
+    try {
+      const response = await productApi.searchBranchProduct(
+        store_uuid,
+        branch_uuid,
+        ""
+      );
+      setProducts(response.data)
+
+    } catch (err) {
+      console.log(err)
+    }
+    // dispatch(infoActions.setProducts(response.data));
+  };
+
+  useEffect(() => {
+    if (store_uuid && branch_uuid) {
+      loadProducts();
+    }
+    //  loadingActions.finishLoad();
+    const intervalID = setInterval(() => {
+      if (store_uuid && branch_uuid) {
+        loadProducts();
+      }
+    }, 60000 * 5);
+
+    return () => {
+      clearInterval(intervalID)
+    }
+  }, [store_uuid, branch_uuid]);
 
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackStatus, setSnackStatus] = React.useState({
@@ -122,6 +156,7 @@ function InventoryCheckPopUp({
   };
 
   const handleItemRealQuantityChange = (itemId, newQuantity) => {
+    
     const itemIndex = inventoryCheck.details.findIndex(
       (item) => item.id === itemId
     );
@@ -139,6 +174,7 @@ function InventoryCheckPopUp({
         },
       },
     });
+    console.log(newInventoryCheck)
     setInventoryCheck(newInventoryCheck);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
@@ -184,6 +220,7 @@ function InventoryCheckPopUp({
       failure();
       console.log(err);
     }
+    loadProducts();
   };
   const handleCloseSnackBar = (event, reason) => {
     setOpenSnack(false);
@@ -249,9 +286,9 @@ function InventoryCheckPopUp({
               </Grid>
               <Grid item>
                 {barcodeChecked ? (
-                  <SearchBarCode handleSearchBarSelect={handleProductSelect} />
+                  <SearchBarCode products={products} handleSearchBarSelect={handleProductSelect} />
                 ) : (
-                  <SearchProduct handleSearchBarSelect={handleProductSelect} />
+                  <SearchProduct products={products} handleSearchBarSelect={handleProductSelect} />
                 )}
               </Grid>
             </Grid>
