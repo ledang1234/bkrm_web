@@ -33,7 +33,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 // import project
 import { grey } from "@material-ui/core/colors";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   StyledMenu,
   StyledMenuItem,
@@ -45,6 +45,7 @@ import { VNDFormat } from "../../../../../components/TextField/NumberFormatCusto
 import PayRemaining from "../../../../../components/Modal/PayRemaining";
 import invoiceApi from "../../../../../api/invoiceApi";
 import setting from "../../../../../assets/constant/setting"
+import {statusAction} from '../../../../../store/slice/statusSlice'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -95,6 +96,11 @@ function InvoiceDetail(props) {
   const { row, openRow, onReload } = props.parentProps;
   const { isMini } = props;
 
+  const info = useSelector((state) => state.info);
+  const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
+  const dispatch = useDispatch()
+
   //  tam thoi
   const currentUser = "Phuong Gia Le";
 
@@ -124,6 +130,17 @@ function InvoiceDetail(props) {
     setOpen(false);
   };
 
+  const handleDelete = () => {
+    try {
+      const res = orderApi.deleteOrder(store_uuid, branch_uuid, row.uuid);
+      dispatch(statusAction.successfulStatus("Xóa hóa đơn thành công"));
+      onReload();
+    } catch (err) {
+      dispatch(statusAction.failedStatus("Xóa hóa đơn thất bại"));
+      console.log(err)
+    }
+  }
+
   const [order, setOrder] = useState({
     customer: { name: "" },
     created_by_user: { name: "" },
@@ -131,8 +148,6 @@ function InvoiceDetail(props) {
     details: [],
   });
 
-  const info = useSelector((state) => state.info);
-  const store_uuid = info.store.uuid;
 
   useEffect(() => {
     const loadData = async () => {
@@ -542,6 +557,17 @@ function InvoiceDetail(props) {
           </Button>
           </Tooltip>
         :null}
+         <Tooltip title={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0 ? "Không thể trả hàng cho hóa đơn còn nợ" : "Trả hàng"}>
+            <Button
+              variant="contained"
+              size="small"
+              disabled={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0}
+              style={{ marginLeft: 15 }}
+              onClick={handleDelete}
+            >
+              Xóa hóa đơn
+          </Button>
+          </Tooltip>
           <IconButton
             aria-label="more"
             aria-controls="long-menu"

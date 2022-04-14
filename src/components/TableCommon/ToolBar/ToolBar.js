@@ -33,6 +33,8 @@ import SimpleModal from "../../Modal/ModalWrapper";
 
 import ModalWrapperWithClose from "../../Modal/ModalWrapperWithClose";
 import { applyMiddleware } from "@reduxjs/toolkit";
+import { DeleteForever } from "@material-ui/icons";
+import DeleteForeverOutlined from "@material-ui/icons/DeleteForeverOutlined";
 // import SimpleModal from "../../Modal/ModalWrapper";
 
 //--thu vien nay bij loi font
@@ -114,7 +116,8 @@ const ToolBar = (props) => {
     sort, setSort,
     isOnlySearch,
     getDataExport,
-    customizable
+    customizable,
+    handleDeleteAll,
   } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -358,6 +361,17 @@ const ToolBar = (props) => {
               </IconButton>
             </Tooltip>
 
+            {handleDeleteAll ? <Tooltip
+              title="Xóa tất cả hóa đơn"
+            >
+              <IconButton
+                aria-label="deletealll "
+                onClick={() => handleDeleteAll()}
+              >
+                <DeleteForeverOutlined className={classes.icon} />
+              </IconButton>
+            </Tooltip>: null}
+
             <Tooltip title="In">
               <IconButton
                 aria-label="filter list"
@@ -381,6 +395,7 @@ const ToolBar = (props) => {
               </Tooltip>
             }
 
+            
 
           </Box>
         </Grid>

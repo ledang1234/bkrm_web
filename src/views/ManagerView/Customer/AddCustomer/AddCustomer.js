@@ -66,8 +66,7 @@ const AddCustomer = (props) => {
       name: Yup.string().required("Nhập tên khách hàng"),
       phone: Yup.string()
         .length(10, "Số điện thoại không chính xác")
-        .required("Nhập số điện thoại").matches(/^\d+$/),
-      
+        .matches(/^\d+$/),
       email: Yup.string().email("Email không chính xác")
       // address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
     }),

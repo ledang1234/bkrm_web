@@ -15,6 +15,7 @@ import {
   Grid,
   Card,
   Box,
+  Table,
   Tabs,
   Tab,
   TableContainer,
@@ -870,11 +871,15 @@ const Cart = () => {
                 )
               ) : (
                 //  Mode nha hang
-                <MenuProduct />
+                <MenuProduct 
+                  products={products} 
+                  handleSearchBarSelect={handleSearchBarSelect}
+                  isCart={true}
+                />
               )}
             </Box>
             {/* 1.3 CHANGE MODE  */}
-            {/* <FormControlLabel
+            <FormControlLabel
               control={<Switch checked={mode} onChange={handleChangeMode} />}
               style={{
                 display: "flex",
@@ -882,7 +887,7 @@ const Cart = () => {
                 margin: -10,
                 marginTop: 10,
               }}
-            /> */}
+            />
           </Box>
         </Card>
       </Grid>
@@ -927,24 +932,61 @@ const Cart = () => {
               />
             ) : (
               <CartSummary
+                setSelectedBranch={setSelectedBranch}
+                selectedBranch={selectedBranch}
                 cartData={cartList[selectedIndex]}
-                updateCustomer={updateCustomer}
+                handleSelectCustomer={handleSelectCustomer}
+                handleSearchCustomer={handleSearchCustomer}
+                handleUpdateDiscount={handleUpdateDiscount}
+                handleUpdatePaidAmount={handleUpdatePaidAmount}
+                handleUpdatePaymentMethod={handleUpdatePaymentMethod}
+                handleCheckDelivery={handleCheckDelivery}
+                handleConfirm={handleConfirm}
                 currentCustomer={cartList[selectedIndex].customer}
+                currentBranch={branch}
                 mode={mode}
+                customers={customers}
+                reloadCustomers={() => setReloadCustomers(!reloadCustomers)}
+                //discount
+                discountData={discountData.filter(
+                  (discount) => discount.discountKey === "invoice"
+                )}
+                isScore={store_setting?.customerScore.status}
+                handleUpdateDiscountDetail={handleUpdateDiscountDetail}
+                handleUpdateSelectedPromotion={handleUpdateSelectedPromotion}
               >
-                <TableContainer
-                  style={{
-                    maxHeight: "40vh",
-                    marginBottom: 20,
-                    height: "40vh",
-                  }}
-                >
-                  <TableBody>
-                    {cartList[selectedIndex].cartItem.map((row, index) => {
-                      return <CartRowMini row={row} />;
-                    })}
-                  </TableBody>
-                </TableContainer>
+                <Table  size="small">
+                  <TableContainer
+                    style={{
+                      maxHeight: "40vh",
+                      marginBottom: 20,
+                      height: "40vh",
+                    }}
+                  >
+                    {/* <TableBody>
+                      {cartList[selectedIndex].cartItem.map((row, index) => {
+                        return <CartRowMini row={row} />;
+                      })}
+                    </TableBody> */}
+                    <TableBody>
+                      {cartList[selectedIndex].cartItem.map((row, index) => {
+                        return (
+                          <CartRow
+                            row={row}
+                            handleUpdateBatches={handleUpdateBatches}
+                            handleDeleteItemCart={handleDeleteItemCart}
+                            handleChangeItemPrice={handleChangeItemPrice}
+                            handleChangeItemQuantity={handleChangeItemQuantity}
+                            discountData={discountData.filter(
+                              (discount) => discount.discountKey === "product"
+                            )}
+                            mini={true}
+                          />
+                        );
+                      })}
+                    </TableBody>
+                  </TableContainer>
+                </Table>
               </CartSummary>
             )}
           </Box>

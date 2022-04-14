@@ -25,6 +25,14 @@ const orderApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/orders/${orderUuid}`;
     return axiosClient.put(url, body);
   },
+  deleteOrder: (storeUuid, branchUuid, orderUuid) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/orders/${orderUuid}`;
+    return axiosClient.delete(url);
+  },
+  deleteAll: (storeUuid, branchUuid) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/orders/deleteAll`;
+    return axiosClient.delete(url);
+  },
 
   // api for customer order
   searchCustomerOrder: (storeUuid, branchUuid, query) => {
