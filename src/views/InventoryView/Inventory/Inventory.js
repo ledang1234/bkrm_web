@@ -78,21 +78,24 @@ const Inventory = () => {
       setOpenProductImportPopper(true);
       setIsLoadingProduct(true);
       const res = await storeApi.importProductJSON(store_uuid, branch_uuid, jsonData);
-      if (res.status === "error") {
-        setIsLoadingProduct(false);
-        setProductErrors(res.data);
-      } else {
+      if (res.status) {
         setIsLoadingProduct(false);
         setOpenProductImportPopper(false);
         setReload(!reload);
+        dispatch(statusAction.successfulStatus("Nhập hàng thành công"))
+      } else {
+        setIsLoadingProduct(false);
+        setProductErrors(res.data);
+        dispatch(statusAction.failedStatus("Nhập hàng thất bại"))
       }
-      dispatch(statusAction.successfulStatus("Nhập hàng thành công"))
       // setOpen(true);
     } catch (err) {
       console.log(err);
+      dispatch(statusAction.failedStatus("Nhập hàng thất bại"))
       setIsLoadingProduct(false);
       // setOpen(false);
     }
+    
   };
 
   useEffect(() => {
@@ -234,7 +237,10 @@ const Inventory = () => {
         open={openProductImportPopper}
         loading={isLoadingProduct}
         errors={productErrors}
-        handleClose={() => setOpenProductImportPopper(false)}
+        handleClose={() => {
+          setOpenProductImportPopper(false)
+          setProductErrors([])
+        }}
       />
       <Grid container direction="row" justifyContent="space-between">
         {/* 1. ADD POP UP */}

@@ -1,20 +1,65 @@
-import React from 'react'
+import React, {useState,useEffect}from 'react'
 import {useTheme, makeStyles,withStyles,createStyles,lighten} from "@material-ui/core/styles";
 import { grey, blue,purple} from '@material-ui/core/colors'
 import {Typography,Divider,Card,Grid,Avatar,Paper,Box,Button,InputLabel,MenuItem,FormControl,Select,ListItem,ListItemIcon,ListItemText} from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ava from '../../../../assets/img/product/lyimg.jpeg';
+import DayReportSelect from "../../../../components/Select/DayReportSelect"
+import BranchSelect from "../../../../components/Select/BranchSelect"
+import { useSelector } from 'react-redux'
+import storeApi from "../../../../api/storeApi";
+import defaultProduct from "../../../../assets/img/product/default-product.png"
+import ReportCard from "../../../../components/CardWrapper/ReportCard"
+import TypeReportSelect from "../../../../components/Select/TypeReportSelect"
 
 const EndDateStatistic = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
 
-    //0. set time
-    const [time, setTime] = React.useState('30day');
+    const info = useSelector((state) => state.info);
+    const store_uuid = info.store.uuid;
+    const branch_uuid = info.branch.uuid;
+    const branches = info.store.branches 
 
-    const handleChangeTime = (event) => {
-    setTime(event.target.value);
-    };
+    const [selectedBranches, setSelectedBranches] = useState('all');
+
+    // 
+    const today = new Date()
+    const [dayQuery,setDayQuery] = useState({
+        fromDate: new Date(today.setDate(today.getDate() - 7 +1)).toISOString().split('T')[0],
+        toDate: new Date().toISOString().split('T')[0],
+    });
+    //
+    const [topData,setTopData] = useState([])
+    const [overview, setOverview] = useState({})
+    console.log("overview",overview)
+    const fetchTopData = async () =>{
+        const branchId = selectedBranches ==='all'?'':selectedBranches.id
+        const topDataRes = await storeApi.getReportTop( store_uuid,branchId, dayQuery.fromDate, dayQuery.toDate );
+        setTopData(topDataRes.top_product.sort((a, b) => Number(b.total_sell_price) - Number(a.total_sell_price) ))
+
+    }
+    const fetchOverview = async () =>{
+        const branchId = selectedBranches ==='all'?'':selectedBranches.id
+        const overViewRes = await storeApi.getReportOverview(store_uuid,branchId, dayQuery.fromDate,   dayQuery.toDate);
+        setOverview(overViewRes.data)
+    }
+
+
+    useEffect(() => {
+        if (store_uuid && branch_uuid ) {
+            fetchTopData()
+            fetchOverview()
+        }   
+    }, [])
+
+    useEffect(() => {
+        if (store_uuid && branch_uuid ) {
+            fetchTopData()
+            fetchOverview()
+        }   
+    }, [store_uuid,dayQuery,selectedBranches])
+
 
   return (
     <div className={classes.root}>
@@ -24,33 +69,15 @@ const EndDateStatistic = () => {
                 <Grid container justifyContent='space-between' >
                     <Grid item >
                         <Typography style={{ fontSize:18,fontWeight:500,}}>Thu - Chi</Typography>
-                        <Typography style={{color:'#000', fontSize:22,fontWeight:500}}>200.000.000</Typography>
+                        <Typography style={{color:'#000', fontSize:22,fontWeight:500}}>{overview.inAccount ?(Number(overview.inAccount)- Number(overview.outAccount)).toLocaleString() :0}</Typography>
                         <Button  variant='contained'color='primary'size="small" style={{marginTop:15}}>Chi tiết</Button>
                     </Grid>
                     <Grid item >
                         <Box style={{marginBottom:5}}>
-                        <FormControl className={classes.formControl} style={{marginTop:-5}} size="small" variant="outlined" >
-                            <Select size="small" onChange={handleChangeTime} defaultValue="today"  value={time}  >
-                                    <MenuItem value="today">Hôm nay</MenuItem>
-                                    <MenuItem value="yesterday">Hôm qua</MenuItem>
-                                    <MenuItem value="7day">7 ngày gần nhất</MenuItem>
-                                    <MenuItem value="30day">30 ngày gần nhất</MenuItem>
-                                    <MenuItem value="365day">365 ngày gần nhất</MenuItem>
-                                    <MenuItem value="advance">Tìm kiếm nâng cao</MenuItem>
-                            </Select>
-                        </FormControl>
+                            <DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery}/>
                         </Box>
                         <Box style={{marginBottom:5}}>
-                            <FormControl className={classes.formControl} style={{marginTop:-5}} size="small" variant="outlined" >
-                                <Select size="small" onChange={handleChangeTime} defaultValue="today"  value={time}  >
-                                        <MenuItem value="today">Chi nhánh trung tâm</MenuItem>
-                                        <MenuItem value="yesterday">Hôm qua</MenuItem>
-                                        <MenuItem value="7day">7 ngày gần nhất</MenuItem>
-                                        <MenuItem value="30day">30 ngày gần nhất</MenuItem>
-                                        <MenuItem value="365day">365 ngày gần nhất</MenuItem>
-                                        <MenuItem value="advance">Tìm kiếm nâng cao</MenuItem>
-                                </Select>
-                            </FormControl>
+                             <BranchSelect haveAllOption={true}selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>
                         </Box>       
                     </Grid>
                 </Grid>
@@ -68,44 +95,47 @@ const EndDateStatistic = () => {
                                 <Divider orientation="vertical" />
                             </Grid>
                             <Grid  container item xs={3} justifyContent="space-between">
-                                <SmallDetailBox bgColor={'#FCF2F5'} color={'#E56A75'} title={"Tổng thu"} value={20}/>
+                                <SmallDetailBox bgColor={'#EBFAF1'} color={'#00C292'} title={"Tổng thu"} value={overview.inAccount}/>
                                 <Divider orientation="vertical" />
                             </Grid>
                             <Grid  container item xs={3} justifyContent="space-between">
-                                <SmallDetailBox bgColor={'#EBFAF1'} color={'#00C292'} title={"Tổng chi"} value={20}/>
+                                <SmallDetailBox bgColor={'#FCF2F5'} color={'#E56A75'} title={"Tổng chi"} value={overview.outAccount}/>
+                                
                             </Grid>
                     </Grid>
                 </Card> 
             </Grid>
         </Grid>
         <Grid container spacing={2} > 
-            <Grid   item md={6} xs={12} >
-                <Card className={classes.hoverCard} style={{padding:25, marginTop:20}}>
-                <Typography style={{marginBottom:30,color:"#000", fontSize:22}} variant="h5">Thống kê sản phẩm </Typography> 
+            <Grid   item md={6} xs={12}style={{marginTop:20}}  >
+            <ReportCard  title={`Thống kê sản phẩm`}  >
+                {/* <Typography style={{marginBottom:30,color:"#000", fontSize:22}} variant="h5">Thống kê sản phẩm</Typography>  */}
                     <Grid container justifyContent='space-between' alignItems='center'  >
-                    <Typography style={{color:"#000",fontSize:17,width:200, fontWeight:500,}}>Sản phẩm</Typography>
+                    <Typography style={{color:"#000",fontSize:17,width:260, fontWeight:500,}}>Sản phẩm</Typography>
                     <Typography style={{ color:"#000",fontSize:17,fontWeight:500}}>SL</Typography>
                     <Typography style={{color:"#000",fontSize:17,fontWeight:500}}>Doanh thu</Typography>
                     </Grid>
                     <Divider style={{marginTop:15, marginBottom:10}} />
-                    {[0,1,3,4,5,6,1,3,4,5].map(()=>{
+                    {topData.map((item)=>{
+                        // console.log("item",item)
+                        const img_urls = item.img_urls ? JSON.parse(item.img_urls).at(0):null
                         return(
                         <Box style={{marginBottom:10}}>
                         <Grid container justifyContent='space-between' alignItems='center' style={{marginBottom:10}} >
-                            <Box style={{width:200}}>
+                            <Box style={{width:260}}>
                                 <ListItem style={{ margin:0, padding:0 }}  >
-                                    <Box  component="img"  sx={{ height: 50, width: 50, borderRadius: 50, marginRight: 15 }}  src={ava} />
-                                    <Typography style={{color:"#000", fontSize:16, fontWeight:500}} >Tên sản phẩm</Typography>
+                                    <Box  component="img"  sx={{ height: 50, width: 50, borderRadius: 50, marginRight: 15 }}   src={img_urls ?img_urls:defaultProduct } />
+                                    <Typography style={{color:"#000", fontSize:16, fontWeight:500}} >{item.name}</Typography>
                                 </ListItem>
                             </Box>
-                            <Typography style={{color:"#000", fontSize:16}}>2</Typography>
-                            <Typography style={{color:"#000", fontSize:16}}>Tổng thu</Typography>
+                            <Typography style={{color:"#000", fontSize:16}}>{item.total_quantity ? item.total_quantity.toLocaleString() :0}</Typography>
+                            <Typography style={{color:"#000", fontSize:16}}>{item.total_sell_price ? item.total_sell_price.toLocaleString() :0}</Typography>
                         </Grid>
                         <Divider />
                         </Box>
                         )
                     })}
-                </Card>
+                </ReportCard>
             </Grid>
             <Grid  item md={6} xs={12} >
                 <Card className={classes.hoverCard} style={{padding:25, marginTop:20}}>
@@ -124,15 +154,15 @@ const SmallDetailBox = ({bgColor, color, title, value}) =>{
     const theme = useTheme();
     const classes = useStyles(theme);
     return (
-            <Box style={{flexGrow:1,textAlign:'center', alignContent:'center', paddingTop:10, paddingBottom:10}} >
+        <Box style={{flexGrow:1,textAlign:'center', alignContent:'center', paddingTop:10, paddingBottom:10}} >
                 <Grid container justifyContent='center' >
                     <Avatar style={{backgroundColor:bgColor, color:color, width: theme.spacing(7),  height: theme.spacing(7)}}>
                         <AttachMoneyIcon/>
                     </Avatar> 
                 </Grid>
-            <Typography style={{color:'#000', fontSize:22,fontWeight:500, marginTop:10}}>{value}</Typography>
+            <Typography style={{color:'#000', fontSize:22,fontWeight:500, marginTop:10}}>{value?.toLocaleString()}</Typography>
             <Typography  style={{marginTop:4, color:'#777e89'}}>{title}</Typography>
-            </Box>
+        </Box>
     )
 }
 

@@ -23,6 +23,7 @@ import {
 import {calculateTotalQuantity} from "../../../../components/TableCommon/util/sortUtil"
 import Popper from '@material-ui/core/Popper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { useSelector } from "react-redux";
 
 import AddCustomer from "../../../../views/ManagerView/Customer/AddCustomer/AddCustomer";
 import giftBox from "../../../../assets/img/icon/giftbox.png";
@@ -36,6 +37,7 @@ import * as Input from "../../../TextField/NumberFormatCustom";
 
 // import VNDInput from '../../../TextField/NumberFormatCustom';
 // import { VNDFormat,ThousandFormat } from '../../../TextField/NumberFormatCustom';
+import setting from "../../../../assets/constant/setting";
 
 import VNDInput from "../../../TextField/NumberFormatCustom";
 import {
@@ -46,6 +48,8 @@ import { useDispatch } from "react-redux";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import DiscountPopUp from "../../../../views/SalesView/Cart/DiscountPopup/DiscountPopup"
 import DiscountInputDetail from "../../../TextField/DiscountInputDetail";
+import openNotification from "../../../../components/StatusPopup/StatusPopup";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     marginBox: {
@@ -148,8 +152,18 @@ const CartSummary = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openDiscountDetail = Boolean(anchorEl);
 
+  const info = useSelector((state) => state.info);
+  console.log("info",info)
+   const store_setting = info.store.general_configuration
+  ? JSON.parse(info.store.general_configuration)
+  : setting;
+  const canEnterDiscountWhenSell = store_setting?.canEnterDiscountWhenSell?.status
   const handleClick = (event) => {
-      setAnchorEl(anchorEl ? null : event.currentTarget);
+      if(canEnterDiscountWhenSell || info.role === 'owner'){
+        setAnchorEl(anchorEl ? null : event.currentTarget);
+      }else{
+        openNotification('error', 'Bạn không có quyền nhập giảm giá', '')
+      }
     };
 
   return (

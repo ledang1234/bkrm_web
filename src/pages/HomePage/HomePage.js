@@ -81,6 +81,8 @@ const HomePage = (props) => {
   const store_uuid = info.store.uuid
   const branch_uuid = info.branch.uuid
 
+  console.log(permissions)
+
   const divLogo = () => {
     if (!smallScreen)
       return (
@@ -130,6 +132,11 @@ const HomePage = (props) => {
   const logOutHandler = () => {
     dispatch(authActions.logOut());
     localStorage.removeItem("token");
+    localStorage.removeItem("customer");
+    localStorage.removeItem("cartListData");
+    localStorage.removeItem("suppliers");
+    localStorage.removeItem("importListData");
+    localStorage.removeItem("products");
     sessionStorage.removeItem("BKRMprev");
     sessionStorage.removeItem("BKRMopening");
 

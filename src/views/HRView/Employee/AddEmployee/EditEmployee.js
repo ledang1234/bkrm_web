@@ -106,7 +106,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
       name: employee.name || "",
       user_name: employee.user_name || "",
       phone: employee.phone,
-      permissions: employee.permissions?.map((p) => p.id) || "",
+      permissions: employee.permissions?.map((p) => p.id) || [],
       email: employee.email || "",
       salary: employee.salary || "",
       salary_type: employee.salary_type || "",
@@ -114,7 +114,7 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
       gender: employee.gender || "",
       date_of_birth: employee.date_of_birth || "",
       address: employee.address || "",
-      branches: employee.branches?.map((b) => b.id),
+      branches: employee.branches?.map((b) => b.id) || [],
       new_password: ""
     },
     validationSchema: Yup.object().shape({

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 //import project
@@ -229,6 +229,10 @@ const ToolBar = (props) => {
 
   const [listCl, setListCl] = useState([]);
 
+  useEffect(() => {
+    setListCl([])
+  }, [openImport])
+
   const readCustomizedProduct = (e) => {
     e.preventDefault();
     try {
@@ -348,7 +352,6 @@ const ToolBar = (props) => {
                   } else {
                     exportExcel(dataTable, tableType, columnsToKeep);
                   }
-                 
                 }}
               >
                 <GetAppTwoToneIcon className={classes.icon} />
