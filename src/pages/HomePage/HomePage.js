@@ -182,7 +182,8 @@ const HomePage = (props) => {
             {/* <SearchProduct /> */}
 
             <Box display="flex" flexDirection="row" alignItems="center">
-              {infoDetail.store?.branches?.length > 1 ?<BranchSelectAppBar store_uuid={infoDetail.store.uuid} />:null}
+              {/* {infoDetail.store?.branches?.length > 1 ?<BranchSelectAppBar store_uuid={infoDetail.store.uuid} />:null} */}
+              <BranchSelectAppBar store_uuid={infoDetail.store.uuid} />
               <IconButton color="primary" size="small" onClick={() => { setOpenUserInfo(true); }} >
                 <PersonIcon fontSize="large" />
               </IconButton>

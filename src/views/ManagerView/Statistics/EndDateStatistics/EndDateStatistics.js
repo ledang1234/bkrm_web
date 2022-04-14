@@ -87,11 +87,11 @@ const EndDateStatistic = () => {
                  <Card className={classes.hoverCard} >
                     <Grid  container >
                             <Grid  container item xs={3} justifyContent="space-between">
-                                <SmallDetailBox bgColor={'#E5F9FB'} color={'#06C9D6'} title={"Hoá đơn"} value={20}/>
+                                <SmallDetailBox bgColor={'#E5F9FB'} color={'#06C9D6'} title={"Hoá đơn"} value={overview.totalOrders}/>
                                 <Divider orientation="vertical" />
                             </Grid>
                             <Grid  container item xs={3} justifyContent="space-between">
-                                <SmallDetailBox bgColor={'#FFF4E5'} color={'#FFC90C'} title={"Sản phẩm"} value={20}/>
+                                <SmallDetailBox bgColor={'#FFF4E5'} color={'#FFC90C'} title={"Sản phẩm"} value={topData? topData.reduce((sum,a) => sum + a.total_quantity,0) : 0}/>
                                 <Divider orientation="vertical" />
                             </Grid>
                             <Grid  container item xs={3} justifyContent="space-between">

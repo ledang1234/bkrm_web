@@ -115,12 +115,13 @@ const ProductStatistics = () => {
   useEffect(()=>{
     if(categoryList&& topData) {filterCategory()}
   },[categoryId])
+  console.log("topData",topData)
    
     let topSortedRevenue = topData ? [...topData] :[]
     topSortedRevenue.sort((a, b) => Number(b.total_sell_price) - Number(a.total_sell_price) ) 
 
     let topProfit = topData ? [...topData] :[]
-    topProfit.sort((a, b) => Number(b.total_sell_price) - Number(a.total_sell_price) ) 
+    topProfit.sort((a, b) => Number(b.profit) - Number(a.profit) ) 
 
     let topBestSeller = topData ? [...topData] :[]
     topBestSeller.sort((a, b) => Number(b.total_quantity )- Number(a.total_quantity) ) 
@@ -143,7 +144,7 @@ const ProductStatistics = () => {
     var dataProfit= {   
       series: [{
         name: 'Tổng lợi nhuận',
-        data: topData ? topData.map((item) =>item.total_quantity).slice(0, limit.profit) :[]
+        data: topData ? topData.map((item) =>item.profit).slice(0, limit.profit) :[]
       }],
       options: {
         ...data.options,
@@ -321,7 +322,7 @@ const DetailStatisticProduct = (props) =>{
     }else if (e.target.value.includes("revenue")) {
       newProductData.sort((a, b) => Number(b.total_sell_price) - Number(a.total_sell_price) )
     }else{
-      newProductData.sort((a, b) => Number(b.total_quantity) - Number(a.total_quantity) )
+      newProductData.sort((a, b) => Number(b.profit) - Number(a.profit) )
     }
     setProductData( newProductData)
   }
@@ -374,7 +375,7 @@ const DetailStatisticProduct = (props) =>{
                 </Grid>
                 <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{item.total_quantity ? item.total_quantity.toLocaleString() :0}</Typography></Grid>
                 <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{ item.total_sell_price ? item.total_sell_price.toLocaleString() :0}</Typography></Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>Tổng lợi nhuận</Typography></Grid>
+                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{ item.profit ? item.profit.toLocaleString() :0}</Typography></Grid>
             </Grid>
             <Divider />
             </Box>
