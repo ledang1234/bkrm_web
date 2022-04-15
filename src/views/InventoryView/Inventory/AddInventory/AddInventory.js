@@ -129,13 +129,11 @@ const AddInventory = (props) => {
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên sản phẩm "),
       importedPrice: Yup.number()
-        .required("Nhập giá vốn")
         // .moreThan(0, "Giá vốn phải lớn hơn không"),
         .moreThan(-1, "Giá vốn không được âm"),
 
       salesPrice: Yup.number()
-        .required("Nhập giá bán")
-        .moreThan(0, "Giá bán phải lớn hơn không"),
+        .moreThan(-1, "Giá bán phải lớn hơn không"),
 
       re_order_point: Yup.number("Phải là một số").moreThan(
         -1,
@@ -702,13 +700,13 @@ return (
               onBlur={productFormik.handleBlur}
               className={classes.margin}
             />
-            {Number(productFormik.values.importedPrice) >
+            {/* {Number(productFormik.values.importedPrice) >
             Number(productFormik.values.salesPrice) ? (
               <Typography variant="h6" style={{ color: "red" }}>
                 {" "}
                 Giá vốn đang lớn hơn giá bán !!
               </Typography>
-            ) : null}
+            ) : null} */}
             {store_setting?.inventory.status ?
             <>
             <ThousandSeperatedInput

@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
+import {Modal} from 'antd'
 //import api
 
 // import redux
@@ -98,6 +99,25 @@ const Invoice = () => {
   // header sort
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("id");
+  const handleDeleteAll = () => {
+    const deleteApi = async () => {
+      console.log("delete api called")
+      try {
+        const res = await orderApi.deleteAll(store_uuid, branch_uuid);
+        dispatch(statusAction.successfulStatus("Xóa tất cả hóa đơn thành công"));
+      } catch (err) {
+        dispatch(statusAction.failedStatus("Xóa tất cả hóa đơn thất bại"));
+      }
+    }
+    Modal.confirm({
+      content: "Bạn chắc chắc muốn xóa tất cả hóa đơn, hành động ngày không thể quay lại",
+      onOk() {
+        deleteApi()
+        onReload()
+      },
+    })
+    
+  }
 
   //3. ToolBar
   //3.2. filter
@@ -112,6 +132,7 @@ const Invoice = () => {
   };
   const [reload, setReload] = useState(false);
   const onReload = () => {
+    console.log("onReload called")
     setReload(!reload);
   };
   const handleRequestSort = (event, property) => {
@@ -201,6 +222,7 @@ const Invoice = () => {
       {/* SAU NÀY SỬA LẠI TRUYỀN DATA SAU KHI FILTER, SORT, LỌC CỘT VÀO */}
       <ToolBar
         dataTable={orders}
+        handleDeleteAll={handleDeleteAll}
         tableType={TableType.INVOICE}
         textSearch={"#, Khách, Người bán,...  "} /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}

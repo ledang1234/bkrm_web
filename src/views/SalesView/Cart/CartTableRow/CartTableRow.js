@@ -46,6 +46,7 @@ export const CartRow = (props) => {
     handleChangeItemQuantity,
     handleUpdateBatches,
     handleChangeItemPrice,
+    mini,
   } = props;
   console.log("cart table row", row)
   const updateQuantity = (newQuantity) => {
@@ -129,24 +130,24 @@ export const CartRow = (props) => {
         onMouseOver={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
       >
-        <TableCell align="left">{row.id + 1}</TableCell>
+        {mini ? null : <TableCell align="left">{row.id + 1}</TableCell>}
         {/* Sửa lại thành product_code */}
-        <TableCell align="left" style={{ width: 5 }}>
+        {mini ? null : <TableCell align="left"  >
           {row.product_code}
-        </TableCell>
-        <TableCell align="left" style={{ minWidth: 200 }}>
+        </TableCell>}
+        <TableCell align="left" style={mini ? {maxWidth: 50}: { minWidth: 70 }}>
           <ListItem
-            style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
+            style={mini ? {} : { marginLeft: -30, marginTop: -10, marginBottom: -10 }}
             alignItems="center"
           >
-            <Box
+            {mini ? null : <Box
               component="img"
-              sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
+              sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 5 }}
               src={
                 JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) ||
                 defaultProduct
               }
-            />
+            />}
             <Typography style={{ marginRight: 5 }}>{row.name}</Typography>
             {show && store_setting?.inventory.status ? (
               <MoreInfo>
@@ -204,11 +205,11 @@ export const CartRow = (props) => {
           )}
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
-        <TableCell align="right">
+        <TableCell align="left">
           {canFixPriceSell.status && canFixPriceSell.cart || info?.role === 'owner'? (
             <Input.ThousandSeperatedInput
               id="standard-basic"
-              style={{ width: 72 }}
+              style={mini ? {maxWidth: 50} : { width: 72 }}
               size="small"
               inputProps={{ style: { textAlign: "right" } }}
               defaultPrice={row.unit_price}
@@ -224,12 +225,13 @@ export const CartRow = (props) => {
           )}
         </TableCell>
         {row.has_batches ? (
-          <TableCell align="center" padding="none">
+          <TableCell align="center">
             {row.quantity}
           </TableCell>
         ) : (
-          <TableCell align="left" padding="none">
+          <TableCell align="center">
             <ButtonQuantity
+              isMini={true}
               quantity={row.quantity}
               setQuantity={updateQuantity}
               branch_quantity={row.branch_quantity}
@@ -237,11 +239,12 @@ export const CartRow = (props) => {
             />
           </TableCell>
         )}
-
-        <TableCell align="right" className={classes.boldText}>
+        
+        <TableCell align="right" className={classes.boldText} padding={mini ? "none" : "normal"}>
           <VNDFormat value={row.unit_price * row.quantity} />
         </TableCell>
-        <TableCell align="right">
+
+        <TableCell align="right" padding={mini ? "none" : "normal"}>
           <IconButton aria-label="expand row" size="small">
             <DeleteForeverOutlinedIcon
               onClick={() => handleDeleteItemCart(row.uuid)}
