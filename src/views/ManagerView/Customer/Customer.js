@@ -3,7 +3,7 @@ import { useTheme } from "@material-ui/core/styles";
 //import style
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 //import lib
-import { Typography, Card, Button, Divider, Grid, ButtonBase, Avatar, Tooltip, TableBody, Box } from '@material-ui/core';
+import { Typography, FormControlLabel, Switch, Card, Button, Divider, Grid, ButtonBase, Avatar, Tooltip, TableBody, Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useReactToPrint } from "react-to-print";
 //import api 
@@ -35,6 +35,8 @@ import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { excel_name_customer, excel_data_customer } from "../../../assets/constant/excel"
 import CustomerRegisterEmail from '../../../components/Email/CustomerRegisterEmail';
 import { statusAction } from '../../../store/slice/statusSlice';
+import { removeAccents } from '../../../utils';
+import Fuse from 'fuse.js'
 const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -56,6 +58,17 @@ const Customer = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  useEffect(() => {
+    if (customerList.length) {
+      window.localStorage.setItem(
+        "customers",
+        JSON.stringify({ 
+          store_uuid: store_uuid, 
+          data: customerList })
+      );
+    }
+  }, [customerList]);
 
   // const handleClose = (status) => {
   //   setOpen(false);
@@ -97,6 +110,7 @@ console.log(info.store.general_configuration)
     // setOrderBy(property);
   };
 
+
   //3. ToolBar
 
   // toolbar
@@ -111,6 +125,7 @@ console.log(info.store.general_configuration)
   const handleToggleFilter = () => {
     setOpenFilter(!openFilter);
   };
+  const [showOnlyDebt, setShowOnlyDebt] = React.useState(true);
 
   //3.3. loc cot
 
@@ -122,24 +137,36 @@ console.log(info.store.general_configuration)
   const handleRemoveFilter = (initialQuery) => {
     setQuery(initialQuery)
   }
+
+
+  useEffect(() => {
+    if (window.localStorage.getItem("customers")) {
+      const customers = JSON.parse(window.localStorage.getItem("customers"));
+      if (customers.store_uuid === store_uuid ) {
+        setCustomerList(customers.data);
+      }
+    }
+  }, [store_uuid, reload])
+
   const [query, setQuery] = useState(initialQuery)
   const [pagingState, setPagingState] = useState({
     page: 0,
     limit: 10,
   });
 
-  const [totalRows, setTotalRows] = useState(0)
+  const [totalRows, setTotalRows] = useState(0);
+
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 })
+    setTotalRows(filterCustomer().length);
   }, [reload, store_uuid, query])
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const response = await customerApi.getCustomers(store_uuid, {
-          page: pagingState.page,
-          limit: pagingState.limit,
-          ...query
+          ...query,
+          searchKey: '',
         });
         setTotalRows(response.total_rows)
         setCustomerList(response.data);
@@ -150,7 +177,7 @@ console.log(info.store.general_configuration)
     if (store_uuid) {
       loadData();
     }
-  }, [pagingState.page, pagingState.limit, reload, query, store_uuid]);
+  }, [reload, store_uuid]);
   const getDataExport = async () => {
     try {
       const response = await customerApi.getCustomers(
@@ -171,6 +198,26 @@ console.log(info.store.general_configuration)
       await customerApi.importCustomerJson(store_uuid,jsonData);
     }catch(error){
     }
+  }
+
+  const filterCustomer = () => {
+    if (query.searchKey) {
+      const options = {
+        includeScore: true,
+        // Search in `author` and in `tags` array
+        keys: ['customer_code', 'name', 'phone', 'email']
+      }
+      const fuse = new Fuse(customerList, options)
+      const result = fuse.search(query.searchKey);
+      return showOnlyDebt ? result.map(r => r.item).filter(cust => cust.debt > 0) : result.map(r => r.item);
+    } 
+    
+    if (showOnlyDebt) {
+      return customerList.filter(cust => cust.debt > 0);
+    }
+     
+    return customerList
+    
   }
 
   return (
@@ -218,8 +265,8 @@ console.log(info.store.general_configuration)
         textSearch={'#, Tên, sđt, email,...  '} /*handlePrint={handlePrint}*/
         handleToggleFilter={handleToggleFilter}
         handlePrint={handlePrint}
-        hasImport={true}
         isOnlySearch={true}
+        hasImport={true}
         handleRemoveFilter={handleRemoveFilter}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({ ...query, searchKey: value })}
         customizable={false}
@@ -227,6 +274,7 @@ console.log(info.store.general_configuration)
         excel_data={excel_data_customer}
         excel_name={excel_name_customer}
         importByJSON={importCustomerByJSON}
+        
         columnsToKeep={[
           { dbName: "name", displayName: "Tên khách hàng" },
           { dbName: "phone", displayName: "Số điện thoại" },
@@ -236,8 +284,18 @@ console.log(info.store.general_configuration)
           { dbName: "points", displayName: "Tích điểm" },
           { dbName: "total_payment", displayName: "Tổng tiền mua" },
           { dbName: "debt", displayName: "Còn nợ" },
-
         ]}
+
+        extra={<FormControlLabel
+          control={
+            <Switch
+              checked={showOnlyDebt}
+              onChange={(e) => setShowOnlyDebt(e.target.checked)}
+              color="primary"
+            />
+          }
+          label="Chỉ hiện khách nợ"
+        />}
       />
 
       <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter} />
@@ -258,7 +316,7 @@ console.log(info.store.general_configuration)
 
         />
         <TableBody>
-          {customerList?.map((row, index) => {
+          {filterCustomer().map((row, index) => {
             return (
               <CustomerTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} onReload={onReload} />
             );
@@ -275,7 +333,7 @@ console.log(info.store.general_configuration)
               );
             })}
           </Box>
-          <Pagination pagingState={{ ...pagingState, total_rows: totalRows }} setPagingState={setPagingState} list={customerList} />
+          <Pagination pagingState={{ ...pagingState, total_rows: totalRows}} setPagingState={setPagingState} list={customerList} />
 
         </>}
 

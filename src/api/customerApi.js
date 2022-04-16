@@ -8,7 +8,6 @@ const customerApi = {
     const url = `/stores/${storeUuid}/customers`;
     return axiosClient.get(url, {params: query});
   },
-
   getCustomer: (storeUuid, customerUuid) => {
     const url = `/stores/${storeUuid}/customers/${customerUuid}`;
     return axiosClient.get(url);
@@ -20,6 +19,12 @@ const customerApi = {
   updateCustomer: (storeUuid, customerUuid,body) => {
     const url = `/stores/${storeUuid}/customers/${customerUuid}`;
     return axiosClient.put(url,body);
+  },
+  payDebt: (storeUuid, customerUuid, paidAmount) => {
+    const url = `/stores/${storeUuid}/customers/${customerUuid}/payDebt`;
+    return axiosClient.put(url,{
+      paid_amount: paidAmount
+    });
   },
   importCustomerJson : (storeUuid, json) => {
     const url = `stores/${storeUuid}/customers/addCustomersByJson`;

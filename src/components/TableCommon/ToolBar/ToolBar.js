@@ -118,6 +118,7 @@ const ToolBar = (props) => {
     getDataExport,
     customizable,
     handleDeleteAll,
+    extra,
   } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -263,34 +264,36 @@ const ToolBar = (props) => {
       <Grid container direction="row" justifyContent="space-between">
         <Grid item>
           <Grid container direction="row">
-            <TextField
-              style={{ marginTop: 12, marginLeft: 10 }}
-              variant="outlined"
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  setSearchKey(e.target.value)
+            <Tooltip title="Nhấn Enter để tìm kiếm">
+              <TextField
+                style={{ marginTop: 12, marginLeft: 10 }}
+                variant="outlined"
+                onKeyUp={(e) => {
+                  if (e.key === "Enter" || e.target.value === "") {
+                    setSearchKey(e.target.value)
+                  }
                 }
-              }
-              }
-              placeholder={textSearch} /*placeholder='Tìm kiếm ...'*/
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchTwoToneIcon className={classes.icon} />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Box
-                      component="img"
-                      sx={{ height: 23, width: 23 }}
-                      src={barcodeIcon}
-                    />
-                  </InputAdornment>
-                ),
-                className: classes.search,
-              }}
-            />
+                }
+                placeholder={textSearch} /*placeholder='Tìm kiếm ...'*/
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchTwoToneIcon className={classes.icon} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Box
+                        component="img"
+                        sx={{ height: 23, width: 23 }}
+                        src={barcodeIcon}
+                      />
+                    </InputAdornment>
+                  ),
+                  className: classes.search,
+                }}
+              />
+            </Tooltip>
             {!isOnlySearch &&
 
               <div style={{ marginLeft: 30, display: 'flex', flexDirection: 'row', gap: 10 }}>
@@ -328,10 +331,11 @@ const ToolBar = (props) => {
                 </Button>
               </div>
             }
+            {extra ? extra : null}
           </Grid>
         </Grid>
+        
         <Grid item>
-
           <Box className={classes.actions}>
             <Tooltip
               title="Nhập excel"

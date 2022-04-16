@@ -23,7 +23,7 @@ import * as Yup from "yup";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import storeApi from "../../../../api/storeApi";
 import CustomerRegisterEmail from "../../../../components/Email/CustomerRegisterEmail";
-
+import Fuse from 'fuse.js'
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -120,7 +120,6 @@ const AddCustomer = (props) => {
                 onBlur={customerFormik.handleBlur}
               />
               <TextField
-                required
                 id="outlined-basic"
                 label="Số điện thoại"
                 variant="outlined"

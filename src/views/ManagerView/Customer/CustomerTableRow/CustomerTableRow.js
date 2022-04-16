@@ -34,7 +34,7 @@ const CustomerTableRow = (props) => {
             >
                 <TableCell align="left">{row.customer_code}</TableCell>
                 {/* <TableCell align="left">{row.id}</TableCell> */}
-                <TableCell align="left" style={{minWidth:200}} >
+                <TableCell align="left" style={{minWidth:100}} >
                     <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}>
                         <Avatar alt="Remy Sharp" src={ava} style={{marginRight:20}} className={classes.ava} />
                         {/* <Avatar alt="Remy Sharp"  style={{marginRight:20}} className={returnRandomColor(Number(row.phone.charAt(row.phone.length - 1)),avaclasses)}  >  {row.name.split(" ").slice(-1)[0][0]} </Avatar> */}
@@ -44,6 +44,9 @@ const CustomerTableRow = (props) => {
 
                 <TableCell align="left">{row.phone}</TableCell>
                 <TableCell align="right" ><ThousandFormat value={row.points} /></TableCell> 
+                <TableCell align="center" >
+                    <VNDFormat value={row.debt} />  
+                </TableCell>
                 <TableCell align="center" >
                     <FormatedStatus debt={row.debt} />     
                 </TableCell>

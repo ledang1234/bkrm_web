@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
-import { Box, Grid, Collapse, Typography, Button, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
+import { Modal } from 'antd';
+import { Box, Grid, Collapse, InputAdornment, Typography, Button, ListItemIcon, ListItemText, IconButton, TextField } from '@material-ui/core';
 
 //import icon
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -20,7 +21,7 @@ import customerApi from "../../../../../api/customerApi";
 import { statusAction } from "../../../../../store/slice/statusSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import UpdateCustomer from "../CustomerDetail/UpdateCustomer/UpdateCustomer"
-import { VNDFormat, ThousandFormat } from '../../../../../components/TextField/NumberFormatCustom';
+import VNDInput, { VNDFormat, ThousandFormat } from '../../../../../components/TextField/NumberFormatCustom';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -65,6 +66,7 @@ const CustomerDetail = (props) => {
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [deleteConfirm, setDeleteConfirm] = React.useState(false);
+  const [openPayDebt, setOpenPayDebt] = React.useState(false);
   const [editItem, setEditItem] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -94,6 +96,23 @@ const CustomerDetail = (props) => {
     }
   };
 
+  const [paidAmount, setPaidAmount] = useState(0)
+
+  const payDebt = async () => {
+    try {
+      if (store_uuid) {
+        const res = await customerApi.payDebt(store_uuid, row.uuid, paidAmount);
+        dispatch(statusAction.successfulStatus("Thanh toán nợ thành công"));
+        setPaidAmount(0)
+        props.parentProps.onReload();
+        setOpenPayDebt(false);
+      }
+    } catch(err) {
+      dispatch(statusAction.failedStatus("Thanh toán nợ thất bại"));
+    }
+  }
+
+
   return (
     <Collapse in={isMini ? true : openRow === row.uuid} timeout="auto" unmountOnExit>
       <ConfirmPopUp
@@ -108,6 +127,33 @@ const CustomerDetail = (props) => {
           </Typography>
         }
       />
+      {openPayDebt && <ConfirmPopUp
+        open={openPayDebt}
+        handleClose={() => {
+          setOpenPayDebt(false);
+        }}
+        handleConfirm={payDebt}
+        message={
+          <>
+          <Typography><strong>Khách trả nợ:</strong></Typography>
+          <VNDInput
+          size="small"
+          value={paidAmount}
+          onChange={(e) => {
+            const amount = Number(e.target.value);
+            if (amount < 0 || amount > row.debt) return;
+            setPaidAmount(e.target.value);
+          }}
+          endAdornment={
+            <InputAdornment position="end">
+              {" "}
+              / <VNDFormat value={row.debt} />
+            </InputAdornment>
+          }
+        />
+          </>
+        }
+      />}
       {editItem &&<UpdateCustomer customerDetail={row} open={editItem} onReload={props.parentProps.onReload} handleClose={() => { setEditItem(false) }} />}
       <Box margin={1}>
         <Typography variant="h3" gutterBottom component="div" className={classes.typo}>
@@ -212,7 +258,7 @@ const CustomerDetail = (props) => {
         <Grid container direction="row" justifyContent={"flex-end"} style={{ marginTop: 20 }}>
           <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick={() => { setEditItem(true) }}>Sửa</Button>
           <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick={() => { setDeleteConfirm(true) }}>Xoá</Button>
-
+          {row.debt > 0 ? <Button variant="contained" size="small" color="primary" style={{ marginLeft: 15 }} onClick={() => { setOpenPayDebt(true) }}>Trả nợ</Button> : null}
           <IconButton
             aria-label="more"
             aria-controls="long-menu"

@@ -235,7 +235,6 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    console.log("reload heer")
     loadProducts();
   }, [reloadProduct])
 

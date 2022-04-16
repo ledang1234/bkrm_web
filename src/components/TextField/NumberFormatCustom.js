@@ -75,6 +75,7 @@ export default function VNDInput(props) {
     <TextField
       name="numberformat"
       InputProps={{
+        endAdornment: props.endAdornment,
         inputComponent: VNDFormatCustom,
         inputProps: {
           style: { textAlign: "right" },
