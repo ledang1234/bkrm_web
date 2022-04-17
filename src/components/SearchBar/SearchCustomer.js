@@ -112,7 +112,7 @@ const SearchCustomer = (props) => {
                   }}
                   style={{ marginRight: -30 }}
                 >
-                  <ClearOutlinedIcon fontSize="small" />
+                  <ClearOutlinedIcon fontSize="small" style={{ color: theme.customization.primaryColor[500] }} />
                 </IconButton>
               ),
             }

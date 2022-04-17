@@ -158,8 +158,10 @@ export const CartHeadCells = [
   { id: "product_code", align: "left", disablePadding: true, label: "Mã SP" },
   { id: "name", align: "left", disablePadding: true, label: "Tên" },
   // { id: "bar_code", align: "left", disablePadding: true, label: "Mã vạch" },
-  { id: "price", align: "right", disablePadding: true, label: "Đơn giá" },
+  // { id: "price", align: "right", disablePadding: true, label: "Đơn giá" },
   { id: "quantity", align: "center", disablePadding: true, label: "Số lượng" },
+  { id: "price", align: "center", disablePadding: true, label: "Đơn giá" },
+
   { id: "protein1", align: "right", disablePadding: true, label: "Thành tiền" },
 ];
 
@@ -168,8 +170,8 @@ export const ImportHeadCells = [
   { id: "product_code", align: "left", disablePadding: true, label: "Mã SP" },
   { id: "name", align: "left", disablePadding: true, label: "Tên" },
   // { id: "bar_code", align: "left", disablePadding: true, label: "Mã vạch" },
-  { id: "price", align: "right", disablePadding: true, label: "Giá nhập" },
   { id: "quantity", align: "center", disablePadding: true, label: "Số lượng" },
+  { id: "price", align: "center", disablePadding: true, label: "Giá nhập" },
   { id: "protein1", align: "right", disablePadding: true, label: "Thành tiền" },
 ];
 

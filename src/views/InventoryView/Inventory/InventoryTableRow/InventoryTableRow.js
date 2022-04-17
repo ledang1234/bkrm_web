@@ -71,7 +71,7 @@ const InventoryTableRow = (props) => {
             lowStock={row.min_reorder_quantity}
           />
         </TableCell> 
-        <TableCell align="center" className={classes.fontName}>
+        <TableCell align="center" className={classes.fontName} style={{fontWeight:500, color:'#000'}}>
           {row.branch_quantity}
         </TableCell>
           </>

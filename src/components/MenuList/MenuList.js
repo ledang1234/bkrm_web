@@ -156,7 +156,7 @@ const salesModule = {
   children: [
     {
       id: 1,
-      title: "Giỏ Hàng",
+      title: "Bán Hàng",
       url: "/home/sales/cart",
       icon: cartIcon,
       icon1: icons.ShoppingCartOutlinedIcon,

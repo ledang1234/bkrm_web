@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 //import style
+import { useTheme } from "@material-ui/core/styles";
+
 import useStyles from "../../../../components/TableCommon/style/mainViewStyle";
 //impỏrt library
 import {
@@ -12,9 +14,12 @@ import {
   Typography,
   Chip,
   Button,
+  Grid,
   Tooltip,
 } from "@material-ui/core";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
+import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
+
 import { DeleteOutline } from "@material-ui/icons";
 //import project
 import * as Input from "../../../../components/TextField/NumberFormatCustom";
@@ -31,6 +36,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import setting from "../../../../assets/constant/setting"
 
 export const ImportRow = (props) => {
+  const theme= useTheme()
   const classes = useStyles();
   const {
     row,
@@ -39,6 +45,9 @@ export const ImportRow = (props) => {
     handleChangeItemQuantity,
     handleChangeItemPrice,
     handleUpdateBatches,
+    mini,
+    imageType,
+    index
   } = props;
   const info = useSelector((state) => state.info);
   const branch = info.branch;
@@ -105,52 +114,104 @@ const findBranchQuantity = (id) => {
   if(rs){return rs }
   else{ return 0}
 }
+
+console.log("imageType",imageType)
   return (
     <>
       <TableRow hover key={props.row.uuid} onMouseOver={()=>  setShow(true)}  onMouseLeave={()=> setShow(false)} >
-        <TableCell align="left" style={{ width: 5 }}>
-          {row.id + 1}
-        </TableCell>
-        <TableCell align="left">{row.product_code}</TableCell>
-        <TableCell align="left" style={{ minWidth: 200 }}>
+      <TableCell align="left" style={!mini?{}:{paddingLeft:0, paddingRight:!imageType?25:15}}>{imageType?'':`${index }.`}</TableCell>
+
+      {mini ? null : <TableCell align="left"  style={{ paddingRight: 20 }}>
+        {row.product_code}
+      </TableCell>}
+        <TableCell align="left" style={{ minWidth: 170 }}  padding={'none'}>
           <ListItem
-            style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
+            style={ {marginLeft:imageType?-10: -10, marginTop: -10, marginBottom: -10, padding:0 }}
+            alignItems="center"
           >
-            <Box
+             <Box
               component="img"
-              sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
-              src={JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) || defaultProduct}
+              sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15,marginTop:12, marginBottom:12 }}
+              src={
+                JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) ||
+                defaultProduct
+              }
             />
-            <Typography  > {row.name} </Typography>
+            {/* <Typography>{row.name}</Typography> */}
+            <Grid style={{paddingTop:12, paddingBottom:12}}>
+                <Typography style={!mini?{}:{fontWeight:600}}>{row.name}</Typography>
+                {imageType ?
+                canFixPriceSell.status && canFixPriceSell.import || info?.role === 'owner'?
+                  <Input.ThousandSeperatedInput
+                    id="standard-basic"
+                    style={{ width: 72 }}
+                    size="small"
+                    inputProps={{ style: { textAlign: "right",marginBottom:5 } }}
+                    value={row.unit_price}
+                    onChange={(e) =>
+                      handleChangeItemPrice(props.row.uuid, e.target.value)
+                    }
 
-            {show? 
+                  />
+                  :
+                   <Input.ThousandFormat  value={row.unit_price} > </Input.ThousandFormat>
+                  
+               :null}
+            </Grid>
+
+            {show  && !mini? 
              <MoreInfo  >     
-                 <ListItem >
-                  <Typography style={{width:180}}></Typography>
-                  <Typography style={{fontWeight:700}}>Tồn</Typography>
-                </ListItem>
+                 {branchs.length > 1?
+                    <>
+                    <ListItem >
+                      <Typography style={{width:180}}></Typography>
+                      <Typography style={{fontWeight:700}}>Tồn</Typography>
+                    </ListItem>
 
-                 {branchs.map((item) => {
-                  return(
-                  <ListItem >
-                      <ListItem style={{width:180, margin:0, padding:0}}>
-                          <Typography style={{fontWeight:700, marginRight:10}}>{item.name}</Typography>
-                          {item.uuid === branch.uuid ? <CheckCircleIcon fontSize="small" color='primary'/> :null} 
-                      </ListItem>
-                      <Typography>{findBranchQuantity(item.uuid)}</Typography>
-                </ListItem>
-                 ) })}
+                    {branchs.map((item) => {
+                      return(
+                      <ListItem >
+                          <ListItem style={{width:180, margin:0, padding:0}}>
+                              <Typography style={{fontWeight:700, marginRight:10}}>{item.name}</Typography>
+                              {item.uuid === branch.uuid ? <CheckCircleIcon fontSize="small" color='primary'/> :null} 
+                          </ListItem>
+                          <Typography>{findBranchQuantity(item.uuid)}</Typography>
+                    </ListItem>
+                    ) })}
+                    </> :
+                 
+                    <Typography  style={{fontWeight:700, color:'#000'}}>{`Tồn kho:\u00a0\u00a0\u00a0  `} {findBranchQuantity(branchs[0].uuid)}</Typography>
+                    /* <Typography style={{fontWeight:700}}> {findBranchQuantity(branchs[0].uuid)}</Typography> */
+       
+                 }
             </MoreInfo>
     
            :null}
           </ListItem>
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
-        <TableCell align="right">
-        {canFixPriceSell.status && canFixPriceSell.import?
+   
+
+        {row.has_batches ? (
+          <TableCell align="center" padding="none">
+            {row.quantity}
+          </TableCell>
+        ) : (
+          <TableCell align="left" padding="none" padding={mini ? "none" : "normal"}>
+            <ButtonQuantity
+              miniCart={mini}
+              quantity={row.quantity}
+              setQuantity={updateQuantity}
+            />
+          </TableCell>
+        )}
+
+      {imageType?null:
+      <TableCell align="right" padding={mini ? "none" : "normal"}>
+        {canFixPriceSell.status && canFixPriceSell.import || info?.role === 'owner'?
           <Input.ThousandSeperatedInput
             id="standard-basic"
-            style={{ width: 72 }}
+            style={{ width: 72, marginLeft:-15}}
             size="small"
             inputProps={{ style: { textAlign: "right" } }}
             value={row.unit_price}
@@ -159,43 +220,31 @@ const findBranchQuantity = (id) => {
             }
           />
           :
-           <Input.ThousandFormat  value={row.unit_price} > </Input.ThousandFormat>
+           <Input.ThousandFormat  value={row.unit_price} style={{ marginLeft:-10}}> </Input.ThousandFormat>
           }
-        </TableCell>
+        </TableCell>}  
 
-        {row.has_batches ? (
-          <TableCell align="center" padding="none">
-            {row.quantity}
-          </TableCell>
-        ) : (
-          <TableCell align="left" padding="none">
-            <ButtonQuantity
-              quantity={row.quantity}
-              setQuantity={updateQuantity}
-            />
-          </TableCell>
-        )}
-
-        <TableCell align="right" className={classes.boldText}>
-          <VNDFormat value={row.unit_price * row.quantity} />
+        <TableCell align="right" className={classes.boldText}  padding={mini ? "none" : "normal"}>
+        {!mini?<VNDFormat value={row.unit_price * row.quantity} />:<Input.ThousandFormat value={row.unit_price * row.quantity} style={{paddingLeft:imageType? 0:20}}/>}
         </TableCell>
-        <TableCell align="right">
-          <IconButton aria-label="expand row" size="small">
-            <DeleteForeverOutlinedIcon
+        <TableCell align="right" padding={mini ? "none" : "normal"}>
+          <IconButton aria-label="expand row" size="small" style={{marginLeft:10}}>
+            <DeleteForeverTwoToneIcon
               onClick={() => handleDeleteItemCart(row.uuid)}
             />
           </IconButton>
         </TableCell>
       </TableRow>
       {row.has_batches ? (
-        <TableRow>
-          <TableCell colSpan={1}></TableCell>
+        <TableRow >
+         {mini?null: <TableCell colSpan={1}></TableCell>}
           <TableCell colSpan={10}>
-            <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+            <div style={{ display: "flex", flexDirection: "row", }}>
               <Button
                 variant="contained"
                 size="small"
                 onClick={() => setSelectBatchOpen(true)}
+                style={{marginRight:10}}
               >
                 Chọn lô
               </Button>
@@ -246,69 +295,69 @@ const findBranchQuantity = (id) => {
     </>
   );
 };
-export const ImportRowMini = ({ row }) => {
-  const classes = useStyles();
+// export const ImportRowMini = ({ row }) => {
+//   const classes = useStyles();
 
-  return (
-    <TableRow hover key={row.id}>
-      <TableCell align="left">
-        <ListItem
-          style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
-        >
-          <Box
-            component="img"
-            sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
-            src={icon}
-          />
-          <Box direction="column">
-            <Typography
-              className={classes.boldText}
-              style={{
-                marginBottom: 3,
-                fontSize: 14.5,
-                width: 135,
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {row.name}
-            </Typography>
-            {/* <Typography>{row.price}</Typography> */}
-            <Input.ThousandSeperatedInput
-              id="standard-basic"
-              style={{ width: 70 }}
-              size="small"
-              defaultPrice={row.price}
-            />
-          </Box>
-        </ListItem>
-      </TableCell>
+//   return (
+//     <TableRow hover key={row.id}>
+//       <TableCell align="left">
+//         <ListItem
+//           style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
+//         >
+//           <Box
+//             component="img"
+//             sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
+//             src={icon}
+//           />
+//           <Box direction="column">
+//             <Typography
+//               className={classes.boldText}
+//               style={{
+//                 marginBottom: 3,
+//                 fontSize: 14.5,
+//                 width: 135,
+//                 textOverflow: "ellipsis",
+//                 overflow: "hidden",
+//                 whiteSpace: "nowrap",
+//               }}
+//             >
+//               {row.name}
+//             </Typography>
+//             {/* <Typography>{row.price}</Typography> */}
+//             <Input.ThousandSeperatedInput
+//               id="standard-basic"
+//               style={{ width: 70 }}
+//               size="small"
+//               defaultPrice={row.price}
+//             />
+//           </Box>
+//         </ListItem>
+//       </TableCell>
 
-      <TableCell align="left" padding="none">
-        <TextField
-          variant="outlined"
-          defaultValue={row.quantity}
-          style={{ width: 37, margin: 0 }}
-          size="small"
-          inputProps={{
-            style: { paddingLeft: 5, paddingRight: 5, textAlign: "center" },
-          }}
-        />
-      </TableCell>
+//       <TableCell align="left" padding="none">
+//         <TextField
+//           variant="outlined"
+//           defaultValue={row.quantity}
+//           style={{ width: 37, margin: 0 }}
+//           size="small"
+//           inputProps={{
+//             style: { paddingLeft: 5, paddingRight: 5, textAlign: "center" },
+//           }}
+//         />
+//       </TableCell>
 
-      <TableCell align="right" className={classes.boldText}>
-        700.000
-      </TableCell>
-      <TableCell align="left">
-        <IconButton
-          aria-label="expand row"
-          size="small"
-          style={{ marginLeft: -25 }}
-        >
-          <DeleteForeverOutlinedIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  );
-};
+//       <TableCell align="right" className={classes.boldText}>
+//         700.000
+//       </TableCell>
+//       <TableCell align="left">
+//         <IconButton
+//           aria-label="expand row"
+//           size="small"
+//           style={{ marginLeft: -25 }}
+//         >
+//           <DeleteForeverOutlinedIcon />
+//         </IconButton>
+//       </TableCell>
+//     </TableRow>
+//   );
+// };

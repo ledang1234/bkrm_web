@@ -190,10 +190,11 @@ const ImportSummary = (props) => {
         {props.children}
 
         {/* 2. PAYMENT INFO  */}
-        {!mode ? (
-          <>
+        {/* {!mode ? ( */}
+          {/* {true ? (
+          <> */}
             {/* 2.1 Mode 1 */}
-            <Grid
+           {!mode? <Grid
               container
               direction="row"
               justifyContent="space-between"
@@ -206,7 +207,7 @@ const ImportSummary = (props) => {
                   value={calculateTotalQuantity(cartData.cartItem)}
                 ></ThousandFormat>
               </Typography>
-            </Grid>
+            </Grid>:null}
 
             <Grid
               container
@@ -214,12 +215,15 @@ const ImportSummary = (props) => {
               justifyContent="space-between"
               className={classes.marginRow}
             >
-              <Typography variant="h5">Tổng tiền hàng</Typography>
-              <Typography variant="body2">
+              <Typography variant="h5">{Number(cartData.discount)===0 && mode ?`Tổng tiền (${calculateTotalQuantity(cartData.cartItem)})`:'Tổng tiền hàng'}</Typography>
+              <Typography variant="body2" style={Number(cartData.discount)===0 && mode?{color: "#2096f3", fontWeight: 600,fontSize:18 }:{}}>
                 <VNDFormat value={cartData.total_amount} />
               </Typography>
             </Grid>
 
+        {/* {Number(cartList[selectedIndex].discount)==0 && mode? */}
+         {(Number(cartData.discount)!==0  && mode)|| !mode?
+         <>
             <Grid
               container
               direction="row"
@@ -244,7 +248,7 @@ const ImportSummary = (props) => {
                 onChange={(e) => handleUpdateDiscount(e.target.value)}
               /> */}
             </Grid>
-
+        
             <Grid
               container
               direction="row"
@@ -259,7 +263,8 @@ const ImportSummary = (props) => {
                 />
               </Typography>
             </Grid>
-
+            </>:null}
+      
             {cartData.total_amount - cartData.discount  !== 0?
             <Grid
               container
@@ -308,14 +313,17 @@ const ImportSummary = (props) => {
               />
             </Grid>
             {/* :null} */}
-
             <Grid
               container
               direction="row"
               justifyContent="flex-end"
               alignItems="center"
-              className={classes.marginRow}
+              // className={classes.marginRow}
+              style={{marginTop:mode?-10:null}}
+
             >
+             {mode && Number(cartData.discount) === 0? <Button size="small"color='primary'style={{textTransform:'none', }} onClick={handleClickOpenPopUp}>Nhập giảm giá</Button>:null}
+            {openPopUp ? <Dialog open={openPopUp}  onClose={handleClosePopUp} > <CheckoutPopUp  cartData={cartData}  onClose={handleClosePopUp} handleUpdateDiscountDetail={handleUpdateDiscountDetail}/> </Dialog>:null}
               <FormControl component="fieldset">
                 <RadioGroup
                   aria-label="gender"
@@ -327,13 +335,13 @@ const ImportSummary = (props) => {
                     <FormControlLabel
                       labelPlacement="start"
                       value="card"
-                      control={<Radio />}
+                      control={<Radio  size="small"/>}
                       label="Thẻ"
                     />
                     <FormControlLabel
                       labelPlacement="start"
                       value="cash"
-                      control={<Radio />}
+                      control={<Radio size="small"/>}
                       label="Tiền mặt"
                     />
                   </Grid>
@@ -345,7 +353,7 @@ const ImportSummary = (props) => {
               variant="contained"
               fullWidth
               color="primary"
-              style={{ marginTop: 80 }}
+              style={{ marginTop: mode?0:80 }}
               onClick={()=>handleConfirm(1)}
             >
               Nhập hàng
@@ -360,11 +368,11 @@ const ImportSummary = (props) => {
             >
               Đặt hàng NCC
             </Button> */}
-           
+{/*            
           </>
-        ) : (
-          /* 2.2 Mode 2 */
-          <>
+        ) : ( */}
+          {/* /* 2.2 Mode 2 */ }
+          {/* <>
             <Grid
               container
               direction="row"
@@ -408,18 +416,18 @@ const ImportSummary = (props) => {
               <CheckoutPopUp />
             </Dialog>
           </>
-        )}
+        )} */}
       </Grid>
     </Box>
   );
 };
 
 export default ImportSummary;
-
 const CheckoutPopUp = (props) => {
-  const { onClose, handleChangePayment, payment } = props;
+  const { onClose, handleUpdateDiscountDetail, cartData } = props;
   const theme = useTheme();
   const classes = useStyles(theme);
+  const [discount, setDiscount] = useState(cartData.discount)
   return (
     <>
       <Box style={{ marginTop: 20, marginLeft: 15, marginBottom: 10 }}>
@@ -434,9 +442,10 @@ const CheckoutPopUp = (props) => {
           justifyContent="space-between"
           className={classes.marginRow}
         >
-          <Typography variant="h5">Tổng tiền hàng</Typography>
-          <Typography variant="body2">500.000</Typography>
+          <Typography variant="h5" style={{ paddingRight: 50 }}>Tổng tiền hàng</Typography>
+          <Typography variant="body2">{cartData.total_amount?.toLocaleString()}</Typography>
         </Grid>
+   
         <Grid
           container
           direction="row"
@@ -444,62 +453,31 @@ const CheckoutPopUp = (props) => {
           alignItems="center"
           className={classes.marginRow}
         >
-          <Typography variant="h5" style={{ paddingRight: 50 }}>
-            Đã trả CNN
-          </Typography>
+          <Typography variant="h5">Giảm giá</Typography>
           <Input.ThousandSeperatedInput
             id="standard-basic"
             style={{ width: 90 }}
             size="small"
             inputProps={{ style: { textAlign: "right" } }}
+            value={discount}
+           onChange={(e) => {if(e.target.value <=cartData.total_amount){ setDiscount(e.target.value)}}}
           />
         </Grid>
         <Grid
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          className={classes.marginRow}
-        >
-          <Typography variant="h5">Công nợ</Typography>
-          <Input.ThousandSeperatedInput
-            id="standard-basic"
-            style={{ width: 90 }}
-            size="small"
-            inputProps={{ style: { textAlign: "right" } }}
-          />
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          justifyContent="flex-end"
-          alignItems="center"
-          className={classes.marginRow}
-        >
-          <FormControl component="fieldset">
-            <RadioGroup
-              aria-label="gender"
-              name="gender1"
-              value={payment}
-              onChange={handleChangePayment}
+              container
+              direction="row"
+              justifyContent="space-between"
+              className={classes.marginRow}
             >
-              <Grid container direction="row">
-                <FormControlLabel
-                  labelPlacement="start"
-                  value="card"
-                  control={<Radio />}
-                  label="Thẻ"
+              <Typography variant="h5">Tổng tiền</Typography>
+              <Typography variant="body2">
+                <VNDFormat
+                  style={{ color: "#2096f3", fontWeight: 500 }}
+                  value={cartData.total_amount - discount}
                 />
-                <FormControlLabel
-                  labelPlacement="start"
-                  value="cash"
-                  control={<Radio />}
-                  label="Tiền mặt"
-                />
-              </Grid>
-            </RadioGroup>
-          </FormControl>
-        </Grid>
+              </Typography>
+            </Grid>
+       
       </DialogContent>
       <DialogActions>
         <Button
@@ -508,10 +486,112 @@ const CheckoutPopUp = (props) => {
           fullWidth
           color="primary"
           style={{ marginTop: 40 }}
+          onClick={()=>{handleUpdateDiscountDetail({type:'VND',value:discount});onClose();}}
         >
-          Thanh toán
+          OK
         </Button>
       </DialogActions>
     </>
   );
 };
+
+
+// const CheckoutPopUp = (props) => {
+//   const { onClose, handleChangePayment, payment } = props;
+//   const theme = useTheme();
+//   const classes = useStyles(theme);
+//   return (
+//     <>
+//       <Box style={{ marginTop: 20, marginLeft: 15, marginBottom: 10 }}>
+//         <Typography className={classes.headerTitle} variant="h5">
+//           Trả tiền NCC
+//         </Typography>
+//       </Box>
+//       <DialogContent>
+//         <Grid
+//           container
+//           direction="row"
+//           justifyContent="space-between"
+//           className={classes.marginRow}
+//         >
+//           <Typography variant="h5">Tổng tiền hàng</Typography>
+//           <Typography variant="body2">500.000</Typography>
+//         </Grid>
+//         <Grid
+//           container
+//           direction="row"
+//           justifyContent="space-between"
+//           alignItems="center"
+//           className={classes.marginRow}
+//         >
+//           <Typography variant="h5" style={{ paddingRight: 50 }}>
+//             Đã trả CNN
+//           </Typography>
+//           <Input.ThousandSeperatedInput
+//             id="standard-basic"
+//             style={{ width: 90 }}
+//             size="small"
+//             inputProps={{ style: { textAlign: "right" } }}
+//           />
+//         </Grid>
+//         <Grid
+//           container
+//           direction="row"
+//           justifyContent="space-between"
+//           alignItems="center"
+//           className={classes.marginRow}
+//         >
+//           <Typography variant="h5">Công nợ</Typography>
+//           <Input.ThousandSeperatedInput
+//             id="standard-basic"
+//             style={{ width: 90 }}
+//             size="small"
+//             inputProps={{ style: { textAlign: "right" } }}
+//           />
+//         </Grid>
+//         <Grid
+//           container
+//           direction="row"
+//           justifyContent="flex-end"
+//           alignItems="center"
+//           className={classes.marginRow}
+//         >
+//           <FormControl component="fieldset">
+//             <RadioGroup
+//               aria-label="gender"
+//               name="gender1"
+//               value={payment}
+//               onChange={handleChangePayment}
+//             >
+//               <Grid container direction="row">
+//                 <FormControlLabel
+//                   labelPlacement="start"
+//                   value="card"
+//                   control={<Radio />}
+//                   label="Thẻ"
+//                 />
+//                 <FormControlLabel
+//                   labelPlacement="start"
+//                   value="cash"
+//                   control={<Radio />}
+//                   label="Tiền mặt"
+//                 />
+//               </Grid>
+//             </RadioGroup>
+//           </FormControl>
+//         </Grid>
+//       </DialogContent>
+//       <DialogActions>
+//         <Button
+//           variant="contained"
+//           onClick={onClose}
+//           fullWidth
+//           color="primary"
+//           style={{ marginTop: 40 }}
+//         >
+//           Thanh toán
+//         </Button>
+//       </DialogActions>
+//     </>
+//   );
+// };

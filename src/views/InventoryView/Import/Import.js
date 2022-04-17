@@ -26,7 +26,9 @@ import {
   Tooltip,
   TextField,
   Button,
-  CircularProgress
+  CircularProgress,
+  Table,
+  Divider
 } from "@material-ui/core";
 
 //import constant
@@ -82,6 +84,7 @@ const Import = () => {
   const branch = info.branch;
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  const canEnterDiscountWhenSell = store_setting?.canEnterDiscountWhenSell?.status
 
   const loadLocalImportListStorage = () => {
     if (window.localStorage.getItem("importListData")) {
@@ -107,22 +110,6 @@ const Import = () => {
   const [products, setProducts] = useState([]);
   const [suppliers, setSuppliers] = React.useState([]);
   ////------------ I. DATA (useState) ----------------
-  // Cart data get from search_product component
-  // const cartData = [
-  //     // QUANTITY có thể edit ->  truyền quatity edit ngược về cartData ??
-  //     //dựa vào id của text field quatity ??
-
-  //     //còn bị lỗi sort // tự generate stt
-  //     { stt: 1, id: 123, name:"Áo dài Việt Nam Việt Nam", quantity:2, price:200 },
-  //     { stt: 2, id: 12,  name:"Quan", quantity:1, price:220 },
-  //     { stt: 3, id: 134,  name:"Bánh", quantity:3, price:240 },
-  //     { stt: 1, id: 123, name:"Áo dài Việt Nam Việt Nam", quantity:2, price:200 },
-  //     { stt: 2, id: 12,  name:"Quan", quantity:1, price:220 },
-  //     { stt: 3, id: 134,  name:"Bánh", quantity:3, price:240 },
-
-  // ];
-  // chú ý cartList id from 1 to ... dùng để edit + delete
-  // const [cartList, setCartList] = React.useState([{ id: 1, customer: null, cartItem: cartData}]);
 
   // local storage
   // fetch localstorage
@@ -133,6 +120,15 @@ const Import = () => {
         setProducts(products.data);
       }
     }
+    if (window.localStorage.getItem("mode")) {
+      const cartMode = JSON.parse(window.localStorage.getItem("mode"));
+      if (cartMode.store_uuid === store_uuid ) {
+        setTypeShow(cartMode.typeShow)
+        setMode(cartMode.mode);
+       
+      }
+    }
+
     if (window.localStorage.getItem("suppliers")) {
       const suppliers = JSON.parse(window.localStorage.getItem("suppliers"));
       if (suppliers.store_uuid === store_uuid ) {
@@ -242,18 +238,6 @@ const Import = () => {
     fetchSupplier();
   }, [reloadSupplier]);
 
-  // const [branchs, setBranchs] = useState([]);
-  // useEffect(() => {
-  //   const loading = async () => {
-  //     try {
-  //       const response = await branchApi.getAllBranches(store_uuid);
-  //       setBranchs(response.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   loading()
-  // }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -324,7 +308,7 @@ const Import = () => {
   };
 
   //2. Table sort
-  const [order, setOrder] = React.useState("asc");
+  const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState(null);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -334,9 +318,16 @@ const Import = () => {
 
   //mode
   const [mode, setMode] = React.useState(false);
+  const [typeShow, setTypeShow] = useState('list')
   const handleChangeMode = (event) => {
     setMode(event.target.checked);
   };
+  useEffect(() => {
+    window.localStorage.setItem(
+      "mode",
+      JSON.stringify({store_uuid: store_uuid,  mode: mode, typeShow: typeShow })
+    );
+  }, [mode,typeShow]);
 
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
@@ -599,9 +590,6 @@ const Import = () => {
   // };
 
   const [barcodeChecked, setBarcodeChecked] = useState(true);
-  const handleSwitchChange = () => {
-    setBarcodeChecked(!barcodeChecked);
-  };
 
 
   // ******* GỢI Ý ĐẶT HÀNG ********
@@ -628,9 +616,6 @@ const Import = () => {
 
   const [loadingOrderButton, setLoadingOrderButton]  = useState(false)
   const handleAddOrderReccomend = (newCartList,cartIndex) => {
-   
-    console.log("newCartList",newCartList)
-    console.log("cartIndex",cartIndex)
     if(cartIndex !== null){
        // ADD EXIST CART
        let newCart  =[...cartList]
@@ -649,14 +634,9 @@ const Import = () => {
   };
 
   return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="space-between"
-      alignItems="center"
-      spacing={2}
-    >
-      {addProduct && <AddInventory
+    <Grid  container   direction="row" justifyContent="space-between"  alignItems="center"  spacing={2}>
+      {addProduct && 
+      <AddInventory
         open={addProduct}
         handleClose={() => {
           setAddProduct(false)
@@ -665,43 +645,23 @@ const Import = () => {
           setReloadProduct(!reloadProduct);
         }}
       />}{" "}
-      <SnackBarGeneral
-        handleClose={handleCloseSnackBar}
-        open={openSnack}
-        status={snackStatus}
-      />
+     
+     <SnackBarGeneral handleClose={handleCloseSnackBar} open={openSnack} status={snackStatus}  />
+
       {/* 1. TABLE CARD (left) */}
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={12} sm={typeShow==='list' && mode?7:8}>
         <Card className={classes.root}>
-          <Box
-            style={{
-              padding: xsScreen ? 10 : 30,
-              minHeight: "80vh",
-              paddingBottom: 0,
-            }}
-          >
+          <Box style={{ padding: xsScreen ? 0 : 30,  minHeight: "82vh", paddingBottom: 0,}}  >
             <Box style={{ height: xsScreen ? null : "70vh" }}>
               {/* 1.1 TITLE + BTN CHANGE CART +  SEARCH */}
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                style={{ marginTop: -10, marginBottom: 30 }}
-              >
+              <Grid container direction="row"  justifyContent="space-between" alignItems="center" style={{ marginTop: -10, marginBottom: 30 }}   >
+
                 <Grid>
                   <ListItem>
                     {/* 1.1.1 Title */}
                     <Typography variant="h3"> Nhập hàng </Typography>
-                    <Typography
-                      variant="h3"
-                      style={{
-                        marginLeft: 10,
-                        color: theme.customization.primaryColor[500],
-                      }}
-                    >
-                      {" "}
-                      # {selectedIndex + 1}
+                    <Typography variant="h3"  style={{  marginLeft: 10,  color: theme.customization.primaryColor[500], }} >
+                      {" "}# {selectedIndex + 1}
                     </Typography>
                     {/* 1.1.2. Btn Channge Cart */}
                     <ChangeCartBtn
@@ -719,19 +679,10 @@ const Import = () => {
                 </Grid>
                 <Grid>
                   <Grid container alignItems="center">
+                  {!mode? 
+                  <>
                     <Grid item>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={searchBarState === 'barcode'}
-                            onChange={(e, checked) => {
-                              dispatch(infoActions.setSearchBarState(checked ? 'barcode' : 'search'))
-                            }}
-                            color="primary"
-                          />
-                        }
-                        label={"Dùng mã vạch"}
-                      />
+                      <FormControlLabel   control={<Switch size="small"  checked={searchBarState === 'barcode'}  onChange={(e, checked) => { dispatch(infoActions.setSearchBarState(checked ? 'barcode' : 'search'))  }} color="primary"  />  } label={"Dùng mã vạch"}  />
                     </Grid>
                     <Grid item>
                       {searchBarState === 'barcode' ? (
@@ -746,6 +697,9 @@ const Import = () => {
                         />
                       )}
                     </Grid>
+                    </>:
+                     <SearchProduct products={products} setProducts={setProducts} isFilter={true} />
+                     }
                     <Grid item>
                       <ButtonBase
                         sx={{ borderRadius: "1px" }}
@@ -792,8 +746,7 @@ const Import = () => {
               </DialogWrapper>:null}
 
               {/* 1.2 TABLE */}
-              {!mode ? (
-                !xsScreen ? (
+              {!mode ? ( 
                   <TableWrapper isCart={true}>
                     <TableHeader
                       classes={classes}
@@ -804,8 +757,7 @@ const Import = () => {
                       isCart={true}
                     />
                     <TableBody>
-                      {stableSort(
-                        cartList[selectedIndex].cartItem,
+                      {stableSort( cartList[selectedIndex].cartItem,
                         getComparator(order, orderBy)
                       ).map((row, index) => {
                         return (
@@ -817,49 +769,35 @@ const Import = () => {
                             handleChangeItemQuantity={handleChangeItemQuantity}
                             handleUpdateBatches={handleUpdateBatches}
                             // branchs={branchs}
+                            index={cartList[selectedIndex].cartItem.length - index}
+
                           />
                         );
                       })}
                     </TableBody>
                   </TableWrapper>
-                ) : (
-                  cartList[selectedIndex].cartItem.map((row, index) => {
-                    return (
-                      <CartMiniTableRow
-                        row={row}
-                        handleDeleteItemCart={handleDeleteItemCart}
-                        handleChangeItemPrice={handleChangeItemPrice}
-                        handleChangeItemQuantity={handleChangeItemQuantity}
-                        isCart={false}
-                      />
-                    );
-                  })
-                )
-              ) : (
-                <MenuProduct />
+              ) : (   
+                <MenuProduct
+                  products={products} 
+                  handleSearchBarSelect={handleSearchBarSelect}
+                  selectedItem={cartList[selectedIndex].cartItem}
+                  typeShow={typeShow}
+                  setTypeShow={setTypeShow}
+                  setProducts={setProducts}
+
+                />
               )}
             </Box>
             {/* 1.3 CHANGE MODE  */}
-            {/* <FormControlLabel
-              control={<Switch checked={mode} onChange={handleChangeMode} />}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                margin: -10,
-                marginTop: 10,
-              }}
-            /> */}
+            <FormControlLabel control={<Switch size="small" checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",   margin: -20,  marginTop: 40, }} />
           </Box>
         </Card>
       </Grid>
-      {xsScreen ? <CartBottom numberItem={2} /> : null}
       {/* 2.SUMMARY CARD (right) */}
-      <Grid item xs={12} sm={4} className={classes.root}>
+      <Grid item xs={12} sm={typeShow==='list' && mode?5:4} className={classes.root}>
         <Card className={classes.root}>
-          <Box style={{ padding: 0, minHeight: "80vh" }}>
-            {!mode ? (
-              /* Viết hàm tính toán sau dựa trên cartData ... hiện tại đang set cứng giá trị */
-              <ImportSummary
+          <Box style={{ padding: 0, minHeight: "82vh" }}>
+            <ImportSummary
                 setSelectedBranch={setSelectedBranch}
                 selectedBranch={selectedBranch}
                 cartData={cartList[selectedIndex]}
@@ -874,30 +812,39 @@ const Import = () => {
                 suppliers={suppliers}
                 reloadSuppliers={() => setReloadSupplier(!reloadSupplier)}
                 handleUpdateDiscountDetail={handleUpdateDiscountDetail}
+              > 
+               {!mode ? null:
+               <>
+                <TableContainer  style={{ maxHeight:Number(cartList[selectedIndex].discount)!==0? "37vh":'44vh', height: Number(cartList[selectedIndex].discount)!==0? "37vh":'44vh'}}>
+                  <Table  size="small">
+                      <TableBody>
+                      
+                        {stableSort( cartList[selectedIndex].cartItem,
+                        getComparator(order, orderBy)
+                      ).map((row, index) => {
+                          return (
+                            <ImportRow
+                              row={row}
+                              handleUpdateBatches={handleUpdateBatches}
+                              handleDeleteItemCart={handleDeleteItemCart}
+                              handleChangeItemPrice={handleChangeItemPrice}
+                              handleChangeItemQuantity={handleChangeItemQuantity}
+                              mini={true}
+                              imageType={typeShow==='image' && mode}
+                              index={cartList[selectedIndex].cartItem.length - index}
 
-              />
-            ) : (
-              <ImportSummary
-                cartData={cartList[selectedIndex]}
-                updateCustomer={updateCustomer}
-                currentCustomer={cartList[selectedIndex].customer}
-                mode={mode}
-              >
-                <TableContainer
-                  style={{
-                    maxHeight: "40vh",
-                    marginBottom: 20,
-                    height: "40vh",
-                  }}
-                >
-                  <TableBody>
-                    {cartList[selectedIndex].cartItem.map((row, index) => {
-                      return <ImportRowMini row={row} />;
-                    })}
-                  </TableBody>
-                </TableContainer>
+                              />
+                          );
+                        })}
+                      </TableBody>
+                  </Table>  
+                  </TableContainer>
+           
+
+                  </>
+
+               }
               </ImportSummary>
-            )}
           </Box>
         </Card>
       </Grid>
@@ -931,3 +878,18 @@ function ButtonComponent(props) {
     </Button>
   );
 }
+
+
+//   cartList[selectedIndex].cartItem.map((row, index) => {
+//     return (
+//       <CartMiniTableRow
+//         row={row}
+//         handleDeleteItemCart={handleDeleteItemCart}
+//         handleChangeItemPrice={handleChangeItemPrice}
+//         handleChangeItemQuantity={handleChangeItemQuantity}
+//         isCart={false}
+//       />
+//     );
+//   })
+// )
+// {xsScreen ? <CartBottom numberItem={2} /> : null}

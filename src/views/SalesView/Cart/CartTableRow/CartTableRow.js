@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
+import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 //import project
 import * as Input from "../../../../components/TextField/NumberFormatCustom";
 import ButtonQuantity from "../../../../components/Button/ButtonQuantity";
@@ -47,6 +48,8 @@ export const CartRow = (props) => {
     handleUpdateBatches,
     handleChangeItemPrice,
     mini,
+    imageType,
+    index
   } = props;
   console.log("cart table row", row)
   const updateQuantity = (newQuantity) => {
@@ -122,6 +125,7 @@ export const CartRow = (props) => {
       return 0;
     }
   };
+  console.log("imageType",imageType)
   return (
     <>
       <TableRow
@@ -130,50 +134,82 @@ export const CartRow = (props) => {
         onMouseOver={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
       >
-        {mini ? null : <TableCell align="left">{row.id + 1}</TableCell>}
+        {/* {mini ? null : <TableCell align="left">{row.id + 1}</TableCell>} */}
+        {/* <TableCell align="left" style={!mini?{}:{paddingLeft:0, paddingRight:!imageType?25:15}}>{imageType?'':`${row.id + 1}.`}</TableCell> */}
+        <TableCell align="left" style={!mini?{}:{paddingLeft:0, paddingRight:!imageType?25:15}}>{imageType?'':`${index }.`}</TableCell>
+
         {/* Sửa lại thành product_code */}
-        {mini ? null : <TableCell align="left"  >
+        {mini ? null : <TableCell align="left"  style={{ paddingRight: 20 }}>
           {row.product_code}
         </TableCell>}
-        <TableCell align="left" style={mini ? {maxWidth: 50}: { minWidth: 70 }}>
+        {/* <TableCell align="left" style={mini ? {maxWidth: 50}: { minWidth: 200 }}> */}
+        <TableCell align="left" style={{ minWidth: 170 }}  padding={'none'}>
           <ListItem
-            style={mini ? {} : { marginLeft: -30, marginTop: -10, marginBottom: -10 }}
+            style={ {marginLeft:-10, marginTop: -10, marginBottom: -10, padding:0 }}
             alignItems="center"
           >
-            {mini ? null : <Box
+             <Box
               component="img"
-              sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 5 }}
+              sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15,marginTop:12, marginBottom:12  }}
               src={
                 JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) ||
                 defaultProduct
               }
-            />}
-            <Typography style={{ marginRight: 5 }}>{row.name}</Typography>
-            {show && store_setting?.inventory.status ? (
+            />
+            <Grid style={{paddingTop:12, paddingBottom:12,marginBottom:imageType?3:0}}>
+                <Typography style={!mini?{}:{fontWeight:600}}>{row.name}</Typography>
+                {imageType ?
+                 canFixPriceSell.status && canFixPriceSell.cart || info?.role === 'owner'? (
+                  <Input.ThousandSeperatedInput
+                    id="standard-basic"
+                    // style={mini ? {maxWidth: 50} : { width: 72 }}
+                    style={{ width: 72 }}
+      
+                    size="small"
+                    inputProps={{ style: { textAlign: "right"  } }}
+                    defaultPrice={row.unit_price}
+                    value={row.unit_price}
+                    onChange={(e) =>
+                      handleChangeItemPrice(props.row.uuid, e.target.value)
+                    }
+                  />
+                ) : (
+                  <Input.ThousandFormat value={row.unit_price}>
+                    {" "}
+                  </Input.ThousandFormat>
+                ):null}
+            </Grid>
+            {show && store_setting?.inventory.status && !mini? (
               <MoreInfo>
-                <ListItem>
-                  <Typography style={{ width: 180 }}></Typography>
-                  <Typography style={{ fontWeight: 700 }}>Tồn</Typography>
-                </ListItem>
-                {branchs.map((item) => {
-                  return (
+                 {branchs.length > 1?
+                 <>
                     <ListItem>
-                      <ListItem style={{ width: 180, margin: 0, padding: 0 }}>
-                        <Typography
-                          style={{ fontWeight: 700, marginRight: 10 }}
-                        >
-                          {item.name}
-                        </Typography>
-                        {item.uuid === branch.uuid ? (
-                          <CheckCircleIcon fontSize="small" color="primary" />
-                        ) : null}
-                      </ListItem>
-                      <Grid justifyContent="flex-end">
-                        <Typography>{findBranchQuantity(item.uuid)}</Typography>
-                      </Grid>
+                      <Typography style={{ width: 180 }}></Typography>
+                      <Typography style={{ fontWeight: 700 }}>Tồn</Typography>
                     </ListItem>
-                  );
-                })}
+                    {branchs.map((item) => {
+                      return (
+                        <ListItem>
+                          <ListItem style={{ width: 180, margin: 0, padding: 0 }}>
+                            <Typography
+                              style={{ fontWeight: 700, marginRight: 10 }}
+                            >
+                              {item.name}
+                            </Typography>
+                            {item.uuid === branch.uuid ? (
+                              <CheckCircleIcon fontSize="small" color="primary" />
+                            ) : null}
+                          </ListItem>
+                          <Grid justifyContent="flex-end">
+                            <Typography>{findBranchQuantity(item.uuid)}</Typography>
+                          </Grid>
+                        </ListItem>
+                      );
+                    })}
+                    </>:
+                   <Typography  style={{fontWeight:700, color:'#000'}}>{`Tồn kho:\u00a0\u00a0\u00a0  `} {findBranchQuantity(branchs[0].uuid)}</Typography>
+
+                  }
                 {/* {row.branch_inventories.map(item =>(
                    <ListItem >
                       <ListItem style={{width:280, margin:0, padding:0}}>
@@ -205,11 +241,33 @@ export const CartRow = (props) => {
           )}
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
-        <TableCell align="left">
-          {canFixPriceSell.status && canFixPriceSell.cart || info?.role === 'owner'? (
+       
+        {row.has_batches ? (
+          <TableCell align="center">
+            {row.quantity}
+          </TableCell>
+        ) : (
+          <TableCell align="center"padding='none' >
+            <ButtonQuantity
+              // isMini={mini?true:false}
+              miniCart={mini}
+              quantity={row.quantity}
+              setQuantity={updateQuantity}
+              branch_quantity={row.branch_quantity}
+              isManageInventory={store_setting?.inventory.status}
+            />
+          </TableCell>
+         
+        )}
+
+      {imageType?null:
+      <TableCell align="right" padding={mini ? "none" : "normal"}>
+          {canFixPriceSell.status && canFixPriceSell.cart ? (
             <Input.ThousandSeperatedInput
               id="standard-basic"
-              style={mini ? {maxWidth: 50} : { width: 72 }}
+              // style={mini ? {maxWidth: 50} : { width: 72 }}
+              style={{ width: 72, marginLeft:-5 }}
+
               size="small"
               inputProps={{ style: { textAlign: "right" } }}
               defaultPrice={row.unit_price}
@@ -219,34 +277,19 @@ export const CartRow = (props) => {
               }
             />
           ) : (
-            <Input.ThousandFormat value={row.unit_price}>
+            <Input.ThousandFormat value={row.unit_price} style={{marginLeft:-5}}>
               {" "}
             </Input.ThousandFormat>
           )}
-        </TableCell>
-        {row.has_batches ? (
-          <TableCell align="center">
-            {row.quantity}
-          </TableCell>
-        ) : (
-          <TableCell align="center">
-            <ButtonQuantity
-              isMini={true}
-              quantity={row.quantity}
-              setQuantity={updateQuantity}
-              branch_quantity={row.branch_quantity}
-              isManageInventory={store_setting?.inventory.status}
-            />
-          </TableCell>
-        )}
+        </TableCell>  }  
         
         <TableCell align="right" className={classes.boldText} padding={mini ? "none" : "normal"}>
-          <VNDFormat value={row.unit_price * row.quantity} />
+          {!mini?<VNDFormat value={row.unit_price * row.quantity} />:<Input.ThousandFormat value={row.unit_price * row.quantity} style={{paddingLeft:imageType? 0:20}}/>}
         </TableCell>
 
         <TableCell align="right" padding={mini ? "none" : "normal"}>
-          <IconButton aria-label="expand row" size="small">
-            <DeleteForeverOutlinedIcon
+          <IconButton aria-label="expand row" size="small" style={{marginLeft:10}}>
+            <DeleteForeverTwoToneIcon
               onClick={() => handleDeleteItemCart(row.uuid)}
             />
           </IconButton>
@@ -261,6 +304,7 @@ export const CartRow = (props) => {
                 variant="contained"
                 size="small"
                 onClick={() => setSelectBatchOpen(true)}
+                
               >
                 Chọn lô
               </Button>
@@ -299,71 +343,73 @@ export const CartRow = (props) => {
     </>
   );
 };
-export const CartRowMini = ({ row }) => {
-  const classes = useStyles();
 
-  return (
-    <>
-      <TableRow hover key={row.id}>
-        <TableCell align="left">
-          <ListItem
-            style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
-          >
-            <Box
-              component="img"
-              sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
-              src={icon}
-            />
-            <Box direction="column">
-              <Typography
-                className={classes.boldText}
-                style={{
-                  marginBottom: 3,
-                  fontSize: 14.5,
-                  width: 135,
-                  textOverflow: "ellipsis",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {row.name}
-              </Typography>
-              {/* <Typography>{row.price}</Typography> */}
-              <Input.ThousandSeperatedInput
-                id="standard-basic"
-                style={{ width: 70 }}
-                size="small"
-                defaultPrice={row.price}
-              />
-            </Box>
-          </ListItem>
-        </TableCell>
 
-        <TableCell align="left" padding="none">
-          <TextField
-            variant="outlined"
-            defaultValue={row.quantity}
-            style={{ width: 37, margin: 0 }}
-            size="small"
-            inputProps={{
-              style: { paddingLeft: 5, paddingRight: 5, textAlign: "center" },
-            }}
-          />
-        </TableCell>
+// export const CartRowMini = ({ row }) => {
+//   const classes = useStyles();
 
-        <TableCell align="right" className={classes.boldText}>
-          700.000
-        </TableCell>
-        <TableCell align="left">
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            style={{ marginLeft: -25 }}
-          >
-            <DeleteForeverOutlinedIcon />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    </>
-  );
-};
+//   return (
+//     <>
+//       <TableRow hover key={row.id}>
+//         <TableCell align="left">
+//           <ListItem
+//             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
+//           >
+//             <Box
+//               component="img"
+//               sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15 }}
+//               src={icon}
+//             />
+//             <Box direction="column">
+//               <Typography
+//                 className={classes.boldText}
+//                 style={{
+//                   marginBottom: 3,
+//                   fontSize: 14.5,
+//                   width: 135,
+//                   textOverflow: "ellipsis",
+//                   overflow: "hidden",
+//                   whiteSpace: "nowrap",
+//                 }}
+//               >
+//                 {row.name}
+//               </Typography>
+//               {/* <Typography>{row.price}</Typography> */}
+//               <Input.ThousandSeperatedInput
+//                 id="standard-basic"
+//                 style={{ width: 70 }}
+//                 size="small"
+//                 defaultPrice={row.price}
+//               />
+//             </Box>
+//           </ListItem>
+//         </TableCell>
+
+//         <TableCell align="left" padding="none">
+//           <TextField
+//             variant="outlined"
+//             defaultValue={row.quantity}
+//             style={{ width: 37, margin: 0 }}
+//             size="small"
+//             inputProps={{
+//               style: { paddingLeft: 5, paddingRight: 5, textAlign: "center" },
+//             }}
+//           />
+//         </TableCell>
+
+//         <TableCell align="right" className={classes.boldText}>
+//           700.000
+//         </TableCell>
+//         <TableCell align="left">
+//           <IconButton
+//             aria-label="expand row"
+//             size="small"
+//             style={{ marginLeft: -25 }}
+//           >
+//             <DeleteForeverOutlinedIcon />
+//           </IconButton>
+//         </TableCell>
+//       </TableRow>
+//     </>
+//   );
+// };

@@ -302,6 +302,7 @@ import defaultProduct from "../../assets/img/product/default-product.png"
 import setting from "../../assets/constant/setting"
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { removeAccents } from "../../utils";
 
 import {
     Grid,
@@ -351,7 +352,7 @@ export default function SearchMultiple(props) {
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   const filterOptions = createFilterOptions({
-    stringify: option => `${option.product_code} - ${option.name}  - ${option.bar_code}`,
+    stringify: option => `${option.product_code} - ${removeAccents(option.name)}  - ${option.bar_code}`,
   });
 
 

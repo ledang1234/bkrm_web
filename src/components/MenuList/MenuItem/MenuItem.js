@@ -105,7 +105,7 @@ const MenuItem = (props) => {
     if (collapse) { setOpen(!open) }
   }
  
-  if(!store_setting.inventory.status && (item.id  == 4 || item.id ==6 || item.id == 7 || item.id == 9 || item.id == 11 || item.id==12)){
+  if(!store_setting.inventory.status && (item.id  == 4 || item.id ==6 || item.id == 7 || item.id == 9 || item.id == 11 || item.id==12 )){
       return null
   }else if (web_setting.status === 'inactive' && item.id  == 22){
     return null

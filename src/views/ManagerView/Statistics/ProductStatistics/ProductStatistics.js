@@ -17,8 +17,10 @@ import defaultProduct from "../../../../assets/img/product/default-product.png"
 import { useSelector } from 'react-redux'
 import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 import barcodeIcon from "../../../../assets/img/icon/barcode_grey.png";
-import { TreeSelect } from 'antd';
+import { TreeSelect,Tree } from 'antd';
 import productApi from "../../../../api/productApi";
+import {removeAccents} from "../../../../utils"
+import CategorySelect from '../../../../components/Select/CategorySelect';
 
 
 const ProductStatistics = () => {
@@ -36,44 +38,44 @@ const ProductStatistics = () => {
   const [topData, setTopData] = useState([])
   const [saveTopData, setSaveTopData] = useState([])
 
-  const [categoryList, setCategoryList] = useState([]);
-  console.log("categoryList",categoryList)
+  // const [categoryList, setCategoryList] = useState([]);
 
-  const recursiveSearchTree = (category) => {
-    const findedCategory=category.find(e => e.uuid === categoryId);
-    if(findedCategory){return findedCategory}
-    for(let i = 0; i< category.length ; i++){
-      if(category[i].children.length > 0){return recursiveSearchTree(category[i].children)}
-    } 
-  };
-  const getAllChild  =(cat) => {
-    if(!cat){return}
-    if(cat.children.length === 0){return cat.uuid}
-    return cat.children.map((child)=>{
-      return getAllChild(child)
-    })
-  }
-  const filterCategory = () =>{
-    if(categoryId === 'all') {
-      setTopData(saveTopData)
-    }else{
-      let cat =  recursiveSearchTree(categoryList)
-      let allChild = cat?.children?.length !== 0? getAllChild(cat) : []
-      allChild =  [].concat.apply([], allChild)
-      let allCat =  allChild ?[... allChild, cat?.uuid]: allChild
-      setTopData(saveTopData.filter(data =>  allCat?.includes(data.category_uuid ) ))
-    }
-  }
+
+  // const recursiveSearchTree = (category) => {
+  //   const findedCategory=category.find(e => e.uuid === categoryId);
+  //   if(findedCategory){return findedCategory}
+  //   for(let i = 0; i< category.length ; i++){
+  //     if(category[i].children.length > 0){return recursiveSearchTree(category[i].children)}
+  //   } 
+  // };
+  // const getAllChild  =(cat) => {
+  //   if(!cat){return}
+  //   if(cat.children.length === 0){return cat.uuid}
+  //   return cat.children.map((child)=>{
+  //     return getAllChild(child)
+  //   })
+  // }
+  // const filterCategory = () =>{
+  //   if(categoryId === 'all') {
+  //     setTopData(saveTopData)
+  //   }else{
+  //     let cat =  recursiveSearchTree(categoryList)
+  //     let allChild = cat?.children?.length !== 0? getAllChild(cat) : []
+  //     allChild =  [].concat.apply([], allChild)
+  //     let allCat =  allChild ?[... allChild, cat?.uuid]: allChild
+  //     setTopData(saveTopData.filter(data =>  allCat?.includes(data.category_uuid ) ))
+  //   }
+  // }
 
 
   
 
-  const fetchAllCategory = async () => {
-    try {
-      const response = await productApi.getNestedCategory(store_uuid);
-      setCategoryList(response.data);
-    } catch (error) { }
-  };
+  // const fetchAllCategory = async () => {
+  //   try {
+  //     const response = await productApi.getNestedCategory(store_uuid);
+  //     setCategoryList(response.data);
+  //   } catch (error) { }
+  // };
  
 
 
@@ -103,7 +105,7 @@ const ProductStatistics = () => {
   useEffect(() => {
       if (store_uuid && branch_uuid ) {
         fetchTopData()
-        fetchAllCategory();
+        // fetchAllCategory();
       }   
   }, [])
     useEffect(() => {
@@ -112,9 +114,9 @@ const ProductStatistics = () => {
       }   
   }, [store_uuid,dayQuery,selectedBranches])
 
-  useEffect(()=>{
-    if(categoryList&& topData) {filterCategory()}
-  },[categoryId])
+  // useEffect(()=>{
+  //   if(categoryList&& topData) {filterCategory()}
+  // },[categoryId])
   console.log("topData",topData)
    
     let topSortedRevenue = topData ? [...topData] :[]
@@ -214,18 +216,20 @@ const ProductStatistics = () => {
     <ReportCard  title={"Báo cáo sản phẩm"} 
     ToolBar={
       <ListItem  style={{margin:0, padding:0}}>
-        <TreeSelect
-          id="category"
-          name="category"  
+        {/* <TreeSelect
+          // id="category"
+          // name="category"  
           style={{ width: 220}}   
-          dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
+          // dropdownStyle={{ maxHeight: 400, overflow: 'auto',zIndex:100000000  }}
           treeData={[{ title:'Tất cả danh mục',value:'all'},...categoryList]}
-          value={categoryId}
-          onChange={(val)=>setCategoryId(val )}
+          // value={categoryId}
+          // onChange={(val)=>setCategoryId(val )}
+          // onSelect={onSelect}
           treeDefaultExpandAll
           placeholder="Danh mục"
           
-        />
+        /> */}
+        <CategorySelect  data={topData} saveData={saveTopData} setData={setTopData}/>
         {branches?.length === 1?null: <BranchSelect haveAllOption={true}selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>}
         <DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery}/>
       </ListItem>
@@ -289,9 +293,7 @@ const ProductStatistics = () => {
 export default ProductStatistics
 const title = ["Bán chạy", " doanh thu"," lợi nhuận" ]
 
-const DetailStatisticCategory = () =>{
 
-}
 const DetailStatisticProduct = (props) =>{
 
   const {data} = props
@@ -304,11 +306,11 @@ const DetailStatisticProduct = (props) =>{
     setProductData(data)
 }, [data])
 
-  function removeAccents(str) {
-    return str.normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .replace(/đ/g, 'd').replace(/Đ/g, 'D');
-  }
+  // function removeAccents(str) {
+  //   return str.normalize('NFD')
+  //             .replace(/[\u0300-\u036f]/g, '')
+  //             .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  // }
 
   const [type,setType] = useState("best-seller")
 
