@@ -20,7 +20,7 @@ import FilterListTwoToneIcon from "@material-ui/icons/FilterListTwoTone";
 import clsx from "clsx"
 import { TreeSelect } from 'antd';
 import CategorySelect from "../Select/CategorySelect"
-const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, selectedItem,typeShow,setTypeShow}) => {
+const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, selectedItem,typeShow,setTypeShow,isCheck}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const InventoryHeadCells = [
@@ -52,7 +52,9 @@ const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, sele
     const selectedItemUuid =selectedItem.length ===0?[]: selectedItem.map((item)=>item.uuid)
     const findItem = (item)=>{
      const findedItem =  selectedItem.find(row => item.uuid === row.uuid)
+     if(isCheck){return findedItem?.real_quantity}
      return findedItem?.quantity
+    // return findedItem?.real_quantity
     // console.log("findedItem",findedItem)
     }
 

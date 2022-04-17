@@ -345,7 +345,8 @@ const CartSummary = (props) => {
               </Typography>
             </Grid>:null}
 
-            {cartData.total_amount - cartData.discount  !== 0 || cartData.total_amount === 0 ?<Grid
+            {/* {cartData.total_amount - cartData.discount  !== 0 || cartData.total_amount === 0 ?<Grid */}
+            {cartData.total_amount - cartData.discount  !== 0 ?<Grid
               container
               direction="row"
               justifyContent="space-between"
@@ -366,6 +367,7 @@ const CartSummary = (props) => {
             </Grid>:null}
 
 
+            {cartData.total_amount - cartData.discount  !== 0 ?
             <Grid
               container
               direction="row"
@@ -388,7 +390,7 @@ const CartSummary = (props) => {
                   }
                 />
               </Typography>
-            </Grid>
+            </Grid>:null}
 
            <Grid
               container

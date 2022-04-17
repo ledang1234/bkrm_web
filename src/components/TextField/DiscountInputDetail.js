@@ -33,7 +33,11 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
     const classes = useStyles(theme);
     
     const handleChangeValue = (e) =>{
-      if(cartData.discountDetail?.type === "%"){
+      // if(e.target.value < 0){e.target.value = 0}
+      console.log("e.target.value.includes('-') ",e.target.value.includes('-') )
+      if(e.target.value < 0 || !e.target.value||e.target.value.includes('-') ){return}
+
+      else if(cartData.discountDetail?.type === "%"){
         if(Number(e.target.value) > 100){ 
           handleUpdateDiscountDetail({value:'100', type:'%'})
         }

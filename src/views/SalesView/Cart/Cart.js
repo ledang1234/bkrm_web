@@ -35,7 +35,8 @@ import {
   Tooltip,
   Avatar,
   TableCell,
-  TableRow
+  TableRow,
+  Button
 } from "@material-ui/core";
 import SearchBarCode from "../../../components/SearchBar/SearchBarCode";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -74,6 +75,7 @@ import productApi from "../../../api/productApi";
 import { statusAction } from "../../../store/slice/statusSlice";
 import promotionCouponApi from '../../../api/promotionCouponApi';
 import { loadingActions } from "../../../store/slice/loadingSlice";
+import ModalWrapperWithClose from "../../../components/Modal/ModalWrapperWithClose";
 
 const Cart = () => {
   const theme = useTheme();
@@ -472,10 +474,13 @@ const Cart = () => {
     let item = cartList[selectedIndex].cartItem.find(
       (item) => item.uuid === itemUuid
     );
+    if(isNaN(newQuantity)){newQuantity = ''}
     if (newQuantity === 0 && !item.has_batches) {
       handleDeleteItemCart(itemUuid);
       return;
     }
+    if (newQuantity < 0){return } 
+  
     let newCartList = [...cartList];
     newCartList[selectedIndex].cartItem[itemIndex].quantity = newQuantity;
     setCartList(newCartList);
@@ -496,6 +501,8 @@ const Cart = () => {
   };
 
   const handleChangeItemPrice = (itemUuid, newPrice) => {
+    if (newPrice < 0){return } 
+
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === itemUuid
     );
@@ -516,6 +523,7 @@ const Cart = () => {
   };
 
   const handleUpdatePaidAmount = (amount) => {
+    if (amount < 0){return } 
     let newCartList = update(cartList, {
       [selectedIndex]: { paid_amount: { $set: amount } },
     });
@@ -609,6 +617,10 @@ const Cart = () => {
   };
 
   const[code,setCode] =React.useState("")
+  const [openPopUpWarningZernoPrice, setOpenPopUpWarningZernoPrice] = useState(false);
+const handleCloseWarning = () =>{
+  setOpenPopUpWarningZernoPrice(false)
+}
 
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
@@ -628,8 +640,17 @@ const Cart = () => {
           else return true;
         })
       : true;
-     
-    if (emptyCart || !correctQuantity || (!alowDebt.status && Number(cart.paid_amount) < Number(cart.total_amount) - Number(cart.discount) )) {
+
+    var notExistNullQuantity =  cart.cartItem.every(function (element, index) {
+      if (element.quantity === '' || Number(element.quantity)===0) return false;
+      else return true;
+    })
+    var notExistZeroPrice =  cart.cartItem.every(function (element, index) {
+      if (Number(element.unit_price)  === 0) return false;
+      else return true;
+    })
+
+    if (emptyCart || !correctQuantity || !notExistNullQuantity|| (!alowDebt.status && Number(cart.paid_amount) < Number(cart.total_amount) - Number(cart.discount) )) {
       setOpenSnack(true);
       if (emptyCart) {
         setSnackStatus({
@@ -641,65 +662,134 @@ const Cart = () => {
           style: "error",
           message: "Giỏ hàng bị vượt tồn kho",
         });
+      }else if(!notExistNullQuantity){
+        setSnackStatus({
+          style: "error",
+          message: "Có sản phẩm chưa nhập số lượng",
+        });
       }else{
         setSnackStatus({
           style: "error",
           message: "Không cho phép khách hàng nợ",
         });
       }
-    } else {
-      let d = moment.now() / 1000;
+    } else if(!notExistZeroPrice){
+      setOpenPopUpWarningZernoPrice(true)
+      return 
+    }
+    else {
+      handleConfirmCallApi()
+      // let d = moment.now() / 1000;
 
-      let orderTime = moment
-        .unix(d)
-        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+      // let orderTime = moment
+      //   .unix(d)
+      //   .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
-      let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
-      console.log(cart.paid_amount, cart.total_amount, cart.discount);
-      let body = {
-        customer_uuid: cart.customer ? cart.customer.uuid : "",
-        total_amount: cart.total_amount.toString(),
-        payment_method: cart.payment_method,
-        paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
-        discount: cart.discount,
-        status:
-          cart.paid_amount < cart.total_amount - cart.discount
-            ? "debt"
-            : "closed",
-        details: details,
-        creation_date: orderTime,
-        paid_date: orderTime,
-        tax: "0",
-        shipping: "0",
-        delivery: cart.delivery,
-        is_customer_order: false,
-        points: cart.scores,
-      };
+      // let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
+      // console.log(cart.paid_amount, cart.total_amount, cart.discount);
+      // let body = {
+      //   customer_uuid: cart.customer ? cart.customer.uuid : "",
+      //   total_amount: cart.total_amount.toString(),
+      //   payment_method: cart.payment_method,
+      //   paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
+      //   discount: cart.discount,
+      //   status:
+      //     cart.paid_amount < cart.total_amount - cart.discount
+      //       ? "debt"
+      //       : "closed",
+      //   details: details,
+      //   creation_date: orderTime,
+      //   paid_date: orderTime,
+      //   tax: "0",
+      //   shipping: "0",
+      //   delivery: cart.delivery,
+      //   is_customer_order: false,
+      //   points: cart.scores,
+      // };
 
-      try {
-        let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
+      // try {
+      //   let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
         
-        setSnackStatus({
-          style: "success",
-          message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
-        });
-        setOpenSnack(true);
-        if (printReceiptWhenSell.status && printReceiptWhenSell.cart) {
-          setCode(res.data.order.order_code)
-          handlePrint();
-        }
-        handleDelete(selectedIndex);
-      } catch (err) {
-        setSnackStatus({
-          style: "error",
-          message: "Tạo hóa đơn thất bại!",
-        });
-        setOpenSnack(true);
-        console.log(err);
-      }
-      loadProducts()
+      //   setSnackStatus({
+      //     style: "success",
+      //     message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
+      //   });
+      //   setOpenSnack(true);
+      //   if (printReceiptWhenSell.status && printReceiptWhenSell.cart) {
+      //     setCode(res.data.order.order_code)
+      //     handlePrint();
+      //   }
+      //   handleDelete(selectedIndex);
+      // } catch (err) {
+      //   setSnackStatus({
+      //     style: "error",
+      //     message: "Tạo hóa đơn thất bại!",
+      //   });
+      //   setOpenSnack(true);
+      //   console.log(err);
+      // }
+      // loadProducts()
     }
   };
+  const handleConfirmCallApi  = async () => {
+    const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
+    let cart = cartList[selectedIndex];
+
+    let d = moment.now() / 1000;
+
+    let orderTime = moment
+      .unix(d)
+      .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
+    let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
+    console.log(cart.paid_amount, cart.total_amount, cart.discount);
+    let body = {
+      customer_uuid: cart.customer ? cart.customer.uuid : "",
+      total_amount: cart.total_amount.toString(),
+      payment_method: cart.payment_method,
+      paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
+      discount: cart.discount,
+      status:
+        cart.paid_amount < cart.total_amount - cart.discount
+          ? "debt"
+          : "closed",
+      details: details,
+      creation_date: orderTime,
+      paid_date: orderTime,
+      tax: "0",
+      shipping: "0",
+      delivery: cart.delivery,
+      is_customer_order: false,
+      points: cart.scores,
+    };
+
+    try {
+      let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
+      
+      setSnackStatus({
+        style: "success",
+        message: "Tạo hóa đơn thành công: " + res.data.order.order_code,
+      });
+      setOpenSnack(true);
+      if (printReceiptWhenSell.status && printReceiptWhenSell.cart) {
+        setCode(res.data.order.order_code)
+        handlePrint();
+      }
+      handleDelete(selectedIndex);
+    } catch (err) {
+      setSnackStatus({
+        style: "error",
+        message: "Tạo hóa đơn thất bại!",
+      });
+      setOpenSnack(true);
+      console.log(err);
+    }
+    loadProducts()
+  }
+
+
+
+
   //print
 
   const componentRef = useRef();
@@ -918,7 +1008,7 @@ const Cart = () => {
           </Box>
         </Card>
       </Grid>
-
+      <PopUpWarningZeroPrice  open={openPopUpWarningZernoPrice} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} />
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
@@ -932,6 +1022,28 @@ const Cart = () => {
 export default Cart;
 
 
+const PopUpWarningZeroPrice = ({open,handleClose,handleConfirmCallApi, }) =>{
+  const theme = useTheme();
+  return (
+    <ModalWrapperWithClose title="Có sản phẩm đang có giá bán bằng 0" open={open} handleClose={handleClose}>
+      <Typography style={{ marginTop: 10, marginBottom: 10 }}>
+        Giỏ hàng đang có sản phẩm có giá bán bằng 0.
+      </Typography>
+      <Typography style={{ fontWeight: 600, color:theme.customization.primaryColor[500] }}>
+        Bạn có chắc chắn muốn tiếp tục thanh toán?
+      </Typography>
+
+      <Grid item xs={12}style={{  display: "flex",  flexDirection: "row", justifyContent: "flex-end", paddingTop: 20, }} >
+        <Button onClick={handleClose} variant="contained" size="small" style={{ marginRight: 20 }}color="secondary" >
+          {" "} Huỷ{" "}
+        </Button>
+        <Button onClick={() => {handleConfirmCallApi(); handleClose()}} variant="contained" size="small" color="primary" >
+          Xác nhận{" "}
+        </Button>
+      </Grid>
+    </ModalWrapperWithClose>
+  )
+}
 
 
 

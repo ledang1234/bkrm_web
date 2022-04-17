@@ -14,7 +14,7 @@ const ButtonQuantity = (props) =>{
   
     const handleIncrement = () => {
       //them cai nay
-       if (Number(limit) === 0){
+       if (limit && Number(limit) === 0){
         setQuantity(quantity)
         return
       }
@@ -55,9 +55,10 @@ const ButtonQuantity = (props) =>{
 
     const handleQuantity = (e) =>{
 
-       if (!isNaN(e.target.value) && e.target.value >0){
-        setQuantity(parseInt(e.target.value))
-      } 
+      //  if (!isNaN(e.target.value) && e.target.value >0){
+      //   setQuantity(parseInt(e.target.value))
+      // } 
+     setQuantity(parseInt(e.target.value))
     }
    
     return(

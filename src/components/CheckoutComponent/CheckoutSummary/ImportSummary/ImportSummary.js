@@ -289,7 +289,8 @@ const ImportSummary = (props) => {
             { cartData.total_amount -
                   cartData.discount -
                   cartData.paid_amount > 0? */}
-                  <Grid
+               {cartData.total_amount - cartData.discount  !== 0?
+                   <Grid
               container
               direction="row"
               justifyContent="space-between"
@@ -311,7 +312,7 @@ const ImportSummary = (props) => {
                   cartData.paid_amount
                 }
               />
-            </Grid>
+            </Grid>:null}
             {/* :null} */}
             <Grid
               container
