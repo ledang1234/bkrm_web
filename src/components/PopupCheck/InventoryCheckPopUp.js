@@ -24,12 +24,13 @@ import {
   IconButton,
   Switch,
   FormControlLabel,
+  TableContainer
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import SelectBatch from "../SelectBatch/SelectBatch";
 import { DeleteOutline } from "@material-ui/icons";
 import update from "immutability-helper";
-import { useSelector } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import SearchBarCode from "../SearchBar/SearchBarCode";
 import moment from "moment";
 import { Input } from "@mui/material";
@@ -51,6 +52,13 @@ import { CheckMiniTableRow } from "../../components/MiniTableRow/MiniTableRow";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import productApi from "../../api/productApi";
+import { infoActions } from "../../store/slice/infoSlice";
+import MenuProduct from "../../components/MenuProduct/MenuProduct";
+import {
+  getComparator,
+  stableSort,
+} from "../../components/TableCommon/util/sortUtil";
+
 function InventoryCheckPopUp({
   classes,
   setReload,
@@ -66,15 +74,19 @@ function InventoryCheckPopUp({
   const theme = useTheme();
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
-  const [order, setOrder] = React.useState("desc");
+  const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("stt");
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+  const dispatch = useDispatch();
+
   // redux
   const info = useSelector((state) => state.info);
+  const searchBarState = info.searchBarState;
+
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
   const user_name = info.user.name;
@@ -161,11 +173,13 @@ function InventoryCheckPopUp({
       (item) => item.id === itemId
     );
     
-
+    if(isNaN(newQuantity)){newQuantity = ''}
     if (newQuantity === inventoryCheck.details[itemIndex].real_quantity && !inventoryCheck.details[itemIndex].has_batches) {
       handleDeleteItem(itemId);
       return;
     }
+    if (newQuantity < 0){return } 
+
 
     const newInventoryCheck = update(inventoryCheck, {
       details: {
@@ -181,11 +195,21 @@ function InventoryCheckPopUp({
 
   const handleConfirm = () => {
     var emptyCart = inventoryCheck.details.length === 0;
+    var notExistNullQuantity =   inventoryCheck.details.every(function (element, index) {
+      if (element.real_quantity === '') return false;
+        else return true;
+    })
     if (emptyCart) {
       setOpenSnack(true);
       setSnackStatus({
         style: "error",
         message: "Kiểm kho trống",
+      });
+    }else if(!notExistNullQuantity){
+      setOpenSnack(true);
+      setSnackStatus({
+        style: "error",
+        message: "Có sản phẩm chưa nhập số lượng",
       });
     } else {
       setOpen(true);
@@ -254,6 +278,20 @@ function InventoryCheckPopUp({
     const newInventoryCheck = {...inventoryCheck};
     newInventoryCheck.details[itemIndex].batches = batches;
   }
+
+//mode
+  const [mode, setMode] = React.useState(false);
+  const [typeShow, setTypeShow] = useState('list')
+  const handleChangeMode = (event) => {
+    setMode(event.target.checked);
+  };
+  useEffect(() => {
+    window.localStorage.setItem(
+      "mode",
+      JSON.stringify({store_uuid: store_uuid,  mode: mode, typeShow: typeShow })
+    );
+  }, [mode,typeShow]);
+
   return (
     <>
       <Grid
@@ -262,6 +300,8 @@ function InventoryCheckPopUp({
         justifyContent="space-between"
         alignItems="center"
       >
+        <SnackBarGeneral handleClose={handleCloseSnackBar} open={openSnack} status={snackStatus}  />
+
         <Grid item>
           <ListItem
             style={{ paddingTop: 20, marginBottom: -20, marginLeft: 25 }}
@@ -272,25 +312,22 @@ function InventoryCheckPopUp({
                   Kiểm kho
                 </Typography>
               </Grid>
-              <Grid item>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={barcodeChecked}
-                      onChange={handleSwitchChange}
-                      color="primary"
-                    />
-                  }
-                  label={"Dùng mã vạch"}
-                />
-              </Grid>
-              <Grid item>
-                {barcodeChecked ? (
-                  <SearchBarCode products={products} handleSearchBarSelect={handleProductSelect} />
-                ) : (
-                  <SearchProduct products={products} handleSearchBarSelect={handleProductSelect} />
-                )}
-              </Grid>
+              {!mode? 
+                  <>
+                  <Grid item>
+                    <FormControlLabel   control={ <Switch  size="small"  checked={searchBarState === 'barcode'}  onChange={(e, checked) => { dispatch(infoActions.setSearchBarState(checked ? 'barcode' : 'search'))  }} color="primary"  />  } label={"Dùng mã vạch"}  />
+
+                  </Grid>
+                  <Grid item>
+                    {false ? (
+                      <SearchBarCode products={products} handleSearchBarSelect={handleProductSelect} />
+                    ) : (
+                      <SearchProduct products={products} handleSearchBarSelect={handleProductSelect} />
+                    )}
+                  </Grid>
+                  </>:
+                 <SearchProduct products={products} setProducts={setProducts} isFilter={true} />
+              }
             </Grid>
           </ListItem>
         </Grid>
@@ -314,13 +351,14 @@ function InventoryCheckPopUp({
           alignItems="center"
           spacing={2}
         >
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={typeShow==='list' && mode?7:8}>
             <Card className={classes.card}>
-              <Box style={{ padding: 30, minHeight: "75vh" }}>
+              <Box style={{ padding: 30, minHeight: "72vh" }}>
                 {/* JSON data attribute phải giongso table head id */}
 
                 {/* <ListItem headCells={HeadCells.CartReturnHeadCells}  cartData={row.list} tableType={TableType.CART_RETURN} /> */}
-                {!xsScreen ? (
+                {/* {!xsScreen ? ( */}
+                  {!mode ? (
                   <TableWrapper isCart>
                     <TableHeader
                       classes={classes}
@@ -330,7 +368,7 @@ function InventoryCheckPopUp({
                       headerData={HeadCells.InventoryCheckHeadCells}
                     />
                     <TableBody>
-                      {inventoryCheck.details.map((detail, index) => (
+                      {stableSort( inventoryCheck.details, getComparator(order, orderBy) ).map((detail, index) => (
                         <InventoryCheckTableRow
                           handleItemRealQuantityChange={
                             handleItemRealQuantityChange
@@ -338,11 +376,27 @@ function InventoryCheckPopUp({
                           detail={detail}
                           handleDeleteItem={handleDeleteItem}
                           handleChangeDetailBatches={handleChangeDetailBatches}
+                          imageType={typeShow==='image' && mode}
+                          index={inventoryCheck.details.length - index}
+
                         />
                       ))}
                     </TableBody>
                   </TableWrapper>
-                ) : (
+                  ) : (
+                    //  Mode nha hang
+                    <MenuProduct 
+                      products={products} 
+                      handleSearchBarSelect={handleProductSelect}
+                      // isCart={true}
+                      selectedItem={inventoryCheck.details}
+                      typeShow={typeShow}
+                      setTypeShow={setTypeShow}
+                      setProducts={setProducts}
+                      isCheck={true}
+                    />
+                  )}
+                {/* ) : (
                   // inventoryCheck.details.map((detail, index) => (
                   ["helo", "xin chao"].map((detail, index) => (
                     <CheckMiniTableRow
@@ -352,20 +406,52 @@ function InventoryCheckPopUp({
                       detail={detail}
                       handleDeleteItem={handleDeleteItem}
                     />
-                  ))
-                )}
+                  )) */}
+                {/* )} */}
               </Box>
+              <FormControlLabel  control={<Switch  size="small"  checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end"}} />
+
             </Card>
           </Grid>
 
-          <Grid item xs={12} sm={4} className={classes.card}>
+          <Grid item xs={12} sm={typeShow==='list' && mode?5:4} className={classes.card}>
             <Card className={classes.card}>
               <InventoryCheckSummary
                 handleConfirm={handleConfirm}
                 data={inventoryCheck}
                 userName={user_name}
                 branchName={branch_name}
-              />
+                mode={mode}
+              >
+                 {!mode ? null:
+                  <TableContainer  style={{ maxHeight: "39vh", height:"39vh"}} >
+                   <Table  size="small">
+                    <TableBody>
+                      {stableSort( inventoryCheck.details, getComparator(order, orderBy) )
+                        .map((detail, index) => {
+                        return (
+                          <InventoryCheckTableRow
+                            key={`${detail.uuid}_index`}
+                            handleItemRealQuantityChange={
+                              handleItemRealQuantityChange
+                            }
+                            detail={detail}
+                            handleDeleteItem={handleDeleteItem}
+                            handleChangeDetailBatches={handleChangeDetailBatches}
+                            
+                            mini={true}
+                            imageType={typeShow==='image' && mode}
+                            index={inventoryCheck.details.length - index}
+                            
+
+                          />
+                        );
+                      })}
+                       </TableBody>
+                    </Table>
+                  </TableContainer>
+                  }
+              </InventoryCheckSummary>
             </Card>
           </Grid>
 
@@ -447,6 +533,8 @@ function InventoryCheckTableRow({
   handleItemRealQuantityChange,
   handleDeleteItem,
   handleChangeDetailBatches,
+  mini,
+  imageType, index
 }) {
   const classes = useStyles();
   const [show, setShow] = React.useState("none");
@@ -501,12 +589,16 @@ function InventoryCheckTableRow({
   return (
     <>
       <TableRow hover key={detail.id}>
-        <TableCell align="left" style={{ width: 5 }}>
-          {detail.product_code}
+        <TableCell align="left" style={{ width: 5 }} padding={'none'} >
+          {index}.
         </TableCell>
+        {!mini?
+        <TableCell align="left" style={{ width: 5 }} >
+          {detail.product_code}
+        </TableCell>:null}
         {/* <TableCell align="left">{row.id}</TableCell> */}
-        <TableCell align="left">{detail.name}</TableCell>
-        <TableCell align="right">
+        <TableCell align="left" >{detail.name}</TableCell>
+        <TableCell align="right" padding={'none'}>
           {" "}
           <ThousandFormat value={detail.branch_quantity} />
           {detail.has_batches ? (
@@ -539,7 +631,7 @@ function InventoryCheckTableRow({
         <TableCell align="left" padding="none">
           {detail.has_batches ? (
             <>
-              <div>{detail.real_quantity}</div>
+              <div style={{textAlign:'right', maxWidth:80}}>{detail.real_quantity}</div>
               <div>
                 {batches
                   .filter((batch) => batch.is_checked)
@@ -570,18 +662,21 @@ function InventoryCheckTableRow({
               setShow={setShow}
               limit={detail.quantity}
               isReturn={false}
+              // miniCart={mini}
             />
           )}
         </TableCell>
 
-        <TableCell align="center">
+        <TableCell align="center" >
           <ThousandFormat
             value={
               Number(detail.real_quantity) - Number(detail.branch_quantity)
             }
+            style={{fontWeight:mini?600:null}}
           />
         </TableCell>
 
+       {!mini?
         <TableCell align="center" className={classes.boldText}>
           <VNDFormat
             value={
@@ -589,7 +684,7 @@ function InventoryCheckTableRow({
               detail.standard_price
             }
           />
-        </TableCell>
+        </TableCell>:null}
         <TableCell align="right" className={classes.boldText}>
           <IconButton
             aria-label="expand row"

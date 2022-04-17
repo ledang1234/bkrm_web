@@ -44,7 +44,8 @@ const useStyles = makeStyles((theme) =>
     },
   })
 );
-function InventoryCheckSummary({ data, handleConfirm, userName, branchName }) {
+function InventoryCheckSummary(props) {
+  const { data, handleConfirm, userName, branchName,mode } = props
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -88,6 +89,7 @@ function InventoryCheckSummary({ data, handleConfirm, userName, branchName }) {
           justifyContent="space-between"
           alignItems="center"
         >
+         {!mode?
           <Grid
             item
             xs={8}
@@ -105,18 +107,8 @@ function InventoryCheckSummary({ data, handleConfirm, userName, branchName }) {
             >
               {userName}
             </Typography>
-          </Grid>
-          {/* <Grid
-            item
-            xs={4}
-            container
-            direction="row"
-            justifyContent="flex-end"
-            className={classes.marginBox}
-            alignItems="center"
-          >
-            <Typography variant="h5">{data.custome}</Typography>
-          </Grid> */}
+          </Grid>:
+          props.children}
         </Grid>
 
         <Grid
@@ -166,9 +158,9 @@ function InventoryCheckSummary({ data, handleConfirm, userName, branchName }) {
           variant="contained"
           fullWidth
           color="primary"
-          style={{ marginTop: 40 }}
+          style={{ marginTop: !mode ?40:0 }}
           onClick={handleConfirm}
-          disabled={data.total_amount === 0}
+          // disabled={data.total_amount === 0}
         >
           Kiểm kho
         </Button>

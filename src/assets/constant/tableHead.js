@@ -299,7 +299,8 @@ export const EmployeeScheduleHeadCells = [
 ];
 
 export const InventoryCheckHeadCells = [
-  { id: "id", align: "left", disablePadding: true, label: "#" },
+  { id: "stt", align: "left", disablePadding: true, label: "Stt" },
+  { id: "id", align: "left", disablePadding: true, label: "Mã" },
   { id: "name", align: "left", disablePadding: false, label: "Tên sản phẩm" },
   { id: "inventory", align: "left", disablePadding: false, label: "Tồn kho" },
   { id: "real", align: "left", disablePadding: false, label: "Thực tế" },

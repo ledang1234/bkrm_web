@@ -388,10 +388,13 @@ const Import = () => {
     let item = cartList[selectedIndex].cartItem.find(
       (item) => item.uuid === itemUuid
     );
+    if(isNaN(newQuantity)){newQuantity = ''}
     if (newQuantity === 0 && !item.has_batches) {
       handleDeleteItemCart(itemUuid);
       return;
     }
+    if (newQuantity < 0){return } 
+
 
     let newCartList = [...cartList];
     newCartList[selectedIndex].cartItem[itemIndex].quantity = newQuantity;
@@ -400,6 +403,7 @@ const Import = () => {
   };
 
   const handleChangeItemPrice = (itemUuid, newPrice) => {
+    if (newPrice < 0){return } 
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === itemUuid
     );
@@ -420,6 +424,7 @@ const Import = () => {
   };
 
   const handleUpdatePaidAmount = (amount) => {
+    if (amount < 0){return } 
     let newCartList = update(cartList, {
       [selectedIndex]: { paid_amount: { $set: amount } },
     });
@@ -508,17 +513,28 @@ const Import = () => {
     var emptyCart = cart.cartItem.filter((item) => item.quantity).length === 0;
     // CHECK NẾU TYPE BẰNG 0(đặt) thì NCC ko đc null 
     // CHECK NẾU TYPE BẰNG 0(đặt) thì setting có  gửi mail NCC ko , nếu có thì warning email NCC rỗng  ?
+    var notExistNullQuantity =  cart.cartItem.every(function (element, index) {
+      if (element.quantity === ''|| Number(element.quantity)===0) return false;
+      else return true;
+    })
 
-    if (emptyCart) {
+    if (emptyCart  ) {
       setOpenSnack(true);
       setSnackStatus({
         style: "error",
         message: "Giỏ hàng trống",
       });
 
-      setOpenSnack(true);
+      // setOpenSnack(true);
       // console.log(err);
-    } else {
+    } else if(!notExistNullQuantity){
+      setOpenSnack(true);
+      setSnackStatus({
+        style: "error",
+        message: "Có sản phẩm chưa nhập số lượng",
+      });
+    }
+    else {
       let d = moment.now() / 1000;
       let importTime = moment
         .unix(d)
