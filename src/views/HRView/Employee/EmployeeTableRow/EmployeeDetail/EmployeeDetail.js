@@ -172,7 +172,7 @@ const EmployeeDetail = (props) => {
         </Typography>
 
         <Grid container direction="row" justifyContent="flex-start">
-          <Grid item xs={12} >
+          <Grid item xs={12}sm={3} >
             <UploadImage src={employeeDetail.img_url} />
           </Grid>
           <Grid item xs={12} sm={5}>

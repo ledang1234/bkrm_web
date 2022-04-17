@@ -51,20 +51,13 @@ export const CustomTextField = withStyles({
 
 export const FormatedImage = (props) => {
   return (
-    <Box
-      component="img"
-      sx={{
-        height: 53,
-        width: 53,
-        borderRadius: 10,
-        marginRight: 15,
-      }}
-      src={props.url}
-    />
+    <Box component="img" sx={{height: 53, width: 53,  borderRadius: 10, marginRight: 15, }} src={props.url} />
+
   );
 };
 
 const SearchProduct = (props) => {
+  const {isFilter, setProducts } =props
   const theme = useTheme();
   const classes = useStyles(theme);
   const [selectedOption, setSelectedOption] = useState({});
@@ -75,8 +68,16 @@ const SearchProduct = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
-  const products = info.products;
 
+  const [allProduct, setAllProduct] =  useState([]);
+  useEffect(()=>{
+    if (isFilter && window.localStorage.getItem("products")) {
+      const products = JSON.parse(window.localStorage.getItem("products"));
+      if (products.store_uuid === store_uuid && products.branch_uuid === branch_uuid ) {
+        setAllProduct(products.data);
+      }
+    }
+  },[])
 
   const renderOption = (option) => {
     // console.log("option",option)
@@ -86,11 +87,6 @@ const SearchProduct = (props) => {
         fullWidth
         container
         direction="row"
-        // style={{
-        //   backgroundColor: selectedOption.name
-        //     ? "rgba(164,247,247,0.3)"
-        //     : "rgba(0,0,0,0)",
-        // }}
       >
         <Grid item xs={3}>
           <FormatedImage url={JSON.parse(option.img_urls ? option.img_urls : "[]").at(0) || defaultProduct} />
@@ -152,6 +148,7 @@ const SearchProduct = (props) => {
     />
   );
 
+
   const filter = createFilterOptions({
     stringify: option => `${option.product_code} - ${removeAccents(option.name)}  - ${option.bar_code}`,
   });
@@ -163,17 +160,10 @@ const SearchProduct = (props) => {
 
   return (
     <div style={{ width: 320, paddingLeft: 20 }}>
-      <Tooltip
-        title={`Space: tìm kiếm, Tab để chọn lựa chọn đầu tiên và tăng số lượng, Delete để xóa lựa chọn hiện tại`}
-      >
+        {!isFilter ?
         <Autocomplete
           filterOptions={filter}
           options={props.products}
-          // freeSolo
-          // CÁI NÀY ĐỂ SET GIÁ TRỊ TEXT FIELD
-          // inputValue={inputValue}
-
-          // BỎ CÁI NÀY TỰ EMPTY
           autoComplete
           getOptionLabel={getOptionLabel}
           onChange={(event, value) => {
@@ -203,8 +193,22 @@ const SearchProduct = (props) => {
           }}
           blurOnSelect={false}
           autoHighlight
+        />:
+        <CustomTextField
+            fullWidth  placeholder="Tìm sản phẩm (mã sp, tên)" variant="outlined" size="small"
+            InputProps={{
+              startAdornment: (   <InputAdornment position="start">   <SearchIcon style={{ color: grey[500] }} />  </InputAdornment> ),
+              endAdornment: ( <InputAdornment position="end">  <Box  component="img" sx={{ height: 23, width: 23 }} src={barcodeIcon} /> </InputAdornment> ),
+              style: { padding: " 5px", paddingLeft:"10px",paddingRight:"10px" },
+            }}
+            onChange={(e)=>{
+              let newProductData = [...allProduct]
+              newProductData = newProductData.filter(item  => removeAccents(item.name.toUpperCase().concat(item.product_code.toUpperCase()).concat(item.bar_code)).includes(removeAccents(e.target.value.replace(/\s/g, '')).toUpperCase()))
+              setProducts(newProductData)
+            }}
         />
-      </Tooltip>
+        }
+
     </div>
   );
 };

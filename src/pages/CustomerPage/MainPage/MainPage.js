@@ -42,6 +42,7 @@ const MainPage = (props) => {
 
     const {products, storeInfo} = useSelector(state => state.customerPage);
     const banners = JSON.parse(storeInfo.banners ? storeInfo.banners : '[]');
+    console.log("banners",banners)
     return (
 <>
     {/* // 1. CAROUSE */}

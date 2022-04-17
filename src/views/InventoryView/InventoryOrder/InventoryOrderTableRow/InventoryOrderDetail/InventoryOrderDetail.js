@@ -348,7 +348,7 @@ const InventoryOrderDetail = (props) => {
             <TableRow>
               <TableCell>Mã SP</TableCell>
               <TableCell>Sản phẩm</TableCell>
-              <TableCell>Mã vạch</TableCell>
+              {/* <TableCell>Mã vạch</TableCell> */}
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá nhập</TableCell>
@@ -362,7 +362,7 @@ const InventoryOrderDetail = (props) => {
                   {detail.product_code}
                 </TableCell>
                 <TableCell>{detail.name}</TableCell>
-                <TableCell>{detail.bar_code}</TableCell>
+                {/* <TableCell>{detail.bar_code}</TableCell> */}
                 <TableCell align="right">
                   <div>
                     {detail.quantity}
@@ -573,12 +573,12 @@ const InventoryOrderDetail = (props) => {
               <ListItemText primary="In đơn nhập" />
             </StyledMenuItem>
 
-            <StyledMenuItem>
+            {/* <StyledMenuItem>
               <ListItemIcon style={{ marginRight: -15 }}>
                 <GetAppTwoToneIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Xuất excel" />
-            </StyledMenuItem>
+            </StyledMenuItem> */}
           </StyledMenu>
         </Grid>
 

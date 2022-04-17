@@ -156,7 +156,7 @@ const salesModule = {
   children: [
     {
       id: 1,
-      title: "Giỏ Hàng",
+      title: "Bán Hàng",
       url: "/home/sales/cart",
       icon: cartIcon,
       icon1: icons.ShoppingCartOutlinedIcon,
@@ -321,35 +321,35 @@ const reportModule = {
       icon2: icons1.LanguageTwoToneIcon,
       children: [
         { id: 19.1, title: "Cài đặt chung", url: "/home/manager/setting" },
-        {
-          id: 19.2,
-          title: "Khuyến mãi",
-          url: "/home/manager/setting-discount",
-        },
-        { id: 19.3, title: "Voucher", url: "/home/manager/setting-voucher" },
-        { id: 19.4, title: "Mẫu email", url: "/home/manager/setting-email" },
+        // {
+        //   id: 19.2,
+        //   title: "Khuyến mãi",
+        //   url: "/home/manager/setting-discount",
+        // },
+        // { id: 19.3, title: "Voucher", url: "/home/manager/setting-voucher" },
+        // { id: 19.4, title: "Mẫu email", url: "/home/manager/setting-email" },
         { id: 19.5, title: "Trang web", url: "/home/manager/setting-web" },
       ],
     },
     {
       id: 20.1,
       title: "Thống Kê",
-      url: "/home/manager/report",
+      url: "/home/manager/end-date-report",
       icon: statisticIcon,
       icon1: icons.DonutSmallOutlinedIcon,
       icon2: icons1.DonutSmallTwoToneIcon,
       children: [
-        { id: 20.1, title: "Tổng quan", url: "/home/manager/report" },
-        { id: 20.2, title: "Sổ quỹ", url: "/home/manager/report" },
+        // { id: 20.1, title: "Tổng quan", url: "/home/manager/report" },
+        // { id: 20.2, title: "Sổ quỹ", url: "/home/manager/report" },
 
-        { id: 20.8, title: "Tổng quan", url: "/home/manager/general-report" },
+        // { id: 20.8, title: "Tổng quan", url: "/home/manager/general-report" },
         { id: 20.3, title: "Báo cáo cuối ngày", url: "/home/manager/end-date-report" },
         { id: 20.9, title: "Doanh thu", url: "/home/manager/income-report" },
         { id: 20.4, title: "Sản phẩm", url: "/home/manager/product-report" },
         { id: 20.5, title: "Khách hàng", url: "/home/manager/customer-report" },
         { id: 20.6, title: "Nhân viên", url: "/home/manager/employee-report" },
         { id: 20.7, title: "Nhà cung cấp", url: "/home/manager/supplier-report" },
-        { id: 20.10, title: "Chi nhánh", url: "/home/manager/branch-report" },
+        // { id: 20.10, title: "Chi nhánh", url: "/home/manager/branch-report" },
 
         
 

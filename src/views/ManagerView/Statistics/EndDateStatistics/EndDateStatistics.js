@@ -87,11 +87,11 @@ const EndDateStatistic = () => {
                  <Card className={classes.hoverCard} >
                     <Grid  container >
                             <Grid  container item xs={3} justifyContent="space-between">
-                                <SmallDetailBox bgColor={'#E5F9FB'} color={'#06C9D6'} title={"Hoá đơn"} value={20}/>
+                                <SmallDetailBox bgColor={'#E5F9FB'} color={'#06C9D6'} title={"Hoá đơn"} value={overview.totalOrders}/>
                                 <Divider orientation="vertical" />
                             </Grid>
                             <Grid  container item xs={3} justifyContent="space-between">
-                                <SmallDetailBox bgColor={'#FFF4E5'} color={'#FFC90C'} title={"Sản phẩm"} value={20}/>
+                                <SmallDetailBox bgColor={'#FFF4E5'} color={'#FFC90C'} title={"Sản phẩm"} value={topData? topData.reduce((sum,a) => sum + a.total_quantity,0) : 0}/>
                                 <Divider orientation="vertical" />
                             </Grid>
                             <Grid  container item xs={3} justifyContent="space-between">
@@ -107,7 +107,7 @@ const EndDateStatistic = () => {
             </Grid>
         </Grid>
         <Grid container spacing={2} > 
-            <Grid   item md={6} xs={12}style={{marginTop:20}}  >
+            <Grid   item md={12} xs={12}style={{marginTop:20}}  >
             <ReportCard  title={`Thống kê sản phẩm`}  >
                 {/* <Typography style={{marginBottom:30,color:"#000", fontSize:22}} variant="h5">Thống kê sản phẩm</Typography>  */}
                     <Grid container justifyContent='space-between' alignItems='center'  >
@@ -138,10 +138,10 @@ const EndDateStatistic = () => {
                 </ReportCard>
             </Grid>
             <Grid  item md={6} xs={12} >
-                <Card className={classes.hoverCard} style={{padding:25, marginTop:20}}>
+                {/* <Card className={classes.hoverCard} style={{padding:25, marginTop:20}}>
                     <Typography style={{marginBottom:20,color:"#000", fontSize:22}} variant="h5">Thống kê bán hàng </Typography> 
 
-                </Card>
+                </Card> */}
             </Grid>
         </Grid>
     </div>

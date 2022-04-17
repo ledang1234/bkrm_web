@@ -9,7 +9,7 @@ import clsx from "clsx";
 import WarningIcon from '@material-ui/icons/Warning';
 const ButtonQuantity = (props) =>{
     const classes = useStyles();
-    const {quantity,setQuantity, limit, isReturn,branch_quantity,isMini,isCustomer,isManageInventory} = props;
+    const {quantity,setQuantity, limit, isReturn,branch_quantity,isMini,miniCart,isCustomer,isManageInventory, mini} = props;
     const [show, setShow] = React.useState('none');
   
     const handleIncrement = () => {
@@ -61,7 +61,7 @@ const ButtonQuantity = (props) =>{
     }
    
     return(
-    <ListItem onMouseOver={handleShow} onMouseOut={handleClose} style={isMini ? {padding: 0} : {}} > 
+    <ListItem onMouseOver={handleShow} onMouseOut={handleClose} style={isMini ||miniCart? {padding:0,paddingTop:5,paddingBottom:5, margin:0} : {}} > 
 
         {error_quantity && isMini && isManageInventory?
             <HtmlTooltip title={ <React.Fragment>
@@ -71,26 +71,25 @@ const ButtonQuantity = (props) =>{
           </HtmlTooltip>:null}
 
           {/* margin:isMini?0:null, padding:isMini?0:null */}
-          {/* <IconButton style={{ display: isMini?true:show ,color: error_quantity && isManageInventory ? "red":null,margin:isMini?0:null, padding:isMini?0:null,}} aria-label="delete" className={classes.margin} size="small" onClick={handleDecrement} >
-
+         {!miniCart? <IconButton style={{ display: isMini?true:show ,color: error_quantity && isManageInventory ? "red":null,margin:isMini?0:null, padding:isMini?0:null,}} aria-label="delete" className={classes.margin} size="small" onClick={handleDecrement} >
             <RemoveIcon fontSize="inherit" />
-          </IconButton>  */}
-       
-           <TextField  variant={isMini? "standard" : "standard"} id="standard-basic" style={{width:isMini?45:35 ,padding:0, marginLeft:isCustomer || isMini?20:null,marginRight:isCustomer|| isMini?20:null}} className={clsx(classes.textfieldClass,(show === 'none') ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: isMini?"center": "right", color: error_quantity  && isManageInventory  ? "red":null, fontWeight:error_quantity  && isManageInventory ? 600:null,
-          backgroundColor:error_quantity  && isManageInventory ?"#ffe8e8":null
-        }}} 
-                value={quantity} onChange={handleQuantity}/>
-           
+          </IconButton> :null}
+             
+           <TextField  variant={isMini || miniCart? "outlined" : "standard"} id="standard-basic" style={{width:isMini||miniCart?35 + (quantity).toString().length*10-10:35,minWidth:45,padding:0, marginLeft:isCustomer || isMini?20:null,marginRight:isCustomer|| isMini?20:null}} className={clsx(classes.textfieldClass,(show === 'none'||miniCart) ? classes.padding : null)}  size="small" inputProps={{style: { textAlign: isMini?"center": "right", color: error_quantity  && isManageInventory  ? "red":null, fontWeight:error_quantity  && isManageInventory ? 600:null,
+              backgroundColor:error_quantity  && isManageInventory ?"#ffe8e8":null, height:miniCart?12:null
+            }}} 
+          value={quantity} onChange={handleQuantity}/>
+     
            
           {isReturn ? `/${limit}`: null}
-          {/* <IconButton style={{ display: isMini?true:show ,color: error_quantity  && isManageInventory  ? "red":null ,margin:isMini?0:null, padding:isMini?0:null,} } aria-label="delete" className={classes.margin} size="small" onClick={handleIncrement}>
+          {!miniCart? <IconButton style={{ display: isMini?true:show ,color: error_quantity  && isManageInventory  ? "red":null ,margin:isMini?0:null, padding:isMini?0:null,} } aria-label="delete" className={classes.margin} size="small" onClick={handleIncrement}>
             <AddIcon fontSize="inherit" />
-          </IconButton> */}
+          </IconButton>:null}
 
 
 
 {/* Error  */}
-          {error_quantity && !isMini  && isManageInventory ?
+          {error_quantity && !isMini  && isManageInventory  && !miniCart?
      
         <HtmlTooltip
         title={

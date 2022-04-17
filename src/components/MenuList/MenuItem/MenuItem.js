@@ -21,6 +21,8 @@ import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import setting from "../../../assets/constant/setting"
+import webInfo from "../../../assets/constant/webInfo"
+
 
 
 
@@ -68,6 +70,7 @@ const MenuItem = (props) => {
 
   const xsScreen = useMediaQuery(theme.breakpoints.down("md")) ;
   const info = useSelector((state) => state.info);
+  const web_setting = info.store?.web_configuration? JSON.parse(info.store.web_configuration): webInfo
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
 
@@ -102,10 +105,11 @@ const MenuItem = (props) => {
     if (collapse) { setOpen(!open) }
   }
  
-  if(!store_setting.inventory.status && (item.id  == 4 || item.id ==6 || item.id == 7 || item.id == 9 || item.id == 11 || item.id==12)){
+  if(!store_setting.inventory.status && (item.id  == 4 || item.id ==6 || item.id == 7 || item.id == 9 || item.id == 11 || item.id==12 )){
       return null
+  }else if (web_setting.status === 'inactive' && item.id  == 22){
+    return null
   }
-
   return (
     <>
       <ListItem

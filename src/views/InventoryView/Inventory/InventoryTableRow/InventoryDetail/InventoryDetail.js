@@ -152,8 +152,10 @@ const InventoryDetail = (props) => {
 
 
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
+console.log("productDetail.img_urls",productDetail)
 
-
+const imageList =JSON.parse(row.img_urls ? row.img_urls : "[]")
+// || defaultProduct
   return row.has_variance ? (
     <>
       {openRow === row.uuid &&
@@ -285,6 +287,8 @@ const InventoryDetail = (props) => {
 
         <Grid container direction="row" justifyContent="flex-start">
           <Grid item xs={12} sm={4}>
+      
+           {imageList.at(0) ?
             <Box
               sx={{
                 // height: 170,
@@ -297,9 +301,8 @@ const InventoryDetail = (props) => {
               }}
             >
               <Carousel showThumbs={false}>
-                {JSON.parse(
-                  productDetail.img_urls ? productDetail.img_urls : "[]"
-                )?.map((url) => (
+                { 
+                imageList?.map((url) => (
                   <img
                     key={url}
                     src={url}
@@ -310,7 +313,19 @@ const InventoryDetail = (props) => {
                   />
                 ))}
               </Carousel>
-            </Box>
+            </Box>:
+              <Box
+                    component="img"
+                    sx={{
+                    height: xsScreen ? 100 : 170,
+                    width: xsScreen ? 100 : 170,
+                    marginLeft: 7,
+                    marginRight: 7,
+                    borderRadius: 20,
+                    }}
+                    src={defaultProduct}
+                    style={{marginBottom:20}}
+                />}
           </Grid>
 
           <Grid container direction="column" item xs={12} sm={8}>
@@ -521,12 +536,12 @@ const InventoryDetail = (props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <StyledMenuItem>
+                {/* <StyledMenuItem>
                   <ListItemIcon style={{ marginRight: -15 }}>
                     <InboxIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="In mã tem" />
-                </StyledMenuItem>
+                </StyledMenuItem> */}
 
                 <StyledMenuItem>
                   <ListItemIcon style={{ marginRight: -15 }}>
@@ -535,7 +550,7 @@ const InventoryDetail = (props) => {
                   <ListItemText primary="Ngừng kinh doanh" />
                 </StyledMenuItem>
 
-                <StyledMenuItem>
+                {/* <StyledMenuItem>
                   <ListItemIcon style={{ marginRight: -15 }}>
                     <LocalOfferTwoToneIcon fontSize="small" />
                   </ListItemIcon>
@@ -547,7 +562,7 @@ const InventoryDetail = (props) => {
                     <VerifiedUserTwoToneIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="Lịch sử kiểm kê" />
-                </StyledMenuItem>
+                </StyledMenuItem> */}
               </StyledMenu>
             </Grid>
           </Grid>

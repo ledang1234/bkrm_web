@@ -1,5 +1,6 @@
 import moment from 'moment';
 
+// string
 export const convertDateToString = (date) => {
     return moment.unix(date.getTime() / 1000).format('YYYY-MM-DD HH:mm:ss',  { trim: false })
 }
@@ -28,3 +29,7 @@ export function removeAccents(str) {
     return str;
 }
 
+
+
+
+//Category filter

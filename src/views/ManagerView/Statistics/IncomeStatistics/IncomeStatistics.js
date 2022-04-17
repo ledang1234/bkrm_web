@@ -35,7 +35,7 @@ const IncomeStatistics = () => {
 
     const [statistics, setStatistics] = useState({})
     const [overview, setOverview] = useState({})
-   
+    console.log("statistics",statistics)
     const fetchStatistic = async () => {
         const branchId = selectedBranches ==='all'?'':selectedBranches.id
         const statisticRes = await storeApi.getReportStatistic(  store_uuid, branchId, dayQuery.fromDate,   dayQuery.toDate, unit );

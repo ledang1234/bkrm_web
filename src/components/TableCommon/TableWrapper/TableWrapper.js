@@ -32,12 +32,15 @@ const TableWrapper = (props) => {
             {/* Chinh size tablw */}
 
             {/* <TableContainer style={{maxHeight: '90vh',}}> */}
-            <TableContainer style={{maxHeight: '84vh', minHeight:'60vh'}}>
+            {/* <TableContainer style={{maxHeight: '84vh', minHeight:'60vh'}}> */}
+            <TableContainer style={{maxHeight: '64vh', minHeight:'60vh'}}>
 
                 <Table
                     ref={tableRef}
                     aria-labelledby="tableTitle"
                     size={dense ? 'small' : 'medium'}
+                    // size={dense ? 'small' : 'small'}
+
                     aria-label="enhanced table"
                     stickyHeader 
                 >

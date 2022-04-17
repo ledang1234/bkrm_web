@@ -18,6 +18,7 @@ import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 import barcodeIcon from "../../../../assets/img/icon/barcode_grey.png";
 import { TreeSelect } from 'antd';
 import productApi from "../../../../api/productApi";
+import {removeAccents} from "../../../../utils"
 
 
 const CustomerStatistics = () => {
@@ -180,11 +181,11 @@ const DetailStatistic= (props) =>{
     setProductData(data)
 }, [data])
 
-  function removeAccents(str) {
-    return str.normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .replace(/đ/g, 'd').replace(/Đ/g, 'D');
-  }
+  // function removeAccents(str) {
+  //   return str.normalize('NFD')
+  //             .replace(/[\u0300-\u036f]/g, '')
+  //             .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  // }
 
   const [type,setType] = useState("revenue")
 
