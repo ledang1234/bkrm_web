@@ -63,7 +63,7 @@ import {
   VatSetting,
 } from "./OtherSetting";
 import { useDispatch } from "react-redux";
-
+import ConfirmPopUp from '../../../../components/ConfirmPopUp/ConfirmPopUp'
 import SettingsIcon from "@material-ui/icons/Settings";
 import StoreSetting from "../StoreSetting/StoreSetting";
 import SettingItem from "./SettingItem";
@@ -74,6 +74,8 @@ import LoyaltyIcon from '@material-ui/icons/Loyalty';
 import setting from "../../../../assets/constant/setting"
 import ExposureIcon from '@material-ui/icons/Exposure';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
+import { DeleteOutline } from "@material-ui/icons";
+import { statusAction } from "../../../../store/slice/statusSlice";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -309,25 +311,59 @@ const GeneralSetting = () => {
 
     // snackbar noti submit thành công
   };
+  const deleteAll = async () => {
+    try {
+      const res = await storeApi.deleteAllTransactions(store_uuid);
+      setOpenDeleteAll(false);
+      dispatch(statusAction.successfulStatus('Xóa tất cả giao dịch thành công'))
+    } catch (err) {
+      dispatch(statusAction.failedStatus('Xóa tất cả giao dịch thất bại'))
+    }
+  }
   const [openStore, setOpenStore] = useState(false);
+  const [openDeleteAll, setOpenDeleteAll] = useState(false);
 
   return (
     <Card className={classes.root}>
       {openStore && <StoreSetting open={openStore} handleClose={() => setOpenStore(false)} />}
+      {openDeleteAll && <ConfirmPopUp
+        open={openDeleteAll}
+        handleClose={() => {
+          setOpenDeleteAll(false);
+        }}
+        handleConfirm={deleteAll}
+        message={
+          <>
+          <Typography><strong>Xóa tất cả giao dịch</strong></Typography>
+          <Typography>
+            Hành động này sẽ xóa tất cả hóa đơn, đơn trả, đơn nhập hàng, đơn trả nhập hàng.<br/>
+            Bạn không thể khôi phục dữ liệu này. Bạn chắc chắn muốn tiếp tục?
+          </Typography>
+          </>
+        }
+      />}
       <Box
         display="flex"
         alignItems="center"
         justifyContent="space-between"
-        style={{ paddingRight: "3vw" }}
+        style={{ paddingRight: "2vw" }}
       >
         <Typography className={classes.headerTitle} variant="h3">
           Cài đặt chung
         </Typography>
-        <Tooltip title="Cài đặt chung">
-          <IconButton aria-label="setting" onClick={() => setOpenStore(true)}>
-            <SettingsIcon color="secondary" />
-          </IconButton>
-        </Tooltip>
+        <Grid direction="row">
+          <Tooltip title="Cài đặt chung">
+            <IconButton aria-label="setting" onClick={() => setOpenStore(true)}>
+              <SettingsIcon color="secondary" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Xóa dữ liệu">
+            <IconButton aria-label="setting" onClick={() => setOpenDeleteAll(true)}>
+              <DeleteOutline color="secondary" />
+            </IconButton>
+          </Tooltip>
+        </Grid>
+        
       </Box>
       {/* 1 */}
       <List

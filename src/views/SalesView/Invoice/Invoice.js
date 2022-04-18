@@ -46,6 +46,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { statusAction } from "../../../store/slice/statusSlice";
+import {VNDFormat} from '../../../components/TextField/NumberFormatCustom'
 
 const Invoice = () => {
   // fetch data here
@@ -60,7 +61,8 @@ const Invoice = () => {
     page: 0,
     limit: 10,
   });
-  const [totalRows, setTotalRows] = useState(0)
+  const [totalRows, setTotalRows] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   // api
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
@@ -112,13 +114,12 @@ const Invoice = () => {
       }
     }
     Modal.confirm({
-      content: "Bạn chắc chắc muốn xóa tất cả hóa đơn, hành động ngày không thể quay lại",
+      content: "Bạn chắc chắn muốn xóa tất cả hóa đơn, hành động này không thể quay lại",
       onOk() {
         deleteApi()
         onReload()
       },
-    })
-    
+    });
   }
 
   //3. ToolBar
@@ -142,9 +143,6 @@ const Invoice = () => {
     // const isAsc = orderBy === property && order === 'asc';
     // setOrder(isAsc ? 'desc' : 'asc');
     // setOrderBy(property);
-
-    
-
   };
 
   useEffect(() => {
@@ -165,6 +163,7 @@ const Invoice = () => {
         // setPagingState({ ...pagingState, total_rows: response.total_rows });
         setTotalRows(response.total_rows)
         setOrders(response.data);
+        setTotalAmount(response.total_amount);
       } catch (error) {
         console.log(error);
       }
@@ -195,9 +194,18 @@ const Invoice = () => {
     <Card className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
         {/* 1. ADD POP UP */}
+        <Grid direction="column" justifyContent="center" alignItems="center">
         <Typography className={classes.headerTitle} variant="h5">
           Hoá đơn
         </Typography>
+        <Typography variant="body2">
+          {"Số hóa đơn: "}
+          <strong>{totalRows}</strong>
+          {"Tổng: "}
+          <VNDFormat value={totalAmount} />
+        </Typography>
+       
+        </Grid>
 
         <Grid className={classes.btngroup1}>
           <ButtonBase
@@ -231,24 +239,26 @@ const Invoice = () => {
         handlePrint={handlePrint}
         getDataExport={getDataExport}
         orderByOptions={[
-          {value: 'orders.created_at', label: 'Ngày bán'},
-          {value: 'total_amount', label: 'Tổng tiền bán'},
+          { value: "orders.created_at", label: "Ngày bán" },
+          { value: "total_amount", label: "Tổng tiền bán" },
         ]}
-        orderBy={query.orderBy} setOrderBy={(value) => setQuery({...query, orderBy: value})}
-        sort={query.sort} setSort={(value) => setQuery({...query, sort:value})}
-        searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+        orderBy={query.orderBy}
+        setOrderBy={(value) => setQuery({ ...query, orderBy: value })}
+        sort={query.sort}
+        setSort={(value) => setQuery({ ...query, sort: value })}
+        searchKey={query.searchKey}
+        setSearchKey={(value) => setQuery({ ...query, searchKey: value })}
         handleRemoveFilter={handleRemoveFilter}
-        
-        columnsToKeep = {[
-          {dbName:"order_code",displayName:"Mã hoá đơn"},
-          {dbName:"customer_name",displayName:"Khách hàng"},
-          {dbName:"created_at",displayName:"Ngày bán"},
-          {dbName:"total_amount",displayName:"Tổng tiền hoá đơn"},
-          {dbName:"paid_amount",displayName:"Tiền khách đã trả"},
-          {dbName:"status",displayName:"Trạng thái"},
-          {dbName:"payment_method",displayName:"Phương thức thanh toán"},
-          {dbName:"created_user_type",displayName:"Tài khoản thực hiện"},
-          {dbName:"created_user_name",displayName:"Tên người thực hiện"},
+        columnsToKeep={[
+          { dbName: "order_code", displayName: "Mã hoá đơn" },
+          { dbName: "customer_name", displayName: "Khách hàng" },
+          { dbName: "created_at", displayName: "Ngày bán" },
+          { dbName: "total_amount", displayName: "Tổng tiền hoá đơn" },
+          { dbName: "paid_amount", displayName: "Tiền khách đã trả" },
+          { dbName: "status", displayName: "Trạng thái" },
+          { dbName: "payment_method", displayName: "Phương thức thanh toán" },
+          { dbName: "created_user_type", displayName: "Tài khoản thực hiện" },
+          { dbName: "created_user_name", displayName: "Tên người thực hiện" },
         ]}
       />
       <InvoiceFilter
@@ -260,52 +270,68 @@ const Invoice = () => {
       />
 
       {/* 3. TABLE */}
-      {!xsScreen?<TableWrapper  pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
-      list={orders}
-      tableRef={tableRef}
-      >
-        <TableHeader
-          classes={classes}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          headerData={HeadCells.InvoiceHeadCells}
-        />
-        <TableBody>
-          {orders.map((row, index) => {
-            return (
-              <InvoiceTableRow
-                key={row.uuid}
-                row={row}
-                openRow={openRow}
-                handleOpenRow={handleOpenRow}
-                onReload={onReload}
-              />
-            );
-          })}
-        </TableBody>
-      </TableWrapper>:
-      <>
-       <Box style={{minHeight:'50vh'}}>
-          {orders.map((row, index) => {
-            return (
-              // <InvoiceTableRow
-              //   key={row.uuid}
-              //   row={row}
-              //   openRow={openRow}
-              //   handleOpenRow={handleOpenRow}
-              //   onReload={onReload}
-              // />
-              <BillMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
-             totalCost={row.total_amount}  id={row.order_code} partnerName={row.customer_name} date={row.paid_date} 
-             typeBill={"Hoá đơn"}/>
-            );
-          })}
+      {!xsScreen ? (
+        <TableWrapper
+          pagingState={{ ...pagingState, total_rows: totalRows }}
+          setPagingState={setPagingState}
+          list={orders}
+          tableRef={tableRef}
+        >
+          <TableHeader
+            classes={classes}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            headerData={HeadCells.InvoiceHeadCells}
+          />
+          <TableBody>
+            {orders.map((row, index) => {
+              return (
+                <InvoiceTableRow
+                  key={row.uuid}
+                  row={row}
+                  openRow={openRow}
+                  handleOpenRow={handleOpenRow}
+                  onReload={onReload}
+                />
+              );
+            })}
+          </TableBody>
+        </TableWrapper>
+      ) : (
+        <>
+          <Box style={{ minHeight: "50vh" }}>
+            {orders.map((row, index) => {
+              return (
+                // <InvoiceTableRow
+                //   key={row.uuid}
+                //   row={row}
+                //   openRow={openRow}
+                //   handleOpenRow={handleOpenRow}
+                //   onReload={onReload}
+                // />
+                <BillMiniTableRow
+                  key={row.uuid}
+                  row={row}
+                  openRow={openRow}
+                  handleOpenRow={handleOpenRow}
+                  onReload={onReload}
+                  totalCost={row.total_amount}
+                  id={row.order_code}
+                  partnerName={row.customer_name}
+                  date={row.paid_date}
+                  typeBill={"Hoá đơn"}
+                />
+              );
+            })}
           </Box>
-          <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}  list={orders}/>
-    
-          </>
-        }
+          <Pagination
+            pagingState={{ ...pagingState, total_rows: totalRows }}
+            setPagingState={setPagingState}
+            list={orders}
+          />
+        </>
+      )}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint orders={orders} classes={classes} />

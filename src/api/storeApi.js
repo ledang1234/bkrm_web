@@ -143,6 +143,10 @@ const storeApi = {
         current_date: currentDate,
       },
     });
-  }
+  },
+  deleteAllTransactions: (storeUuid) =>{
+    const url = `stores/${storeUuid}/deleteAllTransactions`;
+    return axiosClient.post(url);
+  },
 };
 export default storeApi;
