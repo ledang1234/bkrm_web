@@ -61,8 +61,8 @@ let permissionChoices = [
   { id: 1, name: "inventory", description: "Kho hàng" },
   { id: 2, name: "employee", description: "Nhân sự" },
   { id: 3, name: "sales", description: "Bán hàng" },
-  { id: 4, name: "product", description: "Sản phẩm" },
-  { id: 5, name: "report", description: "Báo cáo" },
+  // { id: 4, name: "product", description: "Sản phẩm" },
+  { id: 5, name: "report", description: "Quản lý" },
 ];
 
 const AddEmployee = (props) => {

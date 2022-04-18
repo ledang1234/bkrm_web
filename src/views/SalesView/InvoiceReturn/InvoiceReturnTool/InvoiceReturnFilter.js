@@ -35,23 +35,29 @@ const InvoiceReturnFilter = (props) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const current =moment(new Date()).format("YYYY-MM-DD")
 
   const formik = useFormik({
     initialValues: {
       startDate: '',
       endDate: '',
       orderCode: '',
-      minTotalAmount: 0,
-      maxTotalAmount: 0,
+      minTotalAmount: null,
+      maxTotalAmount: null,
       status: 'debt',
       paymentMethod: '',
     },
     onSubmit: async values => {
-      const res = await refundApi.searchRefund(store_uuid, branch_uuid, values)
+      // const res = await refundApi.searchRefund(store_uuid, branch_uuid, values)
       handleToggleFilter()
-      setRefunds(res.data)
+      // setRefunds(res.data)
     },
   });
+  React.useEffect(() =>{
+    formik.values.startDate.length === 0 ? formik.setFieldValue("startDate",current) : formik.setFieldValue("startDate",formik.values.startDate);
+    formik.values.endDate.length === 0 ? formik.setFieldValue("endDate",current) : formik.setFieldValue("endDate",formik.values.startDate)
+
+  },[])
 
   return (
     <Drawer
@@ -158,7 +164,7 @@ const InvoiceReturnFilter = (props) => {
 
 
       {/* 5.Trang thai */}
-      <Typography variant="h5" className={classes.text} >Trạng thái:</Typography>
+      {/* <Typography variant="h5" className={classes.text} >Trạng thái:</Typography>
       <FormControl
         className={classes.formControl}
         fullWidth
@@ -174,10 +180,11 @@ const InvoiceReturnFilter = (props) => {
           // label=" Chi nhánh"
           value={formik.values.status}
         >
+           <MenuItem value="" ><em>Tất cả</em></MenuItem>
           <MenuItem value="debt">Còn nợ</MenuItem>
           <MenuItem value="closed">Trả đủ</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> */}
 
 
 
@@ -197,6 +204,7 @@ const InvoiceReturnFilter = (props) => {
           // label=" Chi nhánh"
           value={formik.values.paymentMethod}
         >
+           <MenuItem value="" ><em>Tất cả</em></MenuItem>
           <MenuItem value="card">Thẻ</MenuItem>
           <MenuItem value="cash">Tiền mặt</MenuItem>
         </Select>

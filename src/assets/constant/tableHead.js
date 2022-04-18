@@ -50,7 +50,7 @@ export const InventoryOrderHeadCells = [
 export const InventoryReturnOrderHeadCells = [
   // them cột tình trạng
   { id: "id", align: "left", disablePadding: true, label: "#" },
-  { id: "date", align: "left", disablePadding: false, label: "Ngày nhập" },
+  { id: "date", align: "left", disablePadding: false, label: "Ngày trả" },
   {
     id: "supplier",
     align: "left",
@@ -86,14 +86,20 @@ export const SupplierHeadCells = [
   { id: "name", align: "left", disablePadding: false, label: "Tên NCC" },
   { id: "phone", align: "left", disablePadding: false, label: "Số điện thoại" },
   { id: "email", align: "left", disablePadding: false, label: "Email" },
-  { id: "address", align: "left", disablePadding: false, label: "Địa chỉ" },
-  // {
-  //   id: "total_cost",
-  //   align: "right",
-  //   disablePadding: false,
-  //   label: "Tổng tiền nhập",
-  // },
-  { id: "debt", align: "center", disablePadding: false, label: "Công nợ" },
+  // { id: "address", align: "left", disablePadding: false, label: "Địa chỉ" },
+  {
+    id: "total_cost",
+    align: "right",
+    disablePadding: false,
+    label: "Tổng tiền nhập",
+  },
+  {
+    id: "debt",
+    align: "right",
+    disablePadding: false,
+    label: "Nợ NCC",
+  },
+  { id: "debt", align: "center", disablePadding: false, label: "" },
 ];
 
 export const InvoiceHeadCells = [
@@ -141,6 +147,8 @@ export const EmployeeHeadCells = [
   { id: "name", align: "left", disablePadding: true, label: "Nhân viên" },
   { id: "phone", align: "left", disablePadding: true, label: "Số điện thoại" },
   { id: "email", align: "left", disablePadding: true, label: "Email" },
+  // { id: "role", align: "left", disablePadding: true, label: "Chức năng" },
+  // { id: "branch", align: "left", disablePadding: true, label: "Chi nhánh" },
   { id: "function", align: "left", disablePadding: false, label: "Trạng thái" },
 ];
 
@@ -150,7 +158,9 @@ export const CustomerHeadCells = [
   { id: "name", align: "left", disablePadding: true, label: "Khách hàng" },
   { id: "phone", align: "left", disablePadding: true, label: "Số điện thoại" },
   { id: "score", align: "right", disablePadding: true, label: "Tích điểm" },
-  { id: "debt", align: "center", disablePadding: true, label: "Công nợ" },
+  { id: "total", align: "right", disablePadding: true, label: "Tổng tiền mua" },
+  { id: "debt", align: "right", disablePadding: true, label: "Nợ" },
+  { id: "debt", align: "center", disablePadding: true, label: "" },
 ];
 
 export const CartHeadCells = [

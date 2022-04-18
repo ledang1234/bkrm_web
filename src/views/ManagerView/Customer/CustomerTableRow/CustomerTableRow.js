@@ -7,6 +7,7 @@ import { grey} from '@material-ui/core/colors'
 
 import {TableCell,TableRow,Avatar,ListItem,Typography} from '@material-ui/core';
 import {pink,red,purple,blue,lime,amber,green,cyan,orange,yellow} from '@material-ui/core/colors';
+import { useDispatch, useSelector } from "react-redux";
 
 
 import {FormatedStatus} from '../../../../components/TableCommon/util/format'
@@ -18,12 +19,16 @@ import ava from '../../../../assets/img/ava/avaa.jpeg';
 
 import { VNDFormat, ThousandFormat } from '../../../../components/TextField/NumberFormatCustom';
 
+import setting from "../../../../assets/constant/setting";
 
 const CustomerTableRow = (props) => {
     const { row, handleOpenRow,openRow ,onReload} = props;
     const theme = useTheme()
     const classes = useRowStyles();
     // const avaclasses = useStyles(theme);
+    const info = useSelector((state) => state.info);
+    const store_setting = info.store.general_configuration ? JSON.parse(info.store.general_configuration)  : setting;
+    const haveCustomerScore = store_setting.customerScore.status
     return (
         <>
         {/* ROW */}
@@ -43,8 +48,9 @@ const CustomerTableRow = (props) => {
                 </TableCell>
 
                 <TableCell align="left">{row.phone}</TableCell>
-                <TableCell align="right" ><ThousandFormat value={row.points} /></TableCell> 
-                <TableCell align="center" >
+                {haveCustomerScore?<TableCell align="right" ><ThousandFormat value={row.points} /></TableCell> :null}
+                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_payment} /></TableCell> 
+                <TableCell align="right" >
                     <VNDFormat value={row.debt} />  
                 </TableCell>
                 <TableCell align="center" >

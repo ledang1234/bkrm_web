@@ -19,7 +19,7 @@ import ava from "../../../../assets/img/product/lyimg.jpeg";
 const EmployeeTableRow = (props) => {
   const { row, handleOpenRow, openRow, handleReload } = props;
   const classes = useRowStyles();
-  // console.log("row",row)
+  console.log("row",row)
 
   return (
     <>
@@ -35,10 +35,10 @@ const EmployeeTableRow = (props) => {
         <TableCell align="left">{row.employee_code}</TableCell>
         <TableCell align="left" style={{ minWidth: 200 }}>
           <ListItem
-            style={{ margin:0,padding:0, marginTop: -10, marginBottom: -10 }}
+            style={{ margin:0,paddingLeft:0, paddingRight:0, marginTop: -10, marginBottom: -10 }}
           >
             <Avatar
-              alt="Remy Sharp"
+              alt={row.name}
               src={row.img_url}
               style={{ marginRight: 20 }}
               className={classes.ava}
@@ -49,6 +49,7 @@ const EmployeeTableRow = (props) => {
 
         <TableCell align="left">{row.phone}</TableCell>
         <TableCell align="left">{row.email}</TableCell>
+        {/* <TableCell align="left">{row.permissions.map((permission) => permission.description)}</TableCell> */}
         <TableCell align="left">{row.status === 'active' ? 'Kích hoạt' : 'Ngưng hoạt động'}</TableCell>
       </TableRow>
 

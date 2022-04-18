@@ -24,10 +24,10 @@ const InventoryOrderTableRow = (props) => {
                 {/* <TableCell align="left" >{row.creation_date}</TableCell> */}
                 <TableCell align="left" className={classes.fontName}>{row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }</TableCell>
 
-                <TableCell align="left"className={classes.fontName}>{row.supplier_name}</TableCell>
+                <TableCell align="left">{row.supplier_name}</TableCell>
                 {/* <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.branch_name}</TableCell> */}
                 <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
-                <TableCell align="right"><VNDFormat value={row.total_amount  -row.discount}/></TableCell>
+                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_amount  -row.discount}/></TableCell>
                 <TableCell align="center" className={classes.fontName}>
                     <FormatedStatus debt={Number(row.total_amount) - Number( row.discount)  - Number(row.paid_amount) > 0 ? 1 : 0}/>
                 </TableCell>

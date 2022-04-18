@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import { makeStyles, useTheme,withStyles } from "@material-ui/core/styles";
 
 import { TableCell, TableRow } from "@material-ui/core";
 import useRowStyles from "../../../../components/TableCommon/style/rowStyle";
@@ -10,6 +11,8 @@ import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 
 function InvoiceTableRow(props) {
   const { row, handleOpenRow, openRow, onReload } = props;
+  const theme = useTheme();
+
   const classes = useRowStyles();
 
   return (
@@ -32,7 +35,7 @@ function InvoiceTableRow(props) {
         <TableCell
           align="left"
           style={{ minWidth: 150 }}
-          className={classes.fontName}
+          // className={classes.fontName}
         >
           {row.customer_name}
         </TableCell>
@@ -40,7 +43,10 @@ function InvoiceTableRow(props) {
         <TableCell align="left">
           {row.payment_method === "cash" ? "Tiền mặt" : "Thẻ"}
         </TableCell>
-        <TableCell align="right" className={classes.fontName}>
+        <TableCell align="right" 
+        style={{fontWeight:500}}
+        // style={{color: theme.customization.mode === "Light"? '#000': null}}
+        >
           {" "}
           <VNDFormat value={Number(row.total_amount) - Number(row.discount)} />
         </TableCell>

@@ -229,10 +229,10 @@ const DetailStatistic= (props) =>{
             </ListItem>
         } > 
         <Grid container justifyContent='space-between' alignItems='center'  >
-            <Grid item xs={4}><Typography style={{color:"#000",fontSize:17,fontWeight:500,}}>Khách hàng</Typography></Grid>
-            <Grid item xs={2}><Typography style={{ color:"#000",fontSize:17,fontWeight:500,textAlign:"center"}}>Số lần mua</Typography></Grid>
-            <Grid item xs={2}><Typography style={{color:"#000",fontSize:17,fontWeight:500,textAlign:"center"}}>Tổng tiền mua</Typography></Grid>
-            <Grid item xs={2}><Typography style={{color:"#000",fontSize:17,fontWeight:500,textAlign:"center"}}>Tổng lợi nhuận</Typography></Grid>
+            <Grid item xs={4}><Typography style={{fontSize:17,fontWeight:500,}}>Khách hàng</Typography></Grid>
+            <Grid item xs={2}><Typography style={{ fontSize:17,fontWeight:500,textAlign:"center"}}>Số lần mua</Typography></Grid>
+            <Grid item xs={2}><Typography style={{fontSize:17,fontWeight:500,textAlign:"center"}}>Tổng tiền mua</Typography></Grid>
+            <Grid item xs={2}><Typography style={{fontSize:17,fontWeight:500,textAlign:"center"}}>Tổng lợi nhuận</Typography></Grid>
         </Grid>
 
         <Divider style={{marginTop:15, marginBottom:10}} />
@@ -244,13 +244,13 @@ const DetailStatistic= (props) =>{
                   <Box style={{}}>
                       <ListItem style={{ margin:0, padding:0 }}  >
                           <Box  component="img"  sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}  src={item.url ?item.url :defaultProduct } />
-                          <Typography style={{color:"#000", fontSize:16, fontWeight:500}} >{item.name}</Typography>
+                          <Typography style={{ fontSize:16, fontWeight:500}} >{item.name}</Typography>
                       </ListItem>
                   </Box>
                 </Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{item.total_buy_price ? Number(item.total_buy_price).toLocaleString() :0}</Typography></Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{ item.total_buy_price ? Number(item.total_buy_price).toLocaleString() :0}</Typography></Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>Tổng lợi nhuận</Typography></Grid>
+                <Grid item xs={2}><Typography style={{ fontSize:16,textAlign:"center"}}>{item.total_buy_price ? Number(item.total_buy_price).toLocaleString() :0}</Typography></Grid>
+                <Grid item xs={2}><Typography style={{ fontSize:16,textAlign:"center"}}>{ item.total_buy_price ? Number(item.total_buy_price).toLocaleString() :0}</Typography></Grid>
+                <Grid item xs={2}><Typography style={{ fontSize:16,textAlign:"center"}}>Tổng lợi nhuận</Typography></Grid>
             </Grid>
             <Divider />
             </Box>

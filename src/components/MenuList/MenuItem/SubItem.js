@@ -50,7 +50,8 @@ const SubItem = (props) => {
     const itemMenuOpen = customization.itemMenuOpen;
     const xsScreen = useMediaQuery(theme.breakpoints.down("md")) ;
 
-  
+    const showMenu = customization.showMenu;
+
     function handleOnClick(id){
       if ( xsScreen) {
         dispatch(customizeAction.setSidebarOpen(false));
@@ -67,6 +68,9 @@ const SubItem = (props) => {
       return null
     }
     if(!store_setting.email.status && item.id== 19.4){
+      return null
+    }
+    if( !showMenu.includes(item.title) && !(showMenu.every(item => ['salesModule','inventoryModule','hrModule','reportModule'].includes(item)) &&showMenu.length === 4 )){
       return null
     }
     return (

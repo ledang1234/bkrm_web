@@ -99,6 +99,8 @@ function InvoiceReturnDetail(props) {
       content: () => componentRef.current,
   });
 
+  console.log("refund",refund)
+
   return (
     <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <Box margin={1}>
@@ -198,7 +200,7 @@ function InvoiceReturnDetail(props) {
               </Grid>
               <Grid item  sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  {row.payment_method}
+                {row.payment_method === "cash" ? "Tiền mặt" : "Thẻ"}{" "}
                   {' '}
                 </Typography>
               </Grid>
@@ -288,7 +290,7 @@ function InvoiceReturnDetail(props) {
                 <Typography variant="h5" gutterBottom component="div">Tổng tiền trả</Typography>
               </Grid>
               <Grid item xs={2}sm={2}>
-                <Typography variant="body1" gutterBottom component="div">
+                <Typography variant="body1" gutterBottom component="div"  style={{fontWeight:500, color:theme.customization.primaryColor[500]}}>
                 <VNDFormat value={row.total_amount} />
                   {' '}
                 </Typography>

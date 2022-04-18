@@ -35,7 +35,7 @@ const IncomeStatistics = () => {
 
     const [statistics, setStatistics] = useState({})
     const [overview, setOverview] = useState({})
-    console.log("statistics",statistics)
+   
     const fetchStatistic = async () => {
         const branchId = selectedBranches ==='all'?'':selectedBranches.id
         const statisticRes = await storeApi.getReportStatistic(  store_uuid, branchId, dayQuery.fromDate,   dayQuery.toDate, unit );
@@ -99,7 +99,7 @@ const IncomeStatistics = () => {
             yaxis: {
               labels: { 
                    formatter: function (value) {  return value?  formatYLabel(value) :''},
-                  style: { colors: [], fontSize: '14px', fontFamily: 'Helvetica, Arial, sans-serif',  fontWeight: 500, cssClass: 'apexcharts-yaxis-label', },
+                  style: { colors: ['#000'], fontSize: '14px', fontFamily: 'Helvetica, Arial, sans-serif',  fontWeight: 500, cssClass: 'apexcharts-yaxis-label', },
                },
   
               },
@@ -126,7 +126,7 @@ const IncomeStatistics = () => {
           yaxis: {
             labels: { 
                  formatter: function (value) {  return value?  formatYLabel(value) :''},
-                style: { colors: [], fontSize: '14px', fontFamily: 'Helvetica, Arial, sans-serif',  fontWeight: 500, cssClass: 'apexcharts-yaxis-label', },
+                style: { colors: ['#000'], fontSize: '14px', fontFamily: 'Helvetica, Arial, sans-serif',  fontWeight: 500, cssClass: 'apexcharts-yaxis-label', },
              },
 
             },
@@ -206,7 +206,7 @@ const IncomeStatistics = () => {
 
             <Divider style={{ margin:25}} />
             
-            <Typography style={{color:"#000", fontSize:22, marginBottom:25, marginLeft:10}} variant="h5">Lợi nhuận</Typography> 
+            <Typography style={{ fontSize:22, marginBottom:25, marginLeft:10}} variant="h5">Lợi nhuận</Typography> 
             <Chart {...profitData}/>    
         </ReportCard>
        
@@ -215,10 +215,10 @@ const IncomeStatistics = () => {
                 <Grid item lg={6}md={12}>
                     <ReportCard title={"Chi tiết thu - chi"} >
                         <Grid container justifyContent='space-between' alignItems='center'  >
-                            <Grid item xs={3}><Typography style={{color:"#000",fontSize:17, fontWeight:500,}}>{unit ==="day" ?"Ngày": unit ==="month" ? "Tháng" :"Năm"  }</Typography></Grid>
-                            <Grid item xs={3}><Typography style={{ color:"#000",fontSize:17,fontWeight:500,textAlign:"right" }}>Tổng thu</Typography></Grid>
-                            <Grid item xs={3}><Typography style={{color:"#000",fontSize:17,fontWeight:500,textAlign:"right"}}>Tổng chi</Typography></Grid>
-                            <Grid item xs={3}><Typography style={{color:"#000",fontSize:17,fontWeight:500,textAlign:"right"}}>Thu - chi</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{fontSize:17, fontWeight:500,}}>{unit ==="day" ?"Ngày": unit ==="month" ? "Tháng" :"Năm"  }</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{ fontSize:17,fontWeight:500,textAlign:"right" }}>Tổng thu</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{fontSize:17,fontWeight:500,textAlign:"right"}}>Tổng chi</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{fontSize:17,fontWeight:500,textAlign:"right"}}>Thu - chi</Typography></Grid>
 
                         </Grid>
                         <Divider style={{marginTop:15, marginBottom:10}} />
@@ -226,10 +226,10 @@ const IncomeStatistics = () => {
                             return(
                             <Box style={{marginBottom:10}}>
                             <Grid container justifyContent='space-between' alignItems='center' style={{marginBottom:10}} >
-                                <Grid item xs={3}><Typography style={{color:"#000", fontSize:16, fontWeight:500}} >{statistics.date_list?  formatXLabel(statistics.date_list[index], true) :null}</Typography></Grid>
-                                <Grid item xs={3}><Typography style={{color:"#000", fontSize:16,textAlign:"right"}}>{Number(item).toLocaleString()}</Typography></Grid>
-                                <Grid item xs={3}><Typography style={{color:"#000", fontSize:16,textAlign:"right"}}>{statistics?.purchase? Number(statistics?.purchase[index]).toLocaleString() : null}</Typography></Grid>
-                                <Grid item xs={3}><Typography style={{color:"#000", fontSize:16,textAlign:"right"}}>{statistics?.purchase? (Number(item) - Number(statistics?.purchase[index])).toLocaleString() : null}</Typography></Grid>
+                                <Grid item xs={3}><Typography style={{ fontSize:16, fontWeight:500}} >{statistics.date_list?  formatXLabel(statistics.date_list[index], true) :null}</Typography></Grid>
+                                <Grid item xs={3}><Typography style={{ fontSize:16,textAlign:"right"}}>{Number(item).toLocaleString()}</Typography></Grid>
+                                <Grid item xs={3}><Typography style={{ fontSize:16,textAlign:"right"}}>{statistics?.purchase? Number(statistics?.purchase[index]).toLocaleString() : null}</Typography></Grid>
+                                <Grid item xs={3}><Typography style={{ fontSize:16,textAlign:"right"}}>{statistics?.purchase? (Number(item) - Number(statistics?.purchase[index])).toLocaleString() : null}</Typography></Grid>
                             </Grid>
                             <Divider />
                             </Box>
@@ -241,10 +241,10 @@ const IncomeStatistics = () => {
                 <Grid item lg={6}md={12}>
                     <ReportCard title={"Chi tiết lợi nhuận"} >
                         <Grid container justifyContent='space-between' alignItems='center'  >
-                            <Grid item xs={3}><Typography style={{color:"#000",fontSize:17, fontWeight:500,}}>{unit ==="day" ?"Ngày": unit ==="month" ? "Tháng" :"Năm"  }</Typography></Grid>
-                            <Grid item xs={3}><Typography style={{ color:"#000",fontSize:17,fontWeight:500,textAlign:"right" }}>Doanh thu</Typography></Grid>
-                            <Grid item xs={3}><Typography style={{color:"#000",fontSize:17,fontWeight:500,textAlign:"right"}}>Giá vốn</Typography></Grid>
-                            <Grid item xs={3}><Typography style={{color:"#000",fontSize:17,fontWeight:500,textAlign:"right"}}>Lợi nhuận</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{fontSize:17, fontWeight:500,}}>{unit ==="day" ?"Ngày": unit ==="month" ? "Tháng" :"Năm"  }</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{ fontSize:17,fontWeight:500,textAlign:"right" }}>Doanh thu</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{fontSize:17,fontWeight:500,textAlign:"right"}}>Giá vốn</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{fontSize:17,fontWeight:500,textAlign:"right"}}>Lợi nhuận</Typography></Grid>
 
                         </Grid>
                         <Divider style={{marginTop:15, marginBottom:10}} />
@@ -252,10 +252,10 @@ const IncomeStatistics = () => {
                             return(
                             <Box style={{marginBottom:10}}>
                             <Grid container justifyContent='space-between' alignItems='center' style={{marginBottom:10}} >
-                                <Grid item xs={3}><Typography style={{color:"#000", fontSize:16, fontWeight:500}} >{statistics?.date_list ? formatXLabel(statistics?.date_list[index], true) :null}</Typography></Grid>
-                                <Grid item xs={3}><Typography style={{color:"#000", fontSize:16,textAlign:"right"}}>{Number(item).toLocaleString()}</Typography></Grid>
-                                <Grid item xs={3}><Typography style={{color:"#000", fontSize:16,textAlign:"right"}}>{statistics.capital? Number(statistics?.capital[index]).toLocaleString() : null}</Typography></Grid>
-                                <Grid item xs={3}><Typography style={{color:"#000", fontSize:16,textAlign:"right"}}>{statistics.capital? (Number(item) - Number(statistics?.capital[index])).toLocaleString() : null}</Typography></Grid>
+                                <Grid item xs={3}><Typography style={{ fontSize:16, fontWeight:500}} >{statistics?.date_list ? formatXLabel(statistics?.date_list[index], true) :null}</Typography></Grid>
+                                <Grid item xs={3}><Typography style={{ fontSize:16,textAlign:"right"}}>{Number(item).toLocaleString()}</Typography></Grid>
+                                <Grid item xs={3}><Typography style={{ fontSize:16,textAlign:"right"}}>{statistics.capital? Number(statistics?.capital[index]).toLocaleString() : null}</Typography></Grid>
+                                <Grid item xs={3}><Typography style={{ fontSize:16,textAlign:"right"}}>{statistics.capital? (Number(item) - Number(statistics?.capital[index])).toLocaleString() : null}</Typography></Grid>
                             </Grid>
                             <Divider />
                             </Box>
@@ -281,11 +281,11 @@ const SmallDetailBox = ({bgColor, color, title, value}) =>{
     return (
             <Box style={{flexGrow:1,textAlign:'center', alignContent:'center', paddingTop:10, paddingBottom:10}} >
                 <Grid container justifyContent='center' >
-                    <Avatar style={{backgroundColor:bgColor, color:color, width: theme.spacing(7),  height: theme.spacing(7)}}>
+                    <Avatar style={{backgroundColor: theme.customization.mode === "Light"  ? bgColor: color, color: theme.customization.mode === "Light"  ? color:bgColor, width: theme.spacing(7),  height: theme.spacing(7)}}>
                         <AttachMoneyIcon/>
                     </Avatar> 
                 </Grid>
-            <Typography style={{color:'#000', fontSize:22,fontWeight:500, marginTop:10}}>{value ? getValue(value) :0}</Typography>
+            <Typography style={{ fontSize:22,fontWeight:500, marginTop:10}}>{value ? getValue(value) :0}</Typography>
             <Typography  style={{marginTop:4, color:'#777e89'}}>{title}</Typography>
             </Box>
     )

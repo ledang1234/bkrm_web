@@ -29,5 +29,10 @@ export default makeStyles((theme) => ({
   },
   attrHead:{
     backgroundColor:"#E4E4E4", height:40, color:"#000"
-  }
+  },
+  rooot: {
+    '& .MuiFormLabel-root.Mui-disabled': {
+      color: 'red',
+    },
+  },
 }));

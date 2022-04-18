@@ -14,6 +14,8 @@ const initialState = {
   colorLevel: 50,
   isSidebarOpen: null,
   itemMenuOpen:  sessionStorage.getItem("BKRMopening") ? sessionStorage.getItem("BKRMopening"):-1 ,
+  showMenu:['salesModule','inventoryModule','hrModule','reportModule']
+
 };
 
 const customizeSlice = createSlice({
@@ -25,6 +27,9 @@ const customizeSlice = createSlice({
     },
     setMenu(state, action) {
       state.menu = action.payload;
+    },
+    setShowMenu(state, action) {
+      state.showMenu = action.payload;
     },
     setBorderRadius(state, action) {
       state.borderRadius = action.payload;

@@ -16,6 +16,8 @@ import {
   Grid,
 } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
+import {useTheme,withStyles} from "@material-ui/core/styles";
+
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 //import project
@@ -34,6 +36,7 @@ import defaultProduct from "../../../../assets/img/product/default-product.png";
 import setting from "../../../../assets/constant/setting";
 
 export const CartRow = (props) => {
+  const theme = useTheme();
   const classes = useStyles();
   const haveDiscount = true;
   const info = useSelector((state) => state.info);
@@ -49,7 +52,9 @@ export const CartRow = (props) => {
     handleChangeItemPrice,
     mini,
     imageType,
-    index
+    index,
+    typeShow,
+    showImage
   } = props;
   console.log("cart table row", row)
   const updateQuantity = (newQuantity) => {
@@ -126,6 +131,7 @@ export const CartRow = (props) => {
     }
   };
   console.log("imageType",imageType)
+  var color = theme.customization.mode === "Light"? typeShow==='list'?'#000':null: null
   return (
     <>
       <TableRow
@@ -133,13 +139,14 @@ export const CartRow = (props) => {
         key={props.row.uuid}
         onMouseOver={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
+        // style={{color:'#000'}}
       >
         {/* {mini ? null : <TableCell align="left">{row.id + 1}</TableCell>} */}
         {/* <TableCell align="left" style={!mini?{}:{paddingLeft:0, paddingRight:!imageType?25:15}}>{imageType?'':`${row.id + 1}.`}</TableCell> */}
         <TableCell align="left" style={!mini?{}:{paddingLeft:0, paddingRight:!imageType?25:15}}>{imageType?'':`${index }.`}</TableCell>
 
         {/* Sửa lại thành product_code */}
-        {mini ? null : <TableCell align="left"  style={{ paddingRight: 20 }}>
+        {mini ? null : <TableCell align="left"  style={{ paddingRight: 20, }}>
           {row.product_code}
         </TableCell>}
         {/* <TableCell align="left" style={mini ? {maxWidth: 50}: { minWidth: 200 }}> */}
@@ -148,16 +155,16 @@ export const CartRow = (props) => {
             style={ {marginLeft:-10, marginTop: -10, marginBottom: -10, padding:0 }}
             alignItems="center"
           >
-             <Box
+           {showImage?  <Box
               component="img"
               sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15,marginTop:12, marginBottom:12  }}
               src={
                 JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) ||
                 defaultProduct
               }
-            />
+            />:null}
             <Grid style={{paddingTop:12, paddingBottom:12,marginBottom:imageType?3:0}}>
-                <Typography style={!mini?{}:{fontWeight:600}}>{row.name}</Typography>
+                <Typography style={!mini?{}:{fontWeight:imageType?600:null,color:color}}>{row.name}</Typography>
                 {imageType ?
                  canFixPriceSell.status && canFixPriceSell.cart || info?.role === 'owner'? (
                   <Input.ThousandSeperatedInput
@@ -284,7 +291,7 @@ export const CartRow = (props) => {
         </TableCell>  }  
         
         <TableCell align="right" className={classes.boldText} padding={mini ? "none" : "normal"}>
-          {!mini?<VNDFormat value={row.unit_price * row.quantity} />:<Input.ThousandFormat value={row.unit_price * row.quantity} style={{paddingLeft:imageType? 0:20}}/>}
+          {!mini?<VNDFormat value={row.unit_price * row.quantity} style={{color:color}}/>:<Input.ThousandFormat value={row.unit_price * row.quantity} style={{paddingLeft:imageType? 0:20, color:color}}/>}
         </TableCell>
 
         <TableCell align="right" padding={mini ? "none" : "normal"}>

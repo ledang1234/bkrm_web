@@ -175,6 +175,7 @@ const Cart = () => {
       if (cartMode.store_uuid === store_uuid ) {
         setTypeShow(cartMode.typeShow)
         setMode(cartMode.mode);
+        setShowImage(cartMode.showImage);
         
       }
     }
@@ -250,6 +251,7 @@ const Cart = () => {
   };
 
   useEffect(() => {
+    console.log("reload heer")
     loadProducts();
   }, [reloadProduct])
 
@@ -390,6 +392,7 @@ const Cart = () => {
 
   //mode
   const [mode, setMode] = React.useState(false);
+  const [showImage, setShowImage] = React.useState(true);
   const [typeShow, setTypeShow] = useState('list')
   const handleChangeMode = (event) => {
     setMode(event.target.checked);
@@ -397,9 +400,9 @@ const Cart = () => {
   useEffect(() => {
     window.localStorage.setItem(
       "mode",
-      JSON.stringify({store_uuid: store_uuid,  mode: mode, typeShow: typeShow })
+      JSON.stringify({store_uuid: store_uuid,  mode: mode, typeShow: typeShow , showImage:showImage})
     );
-  }, [mode,typeShow]);
+  }, [mode,typeShow,showImage]);
 
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption) => {
@@ -815,7 +818,8 @@ const handleCloseWarning = () =>{
           setReloadProduct(!reloadProduct)
         }}
       />}{" "}
-      <SnackBarGeneral handleClose={handleCloseSnackBar} open={openSnack} status={snackStatus}  />
+    
+    <SnackBarGeneral handleClose={handleCloseSnackBar} open={openSnack} status={snackStatus}  />
      
      
      {/* 1. TABLE CARD (left) */}
@@ -918,6 +922,7 @@ const handleCloseWarning = () =>{
                               (discount) => discount.discountKey === "product"
                             )}
                             index={cartList[selectedIndex].cartItem.length - index}
+                            showImage={showImage}
                           />
                         );
                       })}
@@ -934,6 +939,8 @@ const handleCloseWarning = () =>{
                   typeShow={typeShow}
                   setTypeShow={setTypeShow}
                   setProducts={setProducts}
+                  showImage={showImage}
+                  setShowImage={setShowImage}
                 />
               )}
             </Box>
@@ -994,6 +1001,8 @@ const handleCloseWarning = () =>{
                             mini={true}
                             imageType={typeShow==='image' && mode}
                             index={cartList[selectedIndex].cartItem.length - index}
+                            typeShow={typeShow}
+                            showImage={showImage}
 
                           />
                         );

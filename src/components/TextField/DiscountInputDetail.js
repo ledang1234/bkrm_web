@@ -34,23 +34,25 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
     
     const handleChangeValue = (e) =>{
       // if(e.target.value < 0){e.target.value = 0}
-      console.log("e.target.value.includes('-') ",e.target.value.includes('-') )
-      if(e.target.value < 0 || !e.target.value||e.target.value.includes('-') ){return}
+      console.log("e.target.value.includes('-') ",!e.target.value )
+
+      // if(!e.target.value){e.target.value = 0; return; }
+      if(e.target.value < 0 || e.target.value.includes('-') ){return}
 
       else if(cartData.discountDetail?.type === "%"){
         if(Number(e.target.value) > 100){ 
           handleUpdateDiscountDetail({value:'100', type:'%'})
         }
         else{  
-          handleUpdateDiscountDetail({value:e.target.value, type:'%'})
+          handleUpdateDiscountDetail({value:!e.target.value?"0": e.target.value, type:'%'})
         }
       }
       else{
         if(Number(e.target.value) > Number(cartData.total_amount)){ 
-          handleUpdateDiscountDetail({value:cartData.total_amount, type:'VND'})
+          handleUpdateDiscountDetail({value: cartData.total_amount, type:'VND'})
         }
         else{ 
-          handleUpdateDiscountDetail({value:e.target.value.toString(), type:'VND'})
+          handleUpdateDiscountDetail({value:!e.target.value?"0": e.target.value.toString(), type:'VND'})
   
         }
       }

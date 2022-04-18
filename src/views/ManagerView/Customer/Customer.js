@@ -37,6 +37,8 @@ import CustomerRegisterEmail from '../../../components/Email/CustomerRegisterEma
 import { statusAction } from '../../../store/slice/statusSlice';
 import { removeAccents } from '../../../utils';
 import Fuse from 'fuse.js'
+import setting from "../../../assets/constant/setting";
+
 const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -46,6 +48,8 @@ const Customer = () => {
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
   const dispatch = useDispatch();
+  const store_setting = info.store.general_configuration ? JSON.parse(info.store.general_configuration)  : setting;
+  const haveCustomerScore = store_setting.customerScore.status
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -311,7 +315,8 @@ console.log(info.store.general_configuration)
           order={order}
           orderBy={orderBy}
           onRequestSort={handleRequestSort}
-          headerData={HeadCells.CustomerHeadCells}
+          headerData={haveCustomerScore ?HeadCells.CustomerHeadCells :HeadCells.CustomerHeadCells.filter(item => !item.id.includes('score'))}
+          
 
 
         />
@@ -328,7 +333,7 @@ console.log(info.store.general_configuration)
             {customerList?.map((row, index) => {
               return (
                 <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} onReload={onReload}
-                  img={ava} id={row.customer_code} name={row.name} phone={row.phone} score={10}
+                  img={ava} id={row.customer_code} name={row.name} phone={row.phone} score={haveCustomerScore?row.points:null}
                   typePartner={"Khách hàng"} />
               );
             })}

@@ -5,7 +5,7 @@ import {useTheme} from "@material-ui/core/styles";
 import useStyles from "../../components/TableCommon/style/mainViewStyle";
 import { useSelector } from 'react-redux';
 //import library 
-import {Grid,Card,Box,Table,TableCell,Modal,Dialog,Tabs,Tab,TableRow,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Switch,Menu,MenuItem,ListItem,IconButton,TableBody,Typography, Button} from '@material-ui/core'
+import {Grid,Card,Box,Table,TableCell,Modal,Tooltip,Dialog,Tabs,Tab,TableRow,TableContainer,CardContent,CardMedia,CardActionArea,FormControlLabel,Switch,Menu,MenuItem,ListItem,IconButton,TableBody,Typography, Button} from '@material-ui/core'
 import { VNDFormat } from "../TextField/NumberFormatCustom";
 import defaultProduct from "../../assets/img/product/default-product.png"
 import setting from "../../assets/constant/setting"
@@ -20,7 +20,10 @@ import FilterListTwoToneIcon from "@material-ui/icons/FilterListTwoTone";
 import clsx from "clsx"
 import { TreeSelect } from 'antd';
 import CategorySelect from "../Select/CategorySelect"
-const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, selectedItem,typeShow,setTypeShow,isCheck}) => {
+import { grey } from "@material-ui/core/colors";
+import BrokenImageTwoToneIcon from '@material-ui/icons/BrokenImageTwoTone';
+import WallpaperTwoToneIcon from '@material-ui/icons/WallpaperTwoTone';
+const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, selectedItem,typeShow,setTypeShow,isCheck,showImage,setShowImage}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const InventoryHeadCells = [
@@ -61,6 +64,7 @@ const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, sele
     const [openFilter, setOpenFilter] = useState(false)
     const [filter, setFilter] = useState(null)
     const renderListOption = () => {
+      const color = theme.customization.mode === "Light"  ? '#000' : '#fff'
       return (
         <>
         <TableContainer style={{maxHeight: '64vh', minHeight:'60vh'}} >
@@ -68,21 +72,22 @@ const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, sele
             <TableHeader
                 classes={classes}
                 headerData={store_setting?.inventory.status ?InventoryHeadCells: InventoryHeadCells.filter(item => item.id !== "inventory")}
+                color={color}
               />
               <TableBody>
                 {products.map((row, index) => {
                   let findedItem= findItem(row)
                   return (
-                  <TableRow key={row.uuid}  onClick={() => handleSearchBarSelect(row)} style={{backgroundColor:selectedItemUuid.includes(row.uuid) &&theme.customization.primaryColor[50]}}>
-                    <TableCell align="left"> {row.product_code} </TableCell>
+                  <TableRow key={row.uuid}  onClick={() => handleSearchBarSelect(row)} style={{color:color,backgroundColor:selectedItemUuid.includes(row.uuid) &&( theme.customization.mode === "Light"  ? theme.customization.primaryColor[50] : grey[700])}}>
+                    <TableCell align="left" style={{color:color}}> {row.product_code} </TableCell>
                       <TableCell align="left"  >
                         <ListItem style={{ marginLeft: -30, marginTop: -10, marginBottom: -10, }}  >
-                          <Box component="img" sx={{ height: 35, width: 35, borderRadius: 10, marginRight: 15 }} src={JSON.parse(row.img_urls)?.at(0) || defaultProduct} />
-                          <Typography className={classes.fontName}>{row.name}</Typography>
+                         {showImage? <Box component="img" sx={{ height: 35, width: 35, borderRadius: 10, marginRight: 15 }} src={JSON.parse(row.img_urls)?.at(0) || defaultProduct} />:null}
+                          <Typography className={classes.fontName} style={{color:color}}>{row.name}</Typography>
                         </ListItem>
                     </TableCell>
-                    <TableCell align="right"> <VNDFormat value={isCart? row.list_price : row.standard_price } /> </TableCell>
-                      {store_setting?.inventory.status ? <TableCell align="right" className={classes.fontName} style={{fontWeight:500, color:'#000'}}> {row.branch_quantity}  </TableCell> : null}
+                    <TableCell align="right" > <VNDFormat value={isCart? row.list_price : row.standard_price } style={{color:color}} /> </TableCell>
+                      {store_setting?.inventory.status ? <TableCell align="right" className={classes.fontName} style={{fontWeight:500,color:color}}> {row.branch_quantity}  </TableCell> : null}
                       <TableCell align="right" style={{color:theme.customization.secondaryColor[500], fontWeight:600}}>{findedItem? `x ${findItem(row)}`:''}</TableCell>
                   </TableRow>
                 ); })}
@@ -101,12 +106,12 @@ const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, sele
             let findedItem= findItem(item)
             return(
               <Grid item>
-              <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{ width:120, borderRadius:7,}} >
+              <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{ width:120, borderRadius:7,backgroundColor: theme.customization.mode === "Light"  ? null: grey[700]}} >
                 <CardActionArea  onClick={() => handleSearchBarSelect(item)}>
-                    <CardMedia
+                {showImage?<CardMedia
                         style={{height:120, margin:5, marginBottom:-5, borderRadius:7}}
                         image={JSON.parse(item.img_urls ? item.img_urls : "[]").length  ? JSON.parse(item.img_urls ? item.img_urls : "[]").at(0) : defaultProduct}
-                  />
+                     />:null}
                     <CardContent style={{margin:-5}}>
                         <Typography gutterBottom  style={{color:'#000', fontWeight:500, fontSize:Number(12)}}> {item.name} </Typography>
                         <Grid container alignItem='center'justifyContent='space-between'>
@@ -130,9 +135,12 @@ const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, sele
 
     return (
           <div style={{marginTop:-25}}>
-            <ListAltTwoToneIcon fontSize="small" onClick={()=>setTypeShow('list')} style={{marginRight:5}}/>
-            <ImageTwoToneIcon fontSize="small" onClick={()=>setTypeShow('image')}  style={{marginRight:5}}/>
-            <FilterListTwoToneIcon  fontSize="small" onClick={()=>setOpenFilter(true)} />
+           {/* <Tooltip title="Dạng danh sách"> <ListAltTwoToneIcon fontSize="small" onClick={()=>setTypeShow('list')} style={{marginRight:5}}/> </Tooltip> */}
+           <Tooltip title="Dạng danh sách" aria-label="add"><ListAltTwoToneIcon fontSize="small" onClick={()=>setTypeShow('list')}  style={{marginRight:5}} /></Tooltip>
+           <Tooltip title="Dạng hình ảnh" aria-label="add"><ImageTwoToneIcon fontSize="small" onClick={()=>setTypeShow('image')}  style={{marginRight:5}}/></Tooltip>
+           <Tooltip title="Lọc" aria-label="add"><FilterListTwoToneIcon  fontSize="small"onClick={()=>setOpenFilter(true)}  style={{marginRight:5}}/></Tooltip>
+           <Tooltip title="Hiển thị hình" aria-label="add"><WallpaperTwoToneIcon fontSize="small"  onClick={()=>setShowImage(!showImage)} /></Tooltip>
+            
              {typeShow === 'list'&& renderListOption()}
              {typeShow === 'image'&& renderImageOption()}
              <Dialog open={openFilter} onClose={()=>setOpenFilter(false)} >

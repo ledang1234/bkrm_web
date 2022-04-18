@@ -109,13 +109,26 @@ function InventoryCheckPopUp({
         ""
       );
       setProducts(response.data)
-
+      
+     
     } catch (err) {
       console.log(err)
     }
     // dispatch(infoActions.setProducts(response.data));
   };
 
+  useEffect(()=>{
+    if (window.localStorage.getItem("mode")) {
+      const cartMode = JSON.parse(window.localStorage.getItem("mode"));
+      if (cartMode.store_uuid === store_uuid ) {
+        setTypeShow(cartMode.typeShow)
+        setMode(cartMode.mode);
+        setShowImage(cartMode.showImage);
+       
+      }
+    }
+
+  },[])
   useEffect(() => {
     if (store_uuid && branch_uuid) {
       loadProducts();
@@ -281,6 +294,7 @@ function InventoryCheckPopUp({
 
 //mode
   const [mode, setMode] = React.useState(false);
+  const [showImage, setShowImage] = React.useState(true);
   const [typeShow, setTypeShow] = useState('list')
   const handleChangeMode = (event) => {
     setMode(event.target.checked);
@@ -288,9 +302,9 @@ function InventoryCheckPopUp({
   useEffect(() => {
     window.localStorage.setItem(
       "mode",
-      JSON.stringify({store_uuid: store_uuid,  mode: mode, typeShow: typeShow })
+      JSON.stringify({store_uuid: store_uuid,  mode: mode, typeShow: typeShow , showImage:showImage})
     );
-  }, [mode,typeShow]);
+  }, [mode,typeShow,showImage]);
 
   return (
     <>
@@ -394,6 +408,8 @@ function InventoryCheckPopUp({
                       setTypeShow={setTypeShow}
                       setProducts={setProducts}
                       isCheck={true}
+                      showImage={showImage}
+                      setShowImage={setShowImage}
                     />
                   )}
                 {/* ) : (

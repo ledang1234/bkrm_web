@@ -197,6 +197,13 @@ function InvoiceDetail(props) {
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   const returnLimit = store_setting?.returnLimit
+
+
+  // const haveReturnQuantity = order.details.ex(()=>returned_quantity)
+  var haveReturnQuantity =   order.details.every(function (element, index) {
+    if ( Number(element.returned_quantity) === 0) return false;
+    else return true;
+  })
   return (
     <Collapse
       in={isMini ? true : openRow === row.uuid}
@@ -368,7 +375,7 @@ function InvoiceDetail(props) {
               <TableCell>Sản phẩm</TableCell>
               {/* <TableCell>Mã vạch</TableCell> */}
               <TableCell align="right">Số lượng</TableCell>
-              <TableCell align="right">Đổi trả</TableCell>
+              {haveReturnQuantity ?<TableCell align="right">Đổi trả</TableCell>:null}
               <TableCell align="right">Giá bán</TableCell>
               <TableCell align="right">Thành tiền</TableCell>
             </TableRow>
@@ -406,7 +413,8 @@ function InvoiceDetail(props) {
                   </div>
                 </TableCell>
                 {/* <TableCell align="right">{detail.returned_quantity}</TableCell> */}
-                <TableCell align="right">
+                {haveReturnQuantity?
+                 <TableCell align="right">
                   <div>
                     {detail.returned_quantity}
                     <div>
@@ -429,7 +437,7 @@ function InvoiceDetail(props) {
                         : null}
                     </div>
                   </div>
-                </TableCell>
+                </TableCell>:null}
                 <TableCell align="right">
                   <VNDFormat value={detail.unit_price} />
                 </TableCell>
@@ -496,7 +504,7 @@ function InvoiceDetail(props) {
                 </Typography>
               </Grid>
               <Grid item xs={2} sm={2}>
-                <Typography variant="body1" gutterBottom component="div">
+                <Typography variant="body1" gutterBottom component="div" style={{fontWeight:500, color:theme.customization.primaryColor[500]}}>
                   <VNDFormat value={row.total_amount - row.discount} />
                 </Typography>
               </Grid>

@@ -550,6 +550,7 @@ return (
               }
               onBlur={productFormik.handleBlur}
               type="text"
+            
             />
             {/* <TextField
               label="Mã sản phẩm (tự động)"

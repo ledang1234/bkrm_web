@@ -47,7 +47,9 @@ export const ImportRow = (props) => {
     handleUpdateBatches,
     mini,
     imageType,
-    index
+    index,
+    typeShow,
+    showImage
   } = props;
   const info = useSelector((state) => state.info);
   const branch = info.branch;
@@ -116,6 +118,8 @@ const findBranchQuantity = (id) => {
 }
 
 console.log("imageType",imageType)
+var color = theme.customization.mode === "Light"? typeShow==='list'?'#000':null: null
+
   return (
     <>
       <TableRow hover key={props.row.uuid} onMouseOver={()=>  setShow(true)}  onMouseLeave={()=> setShow(false)} >
@@ -129,17 +133,17 @@ console.log("imageType",imageType)
             style={ {marginLeft:imageType?-10: -10, marginTop: -10, marginBottom: -10, padding:0 }}
             alignItems="center"
           >
-             <Box
+            {showImage? <Box
               component="img"
               sx={{ height: 40, width: 40, borderRadius: 10, marginRight: 15,marginTop:12, marginBottom:12 }}
               src={
                 JSON.parse(row.img_urls ? row.img_urls : "[]").at(0) ||
                 defaultProduct
               }
-            />
+            />:null}
             {/* <Typography>{row.name}</Typography> */}
             <Grid style={{paddingTop:12, paddingBottom:12}}>
-                <Typography style={!mini?{}:{fontWeight:600}}>{row.name}</Typography>
+                <Typography style={!mini?{}:{fontWeight:imageType?600:null,color:color}}>{row.name}</Typography>
                 {imageType ?
                 canFixPriceSell.status && canFixPriceSell.import || info?.role === 'owner'?
                   <Input.ThousandSeperatedInput
@@ -225,7 +229,7 @@ console.log("imageType",imageType)
         </TableCell>}  
 
         <TableCell align="right" className={classes.boldText}  padding={mini ? "none" : "normal"}>
-        {!mini?<VNDFormat value={row.unit_price * row.quantity} />:<Input.ThousandFormat value={row.unit_price * row.quantity} style={{paddingLeft:imageType? 0:20}}/>}
+        {!mini?<VNDFormat value={row.unit_price * row.quantity}style={{color:color}} />:<Input.ThousandFormat value={row.unit_price * row.quantity} style={{paddingLeft:imageType? 0:20, color:color}}/>}
         </TableCell>
         <TableCell align="right" padding={mini ? "none" : "normal"}>
           <IconButton aria-label="expand row" size="small" style={{marginLeft:10}}>

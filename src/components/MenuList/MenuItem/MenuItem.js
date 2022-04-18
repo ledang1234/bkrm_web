@@ -72,6 +72,8 @@ const MenuItem = (props) => {
   const info = useSelector((state) => state.info);
   const web_setting = info.store?.web_configuration? JSON.parse(info.store.web_configuration): webInfo
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  // const customization = useSelector((state) => state.customize);
+  const showMenu = customization.showMenu;
 
 
   function getMenuIcon(type) {
@@ -83,7 +85,7 @@ const MenuItem = (props) => {
             height: 24,
             width: 24,
           }}
-          src={item.icon}
+          src={item.iconColor}
         />
 
       case "2":
@@ -98,6 +100,7 @@ const MenuItem = (props) => {
 
   function handleOnClick(id) {
     sessionStorage.setItem("BKRMopening",id)
+    if(id ===19 || id ===20.1){setOpen(!open);return}
     if (id === 1 || id === 4 || xsScreen) {
       dispatch(customizeAction.setSidebarOpen(false));
     }
@@ -105,17 +108,22 @@ const MenuItem = (props) => {
     if (collapse) { setOpen(!open) }
   }
  
-  if(!store_setting.inventory.status && (item.id  == 4 || item.id ==6 || item.id == 7 || item.id == 9 || item.id == 11 || item.id==12 )){
+  if(!store_setting.inventory.status && (item.id  == 4 || item.id ==6 || item.id == 7 ||  item.id == 11 )){
       return null
-  }else if (web_setting.status === 'inactive' && item.id  == 22){
+  // }else if (web_setting.status === 'inactive' && item.id  == 22){
+  }
+  if (!info.store?.web_configuration && item.id  == 22){
+    return null
+  }
+  if( !["Cài đặt", "Thống Kê"].includes(item.title)  && !showMenu.includes(item.title) && !(showMenu.every(item => ['salesModule','inventoryModule','hrModule','reportModule'].includes(item)) &&showMenu.length === 4 )){
     return null
   }
   return (
     <>
       <ListItem
         button
-        component={Link}
-        to={item.url}
+        component={item.id ===19 || item.id ===20.1 ? null:Link}
+        to={item.id ===19 || item.id ===20.1 ? null:item.url}
         // className={classes.item}
         className={clsx([classes.item], {
           [classes.itemClick]: Math.floor(itemMenuOpen) === Math.floor(item.id),
