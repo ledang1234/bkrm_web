@@ -34,7 +34,8 @@ const InventoryOrderFilter = (props) => {
     const info = useSelector((state) => state.info);
     const store_uuid = info.store.uuid;
     const branch_uuid = info.branch.uuid;
-    
+    const current =moment(new Date()).format("YYYY-MM-DD")
+
     const formik = useFormik({
       initialValues: query,
       onSubmit: async values => {
@@ -46,7 +47,11 @@ const InventoryOrderFilter = (props) => {
       },
     });
 
-
+    React.useEffect(() =>{
+      formik.values.startDate.length === 0 ? formik.setFieldValue("startDate",current) : formik.setFieldValue("startDate",formik.values.startDate);
+      formik.values.endDate.length === 0 ? formik.setFieldValue("endDate",current) : formik.setFieldValue("endDate",formik.values.startDate)
+  
+    },[])
     return (
       <Drawer
         anchor="right"
@@ -67,7 +72,7 @@ const InventoryOrderFilter = (props) => {
         <TextField id="startDate" label="Từ" 
           type="date" 
           name="startDate"
-          defaultValue={formik.values.startDate} 
+          // defaultValue={formik.values.startDate} 
           variant="outlined" size="small" fullWidth 
           className={classes.textField} 
           InputLabelProps={{ shrink: true }} 
@@ -76,7 +81,7 @@ const InventoryOrderFilter = (props) => {
         />
         <TextField 
           id="endDate" label="Đến" type="date" name="endDate"
-          defaultValue={formik.values.endDate} 
+          // defaultValue={formik.values.endDate} 
           variant="outlined" size="small" 
           fullWidth className={classes.textField} 
           InputLabelProps={{ shrink: true }} 
@@ -182,6 +187,7 @@ const InventoryOrderFilter = (props) => {
             // label=" Chi nhánh"
             value={formik.values.status}
           >
+             <MenuItem value="" ><em>Tất cả</em></MenuItem>
             <MenuItem value="debt">Còn nợ</MenuItem>
             <MenuItem value="closed">Trả đủ</MenuItem>
           </Select>
@@ -205,6 +211,7 @@ const InventoryOrderFilter = (props) => {
             // label=" Chi nhánh"
             value={formik.values.paymentMethod}
           >
+             <MenuItem value="" ><em>Tất cả</em></MenuItem>
             <MenuItem value="card">Thẻ</MenuItem>
             <MenuItem value="cash">Tiền mặt</MenuItem>
           </Select>

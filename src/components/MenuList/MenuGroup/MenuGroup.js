@@ -1,6 +1,7 @@
 
 import React from 'react'
 import {makeStyles } from '@material-ui/styles';
+import { useDispatch, useSelector } from "react-redux";
 
 // import library
 import { Collapse, Divider, List, ListItem, ListItemText, Typography } from '@material-ui/core';
@@ -36,7 +37,17 @@ const MenuGroup = (props) => {
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(true);
+    const customization = useSelector((state) => state.customize);
+    const showMenu = customization.showMenu;
+    
+    var willHideGroupMenu=  item.children.every(function (element, index) {
+        if (showMenu.includes(element.key) ) return false;
+        else return true;
+      })
 
+    if(willHideGroupMenu){
+       return null 
+    }
     return (
         <>
             <List

@@ -14,11 +14,11 @@ const GeneralStatistics = (props) => {
     <Card className={classes.hoverCard} style={{padding:25, marginBottom:20}}>
         <Grid container direction="row"justifyContent="space-between" alignItems="center"  style={{marginBottom:30}}>
             <Grid item >
-                {title? <Typography style={{color:"#000", fontSize:22}} variant="h5">{title} </Typography> :
+                {title? <Typography style={{color:theme.customization.mode === "Light"  ? '#000' :"#757575",  fontSize:22}} variant="h5">{title} </Typography> :
                 <ListItem style={{margin:0, padding:0}}> 
-                  <Typography style={{color:"#000", fontSize:22, marginRight:5}} variant="h5">{ limitTitle} {typeTitle.includes('bán chạy') ?` sản phẩm` :null} </Typography> 
+                  <Typography style={{color:theme.customization.mode === "Light"  ? '#000' :"#757575",  fontSize:22, marginRight:5}} variant="h5">{ limitTitle} {typeTitle.includes('bán chạy') ?` sản phẩm` :null} </Typography> 
                   <Typography style={{color:theme.customization.primaryColor[500], fontSize:22,marginRight:5}} variant="h5">{typeTitle} </Typography> 
-                  <Typography style={{color:"#000", fontSize:22}} variant="h5">{typeTitle.includes('số') ? "nhiều nhất" : typeTitle.includes('bán chạy')  ?'nhất':"cao nhất"}</Typography> 
+                  <Typography style={{color:theme.customization.mode === "Light"  ? '#000' :"#757575",  fontSize:22}} variant="h5">{typeTitle.includes('số') ? "nhiều nhất" : typeTitle.includes('bán chạy')  ?'nhất':"cao nhất"}</Typography> 
                 </ListItem>}
             </Grid>
             <Grid item  >

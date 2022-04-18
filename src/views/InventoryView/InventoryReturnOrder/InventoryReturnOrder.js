@@ -62,9 +62,9 @@ const InventoryReturnOrder = () => {
   const initialQuery = {
     startDate: '',
     endDate: '',
-    minTotalAmount: 0,
-    maxTotalAmount: 0,
-    status: '',
+    minTotalAmount: null,
+    maxTotalAmount: null,
+    // status: '',
     paymentMethod: '',
     orderBy: 'purchase_returns.creation_date',
     sort: 'desc',

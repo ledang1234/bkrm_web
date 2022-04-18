@@ -491,7 +491,7 @@ const InventoryOrderDetail = (props) => {
                 </Typography>
               </Grid>
               <Grid item  xs={3}sm={2}>
-                <Typography variant="body1" gutterBottom component="div">
+                <Typography variant="body1" gutterBottom component="div"  style={{fontWeight:500, color:theme.customization.primaryColor[500]}}>
                   <VNDFormat value={row.total_amount - row.discount} />
                 </Typography>
               </Grid>

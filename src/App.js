@@ -74,7 +74,7 @@ function App() {
             <Route path="*" component={PageNotFound} />
           </Switch>
         </HashRouter>
-        <Customization />
+        {/* <Customization /> */}
       </Box>
     </ThemeProvider>
   );

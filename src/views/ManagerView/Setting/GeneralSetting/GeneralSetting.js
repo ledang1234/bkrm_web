@@ -215,12 +215,14 @@ const GeneralSetting = () => {
 
   const callApi = async() =>{
     try {
+      dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
+
       const response = storeApi.updateStoreInfo(store_uuid, {
         general_configuration: JSON.stringify(checked),
       });
       openNotification("success", "Lưu cài đặt chung thành công");
       console.log("checked",checked)
-      dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
+      // dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
       
     } catch (err) {
       console.log(err);

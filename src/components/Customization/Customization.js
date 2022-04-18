@@ -23,7 +23,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import ColorTheme from "./ColorTheme/ColorTheme";
 import CardWrapper from "../CardWrapper/CardWrapper";
 import AnimateButton from "../Button/AnimateButton";
-
+import MenuSelect from "../Select/MenuSelect"
 //import icon
 import { IconSettings } from "@tabler/icons";
 
@@ -37,8 +37,11 @@ export const updateLocalStorage = (action) => {
     case "MODE":
       customization.mode = action.payload;
       break;
+    case "SHOWMENU":
+      customization.showMenu = action.payload;
+      break;
     case "MENU":
-        customization.menu = action.payload;
+      customization.menu = action.payload;
         break;
     case "FONT_FAMILY":
       customization.fontFamily = action.payload;
@@ -117,6 +120,12 @@ const Customization = () => {
   const handleMode = (mode) => {
     dispatch(customizeAction.setMode(mode));
     updateLocalStorage({ type: "MODE", payload: mode });
+  };
+
+  const showMenu = customization.showMenu;
+  const handleShowMenu = (showMenu) => {
+    dispatch(customizeAction.setShowMenu(showMenu));
+    updateLocalStorage({ type: "SHOWMENU", payload: showMenu });
   };
   
   const menu = customization.menu;
@@ -210,6 +219,7 @@ const Customization = () => {
                 </RadioGroup>
               
             </FormControl>
+            <MenuSelect showMenu={showMenu} handleShowMenu={handleShowMenu}/>
           </CardWrapper>
 
           {/* Font family */}

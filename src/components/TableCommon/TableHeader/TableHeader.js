@@ -11,7 +11,9 @@ import { grey} from '@material-ui/core/colors'
 const StyledTableCell = withStyles((theme) => ({
     head: {
       backgroundColor: theme.customization.mode === "Light"? null: grey[800],
+      // color: theme.customization.mode === "Light"? null: grey[500],
       color: theme.customization.mode === "Light"? null: grey[500],
+
     },
     
 }))(TableCell);
@@ -19,7 +21,7 @@ const StyledTableCell = withStyles((theme) => ({
   
 function TableHeader(props) {
     const theme = useTheme();
-    const { classes, order, orderBy, onRequestSort,headerData,isCart,isCustomer } = props;
+    const { classes, order, orderBy, onRequestSort,headerData,isCart,isCustomer,color } = props;
     const createSortHandler = (property) => (event) => {
       // onRequestSort(event, property);
     };
@@ -52,7 +54,9 @@ function TableHeader(props) {
               key={headCell.id}
               align={headCell.align}
               // sortDirection={orderBy === headCell.id ? order : false}
-              style={{color:isCustomer?"#000":theme.themeText, fontSize:isCustomer?16:null}}
+              // style={{color:isCustomer?"#000":theme.themeText, fontSize:isCustomer?16:null}}
+              style={{color:isCustomer?"#000": theme.customization.mode === "Light"? color?color:null: grey[500], fontSize:isCustomer?16:null}}
+
              >
                   {headCell.label}
             </StyledTableCell>

@@ -264,12 +264,12 @@ const ProductStatistics = () => {
                   return(
                   <Box key={index}style={{marginBottom:10}}>
                     <Grid container justifyContent='space-between' alignItems='center' style={{marginBottom:10}} >
-                        {/* <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{index + 1}</Typography></Grid> */}
-                        <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{categoryData.title[index]}</Typography></Grid>
-                        <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{value}</Typography></Grid>
-                        <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid>
+                        {/* <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{index + 1}</Typography></Grid> */}
+                        <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{categoryData.title[index]}</Typography></Grid>
+                        <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{value}</Typography></Grid>
+                        <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid>
 
-                        {/* <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{value}{` / `}{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid> */}
+                        {/* <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{value}{` / `}{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid> */}
                     </Grid>
                     <Divider />
                   </Box>
@@ -354,10 +354,10 @@ const DetailStatisticProduct = (props) =>{
             </ListItem>
         } > 
         <Grid container justifyContent='space-between' alignItems='center'  >
-            <Grid item xs={4}><Typography style={{color:"#000",fontSize:17,fontWeight:500,}}>Sản phẩm</Typography></Grid>
-            <Grid item xs={2}><Typography style={{ color:"#000",fontSize:17,fontWeight:500,textAlign:"center"}}>SL bán</Typography></Grid>
-            <Grid item xs={2}><Typography style={{color:"#000",fontSize:17,fontWeight:500,textAlign:"center"}}>Doanh thu</Typography></Grid>
-            <Grid item xs={2}><Typography style={{color:"#000",fontSize:17,fontWeight:500,textAlign:"center"}}>Tổng lợi nhuận</Typography></Grid>
+            <Grid item xs={4}><Typography style={{fontSize:17,fontWeight:500,}}>Sản phẩm</Typography></Grid>
+            <Grid item xs={2}><Typography style={{ fontSize:17,fontWeight:500,textAlign:"center"}}>SL bán</Typography></Grid>
+            <Grid item xs={2}><Typography style={{fontSize:17,fontWeight:500,textAlign:"center"}}>Doanh thu</Typography></Grid>
+            <Grid item xs={2}><Typography style={{fontSize:17,fontWeight:500,textAlign:"center"}}>Tổng lợi nhuận</Typography></Grid>
         </Grid>
 
         <Divider style={{marginTop:15, marginBottom:10}} />
@@ -371,13 +371,13 @@ const DetailStatisticProduct = (props) =>{
                   <Box style={{}}>
                       <ListItem style={{ margin:0, padding:0 }}  >
                           <Box  component="img"  sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}  src={img_urls ?img_urls :defaultProduct } />
-                          <Typography style={{color:"#000", fontSize:16, fontWeight:500}} >{item.name}</Typography>
+                          <Typography style={{ fontSize:16, fontWeight:500}} >{item.name}</Typography>
                       </ListItem>
                   </Box>
                 </Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{item.total_quantity ? item.total_quantity.toLocaleString() :0}</Typography></Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{ item.total_sell_price ? item.total_sell_price.toLocaleString() :0}</Typography></Grid>
-                <Grid item xs={2}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{ item.profit ? item.profit.toLocaleString() :0}</Typography></Grid>
+                <Grid item xs={2}><Typography style={{ fontSize:16,textAlign:"center"}}>{item.total_quantity ? item.total_quantity.toLocaleString() :0}</Typography></Grid>
+                <Grid item xs={2}><Typography style={{ fontSize:16,textAlign:"center"}}>{ item.total_sell_price ? item.total_sell_price.toLocaleString() :0}</Typography></Grid>
+                <Grid item xs={2}><Typography style={{ fontSize:16,textAlign:"center"}}>{ item.profit ? item.profit.toLocaleString() :0}</Typography></Grid>
             </Grid>
             <Divider />
             </Box>

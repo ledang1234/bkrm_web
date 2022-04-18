@@ -68,8 +68,8 @@ const EndDateStatistic = () => {
                 <Card className={classes.hoverCard} style={{padding:25, paddingRight:10}}>
                 <Grid container justifyContent='space-between' >
                     <Grid item >
-                        <Typography style={{ fontSize:18,fontWeight:500,}}>Thu - Chi</Typography>
-                        <Typography style={{color:'#000', fontSize:22,fontWeight:500}}>{overview.inAccount ?(Number(overview.inAccount)- Number(overview.outAccount)).toLocaleString() :0}</Typography>
+                        <Typography style={{color:'#757575', fontSize:18,fontWeight:500,}}>Thu - Chi</Typography>
+                        <Typography style={{ fontSize:22,fontWeight:500}}>{overview.inAccount ?(Number(overview.inAccount)- Number(overview.outAccount)).toLocaleString() :0}</Typography>
                         <Button  variant='contained'color='primary'size="small" style={{marginTop:15}}>Chi tiết</Button>
                     </Grid>
                     <Grid item >
@@ -109,11 +109,11 @@ const EndDateStatistic = () => {
         <Grid container spacing={2} > 
             <Grid   item md={12} xs={12}style={{marginTop:20}}  >
             <ReportCard  title={`Thống kê sản phẩm`}  >
-                {/* <Typography style={{marginBottom:30,color:"#000", fontSize:22}} variant="h5">Thống kê sản phẩm</Typography>  */}
+                {/* <Typography style={{marginBottom:30, fontSize:22}} variant="h5">Thống kê sản phẩm</Typography>  */}
                     <Grid container justifyContent='space-between' alignItems='center'  >
-                    <Typography style={{color:"#000",fontSize:17,width:260, fontWeight:500,}}>Sản phẩm</Typography>
-                    <Typography style={{ color:"#000",fontSize:17,fontWeight:500}}>SL</Typography>
-                    <Typography style={{color:"#000",fontSize:17,fontWeight:500}}>Doanh thu</Typography>
+                    <Typography style={{fontSize:17,width:260, fontWeight:500,}}>Sản phẩm</Typography>
+                    <Typography style={{ fontSize:17,fontWeight:500}}>SL</Typography>
+                    <Typography style={{fontSize:17,fontWeight:500}}>Doanh thu</Typography>
                     </Grid>
                     <Divider style={{marginTop:15, marginBottom:10}} />
                     {topData.map((item)=>{
@@ -125,11 +125,11 @@ const EndDateStatistic = () => {
                             <Box style={{width:260}}>
                                 <ListItem style={{ margin:0, padding:0 }}  >
                                     <Box  component="img"  sx={{ height: 50, width: 50, borderRadius: 50, marginRight: 15 }}   src={img_urls ?img_urls:defaultProduct } />
-                                    <Typography style={{color:"#000", fontSize:16, fontWeight:500}} >{item.name}</Typography>
+                                    <Typography style={{ fontSize:16, fontWeight:500}} >{item.name}</Typography>
                                 </ListItem>
                             </Box>
-                            <Typography style={{color:"#000", fontSize:16}}>{item.total_quantity ? item.total_quantity.toLocaleString() :0}</Typography>
-                            <Typography style={{color:"#000", fontSize:16}}>{item.total_sell_price ? item.total_sell_price.toLocaleString() :0}</Typography>
+                            <Typography style={{ fontSize:16}}>{item.total_quantity ? item.total_quantity.toLocaleString() :0}</Typography>
+                            <Typography style={{ fontSize:16}}>{item.total_sell_price ? item.total_sell_price.toLocaleString() :0}</Typography>
                         </Grid>
                         <Divider />
                         </Box>
@@ -139,7 +139,7 @@ const EndDateStatistic = () => {
             </Grid>
             <Grid  item md={6} xs={12} >
                 {/* <Card className={classes.hoverCard} style={{padding:25, marginTop:20}}>
-                    <Typography style={{marginBottom:20,color:"#000", fontSize:22}} variant="h5">Thống kê bán hàng </Typography> 
+                    <Typography style={{marginBottom:20, fontSize:22}} variant="h5">Thống kê bán hàng </Typography> 
 
                 </Card> */}
             </Grid>
@@ -156,11 +156,11 @@ const SmallDetailBox = ({bgColor, color, title, value}) =>{
     return (
         <Box style={{flexGrow:1,textAlign:'center', alignContent:'center', paddingTop:10, paddingBottom:10}} >
                 <Grid container justifyContent='center' >
-                    <Avatar style={{backgroundColor:bgColor, color:color, width: theme.spacing(7),  height: theme.spacing(7)}}>
+                    <Avatar style={{backgroundColor: theme.customization.mode === "Light"  ? bgColor: color, color: theme.customization.mode === "Light"  ? color:bgColor, width: theme.spacing(7),  height: theme.spacing(7)}}>
                         <AttachMoneyIcon/>
                     </Avatar> 
                 </Grid>
-            <Typography style={{color:'#000', fontSize:22,fontWeight:500, marginTop:10}}>{value?.toLocaleString()}</Typography>
+            <Typography style={{ fontSize:22,fontWeight:500, marginTop:10}}>{value?.toLocaleString()}</Typography>
             <Typography  style={{marginTop:4, color:'#777e89'}}>{title}</Typography>
         </Box>
     )

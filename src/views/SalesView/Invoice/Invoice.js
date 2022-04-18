@@ -18,6 +18,8 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
 import {Modal} from 'antd'
+import moment from "moment";
+
 //import api
 
 // import redux
@@ -69,10 +71,10 @@ const Invoice = () => {
   const initialQuery = {
     startDate: '',
     endDate: '',
-    minDiscount: 0,
-    maxDiscount: 0,
-    minTotalAmount: 0,
-    maxTotalAmount: 0,
+    minDiscount: null,
+    maxDiscount:null,
+    minTotalAmount: null,
+    maxTotalAmount: null,
     status: '',
     paymentMethod: '',
     orderBy: 'orders.created_at',

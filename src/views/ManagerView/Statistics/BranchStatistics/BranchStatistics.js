@@ -66,11 +66,11 @@ const BranchStatistics = () => {
             return(
             <Box key={index}style={{marginBottom:10}}>
               <Grid container justifyContent='space-between' alignItems='center' style={{marginBottom:10}} >
-                  {/* <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{index + 1}</Typography></Grid> */}
-                  <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{categoryData.title[index]}</Typography></Grid>
-                  {/* <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{value}{` / `}{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid> */}
-                  <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{value ? value.toLocaleString():'0'}</Typography></Grid>
-                  <Grid item xs={4}><Typography style={{color:"#000", fontSize:16,textAlign:"center"}}>{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid>
+                  {/* <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{index + 1}</Typography></Grid> */}
+                  <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{categoryData.title[index]}</Typography></Grid>
+                  {/* <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{value}{` / `}{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid> */}
+                  <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{value ? value.toLocaleString():'0'}</Typography></Grid>
+                  <Grid item xs={4}><Typography style={{ fontSize:16,textAlign:"center"}}>{(Number(value) / Number(sumAllValue)*100).toFixed(2)}%</Typography></Grid>
 
               </Grid>
               <Divider />

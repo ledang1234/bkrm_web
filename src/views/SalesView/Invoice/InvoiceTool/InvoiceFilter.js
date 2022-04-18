@@ -34,6 +34,7 @@ const InvoiceFilter = (props) => {
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
+  const current =moment(new Date()).format("YYYY-MM-DD")
 
   const formik = useFormik({
     initialValues: query,
@@ -44,6 +45,11 @@ const InvoiceFilter = (props) => {
       setQuery(values)
     },
   });
+  React.useEffect(() =>{
+    formik.values.startDate.length === 0 ? formik.setFieldValue("startDate",current) : formik.setFieldValue("startDate",formik.values.startDate);
+    formik.values.endDate.length === 0 ? formik.setFieldValue("endDate",current) : formik.setFieldValue("endDate",formik.values.startDate)
+
+  },[])
 
   return (
     <Drawer
@@ -65,20 +71,23 @@ const InvoiceFilter = (props) => {
       <TextField id="startDate" label="Từ" 
         type="date" 
         name="startDate"
-        defaultValue={formik.values.startDate} 
+        // defaultValue={formik.values.startDate} 
+        
         variant="outlined" size="small" fullWidth 
         className={classes.textField} 
         InputLabelProps={{ shrink: true }} 
-        value={formik.values.startDate} 
+        // value={formik.values.startDate.length === 0 ? current :formik.values.startDate} 
+        value={formik.values.startDate}  
         onChange={formik.handleChange}
       />
       <TextField 
         id="endDate" label="Đến" type="date" name="endDate"
-        defaultValue={formik.values.endDate} 
+        // defaultValue={formik.values.endDate} 
         variant="outlined" size="small" 
         fullWidth className={classes.textField} 
         InputLabelProps={{ shrink: true }} 
         value={formik.values.endDate}  
+        // value={formik.values.endDate.length === 0 ? current :formik.values.endDate} 
         onChange={formik.handleChange}
       />
      
@@ -112,7 +121,7 @@ const InvoiceFilter = (props) => {
 
       {/* 3.Giảm giá from-to*/}
       <Typography variant="h5" className={classes.text} >Giảm giá:</Typography>
-      <TextField required label="Từ" variant="outlined" 
+      <VNDInput required label="Từ" variant="outlined" 
         name="minDiscount" id="minDiscount"
         fullWidth size="small" className={classes.textField}
         value={formik.values.minDiscount}
@@ -180,6 +189,7 @@ const InvoiceFilter = (props) => {
           // label=" Chi nhánh"
           value={formik.values.status}
         >
+          <MenuItem value="" ><em>Tất cả</em></MenuItem>
           <MenuItem value="debt">Còn nợ</MenuItem>
           <MenuItem value="closed">Trả đủ</MenuItem>
         </Select>
@@ -203,6 +213,7 @@ const InvoiceFilter = (props) => {
           // label=" Chi nhánh"
           value={formik.values.paymentMethod}
         >
+           <MenuItem value="" ><em>Tất cả</em></MenuItem>
           <MenuItem value="card">Thẻ</MenuItem>
           <MenuItem value="cash">Tiền mặt</MenuItem>
         </Select>

@@ -132,6 +132,36 @@ export const empLogInHandler = (userName, password) => {
   };
 };
 
+// export const setCustomization = (ini) => {
+//   return (dispatch) => {
+//     const fetchCustomization = () => {
+//       let customization = JSON.parse(sessionStorage.getItem("customization"));
+//       dispatch(customizeAction.setBorderRadius(customization.borderRadius));
+//       dispatch(customizeAction.setColorLevel(customization.colorLevel));
+//       dispatch(customizeAction.setFontFamily(customization.fontFamily));
+//       dispatch(customizeAction.setMode(customization.mode));
+//       dispatch(customizeAction.setMenu(customization.menu));
+//       dispatch(customizeAction.setPrimaryColor(customization.primaryColor));
+//       dispatch(customizeAction.setSecondaryColor(customization.secondaryColor));
+//     };
+//     try {
+//       fetchCustomization();
+//     } catch (error) {
+//       let customization = {
+//         fontFamily: `'Roboto', sans-serif`,
+//         borderRadius: 12,
+//         mode: "Light",
+//         menu: "1",
+//         primaryColor: blue,
+//         secondaryColor: pink,
+//         colorLevel: 50,
+//       };
+//       sessionStorage.setItem("customization", JSON.stringify(customization));
+//       console.log(error);
+//     }
+//   };
+// };
+
 export const setCustomization = (ini) => {
   return (dispatch) => {
     const fetchCustomization = () => {
@@ -143,6 +173,7 @@ export const setCustomization = (ini) => {
       dispatch(customizeAction.setMenu(customization.menu));
       dispatch(customizeAction.setPrimaryColor(customization.primaryColor));
       dispatch(customizeAction.setSecondaryColor(customization.secondaryColor));
+      dispatch(customizeAction.setShowMenu(customization.showMenu));
     };
     try {
       fetchCustomization();
@@ -155,6 +186,7 @@ export const setCustomization = (ini) => {
         primaryColor: blue,
         secondaryColor: pink,
         colorLevel: 50,
+        showMenu:['salesModule','inventoryModule','hrModule','reportModule']
       };
       sessionStorage.setItem("customization", JSON.stringify(customization));
       console.log(error);

@@ -16,7 +16,8 @@ const TableWrapper = (props) => {
     const theme = useTheme();
     // const classes = useStyles(theme);
     // table
-    const [dense, setDense] = React.useState(isReport?true:false);
+    // const [dense, setDense] = React.useState(isReport?true:false);
+    const [dense, setDense] = React.useState(isCart ?false:true);
 
 
     const handleChangeDense = (event) => {

@@ -35,7 +35,8 @@ const InventoryReturnFilter = (props) => {
     const info = useSelector((state) => state.info);
     const store_uuid = info.store.uuid;
     const branch_uuid = info.branch.uuid;
-    
+    const current =moment(new Date()).format("YYYY-MM-DD")
+
     const formik = useFormik({
       initialValues: query,
       onSubmit: async values => {
@@ -45,6 +46,12 @@ const InventoryReturnFilter = (props) => {
         handleToggleFilter()
       },
     });
+
+    React.useEffect(() =>{
+      formik.values.startDate.length === 0 ? formik.setFieldValue("startDate",current) : formik.setFieldValue("startDate",formik.values.startDate);
+      formik.values.endDate.length === 0 ? formik.setFieldValue("endDate",current) : formik.setFieldValue("endDate",formik.values.startDate)
+  
+    },[])
 
     return (
       <Drawer
@@ -97,7 +104,7 @@ const InventoryReturnFilter = (props) => {
         />
 
         {/* 5.Trang thai */}
-        <Typography variant="h5" className={classes.text} >Trạng thái:</Typography>
+        {/* <Typography variant="h5" className={classes.text} >Trạng thái:</Typography>
         <FormControl
           className={classes.formControl}
           fullWidth
@@ -113,10 +120,11 @@ const InventoryReturnFilter = (props) => {
             // label=" Chi nhánh"
             value={formik.values.status}
           >
+             <MenuItem value="" ><em>Tất cả</em></MenuItem>
             <MenuItem value="debt">Còn nợ</MenuItem>
             <MenuItem value="closed">Trả đủ</MenuItem>
           </Select>
-        </FormControl>
+        </FormControl> */}
   
         {/* 5.Pttt */}
         <Typography variant="h5" className={classes.text}>Phương thức thanh toán:</Typography>
@@ -134,6 +142,7 @@ const InventoryReturnFilter = (props) => {
             // label=" Chi nhánh"
             value={formik.values.paymentMethod}
           >
+             <MenuItem value="" ><em>Tất cả</em></MenuItem>
             <MenuItem value="card">Thẻ</MenuItem>
             <MenuItem value="cash">Tiền mặt</MenuItem>
           </Select>
