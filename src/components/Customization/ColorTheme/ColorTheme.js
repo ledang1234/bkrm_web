@@ -97,10 +97,11 @@ const SliderColor = (props) => {
 
   // state - border radius
   const colorLevel = customization.colorLevel;
+  const info = useSelector((state) => state.info);
 
   const handleColorLevel = (event, newValue) => {
     dispatch(customizeAction.setColorLevel(newValue));
-    updateLocalStorage({ type: "COLOR_LEVEL", payload: newValue })
+    updateLocalStorage(info,{ type: "COLOR_LEVEL", payload: newValue })
   };
 
   if (props.title === "Màu nền") {
