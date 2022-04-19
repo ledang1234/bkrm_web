@@ -167,7 +167,6 @@ export const empLogInHandler = (userName, password) => {
 export const setCustomization = (paramCustomization) => {
   return (dispatch) => {
     const fetchCustomization = () => {
-      debugger
       sessionStorage.setItem("customization", paramCustomization);
       let customization = JSON.parse(paramCustomization)
       dispatch(customizeAction.setBorderRadius(customization.borderRadius));

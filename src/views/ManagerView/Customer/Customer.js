@@ -129,7 +129,7 @@ console.log(info.store.general_configuration)
   const handleToggleFilter = () => {
     setOpenFilter(!openFilter);
   };
-  const [showOnlyDebt, setShowOnlyDebt] = React.useState(true);
+  const [showOnlyDebt, setShowOnlyDebt] = React.useState(false);
 
   //3.3. loc cot
 
@@ -219,7 +219,6 @@ console.log(info.store.general_configuration)
     if (showOnlyDebt) {
       return customerList.filter(cust => cust.debt > 0);
     }
-     
     return customerList
     
   }
@@ -291,10 +290,12 @@ console.log(info.store.general_configuration)
         ]}
 
         extra={<FormControlLabel
+          style={{marginLeft:10}} 
           control={
             <Switch
+              size="small"
               checked={showOnlyDebt}
-              onChange={(e) => setShowOnlyDebt(e.target.checked)}
+              onChange={(e) => { setPagingState({ ...pagingState, page: 0 }); setShowOnlyDebt(e.target.checked)}}
               color="primary"
             />
           }
@@ -316,9 +317,6 @@ console.log(info.store.general_configuration)
           orderBy={orderBy}
           onRequestSort={handleRequestSort}
           headerData={haveCustomerScore ?HeadCells.CustomerHeadCells :HeadCells.CustomerHeadCells.filter(item => !item.id.includes('score'))}
-          
-
-
         />
         <TableBody>
           {filterCustomer().map((row, index) => {

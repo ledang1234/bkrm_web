@@ -13,7 +13,9 @@ import {
   Tooltip,
   TableBody,
   IconButton,
-  Box
+  Box,
+  FormControlLabel,
+  Switch
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -113,6 +115,8 @@ const Supplier = () => {
   const handleToggleFilter = () => {
     setOpenFilter(!openFilter);
   };
+  const [showOnlyDebt, setShowOnlyDebt] = React.useState(false);
+
 
   //3.3. loc cot
   const initialQuery = {
@@ -223,6 +227,19 @@ const Supplier = () => {
         getDataExport={getDataExport}
         handleRemoveFilter={handleRemoveFilter}
         searchKey={query.searchKey} setSearchKey={(value) => setQuery({...query, searchKey: value})}
+
+        extra={<FormControlLabel
+          style={{marginLeft:10}} 
+          control={
+            <Switch
+              size="small"
+              checked={showOnlyDebt}
+              onChange={(e) => { setPagingState({ ...pagingState, page: 0 }); setShowOnlyDebt(e.target.checked)}}
+              color="primary"
+            />
+          }
+          label="Chỉ hiện NCC còn công nợ"
+        />}
       />
       <SupplierFilter
         openFilter={openFilter}
