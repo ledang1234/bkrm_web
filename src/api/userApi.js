@@ -41,7 +41,7 @@ const userAPi = {
     const config = {
       headers: { "content-type": "multipart/form-data" },
     };
-    return axiosClient.post(url,body, body instanceof FormData ? config : null)
+    return axiosClient.post(url,body,config)
   }
 };
 export default userAPi;

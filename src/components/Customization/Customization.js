@@ -29,10 +29,9 @@ import { IconSettings } from "@tabler/icons";
 
 // import redux
 import { customizeAction } from "../../store/slice/customizeSlice";
-import userAPi from "../../api/userApi"
 const drawerWidth = 300;
 
-export const updateLocalStorage = async (info = {}, action ) => {
+export const updateLocalStorage = (action) => {
   let customization = JSON.parse(sessionStorage.getItem("customization"));
   switch (action.type) {
     case "MODE":
@@ -43,7 +42,7 @@ export const updateLocalStorage = async (info = {}, action ) => {
       break;
     case "MENU":
       customization.menu = action.payload;
-      break;
+        break;
     case "FONT_FAMILY":
       customization.fontFamily = action.payload;
       break;
@@ -63,10 +62,6 @@ export const updateLocalStorage = async (info = {}, action ) => {
       console.log("invalid customization");
       break;
   }
-  await userAPi.editProfile(info.store_uuid, {
-    customization: JSON.stringify(customization),
-    role:info.role
-  });
   sessionStorage.setItem("customization", JSON.stringify(customization));
 };
 
@@ -82,7 +77,7 @@ const useStyles = makeStyles((theme) =>
       right: 25,
       boxShadow: theme.shadows[8],
       marginLeft: 200,
-      zIndex: 5
+      zIndex:5
     },
     drawer: {
       width: drawerWidth,
@@ -109,8 +104,7 @@ const Customization = () => {
   const classes = useStyles(theme);
   const dispatch = useDispatch();
   const customization = useSelector((state) => state.customize);
-  const info = useSelector((state) => state.info);
-  const store_uuid = info.store.uuid;
+
   const [open, setOpen] = React.useState(false);
   const handleToggle = () => {
     setOpen(!open);
@@ -119,31 +113,31 @@ const Customization = () => {
   const borderRadius = customization.borderRadius;
   const handleBorderRadius = (borderRadius) => {
     dispatch(customizeAction.setBorderRadius(borderRadius));
-    updateLocalStorage(info, { type: "BORDER_RADIUS", payload: borderRadius });
+    updateLocalStorage({ type: "BORDER_RADIUS", payload: borderRadius });
   };
 
   const mode = customization.mode;
   const handleMode = (mode) => {
     dispatch(customizeAction.setMode(mode));
-    updateLocalStorage(info, { type: "MODE", payload: mode });
+    updateLocalStorage({ type: "MODE", payload: mode });
   };
 
   const showMenu = customization.showMenu;
   const handleShowMenu = (showMenu) => {
     dispatch(customizeAction.setShowMenu(showMenu));
-    updateLocalStorage(info, { type: "SHOWMENU", payload: showMenu });
+    updateLocalStorage({ type: "SHOWMENU", payload: showMenu });
   };
-
+  
   const menu = customization.menu;
   const handleMenu = (menu) => {
     dispatch(customizeAction.setMenu(menu));
-    updateLocalStorage(info, { type: "MENU", payload: menu });
+    updateLocalStorage({ type: "MENU", payload: menu });
   };
 
   const fontFamily = customization.fontFamily;
   const handleFontChange = (fontFamily) => {
     dispatch(customizeAction.setFontFamily(fontFamily));
-    updateLocalStorage(info, { type: "FONT_FAMILY", payload: fontFamily });
+    updateLocalStorage({ type: "FONT_FAMILY", payload: fontFamily });
   };
   return (
     <>
@@ -180,53 +174,53 @@ const Customization = () => {
           {/* Menu */}
           <CardWrapper title="Thanh công cụ">
             <FormControl className={classes.fontForm}>
-              <RadioGroup
-                aria-label="menu"
-                value={menu}
-                // value={1}
-                onChange={(e) => handleMenu(e.target.value)}
-                name="row-radio-buttons-group"
-                style={{ width: 200 }}
-              >
-                <Grid
-                  container
-                  direction="row"
-
+                <RadioGroup
+                  aria-label="menu"
+                  value={menu}
+                  // value={1}
+                  onChange={(e) => handleMenu(e.target.value)}
+                  name="row-radio-buttons-group"
+                  style={{width:200}}
                 >
-                  <FormControlLabel
-                    value="1"
-                    control={<Radio />}
-                    label={1}
-                    sx={{
-                      "& .MuiSvgIcon-root": { fontSize: 28 },
-                      "& .MuiFormControlLabel-label": { color: "grey.900" },
-                    }}
-                  />
-                  <FormControlLabel
-                    value="2"
-                    control={<Radio />}
-                    label={2}
-                    sx={{
-                      "& .MuiSvgIcon-root": { fontSize: 28 },
-                      "& .MuiFormControlLabel-label": { color: "grey.900" },
-                    }}
-                  />
-                  <FormControlLabel
-                    value="3"
-                    control={<Radio />}
-                    label={3}
-                    sx={{
-                      "& .MuiSvgIcon-root": { fontSize: 28 },
-                      "& .MuiFormControlLabel-label": { color: "grey.900" },
-                    }}
-                  />
-
-                </Grid>
-              </RadioGroup>
-
+                  <Grid
+                    container
+                    direction="row"
+                
+                  >
+                      <FormControlLabel
+                        value="1"
+                        control={<Radio />}
+                        label={1}
+                        sx={{
+                          "& .MuiSvgIcon-root": { fontSize: 28 },
+                          "& .MuiFormControlLabel-label": { color: "grey.900" },
+                        }}
+                      />
+                      <FormControlLabel
+                        value="2"
+                        control={<Radio />}
+                        label={2}
+                        sx={{
+                          "& .MuiSvgIcon-root": { fontSize: 28 },
+                          "& .MuiFormControlLabel-label": { color: "grey.900" },
+                        }}
+                      />
+                      <FormControlLabel
+                        value="3"
+                        control={<Radio />}
+                        label={3}
+                        sx={{
+                          "& .MuiSvgIcon-root": { fontSize: 28 },
+                          "& .MuiFormControlLabel-label": { color: "grey.900" },
+                        }}
+                      />
+                  
+                  </Grid>
+                </RadioGroup>
+              
             </FormControl>
-            <Typography className={classes.headerTitle} variant="h5" style={{ marginLeft: 10, marginBottom: 5 }}> Hiển thị</Typography>
-            <MenuSelect showMenu={showMenu} handleShowMenu={handleShowMenu} />
+            <Typography className={classes.headerTitle} variant="h5" style={{marginLeft:10, marginBottom:5}}> Hiển thị</Typography>
+            <MenuSelect showMenu={showMenu} handleShowMenu={handleShowMenu}/>
           </CardWrapper>
 
           {/* Font family */}

@@ -33,6 +33,7 @@ function App() {
   const [path, setPath] = useState("/home");
   useEffect(() => {
     dispatch(verifyToken());
+    dispatch(setCustomization(customization));
     setPath(sessionStorage.getItem("BKRMprev"));
     // dispatch(loadBranches(store_uuid));
 
