@@ -164,7 +164,7 @@ const CartSummary = (props) => {
       }else{
         openNotification('error', 'Bạn không có quyền nhập giảm giá', '')
       }
-    };
+  };
 
     let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount) 
 

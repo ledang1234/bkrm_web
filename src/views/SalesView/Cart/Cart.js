@@ -685,17 +685,10 @@ const Cart = () => {
         setOpenPopUpWarning(true)
         return 
     }
-
-
-    
-  //   else if(!notExistZeroPrice || cart.paid_amount < cart.total_amount - cart.discount && !cart.customer){
-  //     if(!notExistZeroPrice){setOpenPopUpWarning(true)}
-  //     if(cart.paid_amount < cart.total_amount - cart.discount && !cart.customer) {setOpenPopUpWarning(true)}
-  //     return;
-
-  // }
     else {
       handleConfirmCallApi()
+
+
       // let d = moment.now() / 1000;
 
       // let orderTime = moment
@@ -749,9 +742,6 @@ const Cart = () => {
     }
   };
   const handleConfirmCallApi  = async () => {
-    if(cart.paid_amount < cart.total_amount - cart.discount && !cart.customer){
-      setOpenPopUpWarning(true)
-    }
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
     let cart = cartList[selectedIndex];
 
@@ -822,8 +812,9 @@ const Cart = () => {
   const [barcodeChecked, setBarcodeChecked] = useState(true);
 
   console.log("typeShow==='image''",typeShow)
-  console.log("typeShow==='image''",typeShow==='image')
+  console.log("store_setting?.printReceiptWhenSell",store_setting?.printReceiptWhenSell)
   return (
+    <>
     <Grid  container   direction="row" justifyContent="space-between"  alignItems="center"  spacing={2}>
       {addProduct &&
        <AddInventory
@@ -1026,10 +1017,8 @@ const Cart = () => {
                       })}
                     </TableBody>
                     </Table>
-                  </TableContainer>
-             
+                  </TableContainer>     
               }
-
               </CartSummary>
           </Box>
         </Card>
@@ -1039,10 +1028,12 @@ const Cart = () => {
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ReceiptPrinter cart={cartList[selectedIndex]} code={code} />
+          <ReceiptPrinter cart={cartList[selectedIndex]} code={code} type={store_setting?.printReceiptWhenSell.cartModal}/>
         </div>
       </div>
     </Grid>
+              {/* <ReceiptPrinter cart={cartList[selectedIndex]} code={code} /> */}
+</>
   );
 };
 
@@ -1051,21 +1042,21 @@ export default Cart;
 
 const PopUpWarningZeroPrice = ({open,handleClose,handleConfirmCallApi, isDebtWarning,existZeroPrice}) =>{
   const theme = useTheme();
-  const handleConfirm = () =>{
 
-  }
   return (
     <ModalWrapperWithClose title={isDebtWarning?"Hoá đơn nợ chưa có thông tin khách hàng":"Có sản phẩm đang có giá bán bằng 0"} open={open} handleClose={handleClose}>
       <Typography style={{ marginTop: 10, marginBottom: 10 }}>
       {isDebtWarning?"Bạn chưa nhập thông tin khách hàng. Hệ thống không theo dõi công nợ với khách lẻ." :"Giỏ hàng đang có sản phẩm có giá bán bằng 0."}
       </Typography>
-
+    {existZeroPrice && isDebtWarning?
+    <>
       <Typography variant="h3" style={{ marginTop: 10, marginBottom: 10 }}>
-      {existZeroPrice && isDebtWarning?"Có sản phẩm đang có giá bán bằng 0":null }
+        Có sản phẩm đang có giá bán bằng 0
       </Typography>
-      <Typography style={{ marginTop: 10, marginBottom: 10 }}>
-      {existZeroPrice && isDebtWarning?"Giỏ hàng đang có sản phẩm có giá bán bằng 0.":null }
+      <Typography style={{ marginTop: 10, marginBottom: 30 }}>
+         Giỏ hàng đang có sản phẩm có giá bán bằng 0
       </Typography>
+      </>:null}
 
 
       <Typography style={{ fontWeight: 600, color:theme.customization.primaryColor[500] }}>
