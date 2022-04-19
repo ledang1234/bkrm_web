@@ -13,7 +13,7 @@ const initialState = {
   secondaryColor: pink,
   colorLevel: 50,
   isSidebarOpen: null,
-  itemMenuOpen:  sessionStorage.getItem("BKRMopening") ? sessionStorage.getItem("BKRMopening"):-1 ,
+  itemMenuOpen:  localStorage.getItem("BKRMopening") ? localStorage.getItem("BKRMopening"):-1 ,
   showMenu:['salesModule','inventoryModule','hrModule','reportModule']
 
 };
@@ -72,7 +72,7 @@ const customizeSlice = createSlice({
     },
     setItemMenuOpen(state, action) {
       state.itemMenuOpen = action.payload;
-    },
+    }
   },
 });
 export default customizeSlice;

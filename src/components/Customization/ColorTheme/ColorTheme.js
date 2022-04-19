@@ -94,13 +94,14 @@ const SliderColor = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const customization = useSelector((state) => state.customize);
-
+  const info = useSelector((state) => state.info);
   // state - border radius
   const colorLevel = customization.colorLevel;
 
   const handleColorLevel = (event, newValue) => {
-    dispatch(customizeAction.setColorLevel(newValue));
-    updateLocalStorage({ type: "COLOR_LEVEL", payload: newValue })
+    dispatch(customizeAction.setColorLevel(newValue));    
+    updateLocalStorage(info,{ type: "COLOR_LEVEL", payload: newValue })
+
   };
 
   if (props.title === "Màu nền") {
@@ -278,17 +279,18 @@ const ButtonGroup = (props) => {
 const ColorTheme = () => {
   const dispatch = useDispatch();
   const customization = useSelector((state) => state.customize);
+  const info = useSelector((state) => state.info);
 
   const primaryColor = customization.primaryColor;
   const handlePrimaryColor = (e) => {
     dispatch(customizeAction.setPrimaryColor(e));
-    updateLocalStorage({ type: "PRIMARY_COLOR", payload: e })
+    updateLocalStorage(info,{ type: "PRIMARY_COLOR", payload: e })
   };
 
   const secondaryColor = customization.secondaryColor;
   const handleSecondaryColor = (e) => {
     dispatch(customizeAction.setSecondaryColor(e));
-    updateLocalStorage({ type: "SECONDARY_COLOR", payload: e })
+    updateLocalStorage(info,{ type: "SECONDARY_COLOR", payload: e })
   };
 
   return (

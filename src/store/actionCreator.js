@@ -18,12 +18,13 @@ export const verifyToken = () => {
       const response = await userApi.verify();
       return response;
     };
-  
+
     try {
       const rs = await verifyToken();
       console.log(rs)
       if (rs) {
         dispatch(authActions.logIn());
+        dispatch(setCustomization(rs.user.customization));
         if (rs.role === "owner") {
           dispatch(
             infoActions.setUser({
@@ -45,7 +46,7 @@ export const verifyToken = () => {
         dispatch(infoActions.setStore(rs.store));
         dispatch(infoActions.setRole(rs.role));
 
-     
+
 
       } else {
         dispatch(authActions.logOut());
@@ -75,6 +76,7 @@ export const logInHandler = (userName, password) => {
         localStorage.setItem("token", rs.access_token);
         dispatch(authActions.logIn());
         dispatch(loadingActions.finishLoad());
+        dispatch(setCustomization(rs.user.customization));
         dispatch(
           infoActions.setUser({
             ...rs.user,
@@ -162,10 +164,12 @@ export const empLogInHandler = (userName, password) => {
 //   };
 // };
 
-export const setCustomization = (ini) => {
+export const setCustomization = (paramCustomization) => {
   return (dispatch) => {
     const fetchCustomization = () => {
-      let customization = JSON.parse(sessionStorage.getItem("customization"));
+      debugger
+      sessionStorage.setItem("customization", paramCustomization);
+      let customization = JSON.parse(paramCustomization)
       dispatch(customizeAction.setBorderRadius(customization.borderRadius));
       dispatch(customizeAction.setColorLevel(customization.colorLevel));
       dispatch(customizeAction.setFontFamily(customization.fontFamily));
@@ -186,7 +190,7 @@ export const setCustomization = (ini) => {
         primaryColor: blue,
         secondaryColor: pink,
         colorLevel: 50,
-        showMenu:['salesModule','inventoryModule','hrModule','reportModule']
+        showMenu: ['salesModule', 'inventoryModule', 'hrModule', 'reportModule']
       };
       sessionStorage.setItem("customization", JSON.stringify(customization));
       console.log(error);
@@ -207,23 +211,23 @@ export const selectBranch = (uuid, name) => {
 
 
 // useEffect(() => {
-//   const getBranches = async()=> { 
+//   const getBranches = async()=> {
 //     try{
 //     const branches = await branchApi.getAllBranches(infoDetail.store.uuid);
-//     dispatch(infoActions.setBranchsOfStore(branches.data));  
+//     dispatch(infoActions.setBranchsOfStore(branches.data));
 //     }catch(err){
 //       console.log(err)
 //    }
 //   }
-//   getBranches()   
+//   getBranches()
 // }, []);
 // export const loadBranches= (store_uuid) => {
 //   return async (dispatch) => {
 //     try {
 //       const rs = await branchApi.getAllBranches(store_uuid);
 //       if (rs) {
-//         dispatch(infoActions.setBranchsOfStore(rs.data));  
-//       } 
+//         dispatch(infoActions.setBranchsOfStore(rs.data));
+//       }
 //     } catch (error) {
 //       console.log(error)
 //     }
