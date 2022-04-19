@@ -36,7 +36,7 @@ import { excel_name_customer, excel_data_customer } from "../../../assets/consta
 import CustomerRegisterEmail from '../../../components/Email/CustomerRegisterEmail';
 import { statusAction } from '../../../store/slice/statusSlice';
 import { removeAccents } from '../../../utils';
-import Fuse from 'fuse.js'
+import Fuse from 'fuse.js';
 import setting from "../../../assets/constant/setting";
 
 const Customer = () => {
@@ -340,7 +340,7 @@ console.log(info.store.general_configuration)
       </TableWrapper> :
         <>
           <Box style={{ minHeight: '60vh' }}>
-            {customerList?.map((row, index) => {
+            {filterCustomer().map((row, index) => {
               return (
                 <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} onReload={onReload}
                   img={ava} id={row.customer_code} name={row.name} phone={row.phone} score={haveCustomerScore?row.points:null}

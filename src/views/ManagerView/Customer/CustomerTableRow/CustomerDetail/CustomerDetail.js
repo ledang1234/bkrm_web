@@ -101,11 +101,11 @@ const CustomerDetail = (props) => {
   const payDebt = async () => {
     try {
       if (store_uuid) {
+        setOpenPayDebt(false);
         const res = await customerApi.payDebt(store_uuid, row.uuid, paidAmount);
         dispatch(statusAction.successfulStatus("Thanh toán nợ thành công"));
         setPaidAmount(0)
         props.parentProps.onReload();
-        setOpenPayDebt(false);
       }
     } catch(err) {
       dispatch(statusAction.failedStatus("Thanh toán nợ thất bại"));
