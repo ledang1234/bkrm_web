@@ -49,6 +49,7 @@ const setting = {
       returnImport: false,
       order: false,
       checkInventroy: false,
+      cartModal:"large"
     },
     alowDebt: {
       status: true,

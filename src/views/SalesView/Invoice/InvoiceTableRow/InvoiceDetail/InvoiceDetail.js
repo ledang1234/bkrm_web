@@ -190,11 +190,13 @@ function InvoiceDetail(props) {
     content: () => componentRef.current,
   });
 
+
   function getDifferenceInDays(date1, date2) {
     const diffInMs = Math.abs(date2 - date1);
     return diffInMs / (1000 * 60 * 60 * 24);
   }
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  const type = store_setting?.printReceiptWhenSell.cartModal;
 
   const returnLimit = store_setting?.returnLimit
 
@@ -613,7 +615,7 @@ function InvoiceDetail(props) {
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ReceiptPrinter cart={order} date={row.creation_date} />
+          <ReceiptPrinter cart={order} date={row.creation_date?.split(" ")[0].split('-').reverse().join('/')} code={row.order_code} type={type}/>
         </div>
       </div>
 

@@ -6,7 +6,7 @@ import TableWrapper from '../../components/TableCommon/TableWrapper/TableWrapper
 import {ThousandFormat} from '../../components/TextField/NumberFormatCustom'
 import moment from "moment";
 import setting from "../../assets/constant/setting"
-
+import {Docso} from "../../utils"
 import  clsx from "clsx"
 //import library
 import {
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
         textAlign: "center",
-        fontSize: "13.5px",
+        // fontSize: "13.5px",
         // fontSize: "12em",
         fontWeight: 700,
         marginTop:10,
@@ -67,6 +67,10 @@ const useStyles = makeStyles((theme) => ({
         // fontSize: "10em",
         // textAlign: "center",
     },
+    Largetext:{
+      color: "#000",
+      fontSize: "16px",
+    },
     media: {
       // height: '10%',
       // // width: '10%'
@@ -74,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
       // width:50
     },
     weight:{
-      fontWeight:500
+      fontWeight:600
     },
     root: {
       maxWidth: 10,
@@ -90,19 +94,21 @@ let d = moment.now() / 1000;
 let orderTime = moment
 .unix(d)
 .format("DD/MM/YYYY HH:mm", { trim: false });
+
+let orderDate = moment
+.unix(d)
+.format("DD/MM/YYYY", { trim: false });
+
 // CON THIEU LINK WEB + LOGO + MA HOA DON
 var QRCode = require('qrcode.react');
 
 
-export const ReceiptPrinter = ({cart, date,code}) => {
+export const NomalReceiptPrinter = ({cart, date,code, type}) => {
     const info = useSelector((state) => state.info);
-    // var link = "https://www.facebook.com/GiaLePhuongg/";
-    // var logo ="https://newstatic2.clingme.vn/resized/images/default/cms-images/place/0/0/17/1550914926_557320_w600.jpg"
     const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
     var link = store_setting?.custom_web;
     var logo  = store_setting?.img_url ;
-    console.log("logo", logo)
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -127,85 +133,23 @@ export const ReceiptPrinter = ({cart, date,code}) => {
             <>
              <Typography className={classes.center}>Địa chỉ: {info.store.district}, P. {info.store.ward} ,Q. {info.store.district}, {info.store.province}</Typography>
              <Typography className={classes.center}>Điện thoại: {info.store.phone}</Typography>
-          </>
+            </>
            }
             
 
             {/*  */}
-            <Typography className={classes.title}>HOÁ ĐƠN BÁN HÀNG</Typography>
+            <Typography className={classes.title} style={{fontSize: "13.5px"}}>HOÁ ĐƠN BÁN HÀNG</Typography>
             <Typography className={classes.center}>Mã HĐ: {code}</Typography>
-            <Typography className={classes.center} style={{marginBottom:10}}>Thời gian: {date? date: orderTime}</Typography>
+            <Typography className={classes.center} style={{marginBottom:10}}>Ngày: {date? date: orderTime}</Typography>
            
             <Box style={{marginBottom:20}}>
-            <Typography className={classes.text} >Thu ngân: {cart.created_by_user? cart.created_by_user.name: info.user.name}</Typography>
-            {cart.customer? <Typography className={classes.text} >Khách hàng: {cart.customer?.name} </Typography> :null}
-           </Box>
+              <Typography className={classes.text} >Thu ngân: {cart.created_by_user? cart.created_by_user.name: info.user.name}</Typography>
+              <Typography className={classes.text} >Khách hàng: {cart.customer? cart.customer?.name :"Khách lẻ"} </Typography> 
+            </Box>
             {/* List */}
-                {/* <Divider classes={{root: classes.divider}}/>
-                    <Grid container direction="row" justifyContent="space-between">
-                        <Grid item xs={5}>
-                        <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>SL</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>T.Tiền</Typography>
-                        </Grid>
-                    </Grid>
-                    <Divider classes={{root: classes.divider}}/>      
-                
-                    {item.map((row, index) => {
-                    return (
-                        <>
-                          <Typography className={classes.text} >{row.name}</Typography>
-                          <Grid container direction="row" justifyContent="space-between">
-                            <Grid item xs={5}>
-                            <Typography className={classes.text} ><ThousandFormat value={row.unit_price}/></Typography>
-                            </Grid>
-                            <Grid item xs={3}>
-                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity}/></Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
-                            </Grid>
-                        </Grid>
-                        <Divider classes={{root: classes.divider}}/>
-                        </>
-                    );
-                })} */}
-                {/* NHỎ */}
-                 {/* <Divider classes={{root: classes.divider}}/>
-                    <Grid container direction="row" justifyContent="space-between">
-                        <Grid item xs={7}>
-                        <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
-                        </Grid>
-                        <Grid item xs={5}>
-                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>T.Tiền</Typography>
-                        </Grid>
-                    </Grid>
-                    <Divider classes={{root: classes.divider}}/>      
-                
-                    {item.map((row, index) => {
-                    return (
-                        <>
-                          <Grid container direction="row" justifyContent="space-between">
-                            <Grid item xs={7}>
-                              <Typography className={classes.text} >{row.name}</Typography>
-                              <ListItem style={{padding:0, margin:0}}>
-                             <Typography className={classes.text} ><ThousandFormat value={row.quantity}/> x <ThousandFormat value={row.unit_price}/></Typography>
-                              </ListItem>
-                            </Grid>
-                            <Grid item xs={5}>
-                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
-                            </Grid>
-                        </Grid>
-                        <Divider classes={{root: classes.divider}}/>
-                        </>
-                     );
-                  })} */}
-
-
+              
+            {type ==='large'?
+            <>
               <Divider classes={{root: classes.divider}}/>
                     <Grid container direction="row" justifyContent="space-between">
                         <Grid item xs={4}>
@@ -244,6 +188,40 @@ export const ReceiptPrinter = ({cart, date,code}) => {
                         </>
                     );
                 })} 
+                </>:
+
+                <>
+                 <Divider classes={{root: classes.divider}}/>
+                    <Grid container direction="row" justifyContent="space-between">
+                        <Grid item xs={7}>
+                        <Typography className={clsx(classes.text,classes.weight)} >Sản phẩm</Typography>
+                        </Grid>
+                        <Grid item xs={5}>
+                        <Typography className={clsx(classes.text,classes.weight)} style={{textAlign: "center"}}>T.Tiền</Typography>
+                        </Grid>
+                    </Grid>
+                    <Divider classes={{root: classes.divider}}/>      
+                
+                    {item.map((row, index) => {
+                    return (
+                        <>
+                          <Grid container direction="row" justifyContent="space-between">
+                            <Grid item xs={7}>
+                              <Typography className={classes.text} >{row.name}</Typography>
+                              <ListItem style={{padding:0, margin:0}}>
+                             <Typography className={classes.text} ><ThousandFormat value={row.quantity}/> x <ThousandFormat value={row.unit_price}/></Typography>
+                              </ListItem>
+                            </Grid>
+                            <Grid item xs={5}>
+                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
+                            </Grid>
+                        </Grid>
+                        <Divider classes={{root: classes.divider}}/>
+                        </>
+                     );
+                  })} 
+
+                </>}
               
 
             <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}>
@@ -280,11 +258,7 @@ export const ReceiptPrinter = ({cart, date,code}) => {
               </Grid>
             </Grid>
 
-            
-
-       
             <Typography className={classes.center}> --------------------------</Typography>
-
             {link? 
             <>
                 <Typography className={classes.center}> Mở camera và quét mã để truy cập trang web</Typography>
@@ -297,6 +271,139 @@ export const ReceiptPrinter = ({cart, date,code}) => {
             <Typography className={classes.center}>Cảm ơn và hẹn gặp lại !</Typography> 
         </div>
     )
+}
+
+export const ReceiptPrinter = ({cart, date,code,type}) => {
+  const info = useSelector((state) => state.info);
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+
+  var link = store_setting?.custom_web;
+  var logo  = store_setting?.img_url ;
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
+  const item = cart.cartItem? cart.cartItem :cart.details
+  console.log("typetypetype",type)
+  if(type !== 'other'){
+    return <NomalReceiptPrinter cart={cart} date={date} code={code} type={type}/>
+  }
+ 
+  return (
+      <div style={{padding:30}} >
+          {/* Logo */}
+        
+          <Typography className={classes.title} style={{fontSize: "27px"}}>HOÁ ĐƠN BÁN HÀNG</Typography>
+          <Typography className={classes.center} style={{ fontSize: "16px", marginBottom:20}}>Ngày: {date? date: orderDate} - Mã HĐ: {code}</Typography>
+         
+          <Box style={{marginBottom:10}}>
+            <Grid container>
+              <Grid item xs={7}><Typography className={classes.Largetext} style={{fontWeight:500}}>Khách hàng: {cart.customer? cart.customer?.name :"Khách lẻ"} </Typography>  </Grid>
+              <Grid item xs={5}><Typography className={classes.Largetext} style={{fontWeight:500}}>Điện thoại: {cart.customer?.phone} </Typography>  </Grid>
+            </Grid>
+            <Typography className={classes.Largetext} style={{fontWeight:500}}>Địa chỉ: {cart.customer?.address } </Typography> 
+          </Box>
+          {/* List */}
+            <Divider classes={{root: classes.divider}}/>
+              <ListItem  style={{margin:0, padding:0,}}>
+                  <ListItem style={{margin:0, padding:0, justifyContent:'space-between' , width:400}} >
+                        <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                        <Typography className={clsx(classes.Largetext,classes.weight)}style={{marginTop:5, marginBottom:5}} >STT</Typography>
+                        <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                  </ListItem>
+                  <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width:2100 }}>
+                        <Typography className={clsx(classes.Largetext,classes.weight)}style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}>Tên hàng hoá, dịch vụ</Typography>
+                        <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                  </ListItem>
+                  <ListItem style={{margin:0, padding:0,justifyContent:'space-between',width: 620 }}>
+                        <Typography className={clsx(classes.Largetext,classes.weight)} style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}>Đơn vị</Typography>
+                        <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                  </ListItem>
+                  <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 650}}>
+                        <Typography className={clsx(classes.Largetext,classes.weight)}style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}>Số lượng</Typography>
+                        <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                  </ListItem>
+                  <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 750}}>
+                        <Typography className={clsx(classes.Largetext,classes.weight)}style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}>Đơn giá</Typography>
+                        <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                  </ListItem>
+                  <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 950}}>
+                        <Typography className={clsx(classes.Largetext,classes.weight)} style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}>Thành tiền</Typography>
+                        <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                  </ListItem>
+              </ListItem>
+            <Divider classes={{root: classes.divider}}/>      
+                {item.map((row, index) => {
+                  return (
+                    <>
+                    <ListItem  style={{margin:0, padding:0,}}>
+                        <ListItem style={{margin:0, padding:0, justifyContent:'space-between' , width:400}} >
+                              <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                              <Typography className={clsx(classes.Largetext)}style={{marginTop:5, marginBottom:5}} >{index +1}</Typography>
+                              <Divider orientation="vertical" classes={{root: classes.divider}} flexItem />
+                        </ListItem>
+                        <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width:2100 }}>
+                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "left",marginTop:5, marginBottom:5, paddingLeft:4}}>{row.name}</Typography>
+                              <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                        </ListItem>
+                        <ListItem style={{margin:0, padding:0,justifyContent:'space-between',width: 620 }}>
+                              <Typography className={clsx(classes.Largetext)} style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}>{row.quantity_per_unit ?row.quantity_per_unit :"Cái"}</Typography>
+                              <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                        </ListItem>
+                        <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 650}}>
+                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}><ThousandFormat value={ row.quantity}/></Typography>
+                              <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                        </ListItem>
+                        <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 750}}>
+                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "right", marginTop:5, marginBottom:5, paddingRight:4}}><ThousandFormat value={ row.unit_price}/></Typography>
+                              <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                        </ListItem>
+                        <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 950}}>
+                              <Typography className={clsx(classes.Largetext)} style={{flexGrow:1,textAlign: "right",marginTop:5, marginBottom:5, paddingRight:4}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
+                              <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+                        </ListItem>
+                  </ListItem>
+                   <Divider classes={{root: classes.divider}}/>  
+                   
+                  </>
+                  );
+              })} 
+            <Divider classes={{root: classes.divider}}/>  
+          <ListItem  style={{margin:0, padding:0,}}>    
+            <ListItem style={{margin:0, padding:0, justifyContent:'space-between' , width:3120}} >
+                  <Divider orientation="vertical" classes={{root: classes.divider}}  flexItem/>
+                  <Typography className={clsx(classes.Largetext,)}style={{marginTop:5, marginBottom:5, fontWeight:600}} >TỔNG CỘNG</Typography>
+                  <Divider orientation="vertical" classes={{root: classes.divider}} flexItem />
+            </ListItem>
+            <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 650}}>
+                  <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5, fontWeight:600}}><ThousandFormat value={ item?.reduce((sum,a) => sum + Number(a.quantity),0)}/></Typography>
+                  <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+            </ListItem>
+            <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 1700}}>
+                  <Typography className={clsx(classes.Largetext)} style={{flexGrow:1,textAlign: "right",marginTop:5, marginBottom:5, paddingRight:4, fontWeight:600}}><ThousandFormat value={cart.total_amount}/></Typography>
+                  <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
+            </ListItem>
+        </ListItem>
+        <Divider classes={{root: classes.divider}}/>  
+        <ListItem  style={{margin:0, padding:0,justifyContent:'space-between' , }}> 
+            <ListItem  style={{margin:0, padding:0,}}> 
+                <Divider orientation="vertical" classes={{root: classes.divider}}  flexItem/>
+                <Typography className={clsx(classes.Largetext)} style={{fontWeight:600,marginTop:3, marginBottom:3,marginLeft:5}}>Viết bằng chữ:</Typography>
+                <Typography className={clsx(classes.Largetext)} style={{marginTop:3, marginBottom:3,marginLeft:5, fontStyle:'italic'}}> {new Docso().doc(Number(cart.total_amount))} đồng./.</Typography>
+            </ListItem> 
+            <Divider orientation="vertical" classes={{root: classes.divider}}  flexItem/>
+
+        </ListItem> 
+        <Divider classes={{root: classes.divider}}/>  
+
+        <Grid container justifyContent='space-around' style={{marginTop:20}}>
+          <Grid item xs={4}><Typography className={classes.Largetext} style={{fontWeight:500,textAlign: "center",}}>Người mua hàng </Typography>  </Grid>
+          <Grid item xs={4}><Typography className={classes.Largetext} style={{fontWeight:500,textAlign: "center",}}>Người giao hàng </Typography>  </Grid>
+          <Grid item xs={4}><Typography className={classes.Largetext} style={{fontWeight:500,textAlign: "center",}}>Người bán hàng </Typography>  </Grid>
+        </Grid>
+        
+      </div>
+  )
+
 }
 
 export const ImportReceiptPrinter = ({cart, date}) => {

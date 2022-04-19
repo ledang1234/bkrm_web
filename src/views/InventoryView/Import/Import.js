@@ -66,6 +66,8 @@ import openNotification from "../../../components/StatusPopup/StatusPopup";
 import DialogWrapper from "../../../components/Modal/DialogWrapper";
 import ReccomendOrderPopUp from "./RecommendOrderPopUp/RecommendOrderPopUp";
 import { infoActions } from "../../../store/slice/infoSlice";
+import ModalWrapperWithClose from "../../../components/Modal/ModalWrapperWithClose";
+
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
 const Import = () => {
@@ -536,65 +538,76 @@ const Import = () => {
         message: "Có sản phẩm chưa nhập số lượng",
       });
     }
+    else if(  cart.paid_amount < cart.total_amount - cart.discount && !cart.supplier){
+      setOpenPopUpWarning(true)
+      return 
+  }
     else {
-      let d = moment.now() / 1000;
-      let importTime = moment
-        .unix(d)
-        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
-       
-
-
-      let body = {
-        supplier_uuid: cart.supplier ? cart.supplier.uuid : "",
-        total_amount: cart.total_amount.toString(),
-        payment_method: cart.payment_method,
-        paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
-        discount: cart.discount.toString(),
-        // CHECK NẾU TYPE BẰNG 0  thì status là chờ hàng
-        status:
-          Number(cart.total_amount) - Number(cart.discount) >=
-          Number(cart.paid_amount)
-            ? "debt"
-            : "closed",
-        details: cart.cartItem.map((item) => ({
-          ...item,
-          selectedBatches: item.selectedBatches.map((batch) => ({
-            ...batch,
-            returned_quantity: 0,
-          })),
-        })),
-        import_date: importTime,
-      };
-      try {
-        console.log(body)
-         // CHECK NẾU TYPE BẰNG 0(đặt)  thì gọi api đặt hàng (hoặc sửa luôn api này nhưng ko cộng tòn kho)
-        // CHECK NẾU TYPE BẰNG 0(đặt) thì setting có  gửi mail NCC ko , nếu có api gửi mail ?
-        let res = await purchaseOrderApi.addInventory(
-          store_uuid,
-          branch.uuid,
-          body
-        );
-        setSnackStatus({
-          style: "success",
-          message: type === 1? "Nhập hàng thành công: " + res.data.purchase_order_code : "Đặt hàng thành công: " + res.data?.purchase_order_code ,
-        });
-        setOpenSnack(true);
-        if(printReceiptWhenSell.status && printReceiptWhenSell.import && type === 1){
-          handlePrint()    
-        }
-        // handlePrint();
-        handleDelete(selectedIndex);
-      } catch (err) {
-        setSnackStatus({
-          style: "error",
-          message: type === 1? "Nhập hàng thất bại! " :"Dặt hàng thất bại! " ,
-        });
-        setOpenSnack(true);
-        console.log(err);
-      }
-      loadProducts();
+      handleConfirmCallApi(type)
     }
   };
+
+  const handleConfirmCallApi = async(type) =>{
+    let cart = cartList[selectedIndex];
+    const printReceiptWhenSell= store_setting?.printReceiptWhenSell
+
+    let d = moment.now() / 1000;
+    let importTime = moment
+      .unix(d)
+      .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+     
+
+
+    let body = {
+      supplier_uuid: cart.supplier ? cart.supplier.uuid : "",
+      total_amount: cart.total_amount.toString(),
+      payment_method: cart.payment_method,
+      paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
+      discount: cart.discount.toString(),
+      // CHECK NẾU TYPE BẰNG 0  thì status là chờ hàng
+      status:
+        Number(cart.total_amount) - Number(cart.discount) >=
+        Number(cart.paid_amount)
+          ? "debt"
+          : "closed",
+      details: cart.cartItem.map((item) => ({
+        ...item,
+        selectedBatches: item.selectedBatches.map((batch) => ({
+          ...batch,
+          returned_quantity: 0,
+        })),
+      })),
+      import_date: importTime,
+    };
+    try {
+      console.log(body)
+       // CHECK NẾU TYPE BẰNG 0(đặt)  thì gọi api đặt hàng (hoặc sửa luôn api này nhưng ko cộng tòn kho)
+      // CHECK NẾU TYPE BẰNG 0(đặt) thì setting có  gửi mail NCC ko , nếu có api gửi mail ?
+      let res = await purchaseOrderApi.addInventory(
+        store_uuid,
+        branch.uuid,
+        body
+      );
+      setSnackStatus({
+        style: "success",
+        message: type === 1? "Nhập hàng thành công: " + res.data.purchase_order_code : "Đặt hàng thành công: " + res.data?.purchase_order_code ,
+      });
+      setOpenSnack(true);
+      if(printReceiptWhenSell.status && printReceiptWhenSell.import && type === 1){
+        handlePrint()    
+      }
+      // handlePrint();
+      handleDelete(selectedIndex);
+    } catch (err) {
+      setSnackStatus({
+        style: "error",
+        message: type === 1? "Nhập hàng thất bại! " :"Dặt hàng thất bại! " ,
+      });
+      setOpenSnack(true);
+      console.log(err);
+    }
+    loadProducts();
+  }
 
 
 
@@ -608,6 +621,10 @@ const Import = () => {
   // };
 
   const [barcodeChecked, setBarcodeChecked] = useState(true);
+  const [openPopUpWarning, setOpenPopUpWarning] = useState(false);
+  const handleCloseWarning = () =>{
+    setOpenPopUpWarning(false)
+  }
 
 
   // ******* GỢI Ý ĐẶT HÀNG ********
@@ -869,6 +886,8 @@ const Import = () => {
           </Box>
         </Card>
       </Grid>
+      <PopUpWarningZeroPrice  open={openPopUpWarning} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} />
+
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
@@ -880,6 +899,42 @@ const Import = () => {
 };
 
 export default Import;
+
+
+const PopUpWarningZeroPrice = ({open,handleClose,handleConfirmCallApi, isDebtWarning}) =>{
+  const theme = useTheme();
+
+  return (
+    <ModalWrapperWithClose title={"Đơn nhập nợ chưa có thông tin nhà cung cấp"} open={open} handleClose={handleClose}>
+      <Typography style={{ marginTop: 10, marginBottom: 10 }}>
+            Bạn chưa nhập thông tin nhà cung cấp. Hệ thống không theo dõi công nợ với nhà cung cấp lẻ.
+      </Typography>
+    {/* {existZeroPrice && isDebtWarning?
+    <>
+      <Typography variant="h3" style={{ marginTop: 10, marginBottom: 10 }}>
+        Có sản phẩm đang có giá bán bằng 0
+      </Typography>
+      <Typography style={{ marginTop: 10, marginBottom: 30 }}>
+         Giỏ hàng đang có sản phẩm có giá bán bằng 0
+      </Typography>
+      </>:null} */}
+
+
+      <Typography style={{ fontWeight: 600, color:theme.customization.primaryColor[500] }}>
+        Bạn có chắc chắn muốn tiếp tục thanh toán?
+      </Typography>
+
+      <Grid item xs={12}style={{  display: "flex",  flexDirection: "row", justifyContent: "flex-end", paddingTop: 20, }} >
+        <Button onClick={handleClose} variant="contained" size="small" style={{ marginRight: 20 }}color="secondary" >
+          {" "} Huỷ{" "}
+        </Button>
+        <Button onClick={() => {handleConfirmCallApi(); handleClose()}} variant="contained" size="small" color="primary" >
+          Xác nhận{" "}
+        </Button>
+      </Grid>
+    </ModalWrapperWithClose>
+  )
+}
 
 
 
