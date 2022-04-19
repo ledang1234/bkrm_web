@@ -105,7 +105,9 @@ const GeneralSetting = () => {
 
   // })
 
-  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  // const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  const store_setting = setting
+
   // store_setting
   const [checked, setChecked] = React.useState(store_setting)
   const [change, setChange] = useState(false)
@@ -207,7 +209,6 @@ const GeneralSetting = () => {
   //   autoApplyDiscount: { status: true },
   // });
 
-  console.log("store_setting",store_setting)
 
   useEffect(() =>{
     if(change){

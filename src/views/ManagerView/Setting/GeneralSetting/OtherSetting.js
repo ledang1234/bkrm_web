@@ -1,11 +1,11 @@
 import React from 'react'
 import { useTheme, withStyles,makeStyles, createStyles } from "@material-ui/core/styles";
 
-import { Typography,Divider, Button,TextField,FormControlLabel,Checkbox,List,Card,FormControl,ListItem,ListSubheader,ListItemSecondaryAction,Switch,ListItemIcon, ListItemAvatar,Avatar,ListItemText,Grid, ButtonBase, Tooltip } from "@material-ui/core";
+import { Typography,Divider, Button,Radio,RadioGroup,TextField,FormControlLabel,Checkbox,List,Card,FormControl,ListItem,ListSubheader,ListItemSecondaryAction,Switch,ListItemIcon, ListItemAvatar,Avatar,ListItemText,Grid, ButtonBase, Tooltip } from "@material-ui/core";
 import {ThousandSeperatedInput} from "../../../../components/TextField/NumberFormatCustom"
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
-
+import {ReceiptPrinter} from "../../../../components/ReceiptPrinter/ReceiptPrinter"
 export const ReturnLimitSetting = ({checked,handleClose,handleSubmit,name}) => {
 
     const theme = useTheme();
@@ -82,28 +82,51 @@ export const CanFixPriceSellSetting = ({checked,handleClose,handleSubmit,name}) 
 
 export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,name}) => {
     const theme = useTheme();
-    const [discount, setDiscount] = React.useState(checked)
+    const [printer, setPrinter] = React.useState(checked)
     const handleCheckbox= (event) => {
-        setDiscount((prevState)=>{
+        setPrinter((prevState)=>{
             return {
                 ...prevState,
                 [event.target.name]:event.target.checked
             }
         })
     };
+    const handleRadio= (event) => {
+        setPrinter((prevState)=>{
+            return {
+                ...prevState,
+                [event.target.name]:event.target.value
+            }
+        })
+    };
+    console.log("printer?.cartModal",printer)
     return (
         <>
-        <FormControlLabel control={<Checkbox  color="primary" name="cart"  checked={discount.cart}  onChange={handleCheckbox} />} label="In hoá đơn sau khi bán hàng" />
-        <FormControlLabel control={<Checkbox  color="primary" name="import"  checked={discount.import}  onChange={handleCheckbox} />} label="In đơn sau khi nhập hàng" />
-        <FormControlLabel control={<Checkbox  color="primary" name="returnCart"  checked={discount.returnCart}  onChange={handleCheckbox} />} label="In hoá đơn sau khi trả hàng" />
-        <FormControlLabel control={<Checkbox  color="primary" name="returnImport"  checked={discount.returnImport}  onChange={handleCheckbox} />} label="In đơn sau khi trả hàng nhập" />
-        <FormControlLabel control={<Checkbox  color="primary" name="order"  checked={discount.order}  onChange={handleCheckbox} />} label="In đơn sau khi đặt hàng nhập" />
-        <FormControlLabel control={<Checkbox  color="primary" name="checkInventroy"  checked={discount.checkInventroy}  onChange={handleCheckbox} />} label="In đơn sau khi kiểm kho" />
+        <FormControlLabel control={<Checkbox  color="primary" name="cart"  checked={printer.cart}  onChange={handleCheckbox} />} label="In hoá đơn sau khi bán hàng" />
+        {/* <Grid container  direction="row" justifyContent="flex-end" alignItems="center"
+              style={{marginTop:mode?-10:null}}
+            > */}
+              <FormControl component="fieldset">
+                <RadioGroup  name="cartModal" value={printer?.cartModal} onChange={handleRadio}  > 
+                  <Grid container direction="row" >
+                    <FormControlLabel value="small"control={<Radio  size="small"/>} label="Mẫu nhỏ" />
+                    <FormControlLabel value="large" control={<Radio   size="small"/>} label="Mẫu lớn" />
+                    <FormControlLabel  value="other" control={<Radio   size="small"/>} label="Mẫu khác" />
+                  </Grid>
+                </RadioGroup>
+              </FormControl>
+           
+            {/* </Grid> */}
+        <FormControlLabel control={<Checkbox  color="primary" name="import"  checked={printer.import}  onChange={handleCheckbox} />} label="In đơn sau khi nhập hàng" />
+        <FormControlLabel control={<Checkbox  color="primary" name="returnCart"  checked={printer.returnCart}  onChange={handleCheckbox} />} label="In hoá đơn sau khi trả hàng" />
+        <FormControlLabel control={<Checkbox  color="primary" name="returnImport"  checked={printer.returnImport}  onChange={handleCheckbox} />} label="In đơn sau khi trả hàng nhập" />
+        <FormControlLabel control={<Checkbox  color="primary" name="order"  checked={printer.order}  onChange={handleCheckbox} />} label="In đơn sau khi đặt hàng nhập" />
+        <FormControlLabel control={<Checkbox  color="primary" name="checkInventroy"  checked={printer.checkInventroy}  onChange={handleCheckbox} />} label="In đơn sau khi kiểm kho" />
 
 
         <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
           <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
-          <Button onClick={()=>handleSubmit(name,discount)} variant="contained" size="small" color="primary" >OK  </Button>
+          <Button onClick={()=>handleSubmit(name,printer)} variant="contained" size="small" color="primary" >OK  </Button>
         </Grid>
         </>
 

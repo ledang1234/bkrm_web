@@ -134,6 +134,7 @@ const ImportSummary = (props) => {
       setAnchorEl(anchorEl ? null : event.currentTarget);
     };
 
+    const returnMoney = cartData.total_amount - cartData.discount - cartData.paid_amount
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -296,8 +297,9 @@ const ImportSummary = (props) => {
               justifyContent="space-between"
               alignItems="center"
               className={classes.marginRow}
+              style={returnMoney > 0  ? {color:'red', fontWeight:500}:{}}
             >
-              <Typography variant="h5">Còn lại</Typography>
+              <Typography variant="h5">{returnMoney > 0 ? "Còn nợ" :"Tiền thu lại"}</Typography>
               {/* <VNDInput
                     id="standard-basic" style={{ width: 90 }}
                     size="small" inputProps={{ style: { textAlign: "right" } }}
@@ -307,10 +309,13 @@ const ImportSummary = (props) => {
                 // id="standard-basic" style={{ width: 90 }}
                 // size="small" inputProps={{ style: { textAlign: "right" } }}
                 value={
+                  cartData.paid_amount-
+                  (
                   cartData.total_amount -
-                  cartData.discount -
-                  cartData.paid_amount
+                  cartData.discount )
+              
                 }
+                style={returnMoney > 0  ? {color:'red', fontWeight:500}:{}}
               />
             </Grid>:null}
             {/* :null} */}
