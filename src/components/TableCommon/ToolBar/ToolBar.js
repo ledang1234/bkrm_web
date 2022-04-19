@@ -207,7 +207,7 @@ const ToolBar = (props) => {
   };
   const handleImport = () => {
     setOpenImport(false);
-    if (custom) {
+    if (custom && customizable) {
       console.log(customCl)
       setListCl([])
       const json = excel.map((product) => ({
@@ -429,7 +429,7 @@ const ToolBar = (props) => {
             <a
               style={{ color: "blue", cursor: "pointer" }}
               onClick={() => {
-                exportExcel(excel_data, excel_name, columnsToKeep);
+                exportExcel(excel_data, excel_name,  columnsToKeep.filter(cl => cl.dbName != "total_payment" && cl.dbName !="debt"));
               }}
             >
               Excel mẫu
@@ -440,7 +440,7 @@ const ToolBar = (props) => {
 
 
         {
-          custom && listCl.length > 0 && excel &&
+          custom && listCl.length > 0 && excel && customizable &&
           <Grid container spacing={2} style={{ marginBottom: 15, width: 600, maxWidth: "90vw" }} direction="row" justifyContent="center" alignItems="center">
 
             <Grid item sm={6} xs={12}>
@@ -601,7 +601,7 @@ const ToolBar = (props) => {
             </Grid>
           </Grid>
         }
-        {custom ?
+        {custom  && customizable?
           <form>
             <label htmlFor="upload">Chọn file <strong>của bạn</strong>: </label>
             <input
