@@ -50,7 +50,7 @@ const CustomerTableRow = (props) => {
                 <TableCell align="left">{row.phone}</TableCell>
                 {haveCustomerScore?<TableCell align="right" ><ThousandFormat value={row.points} /></TableCell> :null}
                 <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_payment} /></TableCell> 
-                <TableCell align="right" >
+                <TableCell align="right" className={classes.fontName}>
                     <VNDFormat value={row.debt} />  
                 </TableCell>
                 <TableCell align="center" >

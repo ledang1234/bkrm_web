@@ -63,8 +63,8 @@ const DeleteAllModal = ({ openDeleteAll, deleteAll, setOpenDeleteAll }) => {
       }}
       message={
         <>
-          <Typography>
-            <strong>Xóa tất cả giao dịch</strong>
+          <Typography variant="h3" style={{marginBottom:10}}>
+            <strong>Xóa giao dịch cũ</strong>
           </Typography>
 
           <RadioGroup

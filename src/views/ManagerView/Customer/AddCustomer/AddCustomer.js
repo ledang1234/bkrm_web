@@ -235,7 +235,10 @@ const AddCustomer = (props) => {
           variant="contained"
           size="small"
           color="primary"
-          disabled = {!(customerFormik.isValid && Object.keys(customerFormik.touched).length > 0) || clicked}
+          disabled = {!(customerFormik.isValid
+            //  && Object.keys(customerFormik.touched).length > 0
+             ) 
+             || clicked}
         >
           Thêm
         </Button>

@@ -19,6 +19,7 @@ import barcodeIcon from "../../../../assets/img/icon/barcode_grey.png";
 import { TreeSelect } from 'antd';
 import productApi from "../../../../api/productApi";
 import {removeAccents} from "../../../../utils"
+import moment from 'moment';
 
 
 const EmployeeStatistics = () => {
@@ -44,8 +45,10 @@ const EmployeeStatistics = () => {
    // 
    const today = new Date()
    const [dayQuery,setDayQuery] = useState({
-     fromDate: new Date(today.setDate(today.getDate() - 7 +1)).toISOString().split('T')[0],
-     toDate: new Date().toISOString().split('T')[0],
+    //  fromDate: new Date(today.setDate(today.getDate() - 7 +1)).toISOString().split('T')[0],
+    //  toDate: new Date().toISOString().split('T')[0],
+    fromDate:  moment(new Date(today.getFullYear(), today.getMonth(), 1)).format("YYYY-MM-DD") ,
+    toDate:  moment(new Date(today.getFullYear(), today.getMonth()+1, 0)).format("YYYY-MM-DD"),
    });
 
   //  const [selectedBranches, setSelectedBranches] = useState(branches?branches:[]);

@@ -11,6 +11,7 @@ import storeApi from "../../../../api/storeApi";
 import defaultProduct from "../../../../assets/img/product/default-product.png"
 import ReportCard from "../../../../components/CardWrapper/ReportCard"
 import TypeReportSelect from "../../../../components/Select/TypeReportSelect"
+import moment from 'moment';
 
 const EndDateStatistic = () => {
     const theme = useTheme();
@@ -26,8 +27,10 @@ const EndDateStatistic = () => {
     // 
     const today = new Date()
     const [dayQuery,setDayQuery] = useState({
-        fromDate: new Date(today.setDate(today.getDate() - 7 +1)).toISOString().split('T')[0],
-        toDate: new Date().toISOString().split('T')[0],
+        // fromDate: new Date(today.setDate(today.getDate() - 7 +1)).toISOString().split('T')[0],
+        // toDate: new Date().toISOString().split('T')[0],
+        fromDate:  moment(new Date()).format("YYYY-MM-DD"),
+        toDate:  moment(new Date()).format("YYYY-MM-DD"),
     });
     //
     const [topData,setTopData] = useState([])
@@ -74,7 +77,7 @@ const EndDateStatistic = () => {
                     </Grid>
                     <Grid item >
                         <Box style={{marginBottom:5}}>
-                            <DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery}/>
+                            <DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery} defaultSelect={"today"}/>
                         </Box>
                         <Box style={{marginBottom:5}}>
                              <BranchSelect haveAllOption={true}selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>

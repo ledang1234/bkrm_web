@@ -55,9 +55,9 @@ const UpdateSupplier = (props) => {
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên nhà cung cấp"),
       phone: Yup.string()
-        .length(10, "Số điện thoại không chính xác")
-        .required("Nhập số điện thoại").matches(/^\d+$/),
-      address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+        .length(10, "Số điện thoại không chính xác"),
+        // .required("Nhập số điện thoại").matches(/^\d+$/),
+      // address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
       email: Yup.string().email("Email không chính xác")
     }),
     enableReinitialize: true
@@ -117,7 +117,7 @@ const UpdateSupplier = (props) => {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              required
+              // required
               id="outlined-basic"
               label="Địa chỉ"
               variant="outlined"
@@ -138,7 +138,7 @@ const UpdateSupplier = (props) => {
               variant="outlined"
               size="small"
               fullWidth
-              required
+              // required
               name="phone"
               onChange={supplierFormik.handleChange}
               value={supplierFormik.values.phone}
