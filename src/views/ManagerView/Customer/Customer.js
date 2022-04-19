@@ -204,16 +204,28 @@ console.log(info.store.general_configuration)
     }
   }
 
+  // const filterCustomer = () => {
+  //   if (query.searchKey) {
+  //     const options = {
+  //       includeScore: true,
+  //       // Search in `author` and in `tags` array
+  //       keys: ['customer_code', 'name', 'phone', 'email']
+  //     }
+  //     const fuse = new Fuse(customerList, options)
+  //     const result = fuse.search(query.searchKey);
+  //     return showOnlyDebt ? result.map(r => r.item).filter(cust => cust.debt > 0) : result.map(r => r.item);
+  //   } 
+    
+  //   if (showOnlyDebt) {
+  //     return customerList.filter(cust => cust.debt > 0);
+  //   }
+  //   return customerList
+    
+  // }
   const filterCustomer = () => {
     if (query.searchKey) {
-      const options = {
-        includeScore: true,
-        // Search in `author` and in `tags` array
-        keys: ['customer_code', 'name', 'phone', 'email']
-      }
-      const fuse = new Fuse(customerList, options)
-      const result = fuse.search(query.searchKey);
-      return showOnlyDebt ? result.map(r => r.item).filter(cust => cust.debt > 0) : result.map(r => r.item);
+      const result = customerList.filter(cust => `${cust.customer_code} - ${cust.name} - ${cust.phone} - ${cust.email}`.includes(query.searchKey))
+      return showOnlyDebt ? result.filter(cust => cust.debt > 0) : result;
     } 
     
     if (showOnlyDebt) {
