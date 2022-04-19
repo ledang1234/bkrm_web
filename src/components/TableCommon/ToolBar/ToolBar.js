@@ -365,7 +365,7 @@ const ToolBar = (props) => {
               </IconButton>
             </Tooltip>
 
-            {handleDeleteAll ? <Tooltip
+            {/* {handleDeleteAll ? <Tooltip
               title="Xóa tất cả hóa đơn"
             >
               <IconButton
@@ -374,7 +374,7 @@ const ToolBar = (props) => {
               >
                 <DeleteForeverOutlined className={classes.icon} />
               </IconButton>
-            </Tooltip>: null}
+            </Tooltip>: null} */}
 
             <Tooltip title="In">
               <IconButton

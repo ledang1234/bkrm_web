@@ -76,6 +76,7 @@ import ExposureIcon from '@material-ui/icons/Exposure';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import { DeleteOutline } from "@material-ui/icons";
 import { statusAction } from "../../../../store/slice/statusSlice";
+import DeleteAllModal from "./DeleteAllModal";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -311,9 +312,9 @@ const GeneralSetting = () => {
 
     // snackbar noti submit thành công
   };
-  const deleteAll = async () => {
+  const deleteAll = async (body) => {
     try {
-      const res = await storeApi.deleteAllTransactions(store_uuid);
+      const res = await storeApi.deleteAllTransactions(store_uuid, body);
       setOpenDeleteAll(false);
       dispatch(statusAction.successfulStatus('Xóa tất cả giao dịch thành công'))
     } catch (err) {
@@ -326,21 +327,10 @@ const GeneralSetting = () => {
   return (
     <Card className={classes.root}>
       {openStore && <StoreSetting open={openStore} handleClose={() => setOpenStore(false)} />}
-      {openDeleteAll && <ConfirmPopUp
-        open={openDeleteAll}
-        handleClose={() => {
-          setOpenDeleteAll(false);
-        }}
-        handleConfirm={deleteAll}
-        message={
-          <>
-          <Typography><strong>Xóa tất cả giao dịch</strong></Typography>
-          <Typography>
-            Hành động này sẽ xóa tất cả hóa đơn, đơn trả, đơn nhập hàng, đơn trả nhập hàng.<br/>
-            Bạn không thể khôi phục dữ liệu này. Bạn chắc chắn muốn tiếp tục?
-          </Typography>
-          </>
-        }
+      {openDeleteAll && <DeleteAllModal 
+        deleteAll={deleteAll}
+        openDeleteAll={openDeleteAll}
+        setOpenDeleteAll={setOpenDeleteAll}
       />}
       <Box
         display="flex"

@@ -144,9 +144,9 @@ const storeApi = {
       },
     });
   },
-  deleteAllTransactions: (storeUuid) =>{
+  deleteAllTransactions: (storeUuid, body) =>{
     const url = `stores/${storeUuid}/deleteAllTransactions`;
-    return axiosClient.post(url);
+    return axiosClient.post(url, body);
   },
 };
 export default storeApi;
