@@ -1,5 +1,6 @@
 const setting = {
     //
+    averageCost:{status:true},
     inventory: { status: true },
     recommendedProduct: { status: true },
     variation: { status: true },

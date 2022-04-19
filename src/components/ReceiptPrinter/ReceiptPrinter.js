@@ -293,7 +293,7 @@ export const ReceiptPrinter = ({cart, date,code,type}) => {
           {/* Logo */}
         
           <Typography className={classes.title} style={{fontSize: "27px"}}>HOÁ ĐƠN BÁN HÀNG</Typography>
-          <Typography className={classes.center} style={{ fontSize: "16px", marginBottom:20}}>Ngày: {date? date: orderDate} - Mã HĐ: {code}</Typography>
+          <Typography className={classes.center} style={{ fontSize: "16px", marginBottom:15}}>Ngày: {date? date: orderDate} - Mã HĐ: {code}</Typography>
          
           <Box style={{marginBottom:10}}>
             <Grid container>
@@ -338,27 +338,27 @@ export const ReceiptPrinter = ({cart, date,code,type}) => {
                     <ListItem  style={{margin:0, padding:0,}}>
                         <ListItem style={{margin:0, padding:0, justifyContent:'space-between' , width:400}} >
                               <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
-                              <Typography className={clsx(classes.Largetext)}style={{marginTop:5, marginBottom:5}} >{index +1}</Typography>
+                              <Typography className={clsx(classes.Largetext)}style={{marginTop:3, marginBottom:3}} >{index +1}</Typography>
                               <Divider orientation="vertical" classes={{root: classes.divider}} flexItem />
                         </ListItem>
                         <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width:2100 }}>
-                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "left",marginTop:5, marginBottom:5, paddingLeft:4}}>{row.name}</Typography>
+                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "left",marginTop:3, marginBottom:3, paddingLeft:4}}>{row.name}</Typography>
                               <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
                         </ListItem>
                         <ListItem style={{margin:0, padding:0,justifyContent:'space-between',width: 620 }}>
-                              <Typography className={clsx(classes.Largetext)} style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}>{row.quantity_per_unit ?row.quantity_per_unit :"Cái"}</Typography>
+                              <Typography className={clsx(classes.Largetext)} style={{flexGrow:1,textAlign: "center",marginTop:3, marginBottom:3}}>{row.quantity_per_unit ?row.quantity_per_unit :"Cái"}</Typography>
                               <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
                         </ListItem>
                         <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 650}}>
-                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "center",marginTop:5, marginBottom:5}}><ThousandFormat value={ row.quantity}/></Typography>
+                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "center",marginTop:3, marginBottom:3}}><ThousandFormat value={ row.quantity}/></Typography>
                               <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
                         </ListItem>
                         <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 750}}>
-                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "right", marginTop:5, marginBottom:5, paddingRight:4}}><ThousandFormat value={ row.unit_price}/></Typography>
+                              <Typography className={clsx(classes.Largetext)}style={{flexGrow:1,textAlign: "right", marginTop:3, marginBottom:3, paddingRight:4}}><ThousandFormat value={ row.unit_price}/></Typography>
                               <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
                         </ListItem>
                         <ListItem style={{margin:0, padding:0,justifyContent:'space-between', width: 950}}>
-                              <Typography className={clsx(classes.Largetext)} style={{flexGrow:1,textAlign: "right",marginTop:5, marginBottom:5, paddingRight:4}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
+                              <Typography className={clsx(classes.Largetext)} style={{flexGrow:1,textAlign: "right",marginTop:3, marginBottom:3, paddingRight:4}}><ThousandFormat value={row.quantity * row.unit_price}/></Typography>
                               <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
                         </ListItem>
                   </ListItem>

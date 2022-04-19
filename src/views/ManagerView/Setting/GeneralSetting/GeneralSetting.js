@@ -77,6 +77,8 @@ import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import { DeleteOutline } from "@material-ui/icons";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import DeleteAllModal from "./DeleteAllModal";
+import TimelineIcon from '@material-ui/icons/Timeline';
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -105,8 +107,8 @@ const GeneralSetting = () => {
 
   // })
 
-  // const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
-  const store_setting = setting
+  const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
+  // const store_setting = setting
 
   // store_setting
   const [checked, setChecked] = React.useState(store_setting)
@@ -379,6 +381,22 @@ const GeneralSetting = () => {
             }}
           />
         </SettingItem> */}
+        <SettingItem
+          name="averageCost"
+          statusChecked={checked?.averageCost?.status}
+          actionToggle={handleToggle}
+          title="Giá vốn trung bình"
+          subTitle="Giá vốn được tính theo phương pháp tính trung bình từ các giao dịch nhập hàng để tính lợi nhuận"
+        >
+          <TimelineIcon
+            style={{
+              fill: checked?.averageCost?.status
+                ? theme.customization.secondaryColor[500]
+                : null,
+            }}
+          />
+        </SettingItem>
+
         <SettingItem
           name="inventory"
           statusChecked={checked?.inventory?.status}
