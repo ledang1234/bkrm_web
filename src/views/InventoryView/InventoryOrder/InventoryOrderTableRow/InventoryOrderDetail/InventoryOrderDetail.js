@@ -43,10 +43,10 @@ import { grey } from "@material-ui/core/colors";
 
 // api
 import purchaseOrderApi from "../../../../../api/purchaseOrderApi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { VNDFormat } from "../../../../../components/TextField/NumberFormatCustom";
 import PayRemaining from "../../../../../components/Modal/PayRemaining";
-
+import { statusAction } from "../../../../../store/slice/statusSlice";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -93,13 +93,15 @@ const useStyles = makeStyles((theme) =>
 );
 
 const InventoryOrderDetail = (props) => {
-  const { row, openRow } = props.parentProps;
+  const { row, openRow, onReload } = props.parentProps;
   const { isMini } = props;
   //  tam thoi
 
   const currentUser = "Minh Tri";
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
+  const branch_uuid = info.branch.uuid;
+  const dispatch = useDispatch()
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -124,6 +126,17 @@ const InventoryOrderDetail = (props) => {
   const handleCloseReturn = () => {
     setOpen(false);
   };
+
+  const handleDelete = () => {
+    try {
+      const res = purchaseOrderApi.deletePurchaseOrder(store_uuid, branch_uuid, row.uuid);
+      dispatch(statusAction.successfulStatus("Xóa đơn nhập thành công"));
+      onReload();
+    } catch (err) {
+      dispatch(statusAction.failedStatus("Xóa đơn nhập thất bại"));
+      console.log(err)
+    }
+  }
 
   const [purchaseOrder, setPurchaseOrder] = useState({
     branch: null,
@@ -232,7 +245,15 @@ const InventoryOrderDetail = (props) => {
               <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
                   {/* {row.creation_date}{" "} */}
-                  {row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }
+                  {row.creation_date
+                    ?.split(" ")[0]
+                    .split("-")
+                    .reverse()
+                    .join("/")
+                    .concat(
+                      "\u00a0\u00a0" +
+                        row.creation_date?.split(" ")[1].substr(0, 5)
+                    )}
                 </Typography>
               </Grid>
             </Grid>
@@ -304,7 +325,9 @@ const InventoryOrderDetail = (props) => {
               </Grid>
               <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  <VNDFormat value={row.total_amount  -row.discount}></VNDFormat>{" "}
+                  <VNDFormat
+                    value={row.total_amount - row.discount}
+                  ></VNDFormat>{" "}
                 </Typography>
               </Grid>
             </Grid>
@@ -450,7 +473,7 @@ const InventoryOrderDetail = (props) => {
                   Tổng SL sản phẩm ({purchaseOrder.details.length})
                 </Typography>
               </Grid>
-              <Grid item  xs={3} sm={2}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   {calculateTotalQuantity(purchaseOrder.details)}
                 </Typography>
@@ -463,7 +486,7 @@ const InventoryOrderDetail = (props) => {
                   Tiền hàng
                 </Typography>
               </Grid>
-              <Grid item  xs={3} sm={2}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.total_amount} />
                 </Typography>
@@ -477,7 +500,7 @@ const InventoryOrderDetail = (props) => {
                 </Typography>
               </Grid>
 
-              <Grid item  xs={3} sm={2}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={purchaseOrder.discount} />
                 </Typography>
@@ -490,8 +513,16 @@ const InventoryOrderDetail = (props) => {
                   Tổng tiền nhập
                 </Typography>
               </Grid>
-              <Grid item  xs={3}sm={2}>
-                <Typography variant="body1" gutterBottom component="div"  style={{fontWeight:500, color:theme.customization.primaryColor[500]}}>
+              <Grid item xs={3} sm={2}>
+                <Typography
+                  variant="body1"
+                  gutterBottom
+                  component="div"
+                  style={{
+                    fontWeight: 500,
+                    color: theme.customization.primaryColor[500],
+                  }}
+                >
                   <VNDFormat value={row.total_amount - row.discount} />
                 </Typography>
               </Grid>
@@ -503,7 +534,7 @@ const InventoryOrderDetail = (props) => {
                   Đã trả NCC
                 </Typography>
               </Grid>
-              <Grid item xs={3}sm={2}>
+              <Grid item xs={3} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
                   <VNDFormat value={row.paid_amount} />
                 </Typography>
@@ -541,9 +572,24 @@ const InventoryOrderDetail = (props) => {
           <Button
             variant="contained"
             size="small"
+            // disabled={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0}
+            style={{ marginLeft: 15 }}
+            onClick={handleDelete}
+          >
+            Xóa đơn nhập
+          </Button>
+
+          <Button
+            variant="contained"
+            size="small"
             style={{ marginLeft: 15 }}
             onClick={handleClickOpen}
-            disabled={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0}
+            disabled={
+              Number(row.total_amount) -
+                Number(row.discount) -
+                Number(row.paid_amount) >
+              0
+            }
           >
             Trả hàng
           </Button>

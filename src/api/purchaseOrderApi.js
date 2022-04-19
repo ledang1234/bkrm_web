@@ -25,5 +25,9 @@ const purchaseOrderApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-orders/${purchaseOrdersUuid}`;
     return axiosClient.put(url, body)
   },
+  deletePurchaseOrder: (storeUuid, branchUuid, purchaseOrdersUuid) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/purchase-orders/${purchaseOrdersUuid}`;
+    return axiosClient.delete(url)
+  },
 };
 export default purchaseOrderApi;
