@@ -115,7 +115,7 @@ const MenuItem = (props) => {
   if (!info.store?.web_configuration && item.id  == 22){
     return null
   }
-  if( !["Cài đặt", "Thống Kê"].includes(item.title)  && !showMenu.includes(item.title) && !(showMenu.every(item => ['salesModule','inventoryModule','hrModule','reportModule'].includes(item)) &&showMenu.length === 4 )){
+  if( !["Cài đặt", "Thống Kê"].includes(item.title)  && !showMenu.includes(item.title) && !(showMenu.every(item => ['salesModule','inventoryModule','hrModule','reportModule'].includes(item)) && showMenu.length === 4 )){
     return null
   }
   return (

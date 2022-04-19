@@ -76,6 +76,7 @@ import { statusAction } from "../../../store/slice/statusSlice";
 import promotionCouponApi from '../../../api/promotionCouponApi';
 import { loadingActions } from "../../../store/slice/loadingSlice";
 import ModalWrapperWithClose from "../../../components/Modal/ModalWrapperWithClose";
+import { enableMapSet } from "@reduxjs/toolkit/node_modules/immer";
 
 const Cart = () => {
   const theme = useTheme();
@@ -620,10 +621,12 @@ const Cart = () => {
   };
 
   const[code,setCode] =React.useState("")
-  const [openPopUpWarningZernoPrice, setOpenPopUpWarningZernoPrice] = useState(false);
-const handleCloseWarning = () =>{
-  setOpenPopUpWarningZernoPrice(false)
-}
+  const [openPopUpWarning, setOpenPopUpWarning] = useState(false);
+  const handleCloseWarning = () =>{
+    setOpenPopUpWarning(false)
+  }
+
+  
 
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
@@ -676,10 +679,21 @@ const handleCloseWarning = () =>{
           message: "Không cho phép khách hàng nợ",
         });
       }
-    } else if(!notExistZeroPrice){
-      setOpenPopUpWarningZernoPrice(true)
-      return 
+    } 
+
+    else if(!notExistZeroPrice || ( cart.paid_amount < cart.total_amount - cart.discount && !cart.customer)){
+        setOpenPopUpWarning(true)
+        return 
     }
+
+
+    
+  //   else if(!notExistZeroPrice || cart.paid_amount < cart.total_amount - cart.discount && !cart.customer){
+  //     if(!notExistZeroPrice){setOpenPopUpWarning(true)}
+  //     if(cart.paid_amount < cart.total_amount - cart.discount && !cart.customer) {setOpenPopUpWarning(true)}
+  //     return;
+
+  // }
     else {
       handleConfirmCallApi()
       // let d = moment.now() / 1000;
@@ -735,6 +749,9 @@ const handleCloseWarning = () =>{
     }
   };
   const handleConfirmCallApi  = async () => {
+    if(cart.paid_amount < cart.total_amount - cart.discount && !cart.customer){
+      setOpenPopUpWarning(true)
+    }
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
     let cart = cartList[selectedIndex];
 
@@ -1017,7 +1034,8 @@ const handleCloseWarning = () =>{
           </Box>
         </Card>
       </Grid>
-      <PopUpWarningZeroPrice  open={openPopUpWarningZernoPrice} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} />
+      <PopUpWarningZeroPrice  open={openPopUpWarning} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} isDebtWarning={ cartList[selectedIndex].paid_amount < cartList[selectedIndex].total_amount - cartList[selectedIndex].discount && !cartList[selectedIndex].customer} 
+      existZeroPrice={!cartList[selectedIndex].cartItem.every(function (element, index) { if (Number(element.unit_price)  === 0) return false; else return true;})} />
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
@@ -1031,13 +1049,25 @@ const handleCloseWarning = () =>{
 export default Cart;
 
 
-const PopUpWarningZeroPrice = ({open,handleClose,handleConfirmCallApi, }) =>{
+const PopUpWarningZeroPrice = ({open,handleClose,handleConfirmCallApi, isDebtWarning,existZeroPrice}) =>{
   const theme = useTheme();
+  const handleConfirm = () =>{
+
+  }
   return (
-    <ModalWrapperWithClose title="Có sản phẩm đang có giá bán bằng 0" open={open} handleClose={handleClose}>
+    <ModalWrapperWithClose title={isDebtWarning?"Hoá đơn nợ chưa có thông tin khách hàng":"Có sản phẩm đang có giá bán bằng 0"} open={open} handleClose={handleClose}>
       <Typography style={{ marginTop: 10, marginBottom: 10 }}>
-        Giỏ hàng đang có sản phẩm có giá bán bằng 0.
+      {isDebtWarning?"Bạn chưa nhập thông tin khách hàng. Hệ thống không theo dõi công nợ với khách lẻ." :"Giỏ hàng đang có sản phẩm có giá bán bằng 0."}
       </Typography>
+
+      <Typography variant="h3" style={{ marginTop: 10, marginBottom: 10 }}>
+      {existZeroPrice && isDebtWarning?"Có sản phẩm đang có giá bán bằng 0":null }
+      </Typography>
+      <Typography style={{ marginTop: 10, marginBottom: 10 }}>
+      {existZeroPrice && isDebtWarning?"Giỏ hàng đang có sản phẩm có giá bán bằng 0.":null }
+      </Typography>
+
+
       <Typography style={{ fontWeight: 600, color:theme.customization.primaryColor[500] }}>
         Bạn có chắc chắn muốn tiếp tục thanh toán?
       </Typography>

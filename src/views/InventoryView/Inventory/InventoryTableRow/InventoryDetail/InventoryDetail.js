@@ -447,7 +447,7 @@ const imageList =JSON.parse(row.img_urls ? row.img_urls : "[]")
                      }}
                      batches={row.batches}
                      has_batches={row.has_batches}
-                    row={row}
+                     row={row}
                    />
                    
                    :null}

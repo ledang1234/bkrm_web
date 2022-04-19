@@ -38,14 +38,14 @@ const MenuGroup = (props) => {
 
     const [open, setOpen] = React.useState(true);
     const customization = useSelector((state) => state.customize);
-    const showMenu = customization.showMenu;
-    
-    var willHideGroupMenu=  item.children.every(function (element, index) {
-        if (showMenu.includes(element.key) ) return false;
+    const showMenu = customization.showMenu? customization.showMenu : ['salesModule','inventoryModule','hrModule','reportModule'];
+
+    var willHideGroupMenu = item.children.every(function (element, index) {
+        if (showMenu.includes(element.key)  ) return false;
         else return true;
       })
 
-    if(willHideGroupMenu){
+    if(willHideGroupMenu && !(showMenu.every(item => ['salesModule','inventoryModule','hrModule','reportModule'].includes(item)) && showMenu.length === 4 )){
        return null 
     }
     return (

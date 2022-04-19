@@ -4,7 +4,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
 import { Modal } from 'antd';
-import { Box, Grid, Collapse, InputAdornment, Typography, Button, ListItemIcon, ListItemText, IconButton, TextField } from '@material-ui/core';
+import { Box, Grid, Collapse, InputAdornment,ListItem, Typography, Button, ListItemIcon, ListItemText, IconButton, TextField } from '@material-ui/core';
 
 //import icon
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -21,8 +21,8 @@ import customerApi from "../../../../../api/customerApi";
 import { statusAction } from "../../../../../store/slice/statusSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import UpdateCustomer from "../CustomerDetail/UpdateCustomer/UpdateCustomer"
-import VNDInput, { VNDFormat, ThousandFormat } from '../../../../../components/TextField/NumberFormatCustom';
-
+import VNDInput, { VNDFormat, ThousandFormat, ThousandSeperatedInput } from '../../../../../components/TextField/NumberFormatCustom';
+// import CustomerDebtDetail from "./CustomerDebtDetail"
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -112,7 +112,7 @@ const CustomerDetail = (props) => {
     }
   }
 
-
+// const [openDetaiDebt,setOpenDetaiDebt] = useState(false)
   return (
     <Collapse in={isMini ? true : openRow === row.uuid} timeout="auto" unmountOnExit>
       <ConfirmPopUp
@@ -135,8 +135,8 @@ const CustomerDetail = (props) => {
         handleConfirm={payDebt}
         message={
           <>
-          <Typography><strong>Khách trả nợ:</strong></Typography>
-          <VNDInput
+          <Typography variant="h3" style={{marginBottom:15}}>Thu nợ <b style={{color:theme.customization.primaryColor[500]}}>{row.name}</b></Typography>
+          {/* <VNDInput
           size="small"
           value={paidAmount}
           onChange={(e) => {
@@ -150,7 +150,19 @@ const CustomerDetail = (props) => {
               / <VNDFormat value={row.debt} />
             </InputAdornment>
           }
-        />
+        /> */}
+        <ListItem >
+            <ThousandSeperatedInput  
+            style={{marginRight:10}}
+            value={paidAmount}
+            onChange={(e) => {
+              const amount = Number(e.target.value);
+              if (amount < 0 || amount > row.debt) return;
+              setPaidAmount(e.target.value);
+            }}
+            />
+              / <VNDFormat value={row.debt} style={{color:'#000', fontWeight:500}} />
+         </ListItem>
           </>
         }
       />}
@@ -248,7 +260,23 @@ const CustomerDetail = (props) => {
               <Grid item sm={6} >
                 <Typography variant="body1" gutterBottom component="div"><VNDFormat  value={row.debt} /> </Typography>
               </Grid>
-            </Grid>
+              {/* {row.debt > 0?
+              <Grid item sm={3} >
+                  <Button size='small' variant='contained'color='primary' style={{textTransform:'none'}} onClick={()=>setOpenDetaiDebt(true)}> Chi tiết</Button>            
+                </Grid>:null}
+                {openDetaiDebt?
+                <CustomerDebtDetail  
+                open={openDetaiDebt} 
+                 onClose={()=>setOpenDetaiDebt(false)}
+                 setReload={() => {
+                  // setReload();
+                  // setThisReload(!thisReload);
+                  
+                 }}
+                 />:null} */}
+              </Grid>
+              
+  
 
           </Grid>
 
@@ -258,7 +286,7 @@ const CustomerDetail = (props) => {
         <Grid container direction="row" justifyContent={"flex-end"} style={{ marginTop: 20 }}>
           <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick={() => { setEditItem(true) }}>Sửa</Button>
           <Button variant="contained" size="small" style={{ marginLeft: 15 }} onClick={() => { setDeleteConfirm(true) }}>Xoá</Button>
-          {row.debt > 0 ? <Button variant="contained" size="small" color="primary" style={{ marginLeft: 15 }} onClick={() => { setOpenPayDebt(true) }}>Trả nợ</Button> : null}
+          {row.debt > 0 ? <Button variant="contained" size="small" color="primary" style={{ marginLeft: 15 }} onClick={() => { setOpenPayDebt(true) }}>Thu nợ</Button> : null}
           <IconButton
             aria-label="more"
             aria-controls="long-menu"
