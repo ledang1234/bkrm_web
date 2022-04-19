@@ -172,7 +172,7 @@ const Customization = () => {
       >
         <PerfectScrollbar component="div">
           {/* Menu */}
-          <CardWrapper title="Menu">
+          <CardWrapper title="Thanh công cụ">
             <FormControl className={classes.fontForm}>
                 <RadioGroup
                   aria-label="menu"
@@ -219,11 +219,12 @@ const Customization = () => {
                 </RadioGroup>
               
             </FormControl>
+            <Typography className={classes.headerTitle} variant="h5" style={{marginLeft:10, marginBottom:5}}> Hiển thị</Typography>
             <MenuSelect showMenu={showMenu} handleShowMenu={handleShowMenu}/>
           </CardWrapper>
 
           {/* Font family */}
-          <CardWrapper title="Font Family">
+          <CardWrapper title="Phông chữ">
             <FormControl className={classes.fontForm}>
               <RadioGroup
                 aria-label="font-family"
@@ -270,7 +271,7 @@ const Customization = () => {
           </CardWrapper>
 
           {/* Mode */}
-          <CardWrapper title="Mode">
+          <CardWrapper title="Chế độ">
             <FormControl className={classes.fontForm}>
               <Grid>
                 <RadioGroup
@@ -282,7 +283,7 @@ const Customization = () => {
                   <FormControlLabel
                     value="Light"
                     control={<Radio />}
-                    label="Light"
+                    label="Sáng"
                     sx={{
                       "& .MuiSvgIcon-root": { fontSize: 28 },
                       "& .MuiFormControlLabel-label": { color: "grey.900" },
@@ -291,7 +292,7 @@ const Customization = () => {
                   <FormControlLabel
                     value="Dark"
                     control={<Radio />}
-                    label="Dark"
+                    label="Tối"
                     sx={{
                       "& .MuiSvgIcon-root": { fontSize: 28 },
                       "& .MuiFormControlLabel-label": { color: "grey.900" },

@@ -32,7 +32,8 @@ const ConfirmPopUp = (props) => {
         <Button
           color="secondary"
           size="small"
-          variant="outlined"
+          // variant="outlined"
+          variant="contained"
           style={{ marginRight: 20 }}
           onClick={props.handleClose}
         >
@@ -41,7 +42,8 @@ const ConfirmPopUp = (props) => {
         <Button
           color="primary"
           size="small"
-          variant="outlined"
+          variant="contained"
+          // variant="outlined"
           onClick={() => {
             props.handleConfirm(pwd);
           }}
