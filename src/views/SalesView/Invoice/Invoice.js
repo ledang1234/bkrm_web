@@ -46,7 +46,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { statusAction } from "../../../store/slice/statusSlice";
-import {VNDFormat} from '../../../components/TextField/NumberFormatCustom'
+import {ThousandFormat, VNDFormat} from '../../../components/TextField/NumberFormatCustom'
 
 const Invoice = () => {
   // fetch data here
@@ -198,9 +198,10 @@ const Invoice = () => {
         <Typography className={classes.headerTitle} variant="h5">
           Hoá đơn
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="body2" style={{paddingLeft: 25}}>
           {"Số hóa đơn: "}
-          <strong>{totalRows}</strong>
+          <ThousandFormat value={totalRows}></ThousandFormat>
+          {" - "}
           {"Tổng: "}
           <VNDFormat value={totalAmount} />
         </Typography>
