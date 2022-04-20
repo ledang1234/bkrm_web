@@ -67,7 +67,7 @@ export const InventoryReturnOrderHeadCells = [
 
   {
     id: "total",
-    align: "center",
+    align: "right",
     disablePadding: false,
     label: "Tổng tiền trả",
   },
@@ -130,7 +130,7 @@ export const InvoiceReturnHeadCells = [
   },
   {
     id: "total",
-    align: "center",
+    align: "right",
     disablePadding: false,
     label: "Tổng tiền trả",
   },

@@ -191,7 +191,7 @@ const HomePage = (props) => {
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
-                style={{marginLeft: 10, marginRight: 5 }}
+                style={{marginLeft: 10, marginRight: 5, minWidth:90 }}
               >
                 <Typography variant="h6" style={{ fontWeight: 700, fontSize: 13 }}>{roleUser}</Typography>
                 <Typography variant="h6" noWrap>

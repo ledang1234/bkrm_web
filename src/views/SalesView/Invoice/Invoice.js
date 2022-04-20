@@ -13,7 +13,9 @@ import {
   Avatar,
   Tooltip,
   TableBody,
-  Box
+  Box,
+  TableRow,
+  TableCell
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -198,13 +200,13 @@ const Invoice = () => {
         <Typography className={classes.headerTitle} variant="h5">
           Hoá đơn
         </Typography>
-        <Typography variant="body2" style={{paddingLeft: 25}}>
-          {"Số hóa đơn: "}
+        {/* <Typography variant="body2" style={{paddingLeft: 25}}>
+          <b style={{color:'#000'}}>{"Số đơn: "}</b>
           <ThousandFormat value={totalRows}></ThousandFormat>
           {" - "}
-          {"Tổng: "}
-          <VNDFormat value={totalAmount} />
-        </Typography>
+          <b style={{color:'#000'}}>{"Tổng: "}</b>
+          <VNDFormat  value={totalAmount} />
+        </Typography> */}
        
         </Grid>
 
@@ -286,8 +288,17 @@ const Invoice = () => {
             headerData={HeadCells.InvoiceHeadCells}
           />
           <TableBody>
+          <TableRow style={{backgroundColor:'#f5f5f5'}}>
+              <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
+              <TableCell/> <TableCell/> <TableCell/>
+              <TableCell align="right"style={{color:'#000', fontWeight:600}}>Tổng: <VNDFormat value={totalAmount} ></VNDFormat></TableCell>
+              <TableCell/>
+            </TableRow>
             {orders.map((row, index) => {
               return (
+                <>
+                {/* <TableRow style={{backgroundColor:theme.customization.primaryColor[50]}}> */}
+                
                 <InvoiceTableRow
                   key={row.uuid}
                   row={row}
@@ -295,6 +306,7 @@ const Invoice = () => {
                   handleOpenRow={handleOpenRow}
                   onReload={onReload}
                 />
+                </>
               );
             })}
           </TableBody>

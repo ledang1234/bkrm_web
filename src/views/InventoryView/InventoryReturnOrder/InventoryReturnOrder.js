@@ -9,9 +9,12 @@ import {
   Divider,
   Grid,
   TableBody,
-  Box
+  Box,
+  TableRow,
+  TableCell
 } from "@material-ui/core";
 import { useReactToPrint } from "react-to-print";
+import {ThousandFormat, VNDFormat} from '../../../components/TextField/NumberFormatCustom'
 
 //import api
 
@@ -58,6 +61,7 @@ const InventoryReturnOrder = () => {
     limit: 10,
   });
   const [totalRows, setTotalRows] = useState(0)
+  const [totalAmount, setTotalAmount] = useState(0);
 
   const initialQuery = {
     startDate: '',
@@ -93,6 +97,8 @@ const InventoryReturnOrder = () => {
         // setPagingState({ ...pagingState, total_rows: response.total_rows });
         setTotalRows(response.total_rows)
         setPurchaseReturns(response.data);
+        setTotalAmount(response.total_amount);
+
       } catch (error) {
         console.log(error);
       }
@@ -215,6 +221,12 @@ const InventoryReturnOrder = () => {
           headerData={HeadCells.InventoryReturnOrderHeadCells}
         />
         <TableBody>
+        <TableRow style={{backgroundColor:'#f5f5f5'}}>
+              <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
+              <TableCell/> <TableCell/> <TableCell/> 
+              <TableCell align="right"style={{color:'#000', fontWeight:600}}>Tổng: <VNDFormat value={totalAmount} ></VNDFormat></TableCell>
+              <TableCell/>
+          </TableRow>
           {purchaseReturns.map((row, index) => {
             return (
               <InventoryReturnTableRow

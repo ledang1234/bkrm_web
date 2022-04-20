@@ -80,7 +80,7 @@ const EndDateStatistic = () => {
                             <DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery} defaultSelect={"today"}/>
                         </Box>
                         <Box style={{marginBottom:5}}>
-                             <BranchSelect haveAllOption={true}selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>
+                           {branches?.length === 1?null:   <BranchSelect haveAllOption={true}selectedBranches={selectedBranches} setSelectedBranches={setSelectedBranches}/>}
                         </Box>       
                     </Grid>
                 </Grid>
