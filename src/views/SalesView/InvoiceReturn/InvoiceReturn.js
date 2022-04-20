@@ -231,7 +231,7 @@ function InvoiceReturn() {
               <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
               <TableCell/> <TableCell/><TableCell/>
               <TableCell align="right"style={{color:'#000', fontWeight:600}}>Tổng: <VNDFormat value={totalAmount} ></VNDFormat></TableCell>
-              <TableCell/>
+              {/* <TableCell/> */}
           </TableRow>
         <TableBody>
           {refunds.map((row, index) => (

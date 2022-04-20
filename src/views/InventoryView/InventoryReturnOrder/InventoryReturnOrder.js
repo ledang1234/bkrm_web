@@ -225,7 +225,7 @@ const InventoryReturnOrder = () => {
               <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
               <TableCell/> <TableCell/> <TableCell/> 
               <TableCell align="right"style={{color:'#000', fontWeight:600}}>Tổng: <VNDFormat value={totalAmount} ></VNDFormat></TableCell>
-              <TableCell/>
+              {/* <TableCell/> */}
           </TableRow>
           {purchaseReturns.map((row, index) => {
             return (
