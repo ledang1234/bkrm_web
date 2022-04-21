@@ -151,7 +151,7 @@ const EditBranch = (props) => {
     let lat, lng;
     try {
       ({lat, lng}  = await getGeoCode(
-        formik.values.address + " " + ward + " " + district + " " + province
+        formik.values.address + " " + ward + " " + district + " " + province,info.store.key
       ));
     } catch (error) {
       console.log(error)

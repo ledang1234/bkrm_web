@@ -43,6 +43,7 @@ const CartSummary = (props) => {
         try {
           const res = await userApi.getCity();
           setCityList(res.provinces);
+          formik.setFieldValue("cityList", res.provinces)
         } catch (error) {
           console.log(error);
         }
@@ -57,6 +58,7 @@ const CartSummary = (props) => {
           try {
             const res = await userApi.getDistrict(city_id);
             setDistrictList(res.data);
+            formik.setFieldValue("districtList",res.data)
           } catch (error) {
             console.log(error);
           }
@@ -71,6 +73,7 @@ const CartSummary = (props) => {
           try {
             const res = await userApi.getWard(city_id, district_id);
             setWardList(res.data);
+            formik.setFieldValue("wardList",res.data)
           } catch (error) {
             console.log(error);
           }

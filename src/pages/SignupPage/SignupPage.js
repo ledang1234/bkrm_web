@@ -5,7 +5,7 @@ import userApi from "../../api/userApi";
 import Typography from "@material-ui/core/Typography";
 import { Button, Paper, Step, StepLabel, Stepper } from "@material-ui/core";
 import useStyles from "./styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logInHandler } from "../../store/actionCreator";
 import { Link } from "react-router-dom";
 import UserInfo from "../../components/SignUp/UserInfo";
@@ -17,6 +17,7 @@ import { statusAction } from "../../store/slice/statusSlice";
 import getGeoCode from "../../components/BranchMap/Geocode";
 export default function SignUp() {
   const classes = useStyles();
+  const info = useSelector((state) => state.info);
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   const handleNext = () => {
@@ -80,7 +81,7 @@ export default function SignUp() {
     let lat, lng;
     try {
       ({ lat, lng } = await getGeoCode(
-        store_formik.values.address + " " + ward + " " + district + " " + province
+        store_formik.values.address + " " + ward + " " + district + " " + province,info.store.key
       ));
     } catch (error) {
       console.log(error)
