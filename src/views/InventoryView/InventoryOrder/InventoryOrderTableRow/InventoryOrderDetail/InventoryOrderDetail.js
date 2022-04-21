@@ -537,6 +537,15 @@ const InventoryOrderDetail = (props) => {
               </Button>{" "}
             </>
           ) : null} */}
+          {info.user?.uuid?.includes(purchaseOrder?.created_by_user?.uuid) ||  info.role?.includes("owner") ?
+            <Button
+              variant="contained"
+              size="small"
+              style={{ marginLeft: 15}}
+              // onClick={handleDelete}
+            >
+              Xóa đơn nhập
+          </Button> :null}
 
           <Button
             variant="contained"
@@ -548,6 +557,10 @@ const InventoryOrderDetail = (props) => {
             Trả hàng
           </Button>
 
+          <Button variant="contained" color="primary"size="small" style={{ marginLeft: 15 }} startIcon={<PrintTwoToneIcon fontSize="small" />} onClick={() => handlePrint()}>
+            In đơn nhập
+          </Button>
+{/* 
           <IconButton
             aria-label="more"
             aria-controls="long-menu"
@@ -573,13 +586,13 @@ const InventoryOrderDetail = (props) => {
               <ListItemText primary="In đơn nhập" />
             </StyledMenuItem>
 
-            {/* <StyledMenuItem>
+            <StyledMenuItem>
               <ListItemIcon style={{ marginRight: -15 }}>
                 <GetAppTwoToneIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Xuất excel" />
-            </StyledMenuItem> */}
-          </StyledMenu>
+            </StyledMenuItem>
+          </StyledMenu> */}
         </Grid>
 
         {/* 3. Receipt */}

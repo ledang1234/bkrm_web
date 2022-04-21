@@ -46,7 +46,7 @@ export  function stableSort(array, comparator) {
 
 export function calculateTotalQuantity ( cartList ) {
     var value= 0
-    cartList.map(item => value +=item.quantity )
+    cartList.map(item => value +=Number(item.quantity) )
     return value
   }
   export function calculateTotalReturnQuantity ( cartList ) {

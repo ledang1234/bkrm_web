@@ -33,11 +33,17 @@ export const InventoryOrderHeadCells = [
     label: "Nhà cung cấp",
   },
   // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // {
+  //   id: "payment",
+  //   align: "left",
+  //   disablePadding: false,
+  //   label: "Hình thức trả",
+  // },
   {
-    id: "payment",
+    id: "total_quantity",
     align: "left",
     disablePadding: false,
-    label: "Hình thức trả",
+    label: "Số lượng",
   },
   {
     id: "total",
@@ -58,11 +64,17 @@ export const InventoryReturnOrderHeadCells = [
     label: "Nhà cung cấp",
   },
   // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // {
+  //   id: "payment",
+  //   align: "left",
+  //   disablePadding: false,
+  //   label: "Hình thức trả",
+  // },
   {
-    id: "payment",
-    align: "left",
+    id: "total_quantity",
+    align: "right",
     disablePadding: false,
-    label: "Hình thức trả",
+    label: "Số lượng",
   },
 
   {
@@ -108,11 +120,17 @@ export const InvoiceHeadCells = [
   { id: "date", align: "left", disablePadding: false, label: "Ngày bán" },
   { id: "customer", align: "left", disablePadding: false, label: "Khách hàng" },
   // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // {
+  //   id: "payment",
+  //   align: "left",
+  //   disablePadding: false,
+  //   label: "Hình thức trả",
+  // },
   {
-    id: "payment",
-    align: "left",
+    id: "total_quantity",
+    align: "right",
     disablePadding: false,
-    label: "Hình thức trả",
+    label: "Số lượng",
   },
   { id: "total", align: "right", disablePadding: false, label: "Tổng tiền" },
   { id: "debt", align: "left", disablePadding: false, label: "Trạng thái" },
@@ -122,11 +140,17 @@ export const InvoiceReturnHeadCells = [
   { id: "date", align: "left", disablePadding: false, label: "Ngày trả" },
   { id: "customer", align: "left", disablePadding: false, label: "Khách hàng" },
   // { id: "branch", align: "left", disablePadding: false, label: "Chi nhánh" },
+  // {
+  //   id: "payment",
+  //   align: "left",
+  //   disablePadding: false,
+  //   label: "Hình thức trả",
+  // },
   {
-    id: "payment",
-    align: "left",
+    id: "total_quantity",
+    align: "right",
     disablePadding: false,
-    label: "Hình thức trả",
+    label: "Số lượng",
   },
   {
     id: "total",
@@ -159,7 +183,7 @@ export const CustomerHeadCells = [
   { id: "phone", align: "left", disablePadding: true, label: "Số điện thoại" },
   { id: "score", align: "right", disablePadding: true, label: "Tích điểm" },
   { id: "total", align: "right", disablePadding: true, label: "Tổng tiền mua" },
-  { id: "debt", align: "right", disablePadding: true, label: "Nợ" },
+  { id: "debt", align: "right", disablePadding: true, label: "Tổng nợ" },
   { id: "debt", align: "center", disablePadding: true, label: "" },
 ];
 

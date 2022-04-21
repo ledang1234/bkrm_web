@@ -50,7 +50,9 @@ const setting = {
       returnImport: false,
       order: false,
       checkInventroy: false,
-      cartModal:"large"
+      cartModal:"large",
+      titleNote:"",
+      contentNote:""
     },
     alowDebt: {
       status: true,
@@ -60,6 +62,11 @@ const setting = {
     },
     canEnterDiscountWhenSell:{
       status: true,
+    },
+    defaultPaymentAmount:{
+      status:true,
+      cart:true,
+      import:true
     },
     discount: {
       status: true,

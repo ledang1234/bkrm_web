@@ -24,7 +24,9 @@ function InvoiceReturnTableRow(props) {
 
         <TableCell align="left" style={{ minWidth: 100 }} >{row.customer_name}</TableCell>
         {/* <TableCell align="left">{row.branch_name}</TableCell> */}
-        <TableCell align="left">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell>
+        {/* <TableCell align="right">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell> */}
+        <TableCell align="right">{row.total_quantity}</TableCell>
+
         <TableCell align="right" className={classes.fontName} ><VNDFormat value={row.total_amount}/></TableCell>
         {/* <TableCell align="right" ></TableCell>
         <TableCell align="right" ></TableCell> */}

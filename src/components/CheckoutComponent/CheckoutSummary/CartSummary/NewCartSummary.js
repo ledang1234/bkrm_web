@@ -168,6 +168,7 @@ const CartSummary = (props) => {
 
     let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount) 
 
+    const totalQuantity = calculateTotalQuantity(cartData.cartItem)
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -251,7 +252,7 @@ const CartSummary = (props) => {
             >
               <div>
                 <ListItem style={{padding: 0,margin:0}}>
-                <Typography variant="h5">{!canEnterDiscountWhenSell && mode ?`Tổng tiền (${calculateTotalQuantity(cartData.cartItem)})`:'Tổng tiền hàng'}</Typography>
+                <Typography variant="h5">{!canEnterDiscountWhenSell && mode ?`Tổng tiền (${calculateTotalQuantity(cartData.cartItem)})`:`Tổng tiền hàng (${calculateTotalQuantity(cartData.cartItem)})`}</Typography>
                 {/* { filteredPromotion.length > 0   ? 
                 <div onClick={()=>{setOpenDiscount(!openDiscount)}}>
                     <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} />

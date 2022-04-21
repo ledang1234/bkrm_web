@@ -101,8 +101,9 @@ function InvoiceDetail(props) {
   const branch_uuid = info.branch.uuid;
   const dispatch = useDispatch()
 
+ 
   //  tam thoi
-  const currentUser = "Phuong Gia Le";
+
 
   const theme = useTheme();
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
@@ -154,6 +155,7 @@ function InvoiceDetail(props) {
       try {
         const res = await orderApi.getOrder(store_uuid, row.uuid);
         // console.log(res.data)
+        console.log("res",res.data)
         setOrder(res.data);
       } catch (error) {
         setOrder({
@@ -206,6 +208,8 @@ function InvoiceDetail(props) {
     if ( Number(element.returned_quantity) === 0) return false;
     else return true;
   })
+
+
   return (
     <Collapse
       in={isMini ? true : openRow === row.uuid}
@@ -535,7 +539,7 @@ function InvoiceDetail(props) {
           style={{ marginTop: 20 }}
         >
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
-          {currentUser === row.employee ? (
+          {/* {currentUser === row.employee ? (
             <>
               {" "}
               <Button
@@ -553,28 +557,35 @@ function InvoiceDetail(props) {
                 Xoá
               </Button>{" "}
             </>
-          ) : null}
-        {returnLimit.status === false || returnLimit.status === true && (getDifferenceInDays(new Date(),new Date(row.creation_date)) < returnLimit.day) ?
-            <Button
-              variant="contained"
-              size="small"
-              disabled={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0}
-              style={{ marginLeft: 15 }}
-              onClick={handleClickOpen}
-            >
-              Trả hàng
-          </Button>
-        :null}
+          ) : null} */}
+        
+          {info.user.uuid?.includes(order?.created_by_user.uuid) ||  info.role?.includes("owner") ?
             <Button
               variant="contained"
               size="small"
               // disabled={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0}
-              style={{ marginLeft: 15 }}
+              style={{ marginLeft: 15}}
               onClick={handleDelete}
             >
               Xóa hóa đơn
+          </Button> :null}
+
+          {returnLimit.status === false || returnLimit.status === true && (getDifferenceInDays(new Date(),new Date(row.creation_date)) < returnLimit.day) ?
+              <Button
+                variant="contained"
+                size="small"
+                disabled={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0}
+                style={{ marginLeft: 15 }}
+                onClick={handleClickOpen}
+              >
+                Trả hàng
+            </Button>
+          :null}
+           <Button variant="contained" color="primary"size="small" style={{ marginLeft: 15 }} startIcon={<PrintTwoToneIcon fontSize="small" />} onClick={() => handlePrint()}>
+            In hoá đơn
           </Button>
-          <IconButton
+
+          {/* <IconButton
             aria-label="more"
             aria-controls="long-menu"
             aria-haspopup="true"
@@ -583,9 +594,10 @@ function InvoiceDetail(props) {
             style={{ marginLeft: 10 }}
           >
             <MoreVertIcon />
-          </IconButton>
+          </IconButton> */}
+         
 
-          <StyledMenu
+          {/* <StyledMenu
             id="customized-menu"
             anchorEl={anchorEl}
             keepMounted
@@ -599,13 +611,13 @@ function InvoiceDetail(props) {
               <ListItemText primary="In hoá đơn" />
             </StyledMenuItem>
 
-            {/* <StyledMenuItem>
+            <StyledMenuItem>
               <ListItemIcon style={{ marginRight: -15 }}>
                 <GetAppTwoToneIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Xuất excel" />
-            </StyledMenuItem> */}
-          </StyledMenu>
+            </StyledMenuItem>
+          </StyledMenu> */}
         </Grid>
       </Box>
       {/* 
