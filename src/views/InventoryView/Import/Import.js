@@ -87,6 +87,7 @@ const Import = () => {
   const user_uuid = useSelector((state) => state.info.user.uuid);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
   const canEnterDiscountWhenSell = store_setting?.canEnterDiscountWhenSell?.status
+  const defaultPaymentAmount = store_setting?.defaultPaymentAmount.status && store_setting?.defaultPaymentAmount.import 
 
   const loadLocalImportListStorage = () => {
     if (window.localStorage.getItem("importListData")) {
@@ -458,7 +459,11 @@ const Import = () => {
   const handleUpdateDiscountDetail = (obj) => {
     let discountUpdate =  obj.type === '%'?( (Number(obj.value) * Number(cartList[selectedIndex].total_amount)/100/100).toFixed() * 100).toString() : obj.value 
     let newCartList = update(cartList, {
-      [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
+      // [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
+      [selectedIndex]: defaultPaymentAmount? { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }}:
+      { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }} ,
+
+
     });
   
     setCartList(newCartList);
@@ -468,7 +473,10 @@ const Import = () => {
   const handleUpdateDiscount = (amount) => {
     let newCartList = update(cartList, {
       // [selectedIndex]: { discount: { $set: amount } },
-      [selectedIndex]: { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  },
+      // [selectedIndex]: { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  },
+      [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
+      { discount: { $set: amount } },
+
 
     });
     setCartList(newCartList);
@@ -483,11 +491,17 @@ const Import = () => {
     let newCartList = update(cartList, {
       [selectedIndex]: { total_amount: { $set: total } },
     });
-    newCartList = update(newCartList, {
-      [selectedIndex]: {
-        paid_amount: { $set: total - cartList[selectedIndex].discount },
-      },
-    });
+    // newCartList = update(newCartList, {
+    //   [selectedIndex]: {
+    //     paid_amount: { $set: total - cartList[selectedIndex].discount },
+    //   },
+    // });
+    if( defaultPaymentAmount){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          paid_amount: { $set: total - cartList[selectedIndex].discount },
+        },
+      }) };
 
     setCartList(newCartList);
   };

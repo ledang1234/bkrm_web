@@ -61,6 +61,7 @@ import {
   CanFixPriceSellSetting,
   PrintReceiptWhenSellSetting,
   VatSetting,
+  DefaultPaymentSetting
 } from "./OtherSetting";
 import { useDispatch } from "react-redux";
 import ConfirmPopUp from '../../../../components/ConfirmPopUp/ConfirmPopUp'
@@ -78,7 +79,7 @@ import { DeleteOutline } from "@material-ui/icons";
 import { statusAction } from "../../../../store/slice/statusSlice";
 import DeleteAllModal from "./DeleteAllModal";
 import TimelineIcon from '@material-ui/icons/Timeline';
-
+import PaymentIcon from '@material-ui/icons/Payment';
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -263,7 +264,8 @@ const GeneralSetting = () => {
     orderLowStock: false,
     canFixPriceSell: false,
     printReceiptWhenSell: false,
-    inventory:false
+    inventory:false,
+    defaultPaymentAmount:false
   });
 
   const handleTogglePopup = (event, name) => {
@@ -664,6 +666,27 @@ const GeneralSetting = () => {
         </SettingItem>
 
         <SettingItem
+          name="defaultPaymentAmount"
+          detail={true}
+          setOpen={setOpen}
+          statusChecked={checked.defaultPaymentAmount?.status}
+          actionToggle={(e) => {
+            handleTogglePopup(e, "defaultPaymentAmount");
+          }}
+          title="Mặc định tiền thanh toán giao dịch"
+          subTitle="Hệ thống sẽ mặc định tiền khách thanh toán / tiền trả NCC bằng tổng tiền hoá đơn. Nếu không bật thì mặc định là 0." 
+        >
+          <PaymentIcon
+            style={{
+              fill: checked?.defaultPaymentAmount?.status
+                ? theme.customization.secondaryColor[500]
+                : null,
+            }}
+          />
+        </SettingItem>
+
+
+        <SettingItem
           name="discount"
           detail={true}
           setOpen={setOpen}
@@ -935,6 +958,21 @@ const GeneralSetting = () => {
             }} variant="contained" size="small" color="primary" >OK  </Button>
         </Grid>
         
+        </ModalWrapperWithClose>
+      ) : null}
+     
+      {open.defaultPaymentAmount ? (
+        <ModalWrapperWithClose
+          title="Thiết lập mặc định tiền thanh toán giao dịch"
+          open={open.defaultPaymentAmount}
+          handleClose={handleClosePopup}
+        >
+          <DefaultPaymentSetting
+            checked={checked.defaultPaymentAmount}
+            handleSubmit={handleSubmit}
+            name="defaultPaymentAmount"
+            handleClose={handleClosePopup}
+          />
         </ModalWrapperWithClose>
       ) : null}
 

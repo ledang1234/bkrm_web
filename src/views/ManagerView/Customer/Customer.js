@@ -38,7 +38,7 @@ import { statusAction } from '../../../store/slice/statusSlice';
 import { removeAccents } from '../../../utils';
 import Fuse from 'fuse.js';
 import setting from "../../../assets/constant/setting";
-
+import DebtHistory from "./DebtHistory/DebtHistory"
 const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -234,7 +234,7 @@ console.log(info.store.general_configuration)
     return customerList
     
   }
-
+  const [openHistory,setOpenHistory ] =  useState(false)
   return (
 
     <Card className={classes.root} >
@@ -249,6 +249,10 @@ console.log(info.store.general_configuration)
         </Typography>
 
         <Grid className={classes.btngroup1} >
+          <Button variant="outlined" color="primary"style={{marginRight:15}} onClick={()=>setOpenHistory(true)}>Lịch sử thu nợ</Button>
+          
+          {openHistory? <DebtHistory open={openHistory}  onClose={()=>setOpenHistory(false)}/>:null} 
+         
           <ButtonBase sx={{ borderRadius: '16px' }}
             onClick={handleClickOpen}
           >

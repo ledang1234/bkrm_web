@@ -83,6 +83,7 @@ const Cart = () => {
   const classes = useStyles(theme);
   const [selectedBranch, setSelectedBranch] = useState({});
 
+
   // redux
   const info = useSelector((state) => state.info);
   const searchBarState = info.searchBarState;
@@ -92,6 +93,10 @@ const Cart = () => {
   const store_setting = info.store.general_configuration
     ? JSON.parse(info.store.general_configuration)
     : setting;
+
+  const defaultPaymentAmount = store_setting?.defaultPaymentAmount.status && store_setting?.defaultPaymentAmount.cart 
+  console.log("store_setting",store_setting)
+  console.log("defaultPaymentAmount",defaultPaymentAmount)
 
     const canEnterDiscountWhenSell = store_setting?.canEnterDiscountWhenSell?.status
 
@@ -547,9 +552,13 @@ const Cart = () => {
     setCartList(newCartList);
   };
   const handleUpdateDiscountDetail = (obj) => {
+  
     let discountUpdate =  obj.type === '%'?( (Number(obj.value) * Number(cartList[selectedIndex].total_amount)/100/100).toFixed() * 100).toString() : obj.value 
     let newCartList = update(cartList, {
-      [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
+      // [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
+      [selectedIndex]: defaultPaymentAmount? { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }}:
+        { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }} ,
+
     });
   
     setCartList(newCartList);
@@ -562,7 +571,10 @@ const Cart = () => {
     let newCartList = update(cartList, {
       // [selectedIndex]: { discount: { $set: amount } },
 
-      [selectedIndex]: { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  },
+      // [selectedIndex]: { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  },
+      [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
+      { discount: { $set: amount } },
+
     });
 
     if (store_setting?.customerScore.status) {
@@ -599,11 +611,17 @@ const Cart = () => {
       [selectedIndex]: { total_amount: { $set: total } },
     });
 
+    // newCartList = update(newCartList, {
+    //   [selectedIndex]: {
+    //     paid_amount: { $set: total - cartList[selectedIndex].discount },
+    //   },
+    // }) ;
+    if( defaultPaymentAmount){
     newCartList = update(newCartList, {
       [selectedIndex]: {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
-    });
+    }) };
     if (store_setting?.customerScore.status) {
       newCartList = update(newCartList, {
         [selectedIndex]: {
