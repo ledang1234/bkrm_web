@@ -11,7 +11,9 @@ import {
   Avatar,
   Tooltip,
   TableBody,
-  Box
+  Box,
+  TableRow,
+  TableCell
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useSelector, useDispatch } from "react-redux";
@@ -37,6 +39,8 @@ import refundApi from "../../../api/refundApi";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+import {ThousandFormat, VNDFormat} from '../../../components/TextField/NumberFormatCustom'
+
 import { statusAction } from "../../../store/slice/statusSlice";
 function InvoiceReturn() {
   // fetch data here
@@ -119,6 +123,9 @@ function InvoiceReturn() {
     limit: 10,
   });
   const [totalRows, setTotalRows] = useState(0)
+  const [totalAmount, setTotalAmount] = useState(0);
+
+
   useEffect(() => {
     setPagingState({ ...pagingState, page: 0 });
   }, [reload, store_uuid, branch_uuid, query]);
@@ -137,6 +144,8 @@ function InvoiceReturn() {
         // setPagingState({ ...pagingState, total_rows: response.total_rows });
         setTotalRows(response.total_rows)
         setRefunds(response.data);
+        setTotalAmount(response.total_amount);
+
       } catch (error) {
         console.log(error);
       }
@@ -218,6 +227,12 @@ function InvoiceReturn() {
           onRequestSort={handleRequestSort}
           headerData={HeadCells.InvoiceReturnHeadCells}
         />
+        <TableRow style={{backgroundColor:'#f5f5f5'}}>
+              <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
+              <TableCell/> <TableCell/><TableCell/>
+              <TableCell align="right"style={{color:'#000', fontWeight:600}}>Tổng: <VNDFormat value={totalAmount} ></VNDFormat></TableCell>
+              {/* <TableCell/> */}
+          </TableRow>
         <TableBody>
           {refunds.map((row, index) => (
             <InvoiceReturnTableRow

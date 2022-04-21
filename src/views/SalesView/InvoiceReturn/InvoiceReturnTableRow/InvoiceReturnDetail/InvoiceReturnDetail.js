@@ -328,7 +328,7 @@ function InvoiceReturnDetail(props) {
 
         <Grid container direction="row" justifyContent={"flex-end"}style={{ marginTop: 20 }}>
           {/* Chỉ có nhân viên thực hiện nhập đơn đó  mới có thể xoá sửa */}
-          {currentUser === row.employee
+          {/* {currentUser === row.employee
             ? (
               <>
                 {' '}
@@ -338,7 +338,7 @@ function InvoiceReturnDetail(props) {
 
               </>
             )
-            : null}
+            : null} */}
 
           {/* <IconButton
             aria-label="more"

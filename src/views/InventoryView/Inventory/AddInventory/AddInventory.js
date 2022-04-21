@@ -182,7 +182,7 @@ const AddInventory = (props) => {
       );
       bodyFormData.append(
         "quantity_per_unit",
-        productFormik.values.unit.toString()
+        productFormik.values.unit ? productFormik.values.unit.toString() :"Cái"
       );
       bodyFormData.append(
         "min_reorder_quantity",
@@ -977,8 +977,9 @@ return (
             color="primary"
             disabled={
               !(
-                productFormik.isValid &&
-                Object.keys(productFormik.touched).length > 0
+                productFormik.isValid 
+                // &&
+                // Object.keys(productFormik.touched).length > 0
               ) ||
               Number(productFormik.values.importedPrice) >
                 Number(productFormik.values.salesPrice)

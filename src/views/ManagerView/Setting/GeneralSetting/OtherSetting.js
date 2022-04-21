@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTheme, withStyles,makeStyles, createStyles } from "@material-ui/core/styles";
 
-import { Typography,Divider, Button,Radio,RadioGroup,TextField,FormControlLabel,Checkbox,List,Card,FormControl,ListItem,ListSubheader,ListItemSecondaryAction,Switch,ListItemIcon, ListItemAvatar,Avatar,ListItemText,Grid, ButtonBase, Tooltip } from "@material-ui/core";
+import { Typography,Divider, Button,Radio,RadioGroup,TextareaAutosize,TextField,FormControlLabel,Checkbox,List,Card,FormControl,ListItem,ListSubheader,ListItemSecondaryAction,Switch,ListItemIcon, ListItemAvatar,Avatar,ListItemText,Grid, ButtonBase, Tooltip } from "@material-ui/core";
 import {ThousandSeperatedInput} from "../../../../components/TextField/NumberFormatCustom"
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
@@ -79,6 +79,32 @@ export const CanFixPriceSellSetting = ({checked,handleClose,handleSubmit,name}) 
 
   )
 }
+export const DefaultPaymentSetting = ({checked,handleClose,handleSubmit,name}) => {
+
+    const theme = useTheme();
+    const [defaultPayment, setDefaultPayment] = React.useState(checked)
+    const handleCheckbox= (event) => {
+        setDefaultPayment((prevState)=>{
+            return {
+                ...prevState,
+                [event.target.name]:event.target.checked
+            }
+        })
+    };
+    return (
+        <>
+        <FormControlLabel control={<Checkbox  color="primary" name="cart"  checked={defaultPayment.cart}  onChange={handleCheckbox} />} label={<><b>Bán hàng: </b>Mặc định tiền khách thanh toán bằng tiền hoá đơn</>} />
+        <FormControlLabel control={<Checkbox  color="primary" name="import"  checked={defaultPayment.import}  onChange={handleCheckbox} />} label={<><b>Nhập hàng: </b>Mặc định tiền trả NCC toán bằng tiền hoá đơn</>} />
+
+        <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
+          <Button onClick={handleClose} variant="contained"  size="small"  style={{ marginRight: 20 }} color="secondary"  >  Huỷ </Button>
+          <Button onClick={()=>handleSubmit(name,defaultPayment)} variant="contained" size="small" color="primary" >OK  </Button>
+        </Grid>
+        </>
+
+  )
+}
+
 
 export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,name}) => {
     const theme = useTheme();
@@ -91,7 +117,7 @@ export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,na
             }
         })
     };
-    const handleRadio= (event) => {
+    const handleValue= (event) => {
         setPrinter((prevState)=>{
             return {
                 ...prevState,
@@ -107,7 +133,7 @@ export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,na
               style={{marginTop:mode?-10:null}}
             > */}
               <FormControl component="fieldset">
-                <RadioGroup  name="cartModal" value={printer?.cartModal} onChange={handleRadio}  > 
+                <RadioGroup  name="cartModal" value={printer?.cartModal} onChange={handleValue}  > 
                   <Grid container direction="row" >
                     <FormControlLabel value="small"control={<Radio  size="small"/>} label="Mẫu nhỏ" />
                     <FormControlLabel value="large" control={<Radio   size="small"/>} label="Mẫu lớn" />
@@ -115,6 +141,10 @@ export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,na
                   </Grid>
                 </RadioGroup>
               </FormControl>
+              <Typography style={{color:'#000', fontWeight:500}}>Ghi chú thêm</Typography>
+              <TextField name="titleNote" placeholder="Tiêu đề" variant="outlined" size="small" style={{marginBottom:10}} value={printer?.titleNote}  onChange={handleValue} />
+              <TextareaAutosize name="contentNote"  minRows={5}  placeholder="Nội dung" value={printer?.contentNote}  onChange={handleValue} />
+
            
             {/* </Grid> */}
         <FormControlLabel control={<Checkbox  color="primary" name="import"  checked={printer.import}  onChange={handleCheckbox} />} label="In đơn sau khi nhập hàng" />

@@ -114,16 +114,14 @@ const AddEmployee = (props) => {
       user_name: Yup.string().required("Bắt buộc!"),
       phone: Yup.string()
       .length(10, "Số điện thoại không chính xác")
-      .required("Nhập số điện thoại")
+      // .required("Nhập số điện thoại")
       .matches(/^\d+$/, "Số điển thoại không chính xác"),
       email: Yup.string().email("Email không chính xác"),
       password: Yup.string().required("Bắt buộc!"),
       branches: Yup.array().min(1, "Ít nhất một chi nhánh"),
       permissions: Yup.array().min(1, "Ít nhất một chức năng"),
       email: Yup.string().email("Email không chính xác"),
-      phone: Yup.string()
-        .length(10, "Số điện thoại không chính xác")
-        .required("Nhập số điện thoại").matches(/^\d+$/)
+    
     }),
 
     onSubmit: async (values, actions) => {

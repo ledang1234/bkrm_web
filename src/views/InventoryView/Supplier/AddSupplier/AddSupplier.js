@@ -81,9 +81,10 @@ const AddSupplier = (props) => {
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên nhà cung cấp"),
       phone: Yup.string()
-        .length(10, "Số điện thoại không chính xác")
-        .required("Nhập số điện thoại").matches(/^\d+$/),
-      address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
+        .length(10, "Số điện thoại không chính xác"),
+      email: Yup.string().email("Email không chính xác")
+        // .required("Nhập số điện thoại").matches(/^\d+$/),
+      // address: Yup.string().required("Nhập địa chỉ nhà cung cấp"),
     }),
   })
 
@@ -215,7 +216,7 @@ const AddSupplier = (props) => {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              required
+              // required
               id="outlined-basic"
               label="Địa chỉ"
               variant="outlined"
@@ -236,7 +237,7 @@ const AddSupplier = (props) => {
               variant="outlined"
               size="small"
               fullWidth
-              required
+              // required
               name="phone"
               onChange={supplierFormik.handleChange}
               value={supplierFormik.values.phone}
@@ -318,7 +319,7 @@ const AddSupplier = (props) => {
             variant="contained"
             size="small"
             color="primary"
-            disabled = {!(supplierFormik.isValid && Object.keys(supplierFormik.touched).length > 0)}
+            disabled = {!(supplierFormik.isValid)} // && Object.keys(supplierFormik.touched).length > 0
           >
             Thêm
           </Button>

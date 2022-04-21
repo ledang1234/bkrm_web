@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux'
 import { grey, blue,purple} from '@material-ui/core/colors'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import * as _ from "lodash"
+import moment from 'moment';
 
 const IncomeStatistics = () => {   
     const theme = useTheme();
@@ -24,8 +25,8 @@ const IncomeStatistics = () => {
     // must be in format
     const today = new Date()
     const [dayQuery,setDayQuery] = useState({
-        fromDate: new Date(today.setDate(today.getDate() - 7 +1)).toISOString().split('T')[0],
-        toDate: new Date().toISOString().split('T')[0],
+        fromDate:  moment(new Date(today.getFullYear(), today.getMonth(), 1)).format("YYYY-MM-DD") ,
+        toDate:  moment(new Date(today.getFullYear(), today.getMonth()+1, 0)).format("YYYY-MM-DD"),
     });
      //branch
     // const [selectedBranches, setSelectedBranches] = useState(branches?branches:[]);

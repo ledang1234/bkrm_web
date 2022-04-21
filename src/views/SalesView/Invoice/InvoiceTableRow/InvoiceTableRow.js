@@ -10,7 +10,7 @@ import InvoiceDetail from "./InvoiceDetail/InvoiceDetail";
 import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 
 function InvoiceTableRow(props) {
-  const { row, handleOpenRow, openRow, onReload } = props;
+  const { row, handleOpenRow, openRow, onReload,hidenCollumn } = props;
   const theme = useTheme();
 
   const classes = useRowStyles();
@@ -40,9 +40,11 @@ function InvoiceTableRow(props) {
           {row.customer_name}
         </TableCell>
         {/* <TableCell align="left">{row.branch_name}</TableCell> */}
-        <TableCell align="left">
+        {/* <TableCell align="right">
           {row.payment_method === "cash" ? "Tiền mặt" : "Thẻ"}
-        </TableCell>
+        </TableCell> */}
+        <TableCell align="right">{row.total_quantity}</TableCell>
+
         <TableCell align="right" 
         style={{fontWeight:500}}
         // style={{color: theme.customization.mode === "Light"? '#000': null}}
@@ -50,9 +52,10 @@ function InvoiceTableRow(props) {
           {" "}
           <VNDFormat value={Number(row.total_amount) - Number(row.discount)} />
         </TableCell>
+        {hidenCollumn?.includes("debt") ?null:
         <TableCell align="center">
           <FormatedStatus debt={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0 ? 1 : 0} />
-        </TableCell>
+        </TableCell> }
       </TableRow>
 
       {/* DETAIL */}

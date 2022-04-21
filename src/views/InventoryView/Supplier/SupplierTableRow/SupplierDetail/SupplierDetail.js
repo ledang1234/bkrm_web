@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
@@ -11,6 +11,7 @@ import {
   Button,
   ListItemIcon,
   ListItemText,
+  ListItem,
   IconButton,
 } from "@material-ui/core";
 
@@ -28,7 +29,7 @@ import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
 import { useDispatch, useSelector } from "react-redux";
 import { statusAction } from "../../../../../store/slice/statusSlice";
 import UpdateSupplier from "./UpdateSupplier/UpdateSupplier";
-import { VNDFormat, ThousandFormat } from '../../../../../components/TextField/NumberFormatCustom';
+import { VNDFormat, ThousandFormat, ThousandSeperatedInput } from '../../../../../components/TextField/NumberFormatCustom';
 
 
 const useStyles = makeStyles((theme) =>
@@ -61,6 +62,7 @@ const SupplierDetail = (props) => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [deleteConfirm, setDeleteConfirm] = React.useState(false);
+  const [openPayDebt, setOpenPayDebt] = React.useState(false);
   const [editSupplier,setEditSupplier] = React.useState(false);
   const dispatch = useDispatch();
   const handleClick = (event) => {
@@ -80,6 +82,22 @@ const SupplierDetail = (props) => {
       dispatch(statusAction.failedStatus("Xóa thất bại"));
     }
   };
+
+  const [paidAmount, setPaidAmount] = useState(0)
+  const payDebt = async () => {
+    try {
+      if (store_uuid) {
+        setOpenPayDebt(false);
+        const res = await supplierApi.payDebt(store_uuid, row.uuid, paidAmount);
+        dispatch(statusAction.successfulStatus("Thanh toán nợ thành công"));
+        setPaidAmount(0)
+        props.parentProps.setReload();
+      }
+    } catch(err) {
+      console.log(err)
+      dispatch(statusAction.failedStatus("Thanh toán nợ thất bại"));
+    }
+  }
   return (
     <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <ConfirmPopUp
@@ -94,6 +112,30 @@ const SupplierDetail = (props) => {
           </Typography>
         }
       />
+      {openPayDebt && <ConfirmPopUp
+        open={openPayDebt}
+        handleClose={() => {
+          setOpenPayDebt(false);
+        }}
+        handleConfirm={payDebt}
+        message={
+          <>
+          <Typography variant="h3" style={{marginBottom:15}}>Thu nợ <b style={{color:theme.customization.primaryColor[500]}}>{row.name}</b></Typography>
+        <ListItem >
+            <ThousandSeperatedInput  
+            style={{marginRight:10}}
+            value={paidAmount}
+            onChange={(e) => {
+              const amount = Number(e.target.value);
+              if (amount < 0 || amount > row.debt) return;
+              setPaidAmount(e.target.value);
+            }}
+            />
+              / <VNDFormat value={row.debt} style={{color:'#000', fontWeight:500}} />
+         </ListItem>
+          </>
+        }
+      />}
       {editSupplier &&<UpdateSupplier supplierDetail={row} open={editSupplier} handleClose = {() => setEditSupplier(false)} onReload= {props.parentProps.setReload}/>}
       <Box margin={1}>
         <Typography
@@ -256,6 +298,7 @@ const SupplierDetail = (props) => {
           >
             Xoá
           </Button>
+          {row.debt > 0 ? <Button variant="contained" size="small" color="primary" style={{ marginLeft: 15 }} onClick={() => { setOpenPayDebt(true) }}>Thu nợ</Button> : null}
           <IconButton
             aria-label="more"
             aria-controls="long-menu"

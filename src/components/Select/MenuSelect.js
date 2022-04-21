@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { Tree } from 'antd';
 // import {salesModule,inventoryModule,hrModule,reportModule} from "../MenuList/MenuList"
 import {salesModule,inventoryModule,hrModule,reportModule}from "../MenuList/MenuList"
+import { useTheme } from "@material-ui/core/styles";
+import { grey} from '@material-ui/core/colors'
 
 import setting from "../../assets/constant/setting"
 import { useDispatch,useSelector } from "react-redux";
 import * as _ from 'lodash'
 
 const MenuSelect = ({handleShowMenu,showMenu}) => {
-  
+  const theme = useTheme();
   // var {salesModule,inventoryModule,hrModule,reportModule} = modules
 
 
@@ -62,6 +64,7 @@ console.log('permissions',permissions)
 
   return (
     <Tree
+    style={{backgroundColor:theme.customization.mode === "Light"? '#fff': '#2d2d2d', color:theme.customization.mode === "Light"? null: '#fff'}}
       showIcon
       checkable
       defaultExpandAll

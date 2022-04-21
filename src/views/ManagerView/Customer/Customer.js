@@ -36,9 +36,9 @@ import { excel_name_customer, excel_data_customer } from "../../../assets/consta
 import CustomerRegisterEmail from '../../../components/Email/CustomerRegisterEmail';
 import { statusAction } from '../../../store/slice/statusSlice';
 import { removeAccents } from '../../../utils';
-import Fuse from 'fuse.js'
+import Fuse from 'fuse.js';
 import setting from "../../../assets/constant/setting";
-
+import DebtHistory from "./DebtHistory/DebtHistory"
 const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -204,16 +204,28 @@ console.log(info.store.general_configuration)
     }
   }
 
+  // const filterCustomer = () => {
+  //   if (query.searchKey) {
+  //     const options = {
+  //       includeScore: true,
+  //       // Search in `author` and in `tags` array
+  //       keys: ['customer_code', 'name', 'phone', 'email']
+  //     }
+  //     const fuse = new Fuse(customerList, options)
+  //     const result = fuse.search(query.searchKey);
+  //     return showOnlyDebt ? result.map(r => r.item).filter(cust => cust.debt > 0) : result.map(r => r.item);
+  //   } 
+    
+  //   if (showOnlyDebt) {
+  //     return customerList.filter(cust => cust.debt > 0);
+  //   }
+  //   return customerList
+    
+  // }
   const filterCustomer = () => {
     if (query.searchKey) {
-      const options = {
-        includeScore: true,
-        // Search in `author` and in `tags` array
-        keys: ['customer_code', 'name', 'phone', 'email']
-      }
-      const fuse = new Fuse(customerList, options)
-      const result = fuse.search(query.searchKey);
-      return showOnlyDebt ? result.map(r => r.item).filter(cust => cust.debt > 0) : result.map(r => r.item);
+      const result = customerList.filter(cust => `${cust.customer_code} - ${cust.name} - ${cust.phone} - ${cust.email}`.includes(query.searchKey))
+      return showOnlyDebt ? result.filter(cust => cust.debt > 0) : result;
     } 
     
     if (showOnlyDebt) {
@@ -222,7 +234,7 @@ console.log(info.store.general_configuration)
     return customerList
     
   }
-
+  const [openHistory,setOpenHistory ] =  useState(false)
   return (
 
     <Card className={classes.root} >
@@ -237,6 +249,10 @@ console.log(info.store.general_configuration)
         </Typography>
 
         <Grid className={classes.btngroup1} >
+          <Button variant="outlined" color="primary"style={{marginRight:15}} onClick={()=>setOpenHistory(true)}>Lịch sử thu nợ</Button>
+          
+          {openHistory? <DebtHistory open={openHistory}  onClose={()=>setOpenHistory(false)}/>:null} 
+         
           <ButtonBase sx={{ borderRadius: '16px' }}
             onClick={handleClickOpen}
           >
@@ -328,7 +344,7 @@ console.log(info.store.general_configuration)
       </TableWrapper> :
         <>
           <Box style={{ minHeight: '60vh' }}>
-            {customerList?.map((row, index) => {
+            {filterCustomer().map((row, index) => {
               return (
                 <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} onReload={onReload}
                   img={ava} id={row.customer_code} name={row.name} phone={row.phone} score={haveCustomerScore?row.points:null}

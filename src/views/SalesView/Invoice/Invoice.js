@@ -13,7 +13,9 @@ import {
   Avatar,
   Tooltip,
   TableBody,
-  Box
+  Box,
+  TableRow,
+  TableCell
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -198,13 +200,13 @@ const Invoice = () => {
         <Typography className={classes.headerTitle} variant="h5">
           Hoá đơn
         </Typography>
-        <Typography variant="body2" style={{paddingLeft: 25}}>
-          {"Số hóa đơn: "}
+        {/* <Typography variant="body2" style={{paddingLeft: 25}}>
+          <b style={{color:'#000'}}>{"Số đơn: "}</b>
           <ThousandFormat value={totalRows}></ThousandFormat>
           {" - "}
-          {"Tổng: "}
-          <VNDFormat value={totalAmount} />
-        </Typography>
+          <b style={{color:'#000'}}>{"Tổng: "}</b>
+          <VNDFormat  value={totalAmount} />
+        </Typography> */}
        
         </Grid>
 
@@ -286,15 +288,25 @@ const Invoice = () => {
             headerData={HeadCells.InvoiceHeadCells}
           />
           <TableBody>
+          <TableRow style={{backgroundColor:'#f5f5f5'}}>
+              <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
+              <TableCell/> <TableCell/> <TableCell/>
+              <TableCell align="right"style={{color:'#000', fontWeight:600}}>Tổng: <VNDFormat value={totalAmount} ></VNDFormat></TableCell>
+              <TableCell/>
+            </TableRow>
             {orders.map((row, index) => {
               return (
+                <>
+                {/* <TableRow style={{backgroundColor:theme.customization.primaryColor[50]}}> */}
                 <InvoiceTableRow
                   key={row.uuid}
                   row={row}
                   openRow={openRow}
                   handleOpenRow={handleOpenRow}
                   onReload={onReload}
+                  // hidenCollumn={[""]}
                 />
+                </>
               );
             })}
           </TableBody>
@@ -335,7 +347,7 @@ const Invoice = () => {
       )}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ComponentToPrint orders={orders} classes={classes} />
+          <ComponentToPrint orders={orders} classes={classes} query={query} />
         </div>
       </div>
     </Card>
@@ -344,31 +356,48 @@ const Invoice = () => {
 
 export default Invoice;
 
-const ComponentToPrint = ({ orders, classes }) => {
+const ComponentToPrint = ({ orders, classes,query }) => {
+  // const initialQuery = {
+  //   startDate: '',
+  //   endDate: '',
+  //   minDiscount: null,
+  //   maxDiscount:null,
+  //   minTotalAmount: null,
+  //   maxTotalAmount: null,
+  //   status: '',
+  //   paymentMethod: '',
+  //   orderBy: 'orders.created_at',
+  //   sort: 'desc',
+  //   searchKey: '',
+  // };
+  
+  console.log("orders.slice(-1)[0].created_at", orders.slice(-1)[0].created_at.split(" ")[0].split('T')[0].split('-').reverse().join('/'))
+  const firstDate = orders.slice(-1)[0].created_at.split(" ")[0].split('T')[0].split('-').reverse().join('/')
+  console.log("firstDate",firstDate)
   return (
     <div>
-      <Typography
-        style={{
-          flexGrow: 1,
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: 500,
-          margin: 30,
-          color: "#000",
-        }}
-      >
-        Danh sách hoá đơn
-      </Typography>
+      <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+        <Typography style={{  fontSize: 20, fontWeight: 500}} >
+          Thống kê hoá đơn
+        </Typography>
+        <Typography  >
+          {/* Từ {initialQuery.startDate} - Ngày {initialQuery.endDate} */}
+          {`${query.startDate ? `Từ ngày:  ${query.startDate.split('-').reverse().join('/')} - ` :firstDate} Đến ngày: ${query.endDate? query.endDate.split('-').reverse().join('/') : moment(new Date()).format('DD/MM/YYYY')}`}
+        </Typography>
+      </Box>
       <div>
+      <TableWrapper  isCart={true} >
         <TableHeader
+        color="#000"
           classes={classes}
-          headerData={HeadCells.InvoiceHeadCells}
+          headerData={HeadCells.InvoiceHeadCells.filter(item => item.id !== "debt")}
         />
         <TableBody>
           {orders.map((row, index) => {
-            return <InvoiceTableRow key={row.uuid} row={row} />;
-          })}
+            return  <InvoiceTableRow key={row.uuid} row={row} hidenCollumn={["debt"]}/>
+            })}
         </TableBody>
+        </TableWrapper>
       </div>
     </div>
   );

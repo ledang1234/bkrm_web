@@ -33,5 +33,11 @@ const supplierApi = {
     const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
     return axiosClient.post(url, body);
   },
+  payDebt: (storeUuid, supplierUuid, paidAmount) => {
+    const url = `/stores/${storeUuid}/suppliers/${supplierUuid}/payDebt`;
+    return axiosClient.put(url,{
+      paid_amount: paidAmount
+    });
+  },
 };
 export default supplierApi;

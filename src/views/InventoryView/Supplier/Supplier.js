@@ -12,10 +12,10 @@ import {
   Avatar,
   Tooltip,
   TableBody,
+  Switch,
   IconButton,
   Box,
   FormControlLabel,
-  Switch
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
@@ -43,6 +43,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { statusAction } from '../../../store/slice/statusSlice';
+import Fuse from 'fuse.js';
 
 const Supplier = () => {
   const [supplerList, setSupplierList] = useState([]);
@@ -56,8 +57,39 @@ const Supplier = () => {
 
   const theme = useTheme();
   const classes = useStyles(theme);
-  const xsScreen = useMediaQuery(theme.breakpoints.down("xs")) ;
+  const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
+  const filterSupplier = () => {
+    if (query.searchKey) {
+      const result = supplerList.filter(sup => `${sup.supplier_code} - ${sup.name} - ${sup.phone} - ${sup.email}`.includes(query.searchKey))
+      return showOnlyDebt ? result.filter(sup => sup.debt > 0) : result;
+    } 
+    
+    if (showOnlyDebt) {
+      return supplerList.filter(sup => sup.debt > 0);
+    }
+    return supplerList
+  }
+
+  useEffect(() => {
+    if (supplerList.length) {
+      window.localStorage.setItem(
+        "suppliers",
+        JSON.stringify({ 
+          store_uuid: store_uuid, 
+          data: supplerList })
+      );
+    }
+  }, [supplerList]);
+
+  useEffect(() => {
+    if (window.localStorage.getItem("suppliers")) {
+      const suppliers = JSON.parse(window.localStorage.getItem("suppliers"));
+      if (suppliers.store_uuid === store_uuid ) {
+        setSupplierList(suppliers.data);
+      }
+    }
+  }, [store_uuid, reload])
 
   //// 1. Add pop up + noti
   //add
@@ -135,7 +167,8 @@ const Supplier = () => {
 
   const [totalRows, setTotalRows] = useState(0)
   useEffect(() => {
-    setPagingState({...pagingState, page: 0})
+    setPagingState({...pagingState, page: 0});
+    setTotalRows(filterSupplier().length);
   }, [reload, store_uuid, query])
   useEffect(() => {
     const loadData = async () => {
@@ -155,11 +188,10 @@ const Supplier = () => {
     };
     
     if (store_uuid) {
-
       loadData();
     }
     
-  }, [reload,pagingState.page, store_uuid, pagingState.limit, query]);
+  }, [reload, store_uuid]);
   const getDataExport = async () => {
     try {
       const response = await supplierApi.getSuppliers(
@@ -265,7 +297,7 @@ const Supplier = () => {
           headerData={HeadCells.SupplierHeadCells}
         />
         <TableBody>
-          {supplerList.map((row, index) => {
+          {filterSupplier().map((row, index) => {
             return (
               <SupplierTableRow
                 setReload={onReload}
@@ -280,7 +312,7 @@ const Supplier = () => {
       </TableWrapper>:
       <>
         <Box style={{minHeight:'60vh'}}>
-      {supplerList.map((row, index) => {
+      {filterSupplier().map((row, index) => {
         return (
           <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow}  onReload={onReload} 
             id={row.supplier_code} name={row.name} phone={row.phone} 

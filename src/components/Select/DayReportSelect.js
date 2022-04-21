@@ -11,50 +11,52 @@ import { DatePicker, Space } from 'antd';
 import moment from 'moment';
 
 import { Typography } from 'antd';
-const DayReportSelect = ({dayQuery,setDayQuery}) => {
+const DayReportSelect = ({dayQuery,setDayQuery,defaultSelect}) => {
     const { RangePicker } = DatePicker;
 
     const [openPopUp, setOpenPopUp] = useState(false)
-    const [day, setDay] = useState("7day")
+    const [day, setDay] = useState(defaultSelect?defaultSelect:"this_month")
     const  handleChangeDay = (e) =>{
        let today = new Date()
        var toDate = new Date()
        var fromDate =new Date()
+ 
        if(!e.target.value ){
-        console.log("hello")
         return 
        }
-       if(e.target.value === "today") { fromDate = fromDate.toISOString().split('T')[0] }
-       else if(e.target.value === "7day"){  fromDate = new Date(fromDate.setDate(fromDate.getDate() - 7 +1)).toISOString().split('T')[0] ;toDate = toDate.toISOString().split('T')[0]}
-       else if(e.target.value === "30day"){  fromDate = new Date(fromDate.setDate(fromDate.getDate() - 30 + 1)).toISOString().split('T')[0] ;toDate = toDate.toISOString().split('T')[0] }
-       else if(e.target.value === "365day"){ fromDate = new Date(fromDate.setDate(fromDate.getDate() - 365 +1)).toISOString().split('T')[0];toDate = toDate.toISOString().split('T')[0] }
+       if(e.target.value === "today") { fromDate = moment(fromDate).format("YYYY-MM-DD") ; toDate = fromDate}
+       else if(e.target.value === "7day"){  fromDate = moment(new Date(fromDate.setDate(fromDate.getDate() - 7 +1))).format("YYYY-MM-DD") ;toDate = moment(toDate).format("YYYY-MM-DD")}
+       else if(e.target.value === "30day"){  fromDate =  moment(new Date(fromDate.setDate(fromDate.getDate() - 30 + 1))).format("YYYY-MM-DD") ;toDate = moment(toDate).format("YYYY-MM-DD") }
+       else if(e.target.value === "365day"){ fromDate =  moment(new Date(fromDate.setDate(fromDate.getDate() - 365 +1))).format("YYYY-MM-DD");toDate = moment(toDate).format("YYYY-MM-DD") }
       
 
-      else if(e.target.value === "yesterday"){  fromDate = new Date(fromDate.setDate(fromDate.getDate() -1 )).toISOString().split('T')[0] ; toDate = fromDate}
-      else if(e.target.value === "this_month"){  fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), 2).toISOString().split('T')[0] ;toDate = new Date(toDate.getFullYear(), toDate.getMonth()+1, 1).toISOString().split('T')[0]}
-      else if(e.target.value === "this_year"){  fromDate = new Date(fromDate.getFullYear()-1, 11 , 31 +2).toISOString().split('T')[0];toDate =  new Date(toDate.getFullYear(), 11 , 31 +1).toISOString().split('T')[0] }
+      else if(e.target.value === "yesterday"){  fromDate = moment(new Date(fromDate.setDate(fromDate.getDate() -1 ))).format("YYYY-MM-DD") ; toDate = fromDate}
+      else if(e.target.value === "this_month"){  fromDate =moment(new Date(fromDate.getFullYear(), fromDate.getMonth(), 1)).format("YYYY-MM-DD") ;toDate = moment(new Date(toDate.getFullYear(), toDate.getMonth()+1, 0)).format("YYYY-MM-DD")}
+      else if(e.target.value === "this_year"){  fromDate = moment(new Date(fromDate.getFullYear()-1, 11 , 31 +1)).format("YYYY-MM-DD");toDate =  moment(new Date(toDate.getFullYear()-1, 11 , 31 )).format("YYYY-MM-DD") }
 
       // 
 
-      else if(e.target.value === "previous_month"){  fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth()-1, 2).toISOString().split('T')[0] ;toDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1).toISOString().split('T')[0]}
-      else if(e.target.value === "previous_year"){  fromDate = new Date(fromDate.getFullYear()-2, 11 , 31 +2).toISOString().split('T')[0];toDate =  new Date(toDate.getFullYear()-1, 11 , 31 +1).toISOString().split('T')[0] }
+      else if(e.target.value === "previous_month"){  fromDate = moment(new Date(fromDate.getFullYear(), fromDate.getMonth()-1, 1)).format("YYYY-MM-DD") ;toDate =  moment(new Date(toDate.getFullYear(), toDate.getMonth(), 0)).format("YYYY-MM-DD")}
+      else if(e.target.value === "previous_year"){  fromDate =moment( new Date(fromDate.getFullYear()-2, 11 , 31 +1)).format("YYYY-MM-DD");toDate =   moment(new Date(toDate.getFullYear()-1, 11 , 31 )).format("YYYY-MM-DD") }
 
       else if(e.target.value === "this_week"){  
         const first = today.getDate() - today.getDay() + 1;
-        fromDate = new Date(fromDate.setDate(first)).toISOString().split('T')[0];toDate =  new Date(toDate.setDate(first+6)).toISOString().split('T')[0] 
+        fromDate = moment(new Date(fromDate.setDate(first))).format("YYYY-MM-DD");toDate =  moment(new Date(toDate.setDate(first+6))).format("YYYY-MM-DD")
        }
       else if(e.target.value === "previous_week"){  
         const first = today.getDate() - today.getDay() -7 + 1;
-        fromDate = new Date(fromDate.setDate(first)).toISOString().split('T')[0];toDate =  new Date(toDate.setDate(first+6)).toISOString().split('T')[0] 
+        fromDate = moment(new Date(fromDate.setDate(first))).format("YYYY-MM-DD");toDate =  moment(new Date(toDate.setDate(first+6))).format("YYYY-MM-DD")
       }
+      console.log("fromDate",fromDate)
+      console.log("toDate",toDate)
        setDayQuery({  fromDate:fromDate, toDate: toDate})
        setDay(e.target.value)
    }
    const dateFormat = 'YYYY/MM/DD';
    console.log()
-   let currentDate = new Date().toISOString().split('T')[0]
+   let currentDate = moment(new Date()).format("YYYY-MM-DD") 
    const [choosenDate,setChoosenDate] = useState([currentDate, currentDate]) 
-   console.log("choosenDate",choosenDate)
+
   return (
     <Box style={{marginLeft:10}}>
         <FormControl  size="small" variant="outlined" >
