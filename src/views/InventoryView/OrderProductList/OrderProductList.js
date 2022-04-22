@@ -282,8 +282,9 @@ const ComponentToPrint = ({customerOrders,classes}) =>{
   <div style={{padding:10}}>
   <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
   <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
-    <Typography style={{  fontSize: 20, fontWeight: 500}} >
-      Thống kê đơn đặt hàng
+    <Typography style={{  fontSize: 18, fontWeight: 600}} >
+      {/* Thống kê đơn đặt hàng */}
+      THỐNG KÊ ĐƠN ĐẬT HÀNG
     </Typography>
     {/* <Typography  >
       {`Từ ngày: ${query.startDate ? ` ${query.startDate.split('-').reverse().join('/')}` :firstDate} - Đến ngày: ${query.endDate? query.endDate.split('-').reverse().join('/') : moment(new Date()).format('DD/MM/YYYY')}`}
