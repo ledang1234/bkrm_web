@@ -9,7 +9,7 @@ import InventoryOrderDetail from './InventoryOrderDetail/InventoryOrderDetail'
 import {VNDFormat} from '../../../../components/TextField/NumberFormatCustom'
 
 const InventoryOrderTableRow = (props) => {
-    const { row, handleOpenRow,openRow} = props;
+    const { row, handleOpenRow,openRow,hidenCollumn,colorText} = props;
     const classes = useRowStyles();
 
     return (
@@ -19,20 +19,21 @@ const InventoryOrderTableRow = (props) => {
             onClick={() => handleOpenRow(row.uuid)}   
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
+            style={{color:colorText}}
             >
-                <TableCell align="left" >{row.purchase_order_code}</TableCell>
+                <TableCell align="left" style={{color:colorText}}>{row.purchase_order_code}</TableCell>
                 {/* <TableCell align="left" >{row.creation_date}</TableCell> */}
-                <TableCell align="left" className={classes.fontName}>{row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }</TableCell>
+                <TableCell align="left" className={colorText?null:classes.fontName}style={{color:colorText}}>{row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }</TableCell>
 
-                <TableCell align="left">{row.supplier_name}</TableCell>
+                <TableCell align="left"style={{color:colorText}}>{row.supplier_name}</TableCell>
                 {/* <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.branch_name}</TableCell> */}
                 {/* <TableCell align="right">{row.payment_method === 'cash' ? 'Tiền mặt' : 'Thẻ'}</TableCell> */}
-                <TableCell align="right">{row.total_quantity}</TableCell>
+                <TableCell align="right"style={{color:colorText}}>{row.total_quantity}</TableCell>
 
-                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_amount  -row.discount}/></TableCell>
-                <TableCell align="center" className={classes.fontName}>
+                <TableCell align="right" className={colorText?null:classes.fontName}style={{color:colorText}}><VNDFormat value={row.total_amount  -row.discount}/></TableCell>
+                {hidenCollumn?.includes("debt") ?null:<TableCell align="center" className={classes.fontName}>
                     <FormatedStatus debt={Number(row.total_amount) - Number( row.discount)  - Number(row.paid_amount) > 0 ? 1 : 0}/>
-                </TableCell>
+                </TableCell>}
                
             </TableRow>
 

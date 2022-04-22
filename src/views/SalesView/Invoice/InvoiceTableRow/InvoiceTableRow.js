@@ -10,7 +10,7 @@ import InvoiceDetail from "./InvoiceDetail/InvoiceDetail";
 import { VNDFormat } from "../../../../components/TextField/NumberFormatCustom";
 
 function InvoiceTableRow(props) {
-  const { row, handleOpenRow, openRow, onReload,hidenCollumn } = props;
+  const { row, handleOpenRow, openRow, onReload,hidenCollumn ,colorText} = props;
   const theme = useTheme();
 
   const classes = useRowStyles();
@@ -25,9 +25,10 @@ function InvoiceTableRow(props) {
           classes.row,
           openRow === row.uuid ? classes.rowClicked : null
         )}
+        style={{color:colorText}}
       >
-        <TableCell align="left">{row.order_code}</TableCell>
-        <TableCell align="left" className={classes.fontName}>
+        <TableCell align="left"  style={{color:colorText}}>{row.order_code}</TableCell>
+        <TableCell align="left" className={colorText?null:classes.fontName} style={{color:colorText}}>
           {/* {new Date(row.creation_date).toLocaleString()} */}
           {row.creation_date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.creation_date?.split(" ")[1].substr(0, 5)) }
 
@@ -35,6 +36,7 @@ function InvoiceTableRow(props) {
         <TableCell
           align="left"
           style={{ minWidth: 150 }}
+          style={{color:colorText}}
           // className={classes.fontName}
         >
           {row.customer_name}
@@ -43,17 +45,17 @@ function InvoiceTableRow(props) {
         {/* <TableCell align="right">
           {row.payment_method === "cash" ? "Tiền mặt" : "Thẻ"}
         </TableCell> */}
-        <TableCell align="right">{row.total_quantity}</TableCell>
+        <TableCell align="right" style={{color:colorText}}>{row.total_quantity}</TableCell>
 
         <TableCell align="right" 
-        style={{fontWeight:500}}
+        style={{fontWeight:colorText ?null:500,color:colorText}}
         // style={{color: theme.customization.mode === "Light"? '#000': null}}
         >
           {" "}
           <VNDFormat value={Number(row.total_amount) - Number(row.discount)} />
         </TableCell>
         {hidenCollumn?.includes("debt") ?null:
-        <TableCell align="center">
+        <TableCell align="center" style={{color:colorText}}>
           <FormatedStatus debt={Number(row.total_amount) - Number(row.discount) - Number(row.paid_amount) > 0 ? 1 : 0} />
         </TableCell> }
       </TableRow>

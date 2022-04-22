@@ -97,7 +97,7 @@ export const SupplierHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "name", align: "left", disablePadding: false, label: "Tên NCC" },
   { id: "phone", align: "left", disablePadding: false, label: "Số điện thoại" },
-  { id: "email", align: "left", disablePadding: false, label: "Email" },
+  // { id: "email", align: "left", disablePadding: false, label: "Email" },
   // { id: "address", align: "left", disablePadding: false, label: "Địa chỉ" },
   {
     id: "total_cost",
@@ -111,7 +111,7 @@ export const SupplierHeadCells = [
     disablePadding: false,
     label: "Nợ NCC",
   },
-  { id: "debt", align: "center", disablePadding: false, label: "" },
+  { id: "debtStatus", align: "center", disablePadding: false, label: "" },
 ];
 
 export const InvoiceHeadCells = [
@@ -184,7 +184,7 @@ export const CustomerHeadCells = [
   { id: "score", align: "right", disablePadding: true, label: "Tích điểm" },
   { id: "total", align: "right", disablePadding: true, label: "Tổng tiền mua" },
   { id: "debt", align: "right", disablePadding: true, label: "Tổng nợ" },
-  { id: "debt", align: "center", disablePadding: true, label: "" },
+  { id: "debtStatus", align: "center", disablePadding: true, label: "" },
 ];
 
 export const CartHeadCells = [
@@ -270,6 +270,7 @@ export const OrderListHeadCells = [
     label: "Khách hàng",
   },
   { id: "phone", align: "left", disablePadding: false, label: "Số điện thoại" },
+  { id: "address", align: "left", disablePadding: false, label: "Địa chỉ" },
   { id: "total", align: "right", disablePadding: false, label: "Khoảng tiền" },
   { id: "status", align: "center", disablePadding: false, label: "Trạng thái" },
   // {

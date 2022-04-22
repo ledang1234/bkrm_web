@@ -10,7 +10,7 @@ import SupplierDetail from './SupplierDetail/SupplierDetail'
 import { VNDFormat, ThousandFormat } from '../../../../components/TextField/NumberFormatCustom';
 
 const SupplierTableRow = (props) => {
-    const { row, handleOpenRow,openRow} = props;
+    const { row, handleOpenRow,openRow,hidenCollumn,colorText} = props;
     const classes = useRowStyles();
 
     return (
@@ -21,20 +21,20 @@ const SupplierTableRow = (props) => {
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
             >
-                <TableCell align="left">{row.supplier_code}</TableCell>
-                <TableCell align="left" className={classes.fontName} style={{minWidth:150}}>{row.name}</TableCell>
-                <TableCell align="left">{row.phone}</TableCell>
-                <TableCell align="left">{row.email}</TableCell>
+                <TableCell align="left"  style={{color:colorText}}>{row.supplier_code}</TableCell>
+                <TableCell align="left" className={colorText?null:classes.fontName} style={{minWidth:150,color:colorText}}>{row.name}</TableCell>
+                <TableCell align="left"  style={{color:colorText}}>{row.phone}</TableCell>
+                {/* <TableCell align="left">{row.email}</TableCell> */}
                 {/* <TableCell align="left" style={{minWidth:100}}>{row.address}</TableCell> */}
                 {/* <TableCell align="right" >{row.total_cost}</TableCell> */}
 
-                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_payment} /></TableCell> 
-                <TableCell align="right" >
+                <TableCell align="right" className={colorText?null:classes.fontName}  style={{color:colorText}}><VNDFormat value={row.total_payment} /></TableCell> 
+                <TableCell align="right"  style={{color:colorText}}>
                     <VNDFormat value={row.debt} />  
                 </TableCell>
-                <TableCell align="center">
+                {hidenCollumn?.includes("debtStatus") ?null:<TableCell align="center"  style={{color:colorText}}>
                     <FormatedStatus debt={row.debt}/>
-                </TableCell>
+                </TableCell>}
             </TableRow>
 
         {/* DETAIL */}

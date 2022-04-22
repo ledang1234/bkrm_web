@@ -45,6 +45,9 @@ import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { statusAction } from '../../../store/slice/statusSlice';
 import Fuse from 'fuse.js';
 
+import moment from "moment";
+
+
 const Supplier = () => {
   const [supplerList, setSupplierList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -335,32 +338,61 @@ const Supplier = () => {
 
 export default Supplier;
 
-const ComponentToPrint = ({ supplerList, classes }) => {
+const ComponentToPrint = ({ supplerList, classes ,query}) => {
   return (
-    <div>
-      <Typography
-        style={{
-          flexGrow: 1,
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: 500,
-          margin: 30,
-          color: "#000",
-        }}
-      >
-        Danh sách nhà cung cấp
+    // <div>
+    //   <Typography
+    //     style={{
+    //       flexGrow: 1,
+    //       textAlign: "center",
+    //       fontSize: 20,
+    //       fontWeight: 500,
+    //       margin: 30,
+    //       color: "#000",
+    //     }}
+    //   >
+    //     Danh sách nhà cung cấp
+    //   </Typography>
+    //   <div>
+    //     <TableHeader
+    //       classes={classes}
+    //       headerData={HeadCells.SupplierHeadCells}
+    //     />
+    //     <TableBody>
+    //       {supplerList.map((row, index) => {
+    //         return <SupplierTableRow key={row.uuid} row={row} />;
+    //       })}
+    //     </TableBody>
+    //   </div>
+    // </div>
+    <div style={{padding:10}}>
+    <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
+    <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+      <Typography style={{  fontSize: 20, fontWeight: 500}} >
+        Thống kê nhà cung cấp
       </Typography>
-      <div>
-        <TableHeader
-          classes={classes}
-          headerData={HeadCells.SupplierHeadCells}
-        />
-        <TableBody>
-          {supplerList.map((row, index) => {
-            return <SupplierTableRow key={row.uuid} row={row} />;
+      {/* {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}
+      {query.status? <Typography  > {`Tình trạng: ${query.status}`} </Typography>:null}
+      {/* {query.categoryId? <Typography  > {`Danh mục: ${query.categoryId === "cash"?"Tiên mặt":"Thẻ"}`} </Typography>:null} */}
+      {/* {query.minStandardPrice || query.maxStandardPrice ? <Typography  > {`Tổng tiền đơn từ: ${query.minStandardPrice?query.minStandardPrice:0}đ đến ${query.maxStandardPrice?query.maxStandardPrice:0}đ`} </Typography>:null}
+      {query.minListPrice || query.maxListPrice ? <Typography  > {`Đơn giảm giá từ: ${query.minListPrice?query.maxListPrice:0}đ đến ${query.maxDiscount?query.maxListPrice:0}đ`} </Typography>:null}
+      {query.minInventory || query.maxInventory ? <Typography  > {`Đơn giảm giá từ: ${query.minInventory?query.maxInventory:0}đ đến ${query.maxDiscount?query.maxInventory:0}đ`} </Typography>:null} */} 
+
+    </Box>
+    <div>
+    <TableWrapper  isReport={true} >
+      <TableHeader
+      color="#000"
+        classes={classes}
+        headerData={HeadCells.SupplierHeadCells.filter(item => item.id !== "debtStatus")}
+      />
+      <TableBody>
+        {supplerList.map((row, index) => {
+          return  <SupplierTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["debtStatus", "image"]}colorText={"#000"}  />
           })}
-        </TableBody>
-      </div>
+      </TableBody>
+      </TableWrapper>
     </div>
+  </div>
   );
 };

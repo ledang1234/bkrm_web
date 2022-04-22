@@ -26,9 +26,10 @@ import defaultProduct from "../../../../assets/img/product/default-product.png"
 
 
 const InventoryTableRow = (props) => {
-  const { row, handleOpenRow, openRow ,isManageInventory} = props;
+  const { row, handleOpenRow, openRow ,isManageInventory,hidenCollumn,colorText} = props;
   const classes = useRowStyles();
 
+  console.log("rowrowrowrow",)
   return (
     <>
       <TableRow
@@ -38,39 +39,40 @@ const InventoryTableRow = (props) => {
           openRow === row.uuid ? classes.rowClicked : null
         )}
         key={row.uuid}
+        style={{color:colorText}}
       >
-        <TableCell align="left">
+        <TableCell align="left" style={{color:colorText}}>
           {row.product_code}
         </TableCell>
-        <TableCell align="center" style={{ minWidth: 200 }}>
+        <TableCell align="center" style={{ minWidth: hidenCollumn?.includes("image")? 100:200, color:colorText }}>
           <ListItem
             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
           >
-            <Box
+           {hidenCollumn?.includes("image") ?null: <Box
               component="img"
               sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}
               src={JSON.parse(row.img_urls)?.at(0) || defaultProduct}
-            />
-            <Typography className={classes.fontName}>{row.name}</Typography>
+            />}
+            <Typography className={colorText?null:classes.fontName} style={{color:colorText}}>{row.name}</Typography>
           </ListItem>
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
 
-        <TableCell align="left">{row.category?.name}</TableCell>
-        <TableCell align="right">
+        <TableCell align="left" style={{color:colorText}}>{row.category?.name}</TableCell>
+        <TableCell align="right" style={{color:colorText}}>
           <VNDFormat value={row.list_price} />
         </TableCell>
-        <TableCell align="right">
+        <TableCell align="right" style={{color:colorText}}>
           <VNDFormat value={row.standard_price} />
         </TableCell>
         {isManageInventory ?
         <>
-        <TableCell align="center">
+        {hidenCollumn?.includes("quantity") ?null:<TableCell align="center">
           <FormatedProductStatus
             quantity={row.branch_quantity}
             lowStock={row.min_reorder_quantity}
           />
-        </TableCell> 
+        </TableCell> }
         <TableCell align="center" className={classes.fontName} style={{fontWeight:500, color:'#000'}}>
           {row.branch_quantity}
         </TableCell>

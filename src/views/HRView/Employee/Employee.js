@@ -40,6 +40,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {PartnerMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { statusAction } from '../../../store/slice/statusSlice';
+import moment from "moment";
 
 const Employee = () => {
   const [employeeList, setEmployeeList] = useState([]);
@@ -296,24 +297,57 @@ const Employee = () => {
 export default Employee;
 const ComponentToPrint = ({employeeList,classes}) =>{
   return (
-      <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách nhân viên</Typography>
-        <div >
-          <TableHeader
-                classes={classes}
-                headerData={HeadCells.EmployeeHeadCells}
-              />
-              <TableBody >
-                {employeeList.map((row, index) => {
-                  return (
-                    <EmployeeTableRow
-                      key={row.uuid}
-                      row={row}
-                    />
-                  );
-                })}
-              </TableBody>
-        </div>
+  //     <div >
+  //       <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sách nhân viên</Typography>
+  //       <div >
+  //         <TableHeader
+  //               classes={classes}
+  //               headerData={HeadCells.EmployeeHeadCells}
+  //             />
+  //             <TableBody >
+  //               {employeeList.map((row, index) => {
+  //                 return (
+  //                   <EmployeeTableRow
+  //                     key={row.uuid}
+  //                     row={row}
+  //                   />
+  //                 );
+  //               })}
+  //             </TableBody>
+  //       </div>
+  // </div>
+  <div style={{padding:10}}>
+    <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
+    <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+      <Typography style={{  fontSize: 20, fontWeight: 500}} >
+        Thống kê nhân viên
+      </Typography>
+      {/* {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}
+      {query.status? <Typography  > {`Tình trạng: ${query.status}`} </Typography>:null}
+      {query.categoryId? <Typography  > {`Danh mục: ${query.categoryId === "cash"?"Tiên mặt":"Thẻ"}`} </Typography>:null}
+      {query.minStandardPrice || query.maxStandardPrice ? <Typography  > {`Tổng tiền đơn từ: ${query.minStandardPrice?query.minStandardPrice:0}đ đến ${query.maxStandardPrice?query.maxStandardPrice:0}đ`} </Typography>:null}
+      {query.minListPrice || query.maxListPrice ? <Typography  > {`Đơn giảm giá từ: ${query.minListPrice?query.maxListPrice:0}đ đến ${query.maxDiscount?query.maxListPrice:0}đ`} </Typography>:null}
+      {query.minInventory || query.maxInventory ? <Typography  > {`Đơn giảm giá từ: ${query.minInventory?query.maxInventory:0}đ đến ${query.maxDiscount?query.maxInventory:0}đ`} </Typography>:null} */}
+
+    </Box>
+    <div>
+    <TableWrapper  isReport={true} >
+      <TableHeader
+      color="#000"
+        classes={classes}
+        // headerData={HeadCells.CustomerHeadCells.filter(item => item.id !== ""  || (haveCustomerScore ? item.id !== "score":null ))}
+        // headerData={HeadCells.EmployeeHeadCells.filter(item => item.id !=="status" )}
+        headerData={HeadCells.EmployeeHeadCells}
+
+      />
+      <TableBody>
+        {employeeList.map((row, index) => {
+          return  <EmployeeTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["image"]}colorText={"#000"}  />
+          })}
+      </TableBody>
+      </TableWrapper>
+    </div>
   </div>
+  
   )
 }

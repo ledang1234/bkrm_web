@@ -6,10 +6,13 @@ import {TableCell,TableRow} from '@material-ui/core';
 
 import {FormatedStatusOrder} from '../../../../components/TableCommon/util/format'
 import OrderProductListDetail from './OrderProductListDetail/OrderProductListDetail'
+import { Typography } from '@mui/material';
 
 const OrderProductListTableRow = (props) => {
-    const { row, handleOpenRow,openRow, reload} = props;
+    const { row, handleOpenRow,openRow, reload,colorText,isReport} = props;
     const classes = useRowStyles();
+
+    console.log("rowrowrowrow",row)
     return (
         <>
         {/* ROW */}
@@ -18,15 +21,16 @@ const OrderProductListTableRow = (props) => {
             key={row.id}
             className={ clsx(classes.row,(openRow === row.id) ? classes.rowClicked : null)}
             >
-                <TableCell align="left" >{row.customer_order_code}</TableCell>
+                <TableCell align="left"  style={{color:colorText}}>{row.customer_order_code}</TableCell>
                 {/* <TableCell align="left"className={classes.fontName}>{row.created_at}</TableCell> */}
-                <TableCell align="left"className={classes.fontName}>{row.created_at?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.created_at?.split(" ")[1].substr(0, 5)) }</TableCell>
-                <TableCell align="left"className={classes.fontName} style={{minWidth:150}}>{row.name}</TableCell>
-                <TableCell align="left">{row.phone}</TableCell>
-                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_amount} /></TableCell>
-                <TableCell align="center">
-                    <FormatedStatusOrder status={row.status}/>
-                </TableCell>
+                <TableCell align="left"className={colorText?null:classes.fontName}  style={{color:colorText}}> {row.created_at?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.created_at?.split(" ")[1].substr(0, 5)) }</TableCell>
+                <TableCell align="left"className={colorText?null:classes.fontName} style={{color:colorText}}>{row.name}</TableCell>
+                <TableCell align="left"  style={{color:colorText}}>{row.phone}</TableCell>
+                <TableCell align="left"  style={{color:colorText}}>{row.address}{`, `}{row.ward}{`, `}{row.district}{`, `}{row.city}</TableCell>
+                <TableCell align="right" className={colorText?null:classes.fontName}  style={{color:colorText}}><VNDFormat value={row.total_amount} /></TableCell>
+                {isReport?null:<TableCell align="center">
+                        <FormatedStatusOrder status={row.status}/>:
+                </TableCell>}
                 {/* <TableCell align="left">{row.address}</TableCell> */}
             </TableRow>
 

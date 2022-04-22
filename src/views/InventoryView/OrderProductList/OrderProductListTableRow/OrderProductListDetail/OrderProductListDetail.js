@@ -64,7 +64,12 @@ createStyles({
 
 }));
 
-
+const getOrderStatus = (status) =>{
+  if(status === "new") {return "Chờ chấp nhận"}
+  if(status==="cancelled") {return "Đã hủy"}
+  if(status==="confirmed") {return "Chờ giao"}
+  if(status==="paid") {return "Hoàn thành"}
+}
 const OrderProductListDetail = (props) => {
     const {row,openRow, reload }= props.parentProps;
     const {isMini}= props.parentProps;
@@ -194,7 +199,7 @@ const OrderProductListDetail = (props) => {
                 </Grid>
                 <Grid item sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
-                    {row.status}
+                 { getOrderStatus(row.status)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -207,6 +212,18 @@ const OrderProductListDetail = (props) => {
                 <Grid item sm={4}>
                   <Typography variant="body1" gutterBottom component="div">
                     <VNDFormat value={row.total_amount} />
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" justifyContent="flex-start">
+                <Grid item xs={6} sm={6}>
+                  <Typography variant="h5" gutterBottom component="div">
+                    Địa chỉ{" "}
+                  </Typography>
+                </Grid>
+                <Grid item sm={4}>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {row.address}{`, `}{row.ward} {`, `}{row.district}{`, `}{row.city}
                   </Typography>
                 </Grid>
               </Grid>

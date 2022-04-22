@@ -39,6 +39,9 @@ import { removeAccents } from '../../../utils';
 import Fuse from 'fuse.js';
 import setting from "../../../assets/constant/setting";
 import DebtHistory from "./DebtHistory/DebtHistory"
+import moment from "moment";
+
+
 const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -367,27 +370,43 @@ console.log(info.store.general_configuration)
 
 export default Customer
 
-const ComponentToPrint = ({ customerList, classes }) => {
-  return (
-    <div >
-      <Typography style={{ flexGrow: 1, textAlign: "center", fontSize: 20, fontWeight: 500, margin: 30, color: '#000' }} >Danh sách khách hàng</Typography>
-      <div >
-        <TableHeader
-          classes={classes}
-          headerData={HeadCells.CustomerHeadCells}
-        />
-        <TableBody >
-          {customerList?.map((row, index) => {
-            return (
-              <CustomerTableRow
-                key={row.uuid}
-                row={row}
+const ComponentToPrint = ({ customerList, classes , query}) => {
+  const info = useSelector(state => state.info)
+  const store_setting = info.store.general_configuration ? JSON.parse(info.store.general_configuration)  : setting;
+  const haveCustomerScore = store_setting.customerScore.status
 
-              />
-            );
+  let hidenCollumn = [haveCustomerScore ? null: "score", ""]
+  return (
+    <div style={{padding:10}}>
+    <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
+    <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+      <Typography style={{  fontSize: 20, fontWeight: 500}} >
+        Thống kê khách hàng
+      </Typography>
+      {/* {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}
+      {query.status? <Typography  > {`Tình trạng: ${query.status}`} </Typography>:null}
+      {query.categoryId? <Typography  > {`Danh mục: ${query.categoryId === "cash"?"Tiên mặt":"Thẻ"}`} </Typography>:null}
+      {query.minStandardPrice || query.maxStandardPrice ? <Typography  > {`Tổng tiền đơn từ: ${query.minStandardPrice?query.minStandardPrice:0}đ đến ${query.maxStandardPrice?query.maxStandardPrice:0}đ`} </Typography>:null}
+      {query.minListPrice || query.maxListPrice ? <Typography  > {`Đơn giảm giá từ: ${query.minListPrice?query.maxListPrice:0}đ đến ${query.maxDiscount?query.maxListPrice:0}đ`} </Typography>:null}
+      {query.minInventory || query.maxInventory ? <Typography  > {`Đơn giảm giá từ: ${query.minInventory?query.maxInventory:0}đ đến ${query.maxDiscount?query.maxInventory:0}đ`} </Typography>:null} */}
+
+    </Box>
+    <div>
+    <TableWrapper  isReport={true} >
+      <TableHeader
+      color="#000"
+        classes={classes}
+        // headerData={HeadCells.CustomerHeadCells.filter(item => item.id !== ""  || (haveCustomerScore ? item.id !== "score":null ))}
+        headerData={HeadCells.CustomerHeadCells.filter(item => !hidenCollumn.includes(item.id) )}
+
+      />
+      <TableBody>
+        {customerList.map((row, index) => {
+          return  <CustomerTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["debtStatus", "image"]}colorText={"#000"}  />
           })}
-        </TableBody>
-      </div>
+      </TableBody>
+      </TableWrapper>
     </div>
+  </div>
   )
 }

@@ -37,6 +37,7 @@ import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 
 import orderApi from '../../../api/orderApi';
 import { statusAction } from "../../../store/slice/statusSlice";
+import moment from "moment";
 
 
 const OrderProductList = () => {
@@ -239,6 +240,7 @@ const OrderProductList = () => {
               />
               <TableBody>
                 {customerOrders.map((row, index) => {
+                  console.log("row",row)
                     return (
                       <OrderProductListTableRow key={row.id} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} reload={onReload}/>
          
@@ -264,7 +266,7 @@ const OrderProductList = () => {
           </>}
           <div  style={{display:'none'}} >
             <div ref={componentRef}  >
-            <ComponentToPrint  orderProductList={orderProductList} classes={classes}/>
+            <ComponentToPrint  customerOrders={customerOrders} classes={classes}/>
             </div>
         
           </div>
@@ -275,27 +277,35 @@ const OrderProductList = () => {
 
 export default OrderProductList
 
-const ComponentToPrint = ({orderProductList,classes}) =>{
+const ComponentToPrint = ({customerOrders,classes}) =>{
   return (
-      <div >
-        <Typography style={{flexGrow: 1,textAlign: "center",fontSize:20, fontWeight:500, margin:30, color:'#000'}} >Danh sác đơn đặt hàng NCC</Typography>
-        <div >
-          <TableHeader
-                classes={classes}
-                headerData={HeadCells.OrderListHeadCells}
-              />
-              <TableBody >
-                {orderProductList.map((row, index) => {
-                  return (
-                    <OrderProductListTableRow
-                      key={row.uuid}
-                      row={row}
-                    
-                    />
-                  );
-                })}
-              </TableBody>
-        </div>
+  <div style={{padding:10}}>
+  <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
+  <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+    <Typography style={{  fontSize: 20, fontWeight: 500}} >
+      Thống kê đơn đặt hàng
+    </Typography>
+    {/* <Typography  >
+      {`Từ ngày: ${query.startDate ? ` ${query.startDate.split('-').reverse().join('/')}` :firstDate} - Đến ngày: ${query.endDate? query.endDate.split('-').reverse().join('/') : moment(new Date()).format('DD/MM/YYYY')}`}
+    </Typography> */}
+    {/* {query.minTotalAmount || query.maxTotalAmount ? <Typography  > {`Tổng tiền lệch từ: ${query.minTotalAmount?query.minTotalAmount:0}đ đến ${query.maxTotalAmount?query.maxTotalAmount:0}đ`} </Typography>:null}
+    {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}  */}
+
+  </Box>
+  <div>
+  <TableWrapper  isReport={true} >
+    <TableHeader
+    color="#000"
+      classes={classes}
+      headerData={HeadCells.OrderListHeadCells.filter(item => item.id !== "status")}
+    />
+    <TableBody>
+      {customerOrders.map((row, index) => {
+        return  <OrderProductListTableRow colorText={"#000"} key={row.uuid} row={row} isReport={true}/>
+        })}
+    </TableBody>
+    </TableWrapper>
   </div>
+</div>
   )
 }

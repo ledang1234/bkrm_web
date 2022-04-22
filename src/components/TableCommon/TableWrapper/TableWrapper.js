@@ -54,7 +54,7 @@ const TableWrapper = (props) => {
         </StyledPaper>
 
             {/* Add page navigation here...  */}
-            {isCart ? null :
+            {isCart || isReport? null :
                
                 <Grid container justifyContent='flex-end' >     
                         <FormControlLabel

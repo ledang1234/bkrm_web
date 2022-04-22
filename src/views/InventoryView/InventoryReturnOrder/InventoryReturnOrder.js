@@ -40,6 +40,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { statusAction } from "../../../store/slice/statusSlice";
+import moment from "moment";
+
 const InventoryReturnOrder = () => {
   const [purchaseReturns, setPurchaseReturns] = useState([]);
   const [openRow, setRowOpen] = React.useState(null);
@@ -265,6 +267,9 @@ const InventoryReturnOrder = () => {
           <ComponentToPrint
             purchaseReturns={purchaseReturns}
             classes={classes}
+            query={query}
+            totalRows={totalRows}
+            totalAmount={totalAmount}
           />
         </div>
       </div>
@@ -272,34 +277,48 @@ const InventoryReturnOrder = () => {
   );
 };
 
-const ComponentToPrint = ({ purchaseReturns, classes }) => {
+const ComponentToPrint = ({ purchaseReturns, classes, query,totalRows,totalAmount }) => {
+ 
+  const firstDate = purchaseReturns.slice(-1)[0] ?purchaseReturns.slice(-1)[0].creation_date.split(" ")[0].split('T')[0].split('-').reverse().join('/'):''
   return (
-    <div>
-      <Typography
-        style={{
-          flexGrow: 1,
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: 500,
-          margin: 30,
-          color: "#000",
-        }}
-      >
-        Danh sách đơn trả hàng nhập
-      </Typography>
+    <div style={{padding:10}}>
+      <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
+      <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+        <Typography style={{  fontSize: 20, fontWeight: 500}} >
+          Thống kê đơn trả hàng nhập
+        </Typography>
+        <Typography  >
+          {/* Từ {initialQuery.startDate} - Ngày {initialQuery.endDate} */}
+          {`Từ ngày: ${query.startDate ? ` ${query.startDate.split('-').reverse().join('/')}` :firstDate} - Đến ngày: ${query.endDate? query.endDate.split('-').reverse().join('/') : moment(new Date()).format('DD/MM/YYYY')}`}
+        </Typography>
+        {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}
+        {query.status? <Typography  > {`Tình trạng đơn: ${query.status === "debt"?"Nợ":"Trả đủ"}`} </Typography>:null}
+        {query.paymentMethod? <Typography  > {`Phương thức thanh toán: ${query.paymentMethod === "cash"?"Tiên mặt":"Thẻ"}`} </Typography>:null}
+        {query.minTotalAmount || query.maxTotalAmount ? <Typography  > {`Tổng tiền đơn từ: ${query.minTotalAmount?query.minTotalAmount:0}đ đến ${query.maxTotalAmount?query.maxTotalAmount:0}đ`} </Typography>:null}
+        {query.minDiscount || query.maxDiscount ? <Typography  > {`Đơn giảm giá từ: ${query.minDiscount?query.minDiscount:0}đ đến ${query.maxDiscount?query.maxDiscount:0}đ`} </Typography>:null}
+
+      </Box>
       <div>
+      <TableWrapper  isReport={true} >
         <TableHeader
+        color="#000"
           classes={classes}
-          headerData={HeadCells.InventoryReturnOrderHeadCells}
+          headerData={HeadCells.InventoryReturnOrderHeadCells.filter(item => item.id !== "debt")}
         />
         <TableBody>
           {purchaseReturns.map((row, index) => {
-            return <InventoryReturnTableRow key={row.uuid} row={row} />;
-          })}
+            return  <InventoryReturnTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["debt"]}/>
+            })}
+            <TableRow style={{backgroundColor:'#f5f5f5'}}>
+              <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
+              <TableCell/> <TableCell/> <TableCell/> 
+              <TableCell align="right"style={{color:'#000', fontWeight:600}}>Tổng: <VNDFormat value={totalAmount} ></VNDFormat></TableCell>
+              {/* <TableCell/> */}
+          </TableRow>
         </TableBody>
+        </TableWrapper>
       </div>
     </div>
-  );
-};
+  );};
 
 export default InventoryReturnOrder;
