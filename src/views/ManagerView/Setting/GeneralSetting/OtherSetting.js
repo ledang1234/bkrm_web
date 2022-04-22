@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTheme, withStyles,makeStyles, createStyles } from "@material-ui/core/styles";
+import ReactQuill , {Quill}from 'react-quill';
 
-import { Typography,Divider, Button,Radio,RadioGroup,TextareaAutosize,TextField,FormControlLabel,Checkbox,List,Card,FormControl,ListItem,ListSubheader,ListItemSecondaryAction,Switch,ListItemIcon, ListItemAvatar,Avatar,ListItemText,Grid, ButtonBase, Tooltip } from "@material-ui/core";
+import { Typography,Divider,Box, Button,Radio,RadioGroup,TextareaAutosize,TextField,FormControlLabel,Checkbox,List,Card,FormControl,ListItem,ListSubheader,ListItemSecondaryAction,Switch,ListItemIcon, ListItemAvatar,Avatar,ListItemText,Grid, ButtonBase, Tooltip } from "@material-ui/core";
 import {ThousandSeperatedInput} from "../../../../components/TextField/NumberFormatCustom"
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
@@ -125,6 +126,14 @@ export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,na
             }
         })
     };
+    const _handleValue= (value) => {
+        setPrinter((prevState)=>{
+            return {
+                ...prevState,
+                contentNote:value
+            }
+        })
+    };
     console.log("printer?.cartModal",printer)
     return (
         <>
@@ -142,9 +151,11 @@ export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,na
                 </RadioGroup>
               </FormControl>
               <Typography style={{color:'#000', fontWeight:500}}>Ghi chú thêm</Typography>
-              <TextField name="titleNote" placeholder="Tiêu đề" variant="outlined" size="small" style={{marginBottom:10}} value={printer?.titleNote}  onChange={handleValue} />
-              <TextareaAutosize name="contentNote"  minRows={5}  placeholder="Nội dung" value={printer?.contentNote}  onChange={handleValue} />
-
+              {/* <TextField name="titleNote" placeholder="Tiêu đề" variant="outlined" size="small" style={{marginBottom:10}} value={printer?.titleNote}  onChange={handleValue} />
+              <TextareaAutosize name="contentNote"  minRows={5}  placeholder="Nội dung" value={printer?.contentNote}  onChange={handleValue} /> */}
+            <Box style={{width:400}}>
+            <ReactQuill name="contentNote"  style={{minHeight:50, borderRaidus:5}} theme="snow" value={printer?.contentNote} onChange={_handleValue}  modules={modules} formats={formats}  placeholder={'Ghi chú...'}/>
+            </Box>
            
             {/* </Grid> */}
         <FormControlLabel control={<Checkbox  color="primary" name="import"  checked={printer.import}  onChange={handleCheckbox} />} label="In đơn sau khi nhập hàng" />
@@ -162,6 +173,40 @@ export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,na
 
   )
 }
+
+const modules = {
+    toolbar: [
+      [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+      [{size: []}],
+      [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+      ['bold', 'italic', 'underline', 'strike'],
+    //   [{'color':[]}],
+    //   [{'background':[]}],
+      [{'list': 'ordered'}, {'list': 'bullet'}, 
+       {'indent': '-1'}, {'indent': '+1'}],
+    //   ['link', 'image', 'video'],
+    //   ['clean'],
+      
+    ],
+    clipboard: {
+      // toggle to add extra line breaks when pasting HTML:
+      matchVisual: false,
+    },
+    imageResize: {
+      parchment: Quill.import('parchment'),
+      modules: ['Resize', 'DisplaySize','Toolbar']
+   }
+  
+  }
+  const formats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image', 'video','color','background'
+  ]
+  
+  
+  
   
 export const VatSetting = ({checked,handleClose,handleSubmit,name}) => {
 
