@@ -19,6 +19,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useReactToPrint } from "react-to-print";
+import moment from "moment";
 
 //import api
 
@@ -341,8 +342,9 @@ const CheckHistory = () => {
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <ComponentToPrint
-            checkHistoryList={checkHistoryList}
+            inventoryChecks={inventoryChecks}
             classes={classes}
+            query={query}
           />
         </div>
       </div>
@@ -352,32 +354,37 @@ const CheckHistory = () => {
 
 export default CheckHistory;
 
-const ComponentToPrint = ({ checkHistoryList, classes }) => {
+const ComponentToPrint = ({ inventoryChecks, classes,query }) => {
+  // .created_at.split(" ")[0].split('T')[0].split('-').reverse().join('/')
+  const firstDate = inventoryChecks.slice(-1)[0] ?inventoryChecks.slice(-1)[0].created_at.split(" ")[0].split('T')[0].split('-').reverse().join('/'):''
   return (
-    <div>
-      <Typography
-        style={{
-          flexGrow: 1,
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: 500,
-          margin: 30,
-          color: "#000",
-        }}
-      >
-        Danh sách đơn kiểm kho
+    <div style={{padding:10}}>
+    <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
+    <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+      <Typography style={{  fontSize: 20, fontWeight: 500}} >
+        Thống kê đơn kiểm kho
       </Typography>
-      <div>
-        <TableHeader
-          classes={classes}
-          headerData={HeadCells.CheckHistoryHeadCells}
-        />
-        <TableBody>
-          {checkHistoryList.map((row, index) => {
-            return <CheckHistoryTableRow key={row.uuid} row={row} />;
+      <Typography  >
+        {`Từ ngày: ${query.startDate ? ` ${query.startDate.split('-').reverse().join('/')}` :firstDate} - Đến ngày: ${query.endDate? query.endDate.split('-').reverse().join('/') : moment(new Date()).format('DD/MM/YYYY')}`}
+      </Typography>
+      {query.minTotalAmount || query.maxTotalAmount ? <Typography  > {`Tổng tiền lệch từ: ${query.minTotalAmount?query.minTotalAmount:0}đ đến ${query.maxTotalAmount?query.maxTotalAmount:0}đ`} </Typography>:null}
+      {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null} 
+
+    </Box>
+    <div>
+    <TableWrapper  isReport={true} >
+      <TableHeader
+      color="#000"
+        classes={classes}
+        headerData={HeadCells.CheckHistoryHeadCells.filter(item => item.id !== "debt")}
+      />
+      <TableBody>
+        {inventoryChecks.map((row, index) => {
+          return  <CheckHistoryTableRow colorText={"#000"} key={row.uuid} row={row} />
           })}
-        </TableBody>
-      </div>
+      </TableBody>
+      </TableWrapper>
     </div>
+  </div>
   );
 };

@@ -8,7 +8,7 @@ import {FormatedStatusCheck} from '../../../../components/TableCommon/util/forma
 import CheckHistoryDetail from './CheckHistoryDetail/CheckHistoryDetail'
 
 const CheckHistoryTableRow = (props) => {
-    const { row, handleOpenRow,openRow} = props;
+    const { row, handleOpenRow,openRow,colorText} = props;
     const classes = useRowStyles();
 
     const quantityDifference = row.details
@@ -30,19 +30,20 @@ const CheckHistoryTableRow = (props) => {
             classes.row,
             openRow === row.uuid ? classes.rowClicked : null
           )}
+          style={{color:colorText}}
         >
-          <TableCell align="left">{row.inventory_check_code}</TableCell>
-          <TableCell align="left" className={classes.fontName}>
+          <TableCell align="left" style={{color:colorText}}>{row.inventory_check_code}</TableCell>
+          <TableCell align="left" className={colorText?colorText:classes.fontName}  style={{color:colorText}}>
             {/* {row.created_at} */}
             {row.created_at?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.created_at?.split(" ")[1].substr(0, 5)) }
 
           </TableCell>
           {/* <TableCell align="left">{row.branch_name}</TableCell> */}
-          <TableCell align="right" className={classes.fontName}>
-           <ThousandFormat style={{fontWeight:700,color:quantityDifference >0 ?"green" :"red"}}value={quantityDifference} />
+          <TableCell align="right"  >
+           <ThousandFormat style={{fontWeight:colorText?null:700,color:colorText?colorText:quantityDifference >0 ?"green" :"red"}}value={quantityDifference} />
           </TableCell>
-          <TableCell align="right" className={classes.fontName}>
-          <VNDFormat style={{fontWeight:700,color:quantityDifference >0 ?"green" :"red"}} value={moneyDifference}/>
+          <TableCell align="right" >
+          <VNDFormat style={{fontWeight:colorText?null:700,color:colorText?colorText:quantityDifference >0 ?"green" :"red"}} value={moneyDifference}/>
           </TableCell>
           {/* <TableCell align="center">
                     <FormatedStatusCheck status={row.tongSLthucte - row.tongtonkho}/>
@@ -50,7 +51,7 @@ const CheckHistoryTableRow = (props) => {
           {/* <TableCell align="left">
             {row.created_user_type === "owner" ? "Chủ cửa hàng" : "Nhân viên"}
           </TableCell> */}
-          <TableCell align="center">{row.user_name}</TableCell>
+          <TableCell align="center"  style={{color:colorText}}>{row.user_name}</TableCell>
         </TableRow>
 
         {/* DETAIL */}

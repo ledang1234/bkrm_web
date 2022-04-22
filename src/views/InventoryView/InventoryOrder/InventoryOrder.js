@@ -42,6 +42,7 @@ import {BillMiniTableRow} from "../../../components/MiniTableRow/MiniTableRow"
 import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
 import { statusAction } from "../../../store/slice/statusSlice";
 import {ThousandFormat, VNDFormat} from '../../../components/TextField/NumberFormatCustom'
+import moment from "moment";
 
 const InventoryOrder = () => {
   // fetch data here
@@ -282,7 +283,7 @@ const InventoryOrder = () => {
         );
       })}
       </Box>
-      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}
+      <Pagination pagingState={{...pagingState, total_rows: totalRows}} setPagingState={setPagingState}list={purchaseOrders}
      />
 
       </>
@@ -292,7 +293,7 @@ const InventoryOrder = () => {
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ComponentToPrint purchaseOrders={purchaseOrders} classes={classes}  list={purchaseOrders} />
+          <ComponentToPrint purchaseOrders={purchaseOrders} classes={classes}  query={query} totalRows={totalRows}totalAmount={totalAmount}/>
         </div>
       </div>
     </Card>
@@ -301,32 +302,50 @@ const InventoryOrder = () => {
 
 export default InventoryOrder;
 
-const ComponentToPrint = ({ purchaseOrders, classes }) => {
+const ComponentToPrint = ({ purchaseOrders, classes,query,totalRows,totalAmount, }) => {
+ 
+  const firstDate = purchaseOrders.slice(-1)[0] ?purchaseOrders.slice(-1)[0].creation_date.split(" ")[0].split('T')[0].split('-').reverse().join('/'):''
   return (
-    <div>
-      <Typography
-        style={{
-          flexGrow: 1,
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: 500,
-          margin: 30,
-          color: "#000",
-        }}
-      >
-        Danh sách đơn nhập hàng
-      </Typography>
+    <div style={{padding:10}}>
+      <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
+      <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+        <Typography style={{  fontSize: 20, fontWeight: 500}} >
+          Thống kê đơn nhập hàng
+        </Typography>
+        <Typography  >
+          {/* Từ {initialQuery.startDate} - Ngày {initialQuery.endDate} */}
+          {`Từ ngày: ${query.startDate ? ` ${query.startDate.split('-').reverse().join('/')}` :firstDate} - Đến ngày: ${query.endDate? query.endDate.split('-').reverse().join('/') : moment(new Date()).format('DD/MM/YYYY')}`}
+        </Typography>
+        {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}
+        {query.status? <Typography  > {`Tình trạng đơn: ${query.status === "debt"?"Nợ":"Trả đủ"}`} </Typography>:null}
+        {query.paymentMethod? <Typography  > {`Phương thức thanh toán: ${query.paymentMethod === "cash"?"Tiên mặt":"Thẻ"}`} </Typography>:null}
+        {query.minTotalAmount || query.maxTotalAmount ? <Typography  > {`Tổng tiền đơn từ: ${query.minTotalAmount?query.minTotalAmount:0}đ đến ${query.maxTotalAmount?query.maxTotalAmount:0}đ`} </Typography>:null}
+        {query.minDiscount || query.maxDiscount ? <Typography  > {`Đơn giảm giá từ: ${query.minDiscount?query.minDiscount:0}đ đến ${query.maxDiscount?query.maxDiscount:0}đ`} </Typography>:null}
+
+      </Box>
       <div>
+      <TableWrapper  isReport={true} >
         <TableHeader
+        color="#000"
           classes={classes}
-          headerData={HeadCells.InventoryOrderHeadCells}
+          headerData={HeadCells.InventoryOrderHeadCells.filter(item => item.id !== "debt")}
         />
         <TableBody>
           {purchaseOrders.map((row, index) => {
-            return <InventoryOrderTableRow key={row.uuid} row={row} />;
-          })}
+            return  <InventoryOrderTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["debt"]}/>
+            })}
+           <TableRow style={{backgroundColor:'#f5f5f5'}}>
+              <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
+              <TableCell/> <TableCell/> <TableCell/>
+              <TableCell align="right"style={{color:'#000', fontWeight:600}}>Tổng: <VNDFormat value={totalAmount} ></VNDFormat></TableCell>
+              <TableCell/>
+          </TableRow>
+
         </TableBody>
+        </TableWrapper>
       </div>
     </div>
   );
 };
+
+

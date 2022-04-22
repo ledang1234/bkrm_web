@@ -22,7 +22,7 @@ import { VNDFormat, ThousandFormat } from '../../../../components/TextField/Numb
 import setting from "../../../../assets/constant/setting";
 
 const CustomerTableRow = (props) => {
-    const { row, handleOpenRow,openRow ,onReload} = props;
+    const { row, handleOpenRow,openRow ,onReload,hidenCollumn,colorText} = props;
     const theme = useTheme()
     const classes = useRowStyles();
     // const avaclasses = useStyles(theme);
@@ -36,26 +36,27 @@ const CustomerTableRow = (props) => {
             onClick={() => handleOpenRow(row.uuid)}   
             key={row.uuid}
             className={ clsx(classes.row,(openRow === row.uuid) ? classes.rowClicked : null)}
+            style={{color:colorText}}
             >
-                <TableCell align="left">{row.customer_code}</TableCell>
+                <TableCell align="left" style={{color:colorText}}>{row.customer_code}</TableCell>
                 {/* <TableCell align="left">{row.id}</TableCell> */}
-                <TableCell align="left" style={{minWidth:100}} >
+                <TableCell align="left" style={{minWidth:100, color:colorText}} >
                     <ListItem  style={{marginLeft:-30, marginTop:-10, marginBottom:-10 }}>
-                        <Avatar alt="Remy Sharp" src={ava} style={{marginRight:20}} className={classes.ava} />
+                    {hidenCollumn?.includes("image") ?null: <Avatar alt="Remy Sharp" src={ava} style={{marginRight:20}} className={classes.ava} />}
                         {/* <Avatar alt="Remy Sharp"  style={{marginRight:20}} className={returnRandomColor(Number(row.phone.charAt(row.phone.length - 1)),avaclasses)}  >  {row.name.split(" ").slice(-1)[0][0]} </Avatar> */}
-                        <Typography className={classes.fontName}>{row.name}</Typography>
+                        <Typography className={colorText?null:classes.fontName} style={{color:colorText}}>{row.name}</Typography>
                     </ListItem>  
                 </TableCell>
 
-                <TableCell align="left">{row.phone}</TableCell>
-                {haveCustomerScore?<TableCell align="right" ><ThousandFormat value={row.points} /></TableCell> :null}
-                <TableCell align="right" className={classes.fontName}><VNDFormat value={row.total_payment} /></TableCell> 
-                <TableCell align="right" className={classes.fontName}>
+                <TableCell align="left" style={{color:colorText}}>{row.phone}</TableCell>
+                {!haveCustomerScore?null:<TableCell align="right" style={{color:colorText}}><ThousandFormat value={row.points} /></TableCell> }
+                <TableCell align="right" className={colorText?null:classes.fontName} style={{color:colorText}}><VNDFormat value={row.total_payment} /></TableCell> 
+                 <TableCell align="right" className={colorText?null:classes.fontName} style={{color:colorText}}>
                     <VNDFormat value={row.debt} />  
                 </TableCell>
-                <TableCell align="center" >
+                {hidenCollumn?.includes("debtStatus") ?null:<TableCell align="center" >
                     <FormatedStatus debt={row.debt} />     
-                </TableCell>
+                </TableCell>}
             </TableRow>
 
         {/* DETAIL */}

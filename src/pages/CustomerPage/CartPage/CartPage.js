@@ -203,8 +203,20 @@ const CartPage = (props) => {
   const handleSubmit = async () => {
     try {
       const branch = await getBranch()
-      let submitOrder = _.omit({ ...order, branch_id: Number(branch) }, "cartItem")
+      // 
+      const ward = formik.values.wardList.find((ward) => ward.id === formik.values.ward).name;
+      const province = formik.values.cityList.find(
+        (city) => city.id === formik.values.city
+      ).name;
+      const district = formik.values.districtList.find(
+        (district) => district.id === formik.values.district
+      ).name;
+      // 
+      let submitOrder = _.omit({ ...order,branch_id: Number(branch) }, "cartItem")
       submitOrder.details = JSON.stringify(order.cartItem)
+      submitOrder.ward = ward
+      submitOrder.city = province
+      submitOrder.district = district
       const res = await customerPageApi.addOrder(storeInfo.uuid, { ...submitOrder, total_amount: calculateTotal() });
       success("Đặt đơn hàng thành công")
       dispatch(customerPageActions.setOrder({

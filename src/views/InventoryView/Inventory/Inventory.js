@@ -58,6 +58,9 @@ import defaultProduct from "../../../assets/img/product/default-product.png";
 import setting from "../../../assets/constant/setting"
 import empltyImage from "../../../assets/img/icon/empty-cart.png"
 import { statusAction } from "../../../store/slice/statusSlice";
+import moment from "moment";
+
+
 const Inventory = () => {
   const [productList, setProductList] = useState([]);
   const [reload, setReload] = useState(true);
@@ -436,7 +439,7 @@ const Inventory = () => {
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <ComponentToPrint productList={productList} classes={classes} />
+          <ComponentToPrint productList={productList} classes={classes} query={query}/>
         </div>
       </div>
     </Card>
@@ -444,39 +447,42 @@ const Inventory = () => {
 };
 export default Inventory;
 
-const ComponentToPrint = ({ productList, classes }) => {
+const ComponentToPrint = ({ productList, classes, query }) => {
   const info = useSelector((state) => state.info);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
   return (
-    <div>
-      <Typography
-        style={{
-          flexGrow: 1,
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: 500,
-          margin: 30,
-          color: "#000",
-        }}
-      >
-        Danh sách sản phẩm
-      </Typography>
-      <div>
-        <TableHeader
-          classes={classes}
-          headerData={store_setting?.inventory.status ? HeadCells.InventoryHeadCells:
-            HeadCells.InventoryHeadCells.filter(item => item.id !== "inventory" &&  item.id !== "quantity")
 
-          }
-        />
-        <TableBody>
-          {productList.map((row, index) => {
-            return <InventoryTableRow key={row.uuid} row={row} />;
+    <div style={{padding:10}}>
+    <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
+    <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
+      <Typography style={{  fontSize: 20, fontWeight: 500}} >
+        Thống kê sản phẩm
+      </Typography>
+      {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}
+      {query.status? <Typography  > {`Tình trạng: ${query.status}`} </Typography>:null}
+      {/* {query.categoryId? <Typography  > {`Danh mục: ${query.categoryId === "cash"?"Tiên mặt":"Thẻ"}`} </Typography>:null} */}
+      {query.minStandardPrice || query.maxStandardPrice ? <Typography  > {`Tổng tiền đơn từ: ${query.minStandardPrice?query.minStandardPrice:0}đ đến ${query.maxStandardPrice?query.maxStandardPrice:0}đ`} </Typography>:null}
+      {query.minListPrice || query.maxListPrice ? <Typography  > {`Đơn giảm giá từ: ${query.minListPrice?query.maxListPrice:0}đ đến ${query.maxDiscount?query.maxListPrice:0}đ`} </Typography>:null}
+      {query.minInventory || query.maxInventory ? <Typography  > {`Đơn giảm giá từ: ${query.minInventory?query.maxInventory:0}đ đến ${query.maxDiscount?query.maxInventory:0}đ`} </Typography>:null}
+
+    </Box>
+    <div>
+    <TableWrapper  isReport={true} >
+      <TableHeader
+      color="#000"
+        classes={classes}
+        headerData={HeadCells.InventoryHeadCells.filter(item => item.id !== "quantity")}
+      />
+      <TableBody>
+        {productList.map((row, index) => {
+          console.log("rowrow",row)
+          return  <InventoryTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["quantity", "image"]}colorText={"#000"}  isManageInventory={store_setting?.inventory.status} />
           })}
-        </TableBody>
-      </div>
+      </TableBody>
+      </TableWrapper>
     </div>
+  </div>
   );
 };
 
