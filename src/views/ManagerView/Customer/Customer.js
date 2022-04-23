@@ -411,8 +411,9 @@ const ComponentToPrint = ({ customerList, classes , query}) => {
     <div style={{padding:10}}>
     <Typography style={{color:'#000'}}>Ngày lập:  {moment(new Date()).format("DD/MM/YYYY HH:mm")}</Typography>
     <Box style={{ margin: 10,flexGrow: 1,  textAlign: "center" ,color: "#000"}}>
-      <Typography style={{  fontSize: 20, fontWeight: 500}} >
-        Thống kê khách hàng
+      <Typography style={{  fontSize: 18, fontWeight: 600}} >
+        {/* Thống kê khách hàng */}
+        THỐNG KÊ KHÁCH HÀNG
       </Typography>
       {/* {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}
       {query.status? <Typography  > {`Tình trạng: ${query.status}`} </Typography>:null}
