@@ -12,7 +12,6 @@ const supplierApi = {
     const url = `/stores/${storeUuid}/suppliers`;
     return axiosClient.get(url, {params: query});
   },
-
   getSupplier: (storeUuid, supplierUuid) => {
     const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
     return axiosClient.get(url);
@@ -33,11 +32,9 @@ const supplierApi = {
     const url = `/stores/${storeUuid}/suppliers/${supplierUuid}`;
     return axiosClient.post(url, body);
   },
-  payDebt: (storeUuid, supplierUuid, paidAmount) => {
+  payDebt: (storeUuid, supplierUuid, body) => {
     const url = `/stores/${storeUuid}/suppliers/${supplierUuid}/payDebt`;
-    return axiosClient.put(url,{
-      paid_amount: paidAmount
-    });
+    return axiosClient.put(url,body);
   },
 };
 export default supplierApi;
