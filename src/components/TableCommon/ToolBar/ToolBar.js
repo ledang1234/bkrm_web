@@ -133,8 +133,8 @@ const ToolBar = (props) => {
     standard_price: "Giá vốn",
     quantity_per_unit: "Đơn vị",
     quantity: "Tồn kho",
-    min_reorder_quantity: "Điểm đặt hàng lại",
-    max_order: "Đặt hàng tối đa",
+    min_reorder_quantity: "Tồn nhỏ nhất",
+    max_order: "Tồn lớn nhất",
     img_urls: "Hình ảnh",
     has_batches: "Lô",
     description: "Miêu tả"
@@ -523,7 +523,7 @@ const ToolBar = (props) => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
-                <Typography><b>Điểm đặt hàng lại</b></Typography>
+                <Typography><b>Tồn nhỏ nhất</b></Typography>
                 <TextField label="Tên tùy chỉnh" value={customCl.min_reorder_quantity} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, min_reorder_quantity: e.target.value })}>
                   <option value="" />
                   {listCl.map((cl) => (
@@ -536,7 +536,7 @@ const ToolBar = (props) => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
-                <Typography><b>Đặt hàng lớn nhất</b></Typography>
+                <Typography><b>Tồn lớn nhất</b></Typography>
                 <TextField label="Tên tùy chỉnh" value={customCl.max_order} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, max_order: e.target.value })}>
                   <option value="" />
                   {listCl.map((cl) => (
@@ -549,7 +549,7 @@ const ToolBar = (props) => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <Box flexDirection="row" display="flex" justifyContent="space-between" alignItems="center">
-                <Typography><b>Hình ảnh</b></Typography>
+                <Typography><b>Hình ảnh (url1, url2,...)</b></Typography>
                 <TextField label="Tên tùy chỉnh" value={customCl.img_urls} style={{ minWidth: 150, maxWidth: "80%" }} size="small" select variant="outlined" SelectProps={{ native: true }} onChange={(e) => setCustomCl({ ...customCl, img_urls: e.target.value })}>
                   <option value="" />
                   {listCl.map((cl) => (

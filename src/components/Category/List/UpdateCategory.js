@@ -115,6 +115,7 @@ const UpdateCategory = (props) => {
                         Xóa danh mục
                     </Button>
                     <Button
+                    color="primary"
                         variant="contained"
                         onClick={handleUpdateCategory}
                         size="small"

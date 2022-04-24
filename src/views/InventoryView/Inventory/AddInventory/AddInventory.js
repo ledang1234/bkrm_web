@@ -94,6 +94,7 @@ const AddInventory = (props) => {
   const [display, setDisplay] = useState([]);
   const [imageURL, setImageURL] = useState("");
   const addImageHandler = (e) => {
+   try{
     console.log(e.target.files[0]);
     console.log(URL.createObjectURL(e.target.files[0]));
     setImages([...images, e.target.files[0]]);
@@ -105,6 +106,9 @@ const AddInventory = (props) => {
         isUrl: false,
       },
     ]);
+   }catch(err) {
+     console.log(err)
+   }
   };
 
   const [description, setDescription] = useState('');
