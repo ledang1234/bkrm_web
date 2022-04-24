@@ -15,9 +15,11 @@ export default function SelectBatch({ handleSubmit, handleClose, row, isInventor
   const [selectedBatches, setSelectedBatches] = useState([]);
   return (
     <Dialog open={true}>
-      <DialogTitle
-        style={{ fontSize: 20 }}
-      >{`Chọn lô của ${row.product_code} - ${row.name}`}</DialogTitle>
+      {/* <DialogTitle
+        style={{ fontSize: 16, paddingRight:30 }}
+      >{`Chọn lô của ${row.product_code} - ${row.name}`}</DialogTitle> */}
+      <Typography style={{ fontSize: 16,fontWeight:600, marginTop:15, marginLeft:15, paddingRight:30 }}>{`Chọn lô của ${row.product_code} - ${row.name}`}</Typography>
+
       <DialogContent>
         <Autocomplete
           options={row.batches}

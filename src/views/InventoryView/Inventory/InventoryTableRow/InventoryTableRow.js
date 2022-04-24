@@ -29,7 +29,8 @@ const InventoryTableRow = (props) => {
   const { row, handleOpenRow, openRow ,isManageInventory,hidenCollumn,colorText} = props;
   const classes = useRowStyles();
 
-  console.log("rowrowrowrow",)
+  let  imageList =row.img_urls ? JSON.parse(row.img_urls):null
+  imageList =imageList?  Array.isArray(imageList)? imageList :[imageList] :null
   return (
     <>
       <TableRow
@@ -44,14 +45,14 @@ const InventoryTableRow = (props) => {
         <TableCell align="left" style={{color:colorText}}>
           {row.product_code}
         </TableCell>
-        <TableCell align="center" style={{ minWidth: hidenCollumn?.includes("image")? 100:200, color:colorText }}>
+        <TableCell align="center" style={{ minWidth: hidenCollumn?.includes("image")? 50:200, color:colorText }}>
           <ListItem
             style={{ marginLeft: -30, marginTop: -10, marginBottom: -10 }}
           >
            {hidenCollumn?.includes("image") ?null: <Box
               component="img"
               sx={{ height: 50, width: 50, borderRadius: 10, marginRight: 15 }}
-              src={JSON.parse(row.img_urls)?.at(0) || defaultProduct}
+              src={imageList?.at(0) || defaultProduct}
             />}
             <Typography className={colorText?null:classes.fontName} style={{color:colorText}}>{row.name}</Typography>
           </ListItem>

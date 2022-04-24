@@ -99,6 +99,7 @@ const AddCategory = (props) => {
             </Select>
           </FormControl> */}
             <TreeSelect
+            placeholder="Danh mục cha"
                   id="category"
                   name="category"  
                   style={{ width: '100%'}}   

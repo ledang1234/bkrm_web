@@ -320,12 +320,13 @@ const Inventory = () => {
           { dbName: "list_price", displayName: "Giá bán" },
           { dbName: "standard_price", displayName: "Giá vốn"},
           {dbName: "quantity_per_unit", displayName:"Đơn vị"},
-          { dbName: "quantity_available", displayName: "Tồn kho" },
-          { dbName: "min_reorder_quantity", displayName: "Điểm đặt hàng lại" },
-          { dbName: "img_urls", displayName: "Hình ảnh" },
           {dbName: "category_id",displayName:"Danh mục"},
-          {dbName:"max_order",displayName:"Đặt hàng tối đa"},
-          {dbName:"has_batches",displayName:"Lô"}
+          { dbName: "img_urls", displayName: "Hình ảnh (url1, url2,...)" },
+          { dbName: "quantity_available", displayName: "Tồn kho" },
+          { dbName: "min_reorder_quantity", displayName: "Tồn nhỏ nhất" },
+          {dbName:"max_order",displayName:"Tồn lớn nhất"},
+          {dbName:"has_batches",displayName:"Lô"},
+          {dbName:"desciption",displayName:"Mô tả"}
         ]}
         orderByOptions={
           store_setting?.inventory.status ?
@@ -462,9 +463,9 @@ const ComponentToPrint = ({ productList, classes, query }) => {
       {query.searchKey ? <Typography  > {`Tìm kiếm theo: ${query.searchKey}`} </Typography>:null}
       {query.status? <Typography  > {`Tình trạng: ${query.status}`} </Typography>:null}
       {/* {query.categoryId? <Typography  > {`Danh mục: ${query.categoryId === "cash"?"Tiên mặt":"Thẻ"}`} </Typography>:null} */}
-      {query.minStandardPrice || query.maxStandardPrice ? <Typography  > {`Tổng tiền đơn từ: ${query.minStandardPrice?query.minStandardPrice:0}đ đến ${query.maxStandardPrice?query.maxStandardPrice:0}đ`} </Typography>:null}
-      {query.minListPrice || query.maxListPrice ? <Typography  > {`Đơn giảm giá từ: ${query.minListPrice?query.maxListPrice:0}đ đến ${query.maxDiscount?query.maxListPrice:0}đ`} </Typography>:null}
-      {query.minInventory || query.maxInventory ? <Typography  > {`Đơn giảm giá từ: ${query.minInventory?query.maxInventory:0}đ đến ${query.maxDiscount?query.maxInventory:0}đ`} </Typography>:null}
+      {query.minStandardPrice || query.maxStandardPrice ? <Typography  > {`Giá nhập từ: ${query.minStandardPrice?query.minStandardPrice:0}đ đến ${query.maxStandardPrice?query.maxStandardPrice:0}đ`} </Typography>:null}
+      {query.minListPrice || query.maxListPrice ? <Typography  > {`Giá bán từ: ${query.minListPrice?query.minListPrice:0}đ đến ${query.maxListPrice?query.maxListPrice:0}đ`} </Typography>:null}
+      {query.minInventory || query.maxInventory ? <Typography  > {`Tồn kho từ: ${query.minInventory?query.minInventory:0} đến ${query.maxInventory?query.maxInventory:0}`} </Typography>:null}
 
     </Box>
     <div>

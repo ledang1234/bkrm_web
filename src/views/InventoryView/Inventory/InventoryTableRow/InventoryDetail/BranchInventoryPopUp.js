@@ -103,6 +103,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
     setReload()
   }
   const currenBranchInventory = findBranchQuantity(branch_uuid)
+ var totalQuantity = 0;
     return (
         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" maxWidth="xs" fullWidth={true}>
             <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -143,19 +144,32 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
                
                 <Grid container style={{marginBottom:10}}>
                     <Grid item xs={7}> </Grid>
-                    <Grid item xs={2} style={{color:'#000', fontWeight:500}}> Tồn</Grid>
+                    <Grid item xs={2} style={{color:'#000', fontWeight:500}}> Tồn </Grid>
                     <Grid item xs={3}> </Grid>
                 </Grid>
-                {branchs.map((item=>(
+                {branchs.map((item=>{ 
+                const quantity  = findBranchQuantity(item.uuid)
+                totalQuantity = totalQuantity +Number(quantity) 
+                    return (
                     <Grid container>
                         <Grid item xs={7} style={{color:'#000', fontWeight:500, marginBottom:25}}>
                             {item.name}
                         {item.uuid === branch_uuid ? <CheckCircleIcon style={{marginLeft:10}}fontSize="small" color='primary'/> :null} </Grid>
 
-                        <Grid item xs={2}>{findBranchQuantity(item.uuid)}</Grid>
+                        {/* <Grid item xs={2}>{findBranchQuantity(item.uuid)}</Grid> */}
+                        <Grid item xs={2}>{quantity}</Grid>
+
                        <Grid item xs={3}> {item.uuid !== branch_uuid ? <Button color='primary' variant='contained'size='small'style={{textTransform:'none'}} onClick={()=>setOpenModal(item)}>Chuyển</Button>:null}</Grid>
                     </Grid>
-                )))}
+                )}))}
+                <Divider />
+                <Grid container>
+                    <Grid item xs={7} ></Grid>
+                    <Grid item xs={2} style={{color:'#000', fontWeight:500}}>Tổng: {totalQuantity}</Grid>
+                    <Grid item xs={3}> </Grid>
+                </Grid>
+
+
 
                 {openModal?<ModalWrapperWithClose size='h4' title={<ListItem><Typography variant='h4'>Chuyển tồn kho đến </Typography><Typography variant='h4' style={{marginLeft:5,color:theme.customization.primaryColor[500]}}>{openModal.name} </Typography>  </ListItem>}open={openModal !== null}handleClose={()=>setOpenModal(null)}>
                         
@@ -195,7 +209,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
                     
                     }
                         <Button disabled={valueQuantity > Number(currenBranchInventory) || valueQuantity === 0} onClick={()=>{confirmTransferQuantity()}}  variant="contained" size="small"  color="secondary" style={{marginTop:20}}>
-                            Xác nhận
+                            Xác nhận 
                         </Button>
 
                     </ModalWrapperWithClose>:null}
@@ -203,7 +217,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
             </DialogContent>
             <DialogActions>
         <Button  onClick={onClose}  variant="contained" size="small"  color="secondary" >
-            Huỷ
+            Huỷ 
         </Button>
        
       </DialogActions>

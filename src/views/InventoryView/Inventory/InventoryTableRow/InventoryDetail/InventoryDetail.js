@@ -154,7 +154,8 @@ const InventoryDetail = (props) => {
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
 console.log("productDetail.img_urls",productDetail)
 
-const imageList =JSON.parse(row.img_urls ? row.img_urls : "[]")
+let  imageList =row.img_urls ? JSON.parse(row.img_urls):null
+imageList = Array.isArray(imageList)? imageList :[imageList]
 // || defaultProduct
   return row.has_variance ? (
     <>
@@ -536,12 +537,12 @@ const imageList =JSON.parse(row.img_urls ? row.img_urls : "[]")
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                {/* <StyledMenuItem>
+                <StyledMenuItem>
                   <ListItemIcon style={{ marginRight: -15 }}>
                     <InboxIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="In mã tem" />
-                </StyledMenuItem> */}
+                </StyledMenuItem>
 
                 <StyledMenuItem>
                   <ListItemIcon style={{ marginRight: -15 }}>

@@ -6,7 +6,7 @@ export const INVOICE_RETURN = "Đơn_trả";
 export const CUSTOMER_ORDER = "Đơn_đặt_hàng";
 
 // inventory
-export const INVENTORY = "Kho_hàng";
+export const INVENTORY = "Sản_phẩm";
 export const INVENTORY_ORDER = "Đơn_nhập_hàng";
 export const INVENTORY_RETURN = "Đơn_trả_hàng_nhập";
 export const SUPPLIER = "Nhà_cung_cấp";

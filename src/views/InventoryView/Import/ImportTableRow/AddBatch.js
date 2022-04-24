@@ -15,6 +15,7 @@ import {
   openNotification,
   success,
 } from "../../../../components/StatusPopup/StatusPopup";
+import { Typography } from "antd";
 
 export default function AddBatch({ handleSubmit, handleClose, row }) {
   const [batch, setBatch] = useState({
@@ -28,7 +29,8 @@ export default function AddBatch({ handleSubmit, handleClose, row }) {
   });
   return (
     <Dialog open={true} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Thêm lô mới</DialogTitle>
+      {/* <DialogTitle  style={{ fontSize: 16, paddingRight:30 }}>Thêm lô mới</DialogTitle> */}
+      <Typography style={{ fontSize: 18,fontWeight:600, marginTop:15, marginLeft:15, paddingRight:30 }}>Thêm lô mới</Typography>
       <DialogContent>
         {/* <TextField
           autoFocus

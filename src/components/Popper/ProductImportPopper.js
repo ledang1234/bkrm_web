@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Popper from "@material-ui/core/Popper";
-import Paper from "@material-ui/core/Paper";
+import {Paper,Dialog} from "@material-ui/core";
 import { styled } from "@mui/material/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@mui/material/Grid";
@@ -71,29 +71,32 @@ const ProductImportPopper = ({ open, loading, errors, handleClose }) => {
   const renderErrorCard = () => {
     return dataTable?.map((error) => (
       <div style={{ textAlign: "left", color: "red" }}>
-        <Typography>{error.id}</Typography>
+      {/* <> */}
+        <Typography style={{fontWeight:500}}>{error.id}:</Typography>
         <Typography>{error.error.join(", ")}</Typography>
+        {/* </> */}
       </div>
     ));
   };
 
   return (
     open && (
-      <div
-        style={{
-          zIndex: 200,
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          marginTop: "-200px",
-          marginLeft: "-250px",
-        }}
-      >
+      // <div
+      //   style={{
+      //     zIndex: 200,
+      //     position: "fixed",
+      //     top: "50%",
+      //     left: "50%",
+      //     marginTop: "-200px",
+      //     marginLeft: "-250px",
+      //   }}
+      // >
+      <Dialog open={open} onClose={handleClose}>
         <Paper
           elevation={3}
           style={{
-            height: 400,
-            width: 500,
+            // height: 400,
+            // width: 500,
             padding: 20,
           }}
         >
@@ -105,19 +108,22 @@ const ProductImportPopper = ({ open, loading, errors, handleClose }) => {
               <Button onClick={handleClose}>Đóng</Button>
             </Grid>
 
-            <Grid
+            {/* <Grid
               container
               spacing={2}
               direction="column"
               justifyContent="center"
               alignItems="center"
               style={{ marginTop: 30 }}
-            >
-              {loading ? <CircularProgress /> : <div>{renderErrorCard()}</div>}
-            </Grid>
+            > */}
+              <div style={{padding:30}}>
+              {loading ? <CircularProgress /> : renderErrorCard()}
+              </div>
+            {/* </Grid> */}
           </Grid>
         </Paper>
-      </div>
+        </Dialog>
+
     )
   );
 };
