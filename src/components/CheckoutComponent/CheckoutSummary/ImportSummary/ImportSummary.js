@@ -216,7 +216,7 @@ const ImportSummary = (props) => {
               justifyContent="space-between"
               className={classes.marginRow}
             >
-              <Typography variant="h5">{Number(cartData.discount)===0 && mode ?`Tổng tiền (${calculateTotalQuantity(cartData.cartItem)})`:`Tổng tiền hàng (${calculateTotalQuantity(cartData.cartItem)})`}</Typography>
+              <Typography variant="h5">{Number(cartData.discount)===0 && mode ?`Tổng tiền (${calculateTotalQuantity(cartData.cartItem)})`:`Tổng tiền hàng`}</Typography>
               <Typography variant="body2" style={Number(cartData.discount)===0 && mode?{color: "#2096f3", fontWeight: 600,fontSize:18 }:{}}>
                 <VNDFormat value={cartData.total_amount} />
               </Typography>

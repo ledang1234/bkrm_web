@@ -252,7 +252,7 @@ const CartSummary = (props) => {
             >
               <div>
                 <ListItem style={{padding: 0,margin:0}}>
-                <Typography variant="h5">{!canEnterDiscountWhenSell && mode ?`Tổng tiền (${calculateTotalQuantity(cartData.cartItem)})`:`Tổng tiền hàng (${calculateTotalQuantity(cartData.cartItem)})`}</Typography>
+                <Typography variant="h5">{!canEnterDiscountWhenSell && mode ?`Tổng tiền (${calculateTotalQuantity(cartData.cartItem)})`:`Tổng tiền hàng`}</Typography>
                 {/* { filteredPromotion.length > 0   ? 
                 <div onClick={()=>{setOpenDiscount(!openDiscount)}}>
                     <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} />
