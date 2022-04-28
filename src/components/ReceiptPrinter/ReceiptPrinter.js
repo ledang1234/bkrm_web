@@ -297,7 +297,7 @@ export const ReceiptPrinter = ({cart, date,code,type}) => {
           <Grid container justifyContent='space-between'  alignItems='center' style={{marginBottom:15}}>
               
               <Grid>
-              <Typography className={classes.title} style={{fontSize: "18px"}}>HOÁ ĐƠN BÁN HÀNG</Typography>
+              <Typography className={classes.title} style={{fontSize: "18px"}}>PHIẾU XUẤT KHO</Typography>
               <Typography className={classes.center} style={{ fontSize: "12px"}}>Ngày: {date? date: orderDate} - Mã HĐ: {code}</Typography>
               </Grid>
               <Grid >
