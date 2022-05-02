@@ -16,8 +16,8 @@ const MenuSelect = ({handleShowMenu,showMenu}) => {
 
   const info = useSelector((state) => state.info);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
-const permissions = info.user.permissions
-console.log('permissions',permissions)
+  const permissions = info.user.permissions
+  console.log('permissions',permissions)
 
   let tree = [salesModule,inventoryModule,hrModule,reportModule]
   

@@ -12,6 +12,7 @@ import PageNotFound from "../../pages/PageNotFound/PageNotFound";
 
 import React from "react";
 import { useSelector } from "react-redux";
+import TransferInventory from "./TransferInventory/TransferInventory";
 
 const InventoryView = (props) => {
   const { path } = useRouteMatch();
@@ -32,6 +33,8 @@ const InventoryView = (props) => {
       <Route path={`${path}/inventory`} component={Inventory} />
       <Route path={`${path}/receipt`} component={InventoryOrder} />
       <Route path={`${path}/returns`} component={InventoryReturnOrder} />
+
+      <Route path={`${path}/transfer-inventory`} component={TransferInventory} />
       {/* <Route path={`${path}/order-list/order`}  component={OrderProduct}/>   
           <Route path={`${path}/order-list`}  component={OrderProductList}/>     */}
       <Route path={`${path}/check-history/check`} component={Check} />

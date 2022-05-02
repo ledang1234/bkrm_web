@@ -129,7 +129,6 @@ const MenuItem = (props) => {
           [classes.itemClick]: Math.floor(itemMenuOpen) === Math.floor(item.id),
         })}
         onClick={() => handleOnClick(item.id)}
-
       >
         <ListItemIcon style={{ marginRight: -6, paddingTop: 2, paddingBottom: 2, marginLeft: -7 }}>
 

@@ -84,11 +84,15 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
      //( + nếu ko là lô thì là số 
 
     const body = {
-        to_branch: openModal.id,
+        to_id: openModal.id,
         value_quantity: has_batches ? _.sumBy(valueQuantity, 'quantity') : valueQuantity,
         batches: JSON.stringify(valueQuantity.filter(batch => batch.quantity)),
         has_batches: has_batches,
-        product_id: row.id
+        product_id: row.id,
+        to_name: openModal.name,
+        created_user_id: info.user.id,
+        created_user_name: info.user.name,
+        created_user_type: info.role,
     }
     try {
         const res = await productApi.transferInventory(store_uuid, branch_uuid, body);

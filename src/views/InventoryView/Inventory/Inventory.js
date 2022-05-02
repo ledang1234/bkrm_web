@@ -478,7 +478,7 @@ const ComponentToPrint = ({ productList, classes, query }) => {
       <TableBody>
         {productList.map((row, index) => {
           console.log("rowrow",row)
-          return  <InventoryTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["quantity", "image"]}colorText={"#000"}  isManageInventory={store_setting?.inventory.status} />
+          return  <InventoryTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["quantity", "image"]}isManageInventory={store_setting?.inventory.status} />
           })}
       </TableBody>
       </TableWrapper>
