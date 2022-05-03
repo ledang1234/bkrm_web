@@ -43,6 +43,7 @@ import DeliveryView from "../../views/DeliveryView/DeliveryView";
 import branchApi from "../../api/branchApi"
 import { infoActions } from "../../store/slice/infoSlice";
 import storeApi from "../../api/storeApi";
+import Notification from "../../components/Notification/Notification";
 const drawerWidth = 240;
 
 const HomePage = (props) => {
@@ -142,11 +143,15 @@ const HomePage = (props) => {
 
   };
 
-  const getNotification = async () => {
+  const [openNotification, setOpenNotifcation] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const getNotification = async (event) => {
     try {
       if (store_uuid && branch_uuid) {
         const res = await storeApi.getNotification(store_uuid, branch_uuid);
-        alert(JSON.stringify(res.data))
+        // alert(JSON.stringify(res.data))
+        setAnchorEl(anchorEl ? null : event.currentTarget);
+        setOpenNotifcation(!openNotification);
       }
     } catch(err) {
       console.log(err)
@@ -199,9 +204,9 @@ const HomePage = (props) => {
                 </Typography>
               </Box>
 
-              {/* <IconButton color="primary" onClick={getNotification} >
-                <Notifications />
-              </IconButton> */}
+             
+
+              <Notification anchorEl={anchorEl} open={openNotification} />
 
               <Button color="primary" style={{ marginRight:10, marginLeft:10}} onClick={() => logOutHandler()}>
                 Đăng xuất
