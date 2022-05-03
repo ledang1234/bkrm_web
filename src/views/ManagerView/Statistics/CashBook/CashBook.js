@@ -164,6 +164,7 @@ const CashBook = () => {
           end: response.end,
           pay: response.pay,
           receive: response.receive,
+          total: response.total,
         })
       } catch (error) {
         console.log(error);
@@ -254,7 +255,7 @@ const CashBook = () => {
           {dbName:"created_user_type",displayName:"Tài khoản thực hiện"},
           {dbName:"created_user_name",displayName:"Tên người thực hiện"},
         ]}
-        extra={<DayReportSelect dayQuery={dayQuery} setDayQuery={setDayQuery}/>}
+        extra={<div style={{marginTop: 10}}><DayReportSelect  dayQuery={dayQuery} setDayQuery={setDayQuery}/></div>}
       />
 
       <CashBookFilter
@@ -279,11 +280,11 @@ const CashBook = () => {
         <TableBody>
           <TableRow style={{backgroundColor:'#f5f5f5'}}>
               <TableCell style={{color:'#000', fontWeight:600}}>Số đơn: <ThousandFormat value={totalRows}></ThousandFormat></TableCell>
-              <TableCell />
               <TableCell style={{color: 'purple', fontWeight:600}}>Quỹ đầu kì: <ThousandFormat value={summary.start}></ThousandFormat></TableCell>
               <TableCell style={{color:'blue', fontWeight:600}}>Quỹ cuối kì: <ThousandFormat value={summary.end}></ThousandFormat></TableCell>
               <TableCell style={{color:'green', fontWeight:600}}>Thu: <ThousandFormat value={summary.receive}></ThousandFormat></TableCell>
               <TableCell style={{color:'orange', fontWeight:600}}>Chi: <ThousandFormat value={summary.pay}></ThousandFormat></TableCell>
+              <TableCell style={{color:'red', fontWeight:600}}>Tổng quỹ: <ThousandFormat value={summary.total}></ThousandFormat></TableCell>
           </TableRow>
           {data.map((row, index) => {
             return (
