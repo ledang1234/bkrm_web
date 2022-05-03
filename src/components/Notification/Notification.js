@@ -58,7 +58,7 @@ export default function Notification() {
   }
 
   React.useEffect(async () => {
-    if (store_uuid && branch_uuid) {
+    if (store_uuid && branch_uuid && open) {
       getNotification();
      }
   }, [open]) 
