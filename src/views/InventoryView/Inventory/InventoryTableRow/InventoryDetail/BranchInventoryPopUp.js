@@ -86,7 +86,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
     const body = {
         to_id: openModal.id,
         value_quantity: has_batches ? _.sumBy(valueQuantity, 'quantity') : valueQuantity,
-        batches: JSON.stringify(valueQuantity.filter(batch => batch.quantity)),
+        batches: JSON.stringify(Array.isArray(valueQuantity) ? valueQuantity.filter(batch => batch.quantity) : []),
         has_batches: has_batches,
         product_id: row.id,
         to_name: openModal.name,

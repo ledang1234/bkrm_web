@@ -382,3 +382,13 @@ export const TransferInventoryHeadCells = [
   { id: "user", align: "left", disablePadding: false, label: "Ngừoi thực hiện" },
   { id: "date", align: "left", disablePadding: false, label: "Ngày" },
 ];
+
+export const CashbookHeadCells = [
+  // { id: "stt", align: "left", disablePadding: true, label: "Stt" },
+  { id: "id", align: "left", disablePadding: true, label: "Mã" },
+  { id: "date", align: "left", disablePadding: false, label: "Ngày" },
+  { id: "quantity", align: "left", disablePadding: false, label: "Giá trị" },
+  { id: "user_type", align: "left", disablePadding: false, label: "Đối tác" },
+  { id: "user_name", align: "left", disablePadding: false, label: "Tên" },
+  { id: "type", align: "left", disablePadding: false, label: "Loại thu chi" },
+];

@@ -394,7 +394,7 @@ export const reportModule = {
       icon2: icons1.DonutSmallTwoToneIcon,
       children: [
         // { id: 20.1, title: "Tổng quan", url: "/home/manager/report" },
-        // { id: 20.2, title: "Sổ quỹ", url: "/home/manager/report" },
+        { id: 20.2, title: "Sổ quỹ", key: "Sổ quỹ", url: "/home/manager/cashbook" },
 
         // { id: 20.8, title: "Tổng quan", url: "/home/manager/general-report" },
         { id: 20.3, title: "Báo cáo cuối ngày",key: "Báo cáo cuối ngày", url: "/home/manager/end-date-report" },
