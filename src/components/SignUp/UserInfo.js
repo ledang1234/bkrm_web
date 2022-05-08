@@ -20,7 +20,7 @@ const UserInfo = (props) => {
             onBlur={user_formik.handleBlur}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <TextField
             variant="outlined"
             required
@@ -34,7 +34,7 @@ const UserInfo = (props) => {
             onBlur={user_formik.handleBlur}
           />
         </Grid>
-        <Grid item xs={6}>
+        {/* <Grid item xs={6}>
           <TextField
             variant="outlined"
             fullWidth
@@ -45,7 +45,7 @@ const UserInfo = (props) => {
             onChange={user_formik.handleChange}
             value={user_formik.values.dateOfBirth}
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <TextField
             variant="outlined"

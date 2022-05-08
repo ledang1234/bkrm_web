@@ -58,7 +58,7 @@ const MainPage = (props) => {
         renderArrowPrev={(onClickHandler) =><IconButton className={classes.arrow} onClick={onClickHandler} ><ArrowBackIosIcon  /></IconButton>}
         renderArrowNext={(onClickHandler) =><IconButton className={clsx(classes.arrow, classes.arrowRight)} onClick={onClickHandler} ><ArrowForwardIosIcon  /></IconButton>}
     >
-        {banners.map((img)=><img  src={img} />)}
+        {banners.map((img)=><img height={400} src={img} />)}
     
     </Carousel>
 

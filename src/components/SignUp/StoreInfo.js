@@ -27,7 +27,7 @@ const StoreInfo = (props) => {
             variant="outlined"
             required
             fullWidth
-            label="Tên chi nhánh"
+            label="Tên cửa hàng"
             onChange={store_formik.handleChange}
             value={store_formik.values.name}
             error={store_formik.touched.name && store_formik.errors.name}
@@ -35,7 +35,7 @@ const StoreInfo = (props) => {
             onBlur={store_formik.handleBlur}
           />
         </Grid>
-        <Grid item xs={5}>
+        {/* <Grid item xs={5}>
           <TextField
             variant="outlined"
             required
@@ -48,8 +48,8 @@ const StoreInfo = (props) => {
             helperText={store_formik.touched.phone ? store_formik.errors.phone : null}
             onBlur={store_formik.handleBlur}
           />
-        </Grid>
-        <Grid item xs={7}>
+        </Grid> */}
+        <Grid item xs={12}>
           <FormControl
             required
             fullWidth

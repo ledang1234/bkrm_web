@@ -57,11 +57,7 @@ export default function SignUp() {
       phone: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Nhập tên chi nhánh"),
-      phone: Yup.string()
-        .length(10, "Số điện thoại không chính xác")
-        .required("Nhập số điện thoại")
-        .matches(/^\d+$/, "Số điển thoại không chính xác"),
+      name: Yup.string().required("Nhập tên cửa hàng"),
       address: Yup.string().required("Nhập địa chỉ"),
       city: Yup.string().required("Chọn tỉnh/thành phố"),
       district: Yup.string().required("Chọn quận/huyện"),
@@ -218,5 +214,5 @@ export default function SignUp() {
 }
 
 function getSteps() {
-  return ["Điền thông tin người dùng", "Điền thông tin chủ cửa hàng"];
+  return ["Điền thông tin người dùng", "Điền thông tin cửa hàng"];
 }

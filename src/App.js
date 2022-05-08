@@ -28,6 +28,7 @@ const LoginPage = React.lazy(() => import("./pages/LoginPage/LoginPage"));
 const SignupPage = React.lazy(() => import("./pages/SignupPage/SignupPage"));
 const CustomerPage = React.lazy(() => import("./pages/CustomerPage/CustomerPage"));
 const MainPage = React.lazy(() => import("./pages/MainPage/MainPage"));
+
 function App() {
   const customization = useSelector((state) => state.customize);
   const store_uuid = useSelector((state) => state.info.store.uuid);
