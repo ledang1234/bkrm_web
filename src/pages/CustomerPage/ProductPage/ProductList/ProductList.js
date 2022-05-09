@@ -155,7 +155,7 @@ const ProductList = (props) => {
     const [openQuickPopUp, setOpenQuickPopUp] = useState(false)
     const [selectedItem, setSelectedItem] = useState(false)
 
-    const addProductToCart = (product, addQuantity=1,stockQuantity) => {
+    const addProductToCart = (product, stockQuantity, addQuantity=1) => {
         const newItem = {...product}  
         try {
             const itemInCart = order.cartItem.find(item => item.uuid === product.uuid);

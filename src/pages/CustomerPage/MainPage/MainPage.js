@@ -49,12 +49,12 @@ const MainPage = (props) => {
     <Carousel // showArrows={true} showStatus={true} showIndicators={true} showThumbs={true} stopOnHover={true} thumbWidth=""
         interval="3000"
         infiniteLoop={true}
-        showStatus={false} 
-        autoPlay  
+        showStatus={false}
+        autoPlay
         emulateTouch={true}
         swipeable={true}
-        dynamicHeight={false} 
-        showThumbs={false} 
+        dynamicHeight={false}
+        showThumbs={false}
         renderArrowPrev={(onClickHandler) =><IconButton className={classes.arrow} onClick={onClickHandler} ><ArrowBackIosIcon  /></IconButton>}
         renderArrowNext={(onClickHandler) =><IconButton className={clsx(classes.arrow, classes.arrowRight)} onClick={onClickHandler} ><ArrowForwardIosIcon  /></IconButton>}
     >
