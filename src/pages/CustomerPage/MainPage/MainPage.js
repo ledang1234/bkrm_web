@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTheme, makeStyles, styled , lighten} from "@material-ui/core/styles";
+// import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import {IconButton,Typography,Box} from '@material-ui/core';
 import '../../../index.css';
@@ -62,9 +64,16 @@ const MainPage = (props) => {
         renderArrowPrev={(onClickHandler) =><IconButton className={classes.arrow} onClick={onClickHandler} ><ArrowBackIosIcon  /></IconButton>}
         renderArrowNext={(onClickHandler) =><IconButton className={clsx(classes.arrow, classes.arrowRight)} onClick={onClickHandler} ><ArrowForwardIosIcon  /></IconButton>}
     >
-        {banners.map((img)=><img  src={img} />)}
+        {banners.map((img)=>
+        <div>
+        <img  src={img} />
+       </div>
+        )}
+      
+       
     
     </Carousel>
+    
 
 
     {/* // 2. BEST SELLERS  */}

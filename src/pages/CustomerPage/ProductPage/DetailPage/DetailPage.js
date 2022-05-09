@@ -10,6 +10,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import clsx from "clsx";
 // import {VNDFormat} from "../"
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 import {VNDFormat} from "../../../../components/TextField/NumberFormatCustom"
 import {CustomButton} from "../../../../components/Button/ColorButton"
 import AddIcon from '@material-ui/icons/Add';
