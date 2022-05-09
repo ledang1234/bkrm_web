@@ -50,6 +50,7 @@ const CascadingContext = React.createContext({
 })
 
 function CascadingMenuItem({ onClick,title,mainColor, id ,...props }) {
+  let { url } = useRouteMatch();
   const classes = useCascadingMenuStyles({mainColor})
   let { path } = useRouteMatch();
   const { rootPopupState } = React.useContext(CascadingContext)
@@ -63,7 +64,7 @@ function CascadingMenuItem({ onClick,title,mainColor, id ,...props }) {
 
   return <MenuItem button {...props} onClick={handleClick} className={classes.title} 
     /* SỬA PATH NÈEEEEEE */
-    component={Link} to={`${path}/products/${id}`} 
+    component={Link} to={`${url}/category/${id}`} 
    />
 }
 
@@ -135,7 +136,7 @@ const HoverMenuBtn = (props) => {
     variant: 'popover',
   })
   const renderTree = (nodes) => {
-    console.log("nodes",nodes)
+
         if(nodes.children.length !==0){
            return(
             <CascadingSubmenu 

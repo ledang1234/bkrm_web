@@ -35,32 +35,33 @@ const ProductPage = (props) => {
           return rs
         }
       }
-     
     }
+
+    // find all category child
+    function findAllSubCat (cat) {
+      let rs = []
+      console.log("cat",cat)
+
+      if(cat?.children.length === 0){
+        return cat
+      }else{
+        let allSubCat = cat.children.map((child)=> findAllSubCat(child))
+        return [cat].concat(allSubCat)
+      }     
+    };
+  
+
+    // const category = categories.find(cat => cat.id.toString() === categoryId)
     // let productOfCategory = products.filter(product => product.category.id.toString() === categoryId)
-    const checkSubcategory = (productCateId, cat) => {
-      if (productCateId === cat.id) return true;
-      
-
-      if (cat.children?.length) {
-        for (let sub in cat.children) {
-          if (checkSubcategory(productCateId, sub)) {
-            return true;
-          }
-        }
-      }
-
-      return false;
-    }
-
 
     const {products, categories} = useSelector(state => state.customerPage);
     const category = findCategoryName()
-    const currCategory = categories.find(cat => cat.id.toString() === categoryId);
-
-    // let productOfCategory = categoryId ? products.filter(product => product.category.id.toString() === categoryId &&(product.attribute_value === null || product.has_variance === 1) ) 
-    //                     :products.filter(product => product.attribute_value === null || product.has_variance === 1 ) 
-    let productOfCategory = categoryId ? products.filter(product => checkSubcategory( product.category.id, currCategory) && (product.attribute_value === null || product.has_variance === 1) ) 
+    const subCatList = category?findAllSubCat(category):null
+    console.log("subCatList",subCatList)
+    console.log("category",category)
+    console.log("category",category)
+    console.log("categories",categories)
+    let productOfCategory = categoryId ? products.filter(product => product.category.id.toString() === categoryId &&(product.attribute_value === null || product.has_variance === 1) ) 
                         :products.filter(product => product.attribute_value === null || product.has_variance === 1 ) 
 
     // let varianceProductOfCategory = categoryId ? products.filter(product => product.category.id.toString() === categoryId &&(product.attribute_value !== null && product.has_variance !== 1) ) 
