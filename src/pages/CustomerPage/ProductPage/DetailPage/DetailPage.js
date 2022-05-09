@@ -43,6 +43,9 @@ const DetailPage = (props) => {
       },
       checked: {}
   }));
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+  },[])
      
     const dispatch = useDispatch()
     const classes = useStyles(theme);

@@ -135,7 +135,8 @@ const HoverMenuBtn = (props) => {
     variant: 'popover',
   })
   const renderTree = (nodes) => {
-        if(nodes.children){
+    console.log("nodes",nodes)
+        if(nodes.children.length !==0){
            return(
             <CascadingSubmenu 
             popupId={nodes.uuid} 
@@ -175,8 +176,8 @@ const HoverMenuBtn = (props) => {
         {...bindFocus(popupState)}
         className={classes.btnNav} 
         style={{color:textColor, fontWeight:textBold, fontSize:textSize}}
-        component={Link} 
-        to={`${url}/all`}
+        // component={Link} 
+        // to={`${url}/all`}
       >
         Sản phẩm
       </Button>
