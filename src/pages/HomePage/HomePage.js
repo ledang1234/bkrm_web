@@ -44,6 +44,7 @@ import branchApi from "../../api/branchApi"
 import { infoActions } from "../../store/slice/infoSlice";
 import storeApi from "../../api/storeApi";
 import Notification from "../../components/Notification/Notification";
+import ManualView from "../../views/ManualView/ManualView";
 const drawerWidth = 240;
 
 const HomePage = (props) => {
@@ -271,11 +272,13 @@ const HomePage = (props) => {
             {permissions?.find((p) => p.name === "report") && (
               <Route path={`${path}/manager`} component={ManagerView} />
             )}
+            <Route path={`${path}/manual`} component={ManualView} />
             <Route path={`${path}/`} >
               {/* only redirect whenever permissions is successfully loaded => length at least = 1 */}
               {permissions?.length > 0 ?
                 (<Redirect to={permissions?.find((p) => p.name === "sales") ? `${path}/sales` : permissions?.find((p) => p.name === "inventory") ? `${path}/inventory` : permissions?.find((p) => p.name === "employee") ? `${path}/hr` : `${path}/manager`} />) : null}
             </Route>
+            
             <Route path={`${path}/*`} component={PageNotFound} />
           </Switch>
         </Box>
