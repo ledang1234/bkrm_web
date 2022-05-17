@@ -108,11 +108,10 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
     const info = useSelector((state) => state.info);
     const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
-    var link = store_setting?.custom_web;
+    var link = info.store.web_page ? "https://cuahangcuatoi.net/#/store/" + info.store.web_page : "";
     var logo  = store_setting?.img_url ;
     const theme = useTheme();
     const classes = useStyles(theme);
-
     const item = cart.cartItem? cart.cartItem :cart.details
 
     return (
