@@ -152,7 +152,7 @@ const HomePage = (props) => {
         const res = await storeApi.getNotification(store_uuid, branch_uuid);
         // alert(JSON.stringify(res.data))
         setAnchorEl(anchorEl ? null : event.currentTarget);
-        setOpenNotifcation(!openNotification);
+        setOpenNotifcation(true);
       }
     } catch(err) {
       console.log(err)
