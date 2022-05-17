@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ModalWrapperWithClose(props) {
   const {title,open,handleClose,handleSubmit,name,size} = props
   const classes = useStyles();
-  return (
+  return ( 
     <React.Fragment>
       <Modal
         open={open}

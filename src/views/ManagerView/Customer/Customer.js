@@ -30,7 +30,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useReactToPrint } from "react-to-print";
 import useStyles from "../../../components/TableCommon/style/mainViewStyle";
 import { useTheme } from "@material-ui/core/styles";
-
+import CustomerGroup from '../../../components/CustomerGroup/CustomerGroup';
 //import style
 
 //import lib
@@ -43,36 +43,9 @@ import { useTheme } from "@material-ui/core/styles";
 
 
 //import constant
-
-
-
 ////import project
 //riêng
-
-
-
-
 //chung
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [reload, setReload] = useState(false);
@@ -96,6 +69,8 @@ const Customer = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const [openCustGroup, setOpenCustGroup] = React.useState(false);
 
   useEffect(() => {
     if (customerList.length) {
@@ -129,7 +104,7 @@ const Customer = () => {
   };
 
   //// 2. Table
-console.log(info.store.general_configuration)
+  // console.log(info.store.general_configuration)
   //collapse
   const [openRow, setRowOpen] = React.useState(null);
   const handleOpenRow = (row) => {
@@ -284,9 +259,9 @@ console.log(info.store.general_configuration)
 
         <Grid className={classes.btngroup1} >
           <Button variant="outlined" color="primary"style={{marginRight:15}} onClick={()=>setOpenHistory(true)}>Lịch sử thu nợ</Button>
-          
+          <Button variant="outlined" color="primary"style={{marginRight:15}} onClick={()=>setOpenCustGroup(true)}>Nhóm khách hàng</Button>
           {openHistory? <DebtHistory open={openHistory}  onClose={()=>setOpenHistory(false)}/>:null} 
-         
+          {openCustGroup ? <CustomerGroup open={openCustGroup}  onClose={()=>setOpenCustGroup(false)}/> : null}
           <ButtonBase sx={{ borderRadius: '16px' }}
             onClick={handleClickOpen}
           >
@@ -339,18 +314,21 @@ console.log(info.store.general_configuration)
           { dbName: "debt", displayName: "Còn nợ" },
         ]}
 
-        extra={<FormControlLabel
-          style={{marginLeft:10}} 
-          control={
-            <Switch
-              size="small"
-              checked={showOnlyDebt}
-              onChange={(e) => { setPagingState({ ...pagingState, page: 0 }); setShowOnlyDebt(e.target.checked)}}
-              color="primary"
+        extra={<>
+          <Tooltip title="Chỉ hiện khách nợ">
+            <FormControlLabel
+              style={{ marginLeft: 10 }}
+              control={
+                <Switch
+                  size="small"
+                  checked={showOnlyDebt}
+                  onChange={(e) => { setPagingState({ ...pagingState, page: 0 }); setShowOnlyDebt(e.target.checked) }}
+                  color="primary"
+                />
+              }
             />
-          }
-          label="Chỉ hiện khách nợ"
-        />}
+          </Tooltip>
+        </>}
       />
 
       <CustomerFilter openFilter={openFilter} handleToggleFilter={handleToggleFilter} />
