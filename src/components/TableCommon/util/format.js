@@ -36,7 +36,7 @@ export const FormatedStatus = (props) => {
   }
 };
 export const FormatedProductStatus = (props) => {
-  if (Number(props.quantity) === 0) {
+  if (Number(props.quantity) <= 0) {
     return (
       <Chip
         label="Hết hàng"
