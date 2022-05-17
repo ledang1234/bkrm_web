@@ -77,6 +77,15 @@ const InventoryTableRow = (props) => {
         <TableCell align="center" className={classes.fontName} style={{fontWeight:500, color:'#000'}}>
           {row.branch_quantity}
         </TableCell>
+
+        <TableCell align="center" style={{color:colorText}}>
+          --
+        </TableCell>
+
+        <TableCell align="center" style={{color:colorText}}>
+          --
+        </TableCell>
+
           </>
           : null}
       </TableRow>
