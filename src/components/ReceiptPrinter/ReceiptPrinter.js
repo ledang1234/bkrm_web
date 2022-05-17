@@ -115,7 +115,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
     const item = cart.cartItem? cart.cartItem :cart.details
 
     return (
-        <div style={{padding:20}} >
+        <div style={{padding:10}} >
             {/* Logo */}
            {logo? 
             <div className={classes.centerQR} style={{marginBottom:10}}  >
@@ -142,7 +142,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
             <Typography className={classes.center}>Mã HĐ: {code}</Typography>
             <Typography className={classes.center} style={{marginBottom:10}}>Ngày: {date? date: orderTime}</Typography>
            
-            <Box style={{marginBottom:20}}>
+            <Box style={{marginBottom:10}}>
               <Typography className={classes.text} >Thu ngân: {cart.created_by_user? cart.created_by_user.name: info.user.name}</Typography>
               <Typography className={classes.text} >Khách hàng: {cart.customer? cart.customer?.name :"Khách lẻ"} </Typography> 
             </Box>
