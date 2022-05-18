@@ -1,22 +1,19 @@
-import { Form, Input, Button, Space, Row } from 'antd';
+import { Form, Input, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useState } from 'react';
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 
-const CustomerGroupForm = () => {
+// import Select from '@material-ui/core/Select';
+import { Select, Radio } from 'antd';
+const { Option } = Select;
+
+const CustomerGroupForm = ({ onSave, onClose }) => {
+
     const onFinish = values => {
         console.log('Received values of form:', values);
     };
 
-
     return (
-        <Form name="customer_group_form" onFinish={onFinish} autoComplete="off" style={{maxHeight: 500, overflow: "auto"}}>
+        <Form name="customer_group_form" onFinish={onFinish} autoComplete="off" style={{ maxHeight: 500, overflow: "auto" }}>
             <Form.Item
                 label="Tên nhóm"
                 name="groupName"
@@ -40,66 +37,70 @@ const CustomerGroupForm = () => {
                 <Input />
             </Form.Item>
 
+            <Space style={{ display: 'flex' }} align="baseline" size={20}>
+                Điều kiện
+            </Space>
+
             <Form.List name="conditions">
                 {(fields, { add, remove }) => (
                     <>
                         {fields.map(({ key, name, ...restField }) => (
-                            <Space key={key} style={{ display: 'flex'}} align="baseline" size={20}>
+                            <Space key={key} style={{ display: 'flex' }} align="baseline" size={20}>
                                 <Form.Item
                                     {...restField}
                                     name={[name, 'criteria']}
                                 >
-                                    <Select defaultValue={"totalAmount"} style={{width: 160}}> 
-                                        <MenuItem value={"totalAmount"}>{'Tổng tiền mua'}</MenuItem>
-                                        <MenuItem value={"numOfOrder"}>{'Số hóa đơn'}</MenuItem>
-                                        <MenuItem value={"point"}>{'Điểm thưởng'}</MenuItem>
-                                        <MenuItem value={"time"}>{'Ngày tạo'}</MenuItem>
-                                    </Select>
+                                    <select defaultValue={"totalAmount"} style={{ width: 160, height: 32, borderRadius: 2 }}>
+                                        <option value={"totalAmount"}>{'Tổng tiền mua'}</option>
+                                        <option value={"numOfOrder"}>{'Số hóa đơn'}</option>
+                                        <option value={"point"}>{'Điểm thưởng'}</option>
+                                        <option value={"time"}>{'Ngày tạo'}</option>
+                                    </select>
+
                                 </Form.Item>
 
                                 <Form.Item
                                     {...restField}
                                     name={[name, 'operation']}
                                 >
-                                    <Select defaultValue={">="} style={{width: 160}}>
-                                        <MenuItem value={">="}>{'>='}</MenuItem>
-                                        <MenuItem value={"="}>{'='}</MenuItem>
-                                        <MenuItem value={"<="}>{'<='}</MenuItem>
-                                    </Select>
+                                    <select defaultValue={">="} style={{ width: 160, height: 32, borderRadius: 2 }}>
+                                        <option value={">="}>{'>='}</option>
+                                        <option value={"="}>{'='}</option>
+                                        <option value={"<="}>{'<='}</option>
+                                    </select>
                                 </Form.Item>
 
                                 <Form.Item
                                     {...restField}
                                     name={[name, 'thres']}
-                                    rules={[{ required: true, message: 'Thiếu giá trị', type: 'number' }]}
+                                    rules={[{ required: true, message: 'Thiếu giá trị' }]}
                                 >
-                                    <Input placeholder="Giá trị"/>
+                                    <Input placeholder="Giá trị" />
                                 </Form.Item>
                                 <MinusCircleOutlined onClick={() => remove(name)} />
                             </Space>
                         ))}
                         <Form.Item>
                             <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                Add field
+                                Thêm điều kiện
                             </Button>
                         </Form.Item>
                     </>
                 )}
             </Form.List>
-            <div style={{display: "flex", flexDirection: "column-reverse", width: '100%'}}>
-            <Form.Item>
-                <Button type="primary" htmlType="submit">
-                    Lưu
-                </Button>
-                
-            </Form.Item>
-            <Form.Item>
-            <Button type="primary" danger>
-                    Hủy
-                </Button>
-            </Form.Item>
+            <div style={{ display: "flex", flexDirection: "row-reverse", width: '100%', gap: 10 }}>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        Lưu
+                    </Button>
+
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" danger onClick={() => onClose()}>
+                        Hủy
+                    </Button>
+                </Form.Item>
             </div>
-            
         </Form>
     );
 };

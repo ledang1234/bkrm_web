@@ -1,20 +1,13 @@
 import {
     Avatar,
-    Button,
     Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     Grid,
-    ListItem,
     Paper,
     Table,
     TableBody,
-    TableCell,
     TableContainer,
     TableRow,
     ButtonBase,
-    TextField,
     Typography,
     Tooltip
 } from "@material-ui/core";
@@ -26,6 +19,8 @@ import useStyles from "../TableCommon/style/mainViewStyle";
 import TableHeader from "../TableCommon/TableHeader/TableHeader";
 import customerApi from "../../api/customerApi";
 import CustomerGroupForm from "./CustomerGroupForm";
+import CustomerGroupView from "./CustomerGroupView";
+
 const CustomerGroup = ({ open, onClose }) => {
     const [custGroups, setCustGroups] = useState([]);
 
@@ -41,6 +36,7 @@ const CustomerGroup = ({ open, onClose }) => {
             console.log(err)
         }
     }
+    
     useEffect(() => {
         // if (store_uuid) fetchData();
     }, [store_uuid])
@@ -62,30 +58,8 @@ const CustomerGroup = ({ open, onClose }) => {
                     </ButtonBase>
                 </Grid>
 
-                {isAddOpen ? <CustomerGroupForm /> :
-                    <TableContainer style={{ maxHeight: '64vh', minHeight: '60vh' }}>
-                        <Table size={'small'} >
-                            <TableHeader
-                                classes={classes}
-                                // order={debtHistory}
-                                color="#000"
-                                headerData={DebtHistoryHeadCells}
-                            />
-                            <TableBody>
-                                {custGroups.map((row, index) => {
-                                    return (
-                                        <TableRow>
-                                            {/* <TableCell align="left" style={{color:'#000'}}> {row.date?.split(" ")[0].split('-').reverse().join('/').concat("\u00a0\u00a0"+ row.date?.split(" ")[1].substr(0, 5)) } </TableCell>
-                  <TableCell align="left" style={{color:'#000'}} > {row.customer_name}  {row.customer_phone ? ` - ${row.customer_phone}` :null}</TableCell>
-                  <TableCell align="left" style={{color:'#000'}} > {row.created_user_name}</TableCell>
-                  <TableCell align="right" style={{color:'#000'}} > {row.amount} </TableCell> */}
-                                        </TableRow>
-                                    );
-                                })}
-
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                {isAddOpen ? <CustomerGroupForm onSave={() => { }} onClose={() => setIsAddOpen(false)} /> :
+                    <CustomerGroupView custGroups={custGroups} />
                 }
 
             </Paper>
@@ -94,10 +68,3 @@ const CustomerGroup = ({ open, onClose }) => {
 }
 
 export default CustomerGroup;
-
-const DebtHistoryHeadCells = [
-    { id: "date", align: "left", disablePadding: false, label: "Tên nhóm" },
-    { id: "customer", align: "left", disablePadding: false, label: "Y" },
-    { id: "customer", align: "left", disablePadding: false, label: "Người thực hiện" },
-    { id: "total", align: "right", disablePadding: false, label: "Tiền thu" },
-]

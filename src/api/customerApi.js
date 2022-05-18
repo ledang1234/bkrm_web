@@ -40,6 +40,10 @@ const customerApi = {
   getCustomerDebts: (storeUuid, query) => {
     const url = `stores/${storeUuid}/customerDebts`;
     return axiosClient.get(url, {params: query});
+  },
+  getCustomerGroups: (storeUuid) => {
+    const url = `stores/${storeUuid}/customerGroups`;
+    return axiosClient.get(url);
   }
 };
 export default customerApi;
