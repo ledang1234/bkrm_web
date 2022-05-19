@@ -297,7 +297,7 @@ const AddSchedulePopup = (props) => {
         >
           Huỷ
         </Button>
-        <Button onClick={formik.handleSubmit}>Thêm</Button>
+        <Button onClick={formik.handleSubmit} size="small"variant="contained" color="primary">Thêm</Button>
       </DialogActions>
     </Dialog>
   );

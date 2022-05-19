@@ -82,6 +82,7 @@ const HomePage = (props) => {
   const store_uuid = info.store.uuid
   const branch_uuid = info.branch.uuid
 
+  console.log("info",info)
   console.log(permissions)
 
   const divLogo = () => {

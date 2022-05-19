@@ -125,7 +125,7 @@ const SupplierDetail = (props) => {
         handleConfirm={payDebt}
         message={
           <>
-          <Typography variant="h3" style={{marginBottom:15}}>Thu nợ <b style={{color:theme.customization.primaryColor[500]}}>{row.name}</b></Typography>
+          <Typography variant="h3" style={{marginBottom:15}}>Trả nợ <b style={{color:theme.customization.primaryColor[500]}}>{row.name}</b></Typography>
         <ListItem >
             <ThousandSeperatedInput  
             style={{marginRight:10}}
