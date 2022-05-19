@@ -84,6 +84,8 @@ const setting = {
     //
     orderLowStock: {
       status: true,
+      choiceRec: "Auto", //"Setting"
+      dayAuto: 7, //"Setting"
       choiceQuantity: "select", //number
       selectQuantity: "latest", //avg
       inputQuantity: 10,

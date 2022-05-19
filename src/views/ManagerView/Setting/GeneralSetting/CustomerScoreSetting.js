@@ -61,7 +61,7 @@ const handleCheckbox= (event) => {
     </div>
      <FormControlLabel control={<Checkbox name="exceptDiscountProduct"  checked={customerScore.exceptDiscountProduct}  onChange={handleCheckbox} />} label="Không tích điểm cho sản phẩm khuyến mãi" />
      <FormControlLabel control={<Checkbox name="exceptDiscountInvoice" checked={customerScore.exceptDiscountInvoice}   onChange={handleCheckbox}/>} label="Không tích điểm cho hoá đơn khuyến mãi" />
-     <FormControlLabel control={<Checkbox name="exceptVoucher" checked={customerScore.exceptVoucher}   onChange={handleCheckbox}/>} label="Không tích điểm cho hoá đơn cho hoá đơn thanh toán bằng voucher" />
+     <FormControlLabel control={<Checkbox name="exceptVoucher" checked={customerScore.exceptVoucher}   onChange={handleCheckbox}/>} label="Không tích điểm cho hoá đơn thanh toán bằng voucher" />
 
      
      <Grid item  xs={12} style={{ display: "flex", flexDirection: "row",justifyContent: "flex-end",  paddingTop: 20,  }}  >
