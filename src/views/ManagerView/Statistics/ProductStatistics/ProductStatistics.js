@@ -150,13 +150,13 @@ const ProductStatistics = () => {
     var dataProfit= {   
       series: [{
         name: 'Tổng lợi nhuận',
-        data: topData ? topData.map((item) =>item.profit).slice(0, limit.profit) :[]
+        data: topProfit ? topProfit.map((item) =>item.profit).slice(0, limit.profit) :[]
       }],
       options: {
         ...data.options,
         xaxis:{
           ...data.options.xaxis,
-          categories:   topData ? topData.map((item) =>item.name).slice(0, limit.profit) :[],
+          categories:   topProfit ? topProfit.map((item) =>item.name).slice(0, limit.profit) :[],
         }
       },
     };

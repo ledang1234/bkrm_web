@@ -700,7 +700,7 @@ const Import = () => {
       {/* 1. TABLE CARD (left) */}
       <Grid item xs={12} sm={typeShow==='list' && mode?7:8}>
         <Card className={classes.root}>
-          <Box style={{ padding: xsScreen ? 0 : 30,  minHeight: "82vh", paddingBottom: 0,}}  >
+          <Box style={{ padding: xsScreen ? 0 : 30,  minHeight: "79vh", paddingBottom: 0,}}  >
             <Box style={{ height: xsScreen ? null : "70vh" }}>
               {/* 1.1 TITLE + BTN CHANGE CART +  SEARCH */}
               <Grid container direction="row"  justifyContent="space-between" alignItems="center" style={{ marginTop: -10, marginBottom: 30 }}   >
@@ -840,8 +840,10 @@ const Import = () => {
               )}
             </Box>
             {/* 1.3 CHANGE MODE  */}
-            <FormControlLabel control={<Switch size="small" checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",   margin: -20,  marginTop: 40, }} />
+            {/* <FormControlLabel control={<Switch size="small" checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",   margin: -20,  marginTop: 40, }} /> */}
           </Box>
+          <FormControlLabel control={<Switch  size="small"  checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",  }} />
+
         </Card>
       </Grid>
       {/* 2.SUMMARY CARD (right) */}

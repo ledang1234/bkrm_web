@@ -1,4 +1,5 @@
 import axiosClient from "./axiosClient";
+
 const customerApi = {
   createCustomer: (storeUuid, body) => {
     const url = `/stores/${storeUuid}/customers`;
@@ -20,11 +21,9 @@ const customerApi = {
     const url = `/stores/${storeUuid}/customers/${customerUuid}`;
     return axiosClient.put(url,body);
   },
-  payDebt: (storeUuid, customerUuid, paidAmount) => {
+  payDebt: (storeUuid, customerUuid, body) => {
     const url = `/stores/${storeUuid}/customers/${customerUuid}/payDebt`;
-    return axiosClient.put(url,{
-      paid_amount: paidAmount
-    });
+    return axiosClient.put(url,body);
   },
   importCustomerJson : (storeUuid, json) => {
     const url = `stores/${storeUuid}/customers/addCustomersByJson`;
@@ -37,6 +36,10 @@ const customerApi = {
     return axiosClient.post(url, {
       "vouchers": JSON.stringify(vouchers)
     });
+  },
+  getCustomerDebts: (storeUuid, query) => {
+    const url = `stores/${storeUuid}/customerDebts`;
+    return axiosClient.get(url, {params: query});
   }
 };
 export default customerApi;

@@ -108,21 +108,25 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
     const info = useSelector((state) => state.info);
     const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
+
     const store = info.store.store_configuration? JSON.parse(info.store.store_configuration): null
 
-    const web_link = store_setting.status ? info.store.web_page:null
-    var link = web_link ? web_link : store? store.custom_web : null ;
-    var logo  = store? store.img_url :null ;
+//     const web_link = store_setting.status ? info.store.web_page:null
+//     var link = web_link ? web_link : store? store.custom_web : null ;
+//     var logo  = store? store.img_url :null ;
+
+    var link = info.store.web_page ? "https://cuahangcuatoi.net/#/store/" + info.store.web_page : "";
+    var logo  = store_setting?.img_url ;
+
     const theme = useTheme();
     const classes = useStyles(theme);
-
     const item = cart.cartItem? cart.cartItem :cart.details
 
     return (
-        <div style={{padding:20}} >
+        <div style={{paddingLeft: -10}} >
             {/* Logo */}
            {logo? 
-            <div className={classes.centerQR} style={{marginBottom:10}}  >
+            <div className={classes.centerQR} style={{marginBottom:5}}  >
               <img src={logo} style={{height:50}}/>
             </div>:null}
               
@@ -146,7 +150,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
             <Typography className={classes.center}>Mã HĐ: {code}</Typography>
             <Typography className={classes.center} style={{marginBottom:10}}>Ngày: {date? date: orderTime}</Typography>
            
-            <Box style={{marginBottom:20}}>
+            <Box style={{marginBottom:5}}>
               <Typography className={classes.text} >Thu ngân: {cart.created_by_user? cart.created_by_user.name: info.user.name}</Typography>
               <Typography className={classes.text} >Khách hàng: {cart.customer? cart.customer?.name :"Khách lẻ"} </Typography> 
             </Box>
@@ -228,7 +232,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                 </>}
               
 
-            <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}>
+            <Grid container direction="row" justifyContent="flex-end" style={{marginTop:10}}>
               <Grid item xs={5}>
                 {Number(cart.discount) > 0?
                   <>
@@ -240,7 +244,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                 Tổng cộng:{" "} 
                 </Typography>
                 <Typography className={clsx(classes.text,classes.weight)}>
-                Tiền khách đưa:{" "}
+                Khách đưa:{" "}
                 </Typography>
                 <Typography className={clsx(classes.text,classes.weight)}>
                 Tiền thối:{" "}
@@ -270,7 +274,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
             {link? 
             <>
                 <Typography className={classes.center}> Mở camera và quét mã để truy cập trang web</Typography>
-                <div className={classes.centerQR} style={{marginBottom:15, marginTop:10 }}>
+                <div className={classes.centerQR} style={{marginBottom:10, marginTop:10 }}>
                    {/* <QRCode value={link}  style={{height:"50%", width:"50%"}}/> */}
                    <QRCode value={link}  size={65}/>
                 </div> 

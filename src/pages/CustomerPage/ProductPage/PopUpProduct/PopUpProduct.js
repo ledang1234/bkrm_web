@@ -144,7 +144,7 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart,getStock
         <CustomButton fullWidth mainColor={mainColor} style={{marginTop:100}} 
         onClick={()=>{
           onClose()
-          addProductToCart(selectedProduct,quantity,stockQuantityOfSelectedProduct )
+          addProductToCart(selectedProduct,stockQuantityOfSelectedProduct,quantity )
         
         }}  >
           Thêm vào giỏ hàng</CustomButton>

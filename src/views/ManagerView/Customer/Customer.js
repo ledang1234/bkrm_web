@@ -1,45 +1,76 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useTheme } from "@material-ui/core/styles";
-//import style
-import useStyles from "../../../components/TableCommon/style/mainViewStyle";
-//import lib
-import { Typography, FormControlLabel, Switch, Card, Button, Divider, Grid, ButtonBase, Avatar, Tooltip, TableBody, Box } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { useReactToPrint } from "react-to-print";
-//import api 
-import customerApi from '../../../api/customerApi'
-import storeApi from '../../../api/storeApi';
-import { useSelector, useDispatch } from 'react-redux'
-
-//import constant
 import * as HeadCells from '../../../assets/constant/tableHead'
 import *  as TableType from '../../../assets/constant/tableType'
 
-////import project
-//riêng
-import AddCustomer from './AddCustomer/AddCustomer'
-import CustomerFilter from './CustomerTool/CustomerFilter'
+import { Avatar, Box, Button, ButtonBase, Card, Divider, FormControlLabel, Grid, Switch, TableBody, Tooltip, Typography } from '@material-ui/core';
+import React, { useEffect, useRef, useState } from 'react'
+import { excel_data_customer, excel_name_customer } from "../../../assets/constant/excel"
+import { useDispatch, useSelector } from 'react-redux'
 
+import AddCustomer from './AddCustomer/AddCustomer'
+import AddIcon from '@material-ui/icons/Add';
+import CustomerFilter from './CustomerTool/CustomerFilter'
+import CustomerRegisterEmail from '../../../components/Email/CustomerRegisterEmail';
 import CustomerTableRow from './CustomerTableRow/CustomerTableRow'
-//chung
+import DebtHistory from "./DebtHistory/DebtHistory"
+import Fuse from 'fuse.js';
+import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
+import { PartnerMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow"
 import SnackBar from '../../../components/SnackBar/SnackBar'
 import TableHeader from '../../../components/TableCommon/TableHeader/TableHeader'
-import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import TableWrapper from '../../../components/TableCommon/TableWrapper/TableWrapper'
-
-
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { PartnerMiniTableRow } from "../../../components/MiniTableRow/MiniTableRow"
+import ToolBar from '../../../components/TableCommon/ToolBar/ToolBar'
 import ava from '../../../assets/img/product/lyimg.jpeg';
-import Pagination from "../../../components/TableCommon/TableWrapper/Pagination"
-import { excel_name_customer, excel_data_customer } from "../../../assets/constant/excel"
-import CustomerRegisterEmail from '../../../components/Email/CustomerRegisterEmail';
-import { statusAction } from '../../../store/slice/statusSlice';
-import { removeAccents } from '../../../utils';
-import Fuse from 'fuse.js';
-import setting from "../../../assets/constant/setting";
-import DebtHistory from "./DebtHistory/DebtHistory"
+import customerApi from '../../../api/customerApi'
 import moment from "moment";
+import { removeAccents } from '../../../utils';
+import setting from "../../../assets/constant/setting";
+import { statusAction } from '../../../store/slice/statusSlice';
+import storeApi from '../../../api/storeApi';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useReactToPrint } from "react-to-print";
+import useStyles from "../../../components/TableCommon/style/mainViewStyle";
+import { useTheme } from "@material-ui/core/styles";
+
+//import style
+
+//import lib
+
+
+
+//import api 
+
+
+
+
+//import constant
+
+
+
+////import project
+//riêng
+
+
+
+
+//chung
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const Customer = () => {
@@ -403,7 +434,7 @@ const ComponentToPrint = ({ customerList, classes , query}) => {
       />
       <TableBody>
         {customerList.map((row, index) => {
-          return  <CustomerTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["debtStatus", "image"]}colorText={"#000"}  />
+          return  <CustomerTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["debtStatus", "image"]}  />
           })}
       </TableBody>
       </TableWrapper>

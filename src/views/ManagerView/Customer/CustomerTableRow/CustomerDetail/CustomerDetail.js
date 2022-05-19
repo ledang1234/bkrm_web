@@ -1,27 +1,41 @@
+import { Box, Button, Collapse, Grid, IconButton, InputAdornment, ListItem, ListItemIcon, ListItemText, TextField, Typography } from '@material-ui/core';
 import React, {useState} from 'react'
-import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
+import { StyledMenu, StyledMenuItem } from '../../../../../components/Button/MenuButton'
+import VNDInput, { ThousandFormat, ThousandSeperatedInput, VNDFormat } from '../../../../../components/TextField/NumberFormatCustom';
+import { createStyles, makeStyles, useTheme } from "@material-ui/core/styles";
+import { useDispatch, useSelector } from 'react-redux';
+
+import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
+import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
+import { Modal } from 'antd';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import UpdateCustomer from "../CustomerDetail/UpdateCustomer/UpdateCustomer"
+import avaUpload from '../../../../../assets/img/ava/avaa.jpeg';
+import customerApi from "../../../../../api/customerApi";
+import moment from 'moment'
+import { statusAction } from "../../../../../store/slice/statusSlice";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import library
-import { Modal } from 'antd';
-import { Box, Grid, Collapse, InputAdornment,ListItem, Typography, Button, ListItemIcon, ListItemText, IconButton, TextField } from '@material-ui/core';
+
+
 
 //import icon
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
-import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
+
+
+
 
 //import image
 // import avaUpload from '../../../../../assets/img/product/lyimg.jpeg';
-import avaUpload from '../../../../../assets/img/ava/avaa.jpeg';
+
 
 //import project 
-import { StyledMenu, StyledMenuItem } from '../../../../../components/Button/MenuButton'
-import customerApi from "../../../../../api/customerApi";
-import { statusAction } from "../../../../../store/slice/statusSlice";
-import { useDispatch, useSelector } from 'react-redux';
-import UpdateCustomer from "../CustomerDetail/UpdateCustomer/UpdateCustomer"
-import VNDInput, { VNDFormat, ThousandFormat, ThousandSeperatedInput } from '../../../../../components/TextField/NumberFormatCustom';
+
+
+
+
+
+
 // import CustomerDebtDetail from "./CustomerDebtDetail"
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -102,7 +116,13 @@ const CustomerDetail = (props) => {
     try {
       if (store_uuid) {
         setOpenPayDebt(false);
-        const res = await customerApi.payDebt(store_uuid, row.uuid, paidAmount);
+        const res = await customerApi.payDebt(store_uuid, row.uuid, {
+          paid_amount: paidAmount,
+          created_user_type: info.role,
+          created_user_name: info.user.name,
+          created_user_id: info.user.id,
+          date: moment(new Date()).format("YYYY-MM-DD")
+        });
         dispatch(statusAction.successfulStatus("Thanh toán nợ thành công"));
         setPaidAmount(0)
         props.parentProps.onReload();
@@ -151,7 +171,7 @@ const CustomerDetail = (props) => {
             </InputAdornment>
           }
         /> */}
-        <ListItem >
+        <ListItem>
             <ThousandSeperatedInput  
             style={{marginRight:10}}
             value={paidAmount}

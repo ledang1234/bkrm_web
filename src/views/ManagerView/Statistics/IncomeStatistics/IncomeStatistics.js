@@ -162,11 +162,11 @@ const IncomeStatistics = () => {
         <Card className={classes.hoverCard} style={{marginBottom:20}}>
             <Grid  container style={{marginBottom:10}} >
                     <Grid  container item xs={4} md={4} justifyContent="space-between" >
-                        <SmallDetailBox bgColor={'#E5F9FB'} color={'#06C9D6'} title={"Tổng thu"} value={overview.inAccount}/>
+                        <SmallDetailBox bgColor={'#E5F9FB'} color={'#06C9D6'} title={"Doanh thu"} value={overview.inAccount}/>
                         <Divider orientation="vertical" />
                     </Grid>
                     <Grid  container item xs={4} md={4} justifyContent="space-between">
-                        <SmallDetailBox bgColor={'#FFF4E5'} color={'#FFC90C'} title={"Tổng chi"} value={overview.outAccount}/>
+                        <SmallDetailBox bgColor={'#FFF4E5'} color={'#FFC90C'} title={"Tiền nhập hàng"} value={overview.outAccount}/>
                         <Divider orientation="vertical" />
                     </Grid>
                     <Grid  container item xs={4}md={4}  justifyContent="space-between">
@@ -217,8 +217,8 @@ const IncomeStatistics = () => {
                     <ReportCard title={"Chi tiết thu - chi"} >
                         <Grid container justifyContent='space-between' alignItems='center'  >
                             <Grid item xs={3}><Typography style={{fontSize:17, fontWeight:500,}}>{unit ==="day" ?"Ngày": unit ==="month" ? "Tháng" :"Năm"  }</Typography></Grid>
-                            <Grid item xs={3}><Typography style={{ fontSize:17,fontWeight:500,textAlign:"right" }}>Tổng thu</Typography></Grid>
-                            <Grid item xs={3}><Typography style={{fontSize:17,fontWeight:500,textAlign:"right"}}>Tổng chi</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{ fontSize:17,fontWeight:500,textAlign:"right" }}>Doanh thu</Typography></Grid>
+                            <Grid item xs={3}><Typography style={{fontSize:17,fontWeight:500,textAlign:"right"}}>Tiền nhập</Typography></Grid>
                             <Grid item xs={3}><Typography style={{fontSize:17,fontWeight:500,textAlign:"right"}}>Thu - chi</Typography></Grid>
 
                         </Grid>

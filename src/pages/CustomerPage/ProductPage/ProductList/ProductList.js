@@ -33,7 +33,7 @@ const ProductList = (props) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const dispatch = useDispatch()
-    const {isMargin,mainColor,priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance,InventoryList} = props
+    const {isMargin,mainColor,priceStyle,btnStyle,border,nameStyle,isBox,marginContainer,boxDistance,InventoryList, fromNoCategoryPage} = props
 
     const {order, storeInfo} = useSelector(state => state.customerPage)
     const storeManageInventory = storeInfo.general_configuration? JSON.parse(storeInfo.general_configuration).inventory.status: true
@@ -93,9 +93,9 @@ const ProductList = (props) => {
         if(!product || !product.has_variance){return }
         if(orderWhenOutOfSctock){
             return false
-        }else{          
-            const all_child_product =  products.filter( item => item.parent_product_code === product.product_code)
+        }else{      
 
+            const all_child_product =  products.filter( item => item.parent_product_code === product.product_code)
             if(branchOption === 'auto'  ){
                 for (let i = 0; i < all_child_product?.length ; i++){
                     if (Number(all_child_product[i]?.quantity_available)>0){return false} 
@@ -108,6 +108,7 @@ const ProductList = (props) => {
                     const branch = all_child_product[i]?.branch_inventories?.find(branch => Number(branch.branch_id) === Number(branchId))
                     if (Number(branch?.quantity_available)>0){return false} 
                 }
+                console.log("alo")
                 return true 
             }else {
                 let branchId = localStorage.getItem(storeInfo.uuid);
@@ -155,7 +156,7 @@ const ProductList = (props) => {
     const [openQuickPopUp, setOpenQuickPopUp] = useState(false)
     const [selectedItem, setSelectedItem] = useState(false)
 
-    const addProductToCart = (product, addQuantity=1,stockQuantity) => {
+    const addProductToCart = (product, stockQuantity, addQuantity=1) => {
         const newItem = {...product}  
         try {
             const itemInCart = order.cartItem.find(item => item.uuid === product.uuid);
@@ -184,7 +185,7 @@ const ProductList = (props) => {
         }
     }
     const openPopUp = (product,stockQuantity) =>{
-        if(stockQuantity === 0){
+        if(stockQuantity <= 0){
             warning("Sản phẩm hết hàng")
             return
         }
@@ -192,7 +193,9 @@ const ProductList = (props) => {
             setOpenQuickPopUp(true)
             return
         }
-        addProductToCart(product,stockQuantity)
+        // addProductToCart(product,stockQuantity)
+        addProductToCart(product,stockQuantity,1)
+
     }
     
     
@@ -206,14 +209,15 @@ const ProductList = (props) => {
                 const varianceProductStatus = getIsAllVarianceOutOfStock(item.has_variance?item:null) ? 0 : 99
                 const stockQuantity  = !item.has_variance ? getStockQuantity(item) : varianceProductStatus
                
-
+                console.log("item",item)
                  return( 
                      <>
                      {Number(isBox)?
                      <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{margin:`${boxDistance}%`, width:widthSize, borderRadius:border?7:0}} >
 
                         <CardActionArea 
-                            component={Link} to={`${url}/products/${item.product_code}`} 
+                            // component={Link} to={`${url}/products/${item.product_code}`} 
+                            component={Link} to={fromNoCategoryPage?`${url}/category/${item.category.id}/products/${item.product_code}`: `${url}/products/${item.product_code}`} 
                         >
 
                             <CardMedia
@@ -222,7 +226,7 @@ const ProductList = (props) => {
                             >
                              {/* <Box component="img" sx={{  height: 40, width: 40, }} style={{zIndex:20,marginTop:10}} src={soldOutIcon}/> */}
                            {/* display:'flex', justifyContent:'flex-end' */}
-                           {stockQuantity === 0? <Box style={{paddingTop:2, }}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
+                           {stockQuantity <= 0? <Box style={{paddingTop:2, }}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
                             </CardMedia>
 
                             <Box style={{marginTop:10}}>
@@ -234,13 +238,15 @@ const ProductList = (props) => {
                     </Card> :
                     <Box  className={clsx(/*classes.hoverCard,*/classes.item)} style={{margin:`${boxDistance}%`,width:widthSize, borderRadius:border?7:0}} >
                         <CardActionArea 
-                            component={Link} to={`${url}/products/${item.product_code}`}
+                            // component={Link} to={`${url}/products/${item.product_code}`}
+                            component={Link} to={fromNoCategoryPage?`${url}/category/${item.category.id}/products/${item.product_code}`: `${url}/products/${item.product_code}`} 
+
                         >
                             <CardMedia
                                 style={{height:widthSize, margin:isMargin?10:0, marginBottom:isMargin?-5:0, borderRadius:border?7:0}}
                                 image={JSON.parse(item.img_urls ? item.img_urls : "[]").length  ? JSON.parse(item.img_urls ? item.img_urls : "[]").at(0) : defaultProduct}
                             >
-                            {stockQuantity === 0? <Box style={{paddingTop:2}}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
+                            {stockQuantity <= 0? <Box style={{paddingTop:2}}><Box style={{backgroundColor:'#000', color:'#fff', maxWidth:55, paddingLeft:2, paddingRight:2,fontWeight:500, marginTop:10, fontSize:12}}>Hết hàng</Box></Box>:null}
 
                             </CardMedia>
                             <Box style={{marginTop:10}}>

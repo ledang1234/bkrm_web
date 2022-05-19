@@ -96,11 +96,12 @@ export default function SelectBatch({ handleSubmit, handleClose, row }) {
         </div>
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" onClick={handleClose}>
+        <Button color="secondary" size="small"variant="contained" onClick={handleClose}>
           Hủy
         </Button>
         <Button
           color="primary"
+          size="small"variant="contained" 
           onClick={() => {
             const nonZeroBatch = selectedBatches.filter(
               (batch) => batch.additional_quantity

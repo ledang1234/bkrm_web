@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTheme, makeStyles, styled , lighten} from "@material-ui/core/styles";
+// import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import {IconButton,Typography,Box} from '@material-ui/core';
 import '../../../index.css';
@@ -11,7 +13,6 @@ import InventoryList from '../../../assets/JsonData/inventory.json'
 import StoreContext from '../StoreContext';
 import customerPageApi from '../../../api/customerPageApi';
 import {useSelector} from 'react-redux';
-
 const useStyles = makeStyles((theme) => ({
     arrow: {
         position: 'absolute',
@@ -41,6 +42,11 @@ const MainPage = (props) => {
     const classes = useStyles(theme);
 
     const {products, storeInfo} = useSelector(state => state.customerPage);
+
+      
+    let productNoAtt =  products.filter(product => product.attribute_value === null || product.has_variance === 1 ) 
+
+
     const banners = JSON.parse(storeInfo.banners ? storeInfo.banners : '[]');
     console.log("banners",banners)
     return (
@@ -58,15 +64,25 @@ const MainPage = (props) => {
         renderArrowPrev={(onClickHandler) =><IconButton className={classes.arrow} onClick={onClickHandler} ><ArrowBackIosIcon  /></IconButton>}
         renderArrowNext={(onClickHandler) =><IconButton className={clsx(classes.arrow, classes.arrowRight)} onClick={onClickHandler} ><ArrowForwardIosIcon  /></IconButton>}
     >
-        {banners.map((img)=><img  src={img} />)}
+        {banners.map((img)=>
+        <div>
+        <img  src={img} />
+       </div>
+        )}
+      
+       
     
     </Carousel>
+    
 
 
     {/* // 2. BEST SELLERS  */}
     <Box>
-        <Typography variant="h2" style={{flexGrow: 1,textAlign: "center", marginBottom:30,marginTop:50}}>Bán chạy</Typography>
-        <ProductList InventoryList={products} mainColor={`rgba(${mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${ mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={15} boxDistance={1}/>
+        {/* <Typography variant="h2" style={{flexGrow: 1,textAlign: "center", marginBottom:30,marginTop:50}}>Bán chạy</Typography> */}
+        {/* <Typography variant="h2" style={{flexGrow: 1,textAlign: "center", marginBottom:30,marginTop:30}}>Sản phẩm bán chạy</Typography> */}
+        <Typography variant="h2" style={{flexGrow: 1,textAlign: "center", marginBottom:30,marginTop:30}}>Sản phẩm</Typography>
+
+        <ProductList InventoryList={productNoAtt} mainColor={`rgba(${mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${ mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={3} boxDistance={1} fromNoCategoryPage={true}/>
         {/* <ProductList InventoryList={products} mainColor={`rgba(${mainColor.r }, ${ mainColor.g }, ${ mainColor.b }, ${ mainColor.a })`} priceStyle={priceStyle} btnStyle={btnStyle} isMargin={isMargin} border={border} alignCenter={alignCenter} nameStyle={nameStyle} isBox={isBox} marginContainer={marginContainer} boxDistance={boxDistance}/> */}
 
     </Box>

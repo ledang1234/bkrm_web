@@ -88,7 +88,12 @@ const SupplierDetail = (props) => {
     try {
       if (store_uuid) {
         setOpenPayDebt(false);
-        const res = await supplierApi.payDebt(store_uuid, row.uuid, paidAmount);
+        const res = await supplierApi.payDebt(store_uuid, row.uuid, {
+          paid_amount: paidAmount,
+          created_user_type: info.role,
+          created_user_name: info.user.name,
+          created_user_id: info.user.id,
+        });
         dispatch(statusAction.successfulStatus("Thanh toán nợ thành công"));
         setPaidAmount(0)
         props.parentProps.setReload();
@@ -120,7 +125,7 @@ const SupplierDetail = (props) => {
         handleConfirm={payDebt}
         message={
           <>
-          <Typography variant="h3" style={{marginBottom:15}}>Thu nợ <b style={{color:theme.customization.primaryColor[500]}}>{row.name}</b></Typography>
+          <Typography variant="h3" style={{marginBottom:15}}>Trả nợ <b style={{color:theme.customization.primaryColor[500]}}>{row.name}</b></Typography>
         <ListItem >
             <ThousandSeperatedInput  
             style={{marginRight:10}}
@@ -337,10 +342,7 @@ const SupplierDetail = (props) => {
                 }
               }
               props.parentProps.setReload();
-  
             }}
-
-            
             >
               <ListItemIcon style={{ marginRight: -15 }}>
                 <HighlightOffTwoToneIcon fontSize="small" />

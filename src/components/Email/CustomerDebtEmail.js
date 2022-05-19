@@ -14,7 +14,7 @@ const CustomerDebtEmail = (header, footer, customer, store) => {
           <li>Tên: {customer.name}</li>
           <li>Số điện thoại: {customer.phone}</li>
           <li>Thông tin thanh toán: {customer.payment_info}</li>
-          <li>Công nơ: {customer.debt}</li>
+          <li>Công nơ: {customer.total_debt}</li>
         </ul>
         <div>Trân trọng</div>
       </div>

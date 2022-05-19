@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 
 //import project
 import MenuGroup from "./MenuGroup/MenuGroup";
-import { Box } from '@material-ui/core';
-
+import { Box, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { Link } from "react-router-dom";
 //import icon
 import cartIcon from "../../assets/img/icon/cart1.png";
 import invoiceIcon from "../../assets/img/icon/invoice.png";
@@ -251,14 +251,16 @@ export const inventoryModule = {
       icon1: icons.SyncProblemOutlinedIcon,
       icon2: icons1.SyncProblemTwoToneIcon,
     },
-    // {
-    //   id: 9,
-    //   title: "Đặt Hàng",
-    //   url: "/home/inventory/order-list",
-    //   icon: orderListIcon,
-    //   icon1: icons.AddIcCallOutlinedIcon,
-    //   icon2: icons1.AddIcCallTwoToneIcon,
-    // },
+    {
+      id: 9,
+      title: "Đơn chuyển kho",
+      key: 'Đơn chuyển kho',
+      url: "/home/inventory/transfer-inventory",
+      icon:  <Box component="img" sx={{ height: 24, width: 24 }} src={deliveryIcon} style={{marginLeft:-10}} />,
+      iconColor: deliveryIcon,
+      icon1: icons.AddIcCallOutlinedIcon,
+      icon2: icons1.AddIcCallTwoToneIcon,
+    },
     {
       id: 11,
       title: "Kiểm Kho",
@@ -322,6 +324,13 @@ export const hrModule = {
     },
   ],
 };
+export const manual = {
+  title: "HDSD",
+  key:'manual',
+  url: "/home/manual",
+  children: []
+};
+
 export const reportModule = {
   title: "Quản Lý",
   key:'reportModule',
@@ -393,7 +402,7 @@ export const reportModule = {
       icon2: icons1.DonutSmallTwoToneIcon,
       children: [
         // { id: 20.1, title: "Tổng quan", url: "/home/manager/report" },
-        // { id: 20.2, title: "Sổ quỹ", url: "/home/manager/report" },
+        { id: 20.2, title: "Sổ quỹ", key: "Sổ quỹ", url: "/home/manager/cashbook" },
 
         // { id: 20.8, title: "Tổng quan", url: "/home/manager/general-report" },
         { id: 20.3, title: "Báo cáo cuối ngày",key: "Báo cáo cuối ngày", url: "/home/manager/end-date-report" },
@@ -402,7 +411,8 @@ export const reportModule = {
         { id: 20.5, title: "Khách hàng", key: "Khách hàng",url: "/home/manager/customer-report" },
         { id: 20.6, title: "Nhân viên",key: "Nhân viên", url: "/home/manager/employee-report" },
         { id: 20.7, title: "Nhà cung cấp", key: "Nhà cung cấp", url: "/home/manager/supplier-report" },
-        // { id: 20.10, title: "Chi nhánh", key: "Chi nhánh",  url: "/home/manager/branch-report" },
+        { id: 20.10, title: "Chi nhánh", key: "Chi nhánh",  url: "/home/manager/branch-report" },
+        { id: 20.11, title: "Tài chính (lãi lỗ)", key: "Tài chính (lãi lỗ)",  url: "/home/manager/financial-report" },
 
         
 
@@ -434,6 +444,21 @@ const MenuList = ({ permissions }) => {
       {permissions?.find((p) => p.name === "report") && (
         <MenuGroup item={reportModule} />
       )}
+      <ListItem
+        to={manual.url}
+        button
+        component={Link}
+      >
+    
+          <ListItemText
+            primary={
+              <Typography variant="caption">
+                HDSD
+              </Typography>
+            } />
+        
+      </ListItem>
+        
     </>
   );
 

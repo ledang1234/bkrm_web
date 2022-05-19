@@ -35,7 +35,7 @@ import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {ColorButton,ColorOutlineButton} from "../../../components/Button/ColorButton"
 import clsx from 'clsx';
-
+import icon from "../../../assets/img/icon/lip.jpeg"
 const useStyles = makeStyles((theme) => ({
     appBar: {
         paddingLeft: 20,

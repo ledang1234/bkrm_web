@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTheme, createStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,16 +20,16 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 
 //import icons
 import MenuIcon from "@material-ui/icons/Menu";
-
+import {Spin} from 'antd'
 //import project
 import MenuList from "../../components/MenuList/MenuList";
 import SearchProduct from "../../components/SearchBar/SearchProduct";
 import Customization from "../../components/Customization/Customization";
 import AvatarInfo from "../../components/Button/AvatarInfo";
-import SalesView from "../../views/SalesView/SalesView";
-import InventoryView from "../../views/InventoryView/InventoryView";
-import HRView from "../../views/HRView/HRView";
-import ManagerView from "../../views/ManagerView/ManagerView";
+// import SalesView from "../../views/SalesView/SalesView";
+// import InventoryView from "../../views/InventoryView/InventoryView";
+// import HRView from "../../views/HRView/HRView";
+// import ManagerView from "../../views/ManagerView/ManagerView";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import useStyles from "./styles";
 import { authActions } from "../../store/slice/authSlice";
@@ -39,10 +39,22 @@ import { customizeAction } from "../../store/slice/customizeSlice";
 
 import PersonIcon from "@material-ui/icons/Person";
 import { Notifications } from "@material-ui/icons";
-import DeliveryView from "../../views/DeliveryView/DeliveryView";
+// import DeliveryView from "../../views/DeliveryView/DeliveryView";
 import branchApi from "../../api/branchApi"
 import { infoActions } from "../../store/slice/infoSlice";
 import storeApi from "../../api/storeApi";
+import Notification from "../../components/Notification/Notification";
+// import ManualView from "../../views/ManualView/ManualView";
+
+const ManagerView = React.lazy(() => import("../../views/ManagerView/ManagerView"))
+const InventoryView = React.lazy(() => import("../../views/InventoryView/InventoryView"))
+const HRView = React.lazy(() => import("../../views/HRView/HRView"))
+const SalesView = React.lazy(() => import("../../views/SalesView/SalesView"))
+const DeliveryView = React.lazy(() => import("../../views/DeliveryView/DeliveryView"))
+const ManualView = React.lazy(() => import("../../views/ManualView/ManualView"))
+
+
+
 const drawerWidth = 240;
 
 const HomePage = (props) => {
@@ -81,6 +93,7 @@ const HomePage = (props) => {
   const store_uuid = info.store.uuid
   const branch_uuid = info.branch.uuid
 
+  console.log("info",info)
   console.log(permissions)
 
   const divLogo = () => {
@@ -142,11 +155,15 @@ const HomePage = (props) => {
 
   };
 
-  const getNotification = async () => {
+  const [openNotification, setOpenNotifcation] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const getNotification = async (event) => {
     try {
       if (store_uuid && branch_uuid) {
         const res = await storeApi.getNotification(store_uuid, branch_uuid);
-        alert(JSON.stringify(res.data))
+        // alert(JSON.stringify(res.data))
+        setAnchorEl(anchorEl ? null : event.currentTarget);
+        setOpenNotifcation(true);
       }
     } catch(err) {
       console.log(err)
@@ -199,9 +216,9 @@ const HomePage = (props) => {
                 </Typography>
               </Box>
 
-              {/* <IconButton color="primary" onClick={getNotification} >
-                <Notifications />
-              </IconButton> */}
+             
+
+              <Notification anchorEl={anchorEl} open={openNotification} />
 
               <Button color="primary" style={{ marginRight:10, marginLeft:10}} onClick={() => logOutHandler()}>
                 Đăng xuất
@@ -251,7 +268,9 @@ const HomePage = (props) => {
             })
           }
         >
-          
+          <Suspense fallback={<div style={{backgroundColor: 'rgba(0, 0, 0, 0.05)', height: '100vh', width: '100%' }}>
+            <Spin style={{margin: 'auto'}}/>
+          </div>} >
           <Switch>
             {permissions?.find((p) => p.name === "sales") && (
               <Route path={`${path}/sales`} component={SalesView} />
@@ -266,13 +285,17 @@ const HomePage = (props) => {
             {permissions?.find((p) => p.name === "report") && (
               <Route path={`${path}/manager`} component={ManagerView} />
             )}
+            <Route path={`${path}/manual`} component={ManualView} />
             <Route path={`${path}/`} >
               {/* only redirect whenever permissions is successfully loaded => length at least = 1 */}
               {permissions?.length > 0 ?
                 (<Redirect to={permissions?.find((p) => p.name === "sales") ? `${path}/sales` : permissions?.find((p) => p.name === "inventory") ? `${path}/inventory` : permissions?.find((p) => p.name === "employee") ? `${path}/hr` : `${path}/manager`} />) : null}
             </Route>
+            
             <Route path={`${path}/*`} component={PageNotFound} />
           </Switch>
+          </Suspense>
+
         </Box>
       </main>
     </div>
