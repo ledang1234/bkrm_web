@@ -333,7 +333,7 @@ const CartSummary = (props) => {
                 <Typography variant="body2" >
                   <VNDFormat
                     style={{ color: "#2096f3",fontWeight: 600, }}
-                    value={fee.type === "%"?  Number(fee.value)*Number(cartData.total_amount) / 100 : fee.value  }
+                    value={fee.type === "%"?  Number(fee.value)*(Number(cartData.total_amount) - Number(cartData.discount)) / 100 : fee.value  }
                   />
                 </Typography>
               </Grid>
@@ -353,7 +353,7 @@ const CartSummary = (props) => {
               <Typography variant="body2" >
                 <VNDFormat
                   style={{ color: "#2096f3",fontWeight: 600, }}
-                  value={cartData.total_amount - cartData.discount}
+                  value={cartData.total_amount - cartData.discount + cartData.otherFee}
                 />
               </Typography>
             </Grid>
@@ -417,7 +417,7 @@ const CartSummary = (props) => {
                 <VNDFormat
                   value={
                     cartData.paid_amount -
-                    (cartData.total_amount - cartData.discount)
+                    (cartData.total_amount - cartData.discount + cartData.otherFee)
                   }
                 />
               </Typography>
