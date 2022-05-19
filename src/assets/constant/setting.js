@@ -78,7 +78,8 @@ const setting = {
 
     vat: {
       status: false,
-      listCost: [{ key: "1", costName: "", value: 0, type: "%" }],
+      listCost: [],
+      // { key: "1", costName: "", value: 0, type: "%" }
     },
 
     //

@@ -25,12 +25,12 @@ const OrderLowStockSetting = ({checked,handleClose,handleSubmit,name}) => {
     <>
   <FormControl component="fieldset">
     <RadioGroup  name="choiceRec" value={orderLowStock.choiceRec} onChange={handleChange}>
-    <FormControlLabel value="Auto" control={<Radio />} label={<Typography style={{color:"#000", fontWeight:600,fontSize:16, marginRight:15}}>1. Hệ thống gợi ý theo thời gian dự kiến hết hàng và số lượng đặt hàng lại </Typography>} />
-    <ListItem>
+    <FormControlLabel value="Auto" control={<Radio />} label={<Typography style={{color:"#000", fontWeight:600,fontSize:16, marginRight:15}}>1. Hệ thống gợi ý theo thời gian dự kiến đặt hàng lại và số lượng đặt hàng lại </Typography>} />
+    {/* <ListItem>
       <Typography style={{ color:"#000",marginLeft:5,marginRight:5, marginTop:10}}>Đặt sản phẩm có số ngày từ hiện tại đến thời gian dự kiến hết hàng nhỏ hơn</Typography>
           <ThousandSeperatedInput name="dayAuto" style={{width:60,marginRight:15}} value={orderLowStock.dayAuto}  onChange={handleChange} />   
           <Typography style={{color:"#000"}}> ngày</Typography>
-      </ListItem>
+      </ListItem> */}
 
     <FormControlLabel value="Setting" control={<Radio />} label={<Typography style={{color:"#000", fontWeight:600,fontSize:16, marginRight:15}}>2. Tuỳ chọn </Typography>} />
 
