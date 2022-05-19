@@ -169,6 +169,11 @@ const CartSummary = (props) => {
     let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount) 
 
     const totalQuantity = calculateTotalQuantity(cartData.cartItem)
+
+
+  console.log( "store_setting" , store_setting)
+  const otherfee = store_setting?.vat
+  console.log("otherfee",otherfee)
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -270,6 +275,7 @@ const CartSummary = (props) => {
                 <VNDFormat value={cartData.total_amount} />
               </Typography>
             </Grid>
+            
                  
           {(canEnterDiscountWhenSell  && mode)|| !mode?
           <>
@@ -311,7 +317,31 @@ const CartSummary = (props) => {
                 onClick={handleClick}
               /> */}
             </Grid>
- 
+            { otherfee?.status ?
+            otherfee?.listCost?.length ?
+            otherfee?.listCost?.map((fee)=>{
+              console.log("fee",fee)
+              if(fee.name.length >0)
+              return (
+                <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                className={classes.marginRow}
+              >
+                <Typography variant="h5" >{fee.name}</Typography>
+                <Typography variant="body2" >
+                  <VNDFormat
+                    style={{ color: "#2096f3",fontWeight: 600, }}
+                    value={fee.type === "%"?  Number(fee.value)*Number(cartData.total_amount) / 100 : fee.value  }
+                  />
+                </Typography>
+              </Grid>
+              )
+            }):null
+            :null}
+           
+
 
             <Grid
               container

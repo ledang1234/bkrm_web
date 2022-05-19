@@ -53,6 +53,7 @@ import "../../../../../index.css"
 
 import RemoveIcon from '@material-ui/icons/Remove';
 import IndeterminateCheckBoxOutlinedIcon from '@material-ui/icons/IndeterminateCheckBoxOutlined';
+import CheckIcon from '@material-ui/icons/Check';
 const { SHOW_PARENT } = TreeSelect;
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -105,6 +106,9 @@ const AddDiscount = (props) => {
 
   const [name, setName] = React.useState("");
   const [categoryList, setCategoryList] = useState([]);
+
+  //tam thoi
+  const customerGroup = [{id:1, name:"VIP",conditions:[]}, {id:2, name:"Khách hàng thân thiết",conditions:[]}]
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -461,6 +465,15 @@ const AddDiscount = (props) => {
     setCheckedBirthday(event.target.checked);
   };
 
+  //Customer group target
+  const [checkedCustomerGroup, setCustomerGroup] = React.useState([]);
+  const handleCustomerGroup = (event) => {
+    setCustomerGroup(event.target.value);
+  };
+  const handleDeleteCustomerGroup = (chipToDelete) => () => {
+    setCustomerGroup((chips) => checkedCustomerGroup.filter((chip) => chip !== chipToDelete));
+  };
+
     
   const currentDate =  new Date()
 
@@ -470,6 +483,12 @@ const AddDiscount = (props) => {
   // const [endDate, setEndDate] = React.useState( new Date(currentDate.setMonth(currentDate.getMonth()+6)).toISOString().slice(0,10) )
 
 
+
+  function getColorSelected (selectedData,item  ){
+    return selectedData.includes(item) ?  theme.customization.primaryColor[50]:null 
+  }
+
+  console.log("checkedCustomerGroup",checkedCustomerGroup)
 
   return (
  
@@ -602,14 +621,6 @@ const AddDiscount = (props) => {
                :null }
               </>
               :null}
-             
-               
-           
-              
-                 
-        
-                 
-           
               
           </Grid>
           
@@ -781,6 +792,55 @@ const AddDiscount = (props) => {
             />
         
         </Card>
+
+
+
+        <Card className={classes.attrCard} style={{marginTop:20, marginBottom:10}}>
+          <CardHeader
+            title="Phạm vi áp dụng"
+            className={classes.attrHead}
+          />
+            <div style={{padding:15}}>
+              <ListItem style={{margin:0, padding:0}}>
+                <Typography>Chỉ áp dụng cho <b>nhóm khách hàng:</b></Typography>
+                {/* <MultipleSelect  chonsenValue={checkedCustomerGroup} handleAction={handleCustomerGroup} handleDeleteChip={handleDeleteCustomerGroup}label="Nhóm khách hàng"   options={customerGroup}/> */}
+                <Select
+                  multiple
+                  variant="outlined"
+                  fullWidth
+                  id="branches"
+                  name="branches"
+                  onChange={handleCustomerGroup}
+                  // onBlur={formik.handleBlur}
+                  size="small"
+                  value={checkedCustomerGroup}
+                  renderValue={(selected) =>
+                    selected
+                      .map((group) => {
+                        return customerGroup.find(
+                          (branch) => branch.id === group
+                        )?.name;
+                      })
+                      .join(", ")
+                  }
+                  placeholder="Nhóm khách hàng"
+                  
+                  style={{width:200, marginLeft:20, height:50}}
+                >
+                  {customerGroup.map((group) => (
+                     /* style={{backgroundColor:getColorSelected(formik.values.branches, branch.id) }} */
+                    <MenuItem key={group.name} value={group.id} style={{backgroundColor:getColorSelected(checkedCustomerGroup, group.id) }} > 
+                      <Grid container justifyContent='space-between'>
+                      {group.name}
+                      {  getColorSelected(checkedCustomerGroup, group.id)? <CheckIcon color='primary'/> :null}
+                      </Grid >
+                    </MenuItem>
+                  ))}
+                </Select>
+                </ListItem>
+
+            </div>
+          </Card>
       </div>
 
 
@@ -818,6 +878,7 @@ const AddDiscount = (props) => {
                 byDate:byDate,
                 byTime:byTime
               }),
+              customerGroup:checkedCustomerGroup
 
             };
 

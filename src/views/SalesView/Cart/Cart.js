@@ -124,7 +124,8 @@ const Cart = () => {
         delivery: false,
         scores: "0",
         discountDetail:{value:'0', type:'VND' },
-        selectedPromotion:null
+        selectedPromotion:null,
+        otherFee:0
       },
     ];
   };
@@ -195,6 +196,11 @@ const Cart = () => {
 
 
   //// ----------II. FUNCTION
+  const otherfee = store_setting?.vat
+
+  const otherFeeMoney = otherfee?.listCost?.reduce((sum,fee)=>fee.type!=="%"? sum + Number(fee.value):sum , 0);
+
+
   // 1.Cart
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -345,7 +351,8 @@ const Cart = () => {
         delivery: false,
         scores: "0",
         discountDetail:{value:'0', type:'VND' },
-        selectedPromotion:null
+        selectedPromotion:null,
+        otherFee:0
 
       },
     ]);
@@ -367,7 +374,8 @@ const Cart = () => {
           delivery: false,
           scores: "0",
           discountDetail:{value:'0', type:'VND' },
-          selectedPromotion:null
+          selectedPromotion:null,
+          otherFee:0
 
         },
       ]);
@@ -616,12 +624,14 @@ const Cart = () => {
     //     paid_amount: { $set: total - cartList[selectedIndex].discount },
     //   },
     // }) ;
+    // 
     if( defaultPaymentAmount){
     newCartList = update(newCartList, {
       [selectedIndex]: {
         paid_amount: { $set: total - cartList[selectedIndex].discount },
       },
     }) };
+    // 
     if (store_setting?.customerScore.status) {
       newCartList = update(newCartList, {
         [selectedIndex]: {
@@ -634,6 +644,14 @@ const Cart = () => {
         },
       });
     }
+    // 
+    let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    console.log("percentFee",percentFee)
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        otherFee: { $set:percentFee * total/100 +  otherFeeMoney },
+      },
+    });
 
     setCartList(newCartList);
   };
@@ -644,6 +662,7 @@ const Cart = () => {
     setOpenPopUpWarning(false)
   }
 
+  console.log("otherFeeeee",cartList[selectedIndex].otherFee)
   
 
   const handleConfirm = async () => {
@@ -789,6 +808,8 @@ const Cart = () => {
       delivery: cart.delivery,
       is_customer_order: false,
       points: cart.scores,
+      //
+      otherFee:cart.otherFee
     };
 
     try {
