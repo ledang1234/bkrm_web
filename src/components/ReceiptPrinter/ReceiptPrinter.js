@@ -108,8 +108,11 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
     const info = useSelector((state) => state.info);
     const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 
-    var link = store_setting?.custom_web;
-    var logo  = store_setting?.img_url ;
+    const store = info.store.store_configuration? JSON.parse(info.store.store_configuration): null
+
+    const web_link = store_setting.status ? info.store.web_page:null
+    var link = web_link ? web_link : store? store.custom_web : null ;
+    var logo  = store? store.img_url :null ;
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -258,6 +261,10 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
 
               </Grid>
             </Grid>
+            {store_setting.printReceiptWhenSell.contentNote?
+            <Box>
+            <ReactQuill theme="bubble"  value={store_setting.printReceiptWhenSell.contentNote}style={{color:"#000", fontSize:'8px',height:75}} readOnly={true} /></Box>:null}
+
 
             <Typography className={classes.center}> --------------------------</Typography>
             {link? 

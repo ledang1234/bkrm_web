@@ -519,8 +519,8 @@ const GeneralSetting = () => {
           actionToggle={(e) => {
             handleTogglePopup(e, "email");
           }}
-          title="Gửi Email - SMS - Zalo"
-          subTitle="Cho phép sử dụng tính năng SMS – Email Marketing - Tin nhắn Zalo."
+          title="Gửi Email"
+          subTitle="Cho phép sử dụng tính năng Email  "
         >
           <TelegramIcon
             style={{
@@ -818,7 +818,7 @@ const GeneralSetting = () => {
 
       {open.email ? (
         <ModalWrapperWithClose
-          title="Thiết lập Email - SMS - Zalo"
+          title="Thiết lập Email"
           open={open.email}
           handleClose={handleClosePopup}
         >
