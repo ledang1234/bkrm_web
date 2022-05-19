@@ -36,7 +36,7 @@ const initialUserInfoSlice = {
   },
   role: "",
   products: [],
-  searchBarState: 'barcode',
+  searchBarState: 'search',
   // branchsOfStore:[]
 };
 const infoSlice = createSlice({

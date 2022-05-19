@@ -23,9 +23,9 @@ import BasicTabs from "../Tab/BasicTab";
 export default function Notification() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
-  const handleClick = (newPlacement) => (event) => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    setOpen((prev) => !prev);
+    setOpen(!open);
   };
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
@@ -66,7 +66,7 @@ export default function Notification() {
   return (
     <Box sx={{ width: 50 }}>
       <IconButton color="primary">
-        <Notifications onClick={handleClick()} />
+        <Notifications onClick={handleClick} />
       </IconButton>
       <Popper open={open} anchorEl={anchorEl} transition style={{zIndex: 1500}}>
         {({ TransitionProps }) => (

@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 
 //import project
 import MenuGroup from "./MenuGroup/MenuGroup";
-import { Box } from '@material-ui/core';
-
+import { Box, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { Link } from "react-router-dom";
 //import icon
 import cartIcon from "../../assets/img/icon/cart1.png";
 import invoiceIcon from "../../assets/img/icon/invoice.png";
@@ -324,6 +324,13 @@ export const hrModule = {
     },
   ],
 };
+export const manual = {
+  title: "HDSD",
+  key:'manual',
+  url: "/home/manual",
+  children: []
+};
+
 export const reportModule = {
   title: "Quản Lý",
   key:'reportModule',
@@ -437,6 +444,21 @@ const MenuList = ({ permissions }) => {
       {permissions?.find((p) => p.name === "report") && (
         <MenuGroup item={reportModule} />
       )}
+      <ListItem
+        to={manual.url}
+        button
+        component={Link}
+      >
+    
+          <ListItemText
+            primary={
+              <Typography variant="caption">
+                HDSD
+              </Typography>
+            } />
+        
+      </ListItem>
+        
     </>
   );
 
