@@ -125,11 +125,12 @@ const Cart = () => {
         scores: "0",
         discountDetail:{value:'0', type:'VND' },
         selectedPromotion:null,
+        bestDetailSelectedPromotion:null,
+        discountPro:0,
         otherFee:0
       },
     ];
   };
-
 
 
   const [cartList, setCartList] = React.useState(loadCartLocalStorage());
@@ -214,11 +215,16 @@ const Cart = () => {
     message: "Tạo hóa đơn thất bại",
   });
 
+  console.log("promotionpromotion",cartList[selectedIndex].selectedPromotion)
+  console.log("promotionpromotion",cartList[selectedIndex].bestDetailSelectedPromotion)
+
+
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   useEffect(() => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
+
 
 
   const handleSearchCustomer = async (searchKey) => {
@@ -282,7 +288,6 @@ const Cart = () => {
     };
     const loadPromotionCoupons = async () => {
       const response = await promotionCouponApi.getActivePromotionVoucher(store_uuid)
-      console.log("eeeeee",response)
       setDiscountData(response.promotions);
     } 
     if (store_uuid) {
@@ -352,6 +357,8 @@ const Cart = () => {
         scores: "0",
         discountDetail:{value:'0', type:'VND' },
         selectedPromotion:null,
+        bestDetailSelectedPromotion:null,
+        discountPro:0,
         otherFee:0
 
       },
@@ -375,6 +382,8 @@ const Cart = () => {
           scores: "0",
           discountDetail:{value:'0', type:'VND' },
           selectedPromotion:null,
+          bestDetailSelectedPromotion:null,
+          discountPro:0,
           otherFee:0
 
         },
@@ -547,8 +556,41 @@ const Cart = () => {
     setCartList(newCartList);
   };
   const handleUpdateSelectedPromotion = (selectedPromotion) => {
+    let bestDetailSelectedCondition = selectedPromotion?.detailCondition?.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+    bestDetailSelectedCondition =bestDetailSelectedCondition.filter(item => item !== null)[0]
+
+
     let newCartList = update(cartList, {
-      [selectedIndex]: { selectedPromotion: { $set: selectedPromotion } },
+      [selectedIndex]: { selectedPromotion: { $set: selectedPromotion } ,bestDetailSelectedPromotion:{$set:bestDetailSelectedCondition}},
+    });
+    let discountPro = selectedPromotion.discountKey ==="invoice" && bestDetailSelectedCondition.type==='%' ? (Number(bestDetailSelectedCondition.discountValue) * Number(cartList[selectedIndex].total_amount)/100) : Number(bestDetailSelectedCondition.discountValue) ;
+ 
+
+    newCartList = update(newCartList, {
+      [selectedIndex]: {discountPro:{ $set: discountPro}},
+    });
+    let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(discountPro)- Number(cartList[selectedIndex].discount) )/100 +  otherFeeMoney
+
+ 
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        otherFee: { $set: totalOtherFee },
+      },
+    }) 
+    
+    if(defaultPaymentAmount ){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          paid_amount: { $set: Number(cartList[selectedIndex].total_amount) - Number(discountPro) -     Number(cartList[selectedIndex].discount)+ totalOtherFee },
+        },
+      }) 
+    }
+    setCartList(newCartList);
+  };
+  const handleUpdateBestDetailSelectedPromotion = (bestDetailSelectedPromotion) => {
+    let newCartList = update(cartList, {
+      [selectedIndex]: { bestDetailSelectedPromotion: { $set: bestDetailSelectedPromotion } },
     });
     setCartList(newCartList);
   };
@@ -560,16 +602,8 @@ const Cart = () => {
     setCartList(newCartList);
   };
   const handleUpdateDiscountDetail = (obj) => {
-  
-    
-    // newCartList = update(newCartList, {
-    //   [selectedIndex]: {
-    //     otherFee: { $set:totalOtherFee },
-    //   },
-    // });
 
     let discountUpdate =  obj.type === '%'?( (Number(obj.value) * Number(cartList[selectedIndex].total_amount)/100/100).toFixed() * 100).toString() : obj.value 
-
 
     let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
     let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(discountUpdate))/100 +  otherFeeMoney
@@ -586,46 +620,43 @@ const Cart = () => {
   };
 
   const handleUpdateDiscount = (amount) => {
-    // if (amount > cartList[selectedIndex].total_amount) {
-    //   return;
+    // // if (amount > cartList[selectedIndex].total_amount) {
+    // //   return;
+    // // }
+    // let newCartList = update(cartList, {
+
+    //   [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
+    //   // [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount }}:
+
+    //   { discount: { $set: amount } },
+
+    // });
+
+
+    // if( defaultPaymentAmount){
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       // paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) - Number(amount) + Number(totalOtherFee)).toString() },
+    //     },
+    //   }) };
+
+    // //
+
+    // if (store_setting?.customerScore.status) {
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       scores: {
+    //         $set: parseInt(
+    //           (cartList[selectedIndex].total_amount - amount) /
+    //             store_setting?.customerScore.value
+    //         ),
+    //       },
+    //     },
+    //   });
     // }
-    let newCartList = update(cartList, {
-
-      [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
-      // [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount }}:
-
-      { discount: { $set: amount } },
-
-    });
 
 
- 
-
-
-    if( defaultPaymentAmount){
-      newCartList = update(newCartList, {
-        [selectedIndex]: {
-          // paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) - Number(amount) + Number(totalOtherFee)).toString() },
-        },
-      }) };
-
-    //
-
-    if (store_setting?.customerScore.status) {
-      newCartList = update(newCartList, {
-        [selectedIndex]: {
-          scores: {
-            $set: parseInt(
-              (cartList[selectedIndex].total_amount - amount) /
-                store_setting?.customerScore.value
-            ),
-          },
-        },
-      });
-    }
-
-
-    setCartList(newCartList);
+    // setCartList(newCartList);
   };
 
   const handleCheckDelivery = (delivery) => {
@@ -635,6 +666,13 @@ const Cart = () => {
 
     setCartList(newCartList);
   };
+
+
+  // useEffect(() => {
+  //   let bestCondition = cartList[selectedIndex].selectedPromotion.detailCondition.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+  //   bestCondition = bestCondition.filter(item => item !== null)[0]
+  //   // if(bestCondition.totalCost !== )
+  // }, [cartList[selectedIndex].total_amount]);
 
   const updateTotalAmount = () => {
     let total = 0;
@@ -654,21 +692,38 @@ const Cart = () => {
     // 
 
     //
+    let discountPro = 0
+    if(cartList[selectedIndex]?.selectedPromotion){
+      let bestDetailSelectedCondition = cartList[selectedIndex]?.selectedPromotion?.detailCondition?.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+      bestDetailSelectedCondition =bestDetailSelectedCondition?.filter(item => item !== null)[0]
+      discountPro= cartList[selectedIndex]?.selectedPromotion?.discountKey ==="invoice" && bestDetailSelectedCondition?.type==='%' ? (Number(bestDetailSelectedCondition?.discountValue) * Number(total)/100) : Number(bestDetailSelectedCondition?.discountValue) ;
+
+    }
    
     let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
-    let totalOtherFee = percentFee * (Number(total) - Number(cartList[selectedIndex].discount))/100 +  otherFeeMoney
-    console.log("percentFee",percentFee)
+
+    let totalOtherFee = percentFee * (Number(total) - Number(cartList[selectedIndex].discount) - Number(discountPro))/100 +  otherFeeMoney
+
+
     newCartList = update(newCartList, {
       [selectedIndex]: {
         otherFee: { $set:totalOtherFee },
       },
     });
 
+    if(discountPro!==0){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          discountPro: { $set: discountPro },
+        },
+      }) 
+    }
+
 
     if( defaultPaymentAmount){
     newCartList = update(newCartList, {
       [selectedIndex]: {
-        paid_amount: { $set: total - cartList[selectedIndex].discount + totalOtherFee },
+        paid_amount: { $set: total - cartList[selectedIndex].discount -discountPro  + totalOtherFee },
       },
     }) };
     // 
@@ -677,7 +732,7 @@ const Cart = () => {
         [selectedIndex]: {
           scores: {
             $set: parseInt(
-              (total - cartList[selectedIndex].discount + totalOtherFee) /
+              (total - cartList[selectedIndex].discount -discountPro+ totalOtherFee) /
                 store_setting?.customerScore.value
             ),
           },
@@ -1064,6 +1119,7 @@ const Cart = () => {
                 isScore={store_setting?.customerScore.status}
                 handleUpdateDiscountDetail={handleUpdateDiscountDetail}
                 handleUpdateSelectedPromotion={handleUpdateSelectedPromotion}
+                handleUpdateBestDetailSelectedPromotion={handleUpdateBestDetailSelectedPromotion}
               >
                 {!mode ? null:
                   <TableContainer  style={{ maxHeight: !canEnterDiscountWhenSell && mode ?"44vh":"37vh", height:!canEnterDiscountWhenSell && mode ?"44vh": "37vh",}} >

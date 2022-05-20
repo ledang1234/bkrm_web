@@ -86,7 +86,9 @@ const CartSummary = (props) => {
     reloadCustomers,
     discountData,
     isScore,
-    handleUpdateDiscountDetail
+    handleUpdateDiscountDetail,
+    handleUpdateSelectedPromotion,
+    handleUpdateBestDetailSelectedPromotion
   } = props;
 
   const theme = useTheme();
@@ -120,25 +122,44 @@ const CartSummary = (props) => {
   const [customerMoney, setCustomerMoney] = React.useState("0");
 
 
-  const handlePromotion = () =>{ 
-    if(discountData.length !==0 ){ 
-      let arr = []
-       discountData?.map(( pro) => {
-        const sortedRow = JSON.parse(pro.promotion_condition).sort((a, b) => {return b.totalCost - a.totalCost})
-        for ( let i = 0; i <sortedRow.length ; i++){
-          if(Number(cartData.total_amount) >= Number(sortedRow[i].totalCost)){
-             arr.push({...sortedRow[i], name:pro.name , discountKey:pro.discountKey,discountType:pro.discountType, id:pro.id})
-             return 
-          }
-        }
-      })
-      return arr
-    }
-    return []
+  // const handlePromotion = () =>{ 
+  //   if(discountData.length !==0 ){ 
+  //     let arr = []
+  //      discountData?.map(( pro) => {
+  //       const sortedRow = JSON.parse(pro.promotion_condition).sort((a, b) => {return b.totalCost - a.totalCost})
+  //       console.log("sortedRow",sortedRow)
+  //       for ( let i = 0; i <sortedRow.length ; i++){
+  //         if(Number(cartData.total_amount) >= Number(sortedRow[i].totalCost)){
+  //            arr.push({...sortedRow[i], name:pro.name , discountKey:pro.discountKey,discountType:pro.discountType, id:pro.id})
+  //            return 
+  //         }
+  //       }
+  //     })
+  //     return arr
+  //   }
+  //   return []
+  // }
+  // let filteredPromotion = handlePromotion()
+
+  const handlePromotion = () =>{
+    console.log("discountData.length ",discountData.length )
+    if(discountData.length ===0 ){return [] }
+    
+    var arr = []
+    discountData?.map(( pro) => {
+      // // thap den cao
+      // const sortedRow = JSON.parse(pro.promotion_condition).sort((a, b) => {return a.totalCost - b.totalCost})
+      // thap den cao
+      const sortedRow = JSON.parse(pro.promotion_condition).sort((a, b) => {return b.totalCost - a.totalCost})
+      if (Number(cartData.total_amount) >= Number(sortedRow[sortedRow.length - 1].totalCost) ){arr.push({detailCondition:sortedRow, name:pro.name , discountKey:pro.discountKey,discountType:pro.discountType, id:pro.id})}
+    })
+    return arr
   }
   let filteredPromotion = handlePromotion()
 
-  const [selectedPromotion, setSelectedPromotion] = React.useState(null);
+
+  // const [selectedPromotion, setSelectedPromotion] = React.useState(null);
+  let  selectedPromotion = cartData.selectedPromotion
   const [openDiscount, setOpenDiscount] = React.useState(false);
 
   const [addCustomer, setAddCustomer] =  React.useState({ name: "", phone: "" });
@@ -166,14 +187,21 @@ const CartSummary = (props) => {
       }
   };
 
-    let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount) 
+    let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount - cartData.discountPro) 
 
-    const totalQuantity = calculateTotalQuantity(cartData.cartItem)
+  const totalQuantity = calculateTotalQuantity(cartData.cartItem)
 
 
-  console.log( "store_setting" , store_setting)
   const otherfee = store_setting?.vat
-  console.log("otherfee",otherfee)
+
+
+  console.log("cartData",cartData)
+
+  // const getBestPromotion = ()=> {
+  //   let bestCondition = selectedPromotion.detailCondition.map((pro) =>{if (Number(cartData.total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+  //   bestCondition =bestCondition.filter(item => item !== null)[0]
+  //   return  bestCondition
+  // }
   return (
     <Box style={{ padding: 30, minHeight: "80vh" }}>
       <Grid container direction="column" alignItems="flex-start" spacing={3}>
@@ -263,11 +291,16 @@ const CartSummary = (props) => {
                     <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} />
                 </div>
                 :null} */}
+                { filteredPromotion.length  > 0  ? 
+                <div onClick={()=>{setOpenDiscount(!openDiscount)}}>
+                    <img id="gift" src={require('../../../../assets/img/icon/giftbox.png').default} style={{height:16,width:16, marginLeft:10, marginTop:-3}} />
+                </div>
+                :null}
                 
                 </ListItem>
               
               </div>
-              {/* {openDiscount && <DiscountPopUp setSelectedPromotion={setSelectedPromotion} selectedPromotion={selectedPromotion} filteredPromotion={filteredPromotion} open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}}/>} */}
+              {openDiscount && <DiscountPopUp handleUpdateSelectedPromotion={handleUpdateSelectedPromotion} selectedPromotion={cartData.selectedPromotion} filteredPromotion={filteredPromotion} open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}} totalCartAmount={cartData.total_amount} handleUpdateBestDetailSelectedPromotion={handleUpdateBestDetailSelectedPromotion}/>}
 
               
        
@@ -287,11 +320,19 @@ const CartSummary = (props) => {
             >
                <div>
                 <ListItem style={{padding: 0,margin:0}}>
-                <Typography variant="h5">Giảm giá {selectedPromotion?.type ==="%" ? <b style={{color:'red'}} >({selectedPromotion.discountValue}%)</b>:""}</Typography>
-                { selectedPromotion    ? 
+                
+                {/* <Typography variant="h5">Giảm giá {selectedPromotion?.type ==="%" ? <b style={{color:'red'}} >({selectedPromotion.discountValue}%)</b>:""}</Typography> */}
+                {/* <Typography variant="h5">Giảm giá {getBestPromotion()?.type ==="%" ? <b style={{color:'red'}} >({getBestPromotion().discountValue}%)</b>:""}</Typography>
+                { selectedPromotion?.discountKey === "invoice" ? 
                 <div >
                       <Box style={{backgroundColor:"red",color:"#fff",fontSize:12,fontWeight:500,borderRadius:5, paddingLeft:5,paddingRight:5, marginLeft:10}}>KM</Box>
-                      {/* <img  src={require('../../../../assets/img/icon/tag (1).png').default} style={{height:22,width:22, marginLeft:10, marginTop:-3}} /> */}
+                </div>
+                :null} */}
+
+              <Typography variant="h5">Giảm giá {cartData.bestDetailSelectedPromotion?.type ==="%" ? <b style={{color:'red'}} >({cartData.bestDetailSelectedPromotion?.discountValue}%)</b>:""}</Typography>
+                { selectedPromotion?.discountKey === "invoice" ? 
+                <div >
+                      <Box style={{backgroundColor:"red",color:"#fff",fontSize:12,fontWeight:500,borderRadius:5, paddingLeft:5,paddingRight:5, marginLeft:10}}>KM</Box>
                 </div>
                 :null}
                 <Popper  placement="left-start" open={openDiscountDetail} anchorEl={anchorEl} onClose={()=>setAnchorEl(null)}   style={{zIndex:1000000}} >   
@@ -301,7 +342,7 @@ const CartSummary = (props) => {
               
               </div>
               <Box  onClick={handleClick} style={{ width: 90 ,color:'#616161',textAlign: "right"}}>
-                <VNDFormat value={cartData.discount}/>
+                <VNDFormat value={Number(cartData.discount) + Number(cartData.discountPro)}/>
                 <Divider style={{ background: anchorEl?theme.customization.primaryColor[500]:'#616161' }} />
               </Box>
               {/* style={{color:anchorEl?theme.customization.primaryColor[500]:'#616161'}} */}
@@ -333,16 +374,13 @@ const CartSummary = (props) => {
                 <Typography variant="body2" >
                   <VNDFormat
                     style={{ color: "#2096f3",fontWeight: 600, }}
-                    value={fee.type === "%"?  Number(fee.value)*(Number(cartData.total_amount) - Number(cartData.discount)) / 100 : fee.value  }
+                    value={fee.type === "%"?  Number(fee.value)*(Number(cartData.total_amount) - Number(cartData.discount) - Number(cartData.discountPro)) / 100 : fee.value  }
                   />
                 </Typography>
               </Grid>
               )
             }):null
             :null}
-           
-
-
             <Grid
               container
               direction="row"
@@ -353,7 +391,7 @@ const CartSummary = (props) => {
               <Typography variant="body2" >
                 <VNDFormat
                   style={{ color: "#2096f3",fontWeight: 600, }}
-                  value={cartData.total_amount - cartData.discount + cartData.otherFee}
+                  value={cartData.total_amount - cartData.discount -  cartData?.discountPro +  cartData.otherFee}
                 />
               </Typography>
             </Grid>
@@ -398,7 +436,7 @@ const CartSummary = (props) => {
             </Grid>:null}
 
 
-            {cartData.total_amount - cartData.discount  !== 0 ?
+            {cartData.total_amount - cartData.discount  -  cartData?.discountPro   !== 0 ?
             <Grid
               container
               direction="row"
@@ -417,7 +455,7 @@ const CartSummary = (props) => {
                 <VNDFormat
                   value={
                     cartData.paid_amount -
-                    (cartData.total_amount - cartData.discount + cartData.otherFee)
+                    (cartData.total_amount - cartData.discount  -  cartData?.discountPro + cartData.otherFee)
                   }
                 />
               </Typography>

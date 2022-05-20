@@ -47,23 +47,32 @@ const useStyles = makeStyles((theme) =>
 
 })
 );
-const DiscountPopup = ({open,onClose,title,filteredPromotion,setSelectedPromotion,selectedPromotion}) => {
+const DiscountPopup = ({open,onClose,title,filteredPromotion,handleUpdateSelectedPromotion,selectedPromotion,totalCartAmount,handleUpdateBestDetailSelectedPromotion}) => {
+    console.log("selectedPromotion",filteredPromotion)
     const theme = useTheme();
   const classes = useStyles(theme);
 
   const [value, setValue] = React.useState(selectedPromotion?selectedPromotion.id.toString():null);
-    const [promotion, setPromotion] =  React.useState(selectedPromotion? selectedPromotion:null);
+  console.log("value",value)
+  console.log("selectedPromotionselectedPromotion",selectedPromotion)
+  const [promotion, setPromotion] =  React.useState(selectedPromotion? selectedPromotion:null);
+
   const handleChange = (promotion) => {
-    if(promotion.id ===Number(value)){
+
+    if(Number(promotion.id) === Number(value)){
         setValue(null);
         setPromotion(null)
-        // setSelectedPromotion(null)
     }else{
         setValue(promotion.id.toString());
         setPromotion(promotion)
-        // setSelectedPromotion(promotion)
     }
   };
+
+  const getBestDetailSelectedCondition = (promotion) =>{
+    let bestDetailSelectedCondition = promotion?.detailCondition?.map((pro) =>{if (Number(totalCartAmount) >= Number(pro.totalCost)) {return pro}else{return null}})
+    bestDetailSelectedCondition =bestDetailSelectedCondition.filter(item => item !== null)[0]
+    return bestDetailSelectedCondition
+  }
     return (
         // <Dialog open={open} handleClose={onClose} title={title}>
         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" maxWidth="md" fullWidth={true}>
@@ -94,7 +103,7 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,setSelectedPromotio
                 {/* // */}
                 <FormControl component="fieldset">
                     <RadioGroup value={value} >
-                        {filteredPromotion?.map((promotion) => {
+                        {/* {filteredPromotion?.map((promotion) => {
                             console.log("promotion",promotion)
                             return (
                         
@@ -110,6 +119,29 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,setSelectedPromotio
                                         </Grid>
                                         <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
                                             <Typography  >Giảm giá {promotion.discountValue.toLocaleString()} {promotion.type} {"\u00a0\u00a0"}(Hoá đơn từ {promotion.totalCost.toLocaleString()} đ) </Typography>
+                                        </Grid>
+                                    </Grid>      
+                            )})} */}
+
+                        {filteredPromotion?.map((promotion) => {
+                            let bestCondition = promotion.detailCondition.map((pro) =>{if (Number(totalCartAmount) >= Number(pro.totalCost)) {return pro}else{return null}})
+                            bestCondition =bestCondition.filter(item => item !== null)[0]
+                            let bestDetailSelectedCondition = getBestDetailSelectedCondition(promotion)
+                            return (
+                                <Grid  key={promotion.id} container direction="row" justifyContent="">
+                                        <Grid item style={{width:10,marginRight:30}} >
+                                            <FormControlLabel value={promotion.id.toString()} control={<Radio  size="small" onClick={()=>handleChange(promotion)}/>}  />
+                                            {/* <FormControlLabel value={promotion} control={<Radio  size="small" onClick={()=>handleChange(promotion)}/>}  /> */}
+
+                                        </Grid>
+                                        <Grid item style={{width:250,marginRight:30,marginTop:10, color:"#383737"}} >
+                                            <Typography >{promotion.name}</Typography>
+                                        </Grid>
+                                        <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
+                                            <Typography  >{promotion.discountKey ==="invoice" ? "Hoá đơn" : "Sản phẩm"} - {getDiscountType(promotion.discountKey,promotion.discountType)}</Typography>
+                                        </Grid>
+                                        <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
+                                            <Typography  >Giảm giá {bestDetailSelectedCondition.discountValue.toLocaleString()} {bestDetailSelectedCondition.type} {"\u00a0\u00a0"}(Hoá đơn từ {bestDetailSelectedCondition.totalCost.toLocaleString()} đ) </Typography>
                                         </Grid>
                                     </Grid>      
                             )})}
@@ -131,7 +163,7 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,setSelectedPromotio
           variant="contained"
           size="small"
           color="primary"
-          onClick={()=>{setSelectedPromotion(promotion);onClose()}}
+          onClick={()=>{handleUpdateBestDetailSelectedPromotion(getBestDetailSelectedCondition(promotion));handleUpdateSelectedPromotion(promotion);onClose()}}
         >
           Áp dụng
         </Button>
