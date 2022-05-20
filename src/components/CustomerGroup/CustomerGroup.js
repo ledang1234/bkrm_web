@@ -3,10 +3,6 @@ import {
     Dialog,
     Grid,
     Paper,
-    Table,
-    TableBody,
-    TableContainer,
-    TableRow,
     ButtonBase,
     Typography,
     Tooltip
@@ -16,17 +12,18 @@ import AddIcon from '@material-ui/icons/Add';
 import { useFormik } from 'formik'
 import { useSelector } from "react-redux";
 import useStyles from "../TableCommon/style/mainViewStyle";
-import TableHeader from "../TableCommon/TableHeader/TableHeader";
 import customerApi from "../../api/customerApi";
 import CustomerGroupForm from "./CustomerGroupForm";
 import CustomerGroupView from "./CustomerGroupView";
-
+import {useDispatch} from 'react-redux';
+import {statusAction} from '../../store/slice/statusSlice'
 const CustomerGroup = ({ open, onClose }) => {
     const [custGroups, setCustGroups] = useState([]);
 
-    const classes = useStyles()
-    const info = useSelector(state => state.info)
+    const classes = useStyles();
+    const info = useSelector(state => state.info);
     const store_uuid = info.store.uuid;
+    const dispatch = useDispatch();
 
     const fetchData = async (query) => {
         try {
@@ -36,11 +33,44 @@ const CustomerGroup = ({ open, onClose }) => {
             console.log(err)
         }
     }
+
+    const [selectedGroup, setSelectedGroup] = useState(-1);
     
     useEffect(() => {
-        // if (store_uuid) fetchData();
+        if (store_uuid) fetchData();
     }, [store_uuid])
     const [isAddOpen, setIsAddOpen] = useState(false);
+    
+    const handleDelete = async (id) => {
+        try {
+            const response = await customerApi.deleteCustomerGroup(store_uuid, id);
+            fetchData();
+            dispatch(statusAction.successfulStatus("Xóa thành công"))
+        } catch (err) {
+            console.log(err);
+            dispatch(statusAction.failedStatus("Xóa thất bại"))
+        }
+    }
+
+    const handleSave = async (customerGroup) => {
+        try {
+            const body = {...customerGroup, store_id: info.store.id, conditions: JSON.stringify(customerGroup.conditions)}
+            if (customerGroup.id) {
+                const response = await customerApi.updateCustomerGroup(store_uuid, customerGroup.id, body);
+                dispatch(statusAction.successfulStatus("Chỉnh sửa thành công"));
+            } else {
+                const response = await customerApi.createCustomerGroup(store_uuid, body);
+                dispatch(statusAction.successfulStatus("Thêm thành công"));
+            }
+            setIsAddOpen(false);
+            setSelectedGroup(-1);
+            fetchData();
+        } catch(err) {
+            console.log(err)
+            dispatch(statusAction.failedStatus("Thất bại"))
+        }
+    }
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth={true} >
 
@@ -58,10 +88,8 @@ const CustomerGroup = ({ open, onClose }) => {
                     </ButtonBase>
                 </Grid>
 
-                {isAddOpen ? <CustomerGroupForm onSave={() => { }} onClose={() => setIsAddOpen(false)} /> :
-                    <CustomerGroupView custGroups={custGroups} />
-                }
-
+                {isAddOpen ? <CustomerGroupForm customerGroup={custGroups.find((c) => c.id === selectedGroup)} onSave={handleSave} onClose={() => setIsAddOpen(false)} /> :
+                    <CustomerGroupView custGroups={custGroups} onSelect={(index) => {console.log(index); setSelectedGroup(index); setIsAddOpen(true)}} handleDelete={handleDelete}/>}
             </Paper>
         </Dialog>
     )

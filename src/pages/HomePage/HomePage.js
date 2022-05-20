@@ -44,6 +44,7 @@ import branchApi from "../../api/branchApi"
 import { infoActions } from "../../store/slice/infoSlice";
 import storeApi from "../../api/storeApi";
 import Notification from "../../components/Notification/Notification";
+import { verifyToken } from "../../store/actionCreator";
 // import ManualView from "../../views/ManualView/ManualView";
 
 const ManagerView = React.lazy(() => import("../../views/ManagerView/ManagerView"))
@@ -67,7 +68,7 @@ const HomePage = (props) => {
     window !== undefined ? () => window().document.body : undefined;
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
-
+  const dispatch = useDispatch();
   const customization = useSelector((state) => state.customize);
   const infoDetail = useSelector((state) => state.info);
   const isSidebarOpen =
@@ -78,6 +79,10 @@ const HomePage = (props) => {
   const roleUser = infoDetail.role === "owner" ? "Chủ cửa hàng" : "Nhân viên"
 
   const permissions = useSelector((state) => state.info.user.permissions);
+
+  useEffect(() => {
+    dispatch(verifyToken())
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(customizeAction.setSidebarOpen(!smallScreen));
@@ -141,7 +146,7 @@ const HomePage = (props) => {
         </div>
       );
   };
-  const dispatch = useDispatch();
+  
   const logOutHandler = () => {
     dispatch(authActions.logOut());
     localStorage.removeItem("token");

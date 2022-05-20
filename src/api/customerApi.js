@@ -44,6 +44,18 @@ const customerApi = {
   getCustomerGroups: (storeUuid) => {
     const url = `stores/${storeUuid}/customerGroups`;
     return axiosClient.get(url);
-  }
+  },
+  updateCustomerGroup: (storeUuid, id, body) => {
+    const url = `stores/${storeUuid}/customerGroups/${id}`;
+    return axiosClient.put(url, body);
+  },
+  createCustomerGroup: (storeUuid, body) => {
+    const url = `stores/${storeUuid}/customerGroups/`;
+    return axiosClient.post(url, body);
+  },
+  deleteCustomerGroup: (storeUuid, id) => {
+    const url = `stores/${storeUuid}/customerGroups/${id}`;
+    return axiosClient.delete(url);
+  },
 };
 export default customerApi;

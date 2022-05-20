@@ -343,7 +343,7 @@ const ComponentToPrint = ({employeeList,classes}) =>{
       />
       <TableBody>
         {employeeList.map((row, index) => {
-          return  <EmployeeTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["image"]}colorText={"#000"}  />
+          return  <EmployeeTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["image"]} />
           })}
       </TableBody>
       </TableWrapper>

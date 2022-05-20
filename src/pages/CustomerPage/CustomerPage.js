@@ -75,9 +75,9 @@ const CustomerPage = () => {
         )
         dispatch(customerPageActions.setCategories(data[0].data ? data[0].data : []));
         dispatch(customerPageActions.setProducts(data[1].data ? data[1].data : []));
-  
+
         const  webSetting = JSON.parse(res.data.web_configuration)
-  
+
         if(webSetting.orderManagement.branchOption==='choose'&& res.data.branches.length > 1 && !webSetting.orderManagement.orderWhenOutOfSctock && !localStorage.getItem(res.data.uuid)){
             setOpenPopUpChooseBranch(true)
         }
@@ -91,7 +91,7 @@ const CustomerPage = () => {
         alert("Trang web chưa được kích hoạt");
         localStorage.removeItem(storeWebPage);
       }
- 
+
     };
     fetchStore();
   }, []);
