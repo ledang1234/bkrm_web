@@ -1,22 +1,28 @@
 import { Form, Input, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import React from 'react';
+import { Button as ButtonMUI } from '@material-ui/core';
+import React, {useEffect} from 'react';
 
 // import Select from '@material-ui/core/Select';
 import { Select, Radio } from 'antd';
 const { Option } = Select;
 
-const CustomerGroupForm = ({ onSave, onClose }) => {
+const CustomerGroupForm = ({ onSave, onClose, customerGroup }) => {
 
     const onFinish = values => {
         console.log('Received values of form:', values);
+        if (customerGroup && customerGroup.id) {
+            onSave({...values, id: customerGroup.id})
+        } else {
+            onSave(values);
+        }
     };
 
     return (
-        <Form name="customer_group_form" onFinish={onFinish} autoComplete="off" style={{ maxHeight: 500, overflow: "auto" }}>
+        <Form initialValues={customerGroup ? {...customerGroup, conditions: JSON.parse(customerGroup.conditions)} : {}} name="customer_group_form" onFinish={onFinish} autoComplete="off" style={{ maxHeight: 500, overflow: "auto" }}>
             <Form.Item
                 label="Tên nhóm"
-                name="groupName"
+                name="name"
                 rules={[{ required: true, message: 'Nhập tên nhóm' }]}
             >
                 <Input />
@@ -49,6 +55,7 @@ const CustomerGroupForm = ({ onSave, onClose }) => {
                                 <Form.Item
                                     {...restField}
                                     name={[name, 'criteria']}
+                                    initialValue
                                 >
                                     <select defaultValue={"totalAmount"} style={{ width: 160, height: 32, borderRadius: 2 }}>
                                         <option value={"totalAmount"}>{'Tổng tiền mua'}</option>
@@ -81,7 +88,7 @@ const CustomerGroupForm = ({ onSave, onClose }) => {
                             </Space>
                         ))}
                         <Form.Item>
-                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                            <Button type="dashed" onClick={() => add({ criteria: "totalAmount", operation: "<=", value: '' })} block icon={<PlusOutlined />}>
                                 Thêm điều kiện
                             </Button>
                         </Form.Item>
@@ -90,15 +97,31 @@ const CustomerGroupForm = ({ onSave, onClose }) => {
             </Form.List>
             <div style={{ display: "flex", flexDirection: "row-reverse", width: '100%', gap: 10 }}>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Lưu
-                    </Button>
+                    <ButtonMUI
+                        variant="contained"
+                        size="small"
+                        style={{ marginLeft: 20 }}
+                        color="primary"
+                        type="submit"
+                        htmlType="submit"
+                        
+                    >
+                        Xác nhận
+                    </ButtonMUI>
+
 
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" danger onClick={() => onClose()}>
+
+
+                    <ButtonMUI
+                        variant="contained"
+                        size="small"
+                        color="secondary"
+                        onClick={() => onClose()}
+                    >
                         Hủy
-                    </Button>
+                    </ButtonMUI>
                 </Form.Item>
             </div>
         </Form>

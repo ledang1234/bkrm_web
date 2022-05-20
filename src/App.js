@@ -22,7 +22,7 @@ import { Box, CssBaseline } from "@material-ui/core";
 import GlobalSnackbar from "./components/GlobalSnackBar/GlobalSnackBar";
 import Test from "./components/Category/Test";
 import "./index.css";
-
+import { useParams } from "react-router-dom";
 const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
 const LoginPage = React.lazy(() => import("./pages/LoginPage/LoginPage"));
 const SignupPage = React.lazy(() => import("./pages/SignupPage/SignupPage"));
@@ -35,8 +35,11 @@ function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const [path, setPath] = useState("/home");
+
+
   useEffect(() => {
-    dispatch(verifyToken());
+  
+    // dispatch(verifyToken());
     setPath(sessionStorage.getItem("BKRMprev"));
     // dispatch(loadBranches(store_uuid));
 
