@@ -411,7 +411,8 @@ export const reportModule = {
         { id: 20.5, title: "Khách hàng", key: "Khách hàng",url: "/home/manager/customer-report" },
         { id: 20.6, title: "Nhân viên",key: "Nhân viên", url: "/home/manager/employee-report" },
         { id: 20.7, title: "Nhà cung cấp", key: "Nhà cung cấp", url: "/home/manager/supplier-report" },
-        // { id: 20.10, title: "Chi nhánh", key: "Chi nhánh",  url: "/home/manager/branch-report" },
+        { id: 20.10, title: "Chi nhánh", key: "Chi nhánh",  url: "/home/manager/branch-report" },
+        { id: 20.11, title: "Tài chính (lãi lỗ)", key: "Tài chính (lãi lỗ)",  url: "/home/manager/financial-report" },
 
         
 

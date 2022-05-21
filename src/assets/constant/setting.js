@@ -78,12 +78,15 @@ const setting = {
 
     vat: {
       status: false,
-      listCost: [{ key: "1", costName: "", value: 0, type: "%" }],
+      listCost: [],
+      // { key: "1", costName: "", value: 0, type: "%" }
     },
 
     //
     orderLowStock: {
       status: true,
+      choiceRec: "Auto", //"Setting"
+      dayAuto: 7, //"Setting"
       choiceQuantity: "select", //number
       selectQuantity: "latest", //avg
       inputQuantity: 10,

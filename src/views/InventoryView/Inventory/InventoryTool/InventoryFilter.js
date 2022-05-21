@@ -1,13 +1,13 @@
 import React from 'react'
 import {
-  Drawer,TextField, Typography,Button,Grid,MenuItem,Select,InputLabel,FormControl
+  Drawer,Box,TextField, Typography,Button,Grid,MenuItem,Select,InputLabel,FormControl
 } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/styles";
 import {ThousandSeperatedInput} from '../../../../components/TextField/NumberFormatCustom'
 import VNDInput from '../../../../components/TextField/NumberFormatCustom'
 import { useFormik } from 'formik';
-
+import CategorySelect from "../../../../components/Select/CategorySelect"
 const drawerWidth = 300;
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -54,7 +54,9 @@ const InventoryFilter = (props) => {
 
       {/* 1. Danh muc  */}
       <Typography variant="h5"className={classes.text} >Danh mục:</Typography>
-
+      <Box style={{width:"90%"}}>
+      <CategorySelect />
+      </Box>
 
       {/* 2. Tien von from-to */}
       <Typography variant="h5"className={classes.text} >Giá vốn:</Typography>
@@ -85,7 +87,7 @@ const InventoryFilter = (props) => {
       {/* 4. Tồn kho from-to */} 
     {isManageInventory?
     <>
-      <Typography variant="h5"className={classes.text} >Tồn kho:</Typography>
+      <Typography variant="h5"className={classes.text} style={{marginTop:-5}} >Tồn kho:</Typography>
       <ThousandSeperatedInput  label="Từ" variant="outlined" fullWidth size="small" className={classes.textField}
         name="minInventory"
         value={formik.values.minInventory}
@@ -97,6 +99,44 @@ const InventoryFilter = (props) => {
         onChange={formik.handleChange}
       />
 </>:null}
+
+<Typography variant="h5"className={classes.text} style={{marginTop:-5}} >Tình trạng tồn kho:</Typography>
+
+      <FormControl
+          className={classes.formControl}
+          fullWidth
+          size="small"
+          variant="outlined"
+        >
+      <Select
+        labelId="demo-simple-select-outlined-label"
+        id="demo-simple-select-outlined"
+        size="small"
+        name="status"
+        value={formik.values.status}
+        onChange={formik.handleChange}
+      >
+        <MenuItem value="active">Hết hàng</MenuItem>
+        <MenuItem value="inactive">Sắp hết</MenuItem>
+        <MenuItem value="inactive">Còn hàng</MenuItem>
+        <MenuItem value="inactive">Vượt mức tồn kho</MenuItem>
+      </Select>
+      </FormControl>
+
+      <Typography variant="h5" className={classes.text} >Ngày dự kiến hết hạn:</Typography>
+      <TextField 
+        id="endDate" label="Ngày dự kiến hết hạn" type="date" name="endDate"
+        // defaultValue={formik.values.endDate} 
+        variant="outlined" size="small" 
+        fullWidth className={classes.textField} 
+        InputLabelProps={{ shrink: true }} 
+        // value={formik.values.endDate}  
+        // value={formik.values.endDate.length === 0 ? current :formik.values.endDate} 
+        // onChange={formik.handleChange}
+      />
+     
+
+
 
       {/* 5. Tinh trang ton kho : còn hang het hang */} 
       {/* <Typography variant="h5"className={classes.text} >Tình trạng:</Typography>
@@ -149,6 +189,8 @@ const InventoryFilter = (props) => {
         <MenuItem value="inactive">Ngưng hoạt động</MenuItem>
       </Select>
       </FormControl>
+
+     
 
        {/* BUTTON */}
        <Button onClick={formik.handleSubmit} variant="contained"  color="primary" style={{marginTop:30}}>

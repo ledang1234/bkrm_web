@@ -93,11 +93,12 @@ export default function SelectBatch({ handleSubmit, handleClose, row, isInventor
         </div>
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" onClick={handleClose}>
+        <Button color="secondary" size="small"variant="contained" onClick={handleClose}>
           Hủy
         </Button>
         <Button
           color="primary"
+          size="small"variant="contained"
           onClick={() => {
             if (!isInventoryCheck) {
               const nonZeroBatch = selectedBatches.filter(

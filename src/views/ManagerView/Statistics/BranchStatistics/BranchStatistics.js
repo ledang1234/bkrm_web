@@ -14,8 +14,8 @@ const BranchStatistics = () => {
    });
 
     const categoryData = {
-        value:[20, 30, 10, 15, 15],
-        title:["Quần áo", "Giày dép", "Mắt kính", 'Túi xách', "Trang sức"]
+        value:[2220000, 3254000, 1234000, 2400000],
+        title:["Cửa hàng văn phòng phẩm", "Chi nhánh Dĩ An", "Chi nhánh Quận 1", 'Chi nhánh Đầm Sen']
       }
   
       const dataCategory = {

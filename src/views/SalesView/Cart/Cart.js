@@ -124,7 +124,8 @@ const Cart = () => {
         delivery: false,
         scores: "0",
         discountDetail:{value:'0', type:'VND' },
-        selectedPromotion:null
+        selectedPromotion:null,
+        otherFee:0
       },
     ];
   };
@@ -195,6 +196,11 @@ const Cart = () => {
 
 
   //// ----------II. FUNCTION
+  const otherfee = store_setting?.vat
+
+  let otherFeeMoney = otherfee?.listCost?.reduce((sum,fee)=>fee.type!=="%"? sum + Number(fee.value):sum , 0);
+
+
   // 1.Cart
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -345,13 +351,25 @@ const Cart = () => {
         delivery: false,
         scores: "0",
         discountDetail:{value:'0', type:'VND' },
-        selectedPromotion:null
+        selectedPromotion:null,
+        otherFee:0
 
       },
     ]);
     setSelectedIndex(cartList.length);
     handleClose();
   };
+
+  const handleDeleteAllItem = (index) => {
+    const newCartList = [...cartList];
+
+    newCartList[index].cartItem = [];
+
+    setCartList(newCartList)
+
+    handleClose();
+  }
+
   const handleDelete = (index) => {
     // DELETE CART
     cartList.splice(index, 1);
@@ -367,8 +385,8 @@ const Cart = () => {
           delivery: false,
           scores: "0",
           discountDetail:{value:'0', type:'VND' },
-          selectedPromotion:null
-
+          selectedPromotion:null,
+          otherFee:0
         },
       ]);
     } else {
@@ -379,6 +397,7 @@ const Cart = () => {
     } else if (selectedIndex > index) {
       setSelectedIndex(selectedIndex - 1);
     }
+    
     handleClose();
   };
   const updateCustomer = (value) => {
@@ -553,11 +572,24 @@ const Cart = () => {
   };
   const handleUpdateDiscountDetail = (obj) => {
   
+    
+    // newCartList = update(newCartList, {
+    //   [selectedIndex]: {
+    //     otherFee: { $set:totalOtherFee },
+    //   },
+    // });
+
     let discountUpdate =  obj.type === '%'?( (Number(obj.value) * Number(cartList[selectedIndex].total_amount)/100/100).toFixed() * 100).toString() : obj.value 
+
+
+    let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(discountUpdate))/100 +  otherFeeMoney
+
+
     let newCartList = update(cartList, {
       // [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
-      [selectedIndex]: defaultPaymentAmount? { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }}:
-        { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }} ,
+      [selectedIndex]: defaultPaymentAmount? { discountDetail: { $set: obj } , discount:{ $set: discountUpdate },  otherFee: { $set:totalOtherFee },paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)+ Number(totalOtherFee)).toString() }}:
+        { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, otherFee: { $set:totalOtherFee }} ,
 
     });
   
@@ -569,13 +601,26 @@ const Cart = () => {
     //   return;
     // }
     let newCartList = update(cartList, {
-      // [selectedIndex]: { discount: { $set: amount } },
 
-      // [selectedIndex]: { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  },
       [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
+      // [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount }}:
+
       { discount: { $set: amount } },
 
     });
+
+
+ 
+
+
+    if( defaultPaymentAmount){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          // paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) - Number(amount) + Number(totalOtherFee)).toString() },
+        },
+      }) };
+
+    //
 
     if (store_setting?.customerScore.status) {
       newCartList = update(newCartList, {
@@ -589,6 +634,7 @@ const Cart = () => {
         },
       });
     }
+
 
     setCartList(newCartList);
   };
@@ -616,18 +662,33 @@ const Cart = () => {
     //     paid_amount: { $set: total - cartList[selectedIndex].discount },
     //   },
     // }) ;
+    // 
+
+    //
+   
+    let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    let totalOtherFee = percentFee * (Number(total) - Number(cartList[selectedIndex].discount))/100 +  otherFeeMoney
+    console.log("percentFee",percentFee)
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        otherFee: { $set:totalOtherFee },
+      },
+    });
+
+
     if( defaultPaymentAmount){
     newCartList = update(newCartList, {
       [selectedIndex]: {
-        paid_amount: { $set: total - cartList[selectedIndex].discount },
+        paid_amount: { $set: total - cartList[selectedIndex].discount + totalOtherFee },
       },
     }) };
+    // 
     if (store_setting?.customerScore.status) {
       newCartList = update(newCartList, {
         [selectedIndex]: {
           scores: {
             $set: parseInt(
-              (total - cartList[selectedIndex].discount) /
+              (total - cartList[selectedIndex].discount + totalOtherFee) /
                 store_setting?.customerScore.value
             ),
           },
@@ -635,6 +696,8 @@ const Cart = () => {
       });
     }
 
+    // 
+    
     setCartList(newCartList);
   };
 
@@ -644,6 +707,7 @@ const Cart = () => {
     setOpenPopUpWarning(false)
   }
 
+  console.log("otherFeeeee",cartList[selectedIndex]?.otherFee)
   
 
   const handleConfirm = async () => {
@@ -789,6 +853,8 @@ const Cart = () => {
       delivery: cart.delivery,
       is_customer_order: false,
       points: cart.scores,
+      //
+      otherFee:cart.otherFee
     };
 
     try {
@@ -803,7 +869,7 @@ const Cart = () => {
         setCode(res.data.order.order_code)
         handlePrint();
       }
-      handleDelete(selectedIndex);
+      handleDeleteAllItem(selectedIndex);
     } catch (err) {
       setSnackStatus({
         style: "error",
@@ -961,7 +1027,7 @@ const Cart = () => {
                   products={products} 
                   handleSearchBarSelect={handleSearchBarSelect}
                   isCart={true}
-                  selectedItem={cartList[selectedIndex].cartItem}
+                  selectedItem={cartList[selectedIndex]?.cartItem}
                   typeShow={typeShow}
                   setTypeShow={setTypeShow}
                   setProducts={setProducts}
