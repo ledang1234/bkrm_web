@@ -361,6 +361,12 @@ const Cart = () => {
   };
   const handleDelete = (index) => {
     // DELETE CART
+    const newCartList = [...cartList];
+
+    newCartList[index].cartItem = [];
+
+    setCartList(newCartList)
+    /*
     cartList.splice(index, 1);
     if (cartList.length === 0) {
       setCartList([
@@ -376,7 +382,6 @@ const Cart = () => {
           discountDetail:{value:'0', type:'VND' },
           selectedPromotion:null,
           otherFee:0
-
         },
       ]);
     } else {
@@ -387,6 +392,7 @@ const Cart = () => {
     } else if (selectedIndex > index) {
       setSelectedIndex(selectedIndex - 1);
     }
+    */
     handleClose();
   };
   const updateCustomer = (value) => {
@@ -696,7 +702,7 @@ const Cart = () => {
     setOpenPopUpWarning(false)
   }
 
-  console.log("otherFeeeee",cartList[selectedIndex].otherFee)
+  console.log("otherFeeeee",cartList[selectedIndex]?.otherFee)
   
 
   const handleConfirm = async () => {
@@ -1016,7 +1022,7 @@ const Cart = () => {
                   products={products} 
                   handleSearchBarSelect={handleSearchBarSelect}
                   isCart={true}
-                  selectedItem={cartList[selectedIndex].cartItem}
+                  selectedItem={cartList[selectedIndex]?.cartItem}
                   typeShow={typeShow}
                   setTypeShow={setTypeShow}
                   setProducts={setProducts}
