@@ -1,7 +1,7 @@
 import * as HeadCells from '../../../assets/constant/tableHead'
 import *  as TableType from '../../../assets/constant/tableType'
 
-import { Avatar, Box, Button, ButtonBase, Card, Divider, FormControlLabel, Grid, Switch, TableBody, Tooltip, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, ButtonBase, Card, Divider, FormControlLabel, Grid, Switch, TableBody, Tooltip, Typography, FormControl, MenuItem, Select, InputLabel } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react'
 import { excel_data_customer, excel_name_customer } from "../../../assets/constant/excel"
 import { useDispatch, useSelector } from 'react-redux'
@@ -71,9 +71,9 @@ const Customer = () => {
   };
 
   const [openCustGroup, setOpenCustGroup] = React.useState(false);
-
+  const [custGroups, setCustGroups] = React.useState([])
   useEffect(() => {
-    if (customerList.length) {
+    if (customerList?.length) {
       window.localStorage.setItem(
         "customers",
         JSON.stringify({ 
@@ -139,7 +139,7 @@ const Customer = () => {
     setOpenFilter(!openFilter);
   };
   const [showOnlyDebt, setShowOnlyDebt] = React.useState(false);
-
+  const [selectedGroup, setSelectedGroup] = React.useState("");
   //3.3. loc cot
 
   const initialQuery = {
@@ -173,20 +173,72 @@ const Customer = () => {
     setPagingState({ ...pagingState, page: 0 })
     setTotalRows(filterCustomer().length);
   }, [reload, store_uuid, query])
+  
+  const compare = (e1, op, e2) => {
+    switch (op) {
+      case "<=": return e1 <= e2;
+      case ">=": return e1 >= e2;
+      case "=": return e1 === e2;
+    }
+  }
+
+  const evaluate = (cond, cust) => {
+    switch (cond.criteria) {
+      case "totalAmount": {     
+        return compare(Number(cust.total_payment), cond.operation, Number(cond.thres))
+      }
+      case "numOfOrder": {
+        return compare(Number(cust.orders), cond.operation, Number(cond.thres))
+      }
+      case "time": {
+        return compare(cust.created_at, cond.operation, cond.thres)
+      }
+      case "point": {
+        return compare(Number(cust.points), cond.operation, Number(cond.thres))
+      }
+    }
+  }
+  const customerMapGroup = (custData, groupData) => {
+    const newCustList = custData.map(cust => {
+      const satisfiedGroups = [];
+      groupData.forEach(g => {
+        const conditions = JSON.parse(g.conditions);
+        console.log(conditions)
+        if (conditions.every((cond) => {
+          if (evaluate(cond, cust)) console.log(evaluate(cond, cust))
+          return evaluate(cond, cust)
+        })) {
+          satisfiedGroups.push(g.name)
+        }
+      });
+      return { ...cust, groups: satisfiedGroups }
+    });
+    console.log("new cust list", newCustList)
+    setCustomerList(newCustList);
+  }
+
+  const loadData = async () => {
+    try {
+      // const response = await customerApi.getCustomers(store_uuid, {
+      //   ...query,
+      //   searchKey: '',
+      // });
+      const [{data: custData, total_rows: totalRows}, {data: groupData}] = await Promise.all([ customerApi.getCustomers(store_uuid, {
+        ...query,
+        searchKey: '',
+      }), 
+        customerApi.getCustomerGroups(store_uuid)]
+      )
+      customerMapGroup(custData, groupData);
+      setCustGroups(groupData)
+      setTotalRows(totalRows)
+      // setCustomerList(custWithGroup);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await customerApi.getCustomers(store_uuid, {
-          ...query,
-          searchKey: '',
-        });
-        setTotalRows(response.total_rows)
-        setCustomerList(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     if (store_uuid) {
       loadData();
     }
@@ -232,16 +284,20 @@ const Customer = () => {
     
   // }
   const filterCustomer = () => {
+    const custOfGroup = customerList ? customerList.filter(cust => selectedGroup ? cust.groups.find(g => g === selectedGroup) : true) : [];
     if (query.searchKey) {
-      const result = customerList.filter(cust => `${cust.customer_code} - ${cust.name} - ${cust.phone} - ${cust.email}`.includes(query.searchKey))
+      const result = custOfGroup
+        .filter(cust => `${cust.customer_code} - ${cust.name} - ${cust.phone} - ${cust.email}`.includes(query.searchKey))
       return showOnlyDebt ? result.filter(cust => cust.debt > 0) : result;
-    } 
-    
-    if (showOnlyDebt) {
-      return customerList.filter(cust => cust.debt > 0);
     }
-    return customerList
-    
+
+    if (showOnlyDebt) {
+      return custOfGroup
+        .filter(cust => `${cust.customer_code} - ${cust.name} - ${cust.phone} - ${cust.email}`.includes(query.searchKey))
+        .filter(cust => cust.debt > 0);
+    }
+
+    return custOfGroup;
   }
   const [openHistory,setOpenHistory ] =  useState(false)
   return (
@@ -261,7 +317,7 @@ const Customer = () => {
           <Button variant="outlined" color="primary"style={{marginRight:15}} onClick={()=>setOpenHistory(true)}>Lịch sử thu nợ</Button>
           <Button variant="outlined" color="primary"style={{marginRight:15}} onClick={()=>setOpenCustGroup(true)}>Nhóm khách hàng</Button>
           {openHistory? <DebtHistory open={openHistory}  onClose={()=>setOpenHistory(false)}/>:null} 
-          {openCustGroup ? <CustomerGroup open={openCustGroup}  onClose={()=>setOpenCustGroup(false)}/> : null}
+          {openCustGroup ? <CustomerGroup open={openCustGroup}  onClose={()=>setOpenCustGroup(false)} custGroups={custGroups} fetchData={loadData}/> : null}
           <ButtonBase sx={{ borderRadius: '16px' }}
             onClick={handleClickOpen}
           >
@@ -317,7 +373,7 @@ const Customer = () => {
         extra={<>
           <Tooltip title="Chỉ hiện khách nợ">
             <FormControlLabel
-              style={{ marginLeft: 10 }}
+              style={{ marginLeft: 10, marginTop: 5 }}
               control={
                 <Switch
                   size="small"
@@ -328,6 +384,24 @@ const Customer = () => {
               }
             />
           </Tooltip>
+          <FormControl sx={{ m: 1, width: 200 }} size="small">
+            <InputLabel id="cust-select">Nhóm khách hàng</InputLabel>
+            <Select
+              labelId="cust-select"
+              id="cust-select"
+              // onChange={handleChange}
+              value={selectedGroup}
+              style={{width: 200}}
+              onChange={(e) => {
+                setSelectedGroup(e.target.value)
+              }}
+            >
+              {custGroups.map(g => (
+                <MenuItem value={g.name}>{g.name}</MenuItem>
+              ))}
+              <MenuItem value={""} title='Tất cả' >Tất cả</MenuItem>
+            </Select>
+          </FormControl>
         </>}
       />
 
@@ -356,7 +430,7 @@ const Customer = () => {
       </TableWrapper> :
         <>
           <Box style={{ minHeight: '60vh' }}>
-            {filterCustomer().map((row, index) => {
+            {filterCustomer()?.map((row, index) => {
               return (
                 <PartnerMiniTableRow key={row.uuid} row={row} openRow={openRow} handleOpenRow={handleOpenRow} onReload={onReload}
                   img={ava} id={row.customer_code} name={row.name} phone={row.phone} score={haveCustomerScore?row.points:null}
@@ -411,9 +485,9 @@ const ComponentToPrint = ({ customerList, classes , query}) => {
 
       />
       <TableBody>
-        {customerList.map((row, index) => {
+        {customerList?.map((row, index) => {
           return  <CustomerTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["debtStatus", "image"]}  />
-          })}
+        })}
       </TableBody>
       </TableWrapper>
     </div>

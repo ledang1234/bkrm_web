@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ConfirmPopUp from "../../../../../components/ConfirmPopUp/ConfirmPopUp";
 import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
-import { Modal } from 'antd';
+import { Tag } from 'antd';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import UpdateCustomer from "../CustomerDetail/UpdateCustomer/UpdateCustomer"
 import avaUpload from '../../../../../assets/img/ava/avaa.jpeg';
@@ -295,10 +295,19 @@ const CustomerDetail = (props) => {
                  }}
                  />:null} */}
               </Grid>
-              
-  
 
-          </Grid>
+              <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={7} sm={6} >
+                <Typography variant="h5" gutterBottom component="div">Nhóm</Typography>
+              </Grid>
+              <Grid item sm={6} >
+                {row.groups.map(g => <Tag color="magenta" >{g}</Tag>)}
+              </Grid>
+
+            </Grid>
+            </Grid>
+              
+            
 
         </Grid>
 
