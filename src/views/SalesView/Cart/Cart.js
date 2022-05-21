@@ -359,14 +359,19 @@ const Cart = () => {
     setSelectedIndex(cartList.length);
     handleClose();
   };
-  const handleDelete = (index) => {
-    // DELETE CART
+
+  const handleDeleteAllItem = (index) => {
     const newCartList = [...cartList];
 
     newCartList[index].cartItem = [];
 
     setCartList(newCartList)
-    /*
+
+    handleClose();
+  }
+
+  const handleDelete = (index) => {
+    // DELETE CART
     cartList.splice(index, 1);
     if (cartList.length === 0) {
       setCartList([
@@ -392,7 +397,7 @@ const Cart = () => {
     } else if (selectedIndex > index) {
       setSelectedIndex(selectedIndex - 1);
     }
-    */
+    
     handleClose();
   };
   const updateCustomer = (value) => {
@@ -864,7 +869,7 @@ const Cart = () => {
         setCode(res.data.order.order_code)
         handlePrint();
       }
-      handleDelete(selectedIndex);
+      handleDeleteAllItem(selectedIndex);
     } catch (err) {
       setSnackStatus({
         style: "error",
