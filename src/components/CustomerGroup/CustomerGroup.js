@@ -17,34 +17,20 @@ import CustomerGroupForm from "./CustomerGroupForm";
 import CustomerGroupView from "./CustomerGroupView";
 import {useDispatch} from 'react-redux';
 import {statusAction} from '../../store/slice/statusSlice'
-const CustomerGroup = ({ open, onClose }) => {
-    const [custGroups, setCustGroups] = useState([]);
-
+const CustomerGroup = ({ open, onClose, custGroups, fetchData }) => {
     const classes = useStyles();
     const info = useSelector(state => state.info);
     const store_uuid = info.store.uuid;
     const dispatch = useDispatch();
 
-    const fetchData = async (query) => {
-        try {
-            const res = await customerApi.getCustomerGroups(store_uuid);
-            setCustGroups(res.data);
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     const [selectedGroup, setSelectedGroup] = useState(-1);
     
-    useEffect(() => {
-        if (store_uuid) fetchData();
-    }, [store_uuid])
     const [isAddOpen, setIsAddOpen] = useState(false);
     
     const handleDelete = async (id) => {
         try {
             const response = await customerApi.deleteCustomerGroup(store_uuid, id);
-            fetchData();
+            await fetchData();
             dispatch(statusAction.successfulStatus("Xóa thành công"))
         } catch (err) {
             console.log(err);
@@ -64,7 +50,7 @@ const CustomerGroup = ({ open, onClose }) => {
             }
             setIsAddOpen(false);
             setSelectedGroup(-1);
-            fetchData();
+            await fetchData();
         } catch(err) {
             console.log(err)
             dispatch(statusAction.failedStatus("Thất bại"))
