@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState,useEffect} from 'react'
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import {
     Button,
@@ -26,12 +26,18 @@ import {
     IconButton,
     FormLabel,
     RadioGroup,
-    Radio
+    Radio,
+    ListItem
   } from "@material-ui/core";
 import clsx  from "clsx"
+import CheckIcon from '@material-ui/icons/Check';
 
 import ModalWrapperWithClose from "../../../../components/Modal/ModalWrapperWithClose"
 import CloseIcon from "@material-ui/icons/Close";
+import {getAllProductInCategoryParent} from "../../../../utils"
+import { ThousandSeperatedInput } from '../../../../components/TextField/NumberFormatCustom';
+import productApi from "../../../../api/productApi";
+import {useSelector,useDispatch} from 'react-redux'
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -47,7 +53,7 @@ const useStyles = makeStyles((theme) =>
 
 })
 );
-const DiscountPopup = ({open,onClose,title,filteredPromotion,handleUpdateSelectedPromotion,selectedPromotion,totalCartAmount,handleUpdateBestDetailSelectedPromotion}) => {
+const DiscountPopup = ({open,onClose,title,filteredPromotion,handleUpdateSelectedPromotion,selectedPromotion,listGiftItem,totalCartAmount,handleUpdateBestDetailSelectedPromotion,products}) => {
     console.log("selectedPromotion",filteredPromotion)
     const theme = useTheme();
   const classes = useStyles(theme);
@@ -56,7 +62,17 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,handleUpdateSelecte
   console.log("value",value)
   console.log("selectedPromotionselectedPromotion",selectedPromotion)
   const [promotion, setPromotion] =  React.useState(selectedPromotion? selectedPromotion:null);
+//   const [check, setCheck] =  React.useState(selectedPromotion?selectedPromotion.listGiftItem:[]);
 
+// const [check, setCheck] =  React.useState(selectedPromotion?{idPro:selectedPromotion.id,detail:selectedPromotion.listGiftItem}:{idPro:null, detail:[]});
+// const [check, setCheck] =  React.useState(selectedPromotion?{idPro:selectedPromotion.id,detail:listGiftItem?listGiftItem:[]}:{idPro:null, detail:[]});
+const [check, setCheck] =  React.useState({idPro:null, detail:[]});
+
+// selectedPromotion.listGiftItem
+  function getColorSelected (selectedData,itemUuid  ){
+    if(!selectedData){return}
+    return selectedData.some(function(e) {return e.uuid.includes(itemUuid); }) ?  theme.customization.primaryColor[50]:null 
+  }
   const handleChange = (promotion) => {
 
     if(Number(promotion.id) === Number(value)){
@@ -68,10 +84,58 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,handleUpdateSelecte
     }
   };
 
+  console.log("check",check)
   const getBestDetailSelectedCondition = (promotion) =>{
-    let bestDetailSelectedCondition = promotion?.detailCondition?.map((pro) =>{if (Number(totalCartAmount) >= Number(pro.totalCost)) {return pro}else{return null}})
-    bestDetailSelectedCondition =bestDetailSelectedCondition.filter(item => item !== null)[0]
-    return bestDetailSelectedCondition
+    if(promotion){
+        let bestDetailSelectedCondition = promotion?.detailCondition?.map((pro) =>{if (Number(totalCartAmount) >= Number(pro.totalCost)) {return pro}else{return null}})
+        bestDetailSelectedCondition =bestDetailSelectedCondition? bestDetailSelectedCondition.filter(item => item !== null)[0]:null
+        return bestDetailSelectedCondition
+    }
+  }
+  const [categoryList,setCategoryList] = useState(null)
+
+  const info = useSelector(state => state.info)
+  const store_uuid = info.store.uuid
+  const branch_uuid = info.branch.uuid;
+
+  useEffect(() => {
+    const fetchCategoryList = async () => {
+      try {
+        const response = await productApi.getNestedCategory(store_uuid);
+        setCategoryList(response.data);
+        console.log("response.data",response.data)
+
+        // productFormik.setFieldValue("category", response.data[0].uuid);
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    };
+    fetchCategoryList();
+  }, []);
+
+  const getListItem = (bestDetailSelectedCondition) => {
+    if(!bestDetailSelectedCondition.isGiftCategory){
+        return bestDetailSelectedCondition.listGiftItem
+    }else{
+        // products,categories,categoryId
+        console.log("bestDetailSelectedCondition.listGiftCategory",bestDetailSelectedCondition.listGiftCategory)
+        return getAllProductInCategoryParent(products,categoryList,bestDetailSelectedCondition.listGiftCategory[0])
+    }
+  
+  }
+  const handleCheck = (value, idPro) =>{
+    return setCheck({idPro:idPro, detail:value.map((item)=> {return {...item, quantity:1}})})
+  }
+
+  const handleChangeGiftQuantity = (idPro,product, newQuantity) => {
+    const itemIndex = check.detail.findIndex(
+        (item) => item.uuid === product.uuid
+      );
+      const newCheck = {...check};
+      newCheck.detail[itemIndex].quantity = newQuantity;
+      console.log("newCheck",newCheck)
+      setCheck(newCheck)
   }
     return (
         // <Dialog open={open} handleClose={onClose} title={title}>
@@ -103,46 +167,77 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,handleUpdateSelecte
                 {/* // */}
                 <FormControl component="fieldset">
                     <RadioGroup value={value} >
-                        {/* {filteredPromotion?.map((promotion) => {
-                            console.log("promotion",promotion)
-                            return (
-                        
-                                    <Grid  container direction="row" justifyContent="">
-                                        <Grid item style={{width:10,marginRight:30}} >
-                                            <FormControlLabel value={promotion.id.toString()} control={<Radio  size="small" onClick={()=>handleChange(promotion)}/>}  />
-                                        </Grid>
-                                        <Grid item style={{width:250,marginRight:30,marginTop:10, color:"#383737"}} >
-                                            <Typography >{promotion.name}</Typography>
-                                        </Grid>
-                                        <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
-                                            <Typography  >{promotion.discountKey ==="invoice" ? "Hoá đơn" : "Sản phẩm"} - {getDiscountType(promotion.discountKey,promotion.discountType)}</Typography>
-                                        </Grid>
-                                        <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
-                                            <Typography  >Giảm giá {promotion.discountValue.toLocaleString()} {promotion.type} {"\u00a0\u00a0"}(Hoá đơn từ {promotion.totalCost.toLocaleString()} đ) </Typography>
-                                        </Grid>
-                                    </Grid>      
-                            )})} */}
-
-                        {filteredPromotion?.map((promotion) => {
-                            let bestCondition = promotion.detailCondition.map((pro) =>{if (Number(totalCartAmount) >= Number(pro.totalCost)) {return pro}else{return null}})
+                        {filteredPromotion?.map((pro) => {
+                            let bestCondition = pro.detailCondition.map((pro) =>{if (Number(totalCartAmount) >= Number(pro.totalCost)) {return pro}else{return null}})
                             bestCondition =bestCondition.filter(item => item !== null)[0]
-                            let bestDetailSelectedCondition = getBestDetailSelectedCondition(promotion)
+                            let bestDetailSelectedCondition = getBestDetailSelectedCondition(pro)
                             return (
-                                <Grid  key={promotion.id} container direction="row" justifyContent="">
+                                <Grid  key={pro.id} container direction="row" justifyContent="">
                                         <Grid item style={{width:10,marginRight:30}} >
-                                            <FormControlLabel value={promotion.id.toString()} control={<Radio  size="small" onClick={()=>handleChange(promotion)}/>}  />
+                                            <FormControlLabel value={pro.id.toString()} control={<Radio  size="small" onClick={()=>handleChange(pro)}/>}  />
                                             {/* <FormControlLabel value={promotion} control={<Radio  size="small" onClick={()=>handleChange(promotion)}/>}  /> */}
 
                                         </Grid>
                                         <Grid item style={{width:250,marginRight:30,marginTop:10, color:"#383737"}} >
-                                            <Typography >{promotion.name}</Typography>
+                                            <Typography >{pro.name}</Typography>
                                         </Grid>
                                         <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
-                                            <Typography  >{promotion.discountKey ==="invoice" ? "Hoá đơn" : "Sản phẩm"} - {getDiscountType(promotion.discountKey,promotion.discountType)}</Typography>
+                                            <Typography  >{pro.discountKey ==="invoice" ? "Hoá đơn" : "Sản phẩm"} - {getDiscountType(pro.discountKey,pro.discountType)}</Typography>
+                                            <Typography  style={{fontSize:12}}>{pro.discountType ==="sendGift" ? `(${bestDetailSelectedCondition.numberGiftItem} sản phẩm)`:null }</Typography>
                                         </Grid>
-                                        <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
-                                            <Typography  >Giảm giá {bestDetailSelectedCondition.discountValue.toLocaleString()} {bestDetailSelectedCondition.type} {"\u00a0\u00a0"}(Hoá đơn từ {bestDetailSelectedCondition.totalCost.toLocaleString()} đ) </Typography>
-                                        </Grid>
+                                        {pro.discountType ==="discountInvoice"?
+                                            <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
+                                                <Typography  >Giảm giá <b style={{color:'#00b3ff', fontWeight:600}}>{bestDetailSelectedCondition.discountValue.toLocaleString()} {bestDetailSelectedCondition.type}</b> {"\u00a0\u00a0"}(Hoá đơn từ {bestDetailSelectedCondition.totalCost.toLocaleString()} đ) </Typography>
+                                            </Grid>
+                                        :null }
+                                         {pro.discountType ==="sendGift"?
+                                            <Grid item style={{width:250, marginRight:30,marginTop:10,color:"#383737"}}>
+                                                {Number(bestDetailSelectedCondition.numberGiftItem) === 1 &&  !bestDetailSelectedCondition.isGiftCategory && bestDetailSelectedCondition.listGiftItem.length === 1 ? 
+                                                    <Typography><b > Tặng sản phẩm </b> <b style={{color:'#00b3ff', fontWeight:500}}>{bestDetailSelectedCondition.listGiftItem[0].product_code}-{bestDetailSelectedCondition.listGiftItem[0].name}</b></Typography>
+                                                    :
+                                                    <>
+                                                    <Typography style={{marginBottom:5}}><b > Tặng sản phẩm </b> </Typography>
+                                                    <Select multiple  variant="outlined" fullWidth   id="branches"  name="branches" size="small"
+                                                        onChange={(e)=>handleCheck(e.target.value,pro.id)}
+                                                        value={check.detail}
+                                                                renderValue={(selected) => 
+                                                                    selected?.map((item) => {
+                                                                        return getListItem(bestDetailSelectedCondition).find( (product) => product.uuid === item.uuid)?.name;
+                                                                    }).join(", ")
+                                                                }
+                                                                placeholder="Sản phẩm"
+                                                                style={{width:200, marginLeft:20, height:50}}
+                                                            >
+                                                            {getListItem(bestDetailSelectedCondition)?.map((item) => (
+                                                                <MenuItem key={item.uuid} value={item} 
+                                                                style={{backgroundColor:getColorSelected(check.detail, item.uuid) }} 
+                                                                > 
+                                                                <Grid container justifyContent='space-between'>
+                                                                    {item.name}
+                                                                    {getColorSelected(check.detail, item.uuid)? <CheckIcon color='primary'/> :null}
+                                                                </Grid >
+                                                                </MenuItem>
+                                                            ))}
+                                                    </Select>
+                                                    { check.idPro === pro.id ?
+                                                     check.detail.map((item)=>{
+                                                        return (
+                                                            <ListItem>
+                                                                <Typography>{item.product_code} - {item.name}</Typography>
+                                                                <ThousandSeperatedInput value={item.quantity} onChange={(e)=>handleChangeGiftQuantity(pro.id,item,e.target.value)}/>
+                                                            </ListItem>
+                                                        )
+                                                    }) :null }
+                                      
+                                                    
+                                                    </>
+                                                }
+
+                                                <Typography  >(Hoá đơn từ {bestDetailSelectedCondition.totalCost.toLocaleString()} đ )</Typography>
+
+                                               
+                                            </Grid>
+                                        :null }
                                     </Grid>      
                             )})}
                     <Divider />
@@ -163,7 +258,7 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,handleUpdateSelecte
           variant="contained"
           size="small"
           color="primary"
-          onClick={()=>{handleUpdateBestDetailSelectedPromotion(getBestDetailSelectedCondition(promotion));handleUpdateSelectedPromotion(promotion);onClose()}}
+          onClick={()=>{handleUpdateBestDetailSelectedPromotion(getBestDetailSelectedCondition(promotion));handleUpdateSelectedPromotion(promotion, check);onClose()}}
         >
           Áp dụng
         </Button>

@@ -88,7 +88,8 @@ const CartSummary = (props) => {
     isScore,
     handleUpdateDiscountDetail,
     handleUpdateSelectedPromotion,
-    handleUpdateBestDetailSelectedPromotion
+    handleUpdateBestDetailSelectedPromotion,
+    products
   } = props;
 
   const theme = useTheme();
@@ -187,12 +188,16 @@ const CartSummary = (props) => {
       }
   };
 
-    let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount - cartData.discountPro) 
+  let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount - cartData.discountPro) 
 
   const totalQuantity = calculateTotalQuantity(cartData.cartItem)
 
 
+ 
   const otherfee = store_setting?.vat
+  let otherFeeMoney = otherfee?.listCost ? otherfee?.listCost?.reduce((sum,fee)=>fee.type!=="%"? sum + Number(fee.value):sum , 0) :0;
+
+
 
 
   console.log("cartData",cartData)
@@ -300,7 +305,7 @@ const CartSummary = (props) => {
                 </ListItem>
               
               </div>
-              {openDiscount && <DiscountPopUp handleUpdateSelectedPromotion={handleUpdateSelectedPromotion} selectedPromotion={cartData.selectedPromotion} filteredPromotion={filteredPromotion} open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}} totalCartAmount={cartData.total_amount} handleUpdateBestDetailSelectedPromotion={handleUpdateBestDetailSelectedPromotion}/>}
+              {openDiscount && <DiscountPopUp products={products}handleUpdateSelectedPromotion={handleUpdateSelectedPromotion} selectedPromotion={cartData.selectedPromotion} listGiftItem={cartData.listGiftItem}filteredPromotion={filteredPromotion} open={openDiscount} title="Khuyến mãi trên hóa đơn" onClose={()=>{setOpenDiscount(!openDiscount)}} totalCartAmount={cartData.total_amount} handleUpdateBestDetailSelectedPromotion={handleUpdateBestDetailSelectedPromotion}/>}
 
               
        
@@ -374,7 +379,9 @@ const CartSummary = (props) => {
                 <Typography variant="body2" >
                   <VNDFormat
                     style={{ color: "#2096f3",fontWeight: 600, }}
-                    value={fee.type === "%"?  Number(fee.value)*(Number(cartData.total_amount) - Number(cartData.discount) - Number(cartData.discountPro)) / 100 : fee.value  }
+                    // value={fee.type === "%"?  Number(fee.value)*(Number(cartData.total_amount) - Number(cartData.discount) - Number(cartData.discountPro)) / 100 : Number(cartData.total_amount) === 0? "0" :fee.value  }
+                    value={fee.type === "%"?  Number(fee.value)*(Number(cartData.total_amount) - Number(cartData.discount) - Number(cartData.discountPro)) / 100 :fee.value  }
+
                   />
                 </Typography>
               </Grid>
@@ -391,7 +398,7 @@ const CartSummary = (props) => {
               <Typography variant="body2" >
                 <VNDFormat
                   style={{ color: "#2096f3",fontWeight: 600, }}
-                  value={cartData.total_amount - cartData.discount -  cartData?.discountPro +  cartData.otherFee}
+                  value={Number(cartData.total_amount) !== 0 ?cartData.total_amount - cartData.discount -  cartData?.discountPro +  cartData.otherFee : cartData.total_amount - cartData.discount -  cartData?.discountPro  + otherFeeMoney   }
                 />
               </Typography>
             </Grid>

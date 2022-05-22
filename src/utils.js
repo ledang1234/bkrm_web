@@ -173,4 +173,46 @@ function capitalizeFirstLetter(result) {
 }
 
 
-//Category filter
+//get All product in category parent
+
+ // // find all category child
+ const findRoot = (curCatId, category) => {
+    // if (category && (curCatId === category.id)) {
+    if (category && (curCatId === category.uuid)) {
+      return category;
+    } else {
+      for(let subCat of category.children) {
+        const subRoot = findRoot(curCatId, subCat);
+        if (subRoot) return subRoot
+      }
+    }
+  }
+
+  const checkSubcategory = (productCatId, curCatId, subCats) => {
+    if (productCatId === curCatId) {
+      return true
+    };
+
+    for (let i = 0; i < subCats.length; i++) {
+      if (checkSubcategory(productCatId, subCats[i].uuid, subCats[i].children)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  const checkProduct = (productCatId, catId,categories) => {
+    const root = findRoot(catId, {children: categories});
+    if (root) return checkSubcategory(productCatId, catId, root.children);
+    else return false;
+  }
+export const getAllProductInCategoryParent = (products,categories,categoryId)=>{
+    console.log("HIHI products",products)
+    console.log("HIHI categories",categories)
+    console.log("HIHI categoryId",categoryId)
+    if(categories){
+        return  products.filter(product => checkProduct(product.category.uuid, Number(categoryId),categories) ) 
+
+    }
+
+}
+

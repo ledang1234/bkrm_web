@@ -175,8 +175,6 @@ const AddDiscount = (props) => {
       numberBuyItem:1,
       listBuyItem:[],
       // typeDiscountItem:"price",
-    
-
       listGiftCategory:[],
       listBuyCategory:[],
       isGiftCategory:false,
