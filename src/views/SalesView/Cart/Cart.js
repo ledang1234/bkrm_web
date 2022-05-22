@@ -430,7 +430,7 @@ const Cart = () => {
   }, [mode,typeShow,showImage]);
 
   // handle search select item add to cart
-  const handleSearchBarSelect = (selectedOption) => {
+  const handleSearchBarSelect = (selectedOption, batchBarCode) => {
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
       (item) => item.uuid === selectedOption.uuid
     );
@@ -480,9 +480,21 @@ const Cart = () => {
           itemIndex
         ].selectedBatches[0].additional_quantity += 1;
         setCartList(newCartList);
+
+      }
+      if(batchBarCode){
+        handleChangeItemQuantity(
+          selectedOption.uuid,
+          cartList[selectedIndex].cartItem[itemIndex].quantity + 1
+        );
+        const newCartList = [...cartList];
+        // newCartList[selectedIndex].cartItem[
+        //   itemIndex
+        // ].selectedBatches[0].additional_quantity += 1;
       }
     }
   };
+  console.log("cartList[selectedIndex].cartItem",cartList[selectedIndex].cartItem)
 
   const handleDeleteItemCart = (itemUuid) => {
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(

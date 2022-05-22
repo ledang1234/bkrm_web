@@ -51,6 +51,17 @@ const SearchBarCode = (props) => {
           } else {
             dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
           }
+          if (barcode.includes("_")){
+              let list = barcode.split("_")
+              let product = props.products.find(
+                (product) => product.product_code.includes(list[0])
+              )
+              if (product) {
+                props.handleSearchBarSelect(product,list[1]);
+                setBarcode("");
+                dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
+              }
+            }
         }
     }
     return <CustomTextField
