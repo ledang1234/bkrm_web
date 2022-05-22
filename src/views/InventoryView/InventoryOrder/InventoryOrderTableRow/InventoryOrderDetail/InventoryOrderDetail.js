@@ -375,7 +375,7 @@ const InventoryOrderDetail = (props) => {
               <TableCell align="right">Số lượng</TableCell>
               <TableCell align="right">Đổi trả</TableCell>
               <TableCell align="right">Giá nhập</TableCell>
-              <TableCell align="right">Thành tiền</TableCell>
+              <TableCell align="left">Thành tiền</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -442,6 +442,9 @@ const InventoryOrderDetail = (props) => {
                   <VNDFormat
                     value={Number(detail.quantity) * Number(detail.unit_price)}
                   />
+                  {!row.is_imported ? <Button variant="contained" color="primary" size="small" style={{ marginLeft: 15, height: 30 }} onClick={() => handlePrint()}>
+            Nhập
+          </Button>: null}
                 </TableCell>
               </TableRow>
             ))}
@@ -606,6 +609,10 @@ const InventoryOrderDetail = (props) => {
           <Button variant="contained" color="primary"size="small" style={{ marginLeft: 15 }} startIcon={<PrintTwoToneIcon fontSize="small" />} onClick={() => handlePrint()}>
             In đơn nhập
           </Button>
+
+          {!row.is_imported ? <Button variant="contained" color="secondary"size="small" style={{ marginLeft: 15 }} onClick={() => handlePrint()}>
+            Nhập hàng
+          </Button> : null}
 {/* 
           <IconButton
             aria-label="more"

@@ -11,25 +11,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useReactToPrint } from "react-to-print";
 import { ImportReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
 //import library
-import {
-  Grid,
-  Card,
-  Box,
-  TableContainer,
-  FormControlLabel,
-  Switch,
-  ListItem,
-  TableBody,
-  Typography,
-  ButtonBase,
-  Avatar,
-  Tooltip,
-  TextField,
-  Button,
-  CircularProgress,
-  Table,
-  Divider
-} from "@material-ui/core";
+import { Grid, Card, Box, TableContainer, FormControlLabel, Switch, ListItem, TableBody, Typography, ButtonBase,
+  Avatar, Tooltip, TextField, Button, CircularProgress, Table, Divider } from "@material-ui/core";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -222,10 +205,6 @@ const Import = () => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
 
-
-
-  
-
   const [reloadSupplier, setReloadSupplier] = useState(false);
   const [reloadProduct, setReloadProduct] = useState(false);
 
@@ -327,6 +306,10 @@ const Import = () => {
   const handleChangeMode = (event) => {
     setMode(event.target.checked);
   };
+
+  // order or import
+  const [isOrder, setIsOrder] = useState(false);
+
   useEffect(() => {
     window.localStorage.setItem(
       "mode",
@@ -599,6 +582,7 @@ const Import = () => {
         })),
       })),
       import_date: importTime,
+      is_imported: isOrder ? 0 : 1,
     };
     try {
       console.log(body)
@@ -875,6 +859,8 @@ const Import = () => {
                 suppliers={suppliers}
                 reloadSuppliers={() => setReloadSupplier(!reloadSupplier)}
                 handleUpdateDiscountDetail={handleUpdateDiscountDetail}
+                setIsOrder={setIsOrder}
+                isOrder={isOrder}
               > 
                {!mode ? null:
                <>

@@ -7,7 +7,7 @@ import {TableCell,TableRow} from '@material-ui/core';
 import {FormatedStatus} from '../../../../components/TableCommon/util/format'
 import InventoryOrderDetail from './InventoryOrderDetail/InventoryOrderDetail'
 import {VNDFormat} from '../../../../components/TextField/NumberFormatCustom'
-
+import {Tag} from 'antd'
 const InventoryOrderTableRow = (props) => {
     const { row, handleOpenRow,openRow,hidenCollumn,colorText} = props;
     const classes = useRowStyles();
@@ -32,9 +32,9 @@ const InventoryOrderTableRow = (props) => {
 
                 <TableCell align="right" className={colorText?null:classes.fontName}style={{color:colorText}}><VNDFormat value={row.total_amount  -row.discount}/></TableCell>
                 {hidenCollumn?.includes("debt") ?null:<TableCell align="center" className={classes.fontName}>
-                    <FormatedStatus debt={Number(row.total_amount) - Number( row.discount)  - Number(row.paid_amount) > 0 ? 1 : 0}/>
+                    <FormatedStatus isImported={row.is_imported} debt={Number(row.total_amount) - Number( row.discount)  - Number(row.paid_amount) > 0 ? 1 : 0}/>
                 </TableCell>}
-               
+               {/* {row.is_imported ? <Tag color="error">Chưa nhập</Tag> : <Tag color="cyan">Nhập đủ</Tag>} */}
             </TableRow>
 
         {/* DETAIL */}

@@ -148,9 +148,6 @@ const Cart = () => {
     );
   }, [cartList]);
 
-
-
-
   useEffect(() => {
     if (products.length) {
       window.localStorage.setItem(
@@ -178,7 +175,7 @@ const Cart = () => {
     if (window.localStorage.getItem("products")) {
       const products = JSON.parse(window.localStorage.getItem("products"));
       if (products.store_uuid === store_uuid && products.branch_uuid === branch_uuid ) {
-        console.log(products.data)
+        // console.log(products.data)
         setProducts(products.data);
       }
     }
@@ -273,9 +270,9 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    console.log("reload heer")
+    // console.log("reload heer")
     loadProducts();
-  }, [reloadProduct])
+  }, [reloadProduct, branch_uuid])
 
   useEffect(() => {
     const loadCustomers = async () => {
@@ -375,11 +372,8 @@ const Cart = () => {
 
   const handleDeleteAllItem = (index) => {
     const newCartList = [...cartList];
-
     newCartList[index].cartItem = [];
-
     setCartList(newCartList)
-
     handleClose();
   }
 
@@ -485,8 +479,7 @@ const Cart = () => {
       );
     } else {
       if (
-        cartList[selectedIndex].cartItem[itemIndex].selectedBatches?.length ===
-        1
+        cartList[selectedIndex].cartItem[itemIndex].selectedBatches?.length === 1
       ) {
         handleChangeItemQuantity(
           selectedOption.uuid,

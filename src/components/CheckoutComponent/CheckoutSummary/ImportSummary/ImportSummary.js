@@ -1,27 +1,7 @@
 import React, {useState,useEffect} from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
-import {
-  Grid,
-  Card,
-  Box,
-  Typography,
-  TextField,
-  InputAdornment,
-  DialogActions,
-  DialogContent,
-  IconButton,
-  Button,
-  Dialog,
-  FormControlLabel,
-  Checkbox,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  ListItem,
-  Divider,
-  Popper
-} from "@material-ui/core";
+import {Grid,Card,Box,Typography,TextField,InputAdornment,DialogActions,DialogContent,IconButton,Button,Dialog,FormControlLabel,
+  Checkbox,FormControl,FormLabel,RadioGroup,Radio,ListItem,Divider,Popper} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
@@ -77,7 +57,9 @@ const ImportSummary = (props) => {
     suppliers,
     mode,
     reloadSuppliers,
-    handleUpdateDiscountDetail
+    handleUpdateDiscountDetail,
+    setIsOrder,
+    isOrder,
   } = props;
 
   const theme = useTheme();
@@ -88,18 +70,6 @@ const ImportSummary = (props) => {
   };
 
   const dispatch = useDispatch();
-  // const handleClose = (status) => {
-  //   if (status === "Success") {
-  //     dispatch(statusAction.successfulStatus("Thêm nhà cung cấp thành công"));
-  //     reloadSuppliers(); 
-  //     setOpen(false);
-  //     console.log("hello")
-  //   } else if (status === "Failure") {
-  //     dispatch(statusAction.failedStatus("Thêm nhà cung cấp thất bại"));
-  //   } else {
-  //     setOpen(false);
-  //   }
-  // };
 
   const handleChangePayment = (event) => {
     handleUpdatePaymentMethod(event.target.value);
@@ -114,8 +84,6 @@ const ImportSummary = (props) => {
   const handleClosePopUp = () => {
     setOpenPopUp(false);
   };
-
-
 
   function calculateTotalQuantity ( cartList ) {
     var value= 0
@@ -354,7 +322,16 @@ const ImportSummary = (props) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-         
+            <Grid container direction="row" justifyContent="flex-end" alignItems="center" style={{ marginTop: mode ? -10 : null }}>
+              <FormControlLabel
+                value={isOrder}
+                control={<Checkbox />}
+                label="Đặt hàng"
+                labelPlacement="start"
+                onChange={(e) => setIsOrder(e.target.value)}
+              />
+            </Grid>
+          
             <Button
               variant="contained"
               fullWidth
@@ -488,7 +465,7 @@ const CheckoutPopUp = (props) => {
       <DialogActions>
         <Button
           variant="contained"
-          onClick={onClose}
+          // onClick={onClose}
           fullWidth
           color="primary"
           style={{ marginTop: 40 }}
