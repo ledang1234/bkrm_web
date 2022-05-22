@@ -69,6 +69,22 @@ export const FormatedProductStatus = (props) => {
         {"Trả đủ"}{" "}
       </Chip>
     );
+  } else if (Number(props.quantity) >= Number(props.overStock)) {
+    return (
+      <Chip
+        label="Vượt tối đa"
+        color="white"
+        variant="outlined"
+        style={{
+          backgroundColor: "red",
+          fontWeight: 500,
+          marginLeft: -10,
+          height: 28,
+        }}
+      >
+       
+      </Chip>
+    );
   } else {
     return (
       <Chip

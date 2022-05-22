@@ -72,6 +72,7 @@ const InventoryTableRow = (props) => {
           <FormatedProductStatus
             quantity={row.branch_quantity}
             lowStock={row.min_reorder_quantity}
+            overStock={row.max_order}
           />
         </TableCell> }
         <TableCell align="center" className={classes.fontName} style={{fontWeight:500, color:'#000'}}>
