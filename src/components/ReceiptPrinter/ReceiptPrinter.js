@@ -131,7 +131,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
             </div>:null}
               
            {/* In đơn cũ thì ko lấy store?? */}
-           {
+           {/* {
              cart.branch ?
              <>
              <Typography className={classes.center}>Địa chỉ: {cart.branch.address}, {cart.branch.ward} , {cart.branch.district}</Typography>
@@ -142,7 +142,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
              <Typography className={classes.center}>Địa chỉ: {info.store.district}, P. {info.store.ward} ,Q. {info.store.district}, {info.store.province}</Typography>
              <Typography className={classes.center}>Điện thoại: {info.store.phone}</Typography>
             </>
-           }
+           } */}
             
 
             {/*  */}
