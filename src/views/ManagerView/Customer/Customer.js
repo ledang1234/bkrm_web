@@ -213,7 +213,6 @@ const Customer = () => {
       });
       return { ...cust, groups: satisfiedGroups }
     });
-    console.log("new cust list", newCustList)
     setCustomerList(newCustList);
   }
 
@@ -232,7 +231,6 @@ const Customer = () => {
       customerMapGroup(custData, groupData);
       setCustGroups(groupData)
       setTotalRows(totalRows)
-      // setCustomerList(custWithGroup);
     } catch (error) {
       console.log(error);
     }

@@ -301,7 +301,7 @@ const CustomerDetail = (props) => {
                 <Typography variant="h5" gutterBottom component="div">Nhóm</Typography>
               </Grid>
               <Grid item sm={6} >
-                {row.groups.map(g => <Tag color="magenta" >{g}</Tag>)}
+                {row.groups?.map(g => <Tag color="magenta" >{g}</Tag>)}
               </Grid>
 
             </Grid>
