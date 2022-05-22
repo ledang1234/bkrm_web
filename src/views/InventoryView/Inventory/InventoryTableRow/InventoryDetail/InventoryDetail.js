@@ -46,6 +46,7 @@ import branchApi from "../../../../../api/branchApi";
 
 import defaultProduct from "../../../../../assets/img/product/default-product.png"
 import BranchInventoryPopUp from "./BranchInventoryPopUp";
+import PrintBarcodePopUp from "./PrintBarcodePopUp"
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -149,7 +150,7 @@ const InventoryDetail = (props) => {
   };
 
 
-
+const [openPrintBarcode,setOpenPrintBarcode] =  useState(false)
 
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
 console.log("productDetail.img_urls",productDetail)
@@ -519,6 +520,15 @@ imageList = Array.isArray(imageList)? imageList :[imageList]
                 Xoá
               </Button>
 
+              {openPrintBarcode?
+                  <PrintBarcodePopUp
+                    open={openPrintBarcode}
+                    onClose={()=>setOpenPrintBarcode(false)}
+                    row={row}
+                   />
+                   
+                   :null}
+
               <IconButton
                 aria-label="more"
                 aria-controls="long-menu"
@@ -537,7 +547,7 @@ imageList = Array.isArray(imageList)? imageList :[imageList]
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <StyledMenuItem>
+                <StyledMenuItem onClick={() => { setOpenPrintBarcode(true) }}>
                   <ListItemIcon style={{ marginRight: -15 }}>
                     <InboxIcon fontSize="small" />
                   </ListItemIcon>
