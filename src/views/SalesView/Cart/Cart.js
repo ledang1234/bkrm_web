@@ -1172,7 +1172,7 @@ const Cart = () => {
             {/* 1.3 CHANGE MODE  */}
             
             {/* <FormControlLabel control={<Switch  size="small"  checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",   margin: -20,  marginTop: 45, }} /> */}
-         {cartList[selectedIndex].listGiftItem.length > 0?
+         {cartList[selectedIndex].listGiftItem?.length > 0?
           <Box style={{ marginTop: -85, }}>
             <Divider/>
             <ListItem>
@@ -1194,7 +1194,7 @@ const Cart = () => {
                             discountData={discountData.filter(
                               (discount) => discount.discountKey === "product"
                             )}
-                            index={cartList[selectedIndex].cartItem.length - index}
+                            // index={cartList[selectedIndex].cartItem.length - index}
                             showImage={showImage}
                             isGiftPromotion={true}
                             index={index+1}

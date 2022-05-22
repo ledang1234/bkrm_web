@@ -355,8 +355,8 @@ const Import = () => {
         name: selectedOption.name,
         has_batches: selectedOption.has_batches,
         batches: selectedOption.batches,
-        branch_inventories:selectedOption.branch_inventories
-
+        branch_inventories:selectedOption.branch_inventories,
+        extreme: selectedOption.extreme
       };
 
       let newCartList = update(cartList, {
@@ -536,6 +536,10 @@ const Import = () => {
       else return true;
     })
 
+    var extremeQuantity = cart.cartItem.filter((element, index) => {
+      if (Number(element.quantity) >= element.extreme && element.extreme !== 0 ) return true;
+      else return false;
+    })
     if (emptyCart  ) {
       setOpenSnack(true);
       setSnackStatus({
@@ -555,7 +559,10 @@ const Import = () => {
     else if(  cart.paid_amount < cart.total_amount - cart.discount && !cart.supplier){
       setOpenPopUpWarning(true)
       return 
-  }
+    } else if (extremeQuantity.length) {
+      setExtremes(extremeQuantity);
+      setOpenExtremeWarning(true)
+    }
     else {
       handleConfirmCallApi(type)
     }
@@ -636,6 +643,9 @@ const Import = () => {
 
   const [barcodeChecked, setBarcodeChecked] = useState(true);
   const [openPopUpWarning, setOpenPopUpWarning] = useState(false);
+  const [extremes, setExtremes] = useState([]);
+  const [openExtremeWarning, setOpenExtremeWarning] = useState(false);
+
   const handleCloseWarning = () =>{
     setOpenPopUpWarning(false)
   }
@@ -903,7 +913,7 @@ const Import = () => {
         </Card>
       </Grid>
       <PopUpWarningZeroPrice  open={openPopUpWarning} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} />
-
+      <PopUpWarningExtreme open={openExtremeWarning}  handleClose={() => setOpenExtremeWarning(false)} handleConfirmCallApi={handleConfirmCallApi} items={extremes} />
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
@@ -938,6 +948,34 @@ const PopUpWarningZeroPrice = ({open,handleClose,handleConfirmCallApi, isDebtWar
 
       <Typography style={{ fontWeight: 600, color:theme.customization.primaryColor[500] }}>
         Bạn có chắc chắn muốn tiếp tục thanh toán?
+      </Typography>
+
+      <Grid item xs={12}style={{  display: "flex",  flexDirection: "row", justifyContent: "flex-end", paddingTop: 20, }} >
+        <Button onClick={handleClose} variant="contained" size="small" style={{ marginRight: 20 }}color="secondary" >
+          {" "} Huỷ{" "}
+        </Button>
+        <Button onClick={() => {handleConfirmCallApi(); handleClose()}} variant="contained" size="small" color="primary" >
+          Xác nhận{" "}
+        </Button>
+      </Grid>
+    </ModalWrapperWithClose>
+  )
+}
+
+const PopUpWarningExtreme = ({open,handleClose,handleConfirmCallApi, isDebtWarning, items}) =>{
+  const theme = useTheme();
+
+  return (
+    <ModalWrapperWithClose title={"Đơn nhập có lượng nhập bất thường"} open={open} handleClose={handleClose}>
+      <Typography style={{ marginTop: 10, marginBottom: 10 }}>
+        Sản phẩm có lượng nhập nhiều hơn mức thường gặp.
+      </Typography>
+
+      {items.map(item => (<div><strong>{item.name}</strong> vượt <strong>{item.extreme}</strong></div>))}
+
+
+      <Typography style={{ fontWeight: 600, color:theme.customization.primaryColor[500] }}>
+        Bạn có chắc chắn muốn tiếp tục tạo đơn nhập
       </Typography>
 
       <Grid item xs={12}style={{  display: "flex",  flexDirection: "row", justifyContent: "flex-end", paddingTop: 20, }} >

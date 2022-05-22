@@ -27,6 +27,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const errorHeadings = {
+  name: "Tên sản phẩm",
   list_price: "Giá bán",
   standard_price: "Giá nhập",
   min_reorder_quantity: "Tồn kho tối thiểu",
