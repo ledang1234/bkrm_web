@@ -42,7 +42,7 @@ export default function Notification() {
           content: <NotificationContent>{res.data["customers"].map(customer => (<CustomerListItem customer={customer}/>))}</NotificationContent>
         })
         tabItems.push({
-          label: "Hết tồn kho",
+          label: "Tồn kho",
           content: <NotificationContent>{res.data["out_of_stock_products"].map(product => (<OutOfStockListItem product={product}/>))}</NotificationContent>
         })
         tabItems.push({
@@ -65,8 +65,8 @@ export default function Notification() {
 
   return (
     <Box sx={{ width: 50 }}>
-      <IconButton color="primary">
-        <Notifications onClick={handleClick} />
+      <IconButton color="primary"  onClick={handleClick} >
+        <Notifications/>
       </IconButton>
       <Popper open={open} anchorEl={anchorEl} transition style={{zIndex: 1500}}>
         {({ TransitionProps }) => (

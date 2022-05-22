@@ -17,7 +17,7 @@ const OutOfDateListItem = ({ product }) => {
                 variant="body2"
                 color="red"
               >
-                <strong>{`Hạn: ${product.expiry_date}`}</strong>
+                <strong>{`Hạn: ${product.expiry_date.substring(0, 10)}`}</strong>
               </Typography>
             </>
           }

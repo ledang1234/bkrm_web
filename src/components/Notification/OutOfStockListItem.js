@@ -21,6 +21,7 @@ const OutOfStockListItem = ({ product }) => {
                 color="red"
               >
                 <strong>{`Tồn kho: ${product.quantity_available}`}</strong>
+                {Number(product.quantity_available) > product.max_order ? ` => tối đa ${product.max_order}` : ` <= tối thiểu ${product.min_reorder_quantity}` }
               </Typography>
             </>
           }
