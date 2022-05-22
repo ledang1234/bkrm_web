@@ -372,6 +372,17 @@ const Cart = () => {
     setSelectedIndex(cartList.length);
     handleClose();
   };
+
+  const handleDeleteAllItem = (index) => {
+    const newCartList = [...cartList];
+
+    newCartList[index].cartItem = [];
+
+    setCartList(newCartList)
+
+    handleClose();
+  }
+
   const handleDelete = (index) => {
     // DELETE CART
     cartList.splice(index, 1);
@@ -403,6 +414,7 @@ const Cart = () => {
     } else if (selectedIndex > index) {
       setSelectedIndex(selectedIndex - 1);
     }
+    
     handleClose();
   };
   const updateCustomer = (value) => {
@@ -816,7 +828,7 @@ const Cart = () => {
     setOpenPopUpWarning(false)
   }
 
-  console.log("otherFeeeee",cartList[selectedIndex].otherFee)
+  console.log("otherFeeeee",cartList[selectedIndex]?.otherFee)
   
 
   const handleConfirm = async () => {
@@ -978,7 +990,7 @@ const Cart = () => {
         setCode(res.data.order.order_code)
         handlePrint();
       }
-      handleDelete(selectedIndex);
+      handleDeleteAllItem(selectedIndex);
     } catch (err) {
       setSnackStatus({
         style: "error",
@@ -1136,7 +1148,7 @@ const Cart = () => {
                   products={products} 
                   handleSearchBarSelect={handleSearchBarSelect}
                   isCart={true}
-                  selectedItem={cartList[selectedIndex].cartItem}
+                  selectedItem={cartList[selectedIndex]?.cartItem}
                   typeShow={typeShow}
                   setTypeShow={setTypeShow}
                   setProducts={setProducts}
