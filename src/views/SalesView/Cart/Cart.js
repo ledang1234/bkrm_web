@@ -36,8 +36,11 @@ import {
   Avatar,
   TableCell,
   TableRow,
-  Button
+  Button,
+  Divider
 } from "@material-ui/core";
+import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
+
 import SearchBarCode from "../../../components/SearchBar/SearchBarCode";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
@@ -125,11 +128,13 @@ const Cart = () => {
         scores: "0",
         discountDetail:{value:'0', type:'VND' },
         selectedPromotion:null,
-        otherFee:0
+        bestDetailSelectedPromotion:null,
+        discountPro:0,
+        otherFee:0,
+        listGiftItem:[]
       },
     ];
   };
-
 
 
   const [cartList, setCartList] = React.useState(loadCartLocalStorage());
@@ -198,7 +203,7 @@ const Cart = () => {
   //// ----------II. FUNCTION
   const otherfee = store_setting?.vat
 
-  let otherFeeMoney = otherfee?.listCost?.reduce((sum,fee)=>fee.type!=="%"? sum + Number(fee.value):sum , 0);
+  let otherFeeMoney =  otherfee?.listCost? otherfee?.listCost?.reduce((sum,fee)=>fee.type!=="%"? sum + Number(fee.value):sum , 0) :0;
 
 
   // 1.Cart
@@ -214,11 +219,16 @@ const Cart = () => {
     message: "Tạo hóa đơn thất bại",
   });
 
+  console.log("promotionpromotion",cartList[selectedIndex].selectedPromotion)
+  console.log("promotionpromotion",cartList[selectedIndex].bestDetailSelectedPromotion)
+
+
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   useEffect(() => {
     updateTotalAmount();
   }, [isUpdateTotalAmount]);
+
 
 
   const handleSearchCustomer = async (searchKey) => {
@@ -282,7 +292,7 @@ const Cart = () => {
     };
     const loadPromotionCoupons = async () => {
       const response = await promotionCouponApi.getActivePromotionVoucher(store_uuid)
-      console.log("eeeeee",response)
+      console.log("response.promotions",response.promotions)
       setDiscountData(response.promotions);
     } 
     if (store_uuid) {
@@ -352,7 +362,10 @@ const Cart = () => {
         scores: "0",
         discountDetail:{value:'0', type:'VND' },
         selectedPromotion:null,
-        otherFee:0
+        bestDetailSelectedPromotion:null,
+        discountPro:0,
+        otherFee:0,
+        listGiftItem:[]
 
       },
     ]);
@@ -386,7 +399,11 @@ const Cart = () => {
           scores: "0",
           discountDetail:{value:'0', type:'VND' },
           selectedPromotion:null,
-          otherFee:0
+          bestDetailSelectedPromotion:null,
+          discountPro:0,
+          otherFee:0,
+          listGiftItem:[]
+
         },
       ]);
     } else {
@@ -562,6 +579,7 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
+  console.log("HELLOO cartList[selectedIndex].selectedPromotion",cartList[selectedIndex].selectedPromotion)
   const handleUpdatePaidAmount = (amount) => {
     if (amount < 0){return } 
     let newCartList = update(cartList, {
@@ -569,9 +587,78 @@ const Cart = () => {
     });
     setCartList(newCartList);
   };
-  const handleUpdateSelectedPromotion = (selectedPromotion) => {
+  //PROMOTIONFUNC
+  const handleUpdateSelectedPromotion = (selectedPromotion, checkProduct=null) => {
     let newCartList = update(cartList, {
-      [selectedIndex]: { selectedPromotion: { $set: selectedPromotion } },
+      [selectedIndex]: { selectedPromotion: { $set: null }, bestDetailSelectedPromotion:{ $set: null },discountPro:{ $set: null },listGiftItem:{ $set: [] } },
+    });
+    if(!selectedPromotion){
+      setCartList(newCartList);
+      return
+    }
+    // setCartList(newCartList);
+    let bestDetailSelectedCondition = selectedPromotion?.detailCondition?.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+    bestDetailSelectedCondition =bestDetailSelectedCondition.filter(item => item !== null)[0]
+
+
+     newCartList = update(newCartList, {
+      [selectedIndex]: { selectedPromotion: { $set: selectedPromotion } ,bestDetailSelectedPromotion:{$set:bestDetailSelectedCondition}},
+    });
+    let discountPro = selectedPromotion.discountKey ==="invoice" && bestDetailSelectedCondition.type==='%' ? (Number(bestDetailSelectedCondition.discountValue) * Number(cartList[selectedIndex].total_amount)/100) : Number(bestDetailSelectedCondition.discountValue) ;
+ 
+
+    newCartList = update(newCartList, {
+      [selectedIndex]: {discountPro:{ $set: discountPro}},
+    });
+    let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(discountPro)- Number(cartList[selectedIndex].discount) )/100 +  otherFeeMoney
+
+ 
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        otherFee: { $set: totalOtherFee },
+      },
+    }) 
+
+    if(selectedPromotion.discountType === "sendGift" ){
+      const listGift = checkProduct ?checkProduct.detail:bestDetailSelectedCondition.listGiftItem
+      let listGiftItem = listGift?.map((selectedOption)=>{
+        if(selectedOption.quantity >0 && !selectedOption.has_batches)
+        return { id: cartList[selectedIndex].cartItem.length,
+          uuid: selectedOption.uuid,
+          quantity: selectedOption.has_batches ? 0 : selectedOption.quantity,
+          product_code: selectedOption.product_code,
+          bar_code: selectedOption.bar_code,
+          unit_price: selectedOption.list_price,
+          img_urls: selectedOption.img_urls,
+          name: selectedOption.name,
+          branch_quantity: Number(selectedOption.branch_quantity),
+          has_batches: selectedOption.has_batches,
+          batches: selectedOption.batches,
+          branch_inventories: selectedOption.branch_inventories,}
+      })
+      console.log("hello Gia Le",listGiftItem)
+      listGiftItem= listGiftItem.filter((item)=> item)
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          listGiftItem: { $set: listGiftItem },
+        },
+      }) 
+    }
+    
+    if(defaultPaymentAmount ){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          paid_amount: { $set: Number(cartList[selectedIndex].total_amount) - Number(discountPro) -     Number(cartList[selectedIndex].discount)+ totalOtherFee },
+        },
+      }) 
+    }
+    setCartList(newCartList);
+  };
+  const handleUpdateBestDetailSelectedPromotion = (bestDetailSelectedPromotion) => {
+    if(!bestDetailSelectedPromotion){return}
+    let newCartList = update(cartList, {
+      [selectedIndex]: { bestDetailSelectedPromotion: { $set: bestDetailSelectedPromotion } },
     });
     setCartList(newCartList);
   };
@@ -583,16 +670,8 @@ const Cart = () => {
     setCartList(newCartList);
   };
   const handleUpdateDiscountDetail = (obj) => {
-  
-    
-    // newCartList = update(newCartList, {
-    //   [selectedIndex]: {
-    //     otherFee: { $set:totalOtherFee },
-    //   },
-    // });
 
     let discountUpdate =  obj.type === '%'?( (Number(obj.value) * Number(cartList[selectedIndex].total_amount)/100/100).toFixed() * 100).toString() : obj.value 
-
 
     let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
     let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(discountUpdate))/100 +  otherFeeMoney
@@ -609,55 +688,80 @@ const Cart = () => {
   };
 
   const handleUpdateDiscount = (amount) => {
-    // if (amount > cartList[selectedIndex].total_amount) {
-    //   return;
+    // // if (amount > cartList[selectedIndex].total_amount) {
+    // //   return;
+    // // }
+    // let newCartList = update(cartList, {
+
+    //   [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
+    //   // [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount }}:
+
+    //   { discount: { $set: amount } },
+
+    // });
+
+
+    // if( defaultPaymentAmount){
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       // paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) - Number(amount) + Number(totalOtherFee)).toString() },
+    //     },
+    //   }) };
+
+    // //
+
+    // if (store_setting?.customerScore.status) {
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       scores: {
+    //         $set: parseInt(
+    //           (cartList[selectedIndex].total_amount - amount) /
+    //             store_setting?.customerScore.value
+    //         ),
+    //       },
+    //     },
+    //   });
     // }
-    let newCartList = update(cartList, {
-
-      [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
-      // [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount }}:
-
-      { discount: { $set: amount } },
-
-    });
 
 
- 
-
-
-    if( defaultPaymentAmount){
-      newCartList = update(newCartList, {
-        [selectedIndex]: {
-          // paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) - Number(amount) + Number(totalOtherFee)).toString() },
-        },
-      }) };
-
-    //
-
-    if (store_setting?.customerScore.status) {
-      newCartList = update(newCartList, {
-        [selectedIndex]: {
-          scores: {
-            $set: parseInt(
-              (cartList[selectedIndex].total_amount - amount) /
-                store_setting?.customerScore.value
-            ),
-          },
-        },
-      });
-    }
-
-
-    setCartList(newCartList);
+    // setCartList(newCartList);
   };
 
   const handleCheckDelivery = (delivery) => {
     let newCartList = update(cartList, {
-      [selectedIndex]: { delivery: { $set: delivery } },
+      // [selectedIndex]: { delivery: { $set: delivery } },
     });
 
     setCartList(newCartList);
   };
+
+
+
+// PROMOTION
+  useEffect(() => {
+    if(cartList[selectedIndex]?.selectedPromotion && cartList[selectedIndex]?.bestDetailSelectedPromotion){
+      let bestCondition = cartList[selectedIndex]?.selectedPromotion?.detailCondition.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+      bestCondition = bestCondition.filter(item => item !== null)[0]
+      if(bestCondition.totalCost !== cartList[selectedIndex].bestDetailSelectedPromotion.totalCost){
+        let newCartList = update(cartList, {
+          [selectedIndex]: { selectedPromotion: { $set: null }, bestDetailSelectedPromotion:{ $set: null },discountPro:{ $set: null },listGiftItem:{ $set: [] } },
+        });
+        setCartList(newCartList);
+      }
+    }
+  }, [cartList[selectedIndex].total_amount]);
+
+
+  useEffect(() => {
+    if(cartList[selectedIndex].total_amount < cartList[selectedIndex].discount ){
+      let newCartList = update(cartList, {
+        [selectedIndex]: { discount: { $set: "0" }, discountDetail: { $set: {value:'0', type:'VND' }}, discountPro:{$set:"0"} } ,
+      });
+      setCartList(newCartList);
+    }
+
+  }, [cartList[selectedIndex].total_amount]);
+
 
   const updateTotalAmount = () => {
     let total = 0;
@@ -677,21 +781,38 @@ const Cart = () => {
     // 
 
     //
+    let discountPro = 0
+    if(cartList[selectedIndex]?.selectedPromotion){
+      let bestDetailSelectedCondition = cartList[selectedIndex]?.selectedPromotion?.detailCondition?.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+      bestDetailSelectedCondition =bestDetailSelectedCondition?.filter(item => item !== null)[0]
+      discountPro= cartList[selectedIndex]?.selectedPromotion?.discountKey ==="invoice" && bestDetailSelectedCondition?.type==='%' ? (Number(bestDetailSelectedCondition?.discountValue) * Number(total)/100) : Number(bestDetailSelectedCondition?.discountValue) ;
+
+    }
    
     let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
-    let totalOtherFee = percentFee * (Number(total) - Number(cartList[selectedIndex].discount))/100 +  otherFeeMoney
-    console.log("percentFee",percentFee)
+
+    let totalOtherFee = percentFee * (Number(total) - Number(cartList[selectedIndex].discount) - Number(discountPro))/100 +  otherFeeMoney
+
+
     newCartList = update(newCartList, {
       [selectedIndex]: {
         otherFee: { $set:totalOtherFee },
       },
     });
 
+    if(discountPro!==0){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          discountPro: { $set: discountPro },
+        },
+      }) 
+    }
+
 
     if( defaultPaymentAmount){
     newCartList = update(newCartList, {
       [selectedIndex]: {
-        paid_amount: { $set: total - cartList[selectedIndex].discount + totalOtherFee },
+        paid_amount: { $set: total - cartList[selectedIndex].discount -discountPro  + totalOtherFee },
       },
     }) };
     // 
@@ -700,7 +821,7 @@ const Cart = () => {
         [selectedIndex]: {
           scores: {
             $set: parseInt(
-              (total - cartList[selectedIndex].discount + totalOtherFee) /
+              (total - cartList[selectedIndex].discount -discountPro+ totalOtherFee) /
                 store_setting?.customerScore.value
             ),
           },
@@ -907,8 +1028,8 @@ const Cart = () => {
   // };
   const [barcodeChecked, setBarcodeChecked] = useState(true);
 
-  console.log("typeShow==='image''",typeShow)
-  console.log("store_setting?.printReceiptWhenSell",store_setting?.printReceiptWhenSell)
+
+  console.log("cartList[selectedIndex].listGiftItem",cartList[selectedIndex].listGiftItem)
   return (
     <>
     <Grid  container   direction="row" justifyContent="space-between"  alignItems="center"  spacing={2}>
@@ -1051,7 +1172,46 @@ const Cart = () => {
             {/* 1.3 CHANGE MODE  */}
             
             {/* <FormControlLabel control={<Switch  size="small"  checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",   margin: -20,  marginTop: 45, }} /> */}
-
+         {cartList[selectedIndex].listGiftItem.length > 0?
+          <Box style={{ marginTop: -85, }}>
+            <Divider/>
+            <ListItem>
+              <Typography><b>Khuyến mãi hoá đơn</b></Typography>
+              <CardGiftcardIcon  style={{marginLeft:10, color:'red'}}/>
+              </ListItem>
+              <TableBody>
+                      { stableSort( cartList[selectedIndex].listGiftItem, getComparator(order, orderBy) )
+                      .map((row, index) => {
+                        return (
+                          <CartRow
+                            isPromotion={true}
+                            key={`${row.uuid}_index`}
+                            row={row}
+                            handleUpdateBatches={handleUpdateBatches}
+                            handleDeleteItemCart={handleDeleteItemCart}
+                            handleChangeItemPrice={handleChangeItemPrice}
+                            // handleChangeItemQuantity={handleChangeItemQuantity}
+                            discountData={discountData.filter(
+                              (discount) => discount.discountKey === "product"
+                            )}
+                            index={cartList[selectedIndex].cartItem.length - index}
+                            showImage={showImage}
+                            isGiftPromotion={true}
+                            index={index+1}
+                          />
+             
+                        );
+                      })}
+                      
+                    </TableBody>
+                    
+                    {/* <ListItem>
+                    <Typography style={{fontWeight:500,color:'#00b3ff'}}>Tặng 1 voucher HELLOWORLD</Typography>
+                    <div >
+                      <Box style={{backgroundColor:"red",color:"#fff",fontSize:12,fontWeight:500,borderRadius:5, paddingLeft:5,paddingRight:5, marginLeft:10}}>KM</Box>
+                </div>
+                </ListItem> */}
+            </Box>:null}
 
           </Box>
           <FormControlLabel control={<Switch  size="small"  checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",  }} />
@@ -1065,6 +1225,7 @@ const Cart = () => {
           <Box style={{ padding: 0, minHeight: "82vh" }}>
             {/* {!mode ? ( */}
               <CartSummary
+                products={products}
                 setSelectedBranch={setSelectedBranch}
                 selectedBranch={selectedBranch}
                 cartData={cartList[selectedIndex]}
@@ -1087,13 +1248,14 @@ const Cart = () => {
                 isScore={store_setting?.customerScore.status}
                 handleUpdateDiscountDetail={handleUpdateDiscountDetail}
                 handleUpdateSelectedPromotion={handleUpdateSelectedPromotion}
+                handleUpdateBestDetailSelectedPromotion={handleUpdateBestDetailSelectedPromotion}
               >
                 {!mode ? null:
                   <TableContainer  style={{ maxHeight: !canEnterDiscountWhenSell && mode ?"44vh":"37vh", height:!canEnterDiscountWhenSell && mode ?"44vh": "37vh",}} >
                    <Table  size="small">
 
                     <TableBody>
-                      {stableSort( cartList[selectedIndex].cartItem, getComparator(order, orderBy) )
+                      {stableSort( cartList[selectedIndex].listGiftItem, getComparator(order, orderBy) )
                         .map((row, index) => {
                         return (
                           <CartRow

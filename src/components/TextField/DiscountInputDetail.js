@@ -21,7 +21,10 @@ import {
 } from "@material-ui/core";
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import * as Input from "./NumberFormatCustom";
-
+import {
+  VNDFormat,
+  ThousandFormat,
+} from "../TextField/NumberFormatCustom";
 const useStyles = makeStyles((theme) =>
   createStyles({
     popup: { borderColor: theme.customization.primaryColor[500], padding: 5, paddingLeft:12, boxShadow: "0px 5px 10px 0px rgba(0, 0, 0, 0.5)" }
@@ -98,6 +101,11 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
                     </Grid> 
                     </ListItem> 
                   </Grid>
+               </Grid>
+
+               <Grid  container alignItems='center' justifyContent="space-between"spacing={3} >
+                    <Grid item><Typography variant="h5" >Khuyến mãi</Typography></Grid>
+                    <Grid item>{<VNDFormat value={cartData.discountPro} style={{marginRight:20, }}/>}</Grid>
                </Grid>
   
       </Paper>

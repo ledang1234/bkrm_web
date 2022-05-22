@@ -48,7 +48,7 @@ const EmailSetting = ({checked,handleClose,handleSubmit,name}) => {
       </ListItem>
       <ListItem>
           <Typography style={{fontWeight:500, color:"#000", marginRight:20}}>Mật khẩu</Typography>
-          <TextField  name="password" value={email.password} onChange={handleChangeValue} style={{width:250}} 
+          <TextField  type="password" value={email.password} onChange={handleChangeValue} style={{width:250}} 
           error={formik.touched.password && formik.errors.password}
           helperText={formik.touched.password ? formik.errors.password : null}
           onBlur={formik.handleBlur}

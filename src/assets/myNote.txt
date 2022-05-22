@@ -1,139 +1,333 @@
-import React, { useEffect, useState }  from 'react'
-import TagsInput from "../../../../components/TextField/TagsInput"
-import { useTheme, makeStyles, styled } from "@material-ui/core/styles";
-
-import AddIcon from '@material-ui/icons/Add';
-import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
-
-import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
-
-import {
-    Button,
-    TextField,
-    Typography,
-    Grid,
-    Box,
-    InputAdornment,
-    FormControl,
-    InputLabel,
-    Select,
-    IconButton,
-    Tooltip,
-    Dialog,
-    FormControlLabel,
-    Switch,
-    Collapse,
-    Paper,
-    Card,
-    CardHeader,
-    MenuItem
-  } from "@material-ui/core";
-
-  const useStyles = makeStyles((theme) => ({
-    formControl: {
-        marginRight:10,
-        minWidth: 220,
+@ -555,6 +555,107 @@ const Cart = () => {
+    });
+    setCartList(newCartList);
+  };
+  useEffect(() => {
+    let discountPro = 0
+    if(cartList[selectedIndex]?.selectedPromotion){
+      let bestDetailSelectedCondition = cartList[selectedIndex]?.selectedPromotion?.detailCondition?.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+      bestDetailSelectedCondition =bestDetailSelectedCondition?.filter(item => item !== null)[0]
+      discountPro= cartList[selectedIndex]?.selectedPromotion?.discountKey ==="invoice" && bestDetailSelectedCondition?.type==='%' ? (Number(bestDetailSelectedCondition?.discountValue) * Number(cartList[selectedIndex].total_amount)/100) : Number(bestDetailSelectedCondition?.discountValue) ;
+    }
+    let newCartList = update(cartList, {
+      [selectedIndex]: {
+        discountPro: { $set: discountPro },
       },
-    row:{
-        margin: "15px 20px 10px 20px", 
-    }
+    }) 
+
+    setCartList(newCartList);
     
-  }));
+  }, [cartList[selectedIndex].total_amount]);
 
-const AddAttribute = ({attributeList,datas,setDatas}) => {
+  useEffect(() => {
+    let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(cartList[selectedIndex].discount) - Number(cartList[selectedIndex].discountPro))/100 +  otherFeeMoney
 
-    const theme = useTheme();
-    const classes = useStyles(theme);
+    let newCartList = update(cartList, {
+      [selectedIndex]: {
+        otherFee: { $set:totalOtherFee },
+      },
+    });
+    setCartList(newCartList);
+    
+  }, [cartList[selectedIndex].total_amount, cartList[selectedIndex].discount, cartList[selectedIndex].discountDetail]);
 
+  useEffect(() => {
+    // // if( defaultPaymentAmount){
+      if( defaultPaymentAmount){
+      let newCartList = update(cartList, {
+        [selectedIndex]: {
+          paid_amount: { $set: Number(cartList[selectedIndex].total_amount)  - Number(cartList[selectedIndex].discount) -Number(cartList[selectedIndex].discountPro)  + Number(cartList[selectedIndex].otherFee)  },
+        },
+      }) 
 
-    const updateFieldChanged = (index, attr,value) =>  {
-        let newArr = [...datas]; 
-        newArr[index] = {"key" :attr, "items": value};
-        setDatas(newArr); 
+      setCartList(newCartList);
+    }; 
+  }, [cartList[selectedIndex].total_amount ,cartList[selectedIndex].discount, cartList[selectedIndex].discountDetail,cartList[selectedIndex].discountPro, cartList[selectedIndex].otherFee]);
+
+  
+  useEffect(() => {
+    if (store_setting?.customerScore.status) {
+      let newCartList = update(cartList, {
+        [selectedIndex]: {
+          scores: {
+            $set: parseInt(
+              (Number(cartList[selectedIndex].total_amount)  - Number(cartList[selectedIndex].discount) - Number(cartList[selectedIndex].discountPro)+ Number(cartList[selectedIndex].otherFee) ) /
+                store_setting?.customerScore.value
+            ),
+          },
+        },
+      });
+      setCartList(newCartList);
     }
+  }, [cartList[selectedIndex].total_amount,cartList[selectedIndex].discount, cartList[selectedIndex].discountPro,cartList[selectedIndex].discountDetail, cartList[selectedIndex].otherFee]);
 
-    const deleteAttr = (key) =>{
-        console.log("key,",key)
-        var newArr = [...datas]; 
-        newArr =  newArr.filter(row => row.key !== key)  
-        setDatas(newArr); 
+
+  useEffect(() => {
+    if(cartList[selectedIndex].selectedPromotion){
+      let discountPro = cartList[selectedIndex].selectedPromotion?.discountKey ==="invoice" && cartList[selectedIndex].bestDetailSelectedCondition?.type==='%' ? (Number(cartList[selectedIndex].bestDetailSelectedCondition?.discountValue) * Number(cartList[selectedIndex].total_amount)/100) : Number(cartList[selectedIndex].bestDetailSelectedCondition?.discountValue) ;
+      let newCartList = update(cartList, {
+        [selectedIndex]: {discountPro:{ $set: discountPro}},
+      });
+      setCartList(newCartList);
     }
-
-    const addAttrRow = () =>{
-        let newArr = [...datas]; 
-        newArr = [...datas,datas.push({ key:  "unset",  items: []})];
-        setDatas(newArr); 
-    }
-      
-    console.log("datas",datas)
-    return (
-        <div style={{marginBottom:10}}>
-            { datas.map( (data, index) => {
-                return (
-                    <AttributeRow attributeList={attributeList} index={index} data={data}  updateFieldChanged={updateFieldChanged} deleteAttr={deleteAttr}/>
-                )
-            }) }
-            <Button variant="outlined"size="small" color="primary" style={{marginLeft:20,marginTop:10,textTransform: "none"}}
-                startIcon={<AddIcon />}
-                onClick={()=>addAttrRow()}>
-                    Thêm thuộc tính
-            </Button>
-
-        </div>
-    )
-}
-
-export default AddAttribute
+  
+  }, [cartList[selectedIndex].bestDetailSelectedPromotion]);
 
 
-const AttributeRow = ({attributeList,data,datas,updateFieldChanged,index,deleteAttr,setDatas}) => {
-    const theme = useTheme();
-    const classes = useStyles(theme);
 
-    const [attr, setAtt] = React.useState('unset');
-    const [value, setValue] = React.useState([]);
+  useEffect(() => {
+   
+      let discountPro = cartList[selectedIndex].selectedPromotion?.discountKey ==="invoice" && cartList[selectedIndex].bestDetailSelectedCondition?.type==='%' ? (Number(cartList[selectedIndex].bestDetailSelectedCondition?.discountValue) * Number(cartList[selectedIndex].total_amount)/100) : Number(cartList[selectedIndex].bestDetailSelectedCondition?.discountValue) ;
+      let newCartList = update(cartList, {
+        [selectedIndex]: {discountPro:{ $set: discountPro}},
+      });
+      setCartList(newCartList);
+    
+  
+  }, [cartList[selectedIndex].discountDetail]);
 
 
-    const handleChangeAttr = (event) => {
-        setAtt(event.target.value)
-        updateFieldChanged(index, event.target.value,value)
-    };
+  // useEffect(() => {
+  //   // if( defaultPaymentAmount){
+  //     if(cartList[selectedIndex].total_amount < Number(cartList[selectedIndex].discount ){
+  //     let newCartList = update(cartList, {
+  //       [selectedIndex]: {
+  //         paid_amount: { $set: Number(cartList[selectedIndex].total_amount)  - Number(cartList[selectedIndex].discount) -Number(cartList[selectedIndex].discountPro)  + Number(cartList[selectedIndex].otherFee)  },
+  //       },
+  //     }) 
 
-    function handleSelecetedTags(items) {  
-        setValue(items);
-        // updateFieldChanged(index, 'leoo', items)
+  //     setCartList(newCartList);
+  //   }; 
+  // }, [cartList[selectedIndex].total_amount ]);
 
-    }
 
-    useEffect(() => {
-        console.log("value",value)
-        updateFieldChanged(index, attr,value);
-    }, [  value ]);
 
+  const handleUpdateSelectedPromotion = (selectedPromotion) => {
+    let bestDetailSelectedCondition = selectedPromotion?.detailCondition?.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+    bestDetailSelectedCondition =bestDetailSelectedCondition.filter(item => item !== null)[0]
+@ -563,29 +664,34 @@ const Cart = () => {
+    let newCartList = update(cartList, {
+      [selectedIndex]: { selectedPromotion: { $set: selectedPromotion } ,bestDetailSelectedPromotion:{$set:bestDetailSelectedCondition}},
+    });
+    let discountPro = selectedPromotion.discountKey ==="invoice" && bestDetailSelectedCondition.type==='%' ? (Number(bestDetailSelectedCondition.discountValue) * Number(cartList[selectedIndex].total_amount)/100) : Number(bestDetailSelectedCondition.discountValue) ;
+
+
+    // let discountPro = selectedPromotion.discountKey ==="invoice" && bestDetailSelectedCondition.type==='%' ? (Number(bestDetailSelectedCondition.discountValue) * Number(cartList[selectedIndex].total_amount)/100) : Number(bestDetailSelectedCondition.discountValue) ;
+ 
+
+    newCartList = update(newCartList, {
+      [selectedIndex]: {discountPro:{ $set: discountPro}},
+    });
+    let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(discountPro)- Number(cartList[selectedIndex].discount) )/100 +  otherFeeMoney
+    // newCartList = update(newCartList, {
+    //   [selectedIndex]: {discountPro:{ $set: discountPro}},
+    // });
+
+
+
+    // let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    // let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(discountPro)- Number(cartList[selectedIndex].discount) )/100 +  otherFeeMoney
 
  
-   
-    return (
-      <Grid container className={classes.row} alignItems="center">
-            <Grid container item xs={11} alignItems="center" >
-                 <FormControl className={classes.formControl}>                     
-                        <Select  value={data.key} onChange={handleChangeAttr}  >
-                            <MenuItem value="unset" selected disabled hidden>Chọn thuộc tính...</MenuItem>
-                            {attributeList.map((attr)=>{
-                            return (<MenuItem value={attr.name}>{attr.name}</MenuItem>)
-                            }) }
-                        </Select>
-                        
-                    </FormControl>
-                    <EditTwoToneIcon style={{ marginRight:60}}/>
-                    <TagsInput style={{minWidth: 270}} selectedTags={handleSelecetedTags} placeholder="Nhấn giá trị và enter" 
-                    />
-            </Grid>
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        otherFee: { $set: totalOtherFee },
+      },
+    }) 
+    // newCartList = update(newCartList, {
+    //   [selectedIndex]: {
+    //     otherFee: { $set: totalOtherFee },
+    //   },
+    // }) 
+    
+    if(defaultPaymentAmount ){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          paid_amount: { $set: Number(cartList[selectedIndex].total_amount) - Number(discountPro) -     Number(cartList[selectedIndex].discount)+ totalOtherFee },
+        },
+      }) 
+    }
+    // if(defaultPaymentAmount ){
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       paid_amount: { $set: Number(cartList[selectedIndex].total_amount) - Number(discountPro) -     Number(cartList[selectedIndex].discount)+ totalOtherFee },
+    //     },
+    //   }) 
+    // }
+    setCartList(newCartList);
+  };
+  const handleUpdateBestDetailSelectedPromotion = (bestDetailSelectedPromotion) => {
+@ -609,10 +715,15 @@ const Cart = () => {
+    let totalOtherFee = percentFee * (Number(cartList[selectedIndex].total_amount) - Number(discountUpdate))/100 +  otherFeeMoney
 
-            <Grid container item xs={1} >
-                <DeleteForeverTwoToneIcon onClick={()=>{deleteAttr(data.key)}}/>
-            </Grid>
-            
-    </Grid>
-    )
-}
+
+    // let newCartList = update(cartList, {
+    //   // [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
+    //   [selectedIndex]: defaultPaymentAmount? { discountDetail: { $set: obj } , discount:{ $set: discountUpdate },  otherFee: { $set:totalOtherFee },paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)+ Number(totalOtherFee)).toString() }}:
+    //     { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, otherFee: { $set:totalOtherFee }} ,
+    // });
+
+    let newCartList = update(cartList, {
+      // [selectedIndex]: { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }},
+      [selectedIndex]: defaultPaymentAmount? { discountDetail: { $set: obj } , discount:{ $set: discountUpdate },  otherFee: { $set:totalOtherFee },paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)+ Number(totalOtherFee)).toString() }}:
+        { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, otherFee: { $set:totalOtherFee }} ,
+      [selectedIndex]:  { discountDetail: { $set: obj },discount:{ $set: discountUpdate } } ,
+
+    });
+  
+@ -620,43 +731,7 @@ const Cart = () => {
+  };
+
+  const handleUpdateDiscount = (amount) => {
+    // // if (amount > cartList[selectedIndex].total_amount) {
+    // //   return;
+    // // }
+    // let newCartList = update(cartList, {
+
+    //   [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
+    //   // [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount }}:
+
+    //   { discount: { $set: amount } },
+
+    // });
+
+
+    // if( defaultPaymentAmount){
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       // paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) - Number(amount) + Number(totalOtherFee)).toString() },
+    //     },
+    //   }) };
+
+    // //
+
+    // if (store_setting?.customerScore.status) {
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       scores: {
+    //         $set: parseInt(
+    //           (cartList[selectedIndex].total_amount - amount) /
+    //             store_setting?.customerScore.value
+    //         ),
+    //       },
+    //     },
+    //   });
+    // }
+
+
+    // setCartList(newCartList);
+ 
+  };
+
+  const handleCheckDelivery = (delivery) => {
+@ -674,6 +749,8 @@ const Cart = () => {
+  //   // if(bestCondition.totalCost !== )
+  // }, [cartList[selectedIndex].total_amount]);
+
+  
+
+  const updateTotalAmount = () => {
+    let total = 0;
+    cartList[selectedIndex].cartItem.forEach((item) => {
+@ -684,61 +761,51 @@ const Cart = () => {
+      [selectedIndex]: { total_amount: { $set: total } },
+    });
+
+    // newCartList = update(newCartList, {
+    //   [selectedIndex]: {
+    //     paid_amount: { $set: total - cartList[selectedIndex].discount },
+    //   },
+    // }) ;
+    // 
+    // let discountPro = 0
+    // if(cartList[selectedIndex]?.selectedPromotion){
+    //   let bestDetailSelectedCondition = cartList[selectedIndex]?.selectedPromotion?.detailCondition?.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+    //   bestDetailSelectedCondition =bestDetailSelectedCondition?.filter(item => item !== null)[0]
+    //   discountPro= cartList[selectedIndex]?.selectedPromotion?.discountKey ==="invoice" && bestDetailSelectedCondition?.type==='%' ? (Number(bestDetailSelectedCondition?.discountValue) * Number(total)/100) : Number(bestDetailSelectedCondition?.discountValue) ;
+
+    //
+    let discountPro = 0
+    if(cartList[selectedIndex]?.selectedPromotion){
+      let bestDetailSelectedCondition = cartList[selectedIndex]?.selectedPromotion?.detailCondition?.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
+      bestDetailSelectedCondition =bestDetailSelectedCondition?.filter(item => item !== null)[0]
+      discountPro= cartList[selectedIndex]?.selectedPromotion?.discountKey ==="invoice" && bestDetailSelectedCondition?.type==='%' ? (Number(bestDetailSelectedCondition?.discountValue) * Number(total)/100) : Number(bestDetailSelectedCondition?.discountValue) ;
+
+    }
+    // }
+   
+    let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+
+    let totalOtherFee = percentFee * (Number(total) - Number(cartList[selectedIndex].discount) - Number(discountPro))/100 +  otherFeeMoney
+
+    // let percentFee = otherfee?.listCost?.reduce((sum,fee)=>fee.type==="%"? sum + Number(fee.value):sum , 0);
+    // let totalOtherFee = percentFee * (Number(total) - Number(cartList[selectedIndex].discount) - Number(discountPro))/100 +  otherFeeMoney
+
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        otherFee: { $set:totalOtherFee },
+      },
+    });
+
+    if(discountPro!==0){
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          discountPro: { $set: discountPro },
+        },
+      }) 
+    }
+    // newCartList = update(newCartList, {
+    //   [selectedIndex]: {
+    //     otherFee: { $set:totalOtherFee },
+    //   },
+    // });
+
+    // if(discountPro!==0){
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       discountPro: { $set: discountPro },
+    //     },
+    //   }) 
+    // }
+
+    if( defaultPaymentAmount){
+    newCartList = update(newCartList, {
+      [selectedIndex]: {
+        paid_amount: { $set: total - cartList[selectedIndex].discount -discountPro  + totalOtherFee },
+      },
+    }) };
+    // if( defaultPaymentAmount){
+    // newCartList = update(newCartList, {
+    //   [selectedIndex]: {
+    //     paid_amount: { $set: total - cartList[selectedIndex].discount -discountPro  + totalOtherFee },
+    //   },
+    // }) };
+    // 
+    if (store_setting?.customerScore.status) {
+      newCartList = update(newCartList, {
+        [selectedIndex]: {
+          scores: {
+            $set: parseInt(
+              (total - cartList[selectedIndex].discount -discountPro+ totalOtherFee) /
+                store_setting?.customerScore.value
+            ),
+          },
+        },
+      });
+    }
+    // if (store_setting?.customerScore.status) {
+    //   newCartList = update(newCartList, {
+    //     [selectedIndex]: {
+    //       scores: {
+    //         $set: parseInt(
+    //           (total - cartList[selectedIndex].discount -discountPro+ totalOtherFee) /
+    //             store_setting?.customerScore.value
+    //         ),
+    //       },
+    //     },
+    //   });
+    // }
+
+    // 
+    

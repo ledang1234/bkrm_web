@@ -159,7 +159,7 @@ const Inventory = () => {
     }
   }, [pagingState.page, pagingState.limit, branch_uuid, reload, query]);
 
-  console.log("GIA LỆ")
+
   const theme = useTheme();
   const classes = useStyles(theme);
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));

@@ -54,7 +54,8 @@ export const CartRow = (props) => {
     imageType,
     index,
     typeShow,
-    showImage
+    showImage,
+    isGiftPromotion
   } = props;
   console.log("cart table row", row)
   const updateQuantity = (newQuantity) => {
@@ -75,13 +76,14 @@ export const CartRow = (props) => {
   }, []);
 
   useEffect(() => {
-    let total = 0;
-    selectedBatches.forEach((batch) => {
-      total += Number(batch.additional_quantity);
-    });
-
-    updateQuantity(total);
-    handleUpdateBatches(row.uuid, selectedBatches);
+    if(!isGiftPromotion){
+      let total = 0;
+      selectedBatches.forEach((batch) => {
+        total += Number(batch.additional_quantity);
+      });
+      updateQuantity(total);
+      handleUpdateBatches(row.uuid, selectedBatches);
+    }
   }, [selectedBatches]);
 
   const handleSelectBatches = (batches) => {
@@ -130,7 +132,39 @@ export const CartRow = (props) => {
       return 0;
     }
   };
-  console.log("imageType",imageType)
+  function getCommon(array1, array2) {
+    return array1.filter(object1 => {
+      return array2.some(object2 => {
+        return object1.id === object2.id;
+      });
+    });
+  }
+
+  const getListOfPromotionOfProduct = (product) =>{
+    let satisfy =  discountData.map((pro)=>{
+      let promotionCondition = JSON.parse(pro.promotion_condition)
+      
+      let proSatisfy = promotionCondition.map((condition)=>{
+          console.log("allooooo")
+          if(condition.isBuyCategory){
+            //
+            return false
+          }else{
+            // console.log("allooooo",getCommon(condition.listBuyItem,product ) )
+            // console.log("condition.listBuyItem.filter((item)=>item.uuid === product.uuid).length > 0",condition.listBuyItem.filter((item)=>item.uuid === product.uuid).length > 0)
+            const isSatisfied = condition.listBuyItem.filter((item)=>item.uuid === product.uuid)
+            console.log("isSatisfied",isSatisfied.length > 0)
+            return isSatisfied.length > 0 
+          }
+        })
+        return proSatisfy.some(v => v === true)
+      
+    })
+    // arr.push({detailCondition:sortedRow, name:pro.name , discountKey:pro.discountKey,discountType:pro.discountType, id:pro.id})
+    // return satisfy.some(v => v === true) ? [{detailCondition:sortedRow, name:pro.name , discountKey:pro.discountKey,discountType:pro.discountType, id:pro.id}]: []
+    return satisfy.some(v => v === true)
+
+  }
   var color = theme.customization.mode === "Light"? typeShow==='list'?'#000':null: null
   return (
     <>
@@ -228,7 +262,7 @@ export const CartRow = (props) => {
                 ))}   */}
               </MoreInfo>
             ) : null}
-            {/* {haveDiscount ? (
+            {/* {getListOfPromotionOfProduct(row) ? (
               <img
                 id="gift"
                 src={require("../../../../assets/img/icon/giftbox.png").default}
@@ -236,6 +270,14 @@ export const CartRow = (props) => {
                 onClick={() => setOpenDiscount(true)}
               />
             ) : null} */}
+            {false ? (
+              <img
+                id="gift"
+                src={require("../../../../assets/img/icon/giftbox.png").default}
+                style={{ height: 16, width: 16, marginLeft: 10, marginTop: -3 }}
+                onClick={() => setOpenDiscount(true)}
+              />
+            ) : null}
           </ListItem>
           {openDiscount && (
             <DiscountPopUp
@@ -249,7 +291,7 @@ export const CartRow = (props) => {
         </TableCell>
         {/* <TableCell align="left">{row.bar_code}</TableCell> */}
        
-        {row.has_batches ? (
+        {row.has_batches  || isGiftPromotion? (
           <TableCell align="center">
             {row.quantity}
           </TableCell>
@@ -269,7 +311,8 @@ export const CartRow = (props) => {
 
       {imageType?null:
       <TableCell align="right" padding={mini ? "none" : "normal"}>
-          {canFixPriceSell.status && canFixPriceSell.cart ? (
+          { !isGiftPromotion ?
+          canFixPriceSell.status && canFixPriceSell.cart ? (
             <Input.ThousandSeperatedInput
               id="standard-basic"
               // style={mini ? {maxWidth: 50} : { width: 72 }}
@@ -287,20 +330,27 @@ export const CartRow = (props) => {
             <Input.ThousandFormat value={row.unit_price} style={{marginLeft:-5}}>
               {" "}
             </Input.ThousandFormat>
-          )}
+          ):
+          <Box style={{marginTop:10}}>
+            <Input.ThousandFormat value={0} style={{marginLeft:-5, }}/><br/>
+            <Input.ThousandFormat  value={`-${row.unit_price}`} style={{marginLeft:-5,color:'red'}}/>
+          </Box>
+          
+          } 
         </TableCell>  }  
         
         <TableCell align="right" className={classes.boldText} padding={mini ? "none" : "normal"}>
-          {!mini?<VNDFormat value={row.unit_price * row.quantity} style={{color:color}}/>:<Input.ThousandFormat value={row.unit_price * row.quantity} style={{paddingLeft:imageType? 0:20, color:color}}/>}
+          {!mini?<VNDFormat value={!isGiftPromotion?row.unit_price * row.quantity:0} style={{color:color}}/>:<Input.ThousandFormat value={row.unit_price * row.quantity} style={{paddingLeft:imageType? 0:20, color:color}}/>}
         </TableCell>
 
+        {!isGiftPromotion?
         <TableCell align="right" padding={mini ? "none" : "normal"}>
           <IconButton aria-label="expand row" size="small" style={{marginLeft:10}}>
             <DeleteForeverTwoToneIcon
               onClick={() => handleDeleteItemCart(row.uuid)}
             />
           </IconButton>
-        </TableCell>
+        </TableCell>:null}
       </TableRow>
       {row.has_batches ? (
         <TableRow>
