@@ -1248,7 +1248,7 @@ const Cart = () => {
                    <Table  size="small">
 
                     <TableBody>
-                      {stableSort( cartList[selectedIndex].listGiftItem, getComparator(order, orderBy) )
+                      {stableSort( cartList[selectedIndex].cartItem, getComparator(order, orderBy) )
                         .map((row, index) => {
                         return (
                           <CartRow

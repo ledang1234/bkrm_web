@@ -24,6 +24,13 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {ProductMiniTableRow} from "../../../../components/MiniTableRow/MiniTableRow"
 import defaultProduct from "../../../../assets/img/product/default-product.png"
 
+const getReorderPoint = (row) => {
+  const leadTime = row.lead_times; 
+  const {total_order: totalOrder, days: days} = row.sale_velocity;
+  const velocity = days ? totalOrder / days : totalOrder;
+  console.log(leadTime, totalOrder, days)
+  return velocity * leadTime + row.min_reorder_quantity;
+}
 
 const InventoryTableRow = (props) => {
   const { row, handleOpenRow, openRow ,isManageInventory,hidenCollumn,colorText} = props;
@@ -80,7 +87,7 @@ const InventoryTableRow = (props) => {
         </TableCell>
 
         <TableCell align="center" style={{color:colorText}}>
-          --
+          {getReorderPoint(row)}
         </TableCell>
 
         <TableCell align="center" style={{color:colorText}}>

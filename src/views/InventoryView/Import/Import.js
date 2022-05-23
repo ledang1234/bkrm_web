@@ -576,10 +576,10 @@ const Import = () => {
           : "closed",
       details: cart.cartItem.map((item) => ({
         ...item,
-        selectedBatches: item.selectedBatches.map((batch) => ({
+        selectedBatches: item.selectedBatches ? item.selectedBatches.map((batch) => ({
           ...batch,
           returned_quantity: 0,
-        })),
+        })) : [],
       })),
       import_date: importTime,
       is_imported: isOrder ? 0 : 1,

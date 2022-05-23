@@ -4,8 +4,8 @@ import { useReactToPrint } from "react-to-print";
 import { ImportReceiptPrinter } from "../../../../../components/ReceiptPrinter/ReceiptPrinter";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { calculateTotalQuantity } from "../../../../../components/TableCommon/util/sortUtil";
-
-//import library
+import {currentDate} from "../../../../../utils"
+//import library 
 import {
   Dialog,
   Tooltip,
@@ -131,7 +131,7 @@ const InventoryOrderDetail = (props) => {
     try {
       const res = purchaseOrderApi.deletePurchaseOrder(store_uuid, branch_uuid, row.uuid);
       dispatch(statusAction.successfulStatus("Xóa đơn nhập thành công"));
-      onReload();
+      props.parentProps.onReload();
     } catch (err) {
       dispatch(statusAction.failedStatus("Xóa đơn nhập thất bại"));
       console.log(err)
@@ -164,6 +164,19 @@ const InventoryOrderDetail = (props) => {
       loadData();
     }
   }, [props.parentProps.openRow, reload]);
+
+  const updateDetail = async (detail) => {
+    if(store_uuid && branch_uuid) {
+      try {
+        const response = await purchaseOrderApi.updateDetail(store_uuid, branch_uuid, {...detail, posted_to_inventory: 1, date_received: currentDate()});
+        props.parentProps.onReload();
+        setReload(!reload)
+        statusAction.successfulStatus("Nhập thành công");
+      } catch(err) {
+        statusAction.failedStatus("Nhập thất bại")
+      }
+    } 
+  }
 
   useEffect(() => {}, [purchaseOrder]);
   const debtAmount =
@@ -442,7 +455,7 @@ const InventoryOrderDetail = (props) => {
                   <VNDFormat
                     value={Number(detail.quantity) * Number(detail.unit_price)}
                   />
-                  {!row.is_imported ? <Button variant="contained" color="primary" size="small" style={{ marginLeft: 15, height: 30 }} onClick={() => handlePrint()}>
+                  {!row.is_imported && !detail.posted_to_inventory ? <Button variant="contained" color="primary" size="small" style={{ marginLeft: 15, height: 30 }} onClick={() => updateDetail(detail)}>
             Nhập
           </Button>: null}
                 </TableCell>

@@ -101,7 +101,7 @@ const InventoryOrder = () => {
   const onReload = () => {
     setReload(!reload);
   };
-
+  
   const handleRequestSort = (event, property) => {
     //// (gửi order vs orderBy lên api) -> fetch lại data để sort
     // const isAsc = orderBy === property && order === 'asc';

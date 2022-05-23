@@ -216,3 +216,12 @@ export const getAllProductInCategoryParent = (products,categories,categoryId)=>{
 
 }
 
+
+export const currentDate = () => {
+    let d = moment.now() / 1000;
+    let importTime = moment
+        .unix(d)
+        .format("YYYY-MM-DD HH:mm:ss", { trim: false });
+
+    return importTime;
+}
