@@ -148,6 +148,9 @@ const Cart = () => {
     );
   }, [cartList]);
 
+
+
+
   useEffect(() => {
     if (products.length) {
       window.localStorage.setItem(
@@ -175,7 +178,7 @@ const Cart = () => {
     if (window.localStorage.getItem("products")) {
       const products = JSON.parse(window.localStorage.getItem("products"));
       if (products.store_uuid === store_uuid && products.branch_uuid === branch_uuid ) {
-        // console.log(products.data)
+        console.log(products.data)
         setProducts(products.data);
       }
     }
@@ -270,9 +273,9 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    // console.log("reload heer")
+    console.log("reload heer")
     loadProducts();
-  }, [reloadProduct, branch_uuid])
+  }, [reloadProduct])
 
   useEffect(() => {
     const loadCustomers = async () => {
@@ -372,8 +375,28 @@ const Cart = () => {
 
   const handleDeleteAllItem = (index) => {
     const newCartList = [...cartList];
-    newCartList[index].cartItem = [];
+
+    // newCartList[index].cartItem = [];
+     newCartList[index] ={
+      customer: null,
+      cartItem: [],
+      total_amount: "0",
+      paid_amount: "0",
+      payment_method: "cash",
+      discount: "0",
+      delivery: false,
+      scores: "0",
+      discountDetail:{value:'0', type:'VND' },
+      selectedPromotion:null,
+      bestDetailSelectedPromotion:null,
+      discountPro:0,
+      otherFee:0,
+      listGiftItem:[]
+
+    }
+
     setCartList(newCartList)
+
     handleClose();
   }
 
@@ -479,7 +502,8 @@ const Cart = () => {
       );
     } else {
       if (
-        cartList[selectedIndex].cartItem[itemIndex].selectedBatches?.length === 1
+        cartList[selectedIndex].cartItem[itemIndex].selectedBatches?.length ===
+        1
       ) {
         handleChangeItemQuantity(
           selectedOption.uuid,
@@ -614,7 +638,7 @@ const Cart = () => {
     }) 
 
     if(selectedPromotion.discountType === "sendGift" ){
-      const listGift = checkProduct ?checkProduct.detail:bestDetailSelectedCondition.listGiftItem
+      const listGift = checkProduct ?checkProduct.detail: bestDetailSelectedCondition.listGiftItem
       let listGiftItem = listGift?.map((selectedOption)=>{
         if(selectedOption.quantity >0 && !selectedOption.has_batches)
         return { id: cartList[selectedIndex].cartItem.length,
@@ -735,7 +759,7 @@ const Cart = () => {
     if(cartList[selectedIndex]?.selectedPromotion && cartList[selectedIndex]?.bestDetailSelectedPromotion){
       let bestCondition = cartList[selectedIndex]?.selectedPromotion?.detailCondition.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})
       bestCondition = bestCondition.filter(item => item !== null)[0]
-      if(bestCondition.totalCost !== cartList[selectedIndex].bestDetailSelectedPromotion.totalCost){
+      if(bestCondition?.totalCost !== cartList[selectedIndex]?.bestDetailSelectedPromotion?.totalCost){
         let newCartList = update(cartList, {
           [selectedIndex]: { selectedPromotion: { $set: null }, bestDetailSelectedPromotion:{ $set: null },discountPro:{ $set: null },listGiftItem:{ $set: [] } },
         });
@@ -1165,7 +1189,7 @@ const Cart = () => {
             {/* 1.3 CHANGE MODE  */}
             
             {/* <FormControlLabel control={<Switch  size="small"  checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",   margin: -20,  marginTop: 45, }} /> */}
-         {cartList[selectedIndex].listGiftItem?.length > 0?
+         {cartList[selectedIndex].listGiftItem.length > 0?
           <Box style={{ marginTop: -85, }}>
             <Divider/>
             <ListItem>
@@ -1187,7 +1211,7 @@ const Cart = () => {
                             discountData={discountData.filter(
                               (discount) => discount.discountKey === "product"
                             )}
-                            // index={cartList[selectedIndex].cartItem.length - index}
+                            index={cartList[selectedIndex].cartItem.length - index}
                             showImage={showImage}
                             isGiftPromotion={true}
                             index={index+1}

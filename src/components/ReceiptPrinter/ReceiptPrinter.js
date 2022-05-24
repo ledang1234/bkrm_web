@@ -234,7 +234,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
 
             <Grid container direction="row" justifyContent="flex-end" style={{marginTop:10}}>
               <Grid item xs={5}>
-                {Number(cart.discount) > 0?
+                {Number(cart.discount) > 0 || Number(cart.otherFee) >0?
                   <>
                   <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
                   <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
@@ -251,7 +251,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                {Number(cart.discount) > 0?
+                {Number(cart.discount) > 0 || Number(cart.otherFee) >0?
                   <>
                     <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount} /></Typography>
                     <Typography >
@@ -259,9 +259,9 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                     </Typography>
                  </>
                 :null}
-                <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount}/></Typography>
+                <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount +cart.otherFee }/></Typography>
                 <Typography className={clsx(classes.text,classes.weight)}> <ThousandFormat value={cart.paid_amount} /></Typography>
-                <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount- cart.discount)} /></Typography>
+                <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount- cart.discount + cart.otherFee)} /></Typography>
 
               </Grid>
             </Grid>

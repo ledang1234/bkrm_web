@@ -109,7 +109,8 @@ export const ShiftMonthBox = ({shift,selectedDate,handleChangeModeMonth,modeMont
                   
                 
                     var dateGroup = groupBy(employeeGroup[key], 'date')
-                    
+                   
+
                         return(
                             <Grid  container  direction="row" alignItems="center" >
                                 <Box border={1} borderLeft={0}  borderTop={0}style={{borderColor:grey[300],width:160,height:55}} > 
@@ -124,9 +125,13 @@ export const ShiftMonthBox = ({shift,selectedDate,handleChangeModeMonth,modeMont
 
                                 {Array.from(Array(numberOfDayInMonth).keys()).map(index=>{
                                     var day = index+1 > 9 ? index+1 : `0${index+1}` 
-                                    var month = selectedDate.getMonth()+1;
+                                    // var month = selectedDate.getMonth()+1;
+                                    var month = selectedDate.getMonth()+1 > 9 ? selectedDate.getMonth()+1 : `0${selectedDate.getMonth()+1}`;
                                     var year = selectedDate.getFullYear();
-                                    
+                                    console.log("dateGroup",dateGroup)
+                                    console.log("day",day)
+                                    console.log("month",month)
+                                    console.log("year",year)
                                     return(
                                         
                                         // fix laij cai responsive nay

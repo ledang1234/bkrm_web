@@ -378,7 +378,7 @@ const CartSummary = (props) => {
                 <Typography variant="h5" >{fee.name}</Typography>
                 <Typography variant="body2" >
                   <VNDFormat
-                    style={{ color: "#2096f3",fontWeight: 600, }}
+                    // style={{ color: "#2096f3",fontWeight: 600, }}
                     // value={fee.type === "%"?  Number(fee.value)*(Number(cartData.total_amount) - Number(cartData.discount) - Number(cartData.discountPro)) / 100 : Number(cartData.total_amount) === 0? "0" :fee.value  }
                     value={fee.type === "%"?  Number(fee.value)*(Number(cartData.total_amount) - Number(cartData.discount) - Number(cartData.discountPro)) / 100 :fee.value  }
 

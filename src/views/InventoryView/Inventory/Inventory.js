@@ -321,7 +321,9 @@ const Inventory = () => {
           { dbName: "standard_price", displayName: "Giá vốn"},
           {dbName: "quantity_per_unit", displayName:"Đơn vị"},
           {dbName: "category_id",displayName:"Danh mục"},
-          { dbName: "img_urls", displayName: "Hình ảnh (url1, url2,...)" },
+          // { dbName: "img_urls", displayName: "Hình ảnh (url1, url2,...)" },
+          { dbName: "img_urls", displayName: "Hình ảnh" },
+
           { dbName: "quantity_available", displayName: "Tồn kho" },
           { dbName: "min_reorder_quantity", displayName: "Tồn nhỏ nhất" },
           {dbName:"max_order",displayName:"Tồn lớn nhất"},

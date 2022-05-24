@@ -208,9 +208,14 @@ const ToolBar = (props) => {
   const handleImport = () => {
     setOpenImport(false);
     if (custom && customizable) {
-      console.log(customCl)
+      console.log("customCl",customCl)
       setListCl([])
-      const json = excel.map((product) => ({
+      const json = excel.map((product) =>
+      
+       {
+        console.log("customCl.img_urls",product[customCl.img_urls])
+
+         return ({
         name: product[customCl.name]?.toString()? product[customCl.name]?.toString(): "",
         list_price: product[customCl.list_price]?.toString()? product[customCl.list_price]?.toString(): "",
         standard_price: product[customCl.standard_price]?.toString()?product[customCl.standard_price]?.toString() : "",
@@ -221,9 +226,11 @@ const ToolBar = (props) => {
         description: product[customCl.description]?.toString() ? product[customCl.description]?.toString(): "",
         has_batches: product[customCl.has_batches]?.toString() ? product[customCl.has_batches]?.toString() : 0,
         max_order: product[customCl.max_order]?.toString() ? product[customCl.max_order]?.toString() : "",
-        img_urls: product[customCl.img_urls]?.toString().split(",") ? product[customCl.img_urls]?.toString().split(",") : "",
+        // img_urls: product[customCl.img_urls]?.toString().split(",") ? product[customCl.img_urls]?.toString().split(",") : "",
+        img_urls: product[customCl.img_urls] ? product[customCl.img_urls] : "",
+
         quantity: product[customCl.quantity]?.toString() ? product[customCl.quantity]?.toString()  : "0"
-      }))
+      })})
       importByJSON(json);
     } else {
       importByJSON(jsonData);
