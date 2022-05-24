@@ -72,8 +72,9 @@ const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,
                 const occurrences =  item.purchase_histories.filter(item => item.name !== "Nhà cung cấp lẻ").reduce( (acc, o) =>  (acc[o.supplier_uuid] = (acc[o.supplier_uuid] || 0)+1 , acc) , {} );
                 supplierRecommend = Object.keys(occurrences).length !== 0? Object.keys(occurrences).reduce((a, b) => occurrences[a] >= occurrences[b] ? a : b) :null 
                 supplierRecommend =  item.purchase_histories?.find(purchase => purchase.supplier_uuid === supplierRecommend)
-                
             }
+            console.log("supplierRecommend",supplierRecommend)
+
             let row ={
                 img:JSON.parse(item.img_urls)?.at(0),
                 uuid:item.uuid,
@@ -118,9 +119,12 @@ const RecommendOrderPopUp = ({dataRecommend,handleAddOrderReccomend,handleClose,
             supplierGroup?
             Object.keys(supplierGroup).map((supplier) =>{
                 let cartRowListBySupplier = supplierGroup[supplier]
+                console.log("cartRowListBySupplier[0].supplier",cartRowListBySupplier[0].supplier)
                 return (
                 <Box style={{marginBottom:20, marginTop:10}}>
-                    <Typography variant='h4'>{`${cartRowListBySupplier[0].supplier.name} (${cartRowListBySupplier[0].supplier.phone})`}</Typography>
+                    {/* <Typography variant='h4'>{`${cartRowListBySupplier[0].supplier.name} (${cartRowListBySupplier[0].supplier.phone})`}</Typography> */}
+                    <Typography variant='h4'>{`${cartRowListBySupplier[0].supplier.name} `}</Typography>
+
                     <TableRowWithSelect handleAddOrderReccomend={handleAddOrderReccomend} dataRecommend={supplierGroup[supplier]} hanđleChangeQuantity={hanđleChangeQuantity} handleClose={handleClose} cartList={cartList}/>
                 </Box>
                 )
