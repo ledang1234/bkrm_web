@@ -363,7 +363,21 @@ const Cart = () => {
   const handleDeleteAllItem = (index) => {
     const newCartList = [...cartList];
 
-    newCartList[index].cartItem = [];
+    // newCartList[index].cartItem = [];
+    newCartList[index] ={
+      customer: null,
+      cartItem: [],
+      total_amount: "0",
+      paid_amount: "0",
+      payment_method: "cash",
+      discount: "0",
+      delivery: false,
+      scores: "0",
+      discountDetail:{value:'0', type:'VND' },
+      selectedPromotion:null,
+      otherFee:0
+
+    };
 
     setCartList(newCartList)
 
