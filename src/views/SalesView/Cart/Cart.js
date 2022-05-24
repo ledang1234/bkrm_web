@@ -82,6 +82,7 @@ const Cart = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [selectedBranch, setSelectedBranch] = useState({});
+  const [disable, setDisable] = useState(false)
 
 
   // redux
@@ -840,7 +841,7 @@ const Cart = () => {
   const handleConfirmCallApi  = async () => {
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
     let cart = cartList[selectedIndex];
-
+    
     let d = moment.now() / 1000;
 
     let orderTime = moment
@@ -872,6 +873,7 @@ const Cart = () => {
     };
 
     try {
+      setDisable(true);
       let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
       
       setSnackStatus({
@@ -892,6 +894,7 @@ const Cart = () => {
       setOpenSnack(true);
       console.log(err);
     }
+    setDisable(false)
     loadProducts()
   }
 
@@ -1067,6 +1070,7 @@ const Cart = () => {
           <Box style={{ padding: 0, minHeight: "82vh" }}>
             {/* {!mode ? ( */}
               <CartSummary
+                disable={disable}
                 setSelectedBranch={setSelectedBranch}
                 selectedBranch={selectedBranch}
                 cartData={cartList[selectedIndex]}
