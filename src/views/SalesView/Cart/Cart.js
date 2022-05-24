@@ -85,6 +85,7 @@ const Cart = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [selectedBranch, setSelectedBranch] = useState({});
+  const [disable, setDisable] = useState(false)
 
 
   // redux
@@ -152,7 +153,7 @@ const Cart = () => {
 
 
   useEffect(() => {
-    if (products.length) {
+    if (products?.length) {
       window.localStorage.setItem(
         "products",
         JSON.stringify({ 
@@ -164,7 +165,7 @@ const Cart = () => {
   }, [products]);
 
   useEffect(() => {
-    if (customers.length) {
+    if (customers?.length) {
       window.localStorage.setItem(
         "customers",
         JSON.stringify({ 
@@ -369,7 +370,7 @@ const Cart = () => {
 
       },
     ]);
-    setSelectedIndex(cartList.length);
+    setSelectedIndex(cartList?.length);
     handleClose();
   };
 
@@ -403,7 +404,7 @@ const Cart = () => {
   const handleDelete = (index) => {
     // DELETE CART
     cartList.splice(index, 1);
-    if (cartList.length === 0) {
+    if (cartList?.length === 0) {
       setCartList([
         {
           customer: null,
@@ -473,7 +474,7 @@ const Cart = () => {
     );
     if (!item) {
       let newCartItem = {
-        id: cartList[selectedIndex].cartItem.length,
+        id: cartList[selectedIndex].cartItem?.length,
         uuid: selectedOption.uuid,
         quantity: selectedOption.has_batches ? 0 : 1,
         product_code: selectedOption.product_code,
@@ -641,7 +642,7 @@ const Cart = () => {
       const listGift = checkProduct ?checkProduct.detail: bestDetailSelectedCondition.listGiftItem
       let listGiftItem = listGift?.map((selectedOption)=>{
         if(selectedOption.quantity >0 && !selectedOption.has_batches)
-        return { id: cartList[selectedIndex].cartItem.length,
+        return { id: cartList[selectedIndex].cartItem?.length,
           uuid: selectedOption.uuid,
           quantity: selectedOption.has_batches ? 0 : selectedOption.quantity,
           product_code: selectedOption.product_code,
@@ -863,7 +864,7 @@ const Cart = () => {
   const handleConfirm = async () => {
     let cart = cartList[selectedIndex];
 
-    var emptyCart = cart.cartItem.length === 0;
+    var emptyCart = cart.cartItem?.length === 0;
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
     const canSellWhenNegativeQuantity = store_setting?.canSellWhenNegativeQuantity;
     const alowDebt =  store_setting?.alowDebt;
@@ -976,7 +977,7 @@ const Cart = () => {
   const handleConfirmCallApi  = async () => {
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
     let cart = cartList[selectedIndex];
-
+    
     let d = moment.now() / 1000;
 
     let orderTime = moment
@@ -1008,6 +1009,7 @@ const Cart = () => {
     };
 
     try {
+      setDisable(true);
       let res = await orderApi.addOrder(store_uuid, branch.uuid, body);
       
       setSnackStatus({
@@ -1028,6 +1030,7 @@ const Cart = () => {
       setOpenSnack(true);
       console.log(err);
     }
+    setDisable(false)
     loadProducts()
   }
 
@@ -1163,7 +1166,7 @@ const Cart = () => {
                             discountData={discountData.filter(
                               (discount) => discount.discountKey === "product"
                             )}
-                            index={cartList[selectedIndex].cartItem.length - index}
+                            index={cartList[selectedIndex].cartItem?.length - index}
                             showImage={showImage}
                           />
                         );
@@ -1189,7 +1192,7 @@ const Cart = () => {
             {/* 1.3 CHANGE MODE  */}
             
             {/* <FormControlLabel control={<Switch  size="small"  checked={mode} onChange={handleChangeMode} />}style={{ display: "flex",  justifyContent: "flex-end",   margin: -20,  marginTop: 45, }} /> */}
-         {cartList[selectedIndex].listGiftItem.length > 0?
+         {cartList[selectedIndex].listGiftItem?.length > 0?
           <Box style={{ marginTop: -85, }}>
             <Divider/>
             <ListItem>
@@ -1211,7 +1214,7 @@ const Cart = () => {
                             discountData={discountData.filter(
                               (discount) => discount.discountKey === "product"
                             )}
-                            index={cartList[selectedIndex].cartItem.length - index}
+                            index={cartList[selectedIndex].cartItem?.length - index}
                             showImage={showImage}
                             isGiftPromotion={true}
                             index={index+1}
@@ -1243,6 +1246,7 @@ const Cart = () => {
             {/* {!mode ? ( */}
               <CartSummary
                 products={products}
+                disable={disable}
                 setSelectedBranch={setSelectedBranch}
                 selectedBranch={selectedBranch}
                 cartData={cartList[selectedIndex]}
@@ -1287,7 +1291,7 @@ const Cart = () => {
                             )}
                             mini={true}
                             imageType={typeShow==='image' && mode}
-                            index={cartList[selectedIndex].cartItem.length - index}
+                            index={cartList[selectedIndex].cartItem?.length - index}
                             typeShow={typeShow}
                             showImage={showImage}
 

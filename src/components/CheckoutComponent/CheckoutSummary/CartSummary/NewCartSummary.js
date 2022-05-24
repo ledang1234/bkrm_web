@@ -521,6 +521,7 @@ const CartSummary = (props) => {
               color="primary"
               style={{ marginTop:!mode? 60:0 }}
               onClick={handleConfirm}
+              disabled={props.disable}
             >
               Thanh toán
             </Button>
