@@ -478,13 +478,12 @@ const Cart = () => {
     if (batchBarCode) {
       const existedBatchInfo = selectedOption?.batches.find(b => b.batch_code === batchBarCode);
       if (existedBatchInfo) {
-        existedBatchInfo.additional_quantity += 1;
         batchInfo = existedBatchInfo;
       } else {
         batchInfo.additional_quantity = 1;
       }
     }
-    // console.log(batchInfo)
+    console.log(batchInfo)
     if (!item) {
       let newCartItem = {
         id: cartList[selectedIndex].cartItem?.length,
@@ -499,7 +498,7 @@ const Cart = () => {
         has_batches: selectedOption.has_batches,
         batches: selectedOption.batches,
         branch_inventories: selectedOption.branch_inventories,
-        selectedBatches: selectedOption.has_batches ? [batchInfo] : []
+        selectedBatches: selectedOption.has_batches ? [{...batchInfo, additional_quantity: 1}] : []
       };
 
       let newCartList = update(cartList, {
@@ -522,7 +521,7 @@ const Cart = () => {
           newCartList[selectedIndex].cartItem[itemIndex].selectedBatches[existedBatchIndex].additional_quantity += 1 
         } else {
           batchInfo.additional_quantity = 1
-          alert(JSON.stringify(batchInfo))
+          // alert(JSON.stringify(batchInfo))
           newCartList[selectedIndex].cartItem[itemIndex].selectedBatches.push(batchInfo);
         }
       } else {
@@ -615,7 +614,7 @@ const Cart = () => {
     setCartList(newCartList);
   };
 
-  console.log("HELLOO cartList[selectedIndex].selectedPromotion",cartList[selectedIndex].selectedPromotion)
+  // console.log("HELLOO cartList[selectedIndex].selectedPromotion",cartList[selectedIndex].selectedPromotion)
   const handleUpdatePaidAmount = (amount) => {
     if (amount < 0){return } 
     let newCartList = update(cartList, {
