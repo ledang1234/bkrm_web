@@ -9,6 +9,7 @@ import { ReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinte
 import { CartBottom } from "../../../components/Button/CartButton";
 import AddInventory from "../../InventoryView/Inventory/AddInventory/AddInventory";
 import AddIcon from "@material-ui/icons/Add";
+import {cloneDeep} from 'lodash'
 
 //import library
 import {
@@ -16,7 +17,6 @@ import {
   Card,
   Box,
   Table,
-  Tabs,
   Tab,
   TableContainer,
   CardContent,
@@ -472,6 +472,19 @@ const Cart = () => {
     let item = cartList[selectedIndex].cartItem.find(
       (item) => item.uuid === selectedOption.uuid
     );
+
+    
+    let batchInfo = {additional_quantity: 1};
+    if (batchBarCode) {
+      const existedBatchInfo = selectedOption?.batches.find(b => b.batch_code === batchBarCode);
+      if (existedBatchInfo) {
+        existedBatchInfo.additional_quantity += 1;
+        batchInfo = existedBatchInfo;
+      } else {
+        batchInfo.additional_quantity = 1;
+      }
+    }
+    // console.log(batchInfo)
     if (!item) {
       let newCartItem = {
         id: cartList[selectedIndex].cartItem?.length,
@@ -486,50 +499,55 @@ const Cart = () => {
         has_batches: selectedOption.has_batches,
         batches: selectedOption.batches,
         branch_inventories: selectedOption.branch_inventories,
+        selectedBatches: selectedOption.has_batches ? [batchInfo] : []
       };
 
       let newCartList = update(cartList, {
         [selectedIndex]: { cartItem: { $push: [newCartItem] } },
       });
+
       setCartList(newCartList);
       setIsUpdateTotalAmount(!isUpdateTotalAmount);
-      return;
+      
     }
 
-    if (!item.has_batches) {
+    // batch
+      // - batch_code included
+      // - no batch => add a first
+      if (item && item.has_batches) {
+      let newCartList = cloneDeep(cartList);
+      if (batchBarCode) {
+        const existedBatchIndex = item.selectedBatches.findIndex(b => b.batch_code === batchBarCode)
+        if (existedBatchIndex !== -1) {
+          newCartList[selectedIndex].cartItem[itemIndex].selectedBatches[existedBatchIndex].additional_quantity += 1 
+        } else {
+          batchInfo.additional_quantity = 1
+          alert(JSON.stringify(batchInfo))
+          newCartList[selectedIndex].cartItem[itemIndex].selectedBatches.push(batchInfo);
+        }
+      } else {
+        const latest = selectedOption.batches.filter(b => b.quantity !== '0').reverse()[0];
+        newCartList[selectedIndex].cartItem[itemIndex].selectedBatches.push({...latest, additional_quantity: 1});
+      }
+      setCartList(newCartList);
+    }
+
+    // not batch
+    if (item && !item.has_batches) {
       handleChangeItemQuantity(
         selectedOption.uuid,
         cartList[selectedIndex].cartItem[itemIndex].quantity + 1
       );
-    } else {
-      if (
-        cartList[selectedIndex].cartItem[itemIndex].selectedBatches?.length ===
-        1
-      ) {
-        handleChangeItemQuantity(
-          selectedOption.uuid,
-          cartList[selectedIndex].cartItem[itemIndex].quantity + 1
-        );
-        const newCartList = [...cartList];
-        newCartList[selectedIndex].cartItem[
-          itemIndex
-        ].selectedBatches[0].additional_quantity += 1;
-        setCartList(newCartList);
-
-      }
-      if(batchBarCode){
-        handleChangeItemQuantity(
-          selectedOption.uuid,
-          cartList[selectedIndex].cartItem[itemIndex].quantity + 1
-        );
-        const newCartList = [...cartList];
-        // newCartList[selectedIndex].cartItem[
-        //   itemIndex
-        // ].selectedBatches[0].additional_quantity += 1;
-      }
     }
+
+    // if (item) {
+
+    // } else {
+   
+     
+    // }
   };
-  console.log("cartList[selectedIndex].cartItem",cartList[selectedIndex].cartItem)
+  // console.log("cartList[selectedIndex].cartItem",cartList[selectedIndex].cartItem)
 
   const handleDeleteItemCart = (itemUuid) => {
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
@@ -755,7 +773,7 @@ const Cart = () => {
 
 
 
-// PROMOTION
+  // PROMOTION
   useEffect(() => {
     if(cartList[selectedIndex]?.selectedPromotion && cartList[selectedIndex]?.bestDetailSelectedPromotion){
       let bestCondition = cartList[selectedIndex]?.selectedPromotion?.detailCondition.map((pro) =>{if (Number(cartList[selectedIndex].total_amount) >= Number(pro.totalCost)) {return pro}else{return null}})

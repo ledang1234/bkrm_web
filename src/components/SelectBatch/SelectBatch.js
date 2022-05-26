@@ -11,8 +11,9 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Typography } from "@material-ui/core";
 import * as _ from "lodash";
 
-export default function SelectBatch({ handleSubmit, handleClose, row, isInventoryCheck }) {
+export default function SelectBatch({ handleSubmit, handleClose, row, isInventoryCheck, isCart, isImport }) {
   const [selectedBatches, setSelectedBatches] = useState([]);
+
   return (
     <Dialog open={true}>
       {/* <DialogTitle
@@ -22,10 +23,10 @@ export default function SelectBatch({ handleSubmit, handleClose, row, isInventor
 
       <DialogContent>
         <Autocomplete
-          options={row.batches}
+          options={isCart ? row.batches.filter(b => b?.quantity !== '0') : row.batches}
           getOptionLabel={(batch) =>
             `${batch?.batch_code} - ${
-              batch?.expiry_date ? batch?.expiry_date : ""
+              batch?.expiry_date?.substring(10) ? batch?.expiry_date : ""
             } - Tồn kho: ${batch?.quantity}`
           }
           renderInput={(params) => (

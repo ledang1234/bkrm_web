@@ -41,27 +41,39 @@ const SearchBarCode = (props) => {
         //     }
         // }
         if (e.key === "Enter" && barcode != "") {
-          const product = props.products.find(
-            (product) => product.bar_code === barcode
-          );
-          if (product) {
-            props.handleSearchBarSelect(product);
-            setBarcode("");
-            dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
+          
+          if (barcode.split('-').length == 2) 
+          {
+            // alert("barcode")
+            const [product_code, batch_code] = barcode.split('-');
+            const product = props.products.find(
+              (product) => product.product_code === product_code
+            );
+            props.handleSearchBarSelect(product, batch_code);
           } else {
-            dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
+            // const product = props.products.find(
+            //   (product) => product.product_code === barcode
+            // );
+            // if (product) {
+            //   props.handleSearchBarSelect(product);
+            //   setBarcode("");
+            //   dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
+            // } else {
+            //   dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
+            // }
+            // if (barcode.includes("_")){
+            //     let list = barcode.split("_")
+            //     let product = props.products.find(
+            //       (product) => product.product_code.includes(list[0])
+            //     )
+            //     if (product) {
+            //       props.handleSearchBarSelect(product,list[1]);
+            //       setBarcode("");
+            //       dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
+            //     }
+            //   }
           }
-          if (barcode.includes("_")){
-              let list = barcode.split("_")
-              let product = props.products.find(
-                (product) => product.product_code.includes(list[0])
-              )
-              if (product) {
-                props.handleSearchBarSelect(product,list[1]);
-                setBarcode("");
-                dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
-              }
-            }
+          
         }
     }
     return <CustomTextField

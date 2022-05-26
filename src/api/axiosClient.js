@@ -32,7 +32,7 @@ axiosClient.interceptors.response.use(
       if (!(document.URL.includes("/login") || document.URL.includes("/signup") )) {
         console.log(!document.URL.includes("/login"))
         store.dispatch(authActions.logOut())
-        store.dispatch(statusAction.failedStatus("Hết phiên đăng nhập"))
+        // store.dispatch(statusAction.failedStatus("Hết phiên đăng nhập"))
       }
     }
     throw error

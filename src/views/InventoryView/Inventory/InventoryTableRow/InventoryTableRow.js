@@ -90,9 +90,9 @@ const InventoryTableRow = (props) => {
           {getReorderPoint(row)}
         </TableCell>
 
-        <TableCell align="center" style={{color:colorText}}>
+        {/* <TableCell align="center" style={{color:colorText}}>
           --
-        </TableCell>
+        </TableCell> */}
 
           </>
           : null}

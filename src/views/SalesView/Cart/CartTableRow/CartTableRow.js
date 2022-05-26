@@ -67,28 +67,32 @@ export const CartRow = (props) => {
   };
 
   const [selectBatchOpen, setSelectBatchOpen] = useState(false);
-  const [selectedBatches, setSelectedBatches] = useState([]);
+  //const [selectedBatches, setSelectedBatches] = useState([]);
 
-  useEffect(() => {
-    if (row.batches?.length >= 1) {
-      setSelectedBatches([{ ...row.batches[0], additional_quantity: 0 }]);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (row.batches?.length >= 1) {
+  //     // setSelectedBatches([{ ...row.batches[0], additional_quantity: 0 }]);
+  //     setSelectedBatches(row.selectedBatches)
+  //   }
+  //   // alert(JSON.stringify(row.selectedBatches))
+  // }, []);
 
-  useEffect(() => {
-    if(!isGiftPromotion){
-      let total = 0;
-      selectedBatches.forEach((batch) => {
-        total += Number(batch.additional_quantity);
-      });
-      updateQuantity(total);
-      handleUpdateBatches(row.uuid, selectedBatches);
-    }
-  }, [selectedBatches]);
+  // useEffect(() => {
+  //   if(!isGiftPromotion){
+  //     let total = 0;
+  //     row.selectedBatches.forEach((batch) => {
+  //       total += Number(batch.additional_quantity);
+  //     });
+  //     updateQuantity(total);
+  //     handleUpdateBatches(row.uuid, row.selectedBatches);
+  //   }
+  // }, [selectedBatches]);
 
   const handleSelectBatches = (batches) => {
+    if (isGiftPromotion) return;
+    
     const newBatches = [];
-    selectedBatches.forEach((selectedBatch) => {
+    row.selectedBatches.forEach((selectedBatch) => {
       const newBatch = batches.find(
         (batch) => batch.batch_code === selectedBatch.batch_code
       );
@@ -111,7 +115,14 @@ export const CartRow = (props) => {
       }
     });
 
-    setSelectedBatches(newBatches);
+    let total = 0;
+    newBatches.forEach((batch) => {
+      total += Number(batch.additional_quantity);
+    });
+    updateQuantity(total);
+    handleUpdateBatches(row.uuid, newBatches);
+    // setSelectedBatches(newBatches);
+
   };
 
   const store_setting = info.store.general_configuration
@@ -365,20 +376,20 @@ export const CartRow = (props) => {
               >
                 Chọn lô
               </Button>
-              {selectedBatches.map((batch) => (
+              {row.selectedBatches.map((batch) => (
                 <Tooltip title={`Tồn kho - ${batch.quantity}`}>
                   <Chip
                     label={`${
                       batch?.batch_code ? batch?.batch_code : "Mới"
-                    } - ${batch?.expiry_date ? batch?.expiry_date : ""} - ${
+                    } ${batch?.expiry_date ? "(" + batch?.expiry_date.substring(0,10) + ")" : ""}  ${
                       batch.additional_quantity
                     }`}
                     key={batch.id}
                     onDelete={() => {
-                      const newBatches = selectedBatches.filter(
+                      const newBatches = row.selectedBatches.filter(
                         (selectedBatch) => selectedBatch.id !== batch.id
                       );
-                      setSelectedBatches(newBatches);
+                      handleUpdateBatches(row.uuid, newBatches);
                     }}
                     color={batch.is_new ? "primary" : "secondary"}
                     deleteIcon={<DeleteOutline />}
@@ -388,6 +399,7 @@ export const CartRow = (props) => {
               ))}
               {selectBatchOpen && (
                 <SelectBatch
+                  isCart={true}
                   handleSubmit={handleSelectBatches}
                   row={row}
                   handleClose={() => setSelectBatchOpen(false)}
