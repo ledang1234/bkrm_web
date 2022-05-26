@@ -57,19 +57,27 @@ function App() {
         <HashRouter>
           <Switch>
             {/* Fix lại route */}
-            <Route path="/" exact>
+            {/* <Route path="/" exact>
               <Redirect to="/home" />
-            </Route>{" "}
+            </Route>{" "} */}
             <PrivateRoute path="/home">
               <HomePage />
             </PrivateRoute>
-            <Route path="/login" exact>
+            {/* <Route path="/login" exact>
               {isLoggedIn ? <Redirect to={path} /> : <LoginPage />}
             </Route>
             <Route path="/signup" exact>
               {isLoggedIn ? <Redirect to={path} /> : <SignupPage />}
+            </Route> */}
+             <Route path="/login" exact>
+              {isLoggedIn ? <Redirect to={"/home"} /> : <LoginPage />}
             </Route>
-            <Route path="/main" component={MainPage} />
+            <Route path="/signup" exact>
+              {isLoggedIn ? <Redirect to={"/home"} /> : <SignupPage />}
+            </Route>
+            <Route path="/" > 
+              <MainPage />
+            </Route>
             <Route path="/store">
               <Switch>
                 <Route path={"/store/:storeWebPage"}>

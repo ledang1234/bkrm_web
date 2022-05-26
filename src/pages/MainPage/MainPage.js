@@ -14,6 +14,7 @@ import {
   CardMedia,
   Container,
   Divider,
+  TextField
 } from "@material-ui/core";
 //import icons
 import MenuIcon from "@material-ui/icons/Menu";
@@ -26,8 +27,13 @@ import app from "../../assets/img/mainPage/Order - new.png";
 import app1 from "../../assets/img/mainPage/Create new product.png";
 import web from "../../assets/img/mainPage/web.png";
 import web1 from "../../assets/img/mainPage/web1.png";
+import web2 from "../../assets/img/mainPage/web2.png";
+import web3 from "../../assets/img/mainPage/web3.png";
+import inventoryIcon from "../../assets/img/icon/inventory2.png"
 import { borderColor } from "@material-ui/system";
 import { grey } from "@material-ui/core/colors";
+import { Link } from "react-router-dom";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -104,11 +110,16 @@ const MainPage = () => {
             ) : (
               <Grid container item sm={10} direction="row" alignItems="center">
                 <Grid container item sm={8} direction="row">
-                  <Button className={classes.btnNav}>Trang chủ</Button>
+                  <Button className={classes.btnNav}
+                   component={Link}
+                   to="/main"
+                   >
+                     Trang chủ
+                    </Button>
                   <Button className={classes.btnNav}>Giới thiệu</Button>
-                  <Button className={classes.btnNav}>Giới thiệu</Button>
-                  <Button className={classes.btnNav}>Giới thiệu</Button>
-                  <Button className={classes.btnNav}>Giới thiệu</Button>
+                  <Button className={classes.btnNav}>Hỗ trợ</Button>
+                  <Button className={classes.btnNav}>Liên hệ</Button>
+                  {/* <Button className={classes.btnNav}>Giới thiệu</Button> */}
                 </Grid>
                 <Grid
                   container
@@ -117,13 +128,18 @@ const MainPage = () => {
                   direction="row"
                   justifyContent="flex-end"
                 >
+                  <Box  component={Link} to="/login">
                   <ColorOutlineButton
                     className={classes.btnNav}
                     variant="outlined"
                     style={{ borderRadius: 20, marginBottom: 5 }}
+                 
                   >
+                    
                     Đăng nhập
                   </ColorOutlineButton>
+                  </Box>
+                  <Box component={Link} to="/signup">
                   <ColorButton
                     className={classes.btnNav}
                     variant="contained"
@@ -136,6 +152,7 @@ const MainPage = () => {
                   >
                     Đăng ký
                   </ColorButton>
+                  </Box>
                 </Grid>
               </Grid>
             )}
@@ -162,7 +179,8 @@ const MainPage = () => {
             {matchDownXs ? null : (
               <Grid container direction="row" justifyContent="flex-end">
                 <video
-                  loop={false}
+                  // loop={false}
+                  loop={true}
                   autoPlay={true}
                   muted={true}
                   style={{ width: "12%" }}
@@ -204,24 +222,28 @@ const MainPage = () => {
                     paddingRight: 50,
                   }}
                 >
-                  Hỗ trợ bạn tự động hóa quy trình bán hàng từ việc quản lý kho,
-                  nhân sự, nhà cung cấp, khách hàng
+                  Hỗ trợ bạn tự động hóa quy trình bán hàng từ việc quản lý tồn kho, bán hàng,
+                  nhân sự, nhà cung cấp, khách hàng,... Đơn giản, dễ dùng, tiết kiệm chi phí và phù hợp với nhiều ngành hàng khác nhau. 
+                  Đồng thời, bạn cũng có thể tự tạo trang web bán hàng online của riêng mình chỉ với vài thao tác đơn giản.
                 </Typography>
               </Grid>
             </Grid>
-            <ColorButton
-              className={classes.btnNav}
-              variant="contained"
-              color="secondary"
-              style={{ borderRadius: 20, width: 100 }}
-            >
-              Dùng thử
-            </ColorButton>
+            <Box component={Link} to="/signup">
+              <ColorButton
+                className={classes.btnNav}
+                variant="contained"
+                color="secondary"
+                style={{ borderRadius: 20, width: 160 }}
+              >
+                Dùng thử miễn phí
+              </ColorButton>
+            </Box>
           </Grid>
 
           <Grid container item xs={12} sm={6} justifyContent="center">
             <video
-              loop={false}
+              // loop={false}
+              loop={true}
               autoPlay={true}
               muted={true}
               className={matchDownXs ? classes.videosm : classes.videoupsm}
@@ -230,23 +252,78 @@ const MainPage = () => {
             </video>
           </Grid>
         </Grid>
+        <Box style={{marginLeft: matchDownSm ? "15%" : "10%",marginRight: matchDownSm ? "10%" : "15%",marginTop:200}}>
+        <Grid container justifyContent="center" spacing={3} >
+              <Grid xs={4}  item container alignItems="center" justifyContent="center">
+                  <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={inventoryIcon}/>
+                  <Box style={{flexGrow:1, textAlign:'center'}}>
+                    <Typography variant="h4" >
+                      Quản lý tồn kho
+                    </Typography>
+                    <Typography  >
+                      - Quản lý hàng theo thuộc tính (size, màu,...), quản lý theo lô/ hạn sử dụng
+                    </Typography>
+                  </Box>
+          
+              </Grid>
+              <Grid xs={4} container justifyContent="center">
+                <Typography variant="h4" >
+                  Trang web bán hàng online
+                  </Typography>
+              </Grid>
+              <Grid xs={4}  container justifyContent="center">
+                <Typography variant="h4" >
+                  Quản lý tồn kho
+                  </Typography>
+              </Grid>
+             
+        </Grid>
+        </Box>
 
         {/* SECTION 2 */}
-        <Grid>
-          <Container
-            style={{
+        <Grid container justifyContent="center"  
+          style={{
               backgroundColor: "#f3fdff",
               marginTop: 150,
               justifyContent: "center",
-            }}
-          >
-            <Grid
-              container
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-            >
+              alignContent:"center"
+            }}>
+          {/* <Box
+           
+          > */}
+              <Grid item container xs={12} justifyContent="center">
+                <Typography variant="h2" style={{marginTop:40}}>
+                  Thanh toán nhanh chóng, in hóa đơn tiện lợi
+                  </Typography>
+                  </Grid>
+                  <Grid item container xs={12} justifyContent="center">
+                  <Typography style={{color:'#000',fontSize:16,marginTop:20, marginBottom:30,  width: matchDownSm ? "90%" : "70%",}}>
+                  Quét mã vạch tìm hàng nhanh, tự động tính tiền chính xác, kết nối máy in hóa đơn tiện lợi. Tăng tốc bán hàng, đảm bảo chính xác, giảm thiểu nhầm lẫn.              Quét mã vạch tìm hàng nhanh, tự động tính tiền chính xác, kết nối máy in hóa đơn tiện lợi. Tăng tốc bán hàng, đảm bảo chính xác, giảm thiểu nhầm lẫn.
+                  </Typography>
+              </Grid>
               <Box
+                component="img"
+                sx={{
+                  height: matchDownSm ? "90%" : "70%",
+                  width: matchDownSm ? "90%" : "70%",
+                  borderRadius: matchDownXs ? 10 : 20,
+                 
+                  // marginRight:15,
+                }}
+                border={1}
+                borderColor={grey[400]}
+                src={web2}
+              />
+               <Grid item container xs={12} justifyContent="center">
+                <Typography variant="h2" style={{marginTop:40, width: matchDownSm ? "90%" : "70%",}}>
+                Quản lý chặt chẽ hàng trăm nghìn sản phẩm. Nắm bắt tồn kho nhanh, bổ sung hàng kịp thời. Quản lý hàng hóa nhanh chóng theo màu sắc, kích thước
+                  </Typography>
+                  </Grid>
+                  <Grid item container xs={12} justifyContent="center">
+                  <Typography style={{color:'#000',fontSize:16,marginTop:20, marginBottom:30, width: matchDownSm ? "90%" : "70%",}}>
+                  Hàng hóa được sắp xếp theo danh mục, quản lý bằng mã số riêng. Phân loại chi tiết từng sản phẩm theo màu sắc, size số, kích thước, chất liệu...// Phân loại & quản lý hàng hóa theo danh mục, nhãn hàng. Tìm kiếm thông tin hàng hóa dễ dàng, tư vấn cho khách nhanh chóng. //Tối thiểu thất thoát hàng hóa nhờ tính năng kiểm kho chính xác. Quản lý số lượng xuất - nhập - tồn mỗi loại hàng hóa chính xác. Cảnh báo hàng sắp hết, hàng tồn nhiều... để bổ sung hoặc xả hàng kịp thời.               </Typography>
+              </Grid>
+               <Box
                 component="img"
                 sx={{
                   height: matchDownSm ? "90%" : "70%",
@@ -256,10 +333,19 @@ const MainPage = () => {
                 }}
                 border={1}
                 borderColor={grey[400]}
-                src={web1}
+                src={web3}
               />
-            </Grid>
-          </Container>
+              
+              <Grid item container xs={12} justifyContent="center">
+                <Typography variant="h2" style={{marginTop:40, width: matchDownSm ? "90%" : "70%",}}>
+                Báo cáo doanh thu lỗ lãi rõ ràng
+                  </Typography>
+                  </Grid>
+                  <Grid item container xs={12} justifyContent="center">
+                  <Typography style={{color:'#000',fontSize:16,marginTop:20, marginBottom:30, width: matchDownSm ? "90%" : "70%",}}>
+                  Tự động thống kê báo cáo chi tiết về doanh thu, lợi nhuận, chi phí... mỗi ngày. Cập nhật biến động lãi lỗ, tình hình kinh doanh mọi lúc mọi nơi trên các thiết bị: Điện thoại, máy tính, laptop... Giúp chủ shop theo dõi sát sao hiệu quả bán hàng để có kế hoạch kinh doanh phù hợp.               </Typography>
+              </Grid>
+          {/* </Box> */}
         </Grid>
 
         {/* SECTION 3 */}
@@ -305,6 +391,26 @@ const MainPage = () => {
         </Grid>
 
         {/* SECTION 4 */}
+
+        <Grid item container xs={12} justifyContent="center">
+          <Typography variant="h1" style={{marginTop:40}}>
+            Liên hệ
+            </Typography>
+        </Grid>
+        <Box style={{marginLeft:matchDownXs?10:150,marginRight:matchDownXs?10:150}}>
+        <Grid  container  justifyContent="center" >
+          <Grid item container style={{marginBottom:15}} justifyContent="space-between" >
+            <Grid xs={8}><TextField label="Họ và tên" variant="outlined" fullWidth /> </Grid>
+            <Grid xs={4}><TextField  label="Số điện thoại" variant="outlined"  fullWidth/> </Grid>
+          </Grid>
+          {/* <Grid item  container> */}
+            <TextField style={{marginBottom:15}} label="Email" variant="outlined" fullWidth />
+          {/* </Grid> */}
+          {/* <Grid item container> */}
+            <TextField  label="Nội dung" variant="outlined"  fullWidth/>
+          {/* </Grid> */}
+        </Grid>
+        </Box>
 
         {/* FOOTER */}
         <Grid>

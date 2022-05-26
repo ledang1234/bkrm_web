@@ -12,7 +12,8 @@ const CustomExcel = () => {
         quantity_per_unit: "Đơn vị",
         min_reorder_quantity: "Tồn kho nhỏ nhất",
         max_quantity: "Tồn kho lớn nhất",
-        urls: "Hình ảnh (url1, url2,...)",
+        // urls: "Hình ảnh (url1, url2,...)",
+        urls: "Hình ảnh",
         description: "Mô tả",
     })
     return (
