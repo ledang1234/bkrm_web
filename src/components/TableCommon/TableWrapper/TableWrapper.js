@@ -34,7 +34,8 @@ const TableWrapper = (props) => {
 
             {/* <TableContainer style={{maxHeight: '90vh',}}> */}
             {/* <TableContainer style={{maxHeight: '84vh', minHeight:'60vh'}}> */}
-            <TableContainer style={{maxHeight: '64vh', minHeight:'60vh'}}>
+            {/* <TableContainer style={{maxHeight: '64vh', minHeight:'60vh'}}> */}
+            <TableContainer style={{maxHeight: '66vh', minHeight:'60vh'}}>
 
                 <Table
                     ref={tableRef}
