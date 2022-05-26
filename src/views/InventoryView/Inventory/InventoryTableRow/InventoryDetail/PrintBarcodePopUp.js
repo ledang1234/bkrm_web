@@ -63,15 +63,18 @@ const PrintBarcodePopUp = ({open,onClose, row }) => {
     const theme = useTheme();
     const classes = useStyles(theme);
    
+    console.log("row",row)
 
-    const [quantity , setQuantity] = useState(0)
+    const [quantity , setQuantity] = useState(1)
     const [codeType , setCodeType] = useState("code")
     const [printStoreName , setPrintStoreName] = useState("yes")
-    const [printBatch , setPrintBatch] = useState(row.has_batch === 0?"no" :"yes")
+    const [printBatch , setPrintBatch] = useState(row.has_batches === 0?"no" :"yes")
     const [col , setCol] = useState(null)
-    const [batchCode , setBatchCode] = useState(row.batches[0].batch_code)
+    const [batchCode , setBatchCode] = useState(row.batches[0]?.batch_code)
 
-    const [openPrintBarcode,setOpenPrintBarcode] =  useState(row.batches[0].batch_code)
+    console.log("ow.has_batch ",row.has_batches )
+    console.log("row.has_batch === 0",row.has_batches === 0 )
+    const [openPrintBarcode,setOpenPrintBarcode] =  useState(row.batches[0]?.batch_code)
 
       // toolbar
   const componentRef = useRef();
@@ -121,7 +124,7 @@ const PrintBarcodePopUp = ({open,onClose, row }) => {
                             <MenuItem value={"no"}>Không in tên cửa hàng</MenuItem>
                             </Select>
                         </FormControl>
-                        {!row.has_batch? 
+                        {row.has_batches? 
                             <>
                          <Typography style={{color:'#000',fontSize:15, fontWeight:500, marginTop:25}}>In lô</Typography>
                             <FormControl className={classes.formControl}>
@@ -137,7 +140,7 @@ const PrintBarcodePopUp = ({open,onClose, row }) => {
                                 <Select value={batchCode} onChange={(e)=>setBatchCode(e.target.value)} >
                                 { row.batches.map((batch)=>{
                                     return(
-                                         <MenuItem value={batch.batch_code}>{batch.batch_code}</MenuItem>
+                                         <MenuItem value={batch?.batch_code}>{batch?.batch_code}</MenuItem>
                                     )
                                 }) }
                                 </Select>
@@ -204,13 +207,25 @@ const ComponentToPrint = ({ row ,quantity,codeType,printStoreName,printBatch,col
         <Box style={{ textAlign:'center'}}>
             {printStoreName.includes("yes") ? <Typography style={{color:'#000',fontSize:15, fontWeight:500}}>{info.store.name}</Typography>:""}
             {printBatch.includes("no")? <Barcode value={codeType ==="code" ?row.product_code:row.bar_code } />
-            : <Barcode value={codeType ==="code" ?row.product_code.concat("_"+ batchCode):row.bar_code.concat("_"+ batchCode) } />}
+            : <Barcode value={codeType ==="code" ?row.product_code.concat("_"+ batchCode):row.bar_code.concat("_"+ batchCode) } 
+            // format="CODE128" 
+            // className="ss" 
+            // displayValue={false} 
+            width='1px' 
+            // height='50px'
+            
+            />}
         </Box>
         )
     }
+    function range(start, end) {
+        return Array(end - start + 1).fill().map((_, idx) => start + idx)
+      }
+      console.log(" range(1,Number(quantity))", range(1,Number(quantity)))
+
     return (
         <Grid container>
-            {[1,2,3].map(()=> {
+            {range(1,Number(quantity)).map(()=> {
                 return(
                     <Grid container item xs={col} justifyContent="center">
                         <BarCodeModel />
