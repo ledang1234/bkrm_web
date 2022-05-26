@@ -255,5 +255,5 @@ export const getColorBatch = (batch, period) => {
             
         }
     }
-    return {color: "blue", status: ""}
+    return {color: "blue", status: "Còn hạn"}
 }

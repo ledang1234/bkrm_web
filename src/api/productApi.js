@@ -1,4 +1,5 @@
 import axios from "axios";
+import { currentDate } from "../utils";
 import axiosClient from "./axiosClient";
 const productApi = {
   createProduct: (storeUuid, params) => {
@@ -100,7 +101,7 @@ const productApi = {
   },
   transferInventory: (storeUuid, branchUuid, body) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/transferInventory`;
-    return axiosClient.post(url, body);
+    return axiosClient.post(url, {...body, created_at: currentDate()});
   },
   
 };

@@ -122,26 +122,25 @@ const TransferInventory = () => {
   // useEffect(() => {
   //   setPagingState({ ...pagingState, page: 0 });
   // }, [reload, store_uuid, branch_uuid, query]);
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await transferInventoryApi.get(
-          store_uuid,
-          branch_uuid
-        );
-        // setPagingState({ ...pagingState, total_rows: response.total_rows });
-        // setTotalRows(response.total_rows);
-        // setPurchaseOrders(response.data);
-        // setTotalAmount(response.total_amount);
-        setData(response.data)
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (store_uuid && branch_uuid ) {
-      
-      loadData();
+
+  const loadData = async () => {
+    try {
+      const response = await transferInventoryApi.get(
+        store_uuid,
+        branch_uuid
+      );
+      // setPagingState({ ...pagingState, total_rows: response.total_rows });
+      // setTotalRows(response.total_rows);
+      // setPurchaseOrders(response.data);
+      // setTotalAmount(response.total_amount);
+      setData(response.data)
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  useEffect(() => {
+    if (store_uuid && branch_uuid ) loadData();
   }, [store_uuid, branch_uuid]);
 
   const [snackStatus, setSnackStatus] = React.useState({
@@ -160,6 +159,17 @@ const TransferInventory = () => {
       console.log(error);
     }
   }
+
+  const update = async (row) => {
+    try {
+      const response = await transferInventoryApi.update(store_uuid,branch_uuid,row);
+      statusAction.successfulStatus('Nhập thành công');
+      loadData()
+    } catch(err) {
+      statusAction.failedStatus("Nhập thất bại");
+    }
+  }
+
   const tableRef = React.createRef();
 
   return (
@@ -262,6 +272,7 @@ const TransferInventory = () => {
                 openRow={openRow}
                 handleOpenRow={handleOpenRow}
                 onReload={() => {}}
+                update={update}
               />
             );
           })}

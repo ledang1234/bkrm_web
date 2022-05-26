@@ -50,6 +50,7 @@ const SearchBarCode = (props) => {
               (product) => product.product_code === product_code
             );
             props.handleSearchBarSelect(product, batch_code);
+            setBarcode("");
           } else {
             const product = props.products.find(
               (product) => product.product_code === barcode

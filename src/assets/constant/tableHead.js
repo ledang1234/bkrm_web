@@ -382,8 +382,10 @@ export const TransferInventoryHeadCells = [
   { id: "quantity", align: "left", disablePadding: false, label: "Số lượng" },
   { id: "from", align: "left", disablePadding: false, label: "Từ" },
   { id: "to", align: "left", disablePadding: false, label: "Đến" },
-  { id: "user", align: "left", disablePadding: false, label: "Ngừoi thực hiện" },
+  { id: "user", align: "left", disablePadding: false, label: "Người thực hiện" },
   { id: "date", align: "left", disablePadding: false, label: "Ngày" },
+  { id: "status", align: "left", disablePadding: false, label: "" },
+
 ];
 
 export const CashbookHeadCells = [

@@ -476,7 +476,7 @@ const Cart = () => {
     const batchInfo = batchBarCode 
       ? selectedOption.batches.find(b => b.batch_code === batchBarCode)
       : selectedOption.batches.at(-1);
-      
+
     if (!batchInfo) {
       statusAction.failedStatus("Không tìm thấy lô")
       return;
@@ -1007,7 +1007,11 @@ const Cart = () => {
       is_customer_order: false,
       points: cart.scores,
       //
-      otherFee:cart.otherFee
+      // otherFee:cart.otherFee
+      // other_fee_value: 0,
+      // other_fee_detail: {},
+      // promotion: 0,
+      // promotion_detail: {},
     };
 
     try {
