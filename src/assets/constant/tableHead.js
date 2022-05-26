@@ -378,8 +378,8 @@ export const DiscountHeadCells = [
 export const TransferInventoryHeadCells = [
   // { id: "stt", align: "left", disablePadding: true, label: "Stt" },
   { id: "id", align: "left", disablePadding: true, label: "Mã" },
-  { id: "name", align: "left", disablePadding: false, label: "Tên sản phẩm" },
-  { id: "quantity", align: "left", disablePadding: false, label: "Số lượng" },
+  { id: "name", align: "left", disablePadding: false, label: "Tên SP" },
+  { id: "quantity", align: "left", disablePadding: false, label: "SL" },
   { id: "from", align: "left", disablePadding: false, label: "Từ" },
   { id: "to", align: "left", disablePadding: false, label: "Đến" },
   { id: "user", align: "left", disablePadding: false, label: "Người thực hiện" },

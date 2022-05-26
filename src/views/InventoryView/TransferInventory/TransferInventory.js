@@ -254,8 +254,7 @@ const TransferInventory = () => {
           classes={classes}
           headerData={HeadCells.TransferInventoryHeadCells}
           // pagingState={pagingState}
-          // setPagingState={setPagingState}
-          
+          setPagingState={() => {}}
         />
         <TableBody>
           {/* <TableRow style={{backgroundColor:'#f5f5f5'}}>
