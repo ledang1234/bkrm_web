@@ -225,3 +225,35 @@ export const currentDate = () => {
 
     return importTime;
 }
+
+export const isLessDate = (strDate1, strDate2) => {
+    var d1 = Date.parse(strDate1);
+    var d2 = Date.parse(strDate2);
+    if (d1 < d2) {
+        return true;
+    }
+}
+
+export const addDate = (strDate, days) => {
+    var date = Date.parse(strDate);
+    date.setDate(date.getDate() + days);
+    return date.toString();
+}
+
+export const getColorBatch = (batch, period) => {
+    if (batch.expiry_date) {
+        if (isLessDate(batch.expiry_date, (new Date()).toDateString())) {
+            return {color: "red", status: "Hết hạn"}
+        } else {
+            if (period) {
+                if (isLessDate(batch.expiry_date, addDate( (new Date()).toDateString(), -period))) {
+                    return {color: "yellow", status: "Sắp hết hạn"}
+                } else {
+                    return {color: "blue", status: "Còn hạn"}
+                }
+            }
+            
+        }
+    }
+    return {color: "blue", status: ""}
+}

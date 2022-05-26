@@ -34,6 +34,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 import defaultProduct from "../../../../assets/img/product/default-product.png";
 import setting from "../../../../assets/constant/setting";
+import { isLessDate } from "../../../../utils";
 
 export const CartRow = (props) => {
   const theme = useTheme();
@@ -381,7 +382,7 @@ export const CartRow = (props) => {
                   <Chip
                     label={`${
                       batch?.batch_code ? batch?.batch_code : "Mới"
-                    } ${batch?.expiry_date ? "(" + batch?.expiry_date.substring(0,10) + ")" : ""}  ${
+                    }${batch?.expiry_date ? "(" + batch?.expiry_date.substring(0,10) + "): " : ": "}  ${
                       batch.additional_quantity
                     }`}
                     key={batch.id}
@@ -391,7 +392,7 @@ export const CartRow = (props) => {
                       );
                       handleUpdateBatches(row.uuid, newBatches);
                     }}
-                    color={batch.is_new ? "primary" : "secondary"}
+                    color={batch.expiry_date ? isLessDate(batch.expiry_date, (new Date()).toDateString()) ? "secondary" : "primary" : "primary"}
                     deleteIcon={<DeleteOutline />}
                     variant="outlined"
                   />

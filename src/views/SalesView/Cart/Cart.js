@@ -472,18 +472,16 @@ const Cart = () => {
     let item = cartList[selectedIndex].cartItem.find(
       (item) => item.uuid === selectedOption.uuid
     );
-
     
-    let batchInfo = {additional_quantity: 1};
-    if (batchBarCode) {
-      const existedBatchInfo = selectedOption?.batches.find(b => b.batch_code === batchBarCode);
-      if (existedBatchInfo) {
-        batchInfo = existedBatchInfo;
-      } else {
-        batchInfo.additional_quantity = 1;
-      }
+    const batchInfo = batchBarCode 
+      ? selectedOption.batches.find(b => b.batch_code === batchBarCode)
+      : selectedOption.batches.at(-1);
+      
+    if (!batchInfo) {
+      statusAction.failedStatus("Không tìm thấy lô")
+      return;
     }
-    console.log(batchInfo)
+
     if (!item) {
       let newCartItem = {
         id: cartList[selectedIndex].cartItem?.length,
@@ -513,24 +511,18 @@ const Cart = () => {
     // batch
       // - batch_code included
       // - no batch => add a first
-      if (item && item.has_batches) {
+    if (item && item.has_batches) {
       let newCartList = cloneDeep(cartList);
-      if (batchBarCode) {
-        const existedBatchIndex = item.selectedBatches.findIndex(b => b.batch_code === batchBarCode)
-        if (existedBatchIndex !== -1) {
-          newCartList[selectedIndex].cartItem[itemIndex].selectedBatches[existedBatchIndex].additional_quantity += 1 
-        } else {
-          batchInfo.additional_quantity = 1
-          // alert(JSON.stringify(batchInfo))
-          newCartList[selectedIndex].cartItem[itemIndex].selectedBatches.push(batchInfo);
-        }
+      const existedBatchIndex = item.selectedBatches.findIndex(b => b.batch_code === batchInfo.batch_code);
+      if (existedBatchIndex !== -1) {
+        newCartList[selectedIndex].cartItem[itemIndex].selectedBatches[existedBatchIndex].additional_quantity += 1 
       } else {
-        const latest = selectedOption.batches.filter(b => b.quantity !== '0').reverse()[0];
-        newCartList[selectedIndex].cartItem[itemIndex].selectedBatches.push({...latest, additional_quantity: 1});
+        batchInfo.additional_quantity = 1;
+        newCartList[selectedIndex].cartItem[itemIndex].selectedBatches.push(batchInfo);
       }
+      
       setCartList(newCartList);
     }
-
     // not batch
     if (item && !item.has_batches) {
       handleChangeItemQuantity(
@@ -538,15 +530,7 @@ const Cart = () => {
         cartList[selectedIndex].cartItem[itemIndex].quantity + 1
       );
     }
-
-    // if (item) {
-
-    // } else {
-   
-     
-    // }
   };
-  // console.log("cartList[selectedIndex].cartItem",cartList[selectedIndex].cartItem)
 
   const handleDeleteItemCart = (itemUuid) => {
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
@@ -1009,6 +993,7 @@ const Cart = () => {
       payment_method: cart.payment_method,
       paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
       discount: cart.discount,
+      
       status:
         cart.paid_amount < cart.total_amount - cart.discount
           ? "debt"
