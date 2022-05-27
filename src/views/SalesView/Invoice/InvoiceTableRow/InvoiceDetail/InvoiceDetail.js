@@ -174,7 +174,7 @@ function InvoiceDetail(props) {
       loadData();
     }
   }, [props.parentProps.openRow, reload]);
-  const debtAmount = order.total_amount - order.discount - order.paid_amount;
+  const debtAmount = order.total_amount - order.discount - row.promotion_value+row.other_fee_value - order.paid_amount;
   const [openPayRemaining, setOpenPayRemaining] = useState(false);
   const editInventoryOrderApiCall = async (
     store_uuid,
@@ -208,6 +208,8 @@ function InvoiceDetail(props) {
     if ( Number(element.returned_quantity) === 0) return false;
     else return true;
   })
+
+  console.log("rowrowrowrowrowrow",row)
 
 
   return (
@@ -335,7 +337,7 @@ function InvoiceDetail(props) {
               </Grid>
               <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  <VNDFormat value={order.total_amount - order.discount} />
+                  <VNDFormat value={order.total_amount - order.discount  - row.promotion_value+row.other_fee_value} />
                 </Typography>
               </Grid>
             </Grid>
@@ -493,15 +495,35 @@ function InvoiceDetail(props) {
             <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
                 <Typography variant="h5" gutterBottom component="div">
-                  Giảm giá
+                  Giảm giá {row.promotion_detail?.bestDetailSelectedPromotion?.type ==="%" ? <b style={{color:'red'}} >({row?.promotion_detail?.bestDetailSelectedPromotion?.discountValue}%)</b>:""}
                 </Typography>
               </Grid>
               <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
-                  <VNDFormat value={row.discount} />
+                  <VNDFormat value={row.discount + row.promotion_value} />
                 </Typography>
               </Grid>
             </Grid>
+            { 
+           
+            row.other_fee_detail?.map((fee)=>{
+              if(fee.name.length >0)
+              return (
+               <Grid container direction="row" justifyContent={"flex-end"}>
+               <Grid item xs={7} sm={2}>
+                 <Typography variant="h5" gutterBottom component="div">
+                    {fee.name}
+                 </Typography>
+               </Grid>
+               <Grid item xs={2} sm={2}>
+                 <Typography variant="body1" gutterBottom component="div">
+                   <VNDFormat value={fee.type === "%"?  Number(fee.value)*(Number(row.total_amount) - Number(row.discount) - Number(row.promotion)) / 100 :fee.value  } />
+                 </Typography>
+               </Grid>
+             </Grid>
+              )
+            })
+           }
 
             <Grid container direction="row" justifyContent={"flex-end"}>
               <Grid item xs={7} sm={2}>
@@ -511,7 +533,7 @@ function InvoiceDetail(props) {
               </Grid>
               <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div" style={{fontWeight:500, color:theme.customization.primaryColor[500]}}>
-                  <VNDFormat value={row.total_amount - row.discount} />
+                  <VNDFormat value={row.total_amount - row.discount  - row.promotion_value+row.other_fee_value} />
                 </Typography>
               </Grid>
             </Grid>

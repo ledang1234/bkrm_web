@@ -188,7 +188,7 @@ const CartSummary = (props) => {
       }
   };
 
-  let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount - cartData.discountPro) 
+  let returnMoney =  cartData.paid_amount - (cartData.total_amount - cartData.discount - cartData.discountPro + cartData.otherFee) 
 
   const totalQuantity = calculateTotalQuantity(cartData.cartItem)
 
@@ -443,7 +443,7 @@ const CartSummary = (props) => {
             </Grid>:null}
 
 
-            {cartData.total_amount - cartData.discount  -  cartData?.discountPro   !== 0 ?
+            {cartData.total_amount - cartData.discount  -  cartData?.discountPro + cartData?.otherFee   !== 0 ?
             <Grid
               container
               direction="row"

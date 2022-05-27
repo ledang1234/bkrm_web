@@ -121,6 +121,8 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const item = cart.cartItem? cart.cartItem :cart.details
+    const otherfee = store_setting?.vat
+    let otherFeeMoney = otherfee?.listCost ? otherfee?.listCost?.reduce((sum,fee)=>fee.type!=="%"? sum + Number(fee.value):sum , 0) :0;
 
     return (
         <div style={{paddingLeft: -10}} >
@@ -237,9 +239,16 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                 {Number(cart.discount) > 0 || Number(cart.otherFee) >0?
                   <>
                   <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
-                  <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
+                  <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}
+                  {cart.bestDetailSelectedPromotion?.type ==="%" ? <b style={{color:'red'}} >({cart.bestDetailSelectedPromotion?.discountValue}%)</b>:""}
+                  </Typography>
                   </>
                 :null}
+                  { otherfee?.listCost?.map((fee)=>(
+                     <Typography className={clsx(classes.text,classes.weight)}>
+                     {fee.name}{" "} 
+                     </Typography>
+                  ))}
                 <Typography className={clsx(classes.text,classes.weight)}>
                 Tổng cộng:{" "} 
                 </Typography>
@@ -255,13 +264,17 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                   <>
                     <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount} /></Typography>
                     <Typography >
-                      <ThousandFormat className={clsx(classes.text,classes.weight)} value={cart.discount} />
+                      <ThousandFormat className={clsx(classes.text,classes.weight)} value={Number(cart.discount) + Number(cart.discountPro)} />
                     </Typography>
                  </>
                 :null}
-                <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount +cart.otherFee }/></Typography>
+                   { otherfee?.listCost?.map((fee)=>(
+                    <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={ fee.type === "%" ? Number(fee.value)*(Number(cart.total_amount) - Number(cart.discount) - Number(cart.discountPro)) /100 : fee.value}/></Typography>
+                   ))}
+
+                <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount- cart.discountPro +cart.otherFee }/></Typography>
                 <Typography className={clsx(classes.text,classes.weight)}> <ThousandFormat value={cart.paid_amount} /></Typography>
-                <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount- cart.discount + cart.otherFee)} /></Typography>
+                <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount - cart.discount -cart.discountPro + cart.otherFee)} /></Typography>
 
               </Grid>
             </Grid>

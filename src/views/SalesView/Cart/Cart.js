@@ -643,7 +643,8 @@ const Cart = () => {
     }) 
 
     if(selectedPromotion.discountType === "sendGift" ){
-      const listGift = checkProduct ?checkProduct.detail: bestDetailSelectedCondition.listGiftItem
+      // const listGift = checkProduct ?checkProduct.detail: bestDetailSelectedCondition.listGiftItem
+      const listGift = checkProduct.idPro ?checkProduct.detail: bestDetailSelectedCondition.listGiftItem.map((item) =>{return {...item, quantity:bestDetailSelectedCondition.numberGiftItem}})
       let listGiftItem = listGift?.map((selectedOption)=>{
         if(selectedOption.quantity >0 && !selectedOption.has_batches)
         return { id: cartList[selectedIndex].cartItem?.length,
@@ -918,7 +919,7 @@ const Cart = () => {
       }
     } 
 
-    else if(!notExistZeroPrice || ( cart.paid_amount < cart.total_amount - cart.discount && !cart.customer)){
+    else if(!notExistZeroPrice || ( cart.paid_amount < cart.total_amount + cart.otherFee -cart.discountPro - cart.discount && !cart.customer)){
         setOpenPopUpWarning(true)
         return 
     }
@@ -978,6 +979,8 @@ const Cart = () => {
       // loadProducts()
     }
   };
+  console.log("cartcartcartcartcartcart",cartList[selectedIndex])
+
   const handleConfirmCallApi  = async () => {
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
     let cart = cartList[selectedIndex];
@@ -990,11 +993,18 @@ const Cart = () => {
 
     let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
     console.log(cart.paid_amount, cart.total_amount, cart.discount);
+    const otherFee = otherfee?.listCost?.map((fee)=>{
+      if(fee.type === "%") {return({name:fee.name, value:Number(fee.value)*(Number(cart.total_amount) - Number(cart.discount) - Number(cart.discountPro)) / 100 })} else{return({name:fee.name, value:fee.value})}
+    })
+
+
+
+
     let body = {
       customer_uuid: cart.customer ? cart.customer.uuid : "",
       total_amount: cart.total_amount.toString(),
       payment_method: cart.payment_method,
-      paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
+      paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) + Number(cart.otherFee) - Number(cart.discount)),
       discount: cart.discount,
       
       status:
@@ -1010,11 +1020,14 @@ const Cart = () => {
       is_customer_order: false,
       points: cart.scores,
       //
-      // otherFee:cart.otherFee
-      // other_fee_value: 0,
-      // other_fee_detail: {},
-      // promotion: 0,
-      // promotion_detail: {},
+
+      other_fee_value: cart.otherFee,
+      other_fee_detail: otherFee,
+      promotion_value: cart.discountPro,
+      promotion_detail: {
+        selectedPromotion: cart.selectedPromotion, 
+        bestDetailSelectedPromotion: cart.bestDetailSelectedPromotion,
+      },
     };
 
     try {
@@ -1315,7 +1328,7 @@ const Cart = () => {
           </Box>
         </Card>
       </Grid>
-      <PopUpWarningZeroPrice  open={openPopUpWarning} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} isDebtWarning={ cartList[selectedIndex].paid_amount < cartList[selectedIndex].total_amount - cartList[selectedIndex].discount && !cartList[selectedIndex].customer} 
+      <PopUpWarningZeroPrice  open={openPopUpWarning} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} isDebtWarning={ cartList[selectedIndex].paid_amount < cartList[selectedIndex].total_amount  +cartList[selectedIndex].otherFee -cartList[selectedIndex].discountPro - cartList[selectedIndex].discount && !cartList[selectedIndex].customer} 
       existZeroPrice={!cartList[selectedIndex].cartItem.every(function (element, index) { if (Number(element.unit_price)  === 0) return false; else return true;})} />
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>
