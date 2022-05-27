@@ -147,24 +147,24 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
               
                
                 <Grid container style={{marginBottom:10}}>
-                    <Grid item xs={7}> </Grid>
-                    <Grid item xs={2} style={{color:'#000', fontWeight:500}}> Đang đặt </Grid>
+                    <Grid item xs={6}> </Grid>
+                    <Grid item xs={2} style={{color:'#000', fontWeight:500}}> Đặt </Grid>
                     <Grid item xs={2} style={{color:'#000', fontWeight:500}}> Tồn </Grid>
-                    <Grid item xs={3}> </Grid>
+                    <Grid item xs={2}> </Grid>
                 </Grid>
                 {branchs.map((item=>{ 
                 const quantity  = findBranchQuantity(item.uuid)
                 totalQuantity = totalQuantity +Number(quantity) 
                     return (
                     <Grid container>
-                        <Grid item xs={7} style={{color:'#000', fontWeight:500, marginBottom:25}}>
+                        <Grid item xs={6} style={{color:'#000', fontWeight:500, marginBottom:25}}>
                             {item.name}
                         {item.uuid === branch_uuid ? <CheckCircleIcon style={{marginLeft:10}}fontSize="small" color='primary'/> :null} </Grid>
 
-                        {/* <Grid item xs={2}>{findBranchQuantity(item.uuid)}</Grid> */}
+                        <Grid item xs={2}>{row.branch_inventories.find(b => b.uuid === item.uuid)?.ordering_quantity}</Grid>
                         <Grid item xs={2}>{quantity}</Grid>
 
-                       <Grid item xs={3}> {item.uuid !== branch_uuid ? <Button color='primary' variant='contained'size='small'style={{textTransform:'none'}} onClick={()=>setOpenModal(item)}>Chuyển</Button>:null}</Grid>
+                       <Grid item xs={2}> {item.uuid !== branch_uuid ? <Button color='primary' variant='contained'size='small'style={{textTransform:'none'}} onClick={()=>setOpenModal(item)}>Chuyển</Button>:null}</Grid>
                     </Grid>
                 )}))}
 
@@ -202,7 +202,6 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
                                         <ThousandSeperatedInput 
                                         value={newValueQuantity[index]?.quantity} 
                                             onChange={(e)=>{
-                                              
                                                 newValueQuantity[index].quantity= Number(e.target.value)
                                                 setValueQuantity(newValueQuantity)                                          
                                             }}
