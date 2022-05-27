@@ -611,6 +611,7 @@ const Cart = () => {
   };
   //PROMOTIONFUNC
   const handleUpdateSelectedPromotion = (selectedPromotion, checkProduct=null) => {
+    console.log("checkProduct",checkProduct)
     let newCartList = update(cartList, {
       [selectedIndex]: { selectedPromotion: { $set: null }, bestDetailSelectedPromotion:{ $set: null },discountPro:{ $set: null },listGiftItem:{ $set: [] } },
     });
@@ -643,7 +644,8 @@ const Cart = () => {
     }) 
 
     if(selectedPromotion.discountType === "sendGift" ){
-      const listGift = checkProduct ?checkProduct.detail: bestDetailSelectedCondition.listGiftItem
+      // const listGift = checkProduct ?checkProduct.detail: bestDetailSelectedCondition.listGiftItem
+      const listGift = checkProduct.idPro ?checkProduct.detail: bestDetailSelectedCondition.listGiftItem.map((item) =>{return {...item, quantity:bestDetailSelectedCondition.numberGiftItem}})
       let listGiftItem = listGift?.map((selectedOption)=>{
         if(selectedOption.quantity >0 && !selectedOption.has_batches)
         return { id: cartList[selectedIndex].cartItem?.length,
@@ -652,12 +654,15 @@ const Cart = () => {
           product_code: selectedOption.product_code,
           bar_code: selectedOption.bar_code,
           unit_price: selectedOption.list_price,
+
           img_urls: selectedOption.img_urls,
           name: selectedOption.name,
           branch_quantity: Number(selectedOption.branch_quantity),
           has_batches: selectedOption.has_batches,
           batches: selectedOption.batches,
-          branch_inventories: selectedOption.branch_inventories,}
+          branch_inventories: selectedOption.branch_inventories,
+          standard_price: selectedOption.standard_price,
+          }
       })
       console.log("hello Gia Le",listGiftItem)
       listGiftItem= listGiftItem.filter((item)=> item)
@@ -766,7 +771,11 @@ const Cart = () => {
       bestCondition = bestCondition.filter(item => item !== null)[0]
       if(bestCondition?.totalCost !== cartList[selectedIndex]?.bestDetailSelectedPromotion?.totalCost){
         let newCartList = update(cartList, {
-          [selectedIndex]: { selectedPromotion: { $set: null }, bestDetailSelectedPromotion:{ $set: null },discountPro:{ $set: null },listGiftItem:{ $set: [] } },
+          [selectedIndex]: { 
+            selectedPromotion: { $set: null }, 
+            bestDetailSelectedPromotion:{ $set: null },
+            discountPro:{ $set: null },
+            listGiftItem:{ $set: [] } },
         });
         setCartList(newCartList);
       }
@@ -777,7 +786,11 @@ const Cart = () => {
   useEffect(() => {
     if(cartList[selectedIndex].total_amount < cartList[selectedIndex].discount ){
       let newCartList = update(cartList, {
-        [selectedIndex]: { discount: { $set: "0" }, discountDetail: { $set: {value:'0', type:'VND' }}, discountPro:{$set:"0"} } ,
+        [selectedIndex]: {
+           discount: { $set: "0" }, 
+           discountDetail: { $set: {value:'0', type:'VND' }}, 
+           discountPro:{$set:"0"} } ,
+           listGiftItem:{$set:[]}
       });
       setCartList(newCartList);
     }
@@ -862,7 +875,7 @@ const Cart = () => {
     setOpenPopUpWarning(false)
   }
 
-  console.log("otherFeeeee",cartList[selectedIndex]?.otherFee)
+  console.log("cartList[selectedIndex]?.listGiftItem",cartList[selectedIndex]?.listGiftItem)
   
 
   const handleConfirm = async () => {
@@ -918,7 +931,7 @@ const Cart = () => {
       }
     } 
 
-    else if(!notExistZeroPrice || ( cart.paid_amount < cart.total_amount - cart.discount && !cart.customer)){
+    else if(!notExistZeroPrice || ( cart.paid_amount < cart.total_amount + cart.otherFee -cart.discountPro - cart.discount && !cart.customer)){
         setOpenPopUpWarning(true)
         return 
     }
@@ -978,6 +991,8 @@ const Cart = () => {
       // loadProducts()
     }
   };
+  console.log("cartcartcartcartcartcart",cartList[selectedIndex])
+
   const handleConfirmCallApi  = async () => {
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
     let cart = cartList[selectedIndex];
@@ -990,11 +1005,18 @@ const Cart = () => {
 
     let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
     console.log(cart.paid_amount, cart.total_amount, cart.discount);
+    const otherFee = otherfee?.listCost?.map((fee)=>{
+      if(fee.type === "%") {return({name:fee.name, value:Number(fee.value)*(Number(cart.total_amount) - Number(cart.discount) - Number(cart.discountPro)) / 100 })} else{return({name:fee.name, value:fee.value})}
+    })
+
+
+    console.log("cart.listGiftItem",cart.listGiftItem)
+
     let body = {
       customer_uuid: cart.customer ? cart.customer.uuid : "",
       total_amount: cart.total_amount.toString(),
       payment_method: cart.payment_method,
-      paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) - Number(cart.discount)),
+      paid_amount: Math.min(cart.paid_amount, Number(cart.total_amount) + Number(cart.otherFee) - Number(cart.discount)),
       discount: cart.discount,
       
       status:
@@ -1010,11 +1032,16 @@ const Cart = () => {
       is_customer_order: false,
       points: cart.scores,
       //
-      // otherFee:cart.otherFee
-      // other_fee_value: 0,
-      // other_fee_detail: {},
-      // promotion: 0,
-      // promotion_detail: {},
+
+      other_fee_value: cart.otherFee,
+      other_fee_detail: otherFee,
+      promotion_value: cart.discountPro + cartList[selectedIndex]?.listGiftItem.reduce((sum, a) => sum + Number(a.standard_price),0),
+      promotion_detail: {
+        selectedPromotion: cart.selectedPromotion, 
+        bestDetailSelectedPromotion: cart.bestDetailSelectedPromotion,
+        listGiftItem:cart.listGiftItem
+      
+      },
     };
 
     try {
@@ -1315,7 +1342,7 @@ const Cart = () => {
           </Box>
         </Card>
       </Grid>
-      <PopUpWarningZeroPrice  open={openPopUpWarning} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} isDebtWarning={ cartList[selectedIndex].paid_amount < cartList[selectedIndex].total_amount - cartList[selectedIndex].discount && !cartList[selectedIndex].customer} 
+      <PopUpWarningZeroPrice  open={openPopUpWarning} handleClose={handleCloseWarning} handleConfirmCallApi={handleConfirmCallApi} isDebtWarning={ cartList[selectedIndex].paid_amount < cartList[selectedIndex].total_amount  +cartList[selectedIndex].otherFee -cartList[selectedIndex].discountPro - cartList[selectedIndex].discount && !cartList[selectedIndex].customer} 
       existZeroPrice={!cartList[selectedIndex].cartItem.every(function (element, index) { if (Number(element.unit_price)  === 0) return false; else return true;})} />
       {/* 3. Receipt */}
       <div style={{ display: "none" }}>

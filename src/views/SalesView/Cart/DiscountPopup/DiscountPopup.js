@@ -38,6 +38,8 @@ import {getAllProductInCategoryParent} from "../../../../utils"
 import { ThousandSeperatedInput } from '../../../../components/TextField/NumberFormatCustom';
 import productApi from "../../../../api/productApi";
 import {useSelector,useDispatch} from 'react-redux'
+import openNotification from "../../../../components/StatusPopup/StatusPopup";
+import { success ,error,warning, info} from '../../../../components/StatusModal/StatusModal';
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -67,6 +69,7 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,handleUpdateSelecte
 // const [check, setCheck] =  React.useState(selectedPromotion?{idPro:selectedPromotion.id,detail:selectedPromotion.listGiftItem}:{idPro:null, detail:[]});
 // const [check, setCheck] =  React.useState(selectedPromotion?{idPro:selectedPromotion.id,detail:listGiftItem?listGiftItem:[]}:{idPro:null, detail:[]});
 const [check, setCheck] =  React.useState({idPro:null, detail:[]});
+const [openPopUpWarning, setOpenPopUpWarning]=  React.useState(false);
 
 // selectedPromotion.listGiftItem
   function getColorSelected (selectedData,itemUuid  ){
@@ -98,6 +101,8 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
   const store_uuid = info.store.uuid
   const branch_uuid = info.branch.uuid;
 
+  const [quantityWarn, setQuantityWarn] = useState(false)
+
   useEffect(() => {
     const fetchCategoryList = async () => {
       try {
@@ -118,15 +123,35 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
     if(!bestDetailSelectedCondition.isGiftCategory){
         return bestDetailSelectedCondition.listGiftItem
     }else{
-        // products,categories,categoryId
-        console.log("bestDetailSelectedCondition.listGiftCategory",bestDetailSelectedCondition.listGiftCategory)
         return getAllProductInCategoryParent(products,categoryList,bestDetailSelectedCondition.listGiftCategory[0])
     }
   
   }
   const handleCheck = (value, idPro) =>{
-    return setCheck({idPro:idPro, detail:value.map((item)=> {return {...item, quantity:1}})})
+    // console.log("valuevaluevaluevaluevalue",value)
+    if(idPro !== promotion.id){
+        return setOpenPopUpWarning(true)
+    }else{
+        // openNotification('warning', 'Chọn chương trình khuyến mãi trước khi chọn sản phẩm', '')
+        // warning("Chọn chương trình khuyến mãi trước khi chọn sản");
+        
+        // setCheck({idPro:idPro, detail:value.value.map((item ) => {return {...item, quantity:1}})})
+        // 
+        setCheck({idPro:idPro, detail:value?.map((item)=> {return {...item, quantity:1}})})
+
+    }
+    // setCheck({idPro:idPro, detail:value.map((item)=> {return {...item, quantity:1}})})
+    // return setCheck({idPro:idPro, detail:value.map((item)=> {return {...item, quantity:1}})})
   }
+
+  console.log("valuevaluevaluevaluecheck",check)
+  useEffect(()=>{
+    setCheck({idPro:null, detail:[]})
+    setOpenPopUpWarning(false)
+  }, [promotion])
+  useEffect(()=>{
+    setQuantityWarn(false)
+  },[check])
 
   const handleChangeGiftQuantity = (idPro,product, newQuantity) => {
     const itemIndex = check.detail.findIndex(
@@ -137,6 +162,21 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
       console.log("newCheck",newCheck)
       setCheck(newCheck)
   }
+  const handleApplyPromotion  = () =>{
+    console.log("check",check.detail.reduce((sum,item) => sum + Number(item.quantity)  ,0))
+    
+    let bestCondition = promotion?.detailCondition?.map((promotion) =>{if (Number(totalCartAmount) >= Number(promotion.totalCost)) {return promotion}else{return null}})
+    bestCondition =bestCondition?.filter(item => item !== null)[0]
+    let bestDetailSelectedCondition = getBestDetailSelectedCondition(promotion)
+    if(bestDetailSelectedCondition?.numberGiftItem < check?.detail?.reduce((sum,item) => sum + Number(item.quantity),0)){
+        setQuantityWarn(true)
+        return 
+    }
+    handleUpdateBestDetailSelectedPromotion(getBestDetailSelectedCondition(promotion));
+    handleUpdateSelectedPromotion(promotion, check);
+    onClose()
+  }
+
     return (
         // <Dialog open={open} handleClose={onClose} title={title}>
         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" maxWidth="md" fullWidth={true}>
@@ -153,6 +193,7 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
             </Grid>
            
             <DialogContent>
+
                 <Grid  container direction="row" justifyContent="" style={{marginBottom:8}}>
                     <Grid item style={{width:10,marginRight:30}} >                      
                     </Grid>
@@ -165,6 +206,9 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
                 </Grid>
                 <Divider style={{marginBottom:8}} />
                 {/* // */}
+                {openPopUpWarning?<Typography style={{color:'red', fontWeight:500, }}>Chọn chương trình khuyến mãi trước khi chọn sản phẩm</Typography>:null}
+                {quantityWarn?<Typography style={{color:'red', fontWeight:500, }}>Số lượng sản phẩm chọn lớn hơn số lượng cho phép tặng</Typography>:null}
+
                 <FormControl component="fieldset">
                     <RadioGroup value={value} >
                         {filteredPromotion?.map((pro) => {
@@ -198,15 +242,16 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
                                                     <>
                                                     <Typography style={{marginBottom:5}}><b > Tặng sản phẩm </b> </Typography>
                                                     <Select multiple  variant="outlined" fullWidth   id="branches"  name="branches" size="small"
-                                                        onChange={(e)=>handleCheck(e.target.value,pro.id)}
                                                         value={check.detail}
-                                                                renderValue={(selected) => 
-                                                                    selected?.map((item) => {
-                                                                        return getListItem(bestDetailSelectedCondition).find( (product) => product.uuid === item.uuid)?.name;
-                                                                    }).join(", ")
-                                                                }
-                                                                placeholder="Sản phẩm"
-                                                                style={{width:200, marginLeft:20, height:50}}
+                                                        onChange={(e)=>handleCheck(e.target.value,pro.id)}
+                                                    
+                                                        renderValue={(selected) => 
+                                                            selected?.map((item) => {
+                                                                return getListItem(bestDetailSelectedCondition).find( (product) => product.uuid === item.uuid)?.name;
+                                                            }).join(", ")
+                                                        }
+                                                        placeholder="Sản phẩm"
+                                                        style={{width:200, marginLeft:20, height:50}}
                                                             >
                                                             {getListItem(bestDetailSelectedCondition)?.map((item) => (
                                                                 <MenuItem key={item.uuid} value={item} 
@@ -232,7 +277,7 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
                                                     
                                                     </>
                                                 }
-
+                                             
                                                 <Typography  >(Hoá đơn từ {bestDetailSelectedCondition.totalCost.toLocaleString()} đ )</Typography>
 
                                                
@@ -243,8 +288,8 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
                     <Divider />
                 </RadioGroup>
             </FormControl> 
-                
             </DialogContent>
+            
             <DialogActions>
         <Button
           onClick={onClose}
@@ -258,7 +303,7 @@ const [check, setCheck] =  React.useState({idPro:null, detail:[]});
           variant="contained"
           size="small"
           color="primary"
-          onClick={()=>{handleUpdateBestDetailSelectedPromotion(getBestDetailSelectedCondition(promotion));handleUpdateSelectedPromotion(promotion, check);onClose()}}
+          onClick={()=>{handleApplyPromotion()}}
         >
           Áp dụng
         </Button>

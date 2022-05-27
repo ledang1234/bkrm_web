@@ -187,6 +187,7 @@ const AddDiscount = (props) => {
       ]
     }]);
 
+    console.log("rowsInvoicerowsInvoicerowsInvoice",rowsInvoice.listGiftItem)
 
     const getInValidMesg = ()=>{
       if(name.length===0) {  return "Chưa nhập tên chương trình khuyến mãi"}
@@ -307,7 +308,8 @@ const AddDiscount = (props) => {
     //   newArr[index].listGiftItem.push(option)
     // }
     newArr[index].listGiftItem = value
-   
+    console.log("valuevaluevaluevalue",value)
+
     setRowsInvoice(newArr);
   }
   const  handleChangeNumberBuyItem = (event, index) => {

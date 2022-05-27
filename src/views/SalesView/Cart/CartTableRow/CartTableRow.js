@@ -210,7 +210,12 @@ export const CartRow = (props) => {
               }
             />:null}
             <Grid style={{paddingTop:12, paddingBottom:12,marginBottom:imageType?3:0}}>
+              <ListItem>
                 <Typography style={!mini?{}:{fontWeight:imageType?600:null,color:color}}>{row.name}</Typography>
+                {isGiftPromotion ?<div >
+                      <Box style={{backgroundColor:"red",color:"#fff",fontSize:8,marginLeft:7,fontWeight:500,borderRadius:5, paddingLeft:5,paddingRight:5, marginLeft:10}}>KM</Box>
+                </div>:null}
+                </ListItem>
                 {imageType ?
                  canFixPriceSell.status && canFixPriceSell.cart || info?.role === 'owner'? (
                   <Input.ThousandSeperatedInput

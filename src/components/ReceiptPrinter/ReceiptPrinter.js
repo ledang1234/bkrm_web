@@ -32,6 +32,7 @@ import {
     TableRow,TableCell,Divider
   } from "@material-ui/core";
   import ReactQuill, {Quill} from 'react-quill';
+  import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -121,6 +122,8 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const item = cart.cartItem? cart.cartItem :cart.details
+    const otherfee = store_setting?.vat
+    let otherFeeMoney = otherfee?.listCost ? otherfee?.listCost?.reduce((sum,fee)=>fee.type!=="%"? sum + Number(fee.value):sum , 0) :0;
 
     return (
         <div style={{paddingLeft: -10}} >
@@ -230,6 +233,44 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                   })} 
 
                 </>}
+
+              {cart.listGiftItem?.length >0?
+              <>
+              
+              <ListItem>
+              <Typography className={classes.text} ><b>Khuyến mãi hoá đơn</b></Typography>
+                <CardGiftcardIcon style={{marginLeft:7,width:15, height:15, color:"#000"}}/>
+              </ListItem>
+              <Divider />
+
+              {cart.listGiftItem?.map((row, index) => {
+                    return (
+                        <>
+                          <Grid container direction="row" justifyContent="space-between">
+                            <Grid item xs={7}>
+                              <ListItem style={{margin:0, padding:0}}>
+                              <Typography className={classes.text} >{row.name}</Typography>
+                              <div >
+                                <Box style={{backgroundColor:"red",color:"#fff",fontSize:8,height:15,fontWeight:500,borderRadius:5,marginLeft:7, paddingTop:-3,  paddingBottom:-3,  paddingLeft:5,  paddingRight:5}}>KM</Box>
+                               </div>
+                              </ListItem>
+                              <ListItem style={{padding:0, margin:0}}>
+                             <Typography className={classes.text} ><ThousandFormat value={row.quantity}/> x 
+                             <ThousandFormat value={row.unit_price}/>  
+                             {/* <ThousandFormat value={0}/> */}
+                             </Typography>
+                              </ListItem>
+                            </Grid>
+                            <Grid item xs={5}>
+                            <Typography className={classes.text} style={{textAlign: "center"}}><ThousandFormat value={0}/></Typography>
+                            </Grid>
+                        </Grid>
+                        <Divider />
+                        </>
+                     );
+                  })}
+                  </> 
+                :null} 
               
 
             <Grid container direction="row" justifyContent="flex-end" style={{marginTop:10}}>
@@ -237,9 +278,26 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                 {Number(cart.discount) > 0 || Number(cart.otherFee) >0?
                   <>
                   <Typography className={clsx(classes.text,classes.weight)}> Tổng tiền hàng:{" "}</Typography>
-                  <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}</Typography>
+                
                   </>
                 :null}
+                {Number(cart.discount) +Number(cart.discountPro) > 0 ?
+                    <ListItem style={{margin:0, padding:0}}>
+                    <Typography className={clsx(classes.text,classes.weight)}> Giảm giá:{" "}
+                    {cart.bestDetailSelectedPromotion?.type ==="%" ? <b style={{color:'red'}} >({cart.bestDetailSelectedPromotion?.discountValue}%)</b>:""}
+                    </Typography>
+                    {cart.selectedPromotion?.discountKey === "invoice" && cart.selectedPromotion?.discountType==="discountInvoice"? 
+                     <div >
+                           <Box style={{backgroundColor:"red",color:"#fff",fontSize:8,height:15,fontWeight:500,borderRadius:5,marginLeft:7, paddingTop:-3,  paddingBottom:-3,  paddingLeft:5,  paddingRight:5}}>KM</Box>
+                     </div>
+                     :null}
+                    </ListItem>
+                :null}
+                  { otherfee?.listCost?.map((fee)=>(
+                     <Typography className={clsx(classes.text,classes.weight)}>
+                     {fee.name}{" "} 
+                     </Typography>
+                  ))}
                 <Typography className={clsx(classes.text,classes.weight)}>
                 Tổng cộng:{" "} 
                 </Typography>
@@ -255,13 +313,17 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
                   <>
                     <Typography className={clsx(classes.text,classes.weight)}>   <ThousandFormat value={cart.total_amount} /></Typography>
                     <Typography >
-                      <ThousandFormat className={clsx(classes.text,classes.weight)} value={cart.discount} />
+                      <ThousandFormat className={clsx(classes.text,classes.weight)} value={Number(cart.discount) + Number(cart.discountPro)} />
                     </Typography>
                  </>
                 :null}
-                <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount +cart.otherFee }/></Typography>
+                   { otherfee?.listCost?.map((fee)=>(
+                    <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={ fee.type === "%" ? Number(fee.value)*(Number(cart.total_amount) - Number(cart.discount) - Number(cart.discountPro)) /100 : fee.value}/></Typography>
+                   ))}
+
+                <Typography className={clsx(classes.text,classes.weight)}>  <ThousandFormat value={cart.total_amount - cart.discount- cart.discountPro +cart.otherFee }/></Typography>
                 <Typography className={clsx(classes.text,classes.weight)}> <ThousandFormat value={cart.paid_amount} /></Typography>
-                <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount- cart.discount + cart.otherFee)} /></Typography>
+                <Typography className={clsx(classes.text,classes.weight)}><ThousandFormat value={cart.paid_amount - (cart.total_amount - cart.discount -cart.discountPro + cart.otherFee)} /></Typography>
 
               </Grid>
             </Grid>
@@ -269,7 +331,7 @@ export const NomalReceiptPrinter = ({cart, date,code, type}) => {
             <Box>
             <ReactQuill theme="bubble"  value={store_setting.printReceiptWhenSell.contentNote}style={{color:"#000", fontSize:'8px',height:75}} readOnly={true} /></Box>:null}
 
-
+      
             <Typography className={classes.center}> --------------------------</Typography>
             {link? 
             <>
