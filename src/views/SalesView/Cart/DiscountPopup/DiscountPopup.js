@@ -129,23 +129,29 @@ const [openPopUpWarning, setOpenPopUpWarning]=  React.useState(false);
   }
   const handleCheck = (value, idPro) =>{
     // console.log("valuevaluevaluevaluevalue",value)
-    // if(idPro !== promotion.id){
-    //     setOpenPopUpWarning(true)
-    // }else{
-    //     // openNotification('warning', 'Chọn chương trình khuyến mãi trước khi chọn sản phẩm', '')
-    //     // warning("Chọn chương trình khuyến mãi trước khi chọn sản");
+    if(idPro !== promotion.id){
+        return setOpenPopUpWarning(true)
+    }else{
+        // openNotification('warning', 'Chọn chương trình khuyến mãi trước khi chọn sản phẩm', '')
+        // warning("Chọn chương trình khuyến mãi trước khi chọn sản");
         
-    //     setCheck({idPro:idPro, detail:value.value.map((item ) => {return {...item, quantity:1}})})
+        // setCheck({idPro:idPro, detail:value.value.map((item ) => {return {...item, quantity:1}})})
+        // 
+        setCheck({idPro:idPro, detail:value?.map((item)=> {return {...item, quantity:1}})})
 
-    // }
-    
-    return setCheck({idPro:idPro, detail:value.map((item)=> {return {...item, quantity:1}})})
+    }
+    // setCheck({idPro:idPro, detail:value.map((item)=> {return {...item, quantity:1}})})
+    // return setCheck({idPro:idPro, detail:value.map((item)=> {return {...item, quantity:1}})})
   }
 
+  console.log("valuevaluevaluevaluecheck",check)
   useEffect(()=>{
     setCheck({idPro:null, detail:[]})
     setOpenPopUpWarning(false)
   }, [promotion])
+  useEffect(()=>{
+    setQuantityWarn(false)
+  },[check])
 
   const handleChangeGiftQuantity = (idPro,product, newQuantity) => {
     const itemIndex = check.detail.findIndex(
@@ -159,19 +165,18 @@ const [openPopUpWarning, setOpenPopUpWarning]=  React.useState(false);
   const handleApplyPromotion  = () =>{
     console.log("check",check.detail.reduce((sum,item) => sum + Number(item.quantity)  ,0))
     
-    let bestCondition = promotion.detailCondition.map((promotion) =>{if (Number(totalCartAmount) >= Number(promotion.totalCost)) {return promotion}else{return null}})
-    bestCondition =bestCondition.filter(item => item !== null)[0]
+    let bestCondition = promotion?.detailCondition?.map((promotion) =>{if (Number(totalCartAmount) >= Number(promotion.totalCost)) {return promotion}else{return null}})
+    bestCondition =bestCondition?.filter(item => item !== null)[0]
     let bestDetailSelectedCondition = getBestDetailSelectedCondition(promotion)
-    // if(bestDetailSelectedCondition.numberGiftItem < check.detail.reduce((sum,item) => sum + Number(item.quantity),0)){
-    //     setQuantityWarn(true)
-    //     return 
-    // }
-    
-
+    if(bestDetailSelectedCondition?.numberGiftItem < check?.detail?.reduce((sum,item) => sum + Number(item.quantity),0)){
+        setQuantityWarn(true)
+        return 
+    }
     handleUpdateBestDetailSelectedPromotion(getBestDetailSelectedCondition(promotion));
     handleUpdateSelectedPromotion(promotion, check);
     onClose()
   }
+
     return (
         // <Dialog open={open} handleClose={onClose} title={title}>
         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" maxWidth="md" fullWidth={true}>
@@ -188,7 +193,6 @@ const [openPopUpWarning, setOpenPopUpWarning]=  React.useState(false);
             </Grid>
            
             <DialogContent>
-            {openPopUpWarning?<Typography style={{color:'red', fontWeight:500, }}>Chọn chương trình khuyến mãi trước khi chọn sản phẩm</Typography>:null}
 
                 <Grid  container direction="row" justifyContent="" style={{marginBottom:8}}>
                     <Grid item style={{width:10,marginRight:30}} >                      
@@ -202,6 +206,9 @@ const [openPopUpWarning, setOpenPopUpWarning]=  React.useState(false);
                 </Grid>
                 <Divider style={{marginBottom:8}} />
                 {/* // */}
+                {openPopUpWarning?<Typography style={{color:'red', fontWeight:500, }}>Chọn chương trình khuyến mãi trước khi chọn sản phẩm</Typography>:null}
+                {quantityWarn?<Typography style={{color:'red', fontWeight:500, }}>Số lượng sản phẩm chọn lớn hơn số lượng cho phép tặng</Typography>:null}
+
                 <FormControl component="fieldset">
                     <RadioGroup value={value} >
                         {filteredPromotion?.map((pro) => {

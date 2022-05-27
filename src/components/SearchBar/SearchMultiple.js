@@ -348,6 +348,7 @@ export default function SearchMultiple(props) {
   // redux
   const info = useSelector((state) => state.info);
   const products = info.products;
+  console.log("productsproductsproducts",products)
   const vouchers = [{id:"VC00001", name:"HELLOWORLD", quantity:10,value:10000,}]
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
 

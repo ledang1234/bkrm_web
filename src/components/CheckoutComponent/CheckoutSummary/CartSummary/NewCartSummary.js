@@ -335,7 +335,7 @@ const CartSummary = (props) => {
                 :null} */}
 
               <Typography variant="h5">Giảm giá {cartData.bestDetailSelectedPromotion?.type ==="%" ? <b style={{color:'red'}} >({cartData.bestDetailSelectedPromotion?.discountValue}%)</b>:""}</Typography>
-                { selectedPromotion?.discountKey === "invoice" ? 
+                { selectedPromotion?.discountKey === "invoice" && selectedPromotion?.discountType==="discountInvoice"? 
                 <div >
                       <Box style={{backgroundColor:"red",color:"#fff",fontSize:12,fontWeight:500,borderRadius:5, paddingLeft:5,paddingRight:5, marginLeft:10}}>KM</Box>
                 </div>

@@ -611,6 +611,7 @@ const Cart = () => {
   };
   //PROMOTIONFUNC
   const handleUpdateSelectedPromotion = (selectedPromotion, checkProduct=null) => {
+    console.log("checkProduct",checkProduct)
     let newCartList = update(cartList, {
       [selectedIndex]: { selectedPromotion: { $set: null }, bestDetailSelectedPromotion:{ $set: null },discountPro:{ $set: null },listGiftItem:{ $set: [] } },
     });
@@ -653,12 +654,15 @@ const Cart = () => {
           product_code: selectedOption.product_code,
           bar_code: selectedOption.bar_code,
           unit_price: selectedOption.list_price,
+
           img_urls: selectedOption.img_urls,
           name: selectedOption.name,
           branch_quantity: Number(selectedOption.branch_quantity),
           has_batches: selectedOption.has_batches,
           batches: selectedOption.batches,
-          branch_inventories: selectedOption.branch_inventories,}
+          branch_inventories: selectedOption.branch_inventories,
+          standard_price: selectedOption.standard_price,
+          }
       })
       console.log("hello Gia Le",listGiftItem)
       listGiftItem= listGiftItem.filter((item)=> item)
@@ -767,7 +771,11 @@ const Cart = () => {
       bestCondition = bestCondition.filter(item => item !== null)[0]
       if(bestCondition?.totalCost !== cartList[selectedIndex]?.bestDetailSelectedPromotion?.totalCost){
         let newCartList = update(cartList, {
-          [selectedIndex]: { selectedPromotion: { $set: null }, bestDetailSelectedPromotion:{ $set: null },discountPro:{ $set: null },listGiftItem:{ $set: [] } },
+          [selectedIndex]: { 
+            selectedPromotion: { $set: null }, 
+            bestDetailSelectedPromotion:{ $set: null },
+            discountPro:{ $set: null },
+            listGiftItem:{ $set: [] } },
         });
         setCartList(newCartList);
       }
@@ -778,7 +786,11 @@ const Cart = () => {
   useEffect(() => {
     if(cartList[selectedIndex].total_amount < cartList[selectedIndex].discount ){
       let newCartList = update(cartList, {
-        [selectedIndex]: { discount: { $set: "0" }, discountDetail: { $set: {value:'0', type:'VND' }}, discountPro:{$set:"0"} } ,
+        [selectedIndex]: {
+           discount: { $set: "0" }, 
+           discountDetail: { $set: {value:'0', type:'VND' }}, 
+           discountPro:{$set:"0"} } ,
+           listGiftItem:{$set:[]}
       });
       setCartList(newCartList);
     }
@@ -863,7 +875,7 @@ const Cart = () => {
     setOpenPopUpWarning(false)
   }
 
-  console.log("otherFeeeee",cartList[selectedIndex]?.otherFee)
+  console.log("cartList[selectedIndex]?.listGiftItem",cartList[selectedIndex]?.listGiftItem)
   
 
   const handleConfirm = async () => {
@@ -998,7 +1010,7 @@ const Cart = () => {
     })
 
 
-
+    console.log("cart.listGiftItem",cart.listGiftItem)
 
     let body = {
       customer_uuid: cart.customer ? cart.customer.uuid : "",
@@ -1023,10 +1035,12 @@ const Cart = () => {
 
       other_fee_value: cart.otherFee,
       other_fee_detail: otherFee,
-      promotion_value: cart.discountPro,
+      promotion_value: cart.discountPro + cartList[selectedIndex]?.listGiftItem.reduce((sum, a) => sum + Number(a.standard_price),0),
       promotion_detail: {
         selectedPromotion: cart.selectedPromotion, 
         bestDetailSelectedPromotion: cart.bestDetailSelectedPromotion,
+        listGiftItem:cart.listGiftItem
+      
       },
     };
 

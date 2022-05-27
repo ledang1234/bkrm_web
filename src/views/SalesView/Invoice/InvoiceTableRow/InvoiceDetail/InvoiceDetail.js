@@ -18,6 +18,8 @@ import {
   Typography,
   Table,
   TableCell,
+  Divider,
+  ListItem,
   TableRow,
   Collapse,
   Button,
@@ -30,6 +32,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import PrintTwoToneIcon from "@material-ui/icons/PrintTwoTone";
 import GetAppTwoToneIcon from "@material-ui/icons/GetAppTwoTone";
 import CloseIcon from "@material-ui/icons/Close";
+import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 
 // import project
 import { grey } from "@material-ui/core/colors";
@@ -95,6 +98,7 @@ const useStyles = makeStyles((theme) =>
 function InvoiceDetail(props) {
   const { row, openRow, onReload } = props.parentProps;
   const { isMini } = props;
+  const promotionDiscountValue = row.promotion_detail?.selectedPromotion?.discountType ==="discountInvoice" ?  row.promotion_value :0
 
   const info = useSelector((state) => state.info);
   const store_uuid = info.store.uuid;
@@ -174,7 +178,7 @@ function InvoiceDetail(props) {
       loadData();
     }
   }, [props.parentProps.openRow, reload]);
-  const debtAmount = order.total_amount - order.discount - row.promotion_value+row.other_fee_value - order.paid_amount;
+  const debtAmount = order.total_amount - order.discount - promotionDiscountValue+row.other_fee_value - order.paid_amount;
   const [openPayRemaining, setOpenPayRemaining] = useState(false);
   const editInventoryOrderApiCall = async (
     store_uuid,
@@ -212,6 +216,73 @@ function InvoiceDetail(props) {
   console.log("rowrowrowrowrowrow",row)
 
 
+  const TableRowDetailCart = ({detail}) =>{
+    return (
+      <TableRow key={detail.product_id}>
+                <TableCell component="th" scope="row">
+                  {detail.product_code}
+                </TableCell>
+                <TableCell>{detail.name}</TableCell>
+                {/* <TableCell>{detail.bar_code}</TableCell> */}
+                <TableCell align="right">
+                  <div>
+                    {detail.quantity}
+                    <div>
+                      {detail?.batches
+                        ? JSON.parse(detail.batches).map((batch) => (
+                            <Chip
+                              size="small"
+                              label={`${
+                                batch?.batch_code ? batch?.batch_code : "Mới"
+                              }(${
+                                batch?.expiry_date
+                                  ? batch?.expiry_date.substring(0, 10)
+                                  : ""
+                              }) - ${batch.additional_quantity}`}
+                              key={batch.id}
+                              color={batch.is_new ? "primary" : "secondary"}
+                              variant="outlined"
+                            />
+                          ))
+                        : null}
+                    </div>
+                  </div>
+                </TableCell>
+                {/* <TableCell align="right">{detail.returned_quantity}</TableCell> */}
+                {haveReturnQuantity?
+                 <TableCell align="right">
+                  <div>
+                    {detail.returned_quantity}
+                    <div>
+                      {detail.batches
+                        ? JSON.parse(detail.batches).map((batch) => (
+                            <Chip
+                              size="small"
+                              label={`${
+                                batch?.batch_code ? batch?.batch_code : "Mới"
+                              }(${
+                                batch?.expiry_date
+                                  ? batch?.expiry_date.substring(0, 10)
+                                  : ""
+                              })-${batch.returned_quantity}`}
+                              key={batch.id}
+                              color={batch.is_new ? "primary" : "secondary"}
+                              variant="outlined"
+                            />
+                          ))
+                        : null}
+                    </div>
+                  </div>
+                </TableCell>:null}
+                <TableCell align="right">
+                  <VNDFormat value={detail.unit_price} />
+                </TableCell>
+                <TableCell align="right" style={{ fontWeight: 700 }}>
+                  <VNDFormat value={detail.quantity * detail.unit_price} />
+                </TableCell>
+              </TableRow>
+    )
+  }
   return (
     <Collapse
       in={isMini ? true : openRow === row.uuid}
@@ -337,7 +408,7 @@ function InvoiceDetail(props) {
               </Grid>
               <Grid item sm={4}>
                 <Typography variant="body1" gutterBottom component="div">
-                  <VNDFormat value={order.total_amount - order.discount  - row.promotion_value+row.other_fee_value} />
+                  <VNDFormat value={order.total_amount - order.discount  - promotionDiscountValue+row.other_fee_value} />
                 </Typography>
               </Grid>
             </Grid>
@@ -390,72 +461,103 @@ function InvoiceDetail(props) {
           </TableHead>
           <TableBody>
             {order.details.map((detail) => (
-              <TableRow key={detail.product_id}>
-                <TableCell component="th" scope="row">
-                  {detail.product_code}
-                </TableCell>
-                <TableCell>{detail.name}</TableCell>
-                {/* <TableCell>{detail.bar_code}</TableCell> */}
-                <TableCell align="right">
-                  <div>
-                    {detail.quantity}
-                    <div>
-                      {detail.batches
-                        ? JSON.parse(detail.batches).map((batch) => (
-                            <Chip
-                              size="small"
-                              label={`${
-                                batch?.batch_code ? batch?.batch_code : "Mới"
-                              }(${
-                                batch?.expiry_date
-                                  ? batch?.expiry_date.substring(0, 10)
-                                  : ""
-                              }) - ${batch.additional_quantity}`}
-                              key={batch.id}
-                              color={batch.is_new ? "primary" : "secondary"}
-                              variant="outlined"
-                            />
-                          ))
-                        : null}
-                    </div>
-                  </div>
-                </TableCell>
-                {/* <TableCell align="right">{detail.returned_quantity}</TableCell> */}
-                {haveReturnQuantity?
-                 <TableCell align="right">
-                  <div>
-                    {detail.returned_quantity}
-                    <div>
-                      {detail.batches
-                        ? JSON.parse(detail.batches).map((batch) => (
-                            <Chip
-                              size="small"
-                              label={`${
-                                batch?.batch_code ? batch?.batch_code : "Mới"
-                              }(${
-                                batch?.expiry_date
-                                  ? batch?.expiry_date.substring(0, 10)
-                                  : ""
-                              })-${batch.returned_quantity}`}
-                              key={batch.id}
-                              color={batch.is_new ? "primary" : "secondary"}
-                              variant="outlined"
-                            />
-                          ))
-                        : null}
-                    </div>
-                  </div>
-                </TableCell>:null}
-                <TableCell align="right">
-                  <VNDFormat value={detail.unit_price} />
-                </TableCell>
-                <TableCell align="right" style={{ fontWeight: 700 }}>
-                  <VNDFormat value={detail.quantity * detail.unit_price} />
-                </TableCell>
-              </TableRow>
+              <TableRowDetailCart detail={detail}/>
+              // <TableRow key={detail.product_id}>
+              //   <TableCell component="th" scope="row">
+              //     {detail.product_code}
+              //   </TableCell>
+              //   <TableCell>{detail.name}</TableCell>
+              //   {/* <TableCell>{detail.bar_code}</TableCell> */}
+              //   <TableCell align="right">
+              //     <div>
+              //       {detail.quantity}
+              //       <div>
+              //         {detail.batches
+              //           ? JSON.parse(detail.batches).map((batch) => (
+              //               <Chip
+              //                 size="small"
+              //                 label={`${
+              //                   batch?.batch_code ? batch?.batch_code : "Mới"
+              //                 }(${
+              //                   batch?.expiry_date
+              //                     ? batch?.expiry_date.substring(0, 10)
+              //                     : ""
+              //                 }) - ${batch.additional_quantity}`}
+              //                 key={batch.id}
+              //                 color={batch.is_new ? "primary" : "secondary"}
+              //                 variant="outlined"
+              //               />
+              //             ))
+              //           : null}
+              //       </div>
+              //     </div>
+              //   </TableCell>
+              //   {/* <TableCell align="right">{detail.returned_quantity}</TableCell> */}
+              //   {haveReturnQuantity?
+              //    <TableCell align="right">
+              //     <div>
+              //       {detail.returned_quantity}
+              //       <div>
+              //         {detail.batches
+              //           ? JSON.parse(detail.batches).map((batch) => (
+              //               <Chip
+              //                 size="small"
+              //                 label={`${
+              //                   batch?.batch_code ? batch?.batch_code : "Mới"
+              //                 }(${
+              //                   batch?.expiry_date
+              //                     ? batch?.expiry_date.substring(0, 10)
+              //                     : ""
+              //                 })-${batch.returned_quantity}`}
+              //                 key={batch.id}
+              //                 color={batch.is_new ? "primary" : "secondary"}
+              //                 variant="outlined"
+              //               />
+              //             ))
+              //           : null}
+              //       </div>
+              //     </div>
+              //   </TableCell>:null}
+              //   <TableCell align="right">
+              //     <VNDFormat value={detail.unit_price} />
+              //   </TableCell>
+              //   <TableCell align="right" style={{ fontWeight: 700 }}>
+              //     <VNDFormat value={detail.quantity * detail.unit_price} />
+              //   </TableCell>
+              // </TableRow>
             ))}
           </TableBody>
         </Table>
+
+        {row.promotion_detail.selectedPromotion?
+          <Box style={{marginTop:15}}>
+            {/* <Divider/> */}
+              <ListItem>
+              <Typography><b style={{color:'red'}}>Khuyến mãi </b></Typography>
+                  <CardGiftcardIcon  style={{marginLeft:10, color:'red'}}/>
+              </ListItem>
+             <Typography style={{ color:'#000'}}><b>{row.promotion_detail?.selectedPromotion.name}: </b> 
+                Tổng tiền hàng từ {row.promotion_detail?.bestDetailSelectedPromotion?.totalCost.toLocaleString()} đ 
+                { row.promotion_detail?.selectedPromotion?.discountType ==="discountInvoice"?
+                  ` giảm giá ${row.promotion_detail?.bestDetailSelectedPromotion?.discountValue.toLocaleString()} ${row.promotion_detail?.bestDetailSelectedPromotion?.type}`:
+                  ` tặng:`
+                }
+             </Typography>
+            { row.promotion_detail?.listGiftItem?.map((detail)=>{
+              return (
+                <TableRow key={detail.product_id}>
+                 <TableCell>{detail.quantity} sản phẩm</TableCell>
+                <TableCell>{detail.product_code} - {detail.name}</TableCell>
+               
+              
+              </TableRow>
+              )
+            })
+               
+            }
+         
+            </Box>:null}
+
         <Box
           className={classes.background}
           style={{
@@ -500,7 +602,7 @@ function InvoiceDetail(props) {
               </Grid>
               <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div">
-                  <VNDFormat value={row.discount + row.promotion_value} />
+                  <VNDFormat value={row.discount + promotionDiscountValue} />
                 </Typography>
               </Grid>
             </Grid>
@@ -533,7 +635,7 @@ function InvoiceDetail(props) {
               </Grid>
               <Grid item xs={2} sm={2}>
                 <Typography variant="body1" gutterBottom component="div" style={{fontWeight:500, color:theme.customization.primaryColor[500]}}>
-                  <VNDFormat value={row.total_amount - row.discount  - row.promotion_value+row.other_fee_value} />
+                  <VNDFormat value={row.total_amount - row.discount  - promotionDiscountValue+row.other_fee_value} />
                 </Typography>
               </Grid>
             </Grid>

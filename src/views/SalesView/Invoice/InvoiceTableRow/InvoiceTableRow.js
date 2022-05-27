@@ -15,7 +15,9 @@ function InvoiceTableRow(props) {
 
   const classes = useRowStyles();
 
-  
+  console.log("row.promotion_detail?.selectedPromotion",row.promotion_detail?.selectedPromotion)
+  const promotionDiscountValue = row.promotion_detail?.selectedPromotion?.discountType ==="discountInvoice" ? row.promotion_value :0
+
   return (
     <>
       {/* ROW */}
@@ -53,11 +55,11 @@ function InvoiceTableRow(props) {
         // style={{color: theme.customization.mode === "Light"? '#000': null}}
         >
           {" "}
-          <VNDFormat value={Number(row.total_amount) - Number(row.discount)  - Number(row.promotion_value) + Number(row.other_fee_value)} />
+          <VNDFormat value={Number(row.total_amount) - Number(row.discount)  - Number(promotionDiscountValue) + Number(row.other_fee_value)} />
         </TableCell>
         {hidenCollumn?.includes("debt") ?null:
         <TableCell align="center" style={{color:colorText}}>
-          <FormatedStatus debt={Number(row.total_amount) - Number(row.discount)  - Number(row.promotion_value)+ Number(row.other_fee_value)  - Number(row.paid_amount) > 0 ? 1 : 0} />
+          <FormatedStatus debt={Number(row.total_amount) - Number(row.discount)  - Number(promotionDiscountValue)+ Number(row.other_fee_value)  - Number(row.paid_amount) > 0 ? 1 : 0} />
         </TableCell> }
       </TableRow>
 
