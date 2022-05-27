@@ -446,7 +446,6 @@ const Import = () => {
       [selectedIndex]: defaultPaymentAmount? { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }, paid_amount:{ $set: (Number(cartList[selectedIndex].total_amount) -Number(discountUpdate)).toString() }}:
       { discountDetail: { $set: obj } , discount:{ $set: discountUpdate }} ,
 
-
     });
   
     setCartList(newCartList);
@@ -459,7 +458,6 @@ const Import = () => {
       // [selectedIndex]: { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  },
       [selectedIndex]:defaultPaymentAmount? { discount: { $set: amount },paid_amount: { $set: (Number(cartList[selectedIndex].total_amount) -Number(amount)).toString() }  }:
       { discount: { $set: amount } },
-
 
     });
     setCartList(newCartList);

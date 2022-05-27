@@ -148,6 +148,7 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
                
                 <Grid container style={{marginBottom:10}}>
                     <Grid item xs={7}> </Grid>
+                    <Grid item xs={2} style={{color:'#000', fontWeight:500}}> Đang đặt </Grid>
                     <Grid item xs={2} style={{color:'#000', fontWeight:500}}> Tồn </Grid>
                     <Grid item xs={3}> </Grid>
                 </Grid>
@@ -166,6 +167,8 @@ const BranchInventoryPopUp = ({open,onClose, branchs,branch_inventories,setReloa
                        <Grid item xs={3}> {item.uuid !== branch_uuid ? <Button color='primary' variant='contained'size='small'style={{textTransform:'none'}} onClick={()=>setOpenModal(item)}>Chuyển</Button>:null}</Grid>
                     </Grid>
                 )}))}
+
+                
                 <Divider />
                 <Grid container>
                     <Grid item xs={7} ></Grid>

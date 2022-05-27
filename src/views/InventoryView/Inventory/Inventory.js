@@ -59,6 +59,7 @@ import setting from "../../../assets/constant/setting"
 import empltyImage from "../../../assets/img/icon/empty-cart.png"
 import { statusAction } from "../../../store/slice/statusSlice";
 import moment from "moment";
+import { currentDate } from "../../../utils";
 
 
 const Inventory = () => {
@@ -146,6 +147,10 @@ const Inventory = () => {
             page: pagingState.page,
             limit: pagingState.limit,
             ...query,
+            forcastMode: "lastXdays",
+            currentDate: currentDate().substring(0, 10),
+            forcastPeriod: 10,
+            historyPeriod: 30,
           }
         );
         setTotalRows(response.total_rows);

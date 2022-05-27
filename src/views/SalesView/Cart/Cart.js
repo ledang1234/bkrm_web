@@ -477,11 +477,11 @@ const Cart = () => {
       ? selectedOption.batches.find(b => b.batch_code === batchBarCode)
       : selectedOption.batches.at(-1);
 
-    if (!batchInfo) {
+    if (!batchInfo && selectedOption.has_batches) {
       statusAction.failedStatus("Không tìm thấy lô")
       return;
     }
-
+    
     if (!item) {
       let newCartItem = {
         id: cartList[selectedIndex].cartItem?.length,
@@ -498,14 +498,13 @@ const Cart = () => {
         branch_inventories: selectedOption.branch_inventories,
         selectedBatches: selectedOption.has_batches ? [{...batchInfo, additional_quantity: 1}] : []
       };
-
+      
       let newCartList = update(cartList, {
         [selectedIndex]: { cartItem: { $push: [newCartItem] } },
       });
 
       setCartList(newCartList);
       setIsUpdateTotalAmount(!isUpdateTotalAmount);
-      
     }
 
     // batch
@@ -522,6 +521,10 @@ const Cart = () => {
       }
       
       setCartList(newCartList);
+      handleChangeItemQuantity(
+        selectedOption.uuid,
+        cartList[selectedIndex].cartItem[itemIndex].quantity + 1
+      );
     }
     // not batch
     if (item && !item.has_batches) {
