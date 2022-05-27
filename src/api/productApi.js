@@ -95,9 +95,9 @@ const productApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/createBatch`;
     return axiosClient.post(url, body);
   },
-  productOrderRecommend: (storeUuid, branchUuid) => {
+  productOrderRecommend: (storeUuid, branchUuid, body) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/productOrderRecommend`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: body});
   },
   transferInventory: (storeUuid, branchUuid, body) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/transferInventory`;

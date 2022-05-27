@@ -12,7 +12,7 @@ import { useReactToPrint } from "react-to-print";
 import { ImportReceiptPrinter } from "../../../components/ReceiptPrinter/ReceiptPrinter";
 //import library
 import { Grid, Card, Box, TableContainer, FormControlLabel, Switch, ListItem, TableBody, Typography, ButtonBase,
-  Avatar, Tooltip, TextField, Button, CircularProgress, Table, Divider } from "@material-ui/core";
+  Avatar, Tooltip, TextField, Button, CircularProgress, Table, Divider, FormControl, Select, MenuItem } from "@material-ui/core";
 
 //import constant
 import * as HeadCells from "../../../assets/constant/tableHead";
@@ -50,6 +50,7 @@ import DialogWrapper from "../../../components/Modal/DialogWrapper";
 import ReccomendOrderPopUp from "./RecommendOrderPopUp/RecommendOrderPopUp";
 import { infoActions } from "../../../store/slice/infoSlice";
 import ModalWrapperWithClose from "../../../components/Modal/ModalWrapperWithClose";
+import { currentDate } from "../../../utils";
 
 // FILE này xử lý state -> connect search bar, table, với summary lại + quản lý chọn cart
 
@@ -71,6 +72,15 @@ const Import = () => {
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
   const canEnterDiscountWhenSell = store_setting?.canEnterDiscountWhenSell?.status
   const defaultPaymentAmount = store_setting?.defaultPaymentAmount.status && store_setting?.defaultPaymentAmount.import 
+  const [recommendOption, setRecommendOption] = useState({
+    mode: "lastXdays",
+    historyPeriod: 30,
+    forcastPeriod: 30,
+    
+    currentDate: currentDate().substring(0,10),
+    numOfYears: 1,
+    period: 30,
+  });
 
   const loadLocalImportListStorage = () => {
     if (window.localStorage.getItem("importListData")) {
@@ -637,7 +647,7 @@ const Import = () => {
   const handleClickRecommend = async () => {
     if (store_uuid && branch_uuid) {
       try {
-        const res = await productApi.productOrderRecommend(store_uuid, branch_uuid);
+        const res = await productApi.productOrderRecommend(store_uuid, branch_uuid, recommendOption);
         // alert(JSON.stringify(res.data, null, 2))
         // setDataRecommend(JSON.stringify(res.data, null, 2))
         setDataRecommend(res.data)
@@ -779,7 +789,7 @@ const Import = () => {
 
               {openRecommendOrderPopUp?
               <DialogWrapper 
-                title={"Gợi ý đặt hàng"}
+                title={<RecommendTitle recommendOption={recommendOption} setRecommendOption={setRecommendOption}/>}
                 open={openRecommendOrderPopUp}   
                 handleClose={()=>setOpenRecommendOrderPopUp(false)}
               > 
@@ -991,6 +1001,48 @@ function ButtonComponent(props) {
       {!loading && props.title}
     </Button>
   );
+}
+
+
+const RecommendTitle = ({recommendOption, setRecommendOption}) => {
+  const handleChange = (e) => {
+    setRecommendOption({...recommendOption, [e.target.name]: e.target.value})
+  }
+  return (<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+        <Grid container direction="row" spacing={2} alignContent="center" >
+          <Grid item xs={5}><div>Gợi ý đặt hàng nhập</div></Grid>
+
+          <Grid item xs={2}>
+            <TextField select value={recommendOption.mode}  onChange={handleChange} label="Chế độ" name="mode">
+            <MenuItem value={"lastXdays"}>X ngày qua</MenuItem>
+            <MenuItem value={"samePeriodPastYear"}>Cùng kỳ năm ngoái</MenuItem>
+            </TextField>
+          </Grid>
+         
+          {
+            recommendOption.mode === "lastXdays" ? <>
+              <Grid item xs={2}>
+                <TextField name="historyPeriod" label="Số ngày mẫu" type="number" value={recommendOption.historyPeriod} />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField name="forcastPeriod" label="Số ngày gợi ý" type="number" value={recommendOption.forcastPeriod} />
+              </Grid>
+            </> : (<>
+              <Grid item xs={2}>
+                <TextField  name="currentDate" label="Ngày" type="date" value={recommendOption.currentDate} />
+              </Grid>
+              <Grid item xs={1}>
+                <TextField name="numOfYears" width={50} label="Số năm cũ" type="number" value={recommendOption.numOfYears} />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField name="period" label="Số ngày gợi ý" type="number" value={recommendOption.period} /> 
+              </Grid>
+            </>
+            
+            )
+          }
+        </Grid>
+      </FormControl>);
 }
 
 
