@@ -529,7 +529,7 @@ function InvoiceDetail(props) {
           </TableBody>
         </Table>
 
-        {row.promotion_detail.selectedPromotion?
+        {row.promotion_detail?.selectedPromotion?
           <Box style={{marginTop:15}}>
             {/* <Divider/> */}
               <ListItem>
