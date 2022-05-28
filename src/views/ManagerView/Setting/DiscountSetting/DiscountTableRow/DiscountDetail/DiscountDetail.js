@@ -172,6 +172,15 @@ const DiscountDetail = (props) => {
                           <Typography variant="body1" gutterBottom component="div">{row.start_date ? `Từ ${row.start_date?.split('-').reverse().join('/')}` : null}  {row.end_date ? `-  Đến ${row.end_date?.split('-').reverse().join('/')}` :"(Không giới hạn)"}</Typography>
                         </Grid>
                     </Grid>
+                    <Grid container direction="row" justifyContent="flex-start">
+                      
+                        <Grid item xs={3} sm={2} >
+                          <Typography variant="h5" gutterBottom component="div">Áp dụng</Typography>    
+                        </Grid>
+                        <Grid item >
+                          <Typography variant="body1" gutterBottom component="div">{row.times} lần</Typography>
+                        </Grid>
+                    </Grid>
 
                     {/* Thay TRUE thành nếu list theo thứ ngày tháng,.. ko empty thì show */}
                     {dateAdvanceSetting.byMonth?.length !== 0 ?

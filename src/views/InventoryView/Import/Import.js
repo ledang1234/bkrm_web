@@ -75,7 +75,7 @@ const Import = () => {
   const [recommendOption, setRecommendOption] = useState({
     mode: "lastXdays",
     historyPeriod: 30,
-    forcastPeriod: 30,
+    forecastPeriod: 30,
     
     currentDate: currentDate().substring(0,10),
     numOfYears: 1,
@@ -662,6 +662,10 @@ const Import = () => {
       }
     }
   }
+
+  useEffect(() => {
+    handleClickRecommend()
+  }, [recommendOption])
   const [openRecommendOrderPopUp, setOpenRecommendOrderPopUp] = useState(false)
   const [dataRecommend, setDataRecommend] = useState(null)
 
@@ -1022,20 +1026,20 @@ const RecommendTitle = ({recommendOption, setRecommendOption}) => {
           {
             recommendOption.mode === "lastXdays" ? <>
               <Grid item xs={2}>
-                <TextField name="historyPeriod" label="Số ngày mẫu" type="number" value={recommendOption.historyPeriod} />
+                <TextField name="historyPeriod" onChange={handleChange} label="Số ngày mẫu" type="number" value={recommendOption.historyPeriod} />
               </Grid>
               <Grid item xs={2}>
-                <TextField name="forcastPeriod" label="Số ngày gợi ý" type="number" value={recommendOption.forcastPeriod} />
+                <TextField name="forecastPeriod" onChange={handleChange} label="Số ngày gợi ý" type="number" value={recommendOption.forecastPeriod} />
               </Grid>
             </> : (<>
               <Grid item xs={2}>
-                <TextField  name="currentDate" label="Ngày" type="date" value={recommendOption.currentDate} />
+                <TextField  name="currentDate" onChange={handleChange}  label="Ngày" type="date" value={recommendOption.currentDate} />
               </Grid>
               <Grid item xs={1}>
-                <TextField name="numOfYears" width={50} label="Số năm cũ" type="number" value={recommendOption.numOfYears} />
+                <TextField name="numOfYears" onChange={handleChange} width={50} label="Số năm cũ" type="number" value={recommendOption.numOfYears} />
               </Grid>
               <Grid item xs={2}>
-                <TextField name="period" label="Số ngày gợi ý" type="number" value={recommendOption.period} /> 
+                <TextField name="period" onChange={handleChange} label="Số ngày gợi ý" type="number" value={recommendOption.period} /> 
               </Grid>
             </>
             

@@ -316,6 +316,7 @@ const Cart = () => {
       clearInterval(intervalID)
     }
   }, [store_uuid, branch_uuid]);
+  
   const [reloadCustomers, setReloadCustomers] = useState(false);
   useEffect(() => {
     const loadingCustomer = async () => {

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
-import {Table,Button, ListItem,Box,List, Grid,Modal,Dialog} from '@material-ui/core';
+import {Table,Button, ListItem,Box,List, Grid,Modal,Dialog, Tooltip} from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -14,8 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import defaultProduct from "../../../../assets/img/product/default-product.png"
 import ButtonQuantity from "../../../../components/Button/ButtonQuantity";
-
-
 
 // 0. DATA
 
@@ -144,11 +142,6 @@ const EnhancedTableToolbar = (props) => {
         >
          Tạo đơn mới
       </Button>
-
-
-
-
-      
     </Toolbar>
   );
 };
@@ -284,16 +277,18 @@ const TableRowWithSelect = (props) => {
 const RowData = ({row, index,selected,hanđleChangeQuantity,handleClick}) =>{
   const classes = useStyles();
   const isSelected = (uuid) => selected.indexOf(uuid) !== -1;
-
+  console.log(row)
   const isItemSelected = isSelected(row.uuid);
     const labelId = `enhanced-table-checkbox-${index}`;
-    const [quantity, setQuantity] = useState(row.quantity)
+    const [quantity, setQuantity] = useState(Number(row.item.reorder_quantity) - Number(row.item.inventory) - Number(row.item.ordering_quantity))
 
     const updateQuantity = (newQuantity) => {
       setQuantity(newQuantity)
       hanđleChangeQuantity(row.uuid, newQuantity);
     };
     return (
+      <Tooltip title={`Tồn kho cần: ${row.item.reorder_quantity}, Đang đặt: ${row.item.ordering_quantity}, Tồn kho hiện tại: ${row.item.inventory}`}>
+
       <TableRow
         hover
         // onClick={(event) => handleClick(event, row.uuid)}
@@ -329,16 +324,19 @@ const RowData = ({row, index,selected,hanđleChangeQuantity,handleClick}) =>{
         <TableCell align="right"  style={{minWidth:120}}>{row?.standard_price.toLocaleString()}</TableCell>
         
        
-        <TableCell align="center"  style={{minWidth:100}}>
-        <ButtonQuantity
-            quantity={quantity}
-            setQuantity={updateQuantity}
-            isMini={true}
-          />
-        </TableCell>
+          <TableCell align="center" style={{ minWidth: 100 }}>
+            <ButtonQuantity
+              quantity={quantity}
+              setQuantity={updateQuantity}
+              isMini={true}
+            />
+
+
+          </TableCell>
         {/* <TableCell align="right">{row.supplier?.name}</TableCell> */}
         
       </TableRow>
+        </Tooltip>
     );
 }
 export default  TableRowWithSelect
