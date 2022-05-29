@@ -6,7 +6,7 @@ import Select from "@mui/material/Select";
 import branchApi from "../../../api/branchApi";
 import { infoActions } from "../../../store/slice/infoSlice";
 import { useDispatch } from "react-redux";
-export default function BranchSelectAppBar({ store_uuid }) {
+export default function BranchSelectAppBar({ store_uuid, smallScreen }) {
   const [selectedBranch, setSelectedBranch] = React.useState({});
   const [branches, setBranches] = React.useState([]);
   const dispatch = useDispatch();
@@ -24,6 +24,7 @@ export default function BranchSelectAppBar({ store_uuid }) {
 
   const loadingData = async () => {
     try {
+      
       let response = await branchApi.getBranches(store_uuid);
       setBranches(response.data);
       setSelectedBranch(response.data[0]);
@@ -52,7 +53,7 @@ export default function BranchSelectAppBar({ store_uuid }) {
   };
 
   return (
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
+    <FormControl variant="standard" sx={!smallScreen ? { m: 1, minWidth: 120 } : {m: 1, width: 120}}>
       <InputLabel>Chi nhánh</InputLabel>
       <Select value={selectedBranch} label="Chi nhánh" onChange={handleChange}>
         {renderMenuItem()}

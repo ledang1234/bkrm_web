@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import clsx from "clsx";
 import BranchSelectAppBar from "../../components/CheckoutComponent/BranchSelect/BranchSelectAppBar";
+import QrScanner from "../../components/QRScanner/QRScanner";
+import { Modal } from "antd";
 //import library
 import {
   AppBar,
@@ -20,6 +22,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 
 //import icons
 import MenuIcon from "@material-ui/icons/Menu";
+import {CameraAlt} from "@material-ui/icons"
 import {Spin} from 'antd'
 //import project
 import MenuList from "../../components/MenuList/MenuList";
@@ -43,8 +46,10 @@ import { Notifications } from "@material-ui/icons";
 import branchApi from "../../api/branchApi"
 import { infoActions } from "../../store/slice/infoSlice";
 import storeApi from "../../api/storeApi";
+import scheduleApi from "../../api/scheduleApi";
 import Notification from "../../components/Notification/Notification";
 import { verifyToken } from "../../store/actionCreator";
+import { set } from "date-fns";
 // import ManualView from "../../views/ManualView/ManualView";
 
 const ManagerView = React.lazy(() => import("../../views/ManagerView/ManagerView"))
@@ -54,6 +59,16 @@ const SalesView = React.lazy(() => import("../../views/SalesView/SalesView"))
 const DeliveryView = React.lazy(() => import("../../views/DeliveryView/DeliveryView"))
 const ManualView = React.lazy(() => import("../../views/ManualView/ManualView"))
 
+const success = (message) => {
+  Modal.success({
+    content: {message},
+  });
+};
+const error = (message) => {
+  Modal.error({
+    content: message,
+  });
+};
 
 
 const drawerWidth = 240;
@@ -100,6 +115,19 @@ const HomePage = (props) => {
 
   console.log("info",info)
   console.log(permissions)
+
+  const checkAttendance = async (branchUuid) => {
+    if (store_uuid && info.user.id) {
+      try {
+        const response = await scheduleApi.checkAttendanceQR(store_uuid, branchUuid, info.user.id);
+        setOpenQrScanner(false);
+        success(response.message);
+      } catch (err) {
+        setOpenQrScanner(false);
+        error("Điểm danh thất bại. Vui lòng scan lại mã");
+      }
+    }
+   };
 
   const divLogo = () => {
     if (!smallScreen)
@@ -157,7 +185,6 @@ const HomePage = (props) => {
     localStorage.removeItem("products");
     sessionStorage.removeItem("BKRMprev");
     sessionStorage.removeItem("BKRMopening");
-
   };
 
   const [openNotification, setOpenNotifcation] = useState(false);
@@ -176,8 +203,11 @@ const HomePage = (props) => {
   }
 
   const [openUserInfo, setOpenUserInfo] = useState(false)
+  const [openQrScanner, setOpenQrScanner] = useState(false)
+
   return (
     <div className={classes.root}>
+      {openQrScanner && <QrScanner open={openQrScanner} handleClose={() => setOpenQrScanner(false)} processResult={checkAttendance}/>}
       {openUserInfo && <EditEmployee open={openUserInfo} handleClose = {() =>setOpenUserInfo(false)} employee ={infoDetail.user} fromAvatar={true}/>}
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolBar}>
@@ -203,13 +233,14 @@ const HomePage = (props) => {
             <Box></Box>
             {/* <SearchProduct /> */}
 
-            <Box display="flex" flexDirection="row" alignItems="center">
+            <Box display="flex" flexDirection={"row"} alignItems="center">
               {/* {infoDetail.store?.branches?.length > 1 ?<BranchSelectAppBar store_uuid={infoDetail.store.uuid} />:null} */}
-              <BranchSelectAppBar store_uuid={infoDetail.store.uuid} />
+              <BranchSelectAppBar store_uuid={infoDetail.store.uuid} smallScreen={smallScreen} />
               <IconButton color="primary" size="small" onClick={() => { setOpenUserInfo(true); }} >
                 <PersonIcon fontSize="large" />
               </IconButton>
-              <Box
+
+              {!smallScreen ? <Box
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
@@ -219,13 +250,14 @@ const HomePage = (props) => {
                 <Typography variant="h6" noWrap>
                   {infoDetail.user.name}
                 </Typography>
-              </Box>
+              </Box> : null}
+              
 
-             
-
+              {infoDetail.role === "employee" && <IconButton color="primary" size="small"  onClick={() => setOpenQrScanner(true)} >
+                <CameraAlt fontSize="medium" />
+              </IconButton>}
               <Notification anchorEl={anchorEl} open={openNotification} />
-
-              <Button color="primary" style={{ marginRight:10, marginLeft:10}} onClick={() => logOutHandler()}>
+              <Button color="primary" size={smallScreen ? "small" : "medium"} style={!smallScreen ? { marginRight:10, marginLeft:10} : {width: 50}} onClick={() => logOutHandler()}>
                 Đăng xuất
               </Button>
             </Box>

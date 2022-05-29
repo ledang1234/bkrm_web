@@ -30,5 +30,9 @@ const scheduleApi = {
     const url = `stores/${storeUuid}/branches/${branchUuid}/checkAttendance`;
     return axiosClient.post(url, { data: schedule });
   },
+  checkAttendanceQR: (storeUuid, branchUuid, employeeId) => {
+    const url = `stores/${storeUuid}/branches/${branchUuid}/checkAttendanceQR`;
+    return axiosClient.post(url, {employeeId: employeeId});
+  },
 };
 export default scheduleApi;
