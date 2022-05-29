@@ -205,7 +205,7 @@ const TableRowWithSelect = (props) => {
       let newCartItem = {
         id: index ,
         uuid: row.item.uuid,
-        quantity: row.quantity,
+        quantity: Number(row.item.reorder_quantity) - Number(row.item.inventory) - Number(row.item.ordering_quantity),
         bar_code: row.item.bar_code,
         product_code: row.item.product_code,
         unit_price: row.item.standard_price,
