@@ -97,7 +97,8 @@ const MainPage = () => {
                 BKRM
               </Typography>
             </Grid>
-            {matchDownSm ? (
+            {/* {matchDownSm ? ( */}
+              {false ? (
               <Grid>
                 <IconButton
                   aria-label="open drawer"
@@ -258,25 +259,38 @@ const MainPage = () => {
                   <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={inventoryIcon}/>
                   <Box style={{flexGrow:1, textAlign:'center'}}>
                     <Typography variant="h4" >
-                      Quản lý tồn kho
+                      Quản lý tồn kho, bán hàng
                     </Typography>
                     <Typography  >
-                      - Quản lý hàng theo thuộc tính (size, màu,...), quản lý theo lô/ hạn sử dụng
+                      Quản lý hàng theo thuộc tính (size, màu,...), quản lý theo lô/ hạn sử dụng
                     </Typography>
                   </Box>
           
               </Grid>
-              <Grid xs={4} container justifyContent="center">
-                <Typography variant="h4" >
-                  Trang web bán hàng online
-                  </Typography>
+              <Grid xs={4}  item container alignItems="center" justifyContent="center">
+                  <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={inventoryIcon}/>
+                  <Box style={{flexGrow:1, textAlign:'center'}}>
+                    <Typography variant="h4" >
+                     Trang web bán hàng
+                    </Typography>
+                    <Typography  >
+                      Hỗ trợ tạo website bán hàng nhanh, tiết kiệm
+                    </Typography>
+                  </Box>
+          
               </Grid>
-              <Grid xs={4}  container justifyContent="center">
-                <Typography variant="h4" >
-                  Quản lý tồn kho
-                  </Typography>
+              <Grid xs={4}  item container alignItems="center" justifyContent="center">
+                  <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={inventoryIcon}/>
+                  <Box style={{flexGrow:1, textAlign:'center'}}>
+                    <Typography variant="h4" >
+                      Tự động hoá
+                    </Typography>
+                    <Typography  >
+                      Tự động hoá cơ bản giúp giảm thiểu sai sót
+                    </Typography>
+                  </Box>
+          
               </Grid>
-             
         </Grid>
         </Box>
 
@@ -293,12 +307,12 @@ const MainPage = () => {
           > */}
               <Grid item container xs={12} justifyContent="center">
                 <Typography variant="h2" style={{marginTop:40}}>
-                  Thanh toán nhanh chóng, in hóa đơn tiện lợi
+                Nắm bắt tồn kho nhanh, bổ sung hàng kịp thời.
                   </Typography>
                   </Grid>
                   <Grid item container xs={12} justifyContent="center">
                   <Typography style={{color:'#000',fontSize:16,marginTop:20, marginBottom:30,  width: matchDownSm ? "90%" : "70%",}}>
-                  Quét mã vạch tìm hàng nhanh, tự động tính tiền chính xác, kết nối máy in hóa đơn tiện lợi. Tăng tốc bán hàng, đảm bảo chính xác, giảm thiểu nhầm lẫn.              Quét mã vạch tìm hàng nhanh, tự động tính tiền chính xác, kết nối máy in hóa đơn tiện lợi. Tăng tốc bán hàng, đảm bảo chính xác, giảm thiểu nhầm lẫn.
+                  Tối thiểu thất thoát hàng hóa nhờ tính năng kiểm kho chính xác. Quản lý số lượng xuất - nhập - tồn mỗi loại hàng hóa chính xác. Cảnh báo hàng sắp hết, hàng tồn nhiều... để bổ sung hoặc xả hàng kịp thời.          
                   </Typography>
               </Grid>
               <Box
@@ -315,13 +329,14 @@ const MainPage = () => {
                 src={web2}
               />
                <Grid item container xs={12} justifyContent="center">
-                <Typography variant="h2" style={{marginTop:40, width: matchDownSm ? "90%" : "70%",}}>
-                Quản lý chặt chẽ hàng trăm nghìn sản phẩm. Nắm bắt tồn kho nhanh, bổ sung hàng kịp thời. Quản lý hàng hóa nhanh chóng theo màu sắc, kích thước
+               <Typography variant="h2" style={{marginTop:40}}>
+                    Thanh toán nhanh chóng, in hóa đơn tiện lợi
                   </Typography>
                   </Grid>
                   <Grid item container xs={12} justifyContent="center">
                   <Typography style={{color:'#000',fontSize:16,marginTop:20, marginBottom:30, width: matchDownSm ? "90%" : "70%",}}>
-                  Hàng hóa được sắp xếp theo danh mục, quản lý bằng mã số riêng. Phân loại chi tiết từng sản phẩm theo màu sắc, size số, kích thước, chất liệu...// Phân loại & quản lý hàng hóa theo danh mục, nhãn hàng. Tìm kiếm thông tin hàng hóa dễ dàng, tư vấn cho khách nhanh chóng. //Tối thiểu thất thoát hàng hóa nhờ tính năng kiểm kho chính xác. Quản lý số lượng xuất - nhập - tồn mỗi loại hàng hóa chính xác. Cảnh báo hàng sắp hết, hàng tồn nhiều... để bổ sung hoặc xả hàng kịp thời.               </Typography>
+                  Quét mã vạch tìm hàng nhanh, tự động tính tiền chính xác, kết nối máy in hóa đơn tiện lợi. Tăng tốc bán hàng, đảm bảo chính xác, giảm thiểu nhầm lẫn.              Quét mã vạch tìm hàng nhanh, tự động tính tiền chính xác, kết nối máy in hóa đơn tiện lợi. Tăng tốc bán hàng, đảm bảo chính xác, giảm thiểu nhầm lẫn.
+               </Typography>
               </Grid>
                <Box
                 component="img"
@@ -336,15 +351,15 @@ const MainPage = () => {
                 src={web3}
               />
               
-              <Grid item container xs={12} justifyContent="center">
+              {/* <Grid item container xs={12} justifyContent="center">
                 <Typography variant="h2" style={{marginTop:40, width: matchDownSm ? "90%" : "70%",}}>
-                Báo cáo doanh thu lỗ lãi rõ ràng
+                  Báo cáo doanh thu lỗ lãi rõ ràng
                   </Typography>
                   </Grid>
                   <Grid item container xs={12} justifyContent="center">
                   <Typography style={{color:'#000',fontSize:16,marginTop:20, marginBottom:30, width: matchDownSm ? "90%" : "70%",}}>
                   Tự động thống kê báo cáo chi tiết về doanh thu, lợi nhuận, chi phí... mỗi ngày. Cập nhật biến động lãi lỗ, tình hình kinh doanh mọi lúc mọi nơi trên các thiết bị: Điện thoại, máy tính, laptop... Giúp chủ shop theo dõi sát sao hiệu quả bán hàng để có kế hoạch kinh doanh phù hợp.               </Typography>
-              </Grid>
+              </Grid> */}
           {/* </Box> */}
         </Grid>
 
@@ -386,6 +401,7 @@ const MainPage = () => {
                 borderColor={grey[400]}
                 src={app}
               />
+             
             </Grid>
           </Container>
         </Grid>
@@ -393,7 +409,7 @@ const MainPage = () => {
         {/* SECTION 4 */}
 
         <Grid item container xs={12} justifyContent="center">
-          <Typography variant="h1" style={{marginTop:40}}>
+          <Typography variant="h1" style={{marginTop:200, marginBottom:50}}>
             Liên hệ
             </Typography>
         </Grid>
@@ -414,29 +430,31 @@ const MainPage = () => {
 
         {/* FOOTER */}
         <Grid>
-          <Container
+          {/* <Container
             style={{
               backgroundColor: "#ff906d",
               marginTop: 150,
-              justifyContent: "center",
+              // justifyContent: "center",
             }}
-          >
+          > */}
             <Grid
-              container
+              // container
               direction="row"
-              justifyContent="center"
-              alignItems="center"
+              // justifyContent="center"
+              // alignItems="center"
             >
               <Box
+              style={{backgroundColor: "#ff906d", marginTop: 150,}}
                 sx={{
                   height: 200,
-                  width: matchDownSm ? "90%" : "70%",
-                  borderRadius: matchDownXs ? 10 : 20,
-                  marginRight: 15,
+                  // width:"100%",
+                  // width: matchDownSm ? "90%" : "70%",
+                  // borderRadius: matchDownXs ? 10 : 20,
+                  // marginRight: 15,
                 }}
               />
             </Grid>
-          </Container>
+          {/* </Container> */}
         </Grid>
       </Box>
     </div>
