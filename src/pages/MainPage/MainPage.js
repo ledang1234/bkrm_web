@@ -33,6 +33,9 @@ import inventoryIcon from "../../assets/img/icon/inventory2.png"
 import { borderColor } from "@material-ui/system";
 import { grey } from "@material-ui/core/colors";
 import { Link } from "react-router-dom";
+import suplierIcon from "../../assets/img/icon/supplier4.png";
+import invoiceIcon from "../../assets/img/icon/invoice.png";
+import inventoryOrderIcon from "../../assets/img/icon/inventoryOrder1.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -255,11 +258,11 @@ const MainPage = () => {
         </Grid>
         <Box style={{marginLeft: matchDownSm ? "15%" : "10%",marginRight: matchDownSm ? "10%" : "15%",marginTop:200}}>
         <Grid container justifyContent="center" spacing={3} >
-              <Grid xs={4}  item container alignItems="center" justifyContent="center">
+              <Grid xs={3}  item container alignItems="center" justifyContent="center">
                   <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={inventoryIcon}/>
                   <Box style={{flexGrow:1, textAlign:'center'}}>
                     <Typography variant="h4" >
-                      Quản lý tồn kho, bán hàng
+                      Quản lý tồn kho
                     </Typography>
                     <Typography  >
                       Quản lý hàng theo thuộc tính (size, màu,...), quản lý theo lô/ hạn sử dụng
@@ -267,8 +270,20 @@ const MainPage = () => {
                   </Box>
           
               </Grid>
-              <Grid xs={4}  item container alignItems="center" justifyContent="center">
-                  <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={inventoryIcon}/>
+              <Grid xs={3}  item container alignItems="center" justifyContent="center">
+                  <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={invoiceIcon}/>
+                  <Box style={{flexGrow:1, textAlign:'center'}}>
+                    <Typography variant="h4" >
+                    Quản lý bán hàng
+                    </Typography>
+                    <Typography  >
+                      Bán hàng nhanh, theo dõi công nợ, áp dụng khuyến mãi
+                    </Typography>
+                  </Box>
+          
+              </Grid>
+              <Grid xs={3}  item container alignItems="center" justifyContent="center">
+                  <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={inventoryOrderIcon}/>
                   <Box style={{flexGrow:1, textAlign:'center'}}>
                     <Typography variant="h4" >
                      Trang web bán hàng
@@ -279,8 +294,8 @@ const MainPage = () => {
                   </Box>
           
               </Grid>
-              <Grid xs={4}  item container alignItems="center" justifyContent="center">
-                  <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={inventoryIcon}/>
+              <Grid xs={3}  item container alignItems="center" justifyContent="center">
+                  <Box component="img" sx={{ height: 70, width: 70, marginBottom:10 }} src={suplierIcon}/>
                   <Box style={{flexGrow:1, textAlign:'center'}}>
                     <Typography variant="h4" >
                       Tự động hoá
@@ -291,6 +306,7 @@ const MainPage = () => {
                   </Box>
           
               </Grid>
+             
         </Grid>
         </Box>
 
