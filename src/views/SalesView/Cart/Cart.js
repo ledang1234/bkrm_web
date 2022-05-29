@@ -311,7 +311,7 @@ const Cart = () => {
       if (store_uuid && branch_uuid) {
         loadProducts();
       }
-    }, 60000 * 5);
+    }, 60000 * 1);
 
     return () => {
       clearInterval(intervalID)

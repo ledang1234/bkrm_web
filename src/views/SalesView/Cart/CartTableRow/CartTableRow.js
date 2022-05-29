@@ -262,7 +262,7 @@ export const CartRow = (props) => {
                           <Grid justifyContent="flex-end">
                             <Typography>{findBranchQuantity(item.uuid)}</Typography>
                           </Grid>
-                          <Grid justifyContent="flex-end" style={{marginLeft: 10}}>
+                          <Grid justifyContent="flex-end" style={{marginLeft: 20}}>
                             <Typography>{row.branch_inventories.find(b => b.uuid === item.uuid)?.ordering_quantity}</Typography>
                           </Grid>
                         </ListItem>

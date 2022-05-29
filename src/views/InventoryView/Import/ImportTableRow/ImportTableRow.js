@@ -170,6 +170,8 @@ var color = theme.customization.mode === "Light"? typeShow==='list'?'#000':null:
                     <ListItem >
                       <Typography style={{width:180}}></Typography>
                       <Typography style={{fontWeight:700}}>Tồn</Typography>
+                      <Typography style={{fontWeight:700, marginLeft: 10}}>Đặt</Typography>
+
                     </ListItem>
 
                     {branchs.map((item) => {
@@ -180,6 +182,9 @@ var color = theme.customization.mode === "Light"? typeShow==='list'?'#000':null:
                               {item.uuid === branch.uuid ? <CheckCircleIcon fontSize="small" color='primary'/> :null} 
                           </ListItem>
                           <Typography>{findBranchQuantity(item.uuid)}</Typography>
+                          <Grid justifyContent="flex-end" style={{marginLeft: 20}}>
+                            <Typography>{row.branch_inventories.find(b => b.uuid === item.uuid)?.ordering_quantity}</Typography>
+                          </Grid>
                     </ListItem>
                     ) })}
                     </> :

@@ -287,7 +287,7 @@ const RowData = ({row, index,selected,hanđleChangeQuantity,handleClick}) =>{
       hanđleChangeQuantity(row.uuid, newQuantity);
     };
     return (
-      <Tooltip title={`Tồn kho cần: ${row.item.reorder_quantity}, Đang đặt: ${row.item.ordering_quantity}, Tồn kho hiện tại: ${row.item.inventory}`}>
+      <Tooltip title={`Tồn kho cần: ${row.item.reorder_quantity}, Đang đặt: ${row.item.ordering_quantity}, Tồn kho hiện tại: ${row.item.inventory}, Tổng bán: ${row.item.total}`}>
 
       <TableRow
         hover
@@ -424,12 +424,12 @@ const ChooseCartPopUp = ({cartList,handleClose,open,closeAll,handleAddToCart}) =
               alignItems='center'
           >
           <Grid container direction="row" justifyContent="space-between"spacing={1} alignItems='center'>
-              <Grid container item item xs={10}  >
+              <Grid container item  xs={10}  >
                   <Box style={{marginRight:20, color:'#000', fontWeight:500, fontSize:17}}>#{index + 1}</Box>
                   {/* <Typography style={{color:'#000', fontWeight:400, fontSize:16}}>{getTitle(cart)}  </Typography>        */}
               </Grid>
               <Grid container xs={2} item >
-                  <Button color='primary' variant='contained' size="small" color='primary' 
+                  <Button color='primary' variant='contained' size="small"
                   onClick={()=>{
                     handleClose()
                     closeAll()

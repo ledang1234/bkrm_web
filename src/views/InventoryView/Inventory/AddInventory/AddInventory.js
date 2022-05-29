@@ -391,7 +391,7 @@ const AddInventory = (props) => {
         }
       }
     }
-    // handleCloseAndReset();
+    handleCloseAndReset();
     try {
       var bodyFormData = new FormData();
       bodyFormData.append("name", productFormik.values.name.toString());
