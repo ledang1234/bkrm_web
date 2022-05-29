@@ -205,7 +205,7 @@ const TableRowWithSelect = (props) => {
       let newCartItem = {
         id: index ,
         uuid: row.item.uuid,
-        quantity: Number(row.item.reorder_quantity) - Number(row.item.inventory) - Number(row.item.ordering_quantity),
+        quantity: row.quantity,
         bar_code: row.item.bar_code,
         product_code: row.item.product_code,
         unit_price: row.item.standard_price,
@@ -280,7 +280,7 @@ const RowData = ({row, index,selected,hanđleChangeQuantity,handleClick}) =>{
   console.log(row)
   const isItemSelected = isSelected(row.uuid);
     const labelId = `enhanced-table-checkbox-${index}`;
-    const [quantity, setQuantity] = useState(Number(row.item.reorder_quantity) - Number(row.item.inventory) - Number(row.item.ordering_quantity))
+    const [quantity, setQuantity] = useState(row.quantity)
 
     const updateQuantity = (newQuantity) => {
       setQuantity(newQuantity)
