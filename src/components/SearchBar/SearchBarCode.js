@@ -41,17 +41,6 @@ const SearchBarCode = (props) => {
         //     }
         // }
         if (e.key === "Enter" && barcode != "") {
-          
-          const product = props.products.find(
-            (product) => product.product_code === barcode
-          );
-          if (product) {
-            props.handleSearchBarSelect(product);
-            setBarcode("");
-            dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
-          } else {
-            dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
-          }
           if (barcode.includes("_")){
               let list = barcode.split("_")
               let product = props.products.find(
@@ -61,7 +50,22 @@ const SearchBarCode = (props) => {
                 props.handleSearchBarSelect(product,list[1]);
                 setBarcode("");
                 dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
+              } else {
+                setBarcode("");
+                dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));  
               }
+          } else {
+            const product = props.products.find(
+              (product) => product.product_code === barcode
+            );
+            if (product) {
+              props.handleSearchBarSelect(product);
+              setBarcode("");
+              dispatch(statusAction.successfulStatus("Đã thêm 1 sản phẩm"));
+            } else {
+              setBarcode("");
+              dispatch(statusAction.failedStatus("Không tìm thấy sản phẩm"));
+            }
           }
           
         }
