@@ -84,6 +84,22 @@ const Schedule = () => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
+
+  const fetchSchedule = async (selected_date) => {
+    try {
+      const response = await scheduleApi.getSchedule(
+        store_uuid,
+        branch_uuid,
+        selected_date,
+        mode
+      );
+      setShiftInfo(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+
   React.useEffect(() => {
     let selected_date = moment
       .unix(selectedDate.getTime() / 1000)
@@ -101,20 +117,17 @@ const Schedule = () => {
         break;
     }
 
-    const fetchSchedule = async () => {
-      try {
-        const response = await scheduleApi.getSchedule(
-          store_uuid,
-          branch_uuid,
-          selected_date,
-          mode
-        );
-        setShiftInfo(response.data);
-      } catch (err) {
-        console.log(err);
+    fetchSchedule(selected_date);
+
+    const intervalID = setInterval(() => {
+      if (branch_uuid) {
+        fetchSchedule(selected_date);
       }
-    };
-    fetchSchedule();
+    }, 60000 * 0.5);
+
+    return () => {
+      clearInterval(intervalID)
+    }
   }, [selectedBtn, selectedDate, branch_uuid, reload]);
 
   const handleModeBtn = (mode) => {
