@@ -468,10 +468,10 @@ const Cart = () => {
   // handle search select item add to cart
   const handleSearchBarSelect = (selectedOption, batchBarCode) => {
     let itemIndex = cartList[selectedIndex].cartItem.findIndex(
-      (item) => item.uuid === selectedOption.uuid
+      (item) => item?.uuid === selectedOption.uuid
     );
     let item = cartList[selectedIndex].cartItem.find(
-      (item) => item.uuid === selectedOption.uuid
+      (item) => item?.uuid === selectedOption.uuid
     );
     
     const batchInfo = batchBarCode 
@@ -487,7 +487,7 @@ const Cart = () => {
       let newCartItem = {
         id: cartList[selectedIndex].cartItem?.length,
         uuid: selectedOption.uuid,
-        quantity: selectedOption.has_batches ? 0 : 1,
+        quantity: selectedOption.has_batches && !batchBarCode ? 0 : 1,
         product_code: selectedOption.product_code,
         bar_code: selectedOption.bar_code,
         unit_price: selectedOption.list_price,
@@ -520,12 +520,9 @@ const Cart = () => {
         batchInfo.additional_quantity = 1;
         newCartList[selectedIndex].cartItem[itemIndex].selectedBatches.push(batchInfo);
       }
-      
+      newCartList[selectedIndex].cartItem[itemIndex].quantity += 1
       setCartList(newCartList);
-      handleChangeItemQuantity(
-        selectedOption.uuid,
-        cartList[selectedIndex].cartItem[itemIndex].quantity + 1
-      );
+      setIsUpdateTotalAmount(!isUpdateTotalAmount);
     }
     // not batch
     if (item && !item.has_batches) {
@@ -561,7 +558,7 @@ const Cart = () => {
     }
     if (newQuantity < 0){return } 
   
-    let newCartList = [...cartList];
+    let newCartList = cloneDeep(cartList);
     newCartList[selectedIndex].cartItem[itemIndex].quantity = newQuantity;
     setCartList(newCartList);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
