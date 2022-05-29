@@ -95,7 +95,7 @@ const InventoryTableRow = (props) => {
         </TableCell>
         <Tooltip title={`Thời gian đặt trung bình: ${row.lead_times} - Tốc độ bán : ${row.sale_velocity?.days ? row.sale_velocity.total_order / row.sale_velocity?.days : row.sale_velocity.total_order}`}>
           <TableCell align="center" style={{color:colorText}}>
-            {getReorderPoint(row)}
+            {getReorderPoint(row)} - ngày
           </TableCell>
         </Tooltip>
         
