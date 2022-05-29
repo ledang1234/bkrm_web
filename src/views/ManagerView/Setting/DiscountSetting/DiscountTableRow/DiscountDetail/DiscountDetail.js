@@ -2,7 +2,7 @@ import React from 'react'
 import {useTheme, makeStyles,createStyles} from "@material-ui/core/styles";
 
 //import library
-import {Box,Grid,Collapse,Divider,ListItem,Typography,Button,ListItemIcon,ListItemText,IconButton} from '@material-ui/core';
+import {Box,Grid,Collapse,Divider,ListItem,Typography,Button,ListItemIcon,ListItemText,IconButton,Table,  TableRow, TableCell, TableHead, TableBody} from '@material-ui/core';
 
 //import icon
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -179,6 +179,16 @@ const DiscountDetail = (props) => {
                         </Grid>
                         <Grid item >
                           <Typography variant="body1" gutterBottom component="div">{row.times} lần</Typography>
+                        </Grid>
+                    </Grid>
+
+                    <Grid container direction="row" justifyContent="flex-start">
+                      
+                        <Grid item xs={3} sm={2} >
+                          <Typography variant="h5" gutterBottom component="div">Tổng tiền</Typography>    
+                        </Grid>
+                        <Grid item >
+                        <VNDFormat value={row.totalAmount} />
                         </Grid>
                     </Grid>
 
@@ -369,6 +379,22 @@ const DiscountDetail = (props) => {
 
             );
           })}
+          {row.orders?.length ? <Table size="small" aria-label="purchases" style={{marginTop:20}}>
+            <TableHead>
+              <TableRow style={{backgroundColor:theme.customization.primaryColor[50], color: "#000"}}>
+                <TableCell>Mã Hóa đơn</TableCell>
+                <TableCell>Ngày bán</TableCell>
+                {/* <TableCell>Mã vạch</TableCell> */}
+                <TableCell align="right">Khuyến mãi</TableCell>
+                <TableCell align="right">Hóa đơn</TableCell>
+                <TableCell align="right">Người tạo</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {row.orders.map((o) =>  <TableRowDetailCart detail={o} />)}
+            </TableBody>
+
+          </Table> : null}
           
               {/* Button */}
               <Grid container direction="row" justifyContent="flex-end" style={{marginTop:20}}> 
@@ -412,3 +438,23 @@ const DiscountDetail = (props) => {
 }
 
 export default DiscountDetail
+
+const TableRowDetailCart = ({ detail }) => {
+  return (
+    <TableRow key={detail.order_id}>
+      <TableCell component="th" scope="row">
+        {detail.order_code}
+      </TableCell>
+      <TableCell>{detail.creation_date}</TableCell>
+      <TableCell align="right">
+        <VNDFormat value={detail.promotion_value} />
+      </TableCell>
+      <TableCell align="right" style={{ fontWeight: 700 }}>
+        <VNDFormat value={detail.total_amount} />
+      </TableCell>
+      <TableCell component="right" scope="row">
+        {detail.created_user_name}
+      </TableCell>
+    </TableRow>
+  )
+}

@@ -415,7 +415,7 @@ export const ReceiptPrinter = ({cart, date,code,type}) => {
                         <Divider orientation="vertical" classes={{root: classes.divider}} flexItem/>
                   </ListItem>
               </ListItem>
-            <Divider classes={{root: classes.divider}}/>      
+            <Divider classes={{root: classes.divider}}/>
                 {item.map((row, index) => {
                   return (
                     <>

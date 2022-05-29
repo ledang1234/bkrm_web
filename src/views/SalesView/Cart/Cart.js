@@ -316,7 +316,7 @@ const Cart = () => {
       clearInterval(intervalID)
     }
   }, [store_uuid, branch_uuid]);
-  
+
   const [reloadCustomers, setReloadCustomers] = useState(false);
   useEffect(() => {
     const loadingCustomer = async () => {
@@ -864,9 +864,6 @@ const Cart = () => {
         },
       });
     }
-
-    // 
-    
     setCartList(newCartList);
   };
 
@@ -992,7 +989,7 @@ const Cart = () => {
       // loadProducts()
     }
   };
-  console.log("cartcartcartcartcartcart",cartList[selectedIndex])
+  // console.log("cartcartcartcartcartcart",cartList[selectedIndex])
 
   const handleConfirmCallApi  = async () => {
     const printReceiptWhenSell = store_setting?.printReceiptWhenSell;
@@ -1041,8 +1038,8 @@ const Cart = () => {
         selectedPromotion: cart.selectedPromotion, 
         bestDetailSelectedPromotion: cart.bestDetailSelectedPromotion,
         listGiftItem:cart.listGiftItem
-      
       },
+      promotion_id: cart.selectedPromotion?.id
     };
 
     try {

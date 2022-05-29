@@ -154,6 +154,7 @@ const ScheduleDetail = ({ open, handlePopUp, clickSchedule, handleSubmit }) => {
               schedules.map((s) => ({
                 schedule_id: s.schedule_id,
                 status: s.status,
+                timecheck: s.timecheck
               }))
             );
           }}

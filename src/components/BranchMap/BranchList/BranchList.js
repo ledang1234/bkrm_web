@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useTheme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { Typography, Box, Card, Grid } from "@material-ui/core";
 import store from "../../../assets/img/store.JPG";
 import { grey } from "@material-ui/core/colors";
 import EditBranch from "./EditBranch";
+import { useReactToPrint } from "react-to-print";
+import QRCode from "react-qr-code";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -17,6 +19,27 @@ const useStyles = makeStyles((theme) =>
         boxShadow: " 0px 10px 10px rgba(0,0,0,0.2)",
       },
     },
+    title: {
+      flexGrow: 1,
+      textAlign: "center",
+      fontSize: "15px",
+      // fontSize: "12em",
+      fontWeight: 700,
+      marginTop:10,
+      color: "#000",
+  },
+  centerQR:{
+      flexGrow: 1,
+      textAlign: "center",
+     
+  },
+  center:{
+      flexGrow: 1,
+      textAlign: "center",
+      color: "#000",
+      fontSize:"10px",
+      // fontSize: "10em",
+  },
   })
 );
 
@@ -33,6 +56,12 @@ const BranchList = (props) => {
   });
   const theme = useTheme();
   const classes = useStyles(theme);
+
+  // print QR
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
   return (
     <Grid container spacing={2}>
       {isEditBranch &&
@@ -46,7 +75,7 @@ const BranchList = (props) => {
       {branchList.map((branch) => {
         return (
           <Grid item xs={12} sm={6}>
-            <Card className={classes.card} style={{ minHeight: 140 }}>
+            <Card className={classes.card} style={{ minHeight: 180 }}>
               {/* <CardContent style={{}}> */}
               <Grid container spacing={2}>
                 <Grid item xs={4}>
@@ -111,16 +140,51 @@ const BranchList = (props) => {
                     >
                       Chỉnh sửa
                     </Typography>
+
+                    <Typography
+                      onClick={() => {
+                        handlePrint()
+                      }}
+                      variant="h5"
+                      style={{
+                        cursor: "pointer",
+                        color: "#1b74e4",
+                        marginLeft: 10,
+                      }}
+                    >
+                      In mã QR điểm danh
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>
               {/* </CardContent> */}
             </Card>
+            
+            {/* print barcode */}
+            <div style={{ display: "none" }}>
+              <div ref={componentRef}>
+                <ComponentToPrint branchUuid={branch.uuid} branchName={branch.name} />
+              </div>
+            </div>
           </Grid>
         );
       })}
+
+      
     </Grid>
   );
 };
 
 export default BranchList;
+
+
+const ComponentToPrint = ({branchName, branchUuid}) => {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+  return (<div className={classes.centerQR} style={{marginBottom:5, marginTop: 20}}  >
+      <div className={classes.title}><strong>{branchName}</strong></div>
+      <div className={classes.title} style={{marginBottom:25, marginTop: 5}}><strong>QUÉT MÃ NÀY ĐỂ ĐIỂM DANH</strong></div>
+      <div style={{width: '90%'}}><QRCode value={branchUuid}/></div>
+    </div>
+  );
+};

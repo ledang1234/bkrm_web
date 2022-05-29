@@ -7,6 +7,8 @@ import BranchMap from "../../../components/BranchMap/BranchMap";
 import AddIcon from "@material-ui/icons/Add";
 import AddBranch from "./AddBranch/AddBranch";
 import { grey } from "@material-ui/core/colors";
+import QRCode from "react-qr-code";
+
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -72,3 +74,5 @@ const Branch = () => {
 };
 
 export default Branch;
+
+
