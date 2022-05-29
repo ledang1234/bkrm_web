@@ -337,6 +337,7 @@ export const EmployeeScheduleHeadCells = [
   { id: "id", align: "left", disablePadding: true, label: "#" },
   { id: "name", align: "left", disablePadding: true, label: "Nhân viên" },
   { id: "phone", align: "left", disablePadding: true, label: "Số điện thoại" },
+  { id: "timecheck", align: "center", disablePadding: true, label: "Thời gian" },
   { id: "status", align: "center", disablePadding: true, label: "Chấm công" },
 ];
 

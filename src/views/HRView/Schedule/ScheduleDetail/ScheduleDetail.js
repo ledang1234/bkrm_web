@@ -188,6 +188,7 @@ const EmployeeTableRow = ({ row, handleCheckSchedule }) => {
       </TableCell>
 
       <TableCell align="left">{row.employee_phone}</TableCell>
+      <TableCell align="left">{row.timecheck}</TableCell>
       <TableCell align="center">
         <Checkbox
           checked={row.status}

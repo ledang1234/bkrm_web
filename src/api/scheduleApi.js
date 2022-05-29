@@ -29,7 +29,7 @@ const scheduleApi = {
 
   checkAttendance: (storeUuid, branchUuid, schedule) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/checkAttendance`;
-    return axiosClient.post(url, { data: schedule });
+    return axiosClient.post(url, { data: schedule.map(s => ({...s, timecheck: currentDate()})) });
   },
   checkAttendanceQR: (storeUuid, branchUuid, employeeId) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/checkAttendanceQR`;
