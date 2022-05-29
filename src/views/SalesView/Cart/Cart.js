@@ -80,6 +80,7 @@ import promotionCouponApi from '../../../api/promotionCouponApi';
 import { loadingActions } from "../../../store/slice/loadingSlice";
 import ModalWrapperWithClose from "../../../components/Modal/ModalWrapperWithClose";
 import { enableMapSet } from "@reduxjs/toolkit/node_modules/immer";
+import _ from 'lodash'
 
 const Cart = () => {
   const theme = useTheme();
@@ -573,8 +574,15 @@ const Cart = () => {
     const newCartList = [...cartList];
     newCartList[selectedIndex].cartItem[itemIndex].selectedBatches =
       selectedBatches;
-
+    const newQuantity = _.sumBy(selectedBatches, (b) => b.additional_quantity);
+    if (newQuantity) {
+      newCartList[selectedIndex].cartItem[itemIndex].quantity = newQuantity;
+    } else {
+      newCartList[selectedIndex].cartItem.splice(itemIndex, 1);
+    }
+      
     setCartList(newCartList);
+    setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };
 
   const handleChangeItemPrice = (itemUuid, newPrice) => {
