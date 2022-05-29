@@ -111,23 +111,22 @@ const HomePage = (props) => {
 
   const info = useSelector(state => state.info)
   const store_uuid = info.store.uuid
-  const branch_uuid = info.branch.uuid
+  const branch_uuid = info.branch.uuid;
+  const user_id = info.user.id;
 
   console.log("info",info)
   console.log(permissions)
 
   const checkAttendance = async (branchUuid) => {
-    if (store_uuid && info.user.id) {
-      try {
-        const response = await scheduleApi.checkAttendanceQR(store_uuid, branchUuid, info.user.id);
-        setOpenQrScanner(false);
-        success(response.message);
-      } catch (err) {
-        setOpenQrScanner(false);
-        error("Điểm danh thất bại. Vui lòng scan lại mã");
-      }
+    try {
+      setOpenQrScanner(false);
+      const response = await scheduleApi.checkAttendanceQR(store_uuid, branchUuid, info.user.uuid);
+      alert(response.message + " " + response.data[0].shift_name + " " + response.data[0].start_time + "-" + response.data[0].end_time);
+    } catch (err) {
+      setOpenQrScanner(false);
+      error("Điểm danh thất bại. Vui lòng scan lại mã" + JSON.stringify(err));
     }
-   };
+  };
 
   const divLogo = () => {
     if (!smallScreen)

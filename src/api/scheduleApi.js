@@ -1,3 +1,4 @@
+import { currentDate } from "../utils";
 import axiosClient from "./axiosClient";
 
 const scheduleApi = {
@@ -32,7 +33,7 @@ const scheduleApi = {
   },
   checkAttendanceQR: (storeUuid, branchUuid, employeeId) => {
     const url = `stores/${storeUuid}/branches/${branchUuid}/checkAttendanceQR`;
-    return axiosClient.post(url, {employeeId: employeeId});
+    return axiosClient.post(url, {employeeId: employeeId, time: currentDate().substring(11), date: currentDate().substring(0,10)});
   },
 };
 export default scheduleApi;
