@@ -12,6 +12,7 @@ import {
   ListItem,
   Typography,
   Chip,
+  Tooltip
 } from "@material-ui/core";
 
 import InventoryDetail from "./InventoryDetail/InventoryDetail";
@@ -28,8 +29,11 @@ const getReorderPoint = (row) => {
   const leadTime = row.lead_times; 
   const {total_order: totalOrder, days: days} = row.sale_velocity;
   const velocity = days ? totalOrder / days : totalOrder;
-  console.log(leadTime, totalOrder, days)
-  return velocity * leadTime + row.min_reorder_quantity;
+  const reorderPoint = velocity * leadTime + row.min_reorder_quantity;
+  const dayLefts = Math.round((Number(row.branch_quantity) + Number(row.ordering_quantity) - reorderPoint) / velocity);
+  if (velocity === 0) return "--";
+  if (dayLefts > 0) return dayLefts;
+  return 0;
 }
 
 const InventoryTableRow = (props) => {
@@ -87,15 +91,15 @@ const InventoryTableRow = (props) => {
         </TableCell>
 
         <TableCell align="center" style={{color:colorText}}>
-          {getReorderPoint(row)}
-        </TableCell>
-
-        <TableCell align="center" style={{color:colorText}}>
-          {row.reorder_quantity}
-        </TableCell>
-        <TableCell align="center" style={{color:colorText}}>
           {row.ordering_quantity}
         </TableCell>
+        <Tooltip title={`Thời gian đặt trung bình: ${row.lead_times} - Tốc độ bán : ${row.sale_velocity?.days ? row.sale_velocity.total_order / row.sale_velocity?.days : row.sale_velocity.total_order}`}>
+          <TableCell align="center" style={{color:colorText}}>
+            {getReorderPoint(row)}
+          </TableCell>
+        </Tooltip>
+        
+
 
           </>
           : null}

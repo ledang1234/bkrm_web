@@ -22,12 +22,9 @@ export const InventoryHeadCells = [
   },
   { id: "inventory", align: "center", disablePadding: false, label: "Tồn kho" },
 
-  { id: "reoder_point", align: "center", disablePadding: false, label: "Điểm đặt lại" },
-
-  { id: "reorder_quantity", align: "center", disablePadding: false, label: "SL đặt lại" },
   { id: "reoder_point", align: "center", disablePadding: false, label: "Đang đặt" },
 
-
+  { id: "reorder_quantity", align: "center", disablePadding: false, label: "Đặt lại sau" },
 ];
 export const InventoryOrderHeadCells = [
   // thêm cột Tiền hàng, Giảm giá, (tiền còn thiếu)

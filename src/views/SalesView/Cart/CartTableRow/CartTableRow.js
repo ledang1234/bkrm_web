@@ -244,6 +244,7 @@ export const CartRow = (props) => {
                     <ListItem>
                       <Typography style={{ width: 180 }}></Typography>
                       <Typography style={{ fontWeight: 700 }}>Tồn</Typography>
+                      <Typography style={{ fontWeight: 700 , marginLeft: 10}}>   Đặt</Typography>
                     </ListItem>
                     {branchs.map((item) => {
                       return (
@@ -260,6 +261,9 @@ export const CartRow = (props) => {
                           </ListItem>
                           <Grid justifyContent="flex-end">
                             <Typography>{findBranchQuantity(item.uuid)}</Typography>
+                          </Grid>
+                          <Grid justifyContent="flex-end" style={{marginLeft: 10}}>
+                            <Typography>{row.branch_inventories.find(b => b.uuid === item.uuid)?.ordering_quantity}</Typography>
                           </Grid>
                         </ListItem>
                       );
