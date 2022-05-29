@@ -547,10 +547,10 @@ const ComponentToPrint = ({ row ,quantity,codeType,printStoreName,printBatch,col
              </div>:
              <div>
              <div style={{width:150, textAlign:'center'}}>
-         <Typography style={{color:'#000', fontSize:8, marginBottom:3}}>{row.product_code.concat("-"+ batchCode)}</Typography> 
+         <Typography style={{color:'#000', fontSize:8, marginBottom:3}}>{row.product_code.concat("_"+ batchCode)}</Typography> 
          </div>
          <Barcode 
-            value={row.product_code.concat("-"+ batchCode)}
+            value={row.product_code.concat("_"+ batchCode)}
            format="CODE128" 
            // className="ss" 
            displayValue={false} 
@@ -597,8 +597,6 @@ const ComponentToPrint = ({ row ,quantity,codeType,printStoreName,printBatch,col
              <BarCodeModel  margin={0}/>
              </Grid>
        </div>
-       
-     
     );
   };
   

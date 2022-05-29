@@ -56,7 +56,7 @@ const SearchBarCode = (props) => {
               }
           } else {
             const product = props.products.find(
-              (product) => product.product_code === barcode
+              (product) => product.product_code === barcode || product.bar_code === barcode
             );
             if (product) {
               props.handleSearchBarSelect(product);
