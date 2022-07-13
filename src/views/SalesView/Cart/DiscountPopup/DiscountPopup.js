@@ -95,7 +95,6 @@ const DiscountPopup = ({open,onClose,title,filteredPromotion,setSelectedPromotio
                 <FormControl component="fieldset">
                     <RadioGroup value={value} >
                         {filteredPromotion?.map((promotion) => {
-                            console.log("promotion",promotion)
                             return (
                         
                                     <Grid  container direction="row" justifyContent="">

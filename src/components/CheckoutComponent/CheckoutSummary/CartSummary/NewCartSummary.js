@@ -145,7 +145,6 @@ const CartSummary = (props) => {
   React.useEffect(()=>{
     if(addCustomer?.name?.length !==  0){props.handleSelectCustomer(addCustomer);setAddCustomer({ name: "", phone: "" })}
   })
-  console.log("currentCustomer",currentCustomer)
 
 
 
@@ -153,7 +152,6 @@ const CartSummary = (props) => {
   const openDiscountDetail = Boolean(anchorEl);
 
   const info = useSelector((state) => state.info);
-  console.log("info",info)
    const store_setting = info.store.general_configuration
   ? JSON.parse(info.store.general_configuration)
   : setting;

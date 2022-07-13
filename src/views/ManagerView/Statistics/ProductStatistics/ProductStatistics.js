@@ -32,7 +32,6 @@ const ProductStatistics = () => {
     const store_uuid = info.store.uuid;
     const branch_uuid = info.branch.uuid;
     const branches = info.store.branches 
-  console.log("branches",branches)
   // category id to view to item by root category
   // should be selected by a drop down and pass as category_id=> category uuid đc ko
   const [categoryId, setCategoryId] = useState('all');
@@ -121,7 +120,6 @@ const ProductStatistics = () => {
   // useEffect(()=>{
   //   if(categoryList&& topData) {filterCategory()}
   // },[categoryId])
-  console.log("topData",topData)
    
     let topSortedRevenue = topData ? [...topData] :[]
     topSortedRevenue.sort((a, b) => Number(b.total_sell_price) - Number(a.total_sell_price) ) 
@@ -211,7 +209,6 @@ const ProductStatistics = () => {
     }
 
   
-    console.log("topData",topData)
     const sumAllValue = categoryData.value.reduce((a, b) => a + b, 0)
     const [type,setType] = useState("revenue")
   return (
@@ -320,7 +317,6 @@ const DetailStatisticProduct = (props) =>{
 
   const handleChangeType = (e)  =>{
     setType(e.target.value)
-    console.log("e.target.value",e.target.value)
     let newProductData = [...productData] ;
     if(e.target.value.includes("best-seller")){
       newProductData.sort((a, b) => Number(b.total_quantity) - Number(a.total_quantity) )
@@ -345,7 +341,6 @@ const DetailStatisticProduct = (props) =>{
                 className: classes.search,
               }}
               onChange={(e)=>{
-                console.log('e')
                 if(e.target.value.length === 0 ) { setProductData(data)}
                 else{
                   let newProductData = productData.length !== 0 ?[...data]:[]

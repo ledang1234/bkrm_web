@@ -266,7 +266,6 @@ const AddDiscount = (props) => {
     setRowsInvoice(newArr);
   }
   // const  handleChangeDiscountType = (index, value) => {
-  //   console.log("rowsInvoice",rowsInvoice)
   //   let newArr = [...rowsInvoice];
   //   newArr[index].typeDiscountItem = value;
   //   setRowsInvoice(newArr);
@@ -386,7 +385,6 @@ const AddDiscount = (props) => {
 
   // 
   const  handleChangeMiniDiscountType = (index,miniIndex, value) => {
-    console.log("rowsInvoice",rowsInvoice)
     let newArr = [...rowsInvoice];
     newArr[index].priceByQuantity[miniIndex].typeDiscountItem = value;
     setRowsInvoice(newArr);
@@ -620,7 +618,6 @@ const AddDiscount = (props) => {
 
        {/* List Khuyen mai */}
           {rowsInvoice.map((row, index) => {
-            console.log("{row.priceByQuantity",row)
               return (
                   <>
                   <div style={{paddingLeft:15, marginLeft:10, marginRight:10}}>

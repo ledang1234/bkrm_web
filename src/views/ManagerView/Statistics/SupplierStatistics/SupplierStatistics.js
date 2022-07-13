@@ -38,7 +38,6 @@ const SupplierStatistics = () => {
   const fetchTopData = async () =>{
     const branchId = selectedBranches ==='all'?'':selectedBranches.id
     const topDataRes = await storeApi.getReportTop( store_uuid, branchId, dayQuery.fromDate, dayQuery.toDate );
-    console.log("topDataRes",topDataRes)
     setTopData(topDataRes.top_supplier)
   }
    // 
@@ -196,7 +195,6 @@ const DetailStatistic= (props) =>{
                 className: classes.search,
               }}
               onChange={(e)=>{
-                console.log('e')
                 if(e.target.value.length === 0 ) { setProductData(data)}
                 else{
                   let newProductData = productData.length !== 0 ?[...data]:[]

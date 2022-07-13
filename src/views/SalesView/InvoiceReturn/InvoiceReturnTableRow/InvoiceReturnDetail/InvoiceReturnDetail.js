@@ -98,9 +98,6 @@ function InvoiceReturnDetail(props) {
   const handlePrint = useReactToPrint({
       content: () => componentRef.current,
   });
-
-  console.log("refund",refund)
-
   return (
     <Collapse in={isMini?true:openRow === row.uuid} timeout="auto" unmountOnExit>
       <Box margin={1}>

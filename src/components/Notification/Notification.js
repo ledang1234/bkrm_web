@@ -35,7 +35,6 @@ export default function Notification() {
     try {
       if (store_uuid && branch_uuid) {
         const res = await storeApi.getNotification(store_uuid, branch_uuid);
-        console.log(res.data)
         const tabItems = []
         tabItems.push({
           label: "Công nợ",

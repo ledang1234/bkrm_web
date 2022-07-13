@@ -134,7 +134,6 @@ export const PrintReceiptWhenSellSetting = ({checked,handleClose,handleSubmit,na
             }
         })
     };
-    console.log("printer?.cartModal",printer)
     return (
         <>
         <FormControlLabel control={<Checkbox  color="primary" name="cart"  checked={printer.cart}  onChange={handleCheckbox} />} label="In hoá đơn sau khi bán hàng" />

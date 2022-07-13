@@ -148,7 +148,6 @@ const DiscountSetting = () => {
     };
 
     //3.3. loc cot
-    console.log("newDiscountList",newDiscountList)
     return (
     <Card className={classes.root} >
     

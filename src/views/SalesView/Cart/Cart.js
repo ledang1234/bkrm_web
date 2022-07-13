@@ -95,8 +95,6 @@ const Cart = () => {
     : setting;
 
   const defaultPaymentAmount = store_setting?.defaultPaymentAmount.status && store_setting?.defaultPaymentAmount.cart 
-  console.log("store_setting",store_setting)
-  console.log("defaultPaymentAmount",defaultPaymentAmount)
 
     const canEnterDiscountWhenSell = store_setting?.canEnterDiscountWhenSell?.status
 
@@ -172,7 +170,6 @@ const Cart = () => {
     if (window.localStorage.getItem("products")) {
       const products = JSON.parse(window.localStorage.getItem("products"));
       if (products.store_uuid === store_uuid && products.branch_uuid === branch_uuid ) {
-        console.log(products.data)
         setProducts(products.data);
       }
     }
@@ -257,7 +254,6 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    console.log("reload heer")
     loadProducts();
   }, [reloadProduct])
 
@@ -276,7 +272,6 @@ const Cart = () => {
     };
     const loadPromotionCoupons = async () => {
       const response = await promotionCouponApi.getActivePromotionVoucher(store_uuid)
-      console.log("eeeeee",response)
       setDiscountData(response.promotions);
     } 
     if (store_uuid) {
@@ -770,7 +765,6 @@ const Cart = () => {
       .format("YYYY-MM-DD HH:mm:ss", { trim: false });
 
     let details = cart.cartItem.map((item) => ({ ...item, discount: "0" }));
-    console.log(cart.paid_amount, cart.total_amount, cart.discount);
     let body = {
       customer_uuid: cart.customer ? cart.customer.uuid : "",
       total_amount: cart.total_amount.toString(),
@@ -829,8 +823,6 @@ const Cart = () => {
   // };
   const [barcodeChecked, setBarcodeChecked] = useState(true);
 
-  console.log("typeShow==='image''",typeShow)
-  console.log("store_setting?.printReceiptWhenSell",store_setting?.printReceiptWhenSell)
   return (
     <>
     <Grid  container   direction="row" justifyContent="space-between"  alignItems="center"  spacing={2}>

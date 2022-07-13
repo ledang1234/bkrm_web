@@ -35,7 +35,6 @@ const EndDateStatistic = () => {
     //
     const [topData,setTopData] = useState([])
     const [overview, setOverview] = useState({})
-    console.log("overview",overview)
     const fetchTopData = async () =>{
         const branchId = selectedBranches ==='all'?'':selectedBranches.id
         const topDataRes = await storeApi.getReportTop( store_uuid,branchId, dayQuery.fromDate, dayQuery.toDate );
@@ -120,7 +119,6 @@ const EndDateStatistic = () => {
                     </Grid>
                     <Divider style={{marginTop:15, marginBottom:10}} />
                     {topData.map((item)=>{
-                        // console.log("item",item)
                         const img_urls = item.img_urls ? JSON.parse(item.img_urls).at(0):null
                         return(
                         <Box style={{marginBottom:10}}>

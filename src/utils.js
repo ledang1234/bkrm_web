@@ -111,7 +111,6 @@ export class Docso
     					arr_So.ty=so.substr(i,1)+arr_So.ty;
     				else arr_So.ty=so.substr(i,1);
                 }
-    			//console.log(arr_So);
             }
     		
             if(arr_So['ty']>0)

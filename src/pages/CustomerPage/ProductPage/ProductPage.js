@@ -70,7 +70,6 @@ const ProductPage = (props) => {
 
     // function findAllSubCat (cat) {
     //   let rs = []
-    //   console.log("cat",cat)
 
     //   if(cat?.children.length === 0){
     //     return cat
@@ -87,10 +86,6 @@ const ProductPage = (props) => {
     const {products, categories} = useSelector(state => state.customerPage);
     const category = findCategoryName()
     // const subCatList = category?findAllSubCat(category):null
-    // console.log("subCatList",subCatList)
-    // console.log("category",category)
-    // console.log("category",category)
-    // console.log("categories",categories)
     // let productOfCategory = categoryId ? products.filter(product => product.category.id.toString() === categoryId &&(product.attribute_value === null || product.has_variance === 1) ) 
     //                     :products.filter(product => product.attribute_value === null || product.has_variance === 1 ) 
 

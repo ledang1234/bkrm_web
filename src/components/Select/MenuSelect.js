@@ -17,7 +17,6 @@ const MenuSelect = ({handleShowMenu,showMenu}) => {
   const info = useSelector((state) => state.info);
   const store_setting = info.store.general_configuration? JSON.parse(info.store.general_configuration): setting
   const permissions = info.user.permissions
-  console.log('permissions',permissions)
 
   let tree = [salesModule,inventoryModule,hrModule,reportModule]
   
@@ -36,7 +35,6 @@ const MenuSelect = ({handleShowMenu,showMenu}) => {
   const report = treeData.find(item => item.key==='reportModule')
   const sales = treeData.find(item => item.key==='salesModule')
   const inventory = treeData.find(item => item.key==='inventoryModule')
-  console.log('report[0]',report)
   if(!store_setting.discount.status&& report ){
     report.children[3].children=report.children[3].children.filter(item => item.id !== 19.2)
   }
@@ -57,7 +55,6 @@ const MenuSelect = ({handleShowMenu,showMenu}) => {
   const [checkedKeys, setCheckedKeys] = useState(showMenu);
 
   const onCheck = (checkedKeysValue) => {
-    console.log('onCheck', checkedKeysValue);
     setCheckedKeys(checkedKeysValue);
     handleShowMenu(checkedKeysValue)
   };

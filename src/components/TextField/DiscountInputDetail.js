@@ -34,7 +34,6 @@ const DiscountInputDetail = ({handleUpdateDiscountDetail,cartData,setAnchorEl}) 
     
     const handleChangeValue = (e) =>{
       // if(e.target.value < 0){e.target.value = 0}
-      console.log("e.target.value.includes('-') ",!e.target.value )
 
       // if(!e.target.value){e.target.value = 0; return; }
       if(e.target.value < 0 || e.target.value.includes('-') ){return}

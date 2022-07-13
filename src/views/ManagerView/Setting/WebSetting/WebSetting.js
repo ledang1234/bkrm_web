@@ -153,8 +153,6 @@ const WebSetting = () => {
   }, [store_uuid]);
 
   useEffect(() => {
-    console.log('banner iamge', images);
-    console.log('display', display)
   }, [images, display])
 
   // 1.

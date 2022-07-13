@@ -82,7 +82,6 @@ const EmployeeStatistics = () => {
     let topBestSeller = topData ? [...topData] :[]
     topBestSeller.sort((a, b) => b.number_of_orders - a.number_of_orders ) 
 
-    console.log("topData",topData)
 
     var dataRevenue= {   
       series: [{
@@ -201,7 +200,6 @@ const DetailStatistic= (props) =>{
 
   const handleChangeType = (e)  =>{
     setType(e.target.value)
-    console.log("e.target.value",e.target.value)
     let newProductData = [...productData] ;
     if(e.target.value.includes("best-seller")){
       newProductData.sort((a, b) => Number(b.number_of_orders) - Number(a.number_of_orders) )
@@ -227,7 +225,6 @@ const DetailStatistic= (props) =>{
                 className: classes.search,
               }}
               onChange={(e)=>{
-                console.log('e')
                 if(e.target.value.length === 0 ) { setProductData(data)}
                 else{
                   let newProductData = productData.length !== 0 ?[...data]:[]

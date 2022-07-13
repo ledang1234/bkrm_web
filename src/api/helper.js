@@ -1,7 +1,6 @@
 const toDataURL = (url) =>
   fetch(url)
     .then((response) => {
-      console.log(response);
       return response.blob();
     })
     .then(

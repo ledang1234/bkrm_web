@@ -80,7 +80,7 @@ const SearchProduct = (props) => {
   },[])
 
   const renderOption = (option) => {
-    // console.log("option",option)
+
     //display value in Popper elements
     return (
       <Grid
@@ -184,7 +184,6 @@ const SearchProduct = (props) => {
               }
             } else if (e.key === "Backspace") {
               if (selectedOption?.name) {
-                // console.log("reset");
                 e.preventDefault();
                 e.stopPropagation();
                 setSelectedOption({});

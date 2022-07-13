@@ -154,8 +154,6 @@ function InvoiceDetail(props) {
     const loadData = async () => {
       try {
         const res = await orderApi.getOrder(store_uuid, row.uuid);
-        // console.log(res.data)
-        console.log("res",res.data)
         setOrder(res.data);
       } catch (error) {
         setOrder({

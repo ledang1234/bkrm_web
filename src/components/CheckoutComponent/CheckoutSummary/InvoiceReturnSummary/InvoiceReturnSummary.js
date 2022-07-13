@@ -57,7 +57,6 @@ function InvoiceReturnSummary({
 }) {
   const theme = useTheme();
   const classes = useStyles(theme);
-  console.log("dataaaaa",data)
 
   useEffect(() => {}, [data]);
 

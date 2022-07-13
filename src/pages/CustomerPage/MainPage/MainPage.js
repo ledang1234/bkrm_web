@@ -48,7 +48,6 @@ const MainPage = (props) => {
 
 
     const banners = JSON.parse(storeInfo.banners ? storeInfo.banners : '[]');
-    console.log("banners",banners)
     return (
 <>
     {/* // 1. CAROUSE */}

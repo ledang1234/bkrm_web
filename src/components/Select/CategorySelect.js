@@ -87,7 +87,6 @@ const CategorySelect = ({data,saveData,setData, isNotSelect,setOpenFilter}) => {
         // setCategoryId(info.node.uuid)
         setOpenFilter(false)
     };
-    console.log("selectedNodeUuid",selectedNodeUuid)
 
  if(isNotSelect){
      return (

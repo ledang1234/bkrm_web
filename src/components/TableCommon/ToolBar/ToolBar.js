@@ -208,7 +208,6 @@ const ToolBar = (props) => {
   const handleImport = () => {
     setOpenImport(false);
     if (custom && customizable) {
-      console.log(customCl)
       setListCl([])
       const json = excel.map((product) => ({
         name: product[customCl.name]?.toString()? product[customCl.name]?.toString(): "",

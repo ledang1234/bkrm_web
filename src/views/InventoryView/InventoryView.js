@@ -17,7 +17,6 @@ import TransferInventory from "./TransferInventory/TransferInventory";
 const InventoryView = (props) => {
   const { path } = useRouteMatch();
   const permissions = useSelector((state) => state.info.user.permissions);
-  console.log();
   return (
     <Switch>
       <Route exact path={path}>

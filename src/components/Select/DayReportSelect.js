@@ -47,13 +47,10 @@ const DayReportSelect = ({dayQuery,setDayQuery,defaultSelect}) => {
         const first = today.getDate() - today.getDay() -7 + 1;
         fromDate = moment(new Date(fromDate.setDate(first))).format("YYYY-MM-DD");toDate =  moment(new Date(toDate.setDate(first+6))).format("YYYY-MM-DD")
       }
-      console.log("fromDate",fromDate)
-      console.log("toDate",toDate)
        setDayQuery({  fromDate:fromDate, toDate: toDate})
        setDay(e.target.value)
    }
    const dateFormat = 'YYYY/MM/DD';
-   console.log()
    let currentDate = moment(new Date()).format("YYYY-MM-DD") 
    const [choosenDate,setChoosenDate] = useState([currentDate, currentDate]) 
 
@@ -111,7 +108,6 @@ export default DayReportSelect
 
 const ChooseDateDialog = ({openPopUp,day,setDay,setOpenPopUp,setDayQuery, choosenDate,setChoosenDate}) =>{
   const dateFormat = 'YYYY/MM/DD';
-  console.log("day",day)
   const { RangePicker } = DatePicker;
 
   return(

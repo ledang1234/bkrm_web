@@ -58,7 +58,6 @@ const MenuProduct = ({products, setProducts, handleSearchBarSelect, isCart, sele
      if(isCheck){return findedItem?.real_quantity}
      return findedItem?.quantity
     // return findedItem?.real_quantity
-    // console.log("findedItem",findedItem)
     }
 
     const [openFilter, setOpenFilter] = useState(false)

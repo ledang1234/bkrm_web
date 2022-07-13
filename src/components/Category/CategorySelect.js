@@ -26,7 +26,6 @@ const MyOption = (props) => {
             ]
         )
     } catch (error) {
-        console.log(category)
         return []
     }
 }

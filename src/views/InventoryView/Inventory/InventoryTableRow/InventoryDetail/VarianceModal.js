@@ -119,9 +119,6 @@ const VarianceModal = (props) => {
   const store_uuid = info.store.uuid;
   const branch_uuid = info.branch.uuid;
 
-  console.log("rowwww",row)
-  console.log("productDetail",productDetail)
-  
   // useEffect(() => {
   //   const fetchProduct = async () => {
   //     try {
@@ -154,7 +151,6 @@ const VarianceModal = (props) => {
 
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
 
-  console.log("row.branch_inventories",productDetail.branch_inventories)
 
   return (
     // <ModalWrapperWithClose

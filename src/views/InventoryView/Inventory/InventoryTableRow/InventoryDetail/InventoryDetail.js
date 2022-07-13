@@ -113,9 +113,7 @@ const InventoryDetail = (props) => {
       const response = await productApi.deleteProduct(store_uuid, row.uuid);
       dispatch(statusAction.successfulStatus("Xóa thành công"));
       setReload();
-      // console.log(response);
     } catch (error) {
-      // console.log(error);
       dispatch(statusAction.failedStatus("Xóa thất bại"));
     }
   };
@@ -152,7 +150,6 @@ const InventoryDetail = (props) => {
 
 
   const [openDetailInventory ,setOpenDetailInventory] =  useState(false)
-console.log("productDetail.img_urls",productDetail)
 
 let  imageList =row.img_urls ? JSON.parse(row.img_urls):null
 imageList = Array.isArray(imageList)? imageList :[imageList]

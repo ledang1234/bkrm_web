@@ -107,7 +107,6 @@ const Invoice = () => {
   const [orderBy, setOrderBy] = React.useState("id");
   const handleDeleteAll = () => {
     const deleteApi = async () => {
-      console.log("delete api called")
       try {
         const res = await orderApi.deleteAll(store_uuid, branch_uuid);
         dispatch(statusAction.successfulStatus("Xóa tất cả hóa đơn thành công"));
@@ -137,7 +136,6 @@ const Invoice = () => {
   };
   const [reload, setReload] = useState(false);
   const onReload = () => {
-    console.log("onReload called")
     setReload(!reload);
   };
   const handleRequestSort = (event, property) => {

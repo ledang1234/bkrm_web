@@ -189,7 +189,6 @@ const EditEmployee = ({ handleClose, open, employee ,fromAvatar}) => {
   //     setPermissions(permissions);
   //   };
 
-  console.log(employee)
   const handleEditProfile = async (password) =>{
     setConfirm(false)
     handleClose();

@@ -180,7 +180,6 @@ const CartPage = (props) => {
   }
 
   const getBranch = async () => {
-    console.log()
     const webSetting = storeInfo.web_configuration ? JSON.parse(storeInfo.web_configuration) : null
     const branchOption = webSetting?.orderManagement.branchOption
     if (branchOption === 'auto') {

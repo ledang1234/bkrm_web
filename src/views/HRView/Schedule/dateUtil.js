@@ -82,7 +82,5 @@ export function getWidthCss(numberOfDayInMonth){
 }
 export function isToday (date){
     const now = new Date();
-    console.log(date.toLocaleDateString("en-US"))
-    console.log(now.toLocaleDateString("en-US"))
     return date.toLocaleDateString("en-US") === now.toLocaleDateString("en-US")
 }

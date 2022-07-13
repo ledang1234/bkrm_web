@@ -240,7 +240,6 @@ const OrderProductList = () => {
               />
               <TableBody>
                 {customerOrders.map((row, index) => {
-                  console.log("row",row)
                     return (
                       <OrderProductListTableRow key={row.id} row={row}  openRow={openRow}  handleOpenRow={handleOpenRow} reload={onReload}/>
          

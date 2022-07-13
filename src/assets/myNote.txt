@@ -53,7 +53,6 @@ const AddAttribute = ({attributeList,datas,setDatas}) => {
     }
 
     const deleteAttr = (key) =>{
-        console.log("key,",key)
         var newArr = [...datas]; 
         newArr =  newArr.filter(row => row.key !== key)  
         setDatas(newArr); 
@@ -65,7 +64,6 @@ const AddAttribute = ({attributeList,datas,setDatas}) => {
         setDatas(newArr); 
     }
       
-    console.log("datas",datas)
     return (
         <div style={{marginBottom:10}}>
             { datas.map( (data, index) => {
@@ -106,7 +104,6 @@ const AttributeRow = ({attributeList,data,datas,updateFieldChanged,index,deleteA
     }
 
     useEffect(() => {
-        console.log("value",value)
         updateFieldChanged(index, attr,value);
     }, [  value ]);
 

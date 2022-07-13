@@ -65,7 +65,6 @@ const CartSummary = (props) => {
         }
       };
       loadDistrict(formik.values.city);
-      console.log(formik.errors);
     }, [formik.values.city]);
     useEffect(() => {
       const loadWard = async (city_id, district_id) => {

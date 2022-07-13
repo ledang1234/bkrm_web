@@ -201,7 +201,6 @@ function InventoryCheckPopUp({
         },
       },
     });
-    console.log(newInventoryCheck)
     setInventoryCheck(newInventoryCheck);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };

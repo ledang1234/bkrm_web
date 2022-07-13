@@ -295,7 +295,6 @@ export const ReceiptPrinter = ({cart, date,code,type}) => {
   const classes = useStyles(theme);
 
   const item = cart.cartItem? cart.cartItem :cart.details
-  console.log("typetypetype",type)
   if(type !== 'other'){
     return <NomalReceiptPrinter cart={cart} date={date} code={code} type={type}/>
   }

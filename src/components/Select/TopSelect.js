@@ -3,8 +3,6 @@ import {useTheme} from "@material-ui/core/styles";
 import {MenuItem,FormControl,Select} from '@material-ui/core';
 
 const TopSelect = ({handleChangeLimit, limit,name}) => {
-  console.log("name",name)
-  console.log("limit",limit)
   return (
     <FormControl  style={{marginTop:-5,marginRight:10}} size="small" variant="outlined" >
         <Select size="small" onChange={handleChangeLimit}  defaultValue="7day" value={limit} name={name}>

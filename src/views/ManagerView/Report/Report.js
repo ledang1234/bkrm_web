@@ -126,7 +126,6 @@ const Report = () => {
       // overview: number of employees, customers, suppliers, in money, out money
       const overViewRes = await storeApi.getReportOverview(store_uuid, "", fromDate, toDate);
       setOverview(overViewRes.data)
-      console.log("overview", overViewRes.data)
 
       // top 'limit' of items by category
       // const topItemByCategoryRes = await storeApi.getReportProduct(store_uuid, fromDate, toDate, limit, categoryId);
@@ -141,7 +140,6 @@ const Report = () => {
       );
 
       setStatistic(statisticRes);
-      console.log("statistic", statisticRes);
 
       // top employees, customers, products, suppliers,...
       const topDataRes = await storeApi.getReportTop(
@@ -153,7 +151,6 @@ const Report = () => {
       );
 
       setTopData(topDataRes)
-      console.log("topData", topDataRes)
       // uncomment here
       setIsLoaded(true)
     }
@@ -214,7 +211,6 @@ const Report = () => {
     
     // const fetchReport = async (period) => {
     //   const res = await storeApi.getReport(store_uuid, period);
-    //   console.log(res.data);
     //   setData(res.data)
     // };
   
@@ -222,8 +218,7 @@ const Report = () => {
     //   fetchReport(7)
     // }, [])
 
-    // console.log("data")
-    // console.log(data)
+
 
     return isLoaded && (
       <Card className={classes.root}>

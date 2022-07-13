@@ -11,8 +11,6 @@ import { Typography } from '@mui/material';
 const OrderProductListTableRow = (props) => {
     const { row, handleOpenRow,openRow, reload,colorText,isReport} = props;
     const classes = useRowStyles();
-
-    console.log("rowrowrowrow",row)
     return (
         <>
         {/* ROW */}

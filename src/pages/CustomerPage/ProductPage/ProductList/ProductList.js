@@ -50,7 +50,6 @@ const ProductList = (props) => {
     //     }else{
     //         if (product?.has_variance){
     //             all_child_product= all_child_product? all_child_product: products.filter( item => item.parent_product_code === product.product_code)
-    //             console.log("all_child_product",all_child_product)
     //             let sum =  all_child_product?.reduce((sum,a)=>sum + Number(a.quantity_available), 0)
     //             return sum
     //         }
@@ -108,7 +107,6 @@ const ProductList = (props) => {
                     const branch = all_child_product[i]?.branch_inventories?.find(branch => Number(branch.branch_id) === Number(branchId))
                     if (Number(branch?.quantity_available)>0){return false} 
                 }
-                console.log("alo")
                 return true 
             }else {
                 let branchId = localStorage.getItem(storeInfo.uuid);
@@ -208,9 +206,7 @@ const ProductList = (props) => {
                  const image = JSON.parse(item.img_urls) ?JSON.parse(item.img_urls) [0]:null
                 const varianceProductStatus = getIsAllVarianceOutOfStock(item.has_variance?item:null) ? 0 : 99
                 const stockQuantity  = !item.has_variance ? getStockQuantity(item) : varianceProductStatus
-               
-                console.log("item",item)
-                 return( 
+                return( 
                      <>
                      {Number(isBox)?
                      <Card  className={clsx(classes.hoverCard,classes.item,classes.colorCard)} style={{margin:`${boxDistance}%`, width:widthSize, borderRadius:border?7:0}} >

@@ -129,7 +129,6 @@ const Customer = () => {
   };
 
   //// 2. Table
-console.log(info.store.general_configuration)
   //collapse
   const [openRow, setRowOpen] = React.useState(null);
   const handleOpenRow = (row) => {

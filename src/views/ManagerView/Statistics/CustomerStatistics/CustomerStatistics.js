@@ -195,7 +195,6 @@ const DetailStatistic= (props) =>{
 
   const handleChangeType = (e)  =>{
     setType(e.target.value)
-    console.log("e.target.value",e.target.value)
     let newProductData = [...productData] ;
     if(e.target.value.includes("best-seller")){
       newProductData.sort((a, b) => Number(b.total_buy_price) - Number(a.total_buy_price) )

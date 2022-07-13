@@ -119,12 +119,7 @@ const GeneralStatistics = () => {
       setTopData(topDataRes)  
       setIsLoaded(true)
     }
-    console.log("overview")
-    console.log(overview)
-    console.log(topItemByCategory)
-    console.log(revenue)
-    console.log(topData)
-
+ 
     fetchReports()
     
   }, [])

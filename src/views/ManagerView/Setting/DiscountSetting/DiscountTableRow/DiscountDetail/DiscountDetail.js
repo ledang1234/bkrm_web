@@ -79,7 +79,6 @@ const DiscountDetail = (props) => {
     const {promotion_condition,dateAdvanceSetting,type,isMini} = props;
 
     const rowsInvoice  = props.promotion_condition;
-    console.log("rowsInvoice",props.promotion_condition)
     // const rowsInvoice = props.promotion_condition;
 
     

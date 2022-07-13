@@ -91,7 +91,6 @@ const PopUpProduct = ({open,onClose, product,mainColor,addProductToCart,getStock
     // const [  isLowStock , setIsLowStock] = useState(getStockStatus(selectedProduct))
   //   useEffect(()=>{
   //     setIsLowStock(getStockStatus(selectedProduct))
-  //     console.log(isLowStock)
   // },[selectedProduct])
 
   return (

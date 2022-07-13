@@ -140,7 +140,6 @@ const SearchSupplier = (props) => {
   const filter = createFilterOptions({
     stringify: option => `${removeAccents(option.name)}  - ${option.phone}`,
   });
-  console.log("selectedSupplier",props.selectedSupplier)
   return (
     <div style={{ width: "100%" }}>
       <Autocomplete

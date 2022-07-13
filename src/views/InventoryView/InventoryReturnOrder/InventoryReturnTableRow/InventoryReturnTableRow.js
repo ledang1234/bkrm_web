@@ -11,8 +11,6 @@ import { VNDFormat } from '../../../../components/TextField/NumberFormatCustom'
 const InventoryReturnTableRow = (props) => {
     const { row, handleOpenRow, openRow,colorText } = props;
     const classes = useRowStyles();
-
-    console.log("row",row)
     return (
         <>
             {/* ROW */}

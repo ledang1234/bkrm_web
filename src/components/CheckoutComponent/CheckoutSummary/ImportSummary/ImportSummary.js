@@ -93,7 +93,6 @@ const ImportSummary = (props) => {
   //     dispatch(statusAction.successfulStatus("Thêm nhà cung cấp thành công"));
   //     reloadSuppliers(); 
   //     setOpen(false);
-  //     console.log("hello")
   //   } else if (status === "Failure") {
   //     dispatch(statusAction.failedStatus("Thêm nhà cung cấp thất bại"));
   //   } else {

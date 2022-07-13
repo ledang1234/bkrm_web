@@ -159,7 +159,6 @@ const Inventory = () => {
     }
   }, [pagingState.page, pagingState.limit, branch_uuid, reload, query]);
 
-  console.log("GIA LỆ")
   const theme = useTheme();
   const classes = useStyles(theme);
   const xsScreen = useMediaQuery(theme.breakpoints.down("xs"));
@@ -477,7 +476,6 @@ const ComponentToPrint = ({ productList, classes, query }) => {
       />
       <TableBody>
         {productList.map((row, index) => {
-          console.log("rowrow",row)
           return  <InventoryTableRow colorText={"#000"} key={row.uuid} row={row} hidenCollumn={["quantity", "image"]}isManageInventory={store_setting?.inventory.status} />
           })}
       </TableBody>

@@ -378,7 +378,6 @@ const AddInventory = (props) => {
   const [relatedList, setRelatedList] = useState([]);
   // const [attrOfProduct, setAttrOfProduct] = useState([]);
 
-  // console.log("relatedList",relatedList)
 
   const handleAddProductWithVariation = async () => {
     if (relatedList.length !== 0) {

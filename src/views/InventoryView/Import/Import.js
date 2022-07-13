@@ -92,7 +92,6 @@ const Import = () => {
   const loadLocalImportListStorage = () => {
     if (window.localStorage.getItem("importListData")) {
       const data = JSON.parse(window.localStorage.getItem("importListData"));
-      console.log("data",data)
       if (data.user_uuid === user_uuid) {
         return data.cartList;
       }
@@ -247,7 +246,6 @@ const Import = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  console.log("selectedIndex", selectedIndex)
   const handleCloseSnackBar = (event, reason) => {
     setOpenSnack(false);
   };
@@ -526,7 +524,6 @@ const Import = () => {
     // NẾU LÀ SẢN PHẨM CÓ LÔ THÌ SAO ?? 
 
     let cart = cartList[selectedIndex];
-    console.log("cart.supplier",cart.supplier)
     const printReceiptWhenSell= store_setting?.printReceiptWhenSell
     var emptyCart = cart.cartItem.filter((item) => item.quantity).length === 0;
     // CHECK NẾU TYPE BẰNG 0(đặt) thì NCC ko đc null 
@@ -594,7 +591,6 @@ const Import = () => {
       import_date: importTime,
     };
     try {
-      console.log(body)
        // CHECK NẾU TYPE BẰNG 0(đặt)  thì gọi api đặt hàng (hoặc sửa luôn api này nhưng ko cộng tòn kho)
       // CHECK NẾU TYPE BẰNG 0(đặt) thì setting có  gửi mail NCC ko , nếu có api gửi mail ?
       let res = await purchaseOrderApi.addInventory(

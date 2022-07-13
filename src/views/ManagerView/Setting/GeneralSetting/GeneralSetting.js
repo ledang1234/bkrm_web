@@ -228,7 +228,6 @@ const GeneralSetting = () => {
         general_configuration: JSON.stringify(checked),
       });
       openNotification("success", "Lưu cài đặt chung thành công");
-      console.log("checked",checked)
       // dispatch(infoActions.setStore({...info.store, general_configuration:JSON.stringify(checked)}));
       
     } catch (err) {

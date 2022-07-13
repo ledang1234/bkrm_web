@@ -226,8 +226,6 @@ const TableRowWithSelect = (props) => {
       return newCartItem
     })
 
-    console.log("cartItemsssss",cartItem)
-    console.log("newCartList")
     let newCartList = {
       // supplier reccomend này ko đủ như searh trên kia nha .... ko biết có lỗi gì api ko
       supplier: isNoSupplier?null: {name:rows[0].supplier.name, phone:rows[0].supplier.phone, uuid:rows[0].supplier_uuid},       

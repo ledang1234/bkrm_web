@@ -39,7 +39,6 @@ const InventoryOrderFilter = (props) => {
     const formik = useFormik({
       initialValues: query,
       onSubmit: async values => {
-        // console.log(values)
         // const res = await purchaseOrderApi.searchPurchaseOrder(store_uuid, branch_uuid, values)
         // setPurchaseOrders(res.data)
         handleToggleFilter()

@@ -60,7 +60,6 @@ export const updateLocalStorage = async (info = {}, action ) => {
       customization.secondaryColor = action.payload;
       break;
     default:
-      console.log("invalid customization");
       break;
   }
   await userAPi.editProfile(info.store_uuid, {

@@ -46,7 +46,6 @@ const BranchStatistics = () => {
       }
       const sumAllValue = categoryData.value.reduce((a, b) => a + b, 0)
       const [type,setType] = useState("revenue")
-      console.log("dayQuery",dayQuery)
 
  
   return (

@@ -199,7 +199,6 @@ const EditBranch = (props) => {
     formik.resetForm();
     clearImage()
   };
-  console.log(formik.errors)
   return (
     <SimpleModal open={open} handleClose={closeModalAndResetData}>
       <ConfirmPopUp
