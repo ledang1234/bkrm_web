@@ -57,8 +57,7 @@ const UpdateInventory = (props) => {
     setDisplay(displayList)
   },[props.productInfo.images])
   const addImageHandler = (e) => {
-    console.log(e.target.files[0]);
-    console.log(URL.createObjectURL(e.target.files[0]));
+
     setImages([...images, e.target.files[0]]);
     setDisplay([
       ...display,

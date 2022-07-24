@@ -87,7 +87,6 @@ const Marker = (props) => {
         }}
         src={icon}
         onClick={() => {
-          console.log("Click");
         }}
         style={{ cursor: "pointer" }}
         // onClick={()=>handleClickOpen(id)}

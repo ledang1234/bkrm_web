@@ -40,7 +40,6 @@ const InventoryReturnFilter = (props) => {
     const formik = useFormik({
       initialValues: query,
       onSubmit: async values => {
-        // console.log(values)
         // const res = await purchaseReturnApi.searchPurchaseReturn(store_uuid, branch_uuid, values)
         setQuery(values)
         handleToggleFilter()

@@ -87,13 +87,11 @@ function InvoiceReturnPopUp(props) {
     );
     const newRefund = _.cloneDeep(refund);
 
-    // console.log(newBatches);
     newRefund.details[itemIndex].selectedBatches = newBatches;
     newRefund.details[itemIndex].returnQuantity = _.sumBy(
       newBatches,
       "returned_quantity"
     );
-    // console.log(newRefund);
     setRefund(newRefund);
     setIsUpdateTotalAmount(!isUpdateTotalAmount);
   };

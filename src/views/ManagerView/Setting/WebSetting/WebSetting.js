@@ -173,7 +173,6 @@ const WebSetting = () => {
   // 2.
   const handleChangeMainColor = (color) => {
     var newWeb = { ...web };
-    console.log(color.rgb);
     newWeb.mainColor.r = color.rgb.r;
     newWeb.mainColor.g = color.rgb.g;
     newWeb.mainColor.b = color.rgb.b;

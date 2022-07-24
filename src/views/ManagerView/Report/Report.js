@@ -130,7 +130,6 @@ const Report = () => {
       // top 'limit' of items by category
       // const topItemByCategoryRes = await storeApi.getReportProduct(store_uuid, fromDate, toDate, limit, categoryId);
       // setTopItemByCategory(topItemByCategoryRes);
-      // console.log("topItemByCate", topItemByCategoryRes)
       const statisticRes = await storeApi.getReportStatistic( 
         store_uuid,
         "",
