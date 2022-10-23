@@ -7,8 +7,8 @@ This is backend implementation of our project for graduation thesis: BUILD A RET
 Supervisor: 
 - Assoc. Professor Tran Minh Quang
 Members: 
-- Ly Quoc Hai (Backend)
 - Dang Gia Le (Frontend)
+- Ly Quoc Hai (Backend)
 - Mai Truong Khang (Frontend)
 
 B. HOW TO RUN THIS CODE
@@ -21,3 +21,6 @@ B. HOW TO RUN THIS CODE
 - Install packages: npm i
 - Start localhost: npm start
 - Open browser and go to: http://localhost:3000
+
+C. CODE STRUCTURE:
+An general explaination of the meaning of main folder and files. For detail, please read Laravel Docs
