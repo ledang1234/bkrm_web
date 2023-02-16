@@ -2,7 +2,7 @@
 - _Updated at : 22 Oct 2022 by Hai Ly._
 
 A. INTRODUCTION
-This is backend implementation of our project for graduation thesis: BUILD A RETAIL MANAGEMENT SYSTEM SUPPORTING AUTOMATION.
+This is frontend implementation of our project for graduation thesis: BUILD A RETAIL MANAGEMENT SYSTEM SUPPORTING AUTOMATION.
 30 June 2022 - Ho Chi Minh University of Technology
 Supervisor: 
 - Assoc. Professor Tran Minh Quang
@@ -23,4 +23,4 @@ B. HOW TO RUN THIS CODE
 - Open browser and go to: http://localhost:3000
 
 C. CODE STRUCTURE:
-An general explaination of the meaning of main folder and files. For detail, please read Laravel Docs
+An general explaination of the meaning of main folder and files.
