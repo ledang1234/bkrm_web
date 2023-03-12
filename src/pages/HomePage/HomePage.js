@@ -59,6 +59,14 @@ const SalesView = React.lazy(() => import("../../views/SalesView/SalesView"))
 const DeliveryView = React.lazy(() => import("../../views/DeliveryView/DeliveryView"))
 const ManualView = React.lazy(() => import("../../views/ManualView/ManualView"))
 
+// import ManagerView from '../../views/ManagerView/ManagerView';
+// import InventoryView from "../../views/InventoryView/InventoryView"
+// import HRView from "../../views/HRView/HRView"
+// import SalesView from "../../views/SalesView/SalesView";
+// import DeliveryView from "../../views/DeliveryView/DeliveryView"
+// import ManualView from "../../views/ManualView/ManualView";
+
+
 const success = (message) => {
   Modal.success({
     content: {message},

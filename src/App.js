@@ -29,6 +29,12 @@ const SignupPage = React.lazy(() => import("./pages/SignupPage/SignupPage"));
 const CustomerPage = React.lazy(() => import("./pages/CustomerPage/CustomerPage"));
 const MainPage = React.lazy(() => import("./pages/MainPage/MainPage"));
 
+// import HomePage from "./pages/HomePage/HomePage";
+// import LoginPage from "./pages/LoginPage/LoginPage";
+// import SignupPage from "./pages/SignupPage/SignupPage";
+// import CustomerPage from "./pages/CustomerPage/CustomerPage";
+// import MainPage from "./pages/MainPage/MainPage";
+
 function App() {
   const customization = useSelector((state) => state.customize);
   const store_uuid = useSelector((state) => state.info.store.uuid);
