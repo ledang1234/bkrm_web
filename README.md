@@ -1,5 +1,5 @@
 ***BKRM API - Bach Khoa Retail Management System API***
-- _Updated at : 22 Oct 2022 by Hai Ly._
+- _Updated at : 22 Oct 2022 by Hai
 
 A. INTRODUCTION
 This is frontend implementation of our project for graduation thesis: BUILD A RETAIL MANAGEMENT SYSTEM SUPPORTING AUTOMATION.
